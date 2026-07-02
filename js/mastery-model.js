@@ -45,6 +45,14 @@ export function initState(topicId, conceptIds, existing) {
   for (const id of conceptIds) {
     if (!state.concepts[id]) state.concepts[id] = freshConcept(id);
   }
+  // Drop any concept the topic no longer defines (renamed/removed since this
+  // progress was saved). Otherwise an orphan keeps topicMastered permanently
+  // false, and a focus lock on a vanished concept dead-ends the trainer.
+  const live = new Set(conceptIds);
+  for (const id of Object.keys(state.concepts)) {
+    if (!live.has(id)) delete state.concepts[id];
+  }
+  if (state.focusConceptId && !live.has(state.focusConceptId)) state.focusConceptId = null;
   // Remember the authored skill order so we drill them one at a time, in order.
   state.conceptOrder = conceptIds.slice();
   return state;

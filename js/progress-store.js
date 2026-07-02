@@ -10,16 +10,35 @@ function emptyStore() {
   return { schemaVersion: SCHEMA_VERSION, topics: {} };
 }
 
+const isPlainObject = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
+const validConcept = (c) => isPlainObject(c) && typeof c.proficiency === "number" && Array.isArray(c.recent);
+
+// Return a store whose shape downstream code can trust — `topics` is always a
+// plain object, and any topic state that isn't a well-formed concept map is
+// dropped rather than left to crash getTopicState/initState/grade later. This
+// is what guards against a hand-edited or maliciously-crafted imported file.
+function sanitizeStore(data) {
+  if (!isPlainObject(data) || !isPlainObject(data.topics)) return emptyStore();
+  const topics = {};
+  for (const [id, st] of Object.entries(data.topics)) {
+    if (!isPlainObject(st) || !isPlainObject(st.concepts)) continue;
+    const concepts = Object.values(st.concepts);
+    if (concepts.length && !concepts.every(validConcept)) continue;
+    topics[id] = st;
+  }
+  return { schemaVersion: SCHEMA_VERSION, topics };
+}
+
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return emptyStore();
     const data = JSON.parse(raw);
-    if (data.schemaVersion !== SCHEMA_VERSION) {
+    if (!isPlainObject(data) || data.schemaVersion !== SCHEMA_VERSION) {
       // Future migrations branch here. For now, start fresh on mismatch.
       return emptyStore();
     }
-    return data;
+    return sanitizeStore(data);
   } catch {
     return emptyStore();
   }

@@ -21,7 +21,10 @@ export function el(tag, attrs = {}, children = []) {
 
 export function showError(container, message) {
   container.innerHTML = "";
-  container.appendChild(el("div", { class: "error-box", html: message }));
+  // Render as text, never HTML: `message` interpolates untrusted values such as
+  // the ?id= URL param (via error messages), so innerHTML here would be a
+  // reflected-XSS sink. No caller passes intentional markup.
+  container.appendChild(el("div", { class: "error-box" }, String(message)));
 }
 
 // Motion preference toggle, persisted, applied via animations.setMotionEnabled.

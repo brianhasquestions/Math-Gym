@@ -114,8 +114,12 @@ function colorVar(name) {
 function cartesian(spec) {
   const W = spec.width || 440, H = spec.height || 320;
   const pad = 6;
-  const [x0, x1] = spec.xRange || [-6, 6];
-  const [y0, y1] = spec.yRange || [-6, 6];
+  let [x0, x1] = spec.xRange || [-6, 6];
+  let [y0, y1] = spec.yRange || [-6, 6];
+  // Guard against a zero-span (or inverted) range, which would divide by zero
+  // and emit NaN coordinates for the whole figure.
+  if (!(x1 > x0)) { const c = (x0 + x1) / 2; x0 = c - 1; x1 = c + 1; }
+  if (!(y1 > y0)) { const c = (y0 + y1) / 2; y0 = c - 1; y1 = c + 1; }
   const sx = (W - 2 * pad) / (x1 - x0);
   const sy = (H - 2 * pad) / (y1 - y0);
   const px = (x) => pad + (x - x0) * sx;
@@ -335,7 +339,12 @@ function niceStep(range) {
 }
 function svgWrap(W, H, inner, caption) {
   const capEl = caption ? `<figcaption class="plot-caption">${esc(caption)}</figcaption>` : "";
-  return `<figure class="plot-figure"><svg viewBox="0 0 ${W} ${H}" class="plot-svg" role="img" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">${inner}</svg>${capEl}</figure>`;
+  // Give assistive tech a text alternative: a <title> (referenced by the SVG's
+  // accessible name) plus aria-label, both drawn from the caption. Without this
+  // a screen reader announces a graph-dependent problem as only "image".
+  const label = caption ? ` aria-label="${esc(caption)}"` : "";
+  const titleEl = caption ? `<title>${esc(caption)}</title>` : "";
+  return `<figure class="plot-figure"><svg viewBox="0 0 ${W} ${H}" class="plot-svg" role="img"${label} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">${titleEl}${inner}</svg>${capEl}</figure>`;
 }
 
 // Public: render a plot spec (object) to an <svg> figure string.

@@ -70,12 +70,29 @@ function asConst(A) { // numeric value if A has no variables, else null
   return c;
 }
 
+// Function names must NOT be read as products of single-letter variables, or
+// "sin(4x)" would canonicalize to s*i*n*4*x and compare equal to "4sin(x)" —
+// two different functions. When a letter run spells a known function, we bail
+// out of polynomial parsing entirely so the answer falls back to exact/accept
+// matching (symbolic trig/log is unverifiable here by design; see checkStep).
+const POLY_FUNCS = new Set([
+  "sin", "cos", "tan", "sec", "csc", "cot",
+  "sinh", "cosh", "tanh", "exp", "ln", "log", "sqrt", "abs",
+  "arcsin", "arccos", "arctan", "asin", "acos", "atan",
+]);
+
 function tokenizePoly(s) {
   const toks = [];
   for (let i = 0; i < s.length; ) {
     const ch = s[i];
     if (/[0-9.]/.test(ch)) { let j = i + 1; while (j < s.length && /[0-9.]/.test(s[j])) j++; toks.push({ t: "num", v: s.slice(i, j) }); i = j; }
-    else if (/[a-z]/.test(ch)) { toks.push({ t: "var", v: ch }); i++; }
+    else if (/[a-z]/.test(ch)) {
+      let j = i + 1; while (j < s.length && /[a-z]/.test(s[j])) j++;
+      const run = s.slice(i, j);
+      if (POLY_FUNCS.has(run)) return null; // a function name — not a polynomial
+      for (let k = i; k < j; k++) toks.push({ t: "var", v: s[k] }); // each letter is a variable (xy = x*y)
+      i = j;
+    }
     else if ("+-*/^()".includes(ch)) { toks.push({ t: ch }); i++; }
     else return null; // unknown char (',', '=', etc.) -> not a polynomial expression
   }
@@ -125,11 +142,10 @@ function parsePoly(s) {
     if (base === null) return null;
     if (peek() && peek().t === "^") {
       pos++;
-      const e = peek();
-      if (!e || e.t !== "num") return null;
-      pos++;
-      const n = parseFloat(e.v);
-      if (!Number.isInteger(n) || n < 0 || n > 8) return null;
+      const eBase = parseBaseP();           // a bare number OR a parenthesized one: x^2 and x^(2)
+      if (eBase === null) return null;
+      const n = asConst(eBase);
+      if (n === null || !Number.isInteger(n) || n < 0 || n > 8) return null;
       base = pPow(base, n);
     }
     return base;
@@ -258,7 +274,7 @@ function canonInequality(normalized) {
 // Parse an UNORDERED solution set: "x=2 or x=-3", "2, -3", "{2,-3}", "x=4"
 // (a single/double root). Returns a numerically-sorted array, or null.
 function parseSolutionSet(normalized) {
-  let s = normalized.replace(/[{}]/g, "").replace(/or/g, ",");
+  let s = normalized.replace(/[{}()[\]]/g, "").replace(/or/g, ",");
   const parts = s.split(",").filter((p) => p !== "");
   if (parts.length === 0) return null;
   const nums = [];
@@ -271,11 +287,17 @@ function parseSolutionSet(normalized) {
   return nums.sort((a, b) => a - b);
 }
 
-// Pull a single number out of answers like "x = 7", "7", "x=-3.5", "1/2".
+// Pull a single number (and any leading variable name) out of answers like
+// "x = 7", "7", "x=-3.5", "1/2". Returns { n, v } where v is the variable letter
+// group if one was written (else null), so callers can require variables to
+// agree — "y=7" must not satisfy a step whose answer is "x=7".
 function extractNumber(s) {
   const t = normalize(s);
-  const m = t.match(/^(?:[a-z]+=)?(.+)$/); // optional "x=", "lambda=", etc.
-  return m ? parseNum(m[1]) : null;
+  const m = t.match(/^([a-z]+=)?(.+)$/); // optional "x=", "lambda=", etc.
+  if (!m) return null;
+  const n = parseNum(m[2]);
+  if (n === null) return null;
+  return { n, v: m[1] ? m[1].slice(0, -1) : null };
 }
 
 // Evaluate a constant arithmetic expression to a Number, supporting sqrt, pi, e,
@@ -348,15 +370,36 @@ function evalNumeric(normalized) {
 // un-factored original. A factored form has a parenthesized factor and no
 // additive operator at paren-depth 0 (a single leading sign is allowed).
 function isFactoredForm(normalized) {
-  if (!normalized.includes("(") || !/[a-z]/.test(normalized)) return false;
+  // Peel off any parens that wrap the WHOLE expression, so a wrapped expanded
+  // form like "(x^2-5x+6)" is judged on its contents (and rejected) rather than
+  // passing the gate on the strength of its outer parentheses alone.
+  let s = normalized;
+  while (s.length >= 2 && s[0] === "(" && s[s.length - 1] === ")") {
+    let depth = 0, wrapsWhole = true;
+    for (let i = 0; i < s.length; i++) {
+      if (s[i] === "(") depth++;
+      else if (s[i] === ")") { depth--; if (depth === 0 && i < s.length - 1) { wrapsWhole = false; break; } }
+    }
+    if (!wrapsWhole) break;
+    s = s.slice(1, -1);
+  }
+  if (!s.includes("(") || !/[a-z]/.test(s)) return false;
   let depth = 0;
-  for (let i = 0; i < normalized.length; i++) {
-    const ch = normalized[i];
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
     if (ch === "(") depth++;
     else if (ch === ")") depth--;
     else if ((ch === "+" || ch === "-") && depth === 0 && i !== 0) return false;
   }
   return true;
+}
+
+// Half-a-unit-in-the-last-place tolerance for a plainly-written decimal (e.g.
+// "50.27" -> 0.005). Returns 0 for non-decimal inputs (integers, expressions),
+// which keeps exact answers exact — "7" must not match 7.07.
+function decimalTol(s) {
+  const m = String(s).match(/^-?\d+\.(\d+)$/);
+  return m ? 0.5 * Math.pow(10, -m[1].length) : 0;
 }
 
 // Compare a learner's answer to a step. Returns true if acceptable.
@@ -397,9 +440,17 @@ export function checkStep(step, userAnswer) {
     if (uTuple && cTuple && uTuple.length === cTuple.length &&
         uTuple.every((v, i) => Math.abs(v - cTuple[i]) < 1e-6)) return true;
     const cNum = extractNumber(cand);
-    if (uNum !== null && cNum !== null && Math.abs(uNum - cNum) < 1e-6) return true;
+    // Numbers must be equal AND, if BOTH sides name a variable, name the same one
+    // (so "y=7" doesn't satisfy a step whose answer is "x=7").
+    if (uNum !== null && cNum !== null && Math.abs(uNum.n - cNum.n) < 1e-6 &&
+        (!uNum.v || !cNum.v || uNum.v === cNum.v)) return true;
     const cVal = evalNumeric(c);                                              // radical / pi / e value
-    if (uVal !== null && cVal !== null && Math.abs(uVal - cVal) < 1e-6) return true;
+    // Tolerance widens to the coarser side's rounding grain, so a learner's
+    // "50.27" matches the exact "16pi" (≈50.2655) as the doc on evalNumeric promises.
+    if (uVal !== null && cVal !== null) {
+      const tol = Math.max(1e-6, decimalTol(u), decimalTol(c), 1e-9 * Math.abs(cVal));
+      if (Math.abs(uVal - cVal) <= tol) return true;
+    }
     // Rational-expression equality via cross-multiplication (only when a fraction
     // is involved; bare polynomials are already handled by the canon path above).
     if (uRat && (u.includes("/") || c.includes("/"))) {
