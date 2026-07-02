@@ -265,3 +265,24 @@ Previously lived in a session scratchpad and was lost to temp cleanup; rebuilt
    Verified live: proof-techniques lecture renders (105 KaTeX expressions,
    0 errors) and a full direct-proof problem was solved step-by-step in
    training. 85 topics, 1,402 seed problems, 0 failing.
+14. **Wave-6: multi-dimension review + fixes (2026-07-01, user-directed)**. A 4-track
+   review (engine correctness, security/rendering/a11y, content coverage, deployment)
+   found and fixed: a reflected-XSS sink (`showError` rendered the `?id=` param as
+   innerHTML — now text); two grader loopholes (paren-wrapping bypassed the
+   factored-form gate; function names like `sin` were parsed as commutative
+   letter-products, so `sin(4x)`≡`4sin(x)`); wrong-variable numeric matches
+   (`y=7` satisfied an `x=7` step); an over-tight tolerance that rejected rounded
+   decimals of π/√ answers; `x^(2)` and `(2,-3)` rejections; orphaned concepts
+   wedging the mastery focus lock after a content update; unvalidated
+   import-progress that could crash the app; and a zero-span plot NaN. Added plot
+   `<title>`/aria-label and fixed light-theme `--warn`/`--text-faint` WCAG-AA
+   contrast. Content: proof-techniques got 12 `dm-proof-*` generators (last
+   generator-less topic); the four sub-15-seed algebra topics topped up to 16 with
+   tier-3 gaps closed (validator 15→0 warnings); plots added to calc-3 (dot/cross,
+   gradient, multivar-opt), matrix-transformations, trig-identities, related-rates.
+   Deployment: OG/Twitter/description/canonical/theme-color on all pages, og.svg
+   card, 404.html, robots.txt, sitemap.xml (98 URLs, `tools/gen-sitemap.mjs`).
+   Verified: 85 topics / 1431 problems / 0 failing; 24-case grader test suite;
+   XSS payload confirmed inert on fresh module. OPEN (needs Cloudflare dashboard,
+   not code): enable "Always Use HTTPS" + HSTS — http://mathgym.io still serves
+   cleartext.
