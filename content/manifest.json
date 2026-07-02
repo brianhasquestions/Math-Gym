@@ -149,6 +149,7 @@
       "blurb": "Logic, sets, counting, and networks — the math beneath algorithms and computer science.",
       "topics": [
         { "id": "discrete-math.logic-and-propositions", "title": "Propositional Logic and Truth Tables", "file": "content/discrete-math/logic-and-propositions.json", "status": "ready" },
+        { "id": "discrete-math.proof-techniques", "title": "Proof Techniques: Direct, Contrapositive, and Contradiction", "file": "content/discrete-math/proof-techniques.json", "status": "ready" },
         { "id": "discrete-math.sets-and-set-operations", "title": "Sets and Set Operations", "file": "content/discrete-math/sets-and-set-operations.json", "status": "ready" },
         { "id": "discrete-math.counting-principles", "title": "Counting: Permutations and Combinations", "file": "content/discrete-math/counting-principles.json", "status": "ready" },
         { "id": "discrete-math.graph-theory-basics", "title": "Graph Theory: Networks, Paths, and Trees", "file": "content/discrete-math/graph-theory-basics.json", "status": "ready" },

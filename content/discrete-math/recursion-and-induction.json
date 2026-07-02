@@ -186,7 +186,7 @@
         { "instruction": "What is the smallest $n$ for which $P(n)$ is proved? (Give an integer.)", "answer": "3", "accept": [], "hint": "The first domino that actually gets tipped." }
       ],
       "finalAnswer": { "value": "3", "unit": "" },
-      "solutionNarrative": "Induction covers exactly the base case and everything the step can climb to: $n = 3, 4, 5, \\dots$ Nothing is claimed about $n = 1$ or $n = 2$ — plenty of true-for-large-$n$ facts (like $2^n > n^3$, first true at $n = 10$) need a late base case for exactly this reason."
+      "solutionNarrative": "Induction covers exactly the base case and everything the step can climb to: $n = 3, 4, 5, \\dots$ Nothing is claimed about $n = 1$ or $n = 2$ — plenty of true-for-large-$n$ facts (like $2^n > n^3$, which fails for $n = 2$ through $9$ and holds for every $n \\ge 10$) need a late base case for exactly this reason."
     },
     {
       "id": "discrete-math.recursion-and-induction.s11",

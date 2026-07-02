@@ -1,0 +1,279 @@
+{
+  "id": "discrete-math.proof-techniques",
+  "subject": "discrete-math",
+  "title": "Proof Techniques: Direct, Contrapositive, and Contradiction",
+  "prerequisites": ["discrete-math.logic-and-propositions"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "direct-proof",
+      "label": "Direct proof",
+      "microLesson": "A **direct proof** takes the hypothesis, translates it into algebra, and computes its way to the conclusion. The dictionary is small: *even* means $n = 2k$, *odd* means $n = 2k+1$, *divisible by $m$* means $n = mq$. Example: the sum of two odds is $(2a+1) + (2b+1) = 2a + 2b + 2 = 2(a+b+1)$ — two times an integer, hence even, claim proved for every pair of odds at once. The finishing move is always to **exhibit the form**: produce $2(\\text{integer})$ to show even, $2(\\text{integer})+1$ to show odd. If the algebra flows forward without a fight, direct proof is the right tool."
+    },
+    {
+      "id": "contrapositive-proof",
+      "label": "Contrapositive proof",
+      "microLesson": "You proved by truth table that $p \\to q \\equiv \\lnot q \\to \\lnot p$, so proving the contrapositive proves the original — and sometimes the mirror is far easier. Classic: 'if $n^2$ is even, then $n$ is even' is awkward head-on (try extracting $n$ from $n^2 = 2m$), but the contrapositive 'if $n$ is odd, then $n^2$ is odd' is one line: $(2k+1)^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1$. State the contrapositive carefully — swap AND negate both parts. The converse merely swaps, and proving it proves nothing about the original."
+    },
+    {
+      "id": "proof-by-contradiction",
+      "label": "Proof by contradiction",
+      "microLesson": "A **proof by contradiction** assumes the claim is FALSE and rides that assumption, by perfectly legal steps, into an impossibility; the assumption was the only illegal input, so the claim must be true. Toy version: assume a largest integer $N$ exists — then $N+1$ is larger, contradiction. The famous version: assume $\\sqrt{2} = a/b$ in lowest terms; squaring gives $a^2 = 2b^2$, which forces $a$ even, then $b$ even — but a lowest-terms fraction cannot have both parts even. Everything derived after the false assumption is quarantined scaffolding: it exists only to explode."
+    },
+    {
+      "id": "counterexamples-and-quantifiers",
+      "label": "Counterexamples and quantifiers",
+      "microLesson": "Universal claims ($\\forall$: 'for all $n$...') and existential claims ($\\exists$: 'there is an $n$...') live and die by opposite rules. One **counterexample** kills a universal claim: '$2^n + 1$ is prime for all positive $n$' survives $n = 1, 2$ and dies at $n = 3$, where $2^3 + 1 = 9 = 3 \\times 3$. One **witness** proves an existential claim: 'there exists an even prime' is settled forever by 2. But no pile of confirming examples proves a universal — which is exactly why one failing test disproves 'the code always works' while a million passing tests prove nothing."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A proof is a program\n\nA proof is a program whose runtime is your reader's skepticism. Every step either executes — the reader nods, because the step is justified — or the whole thing crashes with the mathematical equivalent of a stack trace: *why?* You already own the machine language from propositional logic: you proved by truth table that $p \\to q$ is equivalent to its contrapositive $\\lnot q \\to \\lnot p$ and NOT to its converse $q \\to p$. This unit turns that equivalence, and two other ideas, into the four control-flow patterns real proofs are written in: **direct**, **contrapositive**, **contradiction**, and **counterexample**.\n\nFirst, the dictionary every proof below uses. **Even** means $n = 2k$ for some integer $k$. **Odd** means $n = 2k + 1$. **Divisible by $m$** means $n = mq$ for some integer $q$. Translating English into these forms — and back — is half of every proof in this unit.\n\n## Direct proof: run the definitions forward\n\nA **direct proof** assumes the hypothesis, unfolds the definitions into algebra, and computes until the conclusion's required form appears.\n\n**Claim.** The sum of two odd integers is even.\n\n**Proof.** Let the two odds be $2a + 1$ and $2b + 1$. Then\n$$(2a + 1) + (2b + 1) = 2a + 2b + 2 = 2(a + b + 1),$$\nwhich is 2 times an integer — the definition of even. $\\blacksquare$\n\nNotice what the proof does *not* do: it never checks $3 + 5$ or $7 + 9$. Examples illustrate; the algebra covers all infinitely many cases at once, because $a$ and $b$ were arbitrary. The finishing move is always the same — **exhibit the form**: produce $2(\\text{integer})$ to show even, $2(\\text{integer}) + 1$ to show odd, $8 \\cdot (\\text{integer})$ to show divisible by 8.\n\n## Contrapositive: prove the mirror image\n\nSometimes the direct route hits a wall. Try 'if $n^2$ is even, then $n$ is even' head-on: the hypothesis hands you $n^2 = 2m$, and extracting $n$ from that means square roots — a mess. But $p \\to q \\equiv \\lnot q \\to \\lnot p$, so prove the mirror instead.\n\n**Proof (contrapositive).** We show: if $n$ is odd, then $n^2$ is odd. Let $n = 2k + 1$. Then $n^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1$ — odd. Done, and the original claim comes free. $\\blacksquare$\n\nThe mirror's hypothesis is *constructive*: '$n$ is odd' hands you $n = 2k + 1$, something you can actually square. Two warnings. State the contrapositive exactly — swap AND negate. And never drift into the converse: proving 'if $n$ is even then $n^2$ is even' (true, and a nice direct proof) says nothing whatsoever about the original claim.\n\n## Contradiction: assume the opposite, watch it explode\n\nA **proof by contradiction** has a fixed anatomy: assume the claim is FALSE; derive, by perfectly legal steps, something impossible; conclude that the assumption — the only illegal input — is to blame, so the claim is true.\n\nToy version: *there is no largest integer.* Assume $N$ is the largest. Then $N + 1$ is an integer and $N + 1 > N$. Contradiction; no such $N$ exists.\n\nThe famous version: **$\\sqrt{2}$ is irrational.** Assume not: $\\sqrt{2} = a/b$, a fraction in lowest terms, so $a$ and $b$ share no common factor. Squaring: $2 = a^2/b^2$, so $a^2 = 2b^2$. Then $a^2$ is even, which forces $a$ even (we just proved odd squares are odd). Write $a = 2k$: then $4k^2 = 2b^2$, so $b^2 = 2k^2$, forcing $b$ even too. Now $a$ and $b$ share the factor 2 — but they shared no factor. The assumption self-destructs, so $\\sqrt{2}$ is irrational. $\\blacksquare$\n\nA toy of Euclid's argument runs the same way: assume 2, 3, 5, 7 are ALL the primes. Then $N = 2 \\cdot 3 \\cdot 5 \\cdot 7 + 1 = 211$ leaves remainder 1 when divided by each of them, so no prime on the 'complete' list divides $N$ — yet every integer above 1 has a prime factor. The list was incomplete. One discipline note: everything derived after the false assumption is quarantined, valid only inside the proof; its sole purpose is to explode.\n\n## Counterexamples: the asymmetry of $\\forall$ and $\\exists$\n\nUniversal and existential claims die and live by opposite rules. To kill a **universal** claim ($\\forall$: 'for all $n$...'), you need exactly one **counterexample**. '$2^n + 1$ is prime for every positive integer $n$' survives $n = 1$ (giving 3) and $n = 2$ (giving 5), then dies at $n = 3$: $2^3 + 1 = 9 = 3 \\times 3$. '$n^2 \\geq n$ for every real $n$' holds for every integer and dies at $n = 1/2$, where $n^2 = 1/4 < 1/2$. To prove an **existential** claim ($\\exists$: 'there is an $n$...'), you need exactly one **witness**: 'there exists an even prime' is settled forever by 2.\n\nThe flip side is brutal: no pile of confirming examples proves a universal claim. A million passing tests do not prove 'the function always works' — that sentence is a $\\forall$, and only a proof covers infinitely many inputs — while one failing test disproves it permanently. Testing is counterexample search; proof is the certificate that the search must come up empty.\n\n## Choosing a technique — and the missing one\n\nA quick decision guide. Conclusion computable straight from the hypothesis? **Direct.** Negations simpler than the originals? **Contrapositive.** Claim says something *doesn't exist* or *can't happen*? **Contradiction** loves those. Claim merely *smells* true? Hunt a **counterexample** first — disproof is cheap, and a failed hunt usually shows you where the proof lives. One tool is deliberately missing from this unit: claims over all naturals with recursive structure — sums, recurrences, 'for every $n \\geq 1$' formulas — want **proof by induction**, which gets its own unit (*Recursion and Induction*). Know it exists; reach for it there."
+  },
+  "application": {
+    "summary": "The four proof techniques are the debugging discipline of mathematics: a direct proof is a forward trace, a contrapositive proof reasons backward from the failure you didn't observe, a contradiction assumes the impossible happened and watches the assumption explode, and a counterexample is the single failing test that ends the argument. Program verification, cryptographic security proofs, spec review, and everyday debugging all run on exactly these moves.",
+    "domains": ["program verification", "cryptography and security", "software testing", "specification and API design", "debugging"],
+    "workedExample": "**Four techniques, one afternoon of parity.**\n\n**Direct — 'the sum of two odd integers is even.'** Write the odds as $2a+1$ and $2b+1$. Sum: $(2a+1) + (2b+1) = 2a + 2b + 2 = 2(a+b+1)$ — two times an integer, so even. One line, because the hypothesis translated straight into algebra.\n\n**Contrapositive — 'if $n^2$ is even, then $n$ is even.'** Head-on you would face $n = \\sqrt{2m}$. Mirror it: prove 'if $n$ is odd, then $n^2$ is odd.' Let $n = 2k+1$: then $n^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1$ — odd. The contrapositive is proved, and since $p \\to q \\equiv \\lnot q \\to \\lnot p$, so is the original.\n\n**Contradiction — '$\\sqrt{2}$ is irrational.'** Assume the opposite: $\\sqrt{2} = a/b$ in lowest terms, so $a$ and $b$ share no common factor. Square both sides: $2 = a^2/b^2$, hence $a^2 = 2b^2$. So $a^2$ is even, and by the result we just proved, $a$ is even. Substitute $a = 2k$: $4k^2 = 2b^2$, so $b^2 = 2k^2$, making $b^2$ even and therefore $b$ even. Both halves of a lowest-terms fraction divisible by 2 — impossible, so no such fraction exists. Note the dependency graph: this proof *imports* the contrapositive result as a lemma, exactly like a module import.\n\n**Counterexample — '$n^2 + n + 41$ is prime for every $n \\geq 0$.'** True for $n = 0, 1, 2, \\ldots, 39$ — forty straight confirmations. At $n = 40$: $1600 + 40 + 41 = 1681 = 41^2$. Composite. The claim is dead, and no forty-first confirmation could have saved it. This is the exact logical shape of 'the demo worked forty times' meeting its first real user.",
+    "domainNotes": [
+      "**Program verification:** a loop-invariant argument is contrapositive and contradiction reasoning in work clothes — 'the invariant held on entry and every iteration preserves it, so if it fails at the end, it must have failed at the start; it didn't: contradiction.'",
+      "**Cryptography:** security claims are universal ('no efficient attacker wins'), so breaking one takes a single witness — textbook RSA is proven insecure by exhibiting a concrete working attack, a constructive counterexample to the security claim.",
+      "**Software testing:** 'the function always works' is a $\\forall$ claim, so one failing test disproves it and no number of passing tests proves it; testing hunts counterexamples, formal proof certifies the hunt must fail.",
+      "**Specification and API design:** spec review is counterexample hunting — 'what if the list is empty? what if $n = 0$?' Every edge case someone finds is a counterexample to the sentence 'the spec covers everything.'",
+      "**Debugging:** minimizing a bug report is counterexample refinement (the smallest input that still fails), and 'this state is impossible — so one of my assumptions is wrong' is proof by contradiction performed at 2 a.m."
+    ]
+  },
+  "generators": [],
+  "problems": [
+    {
+      "id": "discrete-math.proof-techniques.s01",
+      "concepts": ["direct-proof"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Claim: the sum of any two odd integers is even. Prove it.",
+      "steps": [
+        { "instruction": "The hypothesis ('two odd integers') translates straight into algebra you can compute with. Which technique fits best? (Answer with one of: direct, contrapositive, contradiction, counterexample)", "answer": "direct", "accept": ["direct proof", "a direct proof"], "hint": "No negation, no assumption-for-contradiction — just unfold the definitions and compute forward." },
+        { "instruction": "Write the two odds as $2a+1$ and $2b+1$. Their sum simplifies to $2a + 2b + 2 = 2(a+b+1)$ — two times an integer. Is the sum even or odd? (Answer: even or odd)", "answer": "even", "accept": ["it is even"], "hint": "Anything of the form $2 \\times (\\text{integer})$ is even by definition." },
+        { "instruction": "Sanity-check the general proof with one specific case: compute $7 + 9$. (Give a number.)", "answer": "16", "accept": [], "hint": "The example illustrates the proof — the algebra already covered every case." }
+      ],
+      "finalAnswer": { "value": "even", "unit": "" },
+      "solutionNarrative": "Direct proof: $(2a+1) + (2b+1) = 2a + 2b + 2 = 2(a+b+1)$, two times an integer, hence even. The check $7 + 9 = 16$ illustrates, but the algebra is what proves all infinitely many cases."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s02",
+      "concepts": ["direct-proof"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Claim: if $n$ is even, then $n^2$ is even. Prove it directly.",
+      "steps": [
+        { "instruction": "Write $n$ as an even number: $n = 2k$. Expand $n^2$ in terms of $k$.", "answer": "4k^2", "accept": ["4*k^2", "(2k)^2"], "hint": "$(2k)^2 = 2k \\cdot 2k$." },
+        { "instruction": "To exhibit the even form, rewrite $4k^2$ as $2m$. What is $m$ in terms of $k$?", "answer": "2k^2", "accept": ["2*k^2"], "hint": "Pull one factor of 2 out front: $4k^2 = 2 \\cdot 2k^2$." },
+        { "instruction": "$n^2 = 2(2k^2)$ is two times an integer. Is $n^2$ even or odd? (Answer: even or odd)", "answer": "even", "accept": ["it is even"], "hint": "$2 \\times (\\text{integer})$ is the definition of even." }
+      ],
+      "finalAnswer": { "value": "even", "unit": "" },
+      "solutionNarrative": "Let $n = 2k$. Then $n^2 = 4k^2 = 2(2k^2)$, which is 2 times the integer $2k^2$ — even. The proof works by exhibiting the required form."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s03",
+      "concepts": ["direct-proof"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Claim: if $n$ is odd, then $n^2$ is odd. Prove it directly. (This little lemma gets imported by two other proofs in this unit.)",
+      "steps": [
+        { "instruction": "Write $n$ as an odd number: $n = 2k+1$. Expand $n^2$ in terms of $k$.", "answer": "4k^2+4k+1", "accept": ["4k^2 + 4k + 1", "(2k+1)^2"], "hint": "$(2k+1)^2 = (2k)^2 + 2 \\cdot 2k \\cdot 1 + 1^2$." },
+        { "instruction": "Group the even part: $n^2 = 2(2k^2 + 2k) + r$. What integer remainder $r$ is left over? (Give a number.)", "answer": "1", "accept": ["one"], "hint": "$4k^2 + 4k = 2(2k^2 + 2k)$; the $+1$ doesn't fit inside." },
+        { "instruction": "A number of the form $2m + 1$ is what? (Answer: even or odd)", "answer": "odd", "accept": ["it is odd"], "hint": "Two times an integer plus one is the definition of odd." }
+      ],
+      "finalAnswer": { "value": "odd", "unit": "" },
+      "solutionNarrative": "Let $n = 2k+1$. Then $n^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1$, which has the form $2m + 1$ — odd. Exhibiting that form is the entire proof."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s04",
+      "concepts": ["direct-proof"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A systems programmer fast-paths an alignment check using the claim: for every odd integer $n$, the value $n^2 - 1$ is divisible by 8. Prove the claim directly before it ships.",
+      "steps": [
+        { "instruction": "Write the odd input as $n = 2k+1$ and expand $n^2 - 1$ in terms of $k$.", "answer": "4k^2+4k", "accept": ["4k^2 + 4k", "4k(k+1)"], "hint": "$(2k+1)^2 = 4k^2 + 4k + 1$; then subtract 1." },
+        { "instruction": "Factor: $n^2 - 1 = 4k(k+1)$. Of the two consecutive integers $k$ and $k+1$, how many are even? (Give a number.)", "answer": "1", "accept": ["one"], "hint": "Consecutive integers alternate parity — exactly one of any two neighbors is even." },
+        { "instruction": "So $k(k+1) = 2m$ for some integer $m$, giving $n^2 - 1 = 8m$. Check one case: at $n = 5$, compute $n^2 - 1$. (Give a number.)", "answer": "24", "accept": [], "hint": "$25 - 1$." },
+        { "instruction": "Is 24 divisible by 8? (yes/no)", "answer": "yes", "accept": ["yes it is", "divisible"], "hint": "$24 = 8 \\times 3$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "With $n = 2k+1$: $n^2 - 1 = 4k^2 + 4k = 4k(k+1)$. One of the consecutive integers $k, k+1$ is even, so $k(k+1) = 2m$ and $n^2 - 1 = 8m$ — divisible by 8 for every odd $n$. The spot check $5^2 - 1 = 24 = 8 \\cdot 3$ agrees."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s05",
+      "concepts": ["contrapositive-proof"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A network spec guarantees: 'If the checksum is invalid, the packet is dropped.' You observe a packet that was NOT dropped and want to conclude its checksum was valid.",
+      "steps": [
+        { "instruction": "'If the packet is not dropped, then the checksum is valid' swaps and negates both parts of the spec. Which form is it? (Answer with one of: converse, inverse, contrapositive)", "answer": "contrapositive", "accept": ["the contrapositive"], "hint": "Swap AND negate = contrapositive." },
+        { "instruction": "Is the contrapositive guaranteed to have the same truth value as the original spec? (yes/no)", "answer": "yes", "accept": ["equivalent", "always"], "hint": "$p \\to q \\equiv \\lnot q \\to \\lnot p$ — the truth-table columns match in every row." },
+        { "instruction": "'If the packet is dropped, then the checksum is invalid' merely swaps the parts. Which form is that? (Answer with one of: converse, inverse, contrapositive)", "answer": "converse", "accept": ["the converse"], "hint": "Swap only, no negation." },
+        { "instruction": "Can you rely on the converse without further proof? (yes/no)", "answer": "no", "accept": ["no you cannot", "not equivalent"], "hint": "Packets get dropped for many reasons — the converse is an independent claim." }
+      ],
+      "finalAnswer": { "value": "contrapositive", "unit": "" },
+      "solutionNarrative": "The observation 'not dropped, therefore valid checksum' is exactly the contrapositive of the spec, so it is guaranteed true. The converse ('dropped, therefore invalid checksum') is a different, unproven claim — a full queue drops valid packets too."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s06",
+      "concepts": ["contrapositive-proof"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Claim: if $n^2$ is even, then $n$ is even. Proving this head-on means extracting $n$ from $n^2 = 2m$ — a mess. Prove it via the contrapositive instead.",
+      "steps": [
+        { "instruction": "State the contrapositive: 'if $n$ is odd, then $n^2$ is ___.' (Answer: even or odd)", "answer": "odd", "accept": [], "hint": "Swap and negate both parts; 'odd' is the negation of 'even' for integers." },
+        { "instruction": "Now prove that directly. Write $n = 2k+1$ and expand $n^2$ in terms of $k$.", "answer": "4k^2+4k+1", "accept": ["4k^2 + 4k + 1", "(2k+1)^2"], "hint": "$(2k+1)^2 = 4k^2 + 4k + 1$." },
+        { "instruction": "$n^2 = 2(2k^2 + 2k) + 1$ is odd, so the contrapositive holds. Does that prove the original claim too? (yes/no)", "answer": "yes", "accept": ["yes it does", "equivalent"], "hint": "$p \\to q \\equiv \\lnot q \\to \\lnot p$: proving either proves both." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The contrapositive is 'if $n$ is odd, then $n^2$ is odd' — and that is one line of algebra: $(2k+1)^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1$. Because the contrapositive is logically equivalent to the original, the awkward claim comes free."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s07",
+      "concepts": ["contrapositive-proof"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Claim: if $5n - 7$ is even, then $n$ is odd. The hypothesis '$5n - 7$ is even' is clumsy raw material — flip the statement.",
+      "steps": [
+        { "instruction": "The negated conclusion ('$n$ is even') is nicer to compute with than the original hypothesis. Which technique fits best? (Answer with one of: direct, contrapositive, contradiction, counterexample)", "answer": "contrapositive", "accept": ["the contrapositive", "contrapositive proof"], "hint": "When the negations are simpler than the originals, prove the mirror image." },
+        { "instruction": "Contrapositive: 'if $n$ is even, then $5n - 7$ is odd.' Write $n = 2k$ and express $5n - 7$ in terms of $k$.", "answer": "10k-7", "accept": ["10k - 7", "5(2k)-7"], "hint": "$5 \\cdot 2k - 7$." },
+        { "instruction": "$10k - 7 = 2(5k - 4) + 1$, two times an integer plus one. When $n$ is even, is $5n - 7$ even or odd? (Answer: even or odd)", "answer": "odd", "accept": ["it is odd"], "hint": "The form $2m + 1$ is the definition of odd." }
+      ],
+      "finalAnswer": { "value": "odd", "unit": "" },
+      "solutionNarrative": "The contrapositive is 'if $n$ is even, then $5n - 7$ is odd.' With $n = 2k$: $5n - 7 = 10k - 7 = 2(5k - 4) + 1$, which is odd. The contrapositive is proved, so the original claim holds."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s08",
+      "concepts": ["contrapositive-proof"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Claim: if $n^2$ is divisible by 3, then $n$ is divisible by 3. The contrapositive is 'if $n$ is NOT divisible by 3, then $n^2$ is not divisible by 3' — and a non-multiple of 3 has one of two forms, $3k+1$ or $3k+2$, so the proof splits into two cases.",
+      "steps": [
+        { "instruction": "Case 1: $n = 3k+1$. Expand $(3k+1)^2$ in terms of $k$.", "answer": "9k^2+6k+1", "accept": ["9k^2 + 6k + 1", "(3k+1)^2"], "hint": "$(3k+1)^2 = 9k^2 + 2 \\cdot 3k + 1$." },
+        { "instruction": "Group the multiples of 3: $9k^2 + 6k + 1 = 3(3k^2 + 2k) + r$. What remainder $r$ does Case 1 leave on division by 3? (Give a number.)", "answer": "1", "accept": ["one"], "hint": "$9k^2 + 6k$ is divisible by 3; the $+1$ is not." },
+        { "instruction": "Case 2: $n = 3k+2$. Expand $(3k+2)^2$ in terms of $k$.", "answer": "9k^2+12k+4", "accept": ["9k^2 + 12k + 4", "(3k+2)^2"], "hint": "$(3k+2)^2 = 9k^2 + 12k + 4$." },
+        { "instruction": "$9k^2 + 12k + 4 = 3(3k^2 + 4k + 1) + r$. What remainder $r$ does Case 2 leave? (Give a number.)", "answer": "1", "accept": ["one"], "hint": "$3(3k^2 + 4k + 1) = 9k^2 + 12k + 3$, so $r = 4 - 3$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "Both cases of 'not divisible by 3' leave $n^2$ with remainder 1: $(3k+1)^2 = 3(3k^2+2k) + 1$ and $(3k+2)^2 = 3(3k^2+4k+1) + 1$. So $n^2$ is never a multiple of 3 when $n$ isn't — the contrapositive holds in every case, proving the original claim. (This lemma powers the $\\sqrt{3}$-is-irrational proof, the same way the parity lemma powers $\\sqrt{2}$.)"
+    },
+    {
+      "id": "discrete-math.proof-techniques.s09",
+      "concepts": ["proof-by-contradiction"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Claim: there is no largest integer. Prove it.",
+      "steps": [
+        { "instruction": "The claim says something does NOT exist. Which technique starts by assuming the claim is false and derives an impossibility? (Answer with one of: direct, contrapositive, contradiction, counterexample)", "answer": "contradiction", "accept": ["proof by contradiction", "a contradiction"], "hint": "Non-existence claims are contradiction's home turf: assume the thing exists and break something." },
+        { "instruction": "Assume some integer $N$ is the largest. Consider $N + 1$, which is also an integer. Is $N + 1$ greater than $N$? (yes/no)", "answer": "yes", "accept": ["yes it is", "greater"], "hint": "Adding 1 to any integer makes it strictly bigger." },
+        { "instruction": "So $N$ was not the largest after all — the assumption destroys itself. Can a largest integer exist? (yes/no)", "answer": "no", "accept": ["no it cannot", "it cannot"], "hint": "The only illegal input was the assumption, so the assumption is false." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Assume a largest integer $N$ exists. Then $N + 1$ is an integer greater than $N$, contradicting $N$'s maximality. The assumption is untenable, so no largest integer exists — the standard anatomy: assume the negation, derive an impossibility, conclude."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s10",
+      "concepts": ["proof-by-contradiction"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A toy version of Euclid's argument. Assume, for contradiction, that 2, 3, 5, and 7 are ALL the primes that exist. Build the number $N = 2 \\cdot 3 \\cdot 5 \\cdot 7 + 1$ and hunt for the impossibility.",
+      "steps": [
+        { "instruction": "Compute $N = 2 \\cdot 3 \\cdot 5 \\cdot 7 + 1$. (Give a number.)", "answer": "211", "accept": [], "hint": "$2 \\cdot 3 \\cdot 5 \\cdot 7 = 210$." },
+        { "instruction": "What remainder does $N$ leave when divided by any of 2, 3, 5, or 7? (Give a number.)", "answer": "1", "accept": ["one"], "hint": "$210$ is divisible by each of them; $N$ is one more than $210$." },
+        { "instruction": "So no prime on the 'complete' list divides $N$ — yet every integer above 1 has a prime factor, so the list was incomplete. Contradiction. As it happens, is 211 itself prime? (yes/no)", "answer": "yes", "accept": ["prime", "it is prime"], "hint": "Check divisibility by primes up to $\\sqrt{211} \\approx 14.5$: 2, 3, 5, 7, 11, 13 all fail." }
+      ],
+      "finalAnswer": { "value": "211", "unit": "" },
+      "solutionNarrative": "$N = 210 + 1 = 211$ leaves remainder 1 on division by 2, 3, 5, and 7, so none of the supposedly complete list of primes divides it. But every integer greater than 1 has a prime factor — so a prime outside the list exists, contradicting the assumption. (Here $N = 211$ happens to be prime itself; in general Euclid's $N$ need not be, it just needs a prime factor off the list.)"
+    },
+    {
+      "id": "discrete-math.proof-techniques.s11",
+      "concepts": ["proof-by-contradiction"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A startup claims its lossless compressor makes EVERY file strictly smaller — at least 1 byte saved, guaranteed, on any input. Prove the claim impossible by contradiction, starting from a 100-byte file.",
+      "steps": [
+        { "instruction": "Assume the claim is true. Compress the 100-byte file once: at most how many bytes can the output have? (Give a number.)", "answer": "99", "accept": [], "hint": "Strictly smaller means at least 1 byte saved." },
+        { "instruction": "The claim covers EVERY file — including the compressor's own output. Feed the output back in, over and over. After 100 compressions, at most how many bytes remain? (Give a number.)", "answer": "0", "accept": ["zero"], "hint": "Each pass removes at least 1 byte: $100 \\to 99 \\to 98 \\to \\ldots$" },
+        { "instruction": "A 0-byte file cannot store the information needed to recover the original 100 bytes — impossible for a lossless tool. Is the startup's universal claim true or false? (Answer: true or false)", "answer": "false", "accept": ["the claim is false"], "hint": "The assumption marched itself into an impossibility, so the assumption is wrong." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "Assume every file shrinks by at least 1 byte. Because the claim applies to the compressor's own output, iterating 100 times drives a 100-byte file down to 0 bytes — which cannot losslessly encode 100 bytes of information. Contradiction: no compressor shrinks every input. (Real compressors shrink some files and grow others; the claim's word 'every' is what makes it provably false.)"
+    },
+    {
+      "id": "discrete-math.proof-techniques.s12",
+      "concepts": ["proof-by-contradiction"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The classic: prove $\\sqrt{2}$ is irrational. Assume the opposite — $\\sqrt{2} = a/b$, a fraction in lowest terms, so $a$ and $b$ share no common factor. Squaring both sides gives $a^2 = 2b^2$.",
+      "steps": [
+        { "instruction": "$a^2 = 2b^2$ is two times an integer. Is $a^2$ even or odd? (Answer: even or odd)", "answer": "even", "accept": ["it is even"], "hint": "$2 \\times (\\text{integer})$ is even by definition." },
+        { "instruction": "$a^2$ even forces $a$ even, because an odd $a$ would square to an odd number (the lemma from earlier). Write $a = 2k$ and expand $a^2$ in terms of $k$.", "answer": "4k^2", "accept": ["4*k^2", "(2k)^2"], "hint": "$(2k)^2 = 4k^2$." },
+        { "instruction": "Substitute into $a^2 = 2b^2$: then $4k^2 = 2b^2$. Solve: $b^2$ equals what in terms of $k$?", "answer": "2k^2", "accept": ["2*k^2"], "hint": "Divide both sides of $4k^2 = 2b^2$ by 2." },
+        { "instruction": "So $b^2$ is even, forcing $b$ even too. Both $a$ and $b$ share the factor 2 — but a lowest-terms fraction shares no factor. The assumption explodes. Is $\\sqrt{2}$ rational or irrational? (Answer: rational or irrational)", "answer": "irrational", "accept": ["it is irrational"], "hint": "The assumption '$\\sqrt{2}$ is rational' was the only step that could be wrong." }
+      ],
+      "finalAnswer": { "value": "irrational", "unit": "" },
+      "solutionNarrative": "From $a^2 = 2b^2$: $a^2$ is even, so $a$ is even (odd squares are odd). Writing $a = 2k$ gives $4k^2 = 2b^2$, so $b^2 = 2k^2$ and $b$ is even too. Both parts of a supposedly lowest-terms fraction are divisible by 2 — impossible. The assumption fails, so $\\sqrt{2}$ is irrational."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s13",
+      "concepts": ["counterexamples-and-quantifiers"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two claims about the same number. Claim A (universal): 'All primes are odd.' Claim B (existential): 'There exists an even prime.'",
+      "steps": [
+        { "instruction": "Is 2 prime? (yes/no)", "answer": "yes", "accept": ["prime", "it is prime"], "hint": "Its only divisors are 1 and itself." },
+        { "instruction": "For universal Claim A, the number 2 serves as a what? (Answer with one of: witness, counterexample)", "answer": "counterexample", "accept": ["a counterexample"], "hint": "It satisfies the hypothesis (prime) but breaks the conclusion (odd) — killing the $\\forall$ claim." },
+        { "instruction": "For existential Claim B, the same number 2 serves as a what? (Answer with one of: witness, counterexample)", "answer": "witness", "accept": ["a witness"], "hint": "One example that satisfies an $\\exists$ claim proves it outright." },
+        { "instruction": "So Claim A is false and Claim B is true — both settled by the same number. How many examples did each verdict require? (Give a number.)", "answer": "1", "accept": ["one"], "hint": "One counterexample kills a universal; one witness proves an existential." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "The prime 2 is even, so it falsifies 'all primes are odd' (one counterexample suffices against $\\forall$) and simultaneously proves 'there exists an even prime' (one witness suffices for $\\exists$). Same number, opposite roles — that is the quantifier asymmetry."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s14",
+      "concepts": ["counterexamples-and-quantifiers"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Claim: '$2^n + 1$ is prime for every positive integer $n$.' It starts strong: $n = 1$ gives 3 and $n = 2$ gives 5, both prime.",
+      "steps": [
+        { "instruction": "Evaluate $2^n + 1$ at $n = 3$. (Give a number.)", "answer": "9", "accept": [], "hint": "$2^3 = 8$." },
+        { "instruction": "9 factors as $3 \\times k$. Find $k$. (Give a number.)", "answer": "3", "accept": [], "hint": "$9 \\div 3$." },
+        { "instruction": "So 9 is composite and the claim fails. What is the smallest positive integer $n$ that is a counterexample? (Give a number.)", "answer": "3", "accept": ["n=3"], "hint": "$n = 1$ and $n = 2$ gave primes; $n = 3$ is the first failure." },
+        { "instruction": "Do the two confirming examples at $n = 1$ and $n = 2$ rescue the universal claim once a counterexample exists? (yes/no)", "answer": "no", "accept": ["no they do not"], "hint": "A $\\forall$ claim with one exception is simply false." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$2^3 + 1 = 9 = 3 \\times 3$ is composite, so $n = 3$ is the smallest counterexample and the universal claim is false. The confirmations at $n = 1, 2$ count for nothing — one exception ends a 'for all'."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s15",
+      "concepts": ["counterexamples-and-quantifiers"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Claim: '$n^2 \\geq n$ for every real number $n$.' It holds for every integer — but the claim says every REAL. Test it strictly between 0 and 1.",
+      "steps": [
+        { "instruction": "Evaluate $n^2$ at $n = 1/2$. (Give a fraction.)", "answer": "1/4", "accept": ["0.25"], "hint": "$(1/2)^2 = 1/2 \\times 1/2$." },
+        { "instruction": "Is $1/4 \\geq 1/2$? (yes/no)", "answer": "no", "accept": ["it is not"], "hint": "A quarter is smaller than a half — squaring a number between 0 and 1 shrinks it." },
+        { "instruction": "The claim quantifies over all reals and $n = 1/2$ breaks it. Is the claim true or false? (Answer: true or false)", "answer": "false", "accept": ["the claim is false"], "hint": "One real counterexample suffices, even though every integer complies." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "At $n = 1/2$: $n^2 = 1/4 < 1/2 = n$, so $n^2 \\geq n$ fails. The claim is false as stated — the counterexample lives exactly where the intuition (built on integers) never looked, strictly between 0 and 1. Quantifier hygiene: 'for every real' is a much bigger promise than 'for every integer'."
+    },
+    {
+      "id": "discrete-math.proof-techniques.s16",
+      "concepts": ["counterexamples-and-quantifiers"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A function `isPrime(n)` tests divisibility by the integers 2 through 10 only, and its author claims it is 'correct for all n — it passed a thousand random tests.' Find the smallest input that fools it.",
+      "steps": [
+        { "instruction": "The cheapest way to fool trial division up to 10 is a composite whose smallest prime factor exceeds 10. Compute $11 \\times 11$. (Give a number.)", "answer": "121", "accept": [], "hint": "The smallest prime above 10 is 11; square it." },
+        { "instruction": "Does any integer from 2 through 10 divide 121? (yes/no)", "answer": "no", "accept": ["none", "no divisor"], "hint": "121's only divisors are 1, 11, and 121." },
+        { "instruction": "So `isPrime(121)` returns true. Is 121 actually prime? (yes/no)", "answer": "no", "accept": ["composite", "not prime"], "hint": "$121 = 11 \\times 11$." },
+        { "instruction": "Every composite below 121 has a prime factor at most its square root, hence at most 10 — so 121 is the SMALLEST counterexample. Did the thousand passing tests prove the author's universal claim? (yes/no)", "answer": "no", "accept": ["no they did not"], "hint": "Passing tests never prove a $\\forall$; the one failing input at 121 disproves it." }
+      ],
+      "finalAnswer": { "value": "121", "unit": "" },
+      "solutionNarrative": "$121 = 11^2$ has no divisor between 2 and 10, so the function wrongly reports it prime — a concrete counterexample to 'correct for all n'. It is also the smallest one: any composite below 121 has a prime factor at most $\\sqrt{120} < 11$, i.e. at most 10, and gets caught. A thousand passing tests proved nothing; one failing input settled the claim. (The same move breaks 'secure for all messages' claims in cryptography: exhibit one working attack.)"
+    }
+  ]
+}

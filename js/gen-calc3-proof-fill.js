@@ -183,6 +183,7 @@ fill["c3p-lagrange-axis-d1"] = (rng, idx) => {
 fill["c3p-lagrange-d2"] = (rng, idx) => {
   const v = [rng.int(1, 2), rng.int(0, 2), rng.int(1, 2)];
   const w = [rng.int(1, 2), rng.int(-1, 1), rng.int(0, 2)];
+  while (isZero(cross(v, w))) w[2] += 1; // keep v, w non-parallel so the cross product is nonzero
   const d0 = dot(v, w);
   const m1 = mag2(v), m2 = mag2(w);
   const rhs = m1 * m2 - d0 * d0; // equals |v x w|^2 by the identity
@@ -254,7 +255,7 @@ fill["c3p-geom-parallelogram-d1"] = (rng, idx) => {
 fill["c3p-geom-midsegment-d2"] = (rng, idx) => {
   const p = rng.int(1, 4), q = rng.int(0, 3), r = rng.int(0, 4);
   let s = rng.int(1, 4);
-  while (r === p && s === q) s += 1; // keep the midsegment nonzero
+  while (p * s === q * r) s += 1; // keep A, B, C non-collinear (a real triangle; also keeps the midsegment nonzero)
   const B = [2 * p, 2 * q], C = [2 * r, 2 * s];
   const M1 = [p, q], M2 = [r, s];
   const seg = [r - p, s - q], side = [2 * (r - p), 2 * (s - q)];
