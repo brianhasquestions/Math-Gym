@@ -245,3 +245,23 @@ Previously lived in a session scratchpad and was lost to temp cleanup; rebuilt
    Verified live: manifest validates (84 topics, 1,386 problems, 0 failing);
    graph/shaded/arrow plots render in lectures and in graph-reading training
    problems; no console or KaTeX errors.
+13. **Wave-5: proofs everywhere they belong (2026-07-01, user-directed)**: added
+   **discrete-math.proof-techniques** ("Proof Techniques: Direct, Contrapositive,
+   and Contradiction") — the canonical discrete-math proof unit, following the
+   intro-to-proof grading pattern (enumerated technique menus, numeric witnesses,
+   polynomial-graded algebra steps like (2k+1)² = 4k²+4k+1); 16 seed problems
+   with exact tier coverage; workedExample executes all four techniques in full
+   (odd+odd, n² even ⇒ n even, √2 irrational, n²+n+41 killed at n=40).
+   **Audited every existing proof topic** for logical/mathematical correctness
+   (the harness can only check that answers self-grade, not that the math is
+   right): geometry.intro-to-proof + its 12 gpr- generators (20,000-seed
+   brute-force sweep — clean), calculus-3.vector-proofs (clean),
+   trigonometry.trig-identities (clean), recursion-and-induction's induction
+   problems. Three real defects found and fixed: c3p-geom-midsegment-d2 could
+   emit collinear "triangles" (guard: p·s ≠ q·r), c3p-lagrange-d2 could emit
+   parallel vectors making Lagrange verification a degenerate 0=0 (guard:
+   nonzero cross product), and a false side-claim in an induction narrative
+   ("2^n > n^3 first true at n=10" — it holds at n=1, fails only for 2..9).
+   Verified live: proof-techniques lecture renders (105 KaTeX expressions,
+   0 errors) and a full direct-proof problem was solved step-by-step in
+   training. 85 topics, 1,402 seed problems, 0 failing.
