@@ -65,8 +65,6 @@ index.html / subject.html / topic.html / train.html   — the four pages
 js/          engine: mastery model, problem engine, generators, renderer, plots
 css/         base styles + three switchable terminal themes
 content/     all subjects and topics (JSON)
-tools/       content validation harness (Node)
+tools/       content validation harness + sitemap generator (Node)
 vendor/      KaTeX (vendored; the app is fully offline-capable)
-ROADMAP.md   design decisions and prioritized gaps
-PROGRESS.md  expansion-wave changelog
 ```
