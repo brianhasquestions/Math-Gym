@@ -49,7 +49,7 @@ a:hover { text-decoration: underline; }
   height: calc(100vh - 58px); overflow-y: auto;
 }
 .sidebar-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); padding: 4px 12px var(--space-2); }
-.main { padding: var(--space-5) var(--space-4); max-width: var(--maxw); width: 100%; }
+.main { padding: var(--space-5) var(--space-4); max-width: var(--maxw); width: 100%; margin-inline: auto; }
 
 /* Sidebar nav (collapsible subjects -> topics) */
 .nav-subject + .nav-subject { margin-top: 2px; }
