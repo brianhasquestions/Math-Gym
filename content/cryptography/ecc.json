@@ -1,0 +1,352 @@
+{
+  "id": "cryptography.ecc",
+  "subject": "cryptography",
+  "title": "Elliptic Curve Cryptography",
+  "prerequisites": ["cryptography.gcd-euclid", "algebra.graphing-linear-equations"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "curve-membership",
+      "label": "Points on a curve mod p",
+      "microLesson": "An elliptic curve over a prime field is the set of pairs $(x, y)$ with $0 \\le x, y < p$ satisfying $y^2 \\equiv x^3 + ax + b \\pmod p$, plus one extra 'point at infinity' $\\mathcal{O}$. To test membership, compute both sides mod $p$ and compare residues: $(2, 7)$ is on $y^2 \\equiv x^3 + x + 6 \\pmod{11}$ because $7^2 = 49 \\equiv 5$ and $2^3 + 2 + 6 = 16 \\equiv 5$. Square roots mod $p$ come in pairs, so curve points off the x-axis come in mirror pairs $(x, y)$ and $(x, p - y)$."
+    },
+    {
+      "id": "point-addition",
+      "label": "Adding two points",
+      "microLesson": "To add distinct points $P = (x_1, y_1)$ and $Q = (x_2, y_2)$: compute the chord slope $\\lambda = (y_2 - y_1)(x_2 - x_1)^{-1} \\bmod p$ — the 'division' is multiplication by a modular inverse — then $x_3 = \\lambda^2 - x_1 - x_2$ and $y_3 = \\lambda(x_1 - x_3) - y_1$, both mod $p$. Geometrically: draw the line through $P$ and $Q$, find the third intersection with the curve, and mirror it. Every stage is a small modular computation you can check."
+    },
+    {
+      "id": "point-doubling-and-multiples",
+      "label": "Doubling and multiples",
+      "microLesson": "Adding a point to itself uses the tangent slope from implicit differentiation: $\\lambda = (3x_1^2 + a)(2y_1)^{-1} \\bmod p$, then the same $x_3 = \\lambda^2 - 2x_1$, $y_3 = \\lambda(x_1 - x_3) - y_1$. Chaining gives multiples: $2P$ by doubling, $3P = 2P + P$ by a chord, and in general $kP$ by repeated double-and-add. Computing $kP$ from $k$ is fast; recovering $k$ from $kP$ is the elliptic-curve discrete-log problem — the hard direction that all of ECC leans on."
+    },
+    {
+      "id": "ecdh-and-keysizes",
+      "label": "ECDH and key sizes",
+      "microLesson": "In elliptic-curve Diffie–Hellman, both parties agree on a public curve and generator $G$. Alice picks a secret $a$ and sends $A = aG$; Bob picks $b$ and sends $B = bG$. Each computes the same shared point: $aB = a(bG) = (ab)G = b(aG) = bA$. An eavesdropper sees $A$ and $B$ but needs a discrete log to get $a$ or $b$. Because the best known attacks on good curves take $\\approx 2^{n/2}$ steps, a 256-bit ECC key matches a 3072-bit RSA key — 12 times shorter for equal strength."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The handshake your phone does in a millisecond\n\nEvery time you open an HTTPS page, your phone and the server agree on a fresh secret key — in public, over a wire anyone can tap. The math doing that today is almost always **elliptic curve Diffie–Hellman** on a curve like P-256 or Curve25519. Signal, WhatsApp, iMessage, SSH, and every Bitcoin and Ethereum signature run on the same machinery. And the whole thing reduces to arithmetic you can do by hand once the numbers are small.\n\n## A curve over a clock\n\nAn elliptic curve over the integers mod a prime $p$ is the set of points\n\n$$y^2 \\equiv x^3 + ax + b \\pmod{p}$$\n\nwith $0 \\le x, y < p$, plus one bookkeeping point 'at infinity' called $\\mathcal{O}$. Membership is a computation, not a picture: plug in, reduce both sides mod $p$, compare. On $y^2 \\equiv x^3 + x + 6 \\pmod{11}$, the point $(2, 7)$ qualifies because $49 \\equiv 5$ and $8 + 2 + 6 = 16 \\equiv 5$. There are exactly 12 such points (13 counting $\\mathcal{O}$) — a finite, listable world.\n\nBecause the coordinates are whole numbers on a clock, the curve is not a smooth line but a scatter of **dots**. Here is the entire toy curve $y^2 \\equiv x^3 + x + 6 \\pmod{11}$: every dot is a solution $(x, y)$, and the generator $G = (2, 7)$ is highlighted. Count them — there are the promised 12 affine points, mirror-paired above and below $y = 5$ (the middle of the field).\n\n```plot\n{ \"type\": \"modLattice\", \"p\": 11, \"a\": 1, \"b\": 6, \"points\": [ { \"x\": 2, \"y\": 7, \"label\": \"G\" } ] }\n```\n\n## The group law: chords and tangents\n\nThe magic is that curve points can be **added**. Draw the line through $P$ and $Q$; it hits the curve at exactly one more point; mirror that point over the x-axis. That mirror image is $P + Q$. Over the *real* numbers the same curve $y^2 = x^3 + ax + b$ is a smooth shape — often a closed loop (the left 'lobe') beside an open branch — and the chord construction is literally geometric:\n\n```plot\n{ \"type\": \"elliptic\", \"a\": -3, \"b\": 1, \"xRange\": [-3, 3], \"yRange\": [-3, 3], \"points\": [ { \"x\": 0, \"y\": 1, \"label\": \"P\" }, { \"x\": -1, \"y\": 1.732, \"label\": \"Q\", \"color\": \"warn\" } ], \"segments\": [ { \"from\": [0, 1], \"to\": [-1, 1.732], \"dashed\": true, \"color\": \"warn\" } ], \"caption\": \"Real curve y² = x³ − 3x + 1: the dashed chord through P and Q meets the curve at a third point; reflecting it over the x-axis gives P + Q\" }\n```\n\nThat picture is the *shape* the algebra imitates. Over a prime field the 'drawing' becomes three formulas:\n\n$$\\lambda = \\frac{y_2 - y_1}{x_2 - x_1} \\bmod p, \\qquad x_3 = \\lambda^2 - x_1 - x_2, \\qquad y_3 = \\lambda(x_1 - x_3) - y_1.$$\n\nThe fraction is not a decimal — it means *multiply by the modular inverse* of $x_2 - x_1$, the number that Euclid's algorithm finds. To add a point to itself ($2P$), the chord becomes a tangent and calculus hands us the slope: $\\lambda = (3x_1^2 + a)(2y_1)^{-1} \\bmod p$. With these rules the points form a genuine group: addition is associative, $\\mathcal{O}$ is the identity, and $(x, y) + (x, p-y) = \\mathcal{O}$.\n\nChaining additions gives **scalar multiplication**: $kP$ means $P$ added to itself $k$ times, computed fast by double-and-add ($2P$, $4P$, $8P$, ... then sum the right ones — only $\\sim\\log_2 k$ steps even when $k$ has 256 bits).\n\n## The one-way street\n\nHere is the asymmetry everything rests on. Given $k$ and $G$, computing $kG$ is quick. But given $G$ and $kG$, recovering $k$ — the **elliptic-curve discrete logarithm problem** — has no known shortcut on a well-chosen curve: the best attacks are generic ones costing about $\\sqrt{n} \\approx 2^{128}$ group operations for a 256-bit curve. It is the same discrete-log hardness that classic Diffie–Hellman uses mod a prime, but transplanted to a curve — and that transplant matters, because the powerful *index-calculus* attacks that eat ordinary discrete logs (and factoring) simply do not work on elliptic curves.\n\n**ECDH** turns that into key agreement: Alice sends $A = aG$, Bob sends $B = bG$, and both compute $(ab)G$ — Alice as $aB$, Bob as $bA$. Same point, never transmitted. The eavesdropper holds $A$ and $B$ and a discrete-log problem.\n\n## Why the keys are 10× smaller\n\nBecause only generic attacks apply, an $n$-bit curve delivers a full $n/2$ bits of security. RSA cannot say the same: sub-exponential factoring algorithms force enormous keys. The standard equivalences: **256-bit ECC ≈ 3072-bit RSA**, 384-bit ECC ≈ 7680-bit RSA. Twelve times shorter keys mean faster handshakes, smaller certificates, and crypto that fits in a smart card — which is why the internet quietly migrated.\n\nOur toy curves ($p = 11$, 13, 17, 23) have a dozen-odd points, so you can *see* the whole group and even brute-force the discrete log yourself. Real curves use $p \\approx 2^{256}$, with more points than there are atoms in the observable universe — same formulas, same chord-and-tangent arithmetic you are about to do, just numbers 75 digits longer."
+  },
+  "application": {
+    "summary": "Elliptic-curve point arithmetic is the engine of modern key exchange and digital signatures: TLS handshakes, Signal/WhatsApp session setup, SSH logins, and cryptocurrency transactions all reduce to computing kG fast while betting that nobody can invert it.",
+    "domains": ["web security (TLS/HTTPS)", "secure messaging", "cryptocurrency", "authentication and smart cards"],
+    "workedExample": "**A complete toy ECDH handshake.**\n\nPublic parameters: the curve $y^2 \\equiv x^3 + x + 6 \\pmod{11}$ with generator $G = (2, 7)$, whose multiples cycle through all 13 group elements: $1G = (2,7)$, $2G = (5,2)$, $3G = (8,3)$, $4G = (10,2)$, $5G = (3,6)$, $6G = (7,9)$, $7G = (7,2)$, $8G = (3,5)$, $9G = (10,9)$, $10G = (8,8)$, $11G = (5,9)$, $12G = (2,4)$, $13G = \\mathcal{O}$.\n\n*Alice* picks secret $a = 4$ and sends $A = 4G = (10, 2)$.\n\n*Bob* picks secret $b = 6$ and sends $B = 6G = (7, 9)$.\n\n*Alice computes* $aB = 4 \\cdot (6G) = 24G = 24 \\bmod 13 = 11G = (5, 9)$.\n\n*Bob computes* $bA = 6 \\cdot (4G) = 24G = (5, 9)$. Same point — the shared secret — and its coordinates get hashed into an AES key.\n\n*Eve* saw $(10,2)$ and $(7,9)$. On this toy curve she can brute-force the table and find $a = 4$. On P-256 the 'table' has $\\approx 2^{256}$ rows and the best attack costs $\\approx 2^{128}$ point additions — more work than all computers on Earth will ever do.",
+    "domainNotes": [
+      "**TLS/HTTPS:** virtually every modern handshake is ECDHE on P-256 or X25519 — the 'E' means a fresh key pair per session, so recorded traffic can't be decrypted later (forward secrecy).",
+      "**Messaging:** Signal and WhatsApp run X3DH (several ECDH exchanges on Curve25519) to start a conversation, then ratchet keys forward message by message.",
+      "**Cryptocurrency:** a Bitcoin/Ethereum private key is just a scalar $k$; your public address derives from $kG$ on the curve secp256k1, and every transaction is an ECDSA signature proving you know $k$.",
+      "**Authentication:** SSH ed25519 keys, passkeys/FIDO2 security tokens, and chip passports all sign with elliptic curves because the keys fit in tiny secure hardware.",
+      "**Key-size economics:** 256-bit ECC ≈ 3072-bit RSA means 12× less to store, transmit and compute — the difference between a handshake your phone does in a millisecond and one it doesn't."
+    ]
+  },
+  "generators": [
+    "cr3-ecc-mem-d1", "cr3-ecc-mem-d2", "cr3-ecc-mem-d3",
+    "cr3-ecc-add-d1", "cr3-ecc-add-d2", "cr3-ecc-add-d3",
+    "cr3-ecc-dbl-d1", "cr3-ecc-dbl-d2", "cr3-ecc-dbl-d3",
+    "cr3-ecdh-d1", "cr3-ecdh-d2", "cr3-ecdh-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.ecc.s01",
+      "concepts": ["curve-membership"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is the point $(2, 7)$ on the elliptic curve $y^2 \\equiv x^3 + x + 6 \\pmod{11}$?",
+      "steps": [
+        { "instruction": "Compute the left side: $y^2 = 7^2 \\bmod 11$. (Give a value from 0 to 10.)", "answer": "5", "accept": [], "hint": "$49 = 44 + 5$." },
+        { "instruction": "Compute the right side: $x^3 + x + 6 = 2^3 + 2 + 6 \\bmod 11$.", "answer": "5", "accept": [], "hint": "$8 + 2 + 6 = 16$, then reduce mod 11." },
+        { "instruction": "Do the sides match — is the point on the curve? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare your two residues." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$7^2 = 49 \\equiv 5$ and $2^3 + 2 + 6 = 16 \\equiv 5 \\pmod{11}$: equal, so $(2, 7)$ is a curve point."
+    },
+    {
+      "id": "cryptography.ecc.s02",
+      "concepts": ["curve-membership"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is the point $(4, 4)$ on the elliptic curve $y^2 \\equiv x^3 + x + 6 \\pmod{11}$?",
+      "steps": [
+        { "instruction": "Left side: $4^2 \\bmod 11$.", "answer": "5", "accept": [], "hint": "$16 = 11 + 5$." },
+        { "instruction": "Right side: $4^3 + 4 + 6 \\bmod 11$.", "answer": "8", "accept": [], "hint": "$64 + 4 + 6 = 74$; $74 = 66 + 8$." },
+        { "instruction": "Is the point on the curve? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "5 vs 8." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$4^2 \\equiv 5$ but $4^3 + 4 + 6 = 74 \\equiv 8 \\pmod{11}$: not equal, so $(4, 4)$ is not on the curve."
+    },
+    {
+      "id": "cryptography.ecc.s03",
+      "concepts": ["curve-membership"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Is $(5, 1)$ on the curve $y^2 \\equiv x^3 + 2x + 2 \\pmod{17}$? (This curve is a classic textbook stand-in for NIST's P-256.)",
+      "steps": [
+        { "instruction": "Left side: $1^2 \\bmod 17$.", "answer": "1", "accept": [], "hint": "Easy one." },
+        { "instruction": "Right side: $5^3 + 2 \\cdot 5 + 2 \\bmod 17$.", "answer": "1", "accept": [], "hint": "$125 + 10 + 2 = 137 = 8 \\cdot 17 + 1$." },
+        { "instruction": "Is the point on the curve? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare residues." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$1^2 \\equiv 1$ and $125 + 10 + 2 = 137 \\equiv 1 \\pmod{17}$: $(5, 1)$ is on the curve (it is the standard generator for this toy curve)."
+    },
+    {
+      "id": "cryptography.ecc.s04",
+      "concepts": ["curve-membership"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "On the curve $y^2 \\equiv x^3 + x + 6 \\pmod{11}$, find ALL points with $x = 5$.",
+      "steps": [
+        { "instruction": "Compute the right side at $x = 5$: $5^3 + 5 + 6 \\bmod 11$.", "answer": "4", "accept": [], "hint": "$125 + 5 + 6 = 136 = 12 \\cdot 11 + 4$." },
+        { "instruction": "Is $y = 2$ a solution of $y^2 \\equiv 4 \\pmod{11}$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$2^2 = 4$." },
+        { "instruction": "Square roots mod a prime come in pairs $y$ and $p - y$. What is the other $y$-value with $x = 5$?", "answer": "9", "accept": [], "hint": "$11 - 2$." },
+        { "instruction": "State the second point as a pair $(x, y)$.", "answer": "(5, 9)", "accept": [], "hint": "Same $x$, the mirrored $y$." }
+      ],
+      "finalAnswer": { "value": "(5, 9)", "unit": "" },
+      "solutionNarrative": "RHS $\\equiv 4$; both $y = 2$ and $y = 9$ square to 4 mod 11 (since $9^2 = 81 \\equiv 4$). The two points $(5,2)$ and $(5,9)$ are mirror images — in the group law they are negatives of each other."
+    },
+    {
+      "id": "cryptography.ecc.s05",
+      "concepts": ["point-addition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Add $P = (5, 1)$ and $Q = (6, 3)$ on $y^2 \\equiv x^3 + 2x + 2 \\pmod{17}$. The slope is $\\lambda = (y_2 - y_1)(x_2 - x_1)^{-1} \\bmod 17$ — and here the denominator is 1, so no inverse work is needed.",
+      "steps": [
+        { "instruction": "Compute the slope $\\lambda = (3 - 1)(6 - 5)^{-1} \\bmod 17$.", "answer": "2", "accept": [], "hint": "$(3-1)/1 = 2$." },
+        { "instruction": "Compute $x_3 = \\lambda^2 - x_1 - x_2 \\bmod 17$.", "answer": "10", "accept": ["-7"], "hint": "$4 - 5 - 6 = -7$; add 17." },
+        { "instruction": "Compute $y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 17$.", "answer": "6", "accept": ["-11"], "hint": "$2(5 - 10) - 1 = -11$; add 17." },
+        { "instruction": "State $P + Q$ as a point.", "answer": "(10, 6)", "accept": [], "hint": "Combine $x_3$ and $y_3$." }
+      ],
+      "finalAnswer": { "value": "(10, 6)", "unit": "" },
+      "solutionNarrative": "$\\lambda = 2$, $x_3 = 4 - 11 = -7 \\equiv 10$, $y_3 = 2(5 - 10) - 1 = -11 \\equiv 6 \\pmod{17}$: $P + Q = (10, 6)$."
+    },
+    {
+      "id": "cryptography.ecc.s06",
+      "concepts": ["point-addition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Add $P = (2, 7)$ and $Q = (5, 2)$ on $y^2 \\equiv x^3 + x + 6 \\pmod{11}$, computing the modular inverse yourself.",
+      "steps": [
+        { "instruction": "Numerator of the slope: $y_2 - y_1 \\bmod 11$. (0 to 10.)", "answer": "6", "accept": ["-5"], "hint": "$2 - 7 = -5$; add 11." },
+        { "instruction": "Denominator: $x_2 - x_1 \\bmod 11$.", "answer": "3", "accept": [], "hint": "$5 - 2$." },
+        { "instruction": "Find the inverse: which $v$ in 1..10 satisfies $3v \\equiv 1 \\pmod{11}$?", "answer": "4", "accept": [], "hint": "$3 \\cdot 4 = 12 \\equiv 1$." },
+        { "instruction": "Slope: $\\lambda = 6 \\cdot 4 \\bmod 11$.", "answer": "2", "accept": [], "hint": "$24 = 22 + 2$." },
+        { "instruction": "$x_3 = \\lambda^2 - x_1 - x_2 \\bmod 11$.", "answer": "8", "accept": ["-3"], "hint": "$4 - 2 - 5 = -3$; add 11." },
+        { "instruction": "$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 11$.", "answer": "3", "accept": ["-19"], "hint": "$2(2 - 8) - 7 = -19$; add 22." },
+        { "instruction": "State $P + Q$ as a point.", "answer": "(8, 3)", "accept": [], "hint": "Combine your last two answers." }
+      ],
+      "finalAnswer": { "value": "(8, 3)", "unit": "" },
+      "solutionNarrative": "$\\lambda = 6 \\cdot 3^{-1} = 6 \\cdot 4 = 24 \\equiv 2$; then $x_3 = 4 - 7 \\equiv 8$ and $y_3 = 2(2-8) - 7 = -19 \\equiv 3 \\pmod{11}$. So $(2,7) + (5,2) = (8,3)$ — which is $3G$ on this curve, since $P = G$ and $Q = 2G$."
+    },
+    {
+      "id": "cryptography.ecc.s07",
+      "concepts": ["point-addition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "On $y^2 \\equiv x^3 + x + 1 \\pmod{23}$ (a curve big enough that you can't eyeball it), add $P = (0, 1)$ and $Q = (6, 19)$.",
+      "steps": [
+        { "instruction": "Numerator: $y_2 - y_1 \\bmod 23$.", "answer": "18", "accept": [], "hint": "$19 - 1$." },
+        { "instruction": "Denominator: $x_2 - x_1 \\bmod 23$.", "answer": "6", "accept": [], "hint": "$6 - 0$." },
+        { "instruction": "Invert the denominator: find $v$ with $6v \\equiv 1 \\pmod{23}$.", "answer": "4", "accept": [], "hint": "$6 \\cdot 4 = 24 = 23 + 1$." },
+        { "instruction": "Slope: $\\lambda = 18 \\cdot 4 \\bmod 23$.", "answer": "3", "accept": [], "hint": "$72 = 69 + 3$." },
+        { "instruction": "$x_3 = \\lambda^2 - x_1 - x_2 \\bmod 23$.", "answer": "3", "accept": [], "hint": "$9 - 0 - 6$." },
+        { "instruction": "$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 23$.", "answer": "13", "accept": ["-10"], "hint": "$3(0 - 3) - 1 = -10$; add 23." },
+        { "instruction": "State $P + Q$ as a point.", "answer": "(3, 13)", "accept": [], "hint": "Combine $x_3$ and $y_3$." }
+      ],
+      "finalAnswer": { "value": "(3, 13)", "unit": "" },
+      "solutionNarrative": "$\\lambda = 18 \\cdot 6^{-1} = 18 \\cdot 4 = 72 \\equiv 3$; $x_3 = 9 - 6 = 3$; $y_3 = 3(0-3) - 1 = -10 \\equiv 13 \\pmod{23}$. So $P + Q = (3, 13)$. (Here $P = G$ and $Q = 2G$, so you just computed $3G$.)"
+    },
+    {
+      "id": "cryptography.ecc.s08",
+      "concepts": ["point-doubling-and-multiples"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Double the point $P = (5, 1)$ on $y^2 \\equiv x^3 + 2x + 2 \\pmod{17}$. The tangent slope is $\\lambda = (3x_1^2 + 2)(2y_1)^{-1} \\bmod 17$. Helpful fact: $2^{-1} \\equiv 9 \\pmod{17}$, since $2 \\cdot 9 = 18 \\equiv 1$.",
+      "steps": [
+        { "instruction": "Numerator: $3 \\cdot 5^2 + 2 \\bmod 17$.", "answer": "9", "accept": ["77"], "hint": "$75 + 2 = 77 = 4 \\cdot 17 + 9$." },
+        { "instruction": "Slope: $\\lambda = 9 \\cdot 9 \\bmod 17$.", "answer": "13", "accept": ["81"], "hint": "$81 = 68 + 13$." },
+        { "instruction": "$x_3 = \\lambda^2 - 2x_1 \\bmod 17$.", "answer": "6", "accept": ["159"], "hint": "$169 - 10 = 159 = 9 \\cdot 17 + 6$." },
+        { "instruction": "$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 17$.", "answer": "3", "accept": ["-14"], "hint": "$13(5 - 6) - 1 = -14$; add 17." },
+        { "instruction": "State $2P$ as a point.", "answer": "(6, 3)", "accept": [], "hint": "Combine $x_3$ and $y_3$." }
+      ],
+      "finalAnswer": { "value": "(6, 3)", "unit": "" },
+      "solutionNarrative": "$\\lambda = (3 \\cdot 25 + 2)(2)^{-1} = 9 \\cdot 9 = 81 \\equiv 13$; $x_3 = 169 - 10 \\equiv 6$; $y_3 = 13(5-6) - 1 = -14 \\equiv 3$. So $2P = (6, 3)$."
+    },
+    {
+      "id": "cryptography.ecc.s09",
+      "concepts": ["point-doubling-and-multiples"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Double $G = (2, 7)$ on $y^2 \\equiv x^3 + x + 6 \\pmod{11}$, computing the inverse yourself. Tangent slope: $\\lambda = (3x_1^2 + 1)(2y_1)^{-1} \\bmod 11$.",
+      "steps": [
+        { "instruction": "Numerator: $3 \\cdot 2^2 + 1 \\bmod 11$.", "answer": "2", "accept": ["13"], "hint": "$12 + 1 = 13 \\equiv 2$." },
+        { "instruction": "Denominator: $2 \\cdot 7 \\bmod 11$.", "answer": "3", "accept": ["14"], "hint": "$14 - 11$." },
+        { "instruction": "Invert it: find $v$ with $3v \\equiv 1 \\pmod{11}$.", "answer": "4", "accept": [], "hint": "$3 \\cdot 4 = 12$." },
+        { "instruction": "Slope: $\\lambda = 2 \\cdot 4 \\bmod 11$.", "answer": "8", "accept": [], "hint": "Small enough already." },
+        { "instruction": "$x_3 = \\lambda^2 - 2x_1 \\bmod 11$.", "answer": "5", "accept": ["60"], "hint": "$64 - 4 = 60 = 55 + 5$." },
+        { "instruction": "$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 11$.", "answer": "2", "accept": ["-31"], "hint": "$8(2 - 5) - 7 = -31$; add 33." },
+        { "instruction": "State $2G$ as a point.", "answer": "(5, 2)", "accept": [], "hint": "Combine $x_3$ and $y_3$." }
+      ],
+      "finalAnswer": { "value": "(5, 2)", "unit": "" },
+      "solutionNarrative": "$\\lambda = 2 \\cdot 3^{-1} = 2 \\cdot 4 = 8$; $x_3 = 64 - 4 = 60 \\equiv 5$; $y_3 = 8(2-5) - 7 = -31 \\equiv 2 \\pmod{11}$. So $2G = (5, 2)$."
+    },
+    {
+      "id": "cryptography.ecc.s10",
+      "concepts": ["point-doubling-and-multiples"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "On $y^2 \\equiv x^3 + x + 6 \\pmod{11}$ with $G = (2, 7)$, you already know $2G = (5, 2)$. Now compute $3G = 2G + G$ using the chord slope from $2G$ to $G$.",
+      "steps": [
+        { "instruction": "Numerator: $y_G - y_{2G} = 7 - 2 \\bmod 11$.", "answer": "5", "accept": [], "hint": "Simple subtraction here." },
+        { "instruction": "Denominator: $x_G - x_{2G} = 2 - 5 \\bmod 11$.", "answer": "8", "accept": ["-3"], "hint": "$-3 + 11$." },
+        { "instruction": "Invert it: find $v$ with $8v \\equiv 1 \\pmod{11}$.", "answer": "7", "accept": [], "hint": "$8 \\cdot 7 = 56 = 55 + 1$." },
+        { "instruction": "Slope: $\\lambda = 5 \\cdot 7 \\bmod 11$.", "answer": "2", "accept": ["35"], "hint": "$35 = 33 + 2$." },
+        { "instruction": "$x_3 = \\lambda^2 - x_{2G} - x_G \\bmod 11$.", "answer": "8", "accept": ["-3"], "hint": "$4 - 5 - 2 = -3$; add 11." },
+        { "instruction": "$y_3 = \\lambda(x_{2G} - x_3) - y_{2G} \\bmod 11$.", "answer": "3", "accept": ["-8"], "hint": "$2(5 - 8) - 2 = -8$; add 11." },
+        { "instruction": "State $3G$ as a point.", "answer": "(8, 3)", "accept": [], "hint": "Combine $x_3$ and $y_3$." }
+      ],
+      "finalAnswer": { "value": "(8, 3)", "unit": "" },
+      "solutionNarrative": "Chord slope $\\lambda = 5 \\cdot 8^{-1} = 5 \\cdot 7 = 35 \\equiv 2$; $x_3 = 4 - 7 \\equiv 8$; $y_3 = 2(5-8) - 2 = -8 \\equiv 3$. So $3G = (8, 3)$. Doubling then adding is one rung of the double-and-add ladder that computes $kG$ in $\\sim \\log_2 k$ steps."
+    },
+    {
+      "id": "cryptography.ecc.s11",
+      "concepts": ["ecdh-and-keysizes"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Toy ECDH on $y^2 \\equiv x^3 + x + 6 \\pmod{11}$, generator $G = (2, 7)$ of order 13. Multiples of $G$: $1G=(2,7)$, $2G=(5,2)$, $3G=(8,3)$, $4G=(10,2)$, $5G=(3,6)$, $6G=(7,9)$, $7G=(7,2)$, $8G=(3,5)$, $9G=(10,9)$, $10G=(8,8)$, $11G=(5,9)$, $12G=(2,4)$. Alice picks secret $a = 3$; Bob picks secret $b = 5$.",
+      "steps": [
+        { "instruction": "Alice sends $A = 3G$. Which point is that?", "answer": "(8, 3)", "accept": [], "hint": "Table lookup." },
+        { "instruction": "Bob sends $B = 5G$. Which point?", "answer": "(3, 6)", "accept": [], "hint": "Table lookup." },
+        { "instruction": "Alice computes $aB = 3 \\cdot 5G = (ab)G$. Reduce the scalar: $15 \\bmod 13$?", "answer": "2", "accept": ["15"], "hint": "The group has order 13, so $15G = 2G$." },
+        { "instruction": "So the shared secret point is $2G$. Which point is it?", "answer": "(5, 2)", "accept": [], "hint": "Table lookup — Bob's $bA = 5 \\cdot 3G$ lands on the same point." }
+      ],
+      "finalAnswer": { "value": "(5, 2)", "unit": "" },
+      "solutionNarrative": "$A = (8,3)$, $B = (3,6)$; both parties compute $(ab)G = 15G = 2G = (5,2)$. Eve sees only $A$ and $B$ — to get the secret she must solve $aG = (8,3)$ for $a$, a discrete log."
+    },
+    {
+      "id": "cryptography.ecc.s12",
+      "concepts": ["ecdh-and-keysizes"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Run a full ECDH handshake on $y^2 \\equiv x^3 + 2x + 2 \\pmod{17}$, generator $G = (5, 1)$ of order 19. Multiples: $1G=(5,1)$, $2G=(6,3)$, $3G=(10,6)$, $4G=(3,1)$, $5G=(9,16)$, $6G=(16,13)$, $7G=(0,6)$, $8G=(13,7)$, $9G=(7,6)$, $10G=(7,11)$, $11G=(13,10)$, $12G=(0,11)$, $13G=(16,4)$, $14G=(9,1)$, $15G=(3,16)$, $16G=(10,11)$, $17G=(6,14)$, $18G=(5,16)$. Alice's secret: $a = 2$. Bob's secret: $b = 7$.",
+      "steps": [
+        { "instruction": "Alice's public point $A = 2G$?", "answer": "(6, 3)", "accept": [], "hint": "Table lookup." },
+        { "instruction": "Bob's public point $B = 7G$?", "answer": "(0, 6)", "accept": [], "hint": "Table lookup." },
+        { "instruction": "Alice computes $aB = (ab)G$. What is the scalar $2 \\cdot 7 \\bmod 19$?", "answer": "14", "accept": [], "hint": "14 is already below 19." },
+        { "instruction": "The shared secret point $(ab)G = 14G$?", "answer": "(9, 1)", "accept": [], "hint": "Table lookup." },
+        { "instruction": "Bob computes $bA = 7 \\cdot 2G$ instead. Does he land on the same point? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$a(bG) = (ab)G = b(aG)$ — scalar multiplication commutes." }
+      ],
+      "finalAnswer": { "value": "(9, 1)", "unit": "" },
+      "solutionNarrative": "$A = (6,3)$, $B = (0,6)$, and both sides compute $14G = (9,1)$. Only the public points cross the wire; the shared point's coordinates become the session key. Recovering $a = 2$ from $(6,3)$ is trivial on 19 points but hopeless on $\\approx 2^{256}$."
+    },
+    {
+      "id": "cryptography.ecc.s13",
+      "concepts": ["ecdh-and-keysizes"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Standards bodies rate a 256-bit elliptic-curve key and a 3072-bit RSA key as equally strong (both about 128 bits of security).",
+      "steps": [
+        { "instruction": "How many times longer is the RSA key? Compute $3072 / 256$.", "answer": "12", "accept": ["3072/256"], "hint": "Straight division." },
+        { "instruction": "An $n$-bit ECC key gives about $n/2$ bits of security (best generic attack: $2^{n/2}$ steps). How many bits of security does 256-bit ECC give?", "answer": "128", "accept": [], "hint": "Halve it." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$3072/256 = 12$: RSA needs keys 12× longer for the same 128-bit strength, because factoring has sub-exponential attacks while elliptic-curve discrete logs only have generic $2^{n/2}$ ones."
+    },
+    {
+      "id": "cryptography.ecc.s14",
+      "concepts": ["ecdh-and-keysizes"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "The security level of an ECC key is about half its bit length, because the best known attack (Pollard's rho) takes about $2^{n/2}$ point operations.",
+      "steps": [
+        { "instruction": "What security level (in bits) does a 384-bit ECC key give?", "answer": "192", "accept": [], "hint": "Halve 384." },
+        { "instruction": "To hit a 256-bit security level, how many bits must an ECC key have?", "answer": "512", "accept": [], "hint": "Double 256." }
+      ],
+      "finalAnswer": { "value": "192", "unit": "bits" },
+      "solutionNarrative": "Security level $\\approx n/2$: 384-bit ECC → 192 bits; a 256-bit level needs a 512-bit curve (in practice the standard curve P-521)."
+    },
+    {
+      "id": "cryptography.ecc.s15",
+      "concepts": ["ecdh-and-keysizes"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The NIST comparable-strength table pairs 512-bit ECC with 15360-bit RSA (both about 256 bits of security).",
+      "steps": [
+        { "instruction": "Compute the length ratio $15360 / 512$.", "answer": "30", "accept": ["15360/512"], "hint": "Divide." },
+        { "instruction": "At the 128-bit level the ratio was $3072/256 = 12$. Does RSA's disadvantage GROW or SHRINK as the security level rises? Type 'grow' or 'shrink'.", "answer": "grow", "accept": ["grows", "growing"], "hint": "Compare 12 and 30." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "" },
+      "solutionNarrative": "$15360/512 = 30$, versus 12 at the 128-bit level: RSA keys blow up faster and faster because factoring attacks are sub-exponential. This widening gap is why high-security and low-power systems went elliptic."
+    },
+    {
+      "id": "cryptography.ecc.s16",
+      "concepts": ["ecdh-and-keysizes"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Pollard's rho — the best attack on a well-chosen curve — needs about $\\sqrt{N} $ point operations, where $N \\approx 2^n$ is the number of curve points. Consider a 256-bit curve like P-256 or secp256k1 (Bitcoin's curve).",
+      "steps": [
+        { "instruction": "Express the attack cost as a power of two, $2^k$. What is $k$?", "answer": "128", "accept": [], "hint": "$\\sqrt{2^{256}} = 2^{128}$." },
+        { "instruction": "Suppose an attacker's cluster does $2^{80}$ point operations per year (wildly generous). The attack takes about $2^m$ years — what is $m$?", "answer": "48", "accept": [], "hint": "$2^{128} / 2^{80}$: subtract exponents." },
+        { "instruction": "Is stealing one Bitcoin key by brute force feasible this way? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$2^{48}$ years is about 280 trillion years." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Cost $\\sqrt{2^{256}} = 2^{128}$ operations; even at an absurd $2^{80}$ per year that is $2^{48} \\approx 2.8 \\times 10^{14}$ years. Every unspent Bitcoin is a standing bounty on this math, and it has held since 2009."
+    },
+    {
+      "id": "cryptography.ecc.s17",
+      "concepts": ["curve-membership"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The plot shows every point of the elliptic curve $y^2 \\equiv x^3 + x + 6 \\pmod{11}$ as a dot. Count the dots: how many affine points $(x, y)$ does the curve have (not counting the point at infinity $\\mathcal{O}$)?",
+      "plot": { "type": "modLattice", "p": 11, "a": 1, "b": 6 },
+      "steps": [
+        { "instruction": "Count the dots in the picture. (Give a number.)", "answer": "12", "accept": [], "hint": "They come in mirror pairs above and below the middle row; there are 6 pairs." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "The 12 affine points are $(2,4),(2,7),(3,5),(3,6),(5,2),(5,9),(7,2),(7,9),(8,3),(8,8),(10,2),(10,9)$. With $\\mathcal{O}$ the group has order 13."
+    },
+    {
+      "id": "cryptography.ecc.s18",
+      "concepts": ["curve-membership", "point-doubling-and-multiples"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "On the same curve $y^2 \\equiv x^3 + x + 6 \\pmod{11}$, the generator $G$ and the point $2G$ are highlighted in the plot. Read the coordinates of the highlighted point $2G$ as a pair $(x, y)$.",
+      "plot": { "type": "modLattice", "p": 11, "a": 1, "b": 6, "points": [ { "x": 5, "y": 2, "label": "2G" } ] },
+      "steps": [
+        { "instruction": "Read the $x$-coordinate of the highlighted dot $2G$.", "answer": "5", "accept": [], "hint": "It sits in the column $x = 5$." },
+        { "instruction": "State $2G$ as a point $(x, y)$.", "answer": "(5, 2)", "accept": ["(5,2)"], "hint": "The highlighted dot is at height $y = 2$." }
+      ],
+      "finalAnswer": { "value": "(5, 2)", "unit": "" },
+      "solutionNarrative": "The highlighted point is $2G = (5, 2)$, matching the doubling of $G = (2, 7)$ computed by the tangent-slope formula."
+    },
+    {
+      "id": "cryptography.ecc.s19",
+      "concepts": ["curve-membership"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "On the plotted curve $y^2 \\equiv x^3 + x + 6 \\pmod{11}$, the highlighted point $(5, 2)$ has a mirror partner in the same column (points off the middle come in pairs $(x, y)$ and $(x, 11 - y)$). Read the mirror partner's coordinates as a pair.",
+      "plot": { "type": "modLattice", "p": 11, "a": 1, "b": 6, "points": [ { "x": 5, "y": 2, "label": "R" } ] },
+      "steps": [
+        { "instruction": "The partner shares the same $x = 5$. Its $y$ is $11 - 2$. Compute that $y$-value.", "answer": "9", "accept": [], "hint": "$11 - 2 = 9$." },
+        { "instruction": "State the mirror point as a pair $(x, y)$.", "answer": "(5, 9)", "accept": ["(5,9)"], "hint": "Same column, reflected height." }
+      ],
+      "finalAnswer": { "value": "(5, 9)", "unit": "" },
+      "solutionNarrative": "Square roots mod 11 come in pairs, so $(5, 2)$ and $(5, 9)$ are both on the curve (they are negatives of each other in the group)."
+    },
+    {
+      "id": "cryptography.ecc.s20",
+      "concepts": ["point-addition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The plot shows the real curve $y^2 = x^3 - 3x + 1$ with the point $P = (0, 1)$ marked. In the group law, the negative $-P$ is $P$ reflected across the $x$-axis. Read the coordinates of $-P$ (the reflected point, marked in amber) as a pair $(x, y)$.",
+      "plot": { "type": "elliptic", "a": -3, "b": 1, "xRange": [-3, 3], "yRange": [-3, 3], "points": [ { "x": 0, "y": 1, "label": "P" }, { "x": 0, "y": -1, "label": "-P", "color": "warn" } ], "segments": [ { "from": [0, 1], "to": [0, -1], "dashed": true, "color": "warn" } ] },
+      "steps": [
+        { "instruction": "Reflecting over the $x$-axis keeps $x$ the same and negates $y$. What is the $x$-coordinate of $-P$?", "answer": "0", "accept": [], "hint": "Reflection does not move $x$." },
+        { "instruction": "State $-P$ as a pair $(x, y)$.", "answer": "(0, -1)", "accept": ["(0,-1)"], "hint": "Negate the $y = 1$ of $P$." }
+      ],
+      "finalAnswer": { "value": "(0, -1)", "unit": "" },
+      "solutionNarrative": "$-P$ is $P = (0, 1)$ mirrored across the $x$-axis, giving $(0, -1)$. The vertical dashed line through $P$ and $-P$ never hits a third finite point, which is why $P + (-P) = \\mathcal{O}$."
+    }
+  ]
+}

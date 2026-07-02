@@ -1,0 +1,265 @@
+{
+  "id": "algebra.variables-expressions",
+  "subject": "algebra",
+  "title": "Variables and Expressions",
+  "prerequisites": [],
+  "estimatedMinutes": 30,
+  "keyConcepts": [
+    {
+      "id": "evaluate-expression",
+      "label": "Evaluating an expression",
+      "microLesson": "To **evaluate** an expression, substitute the given number for each variable and compute, following order of operations. If $x = 4$, then $3x + 5 = 3(4) + 5 = 17$. The variable is just a placeholder waiting for a value — once you plug it in, the expression becomes ordinary arithmetic."
+    },
+    {
+      "id": "combine-like-terms",
+      "label": "Combining like terms",
+      "microLesson": "Like terms have the *exact same variable part*. $5x$ and $2x$ are like terms and combine to $7x$; constants like $4$ and $9$ combine to $13$. You cannot combine $5x$ and $4$ — they're different kinds of thing. Add the coefficients of like terms and leave the variable part unchanged: $5x + 4 + 2x = 7x + 4$."
+    },
+    {
+      "id": "distributive-property",
+      "label": "The distributive property",
+      "microLesson": "A factor multiplying a parenthesis multiplies *everything* inside it: $a(b + c) = ab + ac$. So $3(x + 2) = 3x + 6$. Watch signs: $-2(x - 5) = -2x + 10$, because $-2 \\times -5 = +10$. Distributing clears parentheses so you can then combine like terms."
+    },
+    {
+      "id": "translate-to-expression",
+      "label": "Translating words to expressions",
+      "microLesson": "Real situations become algebra by turning words into symbols. *\"\\$5 per shirt plus a \\$20 flat fee\"* becomes $5x + 20$, where $x$ is the number of shirts. Watch the keywords: *per/each* signals multiplication, *more than/plus* signals addition, *less than* signals subtraction, *twice* means $\\times 2$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A formula is a promise you can reuse\n\nEvery time a price tag says *\"\\$5 each\"*, a recipe says *\"per serving\"*, or a paycheck says *\"per hour\"*, somebody has quietly written an **algebraic expression**. An expression is a rule built from numbers, **variables** (letters that stand for a number you haven't filled in yet), and operations. It's the reusable version of a calculation: write it once, then feed it whatever numbers the day brings.\n\n$$\\text{total cost} = 5x + 20$$\n\nHere $x$ is a *variable* — maybe the number of shirts you're printing. The $5x$ means *\\$5 for each shirt*, and the $+20$ is a flat setup fee. Nobody has decided how many shirts yet; that's the whole point. The expression is ready for **any** order.\n\n## Evaluating: filling in the blank\n\nTo **evaluate** an expression you substitute a value for the variable and compute, respecting order of operations (multiply before you add).\n\nIf you order $x = 8$ shirts:\n\n$$5(8) + 20 = 40 + 20 = 60.$$\n\nThat's it — once the variable has a value, the expression collapses into plain arithmetic. The same expression handles 8 shirts, 80 shirts, or 800; you just plug in.\n\n## Combining like terms: tidying up\n\nExpressions often arrive messy, with the same kind of term scattered around. **Like terms** share the exact same variable part, and you combine them by adding their coefficients:\n\n- $5x + 2x = 7x$ (both have $x$)\n- $4 + 9 = 13$ (both are plain numbers)\n- $5x + 4$ stays as $5x + 4$ — you *cannot* merge dollars-per-shirt with a flat fee.\n\nA mixed example: $3x + 7 + 5x - 2 = 8x + 5$. Group the $x$ terms, group the constants, done.\n\n## Distributing: multiplying into a group\n\nWhen a number multiplies a parenthesized group, it hits **everything** inside:\n\n$$a(b + c) = ab + ac.$$\n\nSo $3(x + 2) = 3x + 6$. The only place people slip is **signs**:\n\n$$-2(x - 5) = -2x + 10,$$\n\nbecause $-2 \\times -5 = +10$. Distribute first to clear the parentheses, *then* combine like terms.\n\n## Translating: words into symbols\n\nThe real skill is going the other direction — turning a situation into an expression. A few keyword cues:\n\n1. **per / each / a** → multiply (a rate times a count)\n2. **more than / plus / increased by** → add\n3. **less than / fewer / decreased by** → subtract\n4. **twice / double / triple** → multiply by 2 or 3\n\n*\"A plumber charges \\$90 to show up plus \\$60 an hour\"* becomes $90 + 60h$. Once you can write the expression, you can evaluate it, simplify it, and reuse it forever."
+  },
+  "application": {
+    "summary": "Expressions are the reusable formulas behind everyday pricing, paychecks, and physics. Translating a situation into an expression lets you evaluate it for any input, while combining like terms and distributing keep those formulas clean and easy to compute.",
+    "domains": ["personal finance", "business", "physics", "everyday life"],
+    "workedExample": "**Pricing a custom T-shirt order**\n\nA print shop charges a \\$20 flat setup fee plus \\$5 per shirt. Write a reusable cost formula, then price a 12-shirt order.\n\nLet $x$ be the number of shirts. *Per shirt* signals multiplication and *plus a flat fee* signals addition, so:\n\n$$\\text{total cost} = 5x + 20.$$\n\nNow **evaluate** at $x = 12$:\n\n$$5(12) + 20 = 60 + 20 = 80.$$\n\nTwelve shirts cost **\\$80**. Suppose the shop also adds a \\$2-per-shirt rush charge, written separately as $2x$. Instead of two formulas, **combine like terms**: $5x + 20 + 2x = 7x + 20$. One tidy expression now prices any rush order — at 12 shirts, $7(12) + 20 = 104$, so \\$104. The same base-fee-plus-rate pattern describes ride fares, utility bills, and freelance invoices.",
+    "domainNotes": [
+      "**Finance:** base-fee-plus-rate formulas for invoices, subscriptions, loan payments, and tip calculations.",
+      "**Business:** building a cost or revenue expression once, then evaluating it across many order sizes or price points.",
+      "**Physics:** plugging measured values into formulas like $d = rt$ or $v = v_0 + at$ to get a number.",
+      "**Everyday life:** translating *\"\\$3 a gallon\"* or *\"\\$15 an hour\"* into expressions you can reuse and combine."
+    ]
+  },
+  "generators": ["eval-linear-v1", "eval-quadratic-v1", "combine-terms-v1", "distribute-v1", "distribute-combine-v1", "translate-cost-v1"],
+  "problems": [
+    {
+      "id": "algebra.variables-expressions.s01",
+      "concepts": ["evaluate-expression"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A taxi charges a \\$3 base fare plus \\$2 per mile, so the cost is $2x + 3$ dollars for $x$ miles. What is the cost of a 6-mile ride?",
+      "steps": [
+        { "instruction": "Substitute $x = 6$ into $2x + 3$.", "answer": "2(6) + 3", "accept": ["2*6+3", "12 + 3"], "hint": "Replace $x$ with 6." },
+        { "instruction": "Compute the result.", "answer": "15", "accept": [], "hint": "Multiply first: $2 \\times 6 = 12$, then add 3." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "dollars" },
+      "solutionNarrative": "Substitute $x = 6$: $2(6) + 3 = 12 + 3 = 15$ dollars."
+    },
+    {
+      "id": "algebra.variables-expressions.s02",
+      "concepts": ["evaluate-expression"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A car travels at a constant speed, so distance is $d = rt$. If the rate $r = 55$ miles per hour and the time $t = 3$ hours, how far does it travel?",
+      "steps": [
+        { "instruction": "Substitute $r = 55$ and $t = 3$ into $rt$.", "answer": "55(3)", "accept": ["55*3", "55 \\cdot 3"], "hint": "Replace $r$ with 55 and $t$ with 3, then multiply." },
+        { "instruction": "Compute the distance.", "answer": "165", "accept": [], "hint": "$55 \\times 3 = 165$." }
+      ],
+      "finalAnswer": { "value": "165", "unit": "miles" },
+      "solutionNarrative": "With $r = 55$ and $t = 3$, $d = rt = 55(3) = 165$ miles."
+    },
+    {
+      "id": "algebra.variables-expressions.s03",
+      "concepts": ["evaluate-expression"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ball's height in feet after $t$ seconds is $-16t^2 + 32t + 6$. What is its height at $t = 2$ seconds?",
+      "steps": [
+        { "instruction": "Substitute $t = 2$ into the expression.", "answer": "-16(2)^2 + 32(2) + 6", "accept": ["-16*2^2+32*2+6"], "hint": "Replace each $t$ with 2." },
+        { "instruction": "Evaluate the squared term and the products.", "answer": "-64 + 64 + 6", "accept": [], "hint": "$(2)^2 = 4$, so $-16 \\times 4 = -64$ and $32 \\times 2 = 64$." },
+        { "instruction": "Add to get the height.", "answer": "6", "accept": [], "hint": "$-64 + 64 = 0$, then add 6." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "feet" },
+      "solutionNarrative": "At $t = 2$: $-16(4) + 32(2) + 6 = -64 + 64 + 6 = 6$ feet."
+    },
+    {
+      "id": "algebra.variables-expressions.s04",
+      "concepts": ["evaluate-expression"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $4x - 7$ when $x = 5$.",
+      "steps": [
+        { "instruction": "Substitute $x = 5$.", "answer": "4(5) - 7", "accept": ["4*5-7", "20 - 7"], "hint": "Replace $x$ with 5." },
+        { "instruction": "Compute.", "answer": "13", "accept": [], "hint": "$20 - 7 = 13$." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "" },
+      "solutionNarrative": "$4(5) - 7 = 20 - 7 = 13$."
+    },
+    {
+      "id": "algebra.variables-expressions.s05",
+      "concepts": ["combine-like-terms"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You earn \\$9 per hour mowing lawns and \\$9 per hour washing cars. If you work $h$ hours total, your earnings are $9h$ from mowing plus another $9h$ from washing? No — you work $h$ hours mowing and a separate $h$ hours washing at \\$9 each, giving $9h + 9h$. Simplify this expression.",
+      "steps": [
+        { "instruction": "Combine the like terms $9h + 9h$.", "answer": "18h", "accept": [], "hint": "Add the coefficients: $9 + 9 = 18$." }
+      ],
+      "finalAnswer": { "value": "18h", "unit": "dollars" },
+      "solutionNarrative": "$9h$ and $9h$ are like terms, so they combine to $18h$."
+    },
+    {
+      "id": "algebra.variables-expressions.s06",
+      "concepts": ["combine-like-terms"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A delivery cost has two parts: $3x + 10$ for the base service and $2x - 4$ for fuel, where $x$ is the number of packages. Write the total cost as a single simplified expression.",
+      "steps": [
+        { "instruction": "Add the two expressions and group like terms.", "answer": "3x + 2x + 10 - 4", "accept": ["3x+2x+10-4"], "hint": "Put the $x$ terms together and the constants together." },
+        { "instruction": "Combine the like terms.", "answer": "5x + 6", "accept": ["6 + 5x"], "hint": "$3x + 2x = 5x$ and $10 - 4 = 6$." }
+      ],
+      "finalAnswer": { "value": "5x + 6", "unit": "dollars" },
+      "solutionNarrative": "$(3x + 10) + (2x - 4) = 5x + 6$."
+    },
+    {
+      "id": "algebra.variables-expressions.s07",
+      "concepts": ["combine-like-terms"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Simplify by combining like terms: $7x + 4 - 2x + 9 - 3x$.",
+      "steps": [
+        { "instruction": "Group the $x$ terms together and the constants together.", "answer": "7x - 2x - 3x + 4 + 9", "accept": ["7x-2x-3x+4+9"], "hint": "Keep the sign in front of each term." },
+        { "instruction": "Combine each group.", "answer": "2x + 13", "accept": ["13 + 2x"], "hint": "$7x - 2x - 3x = 2x$ and $4 + 9 = 13$." }
+      ],
+      "finalAnswer": { "value": "2x + 13", "unit": "" },
+      "solutionNarrative": "$7x - 2x - 3x = 2x$ and $4 + 9 = 13$, giving $2x + 13$."
+    },
+    {
+      "id": "algebra.variables-expressions.s08",
+      "concepts": ["combine-like-terms"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Simplify: $6a + 3b + 2a - b$.",
+      "steps": [
+        { "instruction": "Group like terms: the $a$ terms and the $b$ terms.", "answer": "6a + 2a + 3b - b", "accept": ["6a+2a+3b-b"], "hint": "$a$ terms and $b$ terms are different and cannot merge with each other." },
+        { "instruction": "Combine each group.", "answer": "8a + 2b", "accept": ["2b + 8a"], "hint": "$6a + 2a = 8a$ and $3b - b = 2b$." }
+      ],
+      "finalAnswer": { "value": "8a + 2b", "unit": "" },
+      "solutionNarrative": "$6a + 2a = 8a$ and $3b - b = 2b$, so the result is $8a + 2b$."
+    },
+    {
+      "id": "algebra.variables-expressions.s09",
+      "concepts": ["distributive-property"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the distributive property to expand $3(x + 4)$.",
+      "steps": [
+        { "instruction": "Multiply 3 by each term inside the parentheses.", "answer": "3x + 12", "accept": ["3*x + 3*4", "3(x) + 3(4)"], "hint": "$3 \\cdot x$ and $3 \\cdot 4$." }
+      ],
+      "finalAnswer": { "value": "3x + 12", "unit": "" },
+      "solutionNarrative": "$3(x + 4) = 3x + 12$."
+    },
+    {
+      "id": "algebra.variables-expressions.s10",
+      "concepts": ["distributive-property"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A store offers a bundle of $x + 3$ items at \\$4 each. Write the total cost expression and expand it using the distributive property.",
+      "steps": [
+        { "instruction": "Write the total cost as 4 times the number of items.", "answer": "4(x + 3)", "accept": ["4(x+3)", "(x+3)*4"], "hint": "Cost = price per item × number of items." },
+        { "instruction": "Distribute the 4 across the parentheses.", "answer": "4x + 12", "accept": [], "hint": "$4 \\cdot x = 4x$ and $4 \\cdot 3 = 12$." }
+      ],
+      "finalAnswer": { "value": "4x + 12", "unit": "dollars" },
+      "solutionNarrative": "$4(x + 3) = 4x + 12$ dollars."
+    },
+    {
+      "id": "algebra.variables-expressions.s11",
+      "concepts": ["distributive-property"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Expand and simplify: $-2(x - 5) + 3x$.",
+      "steps": [
+        { "instruction": "Distribute $-2$ across $(x - 5)$.", "answer": "-2x + 10", "accept": [], "hint": "$-2 \\cdot x = -2x$ and $-2 \\cdot (-5) = +10$." },
+        { "instruction": "Add the $3x$ term and combine like terms.", "answer": "x + 10", "accept": ["10 + x"], "hint": "$-2x + 3x = x$." }
+      ],
+      "finalAnswer": { "value": "x + 10", "unit": "" },
+      "solutionNarrative": "$-2(x - 5) = -2x + 10$; adding $3x$ gives $-2x + 3x + 10 = x + 10$."
+    },
+    {
+      "id": "algebra.variables-expressions.s12",
+      "concepts": ["distributive-property", "combine-like-terms"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A landscaper charges $5(h + 2)$ dollars for labor and a separate $3h$ dollars for materials, where $h$ is hours worked. Write the total as a single simplified expression.",
+      "steps": [
+        { "instruction": "Distribute the 5 in the labor cost.", "answer": "5h + 10", "accept": [], "hint": "$5 \\cdot h = 5h$ and $5 \\cdot 2 = 10$." },
+        { "instruction": "Add the materials cost $3h$ and combine like terms.", "answer": "8h + 10", "accept": ["10 + 8h"], "hint": "$5h + 3h = 8h$." }
+      ],
+      "finalAnswer": { "value": "8h + 10", "unit": "dollars" },
+      "solutionNarrative": "$5(h + 2) = 5h + 10$; adding $3h$ gives $8h + 10$ dollars."
+    },
+    {
+      "id": "algebra.variables-expressions.s13",
+      "concepts": ["translate-to-expression"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A movie ticket costs \\$12. Write an expression for the total cost of buying $x$ tickets.",
+      "steps": [
+        { "instruction": "Translate '\\$12 per ticket for $x$ tickets' into an expression.", "answer": "12x", "accept": ["12*x", "x*12"], "hint": "Per ticket signals multiplication: price times number of tickets." }
+      ],
+      "finalAnswer": { "value": "12x", "unit": "dollars" },
+      "solutionNarrative": "At \\$12 each, $x$ tickets cost $12x$ dollars."
+    },
+    {
+      "id": "algebra.variables-expressions.s14",
+      "concepts": ["translate-to-expression"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A gym charges a \\$30 one-time joining fee plus \\$25 per month. Write an expression for the total cost after $m$ months.",
+      "steps": [
+        { "instruction": "Translate '\\$25 per month' into a term.", "answer": "25m", "accept": ["25*m", "m*25"], "hint": "Per month signals multiplication: rate times months." },
+        { "instruction": "Add the one-time \\$30 joining fee to get the total.", "answer": "25m + 30", "accept": ["30 + 25m"], "hint": "Plus a flat fee signals addition." }
+      ],
+      "finalAnswer": { "value": "25m + 30", "unit": "dollars" },
+      "solutionNarrative": "Monthly cost $25m$ plus the flat \\$30 fee gives $25m + 30$ dollars."
+    },
+    {
+      "id": "algebra.variables-expressions.s15",
+      "concepts": ["translate-to-expression"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A freelancer charges \\$50 per hour but gives every client a \\$40 discount off the final bill. Write an expression for the amount charged for $h$ hours of work.",
+      "steps": [
+        { "instruction": "Translate '\\$50 per hour' into a term.", "answer": "50h", "accept": ["50*h", "h*50"], "hint": "Per hour signals multiplication." },
+        { "instruction": "Subtract the \\$40 discount to get the final amount.", "answer": "50h - 40", "accept": [], "hint": "A discount off the bill signals subtraction." }
+      ],
+      "finalAnswer": { "value": "50h - 40", "unit": "dollars" },
+      "solutionNarrative": "Hourly charge $50h$ minus the \\$40 discount gives $50h - 40$ dollars."
+    },
+    {
+      "id": "algebra.variables-expressions.s16",
+      "concepts": ["translate-to-expression"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Write an expression for 'seven more than twice a number $n$'.",
+      "steps": [
+        { "instruction": "Translate 'twice a number $n$' into a term.", "answer": "2n", "accept": ["2*n", "n*2"], "hint": "Twice means multiply by 2." },
+        { "instruction": "Add seven to get the full expression.", "answer": "2n + 7", "accept": ["7 + 2n"], "hint": "More than signals addition." }
+      ],
+      "finalAnswer": { "value": "2n + 7", "unit": "" },
+      "solutionNarrative": "Twice the number is $2n$; seven more than that is $2n + 7$."
+    },
+    {
+      "id": "algebra.variables-expressions.s17",
+      "concepts": ["translate-to-expression"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Write an expression for 'a number $x$ decreased by 8'.",
+      "steps": [
+        { "instruction": "Translate 'decreased by 8' into an expression.", "answer": "x - 8", "accept": [], "hint": "Decreased by signals subtraction." }
+      ],
+      "finalAnswer": { "value": "x - 8", "unit": "" },
+      "solutionNarrative": "Decreased by 8 means subtract 8: $x - 8$."
+    }
+  ]
+}

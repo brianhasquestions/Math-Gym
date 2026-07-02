@@ -1,0 +1,269 @@
+{
+  "id": "cryptography.aes-finite-fields",
+  "subject": "cryptography",
+  "title": "Symmetric Ciphers and Finite Fields (AES)",
+  "prerequisites": ["cryptography.modular-arithmetic", "algebra.polynomials-operations"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "xor-and-otp",
+      "label": "XOR and the one-time pad",
+      "microLesson": "XOR ($\\oplus$) is bitwise addition mod 2: compare two bit strings column by column and write 1 where the bits differ, 0 where they match. It is its own inverse — $(M \\oplus K) \\oplus K = M$ — which makes it the perfect encryption primitive: XOR a message with a secret key to encrypt, XOR again with the same key to decrypt. With a truly random, never-reused key (a one-time pad) this is unbreakable. But reuse the key once and $C_1 \\oplus C_2 = M_1 \\oplus M_2$: the key cancels out, and one known plaintext unravels everything."
+    },
+    {
+      "id": "bytes-as-polynomials",
+      "label": "Bytes as GF(2) polynomials",
+      "microLesson": "AES treats each byte as a polynomial with coefficients 0 or 1: bit $i$ becomes the coefficient of $x^i$. So $83 = 01010011_2 = x^6 + x^4 + x + 1$. Adding two of these polynomials means adding coefficients mod 2, so $x^i + x^i = 0$ — matching terms cancel — which is exactly bitwise XOR. Field addition of bytes IS XOR, not integer addition: $87 + 131$ in $GF(2^8)$ is 212, not 218."
+    },
+    {
+      "id": "gf28-multiplication",
+      "label": "Multiplying in GF(2^8)",
+      "microLesson": "Multiplying byte-polynomials can produce powers of $x$ beyond $x^7$, so AES reduces modulo the fixed polynomial $x^8 + x^4 + x^3 + x + 1$ (byte pattern 283). The workhorse is $\\texttt{xtime}$, multiplication by $x$: shift the byte left one bit; if the result is $\\ge 256$, XOR with 283. Any product is a chain of xtimes plus XORs: $3 \\cdot b = \\texttt{xtime}(b) \\oplus b$, $13 \\cdot b = \\texttt{xtime}^3(b) \\oplus \\texttt{xtime}^2(b) \\oplus b$. Every step is a checkable byte value."
+    },
+    {
+      "id": "aes-big-picture",
+      "label": "The AES round structure",
+      "microLesson": "Each AES round runs four steps: **SubBytes** (a nonlinear S-box built from inversion in $GF(2^8)$ — the only nonlinearity), **ShiftRows** (a pure byte permutation), **MixColumns** (each column multiplied by a fixed matrix using $GF(2^8)$ constants 2 and 3), and **AddRoundKey** (XOR the round key in). Key sizes 128/192/256 bits run 10/12/14 rounds. Keyspace grows as $2^{\\text{bits}}$, so each extra bit doubles an attacker's work — and Grover's quantum algorithm only halves the exponent, which is why AES-256 (effective $2^{128}$) is called post-quantum comfortable."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The cipher you used in the last five minutes\n\nAlmost every byte you have ever sent — this page, your messages, your backups, the contents of your phone's storage — was encrypted with **AES**, the Advanced Encryption Standard. It is a *symmetric* cipher: the same secret key encrypts and decrypts. What makes AES worth studying in a math course is that its inner machinery is not a pile of ad-hoc bit tricks. It is *field arithmetic*: additions and multiplications in a tiny, perfectly lawful number system with exactly 256 elements, called $GF(2^8)$.\n\n## Start with XOR, the atom of symmetric crypto\n\nXOR ($\\oplus$) compares two bit strings column by column: 1 where the bits differ, 0 where they match. That is just **addition mod 2** in each column ($1+1 = 0$, no carry). Two properties make it cryptographic gold:\n\n1. **Self-inverse:** $(M \\oplus K) \\oplus K = M$. Encrypting and decrypting are the same operation.\n2. **Perfect masking:** if $K$ is a uniformly random bit string, $M \\oplus K$ is uniformly random too — the ciphertext carries *zero* information about $M$.\n\nUsed with a truly random key as long as the message and never reused, this is the **one-time pad**, the only provably unbreakable cipher. The catch is the word *never*: reuse a pad and the ciphertexts leak $C_1 \\oplus C_2 = M_1 \\oplus M_2$ — the key cancels itself out, and one guessed word of plaintext recovers the key and then everything else. Real systems (this happened to Soviet intelligence, and again with WEP Wi-Fi) have died on exactly this rock. AES exists to solve the pad's logistics: it *generates* unpredictable masking material from one short reusable key.\n\n## Bytes are polynomials\n\nAES's state is a $4 \\times 4$ grid of bytes, and it treats each byte as a polynomial with coefficients in $GF(2) = \\{0, 1\\}$: bit $i$ is the coefficient of $x^i$. So\n\n$$83 = 01010011_2 = x^6 + x^4 + x + 1.$$\n\n**Addition** of these polynomials adds coefficients mod 2, so $x^i + x^i = 2x^i \\equiv 0$: matching terms cancel. Line the bytes up and that is *exactly XOR*. Addition in the field is not integer addition — $87 + 131 = 212$ here, not 218.\n\n**Multiplication** multiplies the polynomials, then reduces modulo the fixed degree-8 polynomial\n\n$$m(x) = x^8 + x^4 + x^3 + x + 1 \\quad (\\text{byte pattern } 100011011_2 = 283),$$\n\nthe same way clock arithmetic reduces mod 12. The practical workhorse is $\\texttt{xtime}$ — multiplying by $x$: shift left one bit, and if the result overflows past $x^7$ (i.e. is $\\ge 256$), XOR with 283. Any multiplication decomposes into xtime chains plus XORs. With this modulus, every nonzero byte has a multiplicative inverse: $GF(2^8)$ is a genuine field, 256 numbers with airtight arithmetic.\n\n## Why AES is built this way\n\nEach round hits the state with four steps: **SubBytes** (each byte replaced through an S-box built from field *inversion* — the only nonlinear step, the one that defeats linear algebra attacks), **ShiftRows** (rotate rows — spread bytes across columns), **MixColumns** (each column multiplied by a fixed matrix with entries 1, 2, 3 in $GF(2^8)$ — this is where xtime runs billions of times a second in your CPU), and **AddRoundKey** (XOR in a round key derived from your key). Repeat 10, 12, or 14 rounds for key sizes 128, 192, 256.\n\nThe field arithmetic is *why a single flipped bit avalanches*: MixColumns makes every output byte depend on every byte of its column, ShiftRows spreads columns apart, and after a few rounds every ciphertext bit depends nonlinearly on every plaintext and key bit.\n\nA brute-force attacker must try $2^{128}$ (or $2^{256}$) keys — each added bit *doubles* the work. Even Grover's quantum search only halves the exponent: AES-256 still leaves $2^{128}$ steps, which is why cryptographers call it **post-quantum comfortable** while RSA and ECC need wholesale replacement.\n\nThe bytes here are real AES bytes and 283 is the real AES modulus — the only toy part is that we compute one byte at a time by hand while your CPU does sixteen at once, with dedicated silicon instructions."
+  },
+  "application": {
+    "summary": "XOR and GF(2^8) arithmetic are the working parts of AES — the cipher inside TLS, disk encryption, Wi-Fi, and messaging apps. Hand-computing xtime chains and byte XORs is doing, at human speed, exactly what hardware AES instructions do billions of times per second.",
+    "domains": ["network security (TLS/HTTPS)", "disk and phone encryption", "secure messaging", "Wi-Fi security"],
+    "workedExample": "**One MixColumns byte, by hand.**\n\nMixColumns computes each output byte as a $GF(2^8)$ dot product. A typical entry: $out = 2 \\cdot d_0 \\oplus 3 \\cdot d_1 \\oplus d_2 \\oplus d_3$ with column bytes $d_0 = 212$, $d_1 = 110$, $d_2 = 55$, $d_3 = 77$.\n\n*Term 1:* $2 \\cdot 212 = \\texttt{xtime}(212)$. Shift: $424 \\ge 256$, so reduce: $424 \\oplus 283 = 179$.\n\n*Term 2:* $3 \\cdot 110 = \\texttt{xtime}(110) \\oplus 110 = 220 \\oplus 110 = 178$ (no reduction; $110 < 128$).\n\n*Sum (XOR, not integer addition):* $179 \\oplus 178 = 1$, then $1 \\oplus 55 = 54$, then $54 \\oplus 77 = 123$.\n\nSo the output byte is $123$. Every AES encryption of every HTTPS request does this exact computation on every column, every round — the constants 2 and 3 were chosen precisely because their xtime chains are one shift and one XOR, making AES fast even on smart cards.",
+    "domainNotes": [
+      "**Disk/phone encryption:** BitLocker, FileVault and Android/iOS storage all run AES (usually AES-256 in XTS mode) over every sector; the field arithmetic runs in dedicated CPU instructions (AES-NI).",
+      "**TLS/HTTPS:** after the (RSA/ECC) handshake agrees a key, the actual page bytes flow through AES-GCM — symmetric crypto does the heavy lifting.",
+      "**Messaging:** Signal and WhatsApp encrypt message bodies with AES-256; the famous 'double ratchet' just manages which AES keys are used when.",
+      "**Wi-Fi:** WPA2/WPA3 use AES-CCMP per packet; its predecessor WEP died partly of keystream reuse — the exact one-time-pad failure you compute in this topic.",
+      "**Smart cards/passports:** chip cards run AES with tiny power budgets; the xtime shift-and-XOR structure is why the field multiply fits in cheap hardware."
+    ]
+  },
+  "generators": [
+    "cr3-xor-d1", "cr3-xor-d2", "cr3-xor-d3",
+    "cr3-b2p-d1", "cr3-b2p-d2", "cr3-b2p-d3",
+    "cr3-gf28-d1", "cr3-gf28-d2", "cr3-gf28-d3",
+    "cr3-aes-d1", "cr3-aes-d2", "cr3-aes-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.aes-finite-fields.s01",
+      "concepts": ["xor-and-otp"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the bitwise XOR $12 \\oplus 10$ of the 4-bit values 12 and 10.",
+      "steps": [
+        { "instruction": "Write 12 in binary (4 bits).", "answer": "1100", "accept": ["01100", "00001100"], "hint": "12 = 8 + 4." },
+        { "instruction": "Write 10 in binary (4 bits).", "answer": "1010", "accept": ["01010", "00001010"], "hint": "10 = 8 + 2." },
+        { "instruction": "XOR column by column — 1 where the bits differ, 0 where they match — and give the result as a DECIMAL number.", "answer": "6", "accept": ["0110"], "hint": "1100 vs 1010: the 8s match (both 1), the 4s and 2s differ, the 1s match (both 0)." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$1100_2 \\oplus 1010_2 = 0110_2 = 6$. Each column is addition mod 2 with no carry."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s02",
+      "concepts": ["xor-and-otp"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A one-time pad encrypts the message nibble $M = 9$ with key nibble $K = 5$ by XOR. Encrypt, then verify the receiver can decrypt.",
+      "steps": [
+        { "instruction": "Compute the ciphertext $C = M \\oplus K = 9 \\oplus 5$. (Decimal.)", "answer": "12", "accept": ["1100"], "hint": "$1001_2 \\oplus 0101_2$: XOR column by column." },
+        { "instruction": "The receiver computes $C \\oplus K = 12 \\oplus 5$. What comes out? (Decimal.)", "answer": "9", "accept": ["1001"], "hint": "XOR with the same key twice cancels: you should recover the message." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$9 \\oplus 5 = 1001_2 \\oplus 0101_2 = 1100_2 = 12$; decrypting, $12 \\oplus 5 = 9$ — XOR is self-inverse, so the same operation encrypts and decrypts."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s03",
+      "concepts": ["xor-and-otp"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Encrypt the plaintext byte $M = 200$ with the one-time-pad key byte $K = 90$, then round-trip it. (In binary: $M = 11001000$, $K = 01011010$.)",
+      "steps": [
+        { "instruction": "Compute $C = M \\oplus K$. (Decimal.)", "answer": "146", "accept": ["10010010"], "hint": "XOR $11001000$ with $01011010$ column by column, then convert to decimal." },
+        { "instruction": "Decrypt: compute $C \\oplus K$. (Decimal.)", "answer": "200", "accept": ["11001000"], "hint": "The key's bits flip the same positions back." }
+      ],
+      "finalAnswer": { "value": "200", "unit": "" },
+      "solutionNarrative": "$200 \\oplus 90 = 10010010_2 = 146$, and $146 \\oplus 90 = 200$: the pad decrypts itself because $(M \\oplus K) \\oplus K = M$."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s04",
+      "concepts": ["xor-and-otp"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An operator reused a one-time-pad key byte $K$ on two messages: $C_1 = M_1 \\oplus K = 226$ and $C_2 = M_2 \\oplus K = 195$. From a predictable header you know $M_1 = 72$. Break the system. (All answers in decimal.)",
+      "steps": [
+        { "instruction": "Compute $C_1 \\oplus C_2$. (This equals $M_1 \\oplus M_2$ — the key cancels.)", "answer": "33", "accept": ["100001", "00100001"], "hint": "$11100010 \\oplus 11000011$, column by column." },
+        { "instruction": "Recover the key: $K = C_1 \\oplus M_1 = 226 \\oplus 72$.", "answer": "170", "accept": ["10101010"], "hint": "$11100010 \\oplus 01001000$." },
+        { "instruction": "Recover the second message: $M_2 = C_2 \\oplus K = 195 \\oplus 170$.", "answer": "105", "accept": ["1101001", "01101001"], "hint": "$11000011 \\oplus 10101010$." }
+      ],
+      "finalAnswer": { "value": "105", "unit": "" },
+      "solutionNarrative": "$C_1 \\oplus C_2 = 33 = M_1 \\oplus M_2$: the reused key cancels itself out of the picture. One known plaintext then gives $K = 226 \\oplus 72 = 170$, and $M_2 = 195 \\oplus 170 = 105$. 'One-time' is a hard requirement, not a suggestion."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s05",
+      "concepts": ["bytes-as-polynomials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "AES views the byte 83 as an element of $GF(2^8)$: each bit becomes the coefficient of a power of $x$.",
+      "steps": [
+        { "instruction": "Write 83 in binary (8 bits).", "answer": "01010011", "accept": ["1010011"], "hint": "83 = 64 + 16 + 2 + 1." },
+        { "instruction": "Write the byte as a polynomial in $x$: bit $i$ (counting from 0 on the right) contributes $x^i$.", "answer": "x^6 + x^4 + x + 1", "accept": ["x^6+x^4+x+1"], "hint": "The 1-bits sit at positions 6, 4, 1, 0." }
+      ],
+      "finalAnswer": { "value": "x^6 + x^4 + x + 1", "unit": "" },
+      "solutionNarrative": "$83 = 01010011_2$; the set bits at positions 6, 4, 1, 0 give $x^6 + x^4 + x + 1$."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s06",
+      "concepts": ["bytes-as-polynomials"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A $GF(2^8)$ element is written as the polynomial $x^7 + x^3 + x^2 + 1$. Convert it back to a byte value.",
+      "steps": [
+        { "instruction": "What is the decimal value of the leading term $x^7$ alone?", "answer": "128", "accept": ["2^7"], "hint": "$x^7$ is the bit worth $2^7$." },
+        { "instruction": "Add the decimal values of all the terms. What byte (decimal) does the polynomial represent?", "answer": "141", "accept": ["10001101"], "hint": "$128 + 8 + 4 + 1$." }
+      ],
+      "finalAnswer": { "value": "141", "unit": "" },
+      "solutionNarrative": "$x^7 + x^3 + x^2 + 1 \\to 128 + 8 + 4 + 1 = 141$ (binary $10001101$)."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s07",
+      "concepts": ["bytes-as-polynomials"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "In $GF(2^8)$, addition of field elements is coefficient-wise mod 2 — i.e. XOR. Add $A = 87$ ($x^6 + x^4 + x^2 + x + 1$) and $B = 131$ ($x^7 + x + 1$).",
+      "steps": [
+        { "instruction": "How many terms cancel (appear in both polynomials)?", "answer": "2", "accept": [], "hint": "A term cancels when it is in both: $x^i + x^i = 2x^i \\equiv 0$ mod 2. Compare the term lists." },
+        { "instruction": "Compute the sum $A \\oplus B$ as a DECIMAL byte.", "answer": "212", "accept": ["11010100"], "hint": "$01010111 \\oplus 10000011$." },
+        { "instruction": "Write the sum as a (mod-2 reduced) polynomial in $x$.", "answer": "x^7 + x^6 + x^4 + x^2", "accept": ["x^7+x^6+x^4+x^2"], "hint": "Convert 212's bits to powers of $x$." }
+      ],
+      "finalAnswer": { "value": "212", "unit": "" },
+      "solutionNarrative": "The shared terms $x$ and $1$ cancel, leaving $x^7 + x^6 + x^4 + x^2 = 212$. Note the field sum is 212, not the integer sum 218 — addition here is XOR."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s08",
+      "concepts": ["gf28-multiplication"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\texttt{xtime}(87)$ — multiplication by $x$ in $GF(2^8)$. Rule: shift left one bit; if the result is 256 or more, XOR with 283.",
+      "steps": [
+        { "instruction": "Is 87 at least 128 (so that doubling overflows the byte)? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Compare 87 to 128." },
+        { "instruction": "So no reduction is needed. What is $\\texttt{xtime}(87)$? (Decimal.)", "answer": "174", "accept": ["10101110"], "hint": "Just double it." }
+      ],
+      "finalAnswer": { "value": "174", "unit": "" },
+      "solutionNarrative": "$87 < 128$, so the shift stays inside a byte: $\\texttt{xtime}(87) = 174$."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s09",
+      "concepts": ["gf28-multiplication"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\texttt{xtime}(174)$ in $GF(2^8)$. Since $174 \\ge 128$, the shift overflows past $x^7$ and you must reduce by XOR with 283 ($= 100011011_2$, the pattern of $x^8 + x^4 + x^3 + x + 1$).",
+      "steps": [
+        { "instruction": "Shift first: what is $2 \\times 174$ before reduction? (It may exceed 255.)", "answer": "348", "accept": [], "hint": "Just double." },
+        { "instruction": "Reduce: compute $348 \\oplus 283$. (Decimal.)", "answer": "71", "accept": ["1000111", "01000111"], "hint": "$101011100 \\oplus 100011011$, column by column (9 bits)." }
+      ],
+      "finalAnswer": { "value": "71", "unit": "" },
+      "solutionNarrative": "$2 \\times 174 = 348 \\ge 256$, so reduce: $348 \\oplus 283 = 71$. The XOR with 283 is 'subtracting' the modulus polynomial, exactly like taking a remainder mod 12 on a clock."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s10",
+      "concepts": ["gf28-multiplication"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "MixColumns multiplies state bytes by the constant 3. Since $3 = x + 1$, we have $3 \\cdot b = \\texttt{xtime}(b) \\oplus b$. Compute $3 \\cdot 87$.",
+      "steps": [
+        { "instruction": "Compute $\\texttt{xtime}(87)$. (87 < 128, so no reduction.) Decimal.", "answer": "174", "accept": [], "hint": "Double it." },
+        { "instruction": "Now XOR: $3 \\cdot 87 = 174 \\oplus 87$. (Decimal.)", "answer": "249", "accept": ["11111001"], "hint": "$10101110 \\oplus 01010111$." }
+      ],
+      "finalAnswer": { "value": "249", "unit": "" },
+      "solutionNarrative": "$3 \\cdot 87 = \\texttt{xtime}(87) \\oplus 87 = 174 \\oplus 87 = 249$ — one shift and one XOR, which is why the MixColumns constants were chosen to be 2 and 3."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s11",
+      "concepts": ["gf28-multiplication"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $13 \\cdot 87$ in $GF(2^8)$. Since $13 = 1101_2 = x^3 + x^2 + 1$, we need $13 \\cdot 87 = \\texttt{xtime}^3(87) \\oplus \\texttt{xtime}^2(87) \\oplus 87$ — a chain of xtimes, then XORs.",
+      "steps": [
+        { "instruction": "First xtime: $\\texttt{xtime}(87)$? (No reduction needed.)", "answer": "174", "accept": [], "hint": "$87 < 128$: just double." },
+        { "instruction": "Second xtime: $\\texttt{xtime}(174)$? ($174 \\ge 128$: double, then XOR 283.)", "answer": "71", "accept": [], "hint": "$348 \\oplus 283$." },
+        { "instruction": "Third xtime: $\\texttt{xtime}(71)$? (No reduction needed.)", "answer": "142", "accept": [], "hint": "$71 < 128$: just double." },
+        { "instruction": "Now combine: $142 \\oplus 71$. (Decimal.)", "answer": "201", "accept": ["11001001"], "hint": "$10001110 \\oplus 01000111$." },
+        { "instruction": "Finish: $201 \\oplus 87$. (Decimal.)", "answer": "158", "accept": ["10011110"], "hint": "$11001001 \\oplus 01010111$." }
+      ],
+      "finalAnswer": { "value": "158", "unit": "" },
+      "solutionNarrative": "The xtime chain gives $x \\cdot 87 = 174$, $x^2 \\cdot 87 = 71$ (one reduction), $x^3 \\cdot 87 = 142$. Then $13 \\cdot 87 = 142 \\oplus 71 \\oplus 87 = 158$. (13 is a real constant from AES's InvMixColumns.)"
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s12",
+      "concepts": ["aes-big-picture"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "AES comes in three key sizes — 128, 192, 256 bits — running 10, 12, 14 rounds respectively. Each round applies SubBytes, ShiftRows, MixColumns and AddRoundKey.",
+      "steps": [
+        { "instruction": "How many rounds does AES-256 run?", "answer": "14", "accept": [], "hint": "128→10, 192→12, 256→14." },
+        { "instruction": "Which round step combines the round key with the state using plain XOR? (SubBytes, ShiftRows, MixColumns, or AddRoundKey)", "answer": "AddRoundKey", "accept": [], "hint": "It is the only step whose name mentions the key." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "rounds" },
+      "solutionNarrative": "AES-256 runs 14 rounds. AddRoundKey is the XOR-in-the-key step — the only key-dependent operation; everything else is fixed public structure."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s13",
+      "concepts": ["aes-big-picture"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Match AES round steps to their math. The four steps are SubBytes, ShiftRows, MixColumns, AddRoundKey.",
+      "steps": [
+        { "instruction": "Which step multiplies each state column by a fixed matrix, using $GF(2^8)$ multiplication by the constants 2 and 3?", "answer": "MixColumns", "accept": [], "hint": "Columns... mixed by a matrix." },
+        { "instruction": "Which step replaces each byte via an S-box built from inversion in $GF(2^8)$?", "answer": "SubBytes", "accept": [], "hint": "It substitutes bytes." },
+        { "instruction": "Which step is the ONLY nonlinear one (without it, AES would fall to linear algebra)?", "answer": "SubBytes", "accept": [], "hint": "Field inversion $b \\mapsto b^{-1}$ is not a linear map; permutations and XORs are." }
+      ],
+      "finalAnswer": { "value": "SubBytes", "unit": "" },
+      "solutionNarrative": "MixColumns is the field-arithmetic matrix multiply; SubBytes is the inversion-based S-box, and being the sole nonlinearity it is what makes AES a cipher rather than a linear-algebra exercise."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s14",
+      "concepts": ["aes-big-picture"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Keyspace arithmetic. AES-128 has $2^{128}$ possible keys; AES-256 has $2^{256}$.",
+      "steps": [
+        { "instruction": "The ratio $2^{256} / 2^{128}$ is a power of two, $2^k$. What is $k$?", "answer": "128", "accept": [], "hint": "Dividing powers subtracts exponents." },
+        { "instruction": "Each added key bit DOUBLES the brute-force work. How many doublings separate AES-128 from AES-256?", "answer": "128", "accept": [], "hint": "One doubling per extra bit." }
+      ],
+      "finalAnswer": { "value": "128", "unit": "" },
+      "solutionNarrative": "$2^{256}/2^{128} = 2^{128}$: AES-256's keyspace is not 'twice as big' — it is $2^{128}$ times bigger, one doubling for each of the 128 extra bits."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s15",
+      "concepts": ["aes-big-picture"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Grover's quantum algorithm searches $2^n$ keys in about $2^{n/2}$ steps. The usual bar for 'computationally infeasible' is $2^{128}$.",
+      "steps": [
+        { "instruction": "Under Grover, AES-256's effective security is $2^k$ steps. What is $k$?", "answer": "128", "accept": [], "hint": "Halve the exponent: $\\sqrt{2^{256}} = 2^{128}$." },
+        { "instruction": "Under Grover, AES-128's effective security is $2^k$ steps. What is $k$?", "answer": "64", "accept": [], "hint": "Halve 128." },
+        { "instruction": "Which key size (in bits) still clears the $2^{128}$ bar against a quantum attacker?", "answer": "256", "accept": ["aes-256", "aes 256"], "hint": "Compare $2^{128}$ and $2^{64}$ to the bar." }
+      ],
+      "finalAnswer": { "value": "256", "unit": "bits" },
+      "solutionNarrative": "Grover halves exponents: AES-256 → $2^{128}$ (still infeasible), AES-128 → $2^{64}$ (uncomfortable). That asymmetry is why 'use AES-256' is the standard post-quantum advice for symmetric crypto, while RSA/ECC need replacing entirely."
+    },
+    {
+      "id": "cryptography.aes-finite-fields.s16",
+      "concepts": ["bytes-as-polynomials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Convert the byte 69 into its $GF(2^8)$ polynomial form.",
+      "steps": [
+        { "instruction": "Write 69 in binary (8 bits).", "answer": "01000101", "accept": ["1000101"], "hint": "69 = 64 + 4 + 1." },
+        { "instruction": "Write the polynomial: bit $i$ contributes $x^i$.", "answer": "x^6 + x^2 + 1", "accept": ["x^6+x^2+1"], "hint": "Set bits at positions 6, 2, 0." }
+      ],
+      "finalAnswer": { "value": "x^6 + x^2 + 1", "unit": "" },
+      "solutionNarrative": "$69 = 01000101_2 = x^6 + x^2 + 1$."
+    }
+  ]
+}

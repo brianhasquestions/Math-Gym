@@ -1,0 +1,283 @@
+{
+  "id": "calculus-2.definite-integrals",
+  "subject": "calculus-2",
+  "title": "The Definite Integral and the Fundamental Theorem",
+  "prerequisites": ["calculus-2.antiderivatives"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "riemann-sums",
+      "label": "Estimating area with Riemann sums",
+      "microLesson": "Before we have an exact tool, we approximate the area under a curve with rectangles. Split $[a,b]$ into $n$ equal strips of width $\\Delta x = \\frac{b-a}{n}$, and on each strip build a rectangle whose height is the function value at the **left** edge, **right** edge, or **midpoint**. Add the areas: $\\sum f(x_i)\\,\\Delta x$. For $f(x)=x^2$ on $[0,2]$ with $n=2$ ($\\Delta x = 1$), the left sum uses heights $f(0)=0$ and $f(1)=1$, giving $(0+1)(1)=1$. More rectangles means a better estimate."
+    },
+    {
+      "id": "ftc-evaluate",
+      "label": "Evaluating with the Fundamental Theorem",
+      "microLesson": "The **Fundamental Theorem of Calculus** turns area into arithmetic: if $F$ is an antiderivative of $f$, then $\\int_a^b f(x)\\,dx = F(b) - F(a)$. You don't sum infinitely many rectangles — you find one antiderivative and subtract its values at the endpoints. For $\\int_0^2 x^2\\,dx$, an antiderivative is $\\frac{x^3}{3}$, so the value is $\\frac{2^3}{3} - \\frac{0^3}{3} = \\frac{8}{3}$. The notation $\\left[F(x)\\right]_a^b$ means exactly 'plug in $b$, subtract plug in $a$.'"
+    },
+    {
+      "id": "area-under-curve",
+      "label": "Exact area under a curve",
+      "microLesson": "When $f(x) \\ge 0$ on $[a,b]$, the definite integral $\\int_a^b f(x)\\,dx$ **is** the exact area between the curve and the x-axis. The Riemann sums were estimates closing in on this number; the FTC delivers it exactly. The area under $f(x) = x^2$ from $0$ to $3$ is $\\int_0^3 x^2\\,dx = \\left[\\frac{x^3}{3}\\right]_0^3 = 9$. No more rectangles — one subtraction gives the precise area."
+    },
+    {
+      "id": "net-change",
+      "label": "Net change from a rate",
+      "microLesson": "The **Net Change Theorem** says the integral of a rate equals the total accumulated change: $\\int_a^b r(t)\\,dt = $ total change over $[a,b]$. If $r(t)$ is velocity, the integral is distance traveled; if $r(t)$ is a flow rate in liters/min, the integral is total liters; if $r(t)$ is marginal cost, the integral is the added cost. For a car with velocity $v(t)=6t$ m/s, the distance over $[0,4]$ is $\\int_0^4 6t\\,dt = \\left[3t^2\\right]_0^4 = 48$ meters."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The question behind the integral\n\nA huge family of real questions has one shape: *\"a rate is changing over time (or space) — how much accumulates in total?\"* A car's speedometer reads a different number every instant; how far did it actually go? Water flows from a pipe at a varying rate; how many liters filled the tank? A factory's cost-per-extra-unit creeps up as it strains capacity; what did the last 100 units cost? The **definite integral** answers every one of these.\n\nGeometrically, all of these are the same picture: the **area under a curve**. Plot the rate against time and the accumulated total is the area beneath that graph between two times. So the whole topic reduces to: *how do we find the area under a curve, exactly?*\n\n## Step 1: estimate with rectangles (Riemann sums)\n\nIf the curve were a straight horizontal line, area would just be (height)(width). It isn't, so we approximate. Slice the interval $[a,b]$ into $n$ equal pieces, each of width\n\n$$\\Delta x = \\frac{b - a}{n}.$$\n\nOn each slice, draw a rectangle. Its height is the function value at the **left** edge, the **right** edge, or the **midpoint** of that slice — three flavors of estimate. The total estimated area is the sum:\n\n$$\\sum_{i} f(x_i)\\,\\Delta x.$$\n\nFor $f(x) = x^2$ on $[0,2]$ with $n = 2$ slices ($\\Delta x = 1$), the **left** sum uses the left edges $x = 0, 1$: heights $f(0)=0$ and $f(1)=1$, so the estimate is $(0 + 1)(1) = 1$. The **right** sum uses $x = 1, 2$: heights $1$ and $4$, giving $(1 + 4)(1) = 5$. The true area sits between. Add more, thinner rectangles and both estimates squeeze toward the exact answer.\n\n## Step 2: get it exact (the Fundamental Theorem)\n\nTaking $n \\to \\infty$ defines the **definite integral** $\\int_a^b f(x)\\,dx$ — the exact area, the limit the Riemann sums approach. Computing that limit directly would be brutal. The **Fundamental Theorem of Calculus** rescues us:\n\n$$\\int_a^b f(x)\\,dx = F(b) - F(a), \\quad \\text{where } F'(x) = f(x).$$\n\nIn words: find **one** antiderivative $F$, evaluate it at the top and bottom limits, and subtract. The infinite sum collapses to a single subtraction. We write the in-between step as $\\left[F(x)\\right]_a^b$, which is shorthand for $F(b) - F(a)$.\n\n### Worked example\n\n$$\\int_0^2 x^2\\,dx = \\left[\\frac{x^3}{3}\\right]_0^2 = \\frac{2^3}{3} - \\frac{0^3}{3} = \\frac{8}{3} \\approx 2.667.$$\n\nNotice this lands neatly between our rectangle estimates of $1$ and $5$ — exactly where the true area should be.\n\nSeen as a picture, that number is the shaded region itself:\n\n```plot\n{ \"xRange\": [-0.5, 2.5], \"yRange\": [-0.5, 6.5], \"curves\": [ { \"fn\": \"x^2\", \"label\": \"y = x²\", \"labelAt\": 2.25, \"color\": \"accent\", \"fillRange\": [0, 2] } ], \"caption\": \"∫₀² x² dx: the shaded area under y = x² from 0 to 2 is exactly 8/3 ≈ 2.667 — between the rectangle estimates 1 and 5.\" }\n```\n\n## Step 3: read the answer as area or as accumulated change\n\nThe same number means two things depending on the story:\n\n- **Area.** When $f(x) \\ge 0$, $\\int_a^b f(x)\\,dx$ is literally the area between the curve and the x-axis over $[a,b]$.\n- **Net change.** When $f$ is a **rate** of something, the **Net Change Theorem** says the integral is the total accumulated amount:\n\n$$\\int_a^b r(t)\\,dt = \\text{total change in the quantity over } [a,b].$$\n\nIf $r(t)$ is velocity, the integral is distance. If $r(t)$ is flow in liters per minute, it's total liters. If $r(t)$ is marginal cost in dollars per unit, it's the total added cost. The mechanics never change: antiderivative, plug in the top, plug in the bottom, subtract.\n\nBoth readings live in one picture. For the car of the key concepts, with velocity $v(t) = 6t$ over $[0, 4]$, the distance traveled is the shaded triangle under the velocity line:\n\n```plot\n{ \"xRange\": [-0.5, 4.5], \"yRange\": [0, 28], \"curves\": [ { \"fn\": \"6*x\", \"label\": \"v(t) = 6t\", \"labelAt\": 3.6, \"color\": \"accent\", \"fillRange\": [0, 4] } ], \"caption\": \"Distance as area: ∫₀⁴ 6t dt = 48 m — the area of the shaded triangle under the velocity line.\" }\n```\n\n## Why polynomials make this clean\n\nThroughout, we use **power-rule** antiderivatives: $\\int x^n\\,dx = \\frac{x^{n+1}}{n+1}$. That keeps every evaluation exact and arithmetic — no rounding unless we choose to report a decimal. Master the pattern on polynomials and the same three moves carry over to every integrand you'll meet later."
+  },
+  "application": {
+    "summary": "The definite integral converts a varying rate into a total: distance from a velocity, liters from a flow rate, cost from a marginal-cost curve, accumulated growth from a growth rate. The Fundamental Theorem makes the total exact via one antiderivative and a subtraction; Riemann sums give a quick estimate when you only have a curve or a table.",
+    "domains": ["physics", "engineering", "business", "environmental science"],
+    "workedExample": "**How far did the car go?**\n\nA car accelerates so that its velocity (meters per second) after $t$ seconds is $v(t) = 3t^2$. How far does it travel during the first 4 seconds? Distance is the accumulated velocity — the area under the velocity curve:\n\n$$\\text{distance} = \\int_0^4 3t^2\\,dt.$$\n\nAn antiderivative of $3t^2$ is $t^3$, so by the Fundamental Theorem:\n\n$$\\int_0^4 3t^2\\,dt = \\left[t^3\\right]_0^4 = 4^3 - 0^3 = 64.$$\n\n**The car travels 64 meters.** No speedometer log needed — the rate function plus two endpoints gives the exact total. Swap velocity for a pump's flow rate and the very same integral tells you liters delivered; swap it for marginal cost and it tells you dollars spent on the next batch. One tool, many ledgers.",
+    "domainNotes": [
+      "**Physics:** distance traveled is the integral of speed; change in velocity is the integral of acceleration.",
+      "**Engineering:** total fluid delivered is the integral of a flow rate; total charge is the integral of current.",
+      "**Business:** total (variable) cost is the integral of marginal cost; total revenue is the integral of marginal revenue.",
+      "**Environmental science:** total population growth or total pollutant released is the integral of the corresponding rate over a time window."
+    ]
+  },
+  "generators": ["riemann-v1", "ftc-eval-v1", "area-under-v1", "net-change-v1"],
+  "problems": [
+    {
+      "id": "calculus-2.definite-integrals.s01",
+      "concepts": ["riemann-sums"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Estimate the area under $f(x) = x^2$ on $[0, 2]$ using a **left** Riemann sum with $n = 2$ equal rectangles.",
+      "steps": [
+        { "instruction": "Find the width $\\Delta x = \\frac{b - a}{n}$.", "answer": "1", "accept": ["1.0"], "hint": "$\\frac{2 - 0}{2}$." },
+        { "instruction": "The left edges are $x = 0$ and $x = 1$. Add the two areas: $f(0)\\Delta x + f(1)\\Delta x$.", "answer": "1", "accept": ["1.0"], "hint": "Heights are $f(0) = 0$ and $f(1) = 1$; each width is 1." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "square units" },
+      "solutionNarrative": "With $\\Delta x = 1$ and left edges $0, 1$: heights $f(0)=0$, $f(1)=1$. Sum $= (0 + 1)(1) = 1$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s02",
+      "concepts": ["riemann-sums"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Estimate the area under $f(x) = x^2$ on $[0, 2]$ using a **right** Riemann sum with $n = 4$ equal rectangles.",
+      "steps": [
+        { "instruction": "Find the width $\\Delta x = \\frac{b - a}{n}$.", "answer": "0.5", "accept": ["1/2"], "hint": "$\\frac{2 - 0}{4}$." },
+        { "instruction": "The right edges are $x = 0.5, 1, 1.5, 2$. Sum the heights $f(x)$ at those points.", "answer": "7.5", "accept": ["15/2"], "hint": "$0.25 + 1 + 2.25 + 4$." },
+        { "instruction": "Multiply the height-sum by $\\Delta x$ to get the estimated area.", "answer": "3.75", "accept": ["15/4"], "hint": "$7.5 \\times 0.5$." }
+      ],
+      "finalAnswer": { "value": "3.75", "unit": "square units" },
+      "solutionNarrative": "$\\Delta x = 0.5$; right-edge heights $0.25, 1, 2.25, 4$ sum to $7.5$; times $0.5$ gives $3.75$ (an overestimate of the true area $\\tfrac{8}{3}$)."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s03",
+      "concepts": ["riemann-sums"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A sensor logs a drone's speed (m/s) every 2 seconds over a 6-second climb: at $t = 0$ it reads $0$, at $t = 2$ it reads $4$, at $t = 4$ it reads $16$, at $t = 6$ it reads $36$ (the speed follows $v = t^2$). Estimate the distance climbed using a **midpoint** Riemann sum with $n = 3$ rectangles of width 2, taking the midpoint speeds $v(1) = 1$, $v(3) = 9$, $v(5) = 25$.",
+      "steps": [
+        { "instruction": "Add the three midpoint speeds $v(1) + v(3) + v(5)$.", "answer": "35", "accept": [], "hint": "$1 + 9 + 25$." },
+        { "instruction": "Multiply the speed-sum by the rectangle width $\\Delta t = 2$ to estimate the distance.", "answer": "70", "accept": [], "hint": "$35 \\times 2$." }
+      ],
+      "finalAnswer": { "value": "70", "unit": "meters" },
+      "solutionNarrative": "Midpoint speeds $1, 9, 25$ sum to $35$; times width $2$ gives an estimated $70$ meters climbed (the exact integral $\\int_0^6 t^2\\,dt = 72$)."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s04",
+      "concepts": ["ftc-evaluate"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_0^3 2x\\,dx$ using the Fundamental Theorem of Calculus.",
+      "steps": [
+        { "instruction": "Find an antiderivative $F(x)$ of $2x$.", "answer": "x^2", "accept": ["x^2 + C", "x²"], "hint": "Use the power rule: the antiderivative of $2x$ is $x^2$." },
+        { "instruction": "Compute $F(3) - F(0)$.", "answer": "9", "accept": [], "hint": "$3^2 - 0^2$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "An antiderivative is $x^2$. By the FTC, $\\int_0^3 2x\\,dx = 3^2 - 0^2 = 9$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s05",
+      "concepts": ["ftc-evaluate"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_1^3 (3x^2 + 2)\\,dx$.",
+      "steps": [
+        { "instruction": "Find an antiderivative $F(x)$ of $3x^2 + 2$.", "answer": "x^3 + 2x", "accept": ["x^3 + 2x + C", "x³ + 2x"], "hint": "Antiderivative of $3x^2$ is $x^3$; of $2$ is $2x$." },
+        { "instruction": "Evaluate $F(3)$.", "answer": "33", "accept": [], "hint": "$3^3 + 2(3) = 27 + 6$." },
+        { "instruction": "Evaluate $F(1)$.", "answer": "3", "accept": [], "hint": "$1^3 + 2(1) = 1 + 2$." },
+        { "instruction": "Compute $F(3) - F(1)$.", "answer": "30", "accept": [], "hint": "$33 - 3$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "" },
+      "solutionNarrative": "$F(x) = x^3 + 2x$. $F(3) = 33$, $F(1) = 3$, so the integral is $33 - 3 = 30$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s06",
+      "concepts": ["ftc-evaluate"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_{-1}^{2} (4x^3 - 6x)\\,dx$.",
+      "steps": [
+        { "instruction": "Find an antiderivative $F(x)$ of $4x^3 - 6x$.", "answer": "x^4 - 3x^2", "accept": ["x^4 - 3x^2 + C", "x⁴ - 3x²"], "hint": "Antiderivative of $4x^3$ is $x^4$; of $-6x$ is $-3x^2$." },
+        { "instruction": "Evaluate $F(2)$.", "answer": "4", "accept": [], "hint": "$2^4 - 3(2^2) = 16 - 12$." },
+        { "instruction": "Evaluate $F(-1)$.", "answer": "-2", "accept": [], "hint": "$(-1)^4 - 3(-1)^2 = 1 - 3$." },
+        { "instruction": "Compute $F(2) - F(-1)$.", "answer": "6", "accept": [], "hint": "$4 - (-2)$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$F(x) = x^4 - 3x^2$. $F(2) = 4$ and $F(-1) = -2$, so the integral is $4 - (-2) = 6$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s07",
+      "concepts": ["ftc-evaluate"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A water tank is filling at a rate of $r(t) = 4t + 1$ liters per minute. The total liters added between minute 0 and minute 5 is $\\int_0^5 (4t + 1)\\,dt$. Evaluate it.",
+      "steps": [
+        { "instruction": "Find an antiderivative $F(t)$ of $4t + 1$.", "answer": "2t^2 + t", "accept": ["2t^2 + t + C", "2t² + t"], "hint": "Antiderivative of $4t$ is $2t^2$; of $1$ is $t$." },
+        { "instruction": "Evaluate $F(5)$.", "answer": "55", "accept": [], "hint": "$2(25) + 5 = 50 + 5$." },
+        { "instruction": "Compute $F(5) - F(0)$.", "answer": "55", "accept": [], "hint": "$F(0) = 0$." }
+      ],
+      "finalAnswer": { "value": "55", "unit": "liters" },
+      "solutionNarrative": "$F(t) = 2t^2 + t$; $F(5) = 55$ and $F(0) = 0$, so $55$ liters are added."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s08",
+      "concepts": ["area-under-curve"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the exact area under $f(x) = x^2$ from $x = 0$ to $x = 3$ (shown in the figure).",
+      "plot": { "xRange": [-0.5, 3.2], "yRange": [0, 11], "curves": [ { "fn": "x^2", "label": "y = x²", "labelAt": 2.4, "color": "accent", "fillRange": [0, 3] } ], "caption": "The shaded region under y = x² from x = 0 to x = 3." },
+      "steps": [
+        { "instruction": "Set up the area as a definite integral and find an antiderivative of $x^2$.", "answer": "x^3/3", "accept": ["(1/3)x^3", "x^3 / 3"], "hint": "Power rule: $\\int x^2\\,dx = \\frac{x^3}{3}$." },
+        { "instruction": "Evaluate $\\left[\\frac{x^3}{3}\\right]_0^3 = \\frac{3^3}{3} - \\frac{0^3}{3}$.", "answer": "9", "accept": [], "hint": "$\\frac{27}{3} - 0$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "square units" },
+      "solutionNarrative": "$\\int_0^3 x^2\\,dx = \\left[\\frac{x^3}{3}\\right]_0^3 = 9 - 0 = 9$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s09",
+      "concepts": ["area-under-curve"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the exact area under $f(x) = x^2 + 1$ from $x = 1$ to $x = 4$.",
+      "steps": [
+        { "instruction": "Find an antiderivative of $x^2 + 1$.", "answer": "x^3/3 + x", "accept": ["(1/3)x^3 + x", "x^3 / 3 + x"], "hint": "$\\int x^2\\,dx = \\frac{x^3}{3}$ and $\\int 1\\,dx = x$." },
+        { "instruction": "Evaluate $F(4)$.", "answer": "76/3", "accept": ["25.333", "25.3333"], "hint": "$\\frac{64}{3} + 4 = \\frac{64 + 12}{3}$." },
+        { "instruction": "Evaluate $F(1)$.", "answer": "4/3", "accept": ["1.333", "1.3333"], "hint": "$\\frac{1}{3} + 1 = \\frac{1 + 3}{3}$." },
+        { "instruction": "Compute $F(4) - F(1)$.", "answer": "24", "accept": ["72/3"], "hint": "$\\frac{76}{3} - \\frac{4}{3} = \\frac{72}{3}$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "square units" },
+      "solutionNarrative": "$F(x) = \\frac{x^3}{3} + x$; $F(4) = \\frac{76}{3}$, $F(1) = \\frac{4}{3}$, so the area is $\\frac{72}{3} = 24$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s10",
+      "concepts": ["area-under-curve"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A solar panel's power output (watts) varies across a window as $p(x) = 12 - 3x^2$ for $x$ from $0$ to $2$ (it stays non-negative there). The total represented by the area under this curve is $\\int_0^2 (12 - 3x^2)\\,dx$. Find it.",
+      "steps": [
+        { "instruction": "Find an antiderivative of $12 - 3x^2$.", "answer": "12x - x^3", "accept": ["12x - x^3 + C"], "hint": "Antiderivative of $12$ is $12x$; of $-3x^2$ is $-x^3$." },
+        { "instruction": "Evaluate $F(2)$.", "answer": "16", "accept": [], "hint": "$12(2) - 2^3 = 24 - 8$." },
+        { "instruction": "Compute $F(2) - F(0)$.", "answer": "16", "accept": [], "hint": "$F(0) = 0$." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "square units" },
+      "solutionNarrative": "$F(x) = 12x - x^3$; $F(2) = 16$ and $F(0) = 0$, so the area is $16$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s11",
+      "concepts": ["net-change"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A car moves with velocity $v(t) = 6t$ meters per second. How far does it travel from $t = 0$ to $t = 4$ seconds? (Distance $= \\int_0^4 6t\\,dt$, the shaded area in the figure.)",
+      "plot": { "xRange": [-0.5, 4.5], "yRange": [0, 28], "curves": [ { "fn": "6*x", "label": "v(t) = 6t", "labelAt": 3.6, "color": "accent", "fillRange": [0, 4] } ], "caption": "The distance traveled is the shaded area under the velocity line from t = 0 to t = 4." },
+      "steps": [
+        { "instruction": "Find an antiderivative of $6t$.", "answer": "3t^2", "accept": ["3t^2 + C", "3t²"], "hint": "Antiderivative of $6t$ is $3t^2$." },
+        { "instruction": "Evaluate $\\left[3t^2\\right]_0^4 = 3(4^2) - 3(0^2)$.", "answer": "48", "accept": [], "hint": "$3 \\times 16 - 0$." }
+      ],
+      "finalAnswer": { "value": "48", "unit": "meters" },
+      "solutionNarrative": "$\\int_0^4 6t\\,dt = \\left[3t^2\\right]_0^4 = 48 - 0 = 48$ meters."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s12",
+      "concepts": ["net-change"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A factory's marginal cost is $c(q) = 3q^2 + 4$ dollars per unit. The added cost of producing units $q = 0$ to $q = 3$ is $\\int_0^3 (3q^2 + 4)\\,dq$. Find the total added cost.",
+      "steps": [
+        { "instruction": "Find an antiderivative of $3q^2 + 4$.", "answer": "q^3 + 4q", "accept": ["q^3 + 4q + C", "q³ + 4q"], "hint": "Antiderivative of $3q^2$ is $q^3$; of $4$ is $4q$." },
+        { "instruction": "Evaluate $F(3)$.", "answer": "39", "accept": [], "hint": "$3^3 + 4(3) = 27 + 12$." },
+        { "instruction": "Compute $F(3) - F(0)$.", "answer": "39", "accept": [], "hint": "$F(0) = 0$." }
+      ],
+      "finalAnswer": { "value": "39", "unit": "dollars" },
+      "solutionNarrative": "$F(q) = q^3 + 4q$; $F(3) = 39$ and $F(0) = 0$, so the added cost is \\$39."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s13",
+      "concepts": ["net-change"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A reservoir's net inflow rate is $r(t) = 12t - 3t^2$ thousand liters per hour (positive early, then negative as outflow takes over) for $t$ from 1 to 4 hours. The net change in volume is $\\int_1^4 (12t - 3t^2)\\,dt$ thousand liters. Find it.",
+      "steps": [
+        { "instruction": "Find an antiderivative of $12t - 3t^2$.", "answer": "6t^2 - t^3", "accept": ["6t^2 - t^3 + C", "6t² - t³"], "hint": "Antiderivative of $12t$ is $6t^2$; of $-3t^2$ is $-t^3$." },
+        { "instruction": "Evaluate $F(4)$.", "answer": "32", "accept": [], "hint": "$6(16) - 4^3 = 96 - 64$." },
+        { "instruction": "Evaluate $F(1)$.", "answer": "5", "accept": [], "hint": "$6(1) - 1^3 = 6 - 1$." },
+        { "instruction": "Compute $F(4) - F(1)$.", "answer": "27", "accept": [], "hint": "$32 - 5$." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "thousand liters" },
+      "solutionNarrative": "$F(t) = 6t^2 - t^3$; $F(4) = 32$, $F(1) = 5$, so the net change is $32 - 5 = 27$ thousand liters."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s14",
+      "concepts": ["ftc-evaluate"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_2^5 1\\,dx$ (the integral of the constant 1).",
+      "steps": [
+        { "instruction": "Find an antiderivative of $1$.", "answer": "x", "accept": ["x + C"], "hint": "$\\int 1\\,dx = x$." },
+        { "instruction": "Compute $F(5) - F(2)$.", "answer": "3", "accept": [], "hint": "$5 - 2$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$\\int_2^5 1\\,dx = \\left[x\\right]_2^5 = 5 - 2 = 3$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s15",
+      "concepts": ["riemann-sums"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bike's speed (m/s) is recorded at the start of each 1-second interval over 4 seconds following $v(t) = t + 1$: $v(0) = 1$, $v(1) = 2$, $v(2) = 3$, $v(3) = 4$. Estimate the distance with a **left** Riemann sum ($\\Delta t = 1$).",
+      "steps": [
+        { "instruction": "Add the four left-edge speeds $v(0) + v(1) + v(2) + v(3)$.", "answer": "10", "accept": [], "hint": "$1 + 2 + 3 + 4$." },
+        { "instruction": "Multiply the speed-sum by $\\Delta t = 1$ to estimate the distance.", "answer": "10", "accept": [], "hint": "$10 \\times 1$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "meters" },
+      "solutionNarrative": "Left-edge speeds $1, 2, 3, 4$ sum to $10$; times $\\Delta t = 1$ gives an estimated $10$ meters."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s16",
+      "concepts": ["area-under-curve"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the exact area under $f(x) = 4x$ from $x = 0$ to $x = 2$.",
+      "steps": [
+        { "instruction": "Find an antiderivative of $4x$.", "answer": "2x^2", "accept": ["2x^2 + C", "2x²"], "hint": "Power rule: $\\int 4x\\,dx = 2x^2$." },
+        { "instruction": "Evaluate $\\left[2x^2\\right]_0^2 = 2(2^2) - 2(0^2)$.", "answer": "8", "accept": [], "hint": "$2 \\times 4 - 0$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "square units" },
+      "solutionNarrative": "$\\int_0^2 4x\\,dx = \\left[2x^2\\right]_0^2 = 8 - 0 = 8$."
+    },
+    {
+      "id": "calculus-2.definite-integrals.s17",
+      "concepts": ["net-change"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bacterial culture grows at a rate of $g(t) = 2t + 3$ million cells per hour. How many million cells are added between hour 0 and hour 6? (Total $= \\int_0^6 (2t + 3)\\,dt$.)",
+      "steps": [
+        { "instruction": "Find an antiderivative of $2t + 3$.", "answer": "t^2 + 3t", "accept": ["t^2 + 3t + C", "t² + 3t"], "hint": "Antiderivative of $2t$ is $t^2$; of $3$ is $3t$." },
+        { "instruction": "Evaluate $F(6)$.", "answer": "54", "accept": [], "hint": "$6^2 + 3(6) = 36 + 18$." },
+        { "instruction": "Compute $F(6) - F(0)$.", "answer": "54", "accept": [], "hint": "$F(0) = 0$." }
+      ],
+      "finalAnswer": { "value": "54", "unit": "million cells" },
+      "solutionNarrative": "$F(t) = t^2 + 3t$; $F(6) = 54$ and $F(0) = 0$, so $54$ million cells are added."
+    }
+  ]
+}

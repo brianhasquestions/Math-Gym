@@ -1,0 +1,318 @@
+{
+  "id": "differential-equations.introduction",
+  "subject": "differential-equations",
+  "title": "Introduction to Differential Equations",
+  "prerequisites": ["calculus-2.antiderivatives"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "classify-order-linearity",
+      "label": "Order and linearity",
+      "microLesson": "Before solving a differential equation you describe it. The **order** is the highest derivative that appears: $\\\\frac{dy}{dx} = 2y$ is first order, $\\\\frac{d^2y}{dx^2} + y = 0$ is second order. It is **linear** if $y$ and its derivatives appear only to the first power, never multiplied together and never inside a function like $\\\\sin$ or a square. So $\\\\frac{dy}{dx} + 3y = x$ is linear, but $\\\\frac{dy}{dx} = y^2$ is nonlinear (the $y^2$ ruins it)."
+    },
+    {
+      "id": "verify-solutions",
+      "label": "Verifying a solution",
+      "microLesson": "A solution to a differential equation is a *function*, not a number. You check a proposed function by substituting it and its derivatives back in and seeing whether both sides match. If $y = e^{2x}$, then $\\\\frac{dy}{dx} = 2e^{2x} = 2y$, so $y = e^{2x}$ really does satisfy $\\\\frac{dy}{dx} = 2y$. Sometimes a constant is built in — like $y = Ce^{2x}$ — and you pick the constant that makes an initial condition true."
+    },
+    {
+      "id": "separable-recognition",
+      "label": "Recognizing separable equations",
+      "microLesson": "A first-order equation is **separable** if you can write $\\\\frac{dy}{dx}$ as a product of a part that depends only on $x$ and a part that depends only on $y$: $\\\\frac{dy}{dx} = g(x)\\\\,h(y)$. Then you split the variables — all the $y$'s with $dy$, all the $x$'s with $dx$ — and integrate each side. $\\\\frac{dy}{dx} = xy$ is separable ($g(x)=x$, $h(y)=y$); $\\\\frac{dy}{dx} = x + y$ is **not** (you cannot peel $x$ and $y$ apart by multiplication)."
+    },
+    {
+      "id": "slope-fields",
+      "label": "Slope fields and instantaneous trend",
+      "microLesson": "A first-order equation $\\\\frac{dy}{dx} = f(x,y)$ is a *rule for the slope* at every point. You do not need the solution to read it: just plug a point $(x,y)$ into the right-hand side to get the slope of the solution curve passing through it. A **slope field** draws a little dash with that slope at each point, and solution curves flow along the dashes — rising where the slope is positive, leveling off where it is zero."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A differential equation is a rule for change\n\nMost things we care about are described not by *what they are* but by *how fast they change*. A savings account grows in proportion to how much is already in it. A hot coffee cools faster the hotter it is above the room. A population's growth rate depends on its current size. Each of these is a sentence about a **rate** — and the mathematical translation of such a sentence is a **differential equation**.\n\nA differential equation simply relates a quantity to its own derivative. For a quantity $y$ that depends on $x$ (often $x$ is time), it has the form:\n\n$$\\\\frac{dy}{dx} = f(x, y).$$\n\nRead it out loud: *the instantaneous rate of change of $y$ equals this rule.* For example, \\\"money grows at 5% of itself per year\\\" becomes $\\\\frac{dy}{dt} = 0.05\\\\,y$. The equation **is** the model. Solving it means finding the actual function $y(t)$ that obeys the rule — but you can learn a great deal *before* solving, just by reading the equation.\n\n## Describing an equation: order and linearity\n\nThe first thing to do with any differential equation is classify it.\n\n- **Order** = the highest derivative present. $\\\\frac{dy}{dx} = 2y$ is **first order**; $\\\\frac{d^2y}{dx^2} + 4y = 0$ (which models a vibrating spring) is **second order**.\n- **Linear** means $y$ and its derivatives appear only to the first power, are never multiplied by each other, and never sit inside a nonlinear function. $\\\\frac{dy}{dx} + 3y = x$ is linear. $\\\\frac{dy}{dx} = y^2$ and $\\\\frac{dy}{dx} = \\\\sin(y)$ are **nonlinear**.\n\nThis isn't bookkeeping for its own sake — order and linearity tell you which solution methods are even available.\n\n## Checking an answer: substitute it back\n\nBecause a solution is a *function*, you verify it the same way you check arithmetic: plug it in. To test whether $y = e^{2x}$ solves $\\\\frac{dy}{dx} = 2y$, differentiate the candidate, $\\\\frac{dy}{dx} = 2e^{2x}$, and compare to $2y = 2e^{2x}$. They agree, so **yes**, it's a solution. Often a family of solutions carries a constant, like $y = Ce^{2x}$; an **initial condition** (say, $y(0) = 3$) pins the constant down — here $C = 3$.\n\nIt helps to see what that family looks like. Every choice of $C$ gives a curve $y = Ce^{2x}$ satisfying $\\\\frac{dy}{dx} = 2y$ — the equation alone determines the whole family, and the initial condition $y(0) = 3$ reaches into it and picks out exactly one curve.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-2,1],\"yRange\":[0,8],\"grid\":true,\"curves\":[{\"fn\":\"exp(2*x)\",\"label\":\"C=1\",\"color\":\"dim\",\"labelAt\":0.85},{\"fn\":\"2*exp(2*x)\",\"label\":\"C=2\",\"color\":\"success\",\"labelAt\":0.5},{\"fn\":\"3*exp(2*x)\",\"label\":\"C=3\",\"color\":\"accent\",\"labelAt\":0.3}],\"points\":[{\"x\":0,\"y\":3,\"label\":\"y(0)=3\",\"color\":\"warn\"}],\"caption\":\"Three members of the solution family y = Ce^(2x); the initial condition y(0) = 3 picks out the C = 3 curve\"}\n```\n\n## Separable equations: the first solving technique\n\nA first-order equation is **separable** when the right side factors into an $x$-only part times a $y$-only part:\n\n$$\\\\frac{dy}{dx} = g(x)\\\\,h(y).$$\n\nWhen it does, you can move all the $y$'s to one side and all the $x$'s to the other and integrate. $\\\\frac{dy}{dx} = xy$ is separable; $\\\\frac{dy}{dx} = x + y$ is not, because a *sum* can't be pulled apart into a product. Recognizing separability is the gateway skill: it's the most common solvable form in applications.\n\n## Reading the trend without solving: slope fields\n\nHere's the applied superpower. A first-order equation $\\\\frac{dy}{dx} = f(x,y)$ assigns a **slope** to every point in the plane. To find the slope of the solution curve through a particular point, you don't solve anything — you just substitute that point into $f$.\n\nFor $\\\\frac{dy}{dx} = x + y$, at the point $(1, 2)$ the slope is $1 + 2 = 3$: any solution passing through there is rising steeply. A **slope field** plots a tiny dash of the correct slope at a grid of points, and the solution curves are exactly the paths that stay tangent to those dashes. Where the rule equals zero, the curve is momentarily flat — those level-off points are the **equilibria** a population settles toward or a temperature relaxes to.\n\nA single differential equation has a whole **family of solution curves**, one through each starting point. The simplest example is $\\\\frac{dy}{dx} = ky$: a positive $k$ gives *growth* curves that climb ever faster, a negative $k$ gives *decay* curves that fall toward zero. Below are two representative members — $y = e^{0.4x}$ (growth) and $y = e^{-0.4x}$ (decay) — both passing through $(0, 1)$ but heading opposite ways.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-4, 4], \"yRange\": [0, 6], \"grid\": true, \"curves\": [ { \"fn\": \"exp(0.4*x)\", \"label\": \"growth\", \"color\": \"accent\", \"labelAt\": 2.6 }, { \"fn\": \"exp(-0.4*x)\", \"label\": \"decay\", \"color\": \"warn\", \"labelAt\": -2.6 } ], \"points\": [ { \"x\": 0, \"y\": 1, \"label\": \"y(0)=1\", \"color\": \"dim\" } ], \"caption\": \"Two solution curves of dy/dx = ky: y = e^{0.4x} (growth) and y = e^{-0.4x} (decay), both through (0, 1)\" }\n```\n\nBoth curves have the same value at $x = 0$ but the growth curve rises while the decay curve falls — the sign of the rate rule decides which way each solution flows.\n\n## Why this matters\n\nEverything downstream — exponential growth, Newton's cooling, circuits, mixing tanks — is this same idea: write the rule for the rate, classify it, and read or compute the behavior. The instantaneous trend is right there in the equation, before any integration."
+  },
+  "application": {
+    "summary": "A differential equation encodes how a real quantity changes from instant to instant: a population, an account balance, a cooling object's temperature, the charge on a capacitor. Reading the right-hand side at a point gives the instantaneous trend — rising, falling, or holding steady — without solving anything, and classification plus the separable test tell you how to solve when you need the full curve.",
+    "domains": ["biology", "physics", "finance", "engineering"],
+    "workedExample": "**A cooling cup of coffee.**\n\nNewton's law of cooling says an object changes temperature in proportion to how far it is above its surroundings. If the room is at 20\\u00b0C and $T$ is the coffee's temperature, the rule is\n\n$$\\\\frac{dT}{dt} = -0.1\\\\,(T - 20),$$\n\nwhere $t$ is in minutes. Notice what we can read off *immediately*, with no solving:\n\n- It is **first order** (only $\\\\frac{dT}{dt}$ appears) and **linear** ($T$ appears to the first power).\n- At $T = 90$\\u00b0C the instantaneous rate is $-0.1(90 - 20) = -7$\\u00b0C per minute: the coffee is cooling fast.\n- At $T = 30$\\u00b0C the rate is $-0.1(30 - 20) = -1$\\u00b0C per minute: cooling has nearly leveled off.\n- Setting the rate to zero gives $T = 20$\\u00b0C — the room temperature, the **equilibrium** the coffee drifts toward but never overshoots.\n\nAll of that decision-useful information — how fast, in which direction, toward what limit — comes straight from reading the equation. And because the right side factors as (a function of $T$) with no separate $t$, the equation is **separable**, so we *could* integrate to get the full $T(t)$ curve when we want it.",
+    "domainNotes": [
+      "**Biology:** $\\\\frac{dP}{dt} = rP$ models a population growing in proportion to its size; reading the rate tells you how fast it's expanding right now.",
+      "**Physics:** Newton's cooling and radioactive decay are first-order linear equations whose right-hand side gives the instantaneous rate at the current state.",
+      "**Finance:** continuously compounded interest, $\\\\frac{dA}{dt} = rA$, says the balance grows at rate $r$ times itself \\u2014 the bigger it is, the faster it climbs.",
+      "**Engineering:** the charge on a capacitor in an RC circuit obeys a first-order equation; the slope field shows it relaxing toward its steady-state value."
+    ]
+  },
+  "generators": ["de-classify-v1", "de-slope-v1", "de-separable-v1", "def-classify-order-linearity-d2", "def-classify-order-linearity-d3", "def-verify-solutions-d1", "def-verify-solutions-d2", "def-verify-solutions-d3", "def-separable-recognition-d1", "def-separable-recognition-d3", "def-slope-fields-d2", "def-slope-fields-d3"],
+  "problems": [
+    {
+      "id": "differential-equations.introduction.s01",
+      "concepts": ["classify-order-linearity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the differential equation $\\\\frac{dy}{dx} = 3y$.",
+      "steps": [
+        { "instruction": "What is the order of this equation? (Give a number.)", "answer": "1", "accept": ["first", "one"], "hint": "The order is the highest derivative that appears; here only the first derivative shows up." },
+        { "instruction": "Is the equation linear or nonlinear? Type 'linear' or 'nonlinear'.", "answer": "linear", "accept": [], "hint": "$y$ appears only to the first power and is not inside any nonlinear function." }
+      ],
+      "finalAnswer": { "value": "order 1, linear", "unit": "" },
+      "solutionNarrative": "Only $\\\\frac{dy}{dx}$ appears, so it is first order. $y$ appears to the first power, so it is linear."
+    },
+    {
+      "id": "differential-equations.introduction.s02",
+      "concepts": ["classify-order-linearity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Consider the differential equation $\\\\frac{d^2y}{dx^2} + 5\\\\frac{dy}{dx} + 6y = 0$.",
+      "steps": [
+        { "instruction": "What is the order of this equation? (Give a number.)", "answer": "2", "accept": ["second", "two"], "hint": "The highest derivative present is the second derivative." },
+        { "instruction": "Is the equation linear or nonlinear? Type 'linear' or 'nonlinear'.", "answer": "linear", "accept": [], "hint": "Each of $y$, $\\\\frac{dy}{dx}$, $\\\\frac{d^2y}{dx^2}$ appears to the first power and they are not multiplied together." }
+      ],
+      "finalAnswer": { "value": "order 2, linear", "unit": "" },
+      "solutionNarrative": "The second derivative is the highest present, so order 2. Every term is first power in $y$ and its derivatives, so it is linear."
+    },
+    {
+      "id": "differential-equations.introduction.s03",
+      "concepts": ["classify-order-linearity"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Consider the differential equation $\\\\frac{dy}{dx} + y^2 = \\\\sin(x)$.",
+      "steps": [
+        { "instruction": "What is the order of this equation? (Give a number.)", "answer": "1", "accept": ["first", "one"], "hint": "Only the first derivative of $y$ appears, regardless of the $y^2$." },
+        { "instruction": "Is the equation linear or nonlinear? Type 'linear' or 'nonlinear'.", "answer": "nonlinear", "accept": [], "hint": "The $y^2$ term is $y$ to the second power, which breaks linearity. The $\\\\sin(x)$ is fine since it involves only $x$." }
+      ],
+      "finalAnswer": { "value": "order 1, nonlinear", "unit": "" },
+      "solutionNarrative": "Only the first derivative appears, so order 1. The $y^2$ term makes it nonlinear; $\\\\sin(x)$ does not, because it involves only the independent variable."
+    },
+    {
+      "id": "differential-equations.introduction.s04",
+      "concepts": ["classify-order-linearity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A population $P$ grows according to the logistic model $\\\\frac{dP}{dt} = 0.4\\\\,P\\\\left(1 - \\\\frac{P}{1000}\\\\right)$, which biologists use when growth slows as a habitat fills.",
+      "steps": [
+        { "instruction": "What is the order of this equation? (Give a number.)", "answer": "1", "accept": ["first", "one"], "hint": "Only the first derivative $\\\\frac{dP}{dt}$ appears." },
+        { "instruction": "Multiplying out gives a $P^2$ term. Is the equation linear or nonlinear? Type 'linear' or 'nonlinear'.", "answer": "nonlinear", "accept": [], "hint": "Expanding $0.4P(1 - P/1000)$ produces a $-0.0004P^2$ term, which is $P$ to the second power." }
+      ],
+      "finalAnswer": { "value": "order 1, nonlinear", "unit": "" },
+      "solutionNarrative": "Only $\\\\frac{dP}{dt}$ appears, so order 1. Expanding gives a $P^2$ term, so the logistic equation is nonlinear."
+    },
+    {
+      "id": "differential-equations.introduction.s05",
+      "concepts": ["verify-solutions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Does the function $y = e^{3x}$ satisfy the differential equation $\\\\frac{dy}{dx} = 3y$?",
+      "steps": [
+        { "instruction": "Differentiate $y = e^{3x}$. What is $\\\\frac{dy}{dx}$? (Write it in terms of $y$, e.g. as a multiple of $y$.)", "answer": "3y", "accept": ["3e^{3x}", "3e^(3x)", "3*e^(3x)"], "hint": "$\\\\frac{d}{dx}e^{3x} = 3e^{3x}$, and $e^{3x}$ is just $y$." },
+        { "instruction": "Does this match the right-hand side $3y$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare your derivative to $3y$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\\\frac{dy}{dx} = 3e^{3x} = 3y$, which equals the right-hand side, so yes, $y = e^{3x}$ is a solution."
+    },
+    {
+      "id": "differential-equations.introduction.s06",
+      "concepts": ["verify-solutions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Test whether $y = x^2$ satisfies the differential equation $\\\\frac{dy}{dx} = 2x$.",
+      "steps": [
+        { "instruction": "Differentiate $y = x^2$. What is $\\\\frac{dy}{dx}$?", "answer": "2x", "accept": [], "hint": "Use the power rule: $\\\\frac{d}{dx}x^2 = 2x$." },
+        { "instruction": "Does $y = x^2$ satisfy the equation? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare your derivative to the right-hand side $2x$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\\\frac{dy}{dx} = 2x$ matches the right-hand side exactly, so yes, $y = x^2$ is a solution."
+    },
+    {
+      "id": "differential-equations.introduction.s07",
+      "concepts": ["verify-solutions"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An account balance is modeled by $\\\\frac{dA}{dt} = 0.05\\\\,A$ (continuous 5% growth). The general solution is $A = Ce^{0.05t}$. If the starting balance is $A(0) = 2000$ dollars, find the constant $C$.",
+      "steps": [
+        { "instruction": "Substitute $t = 0$ into $A = Ce^{0.05t}$. What does $A(0)$ simplify to in terms of $C$?", "answer": "C", "accept": ["C*1", "1C"], "hint": "$e^{0.05 \\\\cdot 0} = e^0 = 1$, so $A(0) = C$." },
+        { "instruction": "Set that equal to the initial balance and solve for $C$. (Give a number.)", "answer": "2000", "accept": [], "hint": "$A(0) = C = 2000$." }
+      ],
+      "finalAnswer": { "value": "2000", "unit": "dollars" },
+      "solutionNarrative": "At $t = 0$, $e^{0.05 \\\\cdot 0} = 1$, so $A(0) = C$. Setting $C = 2000$ matches the initial balance."
+    },
+    {
+      "id": "differential-equations.introduction.s08",
+      "concepts": ["verify-solutions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Does $y = \\\\sin(x)$ satisfy the second-order equation $\\\\frac{d^2y}{dx^2} + y = 0$?",
+      "steps": [
+        { "instruction": "The second derivative of $\\\\sin(x)$ is $-\\\\sin(x)$. Compute $\\\\frac{d^2y}{dx^2} + y$.", "answer": "0", "accept": [], "hint": "$-\\\\sin(x) + \\\\sin(x) = 0$." },
+        { "instruction": "Does $y = \\\\sin(x)$ satisfy the equation? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The left-hand side came out to 0, matching the right-hand side." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\\\frac{d^2y}{dx^2} = -\\\\sin(x)$, so $\\\\frac{d^2y}{dx^2} + y = -\\\\sin(x) + \\\\sin(x) = 0$. Yes, it is a solution."
+    },
+    {
+      "id": "differential-equations.introduction.s09",
+      "concepts": ["separable-recognition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider $\\\\frac{dy}{dx} = xy$.",
+      "steps": [
+        { "instruction": "Is this equation separable? Type 'separable' or 'not separable'.", "answer": "separable", "accept": [], "hint": "Can you write the right side as (something in $x$) times (something in $y$)? Here it is literally $x \\\\cdot y$." }
+      ],
+      "finalAnswer": { "value": "separable", "unit": "" },
+      "solutionNarrative": "The right side is $x \\\\cdot y$, a product of an $x$-part and a $y$-part, so the equation is separable."
+    },
+    {
+      "id": "differential-equations.introduction.s10",
+      "concepts": ["separable-recognition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Consider $\\\\frac{dy}{dx} = x + y$.",
+      "steps": [
+        { "instruction": "Is this equation separable? Type 'separable' or 'not separable'.", "answer": "not separable", "accept": ["nonseparable", "not-separable"], "hint": "A sum $x + y$ cannot be written as (a function of $x$) times (a function of $y$)." }
+      ],
+      "finalAnswer": { "value": "not separable", "unit": "" },
+      "solutionNarrative": "The right side is a sum, $x + y$, which cannot be factored into an $x$-only part times a $y$-only part, so it is not separable."
+    },
+    {
+      "id": "differential-equations.introduction.s11",
+      "concepts": ["separable-recognition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Consider $\\\\frac{dy}{dx} = \\\\frac{x^2}{y}$. This is separable, so identify the pieces in $\\\\frac{dy}{dx} = g(x)\\\\,h(y)$.",
+      "steps": [
+        { "instruction": "Is this equation separable? Type 'separable' or 'not separable'.", "answer": "separable", "accept": [], "hint": "$\\\\frac{x^2}{y} = x^2 \\\\cdot \\\\frac{1}{y}$, a product of an $x$-part and a $y$-part." },
+        { "instruction": "What is the $x$-only factor $g(x)$?", "answer": "x^2", "accept": ["x^{2}", "x*x"], "hint": "It is the part involving only $x$." },
+        { "instruction": "After separating, you write $y\\\\,dy = x^2\\\\,dx$. Integrate the left side $\\\\int y\\\\,dy$. What do you get (ignore $+C$)?", "answer": "y^2/2", "accept": ["(1/2)y^2", "0.5y^2", "y^{2}/2"], "hint": "$\\\\int y\\\\,dy = \\\\frac{y^2}{2}$." }
+      ],
+      "finalAnswer": { "value": "separable", "unit": "" },
+      "solutionNarrative": "$\\\\frac{x^2}{y} = x^2 \\\\cdot \\\\frac{1}{y}$, so $g(x) = x^2$ and $h(y) = 1/y$; it is separable. Separating gives $y\\\\,dy = x^2\\\\,dx$, and $\\\\int y\\\\,dy = \\\\frac{y^2}{2}$."
+    },
+    {
+      "id": "differential-equations.introduction.s12",
+      "concepts": ["separable-recognition"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A radioactive sample decays according to $\\\\frac{dN}{dt} = -kN$, where $N$ is the amount remaining and $k$ is a positive constant.",
+      "steps": [
+        { "instruction": "Is this equation separable? Type 'separable' or 'not separable'.", "answer": "separable", "accept": [], "hint": "The right side is $-k \\\\cdot N$, a constant times a function of $N$ only — and a constant counts as a function of $t$." }
+      ],
+      "finalAnswer": { "value": "separable", "unit": "" },
+      "solutionNarrative": "$-kN$ is a (constant) function of $t$ times a function of $N$, so the decay equation is separable; separating gives $\\\\frac{dN}{N} = -k\\\\,dt$."
+    },
+    {
+      "id": "differential-equations.introduction.s13",
+      "concepts": ["slope-fields"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For the equation $\\\\frac{dy}{dx} = x + y$, find the slope of the solution curve passing through the point $(1, 2)$.",
+      "steps": [
+        { "instruction": "Substitute $x = 1$ and $y = 2$ into the right-hand side. What is $\\\\frac{dy}{dx}$ there?", "answer": "3", "accept": [], "hint": "$\\\\frac{dy}{dx} = x + y = 1 + 2$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "At $(1, 2)$, $\\\\frac{dy}{dx} = 1 + 2 = 3$, so the solution curve has slope 3 there."
+    },
+    {
+      "id": "differential-equations.introduction.s14",
+      "concepts": ["slope-fields"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the equation $\\\\frac{dy}{dx} = x^2 - y$, a solution curve passes through $(2, 1)$.",
+      "steps": [
+        { "instruction": "Find the slope $\\\\frac{dy}{dx}$ at $(2, 1)$.", "answer": "3", "accept": [], "hint": "$\\\\frac{dy}{dx} = x^2 - y = 2^2 - 1$." },
+        { "instruction": "Is the solution curve increasing or decreasing at that point? Type 'increasing' or 'decreasing'.", "answer": "increasing", "accept": ["rising"], "hint": "A positive slope means the curve is rising." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "At $(2, 1)$, $\\\\frac{dy}{dx} = 4 - 1 = 3 > 0$, so the curve is increasing there."
+    },
+    {
+      "id": "differential-equations.introduction.s15",
+      "concepts": ["slope-fields"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For the autonomous equation $\\\\frac{dy}{dx} = y(4 - y)$, equilibrium solutions occur where the slope is zero everywhere along a horizontal line.",
+      "steps": [
+        { "instruction": "Find the slope at the point $(0, 1)$.", "answer": "3", "accept": [], "hint": "$\\\\frac{dy}{dx} = y(4 - y) = 1 \\\\cdot (4 - 1)$; the $x$-coordinate doesn't matter here." },
+        { "instruction": "At what positive value of $y$ is the slope zero (the upper equilibrium)? (Give a number.)", "answer": "4", "accept": [], "hint": "Set $y(4 - y) = 0$; the solutions are $y = 0$ and $y = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "At $(0,1)$, $\\\\frac{dy}{dx} = 1(4 - 1) = 3$. Setting $y(4-y)=0$ gives equilibria $y = 0$ and $y = 4$; the positive one is $y = 4$."
+    },
+    {
+      "id": "differential-equations.introduction.s16",
+      "concepts": ["slope-fields"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cup of coffee cools by Newton's law $\\\\frac{dT}{dt} = -0.1(T - 20)$, where $T$ is in \\u00b0C, $t$ in minutes, and the room is 20\\u00b0C.",
+      "steps": [
+        { "instruction": "When the coffee is at $T = 90$\\u00b0C, what is its instantaneous rate of change $\\\\frac{dT}{dt}$? (\\u00b0C per minute)", "answer": "-7", "accept": [], "hint": "$\\\\frac{dT}{dt} = -0.1(90 - 20) = -0.1 \\\\cdot 70$." },
+        { "instruction": "At what temperature $T$ is the rate of change zero (the equilibrium it cools toward)? (\\u00b0C)", "answer": "20", "accept": [], "hint": "Set $-0.1(T - 20) = 0$, so $T = 20$, the room temperature." }
+      ],
+      "finalAnswer": { "value": "-7", "unit": "\\u00b0C per minute" },
+      "solutionNarrative": "At $T = 90$, $\\\\frac{dT}{dt} = -0.1(70) = -7$\\u00b0C/min. The rate is zero when $T = 20$\\u00b0C, the room temperature the coffee approaches."
+    },
+    {
+      "id": "differential-equations.introduction.s17",
+      "concepts": ["classify-order-linearity", "verify-solutions"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A population grows by $\\\\frac{dP}{dt} = 0.2P$, and the proposed solution is $P = 500e^{0.2t}$.",
+      "steps": [
+        { "instruction": "What is the order of the equation? (Give a number.)", "answer": "1", "accept": ["first", "one"], "hint": "Only the first derivative $\\\\frac{dP}{dt}$ appears." },
+        { "instruction": "Differentiate $P = 500e^{0.2t}$ and check: does it satisfy $\\\\frac{dP}{dt} = 0.2P$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$\\\\frac{dP}{dt} = 500 \\\\cdot 0.2 e^{0.2t} = 0.2(500e^{0.2t}) = 0.2P$." },
+        { "instruction": "What is the population at $t = 0$? (Give a number.)", "answer": "500", "accept": [], "hint": "$P(0) = 500e^0 = 500$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The equation is first order. Differentiating gives $\\\\frac{dP}{dt} = 0.2 \\\\cdot 500e^{0.2t} = 0.2P$, so yes, $P = 500e^{0.2t}$ is a solution, and $P(0) = 500$."
+    },
+    {
+      "id": "differential-equations.introduction.s18",
+      "concepts": ["slope-fields"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The plot shows two solution curves of $\\\\frac{dy}{dx} = ky$: curve C1 is $y = e^{0.4x}$ and curve C2 is $y = e^{-0.4x}$. Both pass through the same point on the $y$-axis. Read the common value $y(0)$ (the height where both curves cross $x = 0$).",
+      "plot": { "type": "cartesian", "xRange": [-4, 4], "yRange": [0, 6], "grid": true, "curves": [ { "fn": "exp(0.4*x)", "label": "C1", "color": "accent", "labelAt": 2.6 }, { "fn": "exp(-0.4*x)", "label": "C2", "color": "warn", "labelAt": -2.6 } ], "points": [ { "x": 0, "y": 1, "label": "?", "color": "dim" } ] },
+      "steps": [
+        { "instruction": "Both curves meet where the $y$-axis crosses them. Read that height $y(0)$. (Give a number.)", "answer": "1", "accept": [], "hint": "$e^{0} = 1$, so both curves start at the same height." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "At $x = 0$, $e^{0.4 \\\\cdot 0} = e^{-0.4 \\\\cdot 0} = e^0 = 1$, so both solution curves pass through $(0, 1)$."
+    },
+    {
+      "id": "differential-equations.introduction.s19",
+      "concepts": ["slope-fields"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In the plot, curve C1 rises to the right and curve C2 falls to the right. One is a GROWTH solution ($k > 0$) and one is a DECAY solution ($k < 0$). Which curve is the growth solution? Answer 'C1' or 'C2'.",
+      "plot": { "type": "cartesian", "xRange": [-4, 4], "yRange": [0, 6], "grid": true, "curves": [ { "fn": "exp(0.4*x)", "label": "C1", "color": "accent", "labelAt": 2.6 }, { "fn": "exp(-0.4*x)", "label": "C2", "color": "warn", "labelAt": -2.6 } ] },
+      "steps": [
+        { "instruction": "A growth solution increases as $x$ increases. Which curve climbs toward the right? Answer 'C1' or 'C2'.", "answer": "C1", "accept": ["c1"], "hint": "$y = e^{0.4x}$ has a positive exponent, so it grows." }
+      ],
+      "finalAnswer": { "value": "C1", "unit": "" },
+      "solutionNarrative": "C1 is $y = e^{0.4x}$ with $k = 0.4 > 0$, so it grows; C2 is $y = e^{-0.4x}$ with $k = -0.4 < 0$, so it decays toward zero."
+    },
+    {
+      "id": "differential-equations.introduction.s20",
+      "concepts": ["slope-fields", "verify-solutions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Curve C1 in the plot is the solution $y = e^{0.4x}$ of $\\\\frac{dy}{dx} = 0.4y$. Using the equation (not the picture), find the slope of C1 at the point where it crosses the $y$-axis, i.e. at $(0, 1)$.",
+      "plot": { "type": "cartesian", "xRange": [-4, 4], "yRange": [0, 6], "grid": true, "curves": [ { "fn": "exp(0.4*x)", "label": "C1", "color": "accent", "labelAt": 2.6 } ], "points": [ { "x": 0, "y": 1, "label": "(0,1)", "color": "warn" } ] },
+      "steps": [
+        { "instruction": "The slope of a solution curve is $\\\\frac{dy}{dx} = 0.4y$. At $(0, 1)$ the value of $y$ is 1, so substitute $y = 1$. What is the slope? (Give a number.)", "answer": "0.4", "accept": ["2/5", "0.40"], "hint": "$\\\\frac{dy}{dx} = 0.4 \\\\cdot 1$." }
+      ],
+      "finalAnswer": { "value": "0.4", "unit": "" },
+      "solutionNarrative": "By the rule $\\\\frac{dy}{dx} = 0.4y$, at $(0, 1)$ the slope is $0.4 \\\\cdot 1 = 0.4$ — you read the height $y = 1$ off the graph and plug it into the equation."
+    },
+    {
+      "id": "differential-equations.introduction.s21",
+      "concepts": ["slope-fields"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The decay curve C2 is $y = e^{-0.4x}$. As $x$ increases without bound, what value does C2 approach (its horizontal limit, read from the graph flattening toward the $x$-axis)?",
+      "plot": { "type": "cartesian", "xRange": [-4, 4], "yRange": [0, 6], "grid": true, "curves": [ { "fn": "exp(-0.4*x)", "label": "C2", "color": "warn", "labelAt": -2.6 } ] },
+      "steps": [
+        { "instruction": "As $x \\\\to \\\\infty$, the decaying exponential flattens toward the $x$-axis. What is that limiting $y$-value? (Give a number.)", "answer": "0", "accept": [], "hint": "$e^{-0.4x} \\\\to 0$ as $x$ grows large." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "As $x \\\\to \\\\infty$, $e^{-0.4x} \\\\to 0$, so the decay curve levels off toward the $x$-axis: its equilibrium is $y = 0$."
+    }
+  ]
+}

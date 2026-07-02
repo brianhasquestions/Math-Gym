@@ -1,0 +1,273 @@
+{
+  "id": "cryptography.crypto-weaknesses",
+  "subject": "cryptography",
+  "title": "How Cryptography Breaks: Attacks and Misuse",
+  "prerequisites": ["cryptography.aes-finite-fields", "cryptography.rsa"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "keystream-reuse",
+      "label": "Keystream / nonce reuse (the two-time pad)",
+      "microLesson": "Every stream cipher — AES-CTR, AES-GCM, ChaCha20 — encrypts by XOR-ing the plaintext with a pseudorandom keystream: $C = M \\oplus K$. The keystream is determined by (key, nonce), so if a nonce is EVER reused, two messages get the same $K$ and $C_1 \\oplus C_2 = M_1 \\oplus M_2$ — the keystream cancels and structure leaks. One known/guessed plaintext ($M_1$) then gives $K = C_1 \\oplus M_1$ and hence every other message. The math of AES is untouched; the deployment simply violated 'never reuse a nonce'. Even with unique nonces, AES-GCM has a separate wear-out limit of $2^{36}-32$ bytes per key/nonce pair."
+    },
+    {
+      "id": "ecb-patterns",
+      "label": "ECB leaks structure (the penguin)",
+      "microLesson": "ECB (Electronic Codebook) mode encrypts each block independently with no chaining, so identical plaintext blocks always produce identical ciphertext blocks. Encryption hides the VALUES but not the PATTERN: a bitmap's flat regions stay flat, which is why the famous 'ECB penguin' is still recognizable after encryption. To spot the leak you just count: how many ciphertext blocks share a value, and therefore reveal that their plaintexts were equal. The fix is a randomized/chained mode (CBC, CTR, GCM) where a nonce or previous block makes even identical plaintext blocks encrypt differently."
+    },
+    {
+      "id": "ecdsa-nonce-reuse",
+      "label": "ECDSA nonce reuse recovers the key",
+      "microLesson": "An ECDSA signature is $s = k^{-1}(z + r\\,d) \\bmod n$, where $d$ is the SECRET private key, $z$ is the message hash, and $k$ is a per-signature random nonce. If the same $k$ is used twice, both signatures share $r$, and $s_1 - s_2 = k^{-1}(z_1 - z_2)$, so $k = (z_1 - z_2)(s_1 - s_2)^{-1} \\bmod n$. Once $k$ is known, $d = (s_1 k - z_1)\\,r^{-1} \\bmod n$ — total compromise. This is the Sony PlayStation 3 break. Ed25519 derives $k$ deterministically from the key and message, so two signatures can never share a nonce and this attack cannot occur."
+    },
+    {
+      "id": "rsa-misuse",
+      "label": "Textbook-RSA misuse (padding & shared primes)",
+      "microLesson": "Raw 'textbook' RSA without padding fails in ways the math itself does not. (a) Small exponent: with $e = 3$ and a small message $m$, if $m^3 < n$ then $c = m^3 \\bmod n = m^3$ is never reduced, so an attacker just takes the integer cube root: $m = \\sqrt[3]{c}$. (b) Shared prime: if two moduli were generated with a poor random source and share a prime, $\\gcd(n_1, n_2) = p$ recovers it by Euclid — factoring BOTH keys instantly. The defenses are OAEP padding (so identical/small messages never yield structured ciphertexts) and good randomness, both provided by any vetted library. Don't roll your own."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The math is rarely broken. The *deployment* is.\n\nYou have spent this subject building the engines: XOR and $GF(2^8)$ inside AES, modular exponentiation inside RSA, point addition on elliptic curves. Those engines are, as far as anyone knows, sound — nobody factors a 2048-bit modulus or brute-forces AES-256. Yet systems get broken constantly. **Almost never because the algorithm was weak. Almost always because it was *used* wrong.** This capstone is about the arithmetic of that misuse: the handful of small computations an attacker actually runs. If you want the field's engineering wisdom in prose, the gold standard is Soatok's blog, [Dhole Moments](https://soatok.blog/); the four posts cited below are the ones this lesson is built on.\n\n## 1. Reuse a keystream and it evaporates\n\nEvery modern stream cipher — AES-CTR, AES-GCM, ChaCha20 — encrypts the same way a one-time pad does: it XORs your message with a pseudorandom **keystream** $K$ generated from (key, nonce). Encryption is $C = M \\oplus K$. The keystream is safe *only if the nonce is never repeated under a given key.* Repeat it, and two messages share $K$:\n\n$$C_1 \\oplus C_2 = (M_1 \\oplus K) \\oplus (M_2 \\oplus K) = M_1 \\oplus M_2.$$\n\nThe key **cancels itself out**. Now a single guessed word of $M_1$ (a fixed header, a known greeting) gives $K = C_1 \\oplus M_1$, and from there every other message. This is the exact rock WEP and early WPA died on: their nonces (IVs) were too short and cycled, so keystreams recurred. AES-GCM's nonce is only **96 bits**, and — subtly — GCM is *not* message-committing and carries a wear-out limit of $2^{36}-32$ bytes per key/nonce pair; Soatok lays out these sharp edges in [\"Comparison of Symmetric Encryption Methods\"](https://soatok.blog/2020/07/12/comparison-of-symmetric-encryption-methods/). The number $2^{36}-32 = 68{,}719{,}476{,}704$ isn't fear-mongering — it's a design bound you respect by rotating keys, exactly the way you'd respect a load rating.\n\n## 2. ECB: encryption that keeps the picture\n\nA block cipher only encrypts one block. To encrypt a *message* you need a **mode**. The naive one, **ECB** (Electronic Codebook), encrypts each block independently — and so **identical plaintext blocks become identical ciphertext blocks.** Values are hidden; the *pattern* is not. Encrypt a bitmap with a big flat background and the outline survives: the notorious **\"ECB penguin.\"** Detecting it is pure counting — how many ciphertext blocks repeat, and therefore betray equal plaintexts. The remedy is a randomized or chained mode (CBC, CTR, GCM) where a nonce or the previous block perturbs each block so repeats vanish. Same AES underneath; the mode is the whole story.\n\n## 3. Reuse an ECDSA nonce and you leak the private key\n\nSignatures are where a reused random number is catastrophic. An ECDSA signature on hash $z$ is\n\n$$s = k^{-1}(z + r\\,d) \\bmod n,$$\n\nwhere $d$ is your **private key** and $k$ is a fresh random **nonce** each time. Sign two messages with the *same* $k$ and both share $r$; subtract:\n\n$$s_1 - s_2 = k^{-1}(z_1 - z_2) \\;\\Rightarrow\\; k = \\frac{z_1 - z_2}{s_1 - s_2} \\bmod n.$$\n\nWith $k$ in hand, one line finishes the job: $d = (s_1 k - z_1)\\,r^{-1} \\bmod n$. Your master key, gone. This is precisely how the **Sony PlayStation 3** signing key was extracted — Sony reused $k$. The cure is structural: **Ed25519** computes $k$ *deterministically* from the private key and the message, so distinct messages can never collide on a nonce and this attack is simply impossible. Soatok's [\"Guidance for Choosing an Elliptic Curve Signature Algorithm in 2022\"](https://soatok.blog/2022/05/19/guidance-for-choosing-an-elliptic-curve-signature-algorithm-in-2022/) is the practical reference for why deterministic signatures win.\n\n## 4. Textbook RSA: the failures aren't in the factoring\n\nRSA is secure because factoring is hard — but 'textbook' RSA with no padding hands out free wins that have nothing to do with factoring.\n\n- **Small exponent, small message.** With $e = 3$ and a small $m$, if $m^3 < n$ then the modular reduction never fires: $c = m^3 \\bmod n = m^3$. The attacker just takes an integer **cube root**: $m = \\sqrt[3]{c}$. No factoring, no key — arithmetic a calculator does.\n- **Shared primes.** Key generation needs *good randomness*. When it's weak, two different moduli can accidentally share a prime, and then $\\gcd(n_1, n_2) = p$ (plain Euclid) factors **both** instantly. Internet-wide scans really have found thousands of live keys colliding this way.\n\nThe fixes are old and boring: **OAEP padding** so small/identical messages never produce structured ciphertexts, and a real CSPRNG for key generation. Both come standard in any vetted library — which is the whole point of Soatok's [\"How To Learn Cryptography as a Programmer\"](https://soatok.blog/2020/06/10/how-to-learn-cryptography-as-a-programmer/): *don't roll your own*, and learn by attacking (Cryptopals, CryptoHack) so you can *feel* where these edges are.\n\n## The through-line\n\nEvery attack here is small arithmetic — an XOR, a gcd, a cube root, one modular inverse — and every one exploits a *usage* mistake, not a flaw in AES or RSA. That asymmetry is the discipline's core lesson, and it's why Soatok argues in [\"Cryptography Engineering Has An Intrinsic Duty of Care\"](https://soatok.blog/2026/02/25/cryptography-engineering-has-an-intrinsic-duty-of-care/) that misuse-prone ciphers and side channels are the *designer's* responsibility, not the user's. Do the computations below by hand and you'll never again mistake 'we used AES' for 'we're secure.'"
+  },
+  "application": {
+    "summary": "Real-world crypto breaks by misuse, not by broken math: reused stream-cipher nonces (WEP/early WPA), ECB structure leakage (the penguin), reused ECDSA signing nonces (the PS3 hack), and unpadded/weak-randomness RSA. Each attack is a tiny hand computation — XOR, gcd, cube root, or one modular inverse.",
+    "domains": ["network security", "Wi-Fi", "game-console security", "public-key infrastructure", "CTF / security research"],
+    "workedExample": "**Recovering an ECDSA private key from a reused nonce.**\n\nTwo signatures come from the same signer on a toy curve of order $n = 11$. Both reused the nonce $k$, so they share $r = 5$: $(r, s_1) = (5, 8)$ on message hash $z_1 = 6$, and $(r, s_2) = (5, 7)$ on hash $z_2 = 2$. We know nothing else — but that's enough.\n\n*Step 1 — recover the nonce.* Because $s = k^{-1}(z + rd)$, subtracting kills $d$: $s_1 - s_2 = k^{-1}(z_1 - z_2)$. So\n$$k = \\frac{z_1 - z_2}{s_1 - s_2} = \\frac{6 - 2}{8 - 7} = \\frac{4}{1} = 4 \\bmod 11.$$\n\n*Step 2 — recover the private key.* From $s_1 = k^{-1}(z_1 + rd)$, solve for $d$: $d = (s_1 k - z_1)\\,r^{-1} \\bmod n$. Here $s_1 k - z_1 = 8\\cdot 4 - 6 = 26 \\equiv 4 \\pmod{11}$, and $r^{-1} = 5^{-1} = 9 \\pmod{11}$ (since $5\\cdot 9 = 45 \\equiv 1$). So\n$$d = 4 \\cdot 9 = 36 \\equiv 3 \\pmod{11}.$$\n\n**The private key is $d = 3$.** Two signatures and one repeated nonce were all it took. This is the Sony PS3 break in miniature — and Ed25519's deterministic nonces make the attack impossible by construction.\n\n*Further reading:* the definitive engineering treatment of these failure modes is Soatok's [Dhole Moments](https://soatok.blog/) — especially [\"Guidance for Choosing an Elliptic Curve Signature Algorithm in 2022\"](https://soatok.blog/2022/05/19/guidance-for-choosing-an-elliptic-curve-signature-algorithm-in-2022/).",
+    "domainNotes": [
+      "**Wi-Fi (WEP / early WPA):** short, cycling IVs made the RC4 keystream repeat, so $C_1 \\oplus C_2 = M_1 \\oplus M_2$ recovered traffic — the exact two-time-pad failure. WPA2/WPA3 (AES-CCMP/GCMP) fixed the nonce handling.",
+      "**Game consoles (Sony PS3):** the ECDSA signing key was extracted because Sony reused the nonce $k$ across signatures — the identical computation you did above, at real key sizes. It let anyone sign code as Sony.",
+      "**RSA in the wild:** internet-wide scans (e.g. the 2012 'Mining Your Ps and Qs' study) found thousands of live TLS/SSH keys sharing a prime because embedded devices had weak entropy at boot — every one factorable by a single gcd.",
+      "**CTF / security research:** 'crypto' categories at CTFs are almost entirely these misuse patterns — nonce reuse, ECB detection, unpadded RSA, small-$e$ cube roots. Practicing on Cryptopals and CryptoHack is how professionals build the instinct.",
+      "**Further reading:** Soatok's [Dhole Moments](https://soatok.blog/) is the field's most-recommended source of practical crypto-engineering wisdom — start with 'How To Learn Cryptography as a Programmer' and the symmetric-methods comparison, then 'Cryptography Engineering Has An Intrinsic Duty of Care'."
+    ]
+  },
+  "generators": [
+    "cr4-ksr-d1", "cr4-ksr-d2", "cr4-ksr-d3",
+    "cr4-ecb-d1", "cr4-ecb-d2", "cr4-ecb-d3",
+    "cr4-ecdsa-d1", "cr4-ecdsa-d2", "cr4-ecdsa-d3",
+    "cr4-rsa-d1", "cr4-rsa-d2", "cr4-rsa-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.crypto-weaknesses.s01",
+      "concepts": ["keystream-reuse"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A stream cipher reused its keystream nibble $K$ on two messages: $C_1 = M_1 \\oplus K = 12$ and $C_2 = M_2 \\oplus K = 9$ (4-bit values). You know $M_1 = 9$. Recover the key. (Decimal.)",
+      "steps": [
+        { "instruction": "Compute $C_1 \\oplus C_2 = 12 \\oplus 9$ (this equals $M_1 \\oplus M_2$).", "answer": "5", "accept": ["0101"], "hint": "$1100 \\oplus 1001$, column by column." },
+        { "instruction": "Recover the key: $K = C_1 \\oplus M_1 = 12 \\oplus 9$.", "answer": "5", "accept": ["0101"], "hint": "$1100 \\oplus 1001$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Reusing one keystream makes $C_1 \\oplus C_2 = 5 = M_1 \\oplus M_2$. A known message peels off the key: $K = 12 \\oplus 9 = 5$."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s02",
+      "concepts": ["keystream-reuse"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "AES-CTR was run twice with the SAME nonce, so both messages were XORed with the same keystream byte $K$: $C_1 = 226$ and $C_2 = 195$. A predictable header reveals $M_1 = 72$. Recover the key byte and the second message. (Decimal.)",
+      "steps": [
+        { "instruction": "Compute $C_1 \\oplus C_2 = 226 \\oplus 195$ (which is $M_1 \\oplus M_2$).", "answer": "33", "accept": ["00100001"], "hint": "$11100010 \\oplus 11000011$." },
+        { "instruction": "Recover the key: $K = C_1 \\oplus M_1 = 226 \\oplus 72$.", "answer": "170", "accept": ["10101010"], "hint": "$11100010 \\oplus 01001000$." },
+        { "instruction": "Recover the second message: $M_2 = C_2 \\oplus K = 195 \\oplus 170$.", "answer": "105", "accept": ["01101001"], "hint": "Also $M_1 \\oplus (C_1 \\oplus C_2) = 72 \\oplus 33$." }
+      ],
+      "finalAnswer": { "value": "105", "unit": "" },
+      "solutionNarrative": "The reused keystream cancels: $C_1 \\oplus C_2 = 33$. Then $K = 226 \\oplus 72 = 170$ and $M_2 = 195 \\oplus 170 = 105$. Nonce reuse turns CTR into a broken two-time pad."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s03",
+      "concepts": ["keystream-reuse"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two AES-GCM ciphertexts share a nonce: $C_1 = 226$, $C_2 = 195$; a known header gives $M_1 = 72$. Break the pair, then recall GCM's SEPARATE safety limit of $2^{36}-32$ bytes per key/nonce pair. (Decimal.)",
+      "steps": [
+        { "instruction": "Cancel the keystream: $C_1 \\oplus C_2 = 226 \\oplus 195$.", "answer": "33", "accept": ["00100001"], "hint": "This is $M_1 \\oplus M_2$; the shared keystream drops out." },
+        { "instruction": "Recover the second message directly: $M_2 = M_1 \\oplus (C_1 \\oplus C_2) = 72 \\oplus 33$.", "answer": "105", "accept": ["01101001"], "hint": "$01001000 \\oplus 00100001$." },
+        { "instruction": "Recover the keystream byte $K = C_1 \\oplus M_1 = 226 \\oplus 72$.", "answer": "170", "accept": ["10101010"], "hint": "Once $M_1$ is known, $C_1 \\oplus M_1$ strips the mask." },
+        { "instruction": "The wear-out limit is $2^{36} - 32$ bytes. Compute that number.", "answer": "68719476704", "accept": [], "hint": "$2^{36} = 68719476736$; subtract 32." }
+      ],
+      "finalAnswer": { "value": "105", "unit": "" },
+      "solutionNarrative": "$C_1 \\oplus C_2 = 33 = M_1 \\oplus M_2$, so $M_2 = 72 \\oplus 33 = 105$ and $K = 226 \\oplus 72 = 170$. Even with unique nonces, GCM wears out at $2^{36}-32 = 68{,}719{,}476{,}704$ bytes per key/nonce pair (Soatok, \"Comparison of Symmetric Encryption Methods\")."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s04",
+      "concepts": ["ecb-patterns"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "In ECB mode, equal plaintext blocks encrypt to equal ciphertext blocks. A 4-block message produced these ciphertext blocks: c1=9F, c2=3C, c3=9F, c4=D1. (Same hex value = same plaintext block.)",
+      "steps": [
+        { "instruction": "How many DISTINCT ciphertext block values appear?", "answer": "3", "accept": [], "hint": "9F, 3C, 9F, D1 — count the different values." },
+        { "instruction": "The value 9F appears twice. How many of the 4 blocks are proven identical to another? (Count both copies.)", "answer": "2", "accept": [], "hint": "Two blocks share the value 9F." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "blocks" },
+      "solutionNarrative": "The repeated 9F betrays two identical plaintext blocks — 3 distinct values across 4 blocks. ECB never hides where a message repeats itself."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s05",
+      "concepts": ["ecb-patterns"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An image encrypted with AES in ECB mode gives this 6-block ciphertext stream (by block value): A1 7E A1 7E C4 A1. Identical values mean identical plaintext blocks.",
+      "steps": [
+        { "instruction": "How many DISTINCT block values are there?", "answer": "3", "accept": [], "hint": "A1, 7E, C4." },
+        { "instruction": "A1 appears 3 times and 7E appears 2 times. How many blocks belong to a repeated group? (3 + 2.)", "answer": "5", "accept": [], "hint": "Three copies of A1 plus two of 7E." },
+        { "instruction": "How many blocks are UNIQUE (appear exactly once)? (Only C4.)", "answer": "1", "accept": [], "hint": "6 total minus 5 in repeated groups." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "blocks" },
+      "solutionNarrative": "3 distinct values; A1 (×3) and 7E (×2) put 5 of the 6 blocks into visible repeat groups, only C4 unique. This is why the 'ECB penguin' stays recognizable."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s06",
+      "concepts": ["ecb-patterns"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 16-block bitmap has a flat background: 10 of its blocks are byte-identical (same solid color), and the remaining 6 foreground blocks are all different from each other and from the background. It is encrypted with AES-ECB.",
+      "steps": [
+        { "instruction": "The 10 identical background blocks all encrypt to the SAME value. How many distinct ciphertext values does the full image have?", "answer": "7", "accept": [], "hint": "One value for the whole background, plus 6 distinct foreground values." },
+        { "instruction": "How many of the 16 ciphertext blocks are visibly part of the background repeat group?", "answer": "10", "accept": [], "hint": "Exactly the identical background blocks." },
+        { "instruction": "A secure (randomized) mode would make all 16 blocks look distinct. How many MORE distinct values is that than ECB gives? (16 minus your first answer.)", "answer": "9", "accept": [], "hint": "$16 - 7$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "distinct blocks" },
+      "solutionNarrative": "ECB collapses the 10-block background to one repeated ciphertext value, giving 7 distinct blocks instead of 16. The image outline survives encryption — a structural failure, not a math bug in AES."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s07",
+      "concepts": ["ecdsa-nonce-reuse"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two ECDSA signatures (order $n = 11$) reused the same nonce $k$, so they share $r = 5$: $(r, s_1) = (5, 8)$ on hash $z_1 = 6$, and $(r, s_2) = (5, 7)$ on hash $z_2 = 2$. Recover the nonce $k = (z_1 - z_2)(s_1 - s_2)^{-1} \\bmod 11$.",
+      "steps": [
+        { "instruction": "Compute $z_1 - z_2 \\bmod 11$ (i.e. $6 - 2$).", "answer": "4", "accept": [], "hint": "$6 - 2 = 4$." },
+        { "instruction": "Compute $s_1 - s_2 \\bmod 11$ (i.e. $8 - 7$).", "answer": "1", "accept": [], "hint": "$8 - 7 = 1$." },
+        { "instruction": "Recover $k = (z_1 - z_2)(s_1 - s_2)^{-1} = 4 \\cdot 1^{-1} \\bmod 11$.", "answer": "4", "accept": [], "hint": "The inverse of 1 is 1, so $k = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Since $s = k^{-1}(z + rd)$, the difference $s_1 - s_2 = k^{-1}(z_1 - z_2)$, so $k = 4/1 = 4 \\bmod 11$. A reused nonce hands the attacker $k$ for free."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s08",
+      "concepts": ["ecdsa-nonce-reuse"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Finish the PS3-style break from s07. On order $n = 11$ with $r = 5$, $s_1 = 8$, $z_1 = 6$, and the recovered nonce $k = 4$, extract the PRIVATE key $d = (s_1 k - z_1)\\,r^{-1} \\bmod 11$.",
+      "steps": [
+        { "instruction": "Compute $s_1 k - z_1 \\bmod 11$ (i.e. $8 \\cdot 4 - 6$).", "answer": "4", "accept": [], "hint": "$32 - 6 = 26 \\equiv 4 \\pmod{11}$." },
+        { "instruction": "Find $r^{-1} = 5^{-1} \\bmod 11$.", "answer": "9", "accept": [], "hint": "$5 \\cdot 9 = 45 = 44 + 1 \\equiv 1 \\pmod{11}$." },
+        { "instruction": "Recover $d = (s_1 k - z_1)\\,r^{-1} = 4 \\cdot 9 \\bmod 11$.", "answer": "3", "accept": [], "hint": "$36 = 33 + 3 \\equiv 3 \\pmod{11}$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "From $s_1 = k^{-1}(z_1 + rd)$, $d = (s_1 k - z_1)/r = 4 \\cdot 9 = 36 \\equiv 3 \\pmod{11}$. The private key is $d = 3$ — exactly how Sony's PS3 signing key leaked."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s09",
+      "concepts": ["ecdsa-nonce-reuse"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Full ECDSA key recovery on order $n = 17$. Two signatures reuse the nonce, sharing $r = 9$: $s_1 = 1$ on $z_1 = 10$, $s_2 = 10$ on $z_2 = 4$. Recover $k$ and $d$, then note the fix.",
+      "steps": [
+        { "instruction": "Compute $z_1 - z_2 \\bmod 17$ (i.e. $10 - 4$).", "answer": "6", "accept": [], "hint": "$10 - 4 = 6$." },
+        { "instruction": "Compute $s_1 - s_2 \\bmod 17$ (i.e. $1 - 10$, add 17 since it is negative).", "answer": "8", "accept": [], "hint": "$1 - 10 = -9 \\equiv 8 \\pmod{17}$." },
+        { "instruction": "Recover $k = (z_1 - z_2)(s_1 - s_2)^{-1} = 6 \\cdot 8^{-1} \\bmod 17$. ($8^{-1} = 15$, since $8\\cdot15=120\\equiv1$.)", "answer": "5", "accept": [], "hint": "$6 \\cdot 15 = 90 = 85 + 5 \\equiv 5 \\pmod{17}$." },
+        { "instruction": "Recover $d = (s_1 k - z_1)\\,r^{-1} \\bmod 17$. Here $s_1 k - z_1 = 1\\cdot5 - 10 \\equiv 12$ and $r^{-1} = 9^{-1} = 2$. Compute $12 \\cdot 2 \\bmod 17$.", "answer": "7", "accept": [], "hint": "$24 = 17 + 7 \\equiv 7 \\pmod{17}$." },
+        { "instruction": "Ed25519 derives $k$ deterministically, so two signatures cannot share a nonce. Under Ed25519, how many private keys does this attack recover?", "answer": "0", "accept": ["none", "zero"], "hint": "Deterministic nonces make the reuse condition impossible." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "$k = 6/8 = 5 \\bmod 17$, then $d = (1\\cdot5 - 10)/9 = 12 \\cdot 2 = 24 \\equiv 7 \\pmod{17}$ — total compromise from one repeated nonce. Ed25519's deterministic nonces recover 0 keys, which is why Soatok's ECC guidance recommends it over ECDSA."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s10",
+      "concepts": ["rsa-misuse"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A system uses textbook RSA with public exponent $e = 3$ and NO padding. A small message $m$ was encrypted as $c = m^3 \\bmod n$, but $m$ was so small that $m^3 < n$ — so no wraparound happened and $c = 64$ exactly. Recover $m$.",
+      "steps": [
+        { "instruction": "Since $c = m^3$ was never reduced, recover $m$ as the integer cube root of $c = 64$. What is $m$?", "answer": "4", "accept": [], "hint": "What integer cubed gives 64? ($3^3 = 27$, $4^3 = 64$.)" }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "With $e = 3$, no padding, and $m^3 < n$, the ciphertext is a plain cube: $m = \\sqrt[3]{64} = 4$. OAEP padding exists precisely to stop this (Soatok, \"How To Learn Cryptography as a Programmer\")."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s11",
+      "concepts": ["rsa-misuse"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Same small-$e$ flaw, different message: with $e = 3$, no padding, and $m^3 < n$, an unpadded ciphertext $c = 343$ arrives. Recover $m$.",
+      "steps": [
+        { "instruction": "Take the integer cube root of $c = 343$. What is $m$?", "answer": "7", "accept": [], "hint": "$6^3 = 216$, $7^3 = 343$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "$m = \\sqrt[3]{343} = 7$. When the message is small enough that $m^e$ never wraps mod $n$, encryption does nothing an attacker can't trivially undo."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s12",
+      "concepts": ["rsa-misuse"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two RSA public moduli were generated with a weak random source and accidentally SHARE a prime factor: $n_1 = 77$ and $n_2 = 91$. Anyone can factor both with one gcd. Recover the shared prime $p = \\gcd(n_1, n_2)$.",
+      "steps": [
+        { "instruction": "Run Euclid: compute $91 \\bmod 77$.", "answer": "14", "accept": [], "hint": "$91 - 77 = 14$." },
+        { "instruction": "Continue: compute $77 \\bmod 14$.", "answer": "7", "accept": [], "hint": "$77 = 5 \\cdot 14 + 7$." },
+        { "instruction": "One more: $14 \\bmod 7 = 0$, so what is $\\gcd(77, 91)$?", "answer": "7", "accept": [], "hint": "The last nonzero remainder is the gcd." },
+        { "instruction": "Factor $n_1 = 77$ with the recovered prime: what is the other factor $q_1 = 77 / 7$?", "answer": "11", "accept": [], "hint": "$77 / 7 = 11$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "$\\gcd(77, 91) = 7$ instantly factors both keys: $n_1 = 7 \\times 11$. Real internet scans found thousands of live keys sharing primes — a randomness failure, not a break of RSA's math."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s13",
+      "concepts": ["rsa-misuse"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two RSA moduli share a prime: $n_1 = 143$, $n_2 = 187$. The first key publishes exponent $e = 7$. Recover the shared prime, then the full PRIVATE key $d$ for $n_1$.",
+      "steps": [
+        { "instruction": "Compute the shared prime $p = \\gcd(143, 187)$.", "answer": "11", "accept": [], "hint": "$187 = 143 + 44$; $143 = 3\\cdot44 + 11$; $44 = 4\\cdot11$. The gcd is 11." },
+        { "instruction": "Factor $n_1$: the other prime is $q_1 = 143 / 11$. What is $q_1$?", "answer": "13", "accept": [], "hint": "$143 / 11 = 13$." },
+        { "instruction": "Compute the secret $\\varphi(n_1) = (p-1)(q_1-1) = 10 \\cdot 12$.", "answer": "120", "accept": [], "hint": "$10 \\times 12 = 120$." },
+        { "instruction": "Recover the private key $d = 7^{-1} \\bmod 120$.", "answer": "103", "accept": [], "hint": "$7 \\cdot 103 = 721 = 6\\cdot120 + 1$." }
+      ],
+      "finalAnswer": { "value": "103", "unit": "" },
+      "solutionNarrative": "One gcd factors $n_1 = 11 \\times 13$, giving $\\varphi = 120$ and $d = 7^{-1} \\bmod 120 = 103$ — the whole private key. Don't roll your own RSA: use vetted libraries with OAEP (Soatok, \"Cryptography Engineering Has An Intrinsic Duty of Care\")."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s14",
+      "concepts": ["keystream-reuse"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Abstract two-time pad. Two ciphertext bytes made with the SAME keystream $K$ are $C_1 = 200$ and $C_2 = 156$; a crib gives $M_1 = 65$. Recover $K$ and $M_2$. (Decimal.)",
+      "steps": [
+        { "instruction": "Recover the keystream: $K = C_1 \\oplus M_1 = 200 \\oplus 65$.", "answer": "137", "accept": ["10001001"], "hint": "$11001000 \\oplus 01000001$." },
+        { "instruction": "Recover the second message: $M_2 = C_2 \\oplus K = 156 \\oplus 137$.", "answer": "21", "accept": ["00010101"], "hint": "$10011100 \\oplus 10001001$." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "" },
+      "solutionNarrative": "$K = 200 \\oplus 65 = 137$, then $M_2 = 156 \\oplus 137 = 21$. Any known plaintext under a reused keystream unravels the rest."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s15",
+      "concepts": ["ecb-patterns"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A 5-block ECB ciphertext stream (by block value) is: 4B 4B 4B 90 4B. Identical values came from identical plaintext blocks.",
+      "steps": [
+        { "instruction": "How many DISTINCT block values appear?", "answer": "2", "accept": [], "hint": "Only 4B and 90." },
+        { "instruction": "How many of the 5 blocks share the value 4B?", "answer": "4", "accept": [], "hint": "Count the 4B blocks." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "blocks" },
+      "solutionNarrative": "Four of five blocks are the identical value 4B, so ECB reveals that four plaintext blocks were equal — only 2 distinct values total."
+    },
+    {
+      "id": "cryptography.crypto-weaknesses.s16",
+      "concepts": ["rsa-misuse"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Textbook RSA, $e = 3$, no padding. An unpadded small-message ciphertext $c = 1331$ arrives with $m^3 < n$. Recover $m$, then confirm the flaw's condition.",
+      "steps": [
+        { "instruction": "Take the integer cube root of $c = 1331$. What is $m$?", "answer": "11", "accept": [], "hint": "$10^3 = 1000$, $11^3 = 1331$." },
+        { "instruction": "The attack works only when $m^3$ stays below $n$. For $m = 11$, what is $m^3$ (the smallest $n$ must exceed for the flaw)?", "answer": "1331", "accept": [], "hint": "$11^3 = 1331$." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "" },
+      "solutionNarrative": "$m = \\sqrt[3]{1331} = 11$. The cube-root attack needs $m^3 = 1331 < n$; padding (OAEP) enlarges and randomizes $m$ so $m^e$ always wraps and this shortcut vanishes."
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "id": "algebra.ratios-proportions-percent",
+  "subject": "algebra",
+  "title": "Ratios, Proportions, and Percent",
+  "prerequisites": [],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "ratios-and-rates",
+      "label": "Ratios, rates, and unit pricing",
+      "microLesson": "A **ratio** compares two quantities; a **rate** is a ratio with different units, like miles per hour or dollars per ounce. A **unit rate** has 1 in the denominator — it's the 'per one' price or speed. To compare deals, divide price by size to get the cost per unit and pick the smallest. A 20 oz drink for \\$3.00 is $3.00 \\div 20 = \\$0.15$ per ounce; a 12 oz for \\$2.40 is $2.40 \\div 12 = \\$0.20$ per ounce, so the big one is the better deal."
+    },
+    {
+      "id": "solve-proportion",
+      "label": "Setting up and solving a proportion",
+      "microLesson": "A **proportion** says two ratios are equal: $\\frac{a}{b} = \\frac{c}{d}$. Solve it by **cross-multiplying** — $a \\times d = b \\times c$ — then dividing. Keep the same units in the same positions (cups over servings on both sides). If 2 cups of rice feed 5 people, how much feeds 15? $\\frac{2}{5} = \\frac{x}{15}$ gives $5x = 30$, so $x = 6$ cups. The same setup scales recipes, reads map distances, and resizes models."
+    },
+    {
+      "id": "percent-of",
+      "label": "Percent: the part, the percent, or the whole",
+      "microLesson": "**Percent** means 'per hundred', so $25\\% = \\frac{25}{100} = 0.25$. Every percent problem links three numbers with $\\text{part} = \\text{percent} \\times \\text{whole}$. Find the **part**: $30\\%$ of $80$ is $0.30 \\times 80 = 24$. Find the **percent**: 15 is what percent of 60? $\\frac{15}{60} = 0.25 = 25\\%$. Find the **whole**: 18 is $20\\%$ of what? $18 \\div 0.20 = 90$."
+    },
+    {
+      "id": "percent-change",
+      "label": "Percent change and money applications",
+      "microLesson": "**Percent change** $= \\frac{\\text{new} - \\text{old}}{\\text{old}}$, written as a percent. It's the engine behind everyday money: a **tip** adds a percent of the bill, **sales tax** adds a percent of the price, a **discount** subtracts a percent, a **markup** adds a percent to cost, and **simple interest** is $I = P \\times r \\times t$. A \\$40 shirt at $25\\%$ off drops by $0.25 \\times 40 = \\$10$, so you pay \\$30."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The math you already do at the register\n\nEvery time you compare two box sizes at the store, leave a tip, scale a recipe up for guests, or stare at a 30%-off tag wondering what you'll actually pay, you're doing the math in this topic. **Ratios, proportions, and percent** are the most-used arithmetic in adult life — more than algebra, more than geometry. Get fluent here and a huge slice of daily decisions becomes fast and automatic.\n\n## Ratios and rates: comparing fairly\n\nA **ratio** compares two quantities — 3 cups of flour to 2 cups of sugar is the ratio $3 : 2$. A **rate** is a ratio between *different* units: 60 miles per hour, \\$0.15 per ounce, 4 tickets per person. The most useful move is finding the **unit rate** — the amount per *one* of something — because it makes unequal things comparable.\n\n> **Unit pricing.** A 20 oz bottle costs \\$3.00; a 12 oz bottle costs \\$2.40. Which is the better deal? Divide price by size:\n>\n> $$\\frac{\\$3.00}{20\\text{ oz}} = \\$0.15/\\text{oz}, \\qquad \\frac{\\$2.40}{12\\text{ oz}} = \\$0.20/\\text{oz}.$$\n>\n> The big bottle is cheaper *per ounce*, so it's the better buy. That's exactly the tiny per-unit number on the shelf tag.\n\n## Proportions: scaling with cross-multiplication\n\nA **proportion** sets two ratios equal:\n\n$$\\frac{a}{b} = \\frac{c}{d}.$$\n\nWhenever one quantity grows in lockstep with another, a proportion captures it. Solve by **cross-multiplying** — multiply each top by the opposite bottom — to get $a \\times d = b \\times c$, then divide.\n\n### Worked example\n\nA recipe uses 2 cups of rice to feed 5 people. You're cooking for 15. How much rice?\n\n$$\\frac{2\\text{ cups}}{5\\text{ people}} = \\frac{x}{15\\text{ people}} \\;\\Rightarrow\\; 5x = 2 \\times 15 = 30 \\;\\Rightarrow\\; x = 6 \\text{ cups}.$$\n\nThe one rule that prevents errors: **keep the same units in the same position** on both sides (cups on top, people on bottom). The identical setup reads a map (1 inch = 20 miles), resizes a model, or converts currency.\n\n## Percent: per hundred\n\n**Percent** literally means *per hundred*: $25\\% = \\frac{25}{100} = 0.25$. To use a percent in arithmetic, convert it to a decimal first (move the decimal two places left). Every percent question is really one equation with three slots:\n\n$$\\text{part} = \\text{percent} \\times \\text{whole}.$$\n\n- **Find the part:** What is $30\\%$ of 80? $\\;0.30 \\times 80 = 24$.\n- **Find the percent:** 15 is what percent of 60? $\\;\\frac{15}{60} = 0.25 = 25\\%$.\n- **Find the whole:** 18 is $20\\%$ of what number? $\\;18 \\div 0.20 = 90$.\n\nWhichever slot is missing, the other two solve for it.\n\n## Percent change and the money toolkit\n\nWhen a quantity goes from an old value to a new one, the **percent change** is\n\n$$\\frac{\\text{new} - \\text{old}}{\\text{old}} \\times 100\\%.$$\n\nA positive result is an increase; a negative one is a decrease. This single idea powers the everyday money operations:\n\n- **Tip:** add a percent of the bill. A \\$50 meal with a 20% tip adds $0.20 \\times 50 = \\$10$, total \\$60.\n- **Sales tax:** add a percent of the price. \\$80 at 7% tax adds $0.07 \\times 80 = \\$5.60$, total \\$85.60.\n- **Discount / markdown:** subtract a percent. A \\$40 shirt at 25% off loses $0.25 \\times 40 = \\$10$, so you pay \\$30.\n- **Markup:** a store adds a percent to its cost. Cost \\$20 marked up 50% sells for $20 + 0.50 \\times 20 = \\$30$.\n- **Simple interest:** $I = P \\times r \\times t$. \\$1000 at 3% for 2 years earns $1000 \\times 0.03 \\times 2 = \\$60$.\n\nA quick shortcut worth knowing: paying a price *plus* tax is the same as multiplying by $(1 + \\text{rate})$, and taking a percent *off* is multiplying by $(1 - \\text{rate})$. So \\$40 at 25% off is $40 \\times 0.75 = \\$30$ in one step."
+  },
+  "application": {
+    "summary": "Ratios, proportions, and percent are the arithmetic of everyday money and measurement: unit pricing to find the best deal, proportions to scale recipes and read maps, and percent to compute tips, sales tax, discounts, markups, and interest. Master them and most real financial decisions become quick mental math.",
+    "domains": ["personal finance", "shopping", "cooking", "everyday life"],
+    "workedExample": "**Dinner out: tip and tax on the bill.**\n\nYour restaurant bill is \\$50.00 before tax. The sales tax is 8%, and you want to leave a 20% tip on the pre-tax amount. What's the total?\n\nFirst the tax: $0.08 \\times 50 = \\$4.00$. Then the tip: $0.20 \\times 50 = \\$10.00$. Add them to the bill:\n\n$$50.00 + 4.00 + 10.00 = \\$64.00.$$\n\nSo you'll pay **\\$64.00**. Notice each piece is just 'percent of the whole' — the same move that finds a 30%-off sale price or the interest on a savings account. Once the pattern clicks, you can do it in your head while the check is still on the table, and never overpay or under-tip again.",
+    "domainNotes": [
+      "**Shopping:** unit pricing to compare box sizes, and discount math to find the real sale price before you get to the register.",
+      "**Dining & services:** computing a fair tip and checking the sales tax on any bill.",
+      "**Cooking:** scaling a recipe up or down for a different number of servings with a proportion.",
+      "**Saving & borrowing:** simple interest to see what savings earn — or what a short-term loan costs."
+    ]
+  },
+  "generators": ["unit-rate-v1", "proportion-v1", "percent-of-v1", "percent-is-v1", "tax-total-v1", "discount-v1", "percent-change-v1"],
+  "problems": [
+    {
+      "id": "algebra.ratios-proportions-percent.s01",
+      "concepts": ["ratios-and-rates"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 12 ounce bag of coffee costs \\$9.00. What is the unit price in dollars per ounce? (Enter the number of dollars per ounce.)",
+      "steps": [
+        { "instruction": "Divide the price by the number of ounces.", "answer": "0.75", "accept": ["0.75", "3/4"], "hint": "Unit price = total price ÷ size = 9.00 ÷ 12." }
+      ],
+      "finalAnswer": { "value": "0.75", "unit": "dollars per ounce" },
+      "solutionNarrative": "Divide cost by size: $9.00 \\div 12 = \\$0.75$ per ounce."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s02",
+      "concepts": ["ratios-and-rates"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A store sells the same juice in two sizes: a 16 oz bottle for \\$2.40 and a 24 oz bottle for \\$3.36. Which size is the better deal (lower cost per ounce)? (Enter the size in ounces: 16 or 24.)",
+      "steps": [
+        { "instruction": "Find the cost per ounce of the 16 oz bottle (dollars per ounce).", "answer": "0.15", "accept": ["0.15", "3/20"], "hint": "2.40 ÷ 16." },
+        { "instruction": "Find the cost per ounce of the 24 oz bottle (dollars per ounce).", "answer": "0.14", "accept": ["0.14", "7/50"], "hint": "3.36 ÷ 24." },
+        { "instruction": "Which bottle has the lower cost per ounce? Enter its size in ounces.", "answer": "24", "accept": ["24", "24 oz", "24oz"], "hint": "Smaller per-ounce price wins; compare 0.15 and 0.14." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "ounces" },
+      "solutionNarrative": "16 oz: $2.40 \\div 16 = \\$0.15$/oz. 24 oz: $3.36 \\div 24 = \\$0.14$/oz. The 24 oz bottle is cheaper per ounce, so it's the better deal."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s03",
+      "concepts": ["ratios-and-rates"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A car travels 234 miles and uses 9 gallons of gas. At that rate, how many miles can it travel on a full 14-gallon tank? (Enter the number of miles.)",
+      "steps": [
+        { "instruction": "Find the fuel economy as a unit rate in miles per gallon.", "answer": "26", "accept": ["26"], "hint": "Miles per gallon = 234 ÷ 9." },
+        { "instruction": "Multiply the miles-per-gallon rate by 14 gallons.", "answer": "364", "accept": ["364"], "hint": "26 × 14." }
+      ],
+      "finalAnswer": { "value": "364", "unit": "miles" },
+      "solutionNarrative": "Unit rate: $234 \\div 9 = 26$ mpg. On 14 gallons: $26 \\times 14 = 364$ miles."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s04",
+      "concepts": ["solve-proportion"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A recipe uses 2 cups of flour to make 12 cookies. How many cups of flour are needed for 18 cookies? (Enter the number of cups.)",
+      "steps": [
+        { "instruction": "Set up a proportion with cups over cookies: $\\frac{2}{12} = \\frac{x}{18}$. Cross-multiply to get an equation for $12x$.", "answer": "12x = 36", "accept": ["12x=36", "36=12x"], "hint": "Cross-multiply: 2 × 18 = 12 × x." },
+        { "instruction": "Solve for $x$.", "answer": "x = 3", "accept": ["x=3", "3"], "hint": "Divide both sides by 12." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "cups" },
+      "solutionNarrative": "$\\frac{2}{12} = \\frac{x}{18}$ cross-multiplies to $12x = 36$, so $x = 3$ cups."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s05",
+      "concepts": ["solve-proportion"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "On a map, 1 inch represents 25 miles. Two towns are 3.5 inches apart on the map. How many miles apart are they in reality? (Enter the number of miles.)",
+      "steps": [
+        { "instruction": "Set up the proportion $\\frac{1}{25} = \\frac{3.5}{x}$ (inches over miles) and cross-multiply for an equation in $x$.", "answer": "x = 87.5", "accept": ["x=87.5", "87.5", "x = 25*3.5"], "hint": "Cross-multiply: 1 × x = 25 × 3.5." },
+        { "instruction": "State the real distance in miles.", "answer": "87.5", "accept": ["87.5", "175/2"], "hint": "25 × 3.5 = 87.5." }
+      ],
+      "finalAnswer": { "value": "87.5", "unit": "miles" },
+      "solutionNarrative": "$\\frac{1}{25} = \\frac{3.5}{x}$ gives $x = 25 \\times 3.5 = 87.5$ miles."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s06",
+      "concepts": ["solve-proportion"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A scale model of a building uses a ratio of 1 inch to 8 feet. The real building is 120 feet tall and 200 feet wide. The model is built to scale. How tall is the model in inches? (Enter the number of inches.)",
+      "steps": [
+        { "instruction": "Set up a proportion for the height, $\\frac{1}{8} = \\frac{x}{120}$ (model inches over real feet), and cross-multiply.", "answer": "8x = 120", "accept": ["8x=120", "120=8x"], "hint": "Cross-multiply: 1 × 120 = 8 × x." },
+        { "instruction": "Solve for the model's height $x$ in inches.", "answer": "x = 15", "accept": ["x=15", "15"], "hint": "Divide both sides by 8." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "inches" },
+      "solutionNarrative": "$\\frac{1}{8} = \\frac{x}{120}$ cross-multiplies to $8x = 120$, so $x = 15$ inches tall."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s07",
+      "concepts": ["percent-of"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A jacket costs \\$80. A coupon takes 30% off. How many dollars do you save? (Enter the number of dollars.)",
+      "steps": [
+        { "instruction": "Convert 30% to a decimal and multiply by 80.", "answer": "24", "accept": ["24", "24.00"], "hint": "0.30 × 80." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "dollars" },
+      "solutionNarrative": "30% of \\$80 is $0.30 \\times 80 = \\$24$ saved."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s08",
+      "concepts": ["percent-of"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "On a quiz you got 21 out of 28 questions correct. What percent did you score? (Enter the percent as a number, without the % sign.)",
+      "steps": [
+        { "instruction": "Write your score as a fraction and divide to get a decimal.", "answer": "0.75", "accept": ["0.75", "3/4", "21/28"], "hint": "21 ÷ 28." },
+        { "instruction": "Convert the decimal to a percent (enter the number).", "answer": "75", "accept": ["75"], "hint": "Multiply by 100: 0.75 → 75." }
+      ],
+      "finalAnswer": { "value": "75", "unit": "percent" },
+      "solutionNarrative": "$\\frac{21}{28} = 0.75 = 75\\%$."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s09",
+      "concepts": ["percent-of"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A salesperson earns a commission and tells you that her \\$540 commission was 6% of her total sales. What were her total sales in dollars? (Enter the number of dollars.)",
+      "steps": [
+        { "instruction": "Using part = percent × whole, write the equation with the whole as $x$ (use 0.06 for 6%).", "answer": "0.06x = 540", "accept": ["0.06x=540", "540=0.06x"], "hint": "The \\$540 is the part; 6% of the whole equals 540." },
+        { "instruction": "Solve for $x$ by dividing both sides by 0.06.", "answer": "x = 9000", "accept": ["x=9000", "9000"], "hint": "540 ÷ 0.06." }
+      ],
+      "finalAnswer": { "value": "9000", "unit": "dollars" },
+      "solutionNarrative": "$0.06x = 540$, so $x = 540 \\div 0.06 = \\$9000$ in total sales."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s10",
+      "concepts": ["percent-change"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Your restaurant bill is \\$40. You want to leave a 15% tip. How many dollars is the tip? (Enter the number of dollars.)",
+      "steps": [
+        { "instruction": "Convert 15% to a decimal and multiply by the bill.", "answer": "6", "accept": ["6", "6.00"], "hint": "0.15 × 40." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "dollars" },
+      "solutionNarrative": "15% of \\$40 is $0.15 \\times 40 = \\$6$."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s11",
+      "concepts": ["percent-change"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A \\$60 pair of shoes is on sale for 25% off. There is then 8% sales tax on the discounted price. What is the final amount you pay in dollars? (Enter the number of dollars.)",
+      "steps": [
+        { "instruction": "Find the sale price after taking 25% off (enter the number of dollars).", "answer": "45", "accept": ["45", "45.00"], "hint": "Discount is 0.25 × 60 = 15, so 60 − 15 = 45 (or 60 × 0.75)." },
+        { "instruction": "Add 8% sales tax to the \\$45 sale price (enter the final number of dollars).", "answer": "48.60", "accept": ["48.60", "48.6"], "hint": "Tax is 0.08 × 45 = 3.60, so 45 + 3.60 (or 45 × 1.08)." }
+      ],
+      "finalAnswer": { "value": "48.60", "unit": "dollars" },
+      "solutionNarrative": "Sale price: $60 \\times 0.75 = \\$45$. With 8% tax: $45 \\times 1.08 = \\$48.60$."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s12",
+      "concepts": ["percent-change"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A store buys backpacks for \\$24 each and marks them up 35% to set the selling price. What is the selling price in dollars? (Enter the number of dollars.)",
+      "steps": [
+        { "instruction": "Find the markup amount: 35% of \\$24 (enter the number of dollars).", "answer": "8.40", "accept": ["8.40", "8.4"], "hint": "0.35 × 24." },
+        { "instruction": "Add the markup to the cost to get the selling price (enter the number of dollars).", "answer": "32.40", "accept": ["32.40", "32.4"], "hint": "24 + 8.40 (or 24 × 1.35)." }
+      ],
+      "finalAnswer": { "value": "32.40", "unit": "dollars" },
+      "solutionNarrative": "Markup: $0.35 \\times 24 = \\$8.40$. Selling price: $24 + 8.40 = \\$32.40$."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s13",
+      "concepts": ["percent-change"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You deposit \\$2000 in a savings account that pays 4% simple interest per year. How much interest do you earn after 3 years? (Enter the number of dollars.)",
+      "steps": [
+        { "instruction": "Use $I = P \\times r \\times t$ with $P = 2000$, $r = 0.04$, $t = 3$. Compute the interest.", "answer": "240", "accept": ["240", "240.00"], "hint": "2000 × 0.04 × 3." }
+      ],
+      "finalAnswer": { "value": "240", "unit": "dollars" },
+      "solutionNarrative": "$I = 2000 \\times 0.04 \\times 3 = \\$240$ in interest."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s14",
+      "concepts": ["percent-change"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Last year a town's population was 12,500. This year it is 13,750. What is the percent increase? (Enter the percent as a number, without the % sign.)",
+      "steps": [
+        { "instruction": "Find the change in population (new minus old).", "answer": "1250", "accept": ["1250"], "hint": "13,750 − 12,500." },
+        { "instruction": "Divide the change by the original to get a decimal.", "answer": "0.1", "accept": ["0.1", "0.10", "1250/12500", "1/10"], "hint": "1250 ÷ 12500." },
+        { "instruction": "Convert the decimal to a percent (enter the number).", "answer": "10", "accept": ["10"], "hint": "Multiply by 100." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "percent" },
+      "solutionNarrative": "Change is $13750 - 12500 = 1250$. Percent change $= \\frac{1250}{12500} = 0.10 = 10\\%$ increase."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s15",
+      "concepts": ["ratios-and-rates"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Write the unit rate: if 5 items cost \\$20, what is the cost of 1 item in dollars? (Enter the number of dollars.)",
+      "steps": [
+        { "instruction": "Divide total cost by the number of items.", "answer": "4", "accept": ["4", "4.00"], "hint": "20 ÷ 5." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "dollars" },
+      "solutionNarrative": "$20 \\div 5 = \\$4$ per item."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s16",
+      "concepts": ["solve-proportion"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve the proportion for $x$:  $\\frac{3}{4} = \\frac{x}{20}$.",
+      "steps": [
+        { "instruction": "Cross-multiply to get an equation for $4x$.", "answer": "4x = 60", "accept": ["4x=60", "60=4x"], "hint": "3 × 20 = 4 × x." },
+        { "instruction": "Solve for $x$.", "answer": "x = 15", "accept": ["x=15", "15"], "hint": "Divide both sides by 4." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "$\\frac{3}{4} = \\frac{x}{20}$ cross-multiplies to $4x = 60$, so $x = 15$."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s17",
+      "concepts": ["percent-of"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "What is 40% of 150? (Enter the number.)",
+      "steps": [
+        { "instruction": "Convert 40% to a decimal and multiply by 150.", "answer": "60", "accept": ["60"], "hint": "0.40 × 150." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "" },
+      "solutionNarrative": "$0.40 \\times 150 = 60$."
+    },
+    {
+      "id": "algebra.ratios-proportions-percent.s18",
+      "concepts": ["percent-change"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A value goes from 50 to 60. What is the percent increase? (Enter the percent as a number, without the % sign.)",
+      "steps": [
+        { "instruction": "Find the change, then divide by the original value to get a decimal.", "answer": "0.2", "accept": ["0.2", "0.20", "10/50", "1/5"], "hint": "(60 − 50) ÷ 50 = 10 ÷ 50." },
+        { "instruction": "Convert the decimal to a percent (enter the number).", "answer": "20", "accept": ["20"], "hint": "Multiply by 100." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "percent" },
+      "solutionNarrative": "Change is 10; $\\frac{10}{50} = 0.20 = 20\\%$ increase."
+    }
+  ]
+}

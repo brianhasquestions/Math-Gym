@@ -1,0 +1,10 @@
+{
+  "name": "mathgym",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A web app that teaches and trains applied mathematics with adaptive mastery-based practice.",
+  "scripts": {
+    "serve": "python -m http.server 8000"
+  }
+}

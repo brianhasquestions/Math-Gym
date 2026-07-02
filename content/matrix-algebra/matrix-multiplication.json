@@ -1,0 +1,274 @@
+{
+  "id": "matrix-algebra.matrix-multiplication",
+  "subject": "matrix-algebra",
+  "title": "Matrix Multiplication",
+  "prerequisites": ["matrix-algebra.matrix-operations"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "when-defined",
+      "label": "When a product is defined",
+      "microLesson": "To multiply $A$ (size $m \\times n$) by $B$ (size $p \\times q$), the **inner dimensions must match**: $n = p$. Line the sizes up as $(m \\times n)(p \\times q)$ — the two middle numbers must agree, and the **outer** numbers give the result size $m \\times q$. A $2 \\times 3$ times a $3 \\times 4$ is defined and produces a $2 \\times 4$. A $2 \\times 3$ times a $2 \\times 3$ is **not** defined, because $3 \\neq 2$."
+    },
+    {
+      "id": "compute-product",
+      "label": "Computing the product",
+      "microLesson": "Each entry of $AB$ is a **dot product**: entry in row $i$, column $j$ is row $i$ of $A$ dotted with column $j$ of $B$ — multiply matching elements and add. For $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ 6 \\end{bmatrix}$, the top entry is $1\\cdot5 + 2\\cdot6 = 17$ and the bottom is $3\\cdot5 + 4\\cdot6 = 39$. Matrix-times-vector works the same way and returns a vector."
+    },
+    {
+      "id": "multiplication-properties",
+      "label": "Properties of multiplication",
+      "microLesson": "Matrix multiplication is **not commutative**: $AB \\neq BA$ in general, and one may be defined while the other isn't. The **identity matrix** $I$ (ones on the diagonal, zeros elsewhere) acts like the number 1: $AI = IA = A$. **Powers** repeat a square matrix: $A^2 = AA$, $A^3 = AAA$ — useful for applying the same transformation again and again."
+    },
+    {
+      "id": "multiplication-applied",
+      "label": "Multiplication in applications",
+      "microLesson": "A matrix product **combines two tables along a shared index**. Quantities (per item) times unit prices gives total cost. A transition table times a current-state vector gives the next state. Routing or connection counts multiply to count two-step paths. Whenever you 'multiply across a category and sum', that's a matrix product — it bundles many weighted sums into one clean operation."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The operation that combines two tables\n\nMost real data lives in tables: products against prices, cities against routes, states against probabilities. **Matrix multiplication** is the single operation that fuses two such tables along a shared category and totals the result. When you find yourself saying *\"multiply each item by its rate and add them up\"* — across many rows at once — you are doing matrix multiplication, whether you call it that or not.\n\n## Step 1: does the product even exist?\n\nUnlike adding numbers, you cannot multiply just any two matrices. Write the sizes side by side:\n\n$$(m \\times n)(p \\times q).$$\n\nThe **inner** dimensions $n$ and $p$ must be equal — that shared number is the category you are summing over. If they match, the product is defined and its size is the **outer** dimensions, $m \\times q$:\n\n$$(2 \\times 3)(3 \\times 4) \\;\\Rightarrow\\; \\text{defined},\\; \\text{result } 2 \\times 4.$$\n\nIf the inner numbers disagree, the product simply does not exist. Checking this first saves you from computing nonsense.\n\n## Step 2: every entry is a dot product\n\nThe entry in **row $i$, column $j$** of the product $AB$ is row $i$ of $A$ dotted with column $j$ of $B$: pair up matching elements, multiply, and add.\n\n$$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\end{bmatrix} = \\begin{bmatrix} 1\\cdot5 + 2\\cdot7 & 1\\cdot6 + 2\\cdot8 \\\\ 3\\cdot5 + 4\\cdot7 & 3\\cdot6 + 4\\cdot8 \\end{bmatrix} = \\begin{bmatrix} 19 & 22 \\\\ 43 & 50 \\end{bmatrix}.$$\n\nA **matrix times a vector** is the same recipe with a one-column second matrix, and it returns a vector:\n\n$$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ 6 \\end{bmatrix} = \\begin{bmatrix} 17 \\\\ 39 \\end{bmatrix}.$$\n\n## Step 3: the rules are not the rules of numbers\n\nThree facts surprise people:\n\n- **Order matters.** $AB$ and $BA$ are usually different matrices, and sometimes only one is even defined. Always keep the factors in order.\n- **The identity does nothing.** The identity matrix $I$ has 1's down the diagonal and 0's elsewhere; multiplying by it leaves a matrix unchanged: $AI = IA = A$. It plays the role of the number 1.\n- **Powers repeat the map.** $A^2 = AA$ applies the same transformation twice. This is how you fast-forward a process: two steps of a routing or transition table is its square.\n\n## Why this is worth the bookkeeping\n\nA matrix product packs dozens of weighted sums into one statement. *Quantities $\\times$ prices* gives every customer's bill at once. A *transition matrix $\\times$ state vector* advances a whole system one step. *Connection counts squared* counts two-step paths through a network. The mechanics are just \"row dot column\", but the payoff is combining entire tables in a single, checkable operation."
+  },
+  "application": {
+    "summary": "Matrix multiplication combines two tables along a shared index in one shot: quantities times unit prices give totals, transition tables advance a state, routing counts multiply to count multi-step paths, and weight vectors turn raw scores into rankings. It is the workhorse behind billing, logistics, graphics, and scoring.",
+    "domains": ["business", "logistics", "computer graphics", "data analysis"],
+    "workedExample": "**One order, many suppliers — total the bill in one product.**\n\nA bakery's order is 3 loaves, 5 bagels, and 2 cakes. Two suppliers quote unit prices (dollars): Supplier 1 charges 4 / 1 / 9, Supplier 2 charges 5 / 1 / 8 (loaf / bagel / cake). Stack quantities as a row and prices as columns:\n\n$$\\begin{bmatrix} 3 & 5 & 2 \\end{bmatrix}\\begin{bmatrix} 4 & 5 \\\\ 1 & 5 \\\\ 9 & 8 \\end{bmatrix} = \\begin{bmatrix} 3\\cdot4 + 5\\cdot1 + 2\\cdot9 & 3\\cdot5 + 5\\cdot5 + 2\\cdot8 \\end{bmatrix} = \\begin{bmatrix} 35 & 56 \\end{bmatrix}.$$\n\nIn one multiplication you learn Supplier 1 costs \\$35 and Supplier 2 costs \\$56 for the **same** basket. Add more orders as extra rows and you price every order against every supplier at once — exactly what a billing system does behind the scenes.",
+    "domainNotes": [
+      "**Business:** quantities $\\times$ unit prices produce per-supplier or per-customer totals; a single product bills many orders at once.",
+      "**Logistics / networks:** squaring a connection-count matrix counts two-step routes between locations.",
+      "**Computer graphics:** chaining transformations (rotate then scale) is the product of their matrices, applied to point vectors.",
+      "**Data analysis:** a score matrix times a weight vector collapses many criteria into one ranking number per item."
+    ]
+  },
+  "generators": ["mat-mult-v1", "mat-defined-v1"],
+  "problems": [
+    {
+      "id": "matrix-algebra.matrix-multiplication.s01",
+      "concepts": ["when-defined"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Matrix $A$ is $2 \\times 3$ and matrix $B$ is $3 \\times 4$. Is the product $AB$ defined? If so, what size is it?",
+      "steps": [
+        { "instruction": "Compare the inner dimensions of $(2 \\times 3)(3 \\times 4)$. Is $AB$ defined? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The inner numbers are 3 and 3 — do they match?" },
+        { "instruction": "How many rows does the result have?", "answer": "2", "accept": [], "hint": "The result takes the outer dimensions; rows come from $A$." },
+        { "instruction": "How many columns does the result have?", "answer": "4", "accept": [], "hint": "Columns come from $B$." }
+      ],
+      "finalAnswer": { "value": "2 x 4", "unit": "" },
+      "solutionNarrative": "Inner dimensions $3 = 3$ match, so $AB$ is defined; the outer dimensions give a $2 \\times 4$ result."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s02",
+      "concepts": ["when-defined"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Matrix $A$ is $2 \\times 3$ and matrix $B$ is $2 \\times 3$. Is the product $AB$ defined? Answer 'yes' or 'no'.",
+      "steps": [
+        { "instruction": "Compare the inner dimensions of $(2 \\times 3)(2 \\times 3)$.", "answer": "no", "accept": [], "hint": "The inner numbers are 3 and 2 — they must be equal." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The inner dimensions are 3 and 2, which do not match, so $AB$ is not defined."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s03",
+      "concepts": ["when-defined"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Matrix $A$ is $4 \\times 2$ and matrix $B$ is $2 \\times 5$. The product $AB$ is defined — give its size as 'rows x cols'.",
+      "steps": [
+        { "instruction": "How many rows does $AB$ have?", "answer": "4", "accept": [], "hint": "Rows of the result match rows of $A$." },
+        { "instruction": "How many columns does $AB$ have?", "answer": "5", "accept": [], "hint": "Columns of the result match columns of $B$." }
+      ],
+      "finalAnswer": { "value": "4 x 5", "unit": "" },
+      "solutionNarrative": "$(4 \\times 2)(2 \\times 5)$ has matching inner dimensions, so $AB$ is $4 \\times 5$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s04",
+      "concepts": ["when-defined"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A sales table $S$ lists 3 stores (rows) against 4 products (columns), so $S$ is $3 \\times 4$. A price table $P$ lists 4 products (rows) against 2 currencies (columns), so $P$ is $4 \\times 2$. You want a table of each store's total value in each currency. Which product is defined, $SP$ or $PS$, and what size is the meaningful result?",
+      "steps": [
+        { "instruction": "Is $SP$, the product $(3 \\times 4)(4 \\times 2)$, defined? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Inner dimensions 4 and 4 match." },
+        { "instruction": "Is $PS$, the product $(4 \\times 2)(3 \\times 4)$, defined? Answer 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Inner dimensions 2 and 3 do not match." },
+        { "instruction": "Give the size of the meaningful product $SP$ as 'rows x cols'. How many rows?", "answer": "3", "accept": [], "hint": "Stores carry over from $S$." },
+        { "instruction": "How many columns does $SP$ have?", "answer": "2", "accept": [], "hint": "Currencies carry over from $P$." }
+      ],
+      "finalAnswer": { "value": "3 x 2", "unit": "" },
+      "solutionNarrative": "$SP = (3 \\times 4)(4 \\times 2)$ is defined and yields a $3 \\times 2$ store-by-currency table; $PS$ is not defined because $2 \\neq 3$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s05",
+      "concepts": ["compute-product"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the single dot product of the row $\\begin{bmatrix} 2 & 3 \\end{bmatrix}$ with the column $\\begin{bmatrix} 4 \\\\ 5 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Multiply matching entries and add: $2\\cdot4 + 3\\cdot5$.", "answer": "23", "accept": [], "hint": "$8 + 15$." }
+      ],
+      "finalAnswer": { "value": "23", "unit": "" },
+      "solutionNarrative": "$2\\cdot4 + 3\\cdot5 = 8 + 15 = 23$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s06",
+      "concepts": ["compute-product"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ 6 \\end{bmatrix}$ (a matrix times a vector).",
+      "steps": [
+        { "instruction": "Top entry: dot row 1 with the column, $1\\cdot5 + 2\\cdot6$.", "answer": "17", "accept": [], "hint": "$5 + 12$." },
+        { "instruction": "Bottom entry: dot row 2 with the column, $3\\cdot5 + 4\\cdot6$.", "answer": "39", "accept": [], "hint": "$15 + 24$." },
+        { "instruction": "Write the result vector in the form <a, b>.", "answer": "<17, 39>", "accept": [], "hint": "Stack the two entries you found." }
+      ],
+      "finalAnswer": { "value": "<17, 39>", "unit": "" },
+      "solutionNarrative": "Row by column: $1\\cdot5+2\\cdot6 = 17$ and $3\\cdot5+4\\cdot6 = 39$, giving the vector $\\langle 17, 39 \\rangle$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s07",
+      "concepts": ["compute-product"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Entry (1,1): row 1 dot column 1, $1\\cdot5 + 2\\cdot7$.", "answer": "19", "accept": [], "hint": "$5 + 14$." },
+        { "instruction": "Entry (1,2): row 1 dot column 2, $1\\cdot6 + 2\\cdot8$.", "answer": "22", "accept": [], "hint": "$6 + 16$." },
+        { "instruction": "Now the second row. Write the full product as [[a, b], [c, d]].", "answer": "[[19, 22], [43, 50]]", "accept": [], "hint": "Row 2: $3\\cdot5+4\\cdot7 = 43$ and $3\\cdot6+4\\cdot8 = 50$." }
+      ],
+      "finalAnswer": { "value": "[[19, 22], [43, 50]]", "unit": "" },
+      "solutionNarrative": "The four dot products are $19, 22, 43, 50$, so the product is $\\begin{bmatrix} 19 & 22 \\\\ 43 & 50 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s08",
+      "concepts": ["compute-product"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute the product $\\begin{bmatrix} 2 & 0 & 1 \\\\ 1 & 3 & 2 \\end{bmatrix}\\begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\\\ 4 & 0 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Entry (1,1): $2\\cdot1 + 0\\cdot0 + 1\\cdot4$.", "answer": "6", "accept": [], "hint": "$2 + 0 + 4$." },
+        { "instruction": "Entry (1,2): $2\\cdot2 + 0\\cdot1 + 1\\cdot0$.", "answer": "4", "accept": [], "hint": "$4 + 0 + 0$." },
+        { "instruction": "Write the full $2 \\times 2$ product as [[a, b], [c, d]].", "answer": "[[6, 4], [9, 5]]", "accept": [], "hint": "Row 2: $1\\cdot1+3\\cdot0+2\\cdot4 = 9$ and $1\\cdot2+3\\cdot1+2\\cdot0 = 5$." }
+      ],
+      "finalAnswer": { "value": "[[6, 4], [9, 5]]", "unit": "" },
+      "solutionNarrative": "Each entry is a row-by-column dot product: $6, 4$ in row 1 and $9, 5$ in row 2, giving $\\begin{bmatrix} 6 & 4 \\\\ 9 & 5 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s09",
+      "concepts": ["multiplication-properties"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Multiply any matrix by the identity. Compute $\\begin{bmatrix} 7 & 2 \\\\ 5 & 3 \\end{bmatrix}\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Multiplying by the identity changes nothing. Write the result as [[a, b], [c, d]].", "answer": "[[7, 2], [5, 3]]", "accept": [], "hint": "$AI = A$." }
+      ],
+      "finalAnswer": { "value": "[[7, 2], [5, 3]]", "unit": "" },
+      "solutionNarrative": "The identity matrix leaves a matrix unchanged, so the product is the original $\\begin{bmatrix} 7 & 2 \\\\ 5 & 3 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s10",
+      "concepts": ["multiplication-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Show that order matters. Let $A = \\begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\end{bmatrix}$ and $B = \\begin{bmatrix} 1 & 0 \\\\ 3 & 1 \\end{bmatrix}$. Compute $AB$ and $BA$.",
+      "steps": [
+        { "instruction": "Compute $AB$ and write it as [[a, b], [c, d]].", "answer": "[[7, 2], [3, 1]]", "accept": [], "hint": "Row 1: $1\\cdot1+2\\cdot3 = 7$, $1\\cdot0+2\\cdot1 = 2$. Row 2: $0\\cdot1+1\\cdot3 = 3$, $0\\cdot0+1\\cdot1 = 1$." },
+        { "instruction": "Compute $BA$ and write it as [[a, b], [c, d]].", "answer": "[[1, 2], [3, 7]]", "accept": [], "hint": "Row 1: $1\\cdot1+0\\cdot0 = 1$, $1\\cdot2+0\\cdot1 = 2$. Row 2: $3\\cdot1+1\\cdot0 = 3$, $3\\cdot2+1\\cdot1 = 7$." }
+      ],
+      "finalAnswer": { "value": "[[7, 2], [3, 1]]", "unit": "" },
+      "solutionNarrative": "$AB = \\begin{bmatrix} 7 & 2 \\\\ 3 & 1 \\end{bmatrix}$ but $BA = \\begin{bmatrix} 1 & 2 \\\\ 3 & 7 \\end{bmatrix}$ — different matrices, confirming multiplication is not commutative."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s11",
+      "concepts": ["multiplication-properties"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute the power $A^2$ for $A = \\begin{bmatrix} 2 & 1 \\\\ 0 & 3 \\end{bmatrix}$, where $A^2 = AA$.",
+      "steps": [
+        { "instruction": "Entry (1,1) of $AA$: $2\\cdot2 + 1\\cdot0$.", "answer": "4", "accept": [], "hint": "$4 + 0$." },
+        { "instruction": "Entry (1,2) of $AA$: $2\\cdot1 + 1\\cdot3$.", "answer": "5", "accept": [], "hint": "$2 + 3$." },
+        { "instruction": "Write the full $A^2$ as [[a, b], [c, d]].", "answer": "[[4, 5], [0, 9]]", "accept": [], "hint": "Row 2: $0\\cdot2+3\\cdot0 = 0$ and $0\\cdot1+3\\cdot3 = 9$." }
+      ],
+      "finalAnswer": { "value": "[[4, 5], [0, 9]]", "unit": "" },
+      "solutionNarrative": "$A^2 = AA$: the dot products give $\\begin{bmatrix} 4 & 5 \\\\ 0 & 9 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s12",
+      "concepts": ["multiplication-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A snack stand sells 4 coffees and 3 muffins in an hour. Coffee costs \\$2 and a muffin costs \\$5. Find total revenue as the dot product $\\begin{bmatrix} 4 & 3 \\end{bmatrix}\\begin{bmatrix} 2 \\\\ 5 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Multiply quantities by prices and add: $4\\cdot2 + 3\\cdot5$.", "answer": "23", "accept": [], "hint": "$8 + 15$ dollars." }
+      ],
+      "finalAnswer": { "value": "23", "unit": "dollars" },
+      "solutionNarrative": "Revenue is the dot product $4\\cdot2 + 3\\cdot5 = 8 + 15 = \\$23$."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s13",
+      "concepts": ["multiplication-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bakery order is 3 loaves, 5 bagels, and 2 cakes, written as the row $\\begin{bmatrix} 3 & 5 & 2 \\end{bmatrix}$. Two suppliers price (loaf, bagel, cake) as columns of $\\begin{bmatrix} 4 & 5 \\\\ 1 & 5 \\\\ 9 & 8 \\end{bmatrix}$. Compute the total cost from each supplier.",
+      "steps": [
+        { "instruction": "Supplier 1 (column 1): $3\\cdot4 + 5\\cdot1 + 2\\cdot9$.", "answer": "35", "accept": [], "hint": "$12 + 5 + 18$." },
+        { "instruction": "Supplier 2 (column 2): $3\\cdot5 + 5\\cdot5 + 2\\cdot8$.", "answer": "56", "accept": [], "hint": "$15 + 25 + 16$." },
+        { "instruction": "Write the result row as [[a, b]] (cost from supplier 1, then supplier 2).", "answer": "[[35, 56]]", "accept": [], "hint": "Combine the two totals into a 1 x 2 row." }
+      ],
+      "finalAnswer": { "value": "[[35, 56]]", "unit": "dollars" },
+      "solutionNarrative": "The product $\\begin{bmatrix} 3 & 5 & 2 \\end{bmatrix}\\begin{bmatrix} 4 & 5 \\\\ 1 & 5 \\\\ 9 & 8 \\end{bmatrix} = \\begin{bmatrix} 35 & 56 \\end{bmatrix}$: Supplier 1 costs \\$35, Supplier 2 costs \\$56."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s14",
+      "concepts": ["multiplication-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A weather model uses a transition matrix $T = \\begin{bmatrix} 8 & 3 \\\\ 2 & 7 \\end{bmatrix}$ (rows: tomorrow sunny/rainy; columns: today sunny/rainy, in tenths). Today's state is the vector $\\begin{bmatrix} 10 \\\\ 0 \\end{bmatrix}$ (sunny). Compute tomorrow's state $T \\cdot \\begin{bmatrix} 10 \\\\ 0 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Top entry: $8\\cdot10 + 3\\cdot0$.", "answer": "80", "accept": [], "hint": "$80 + 0$." },
+        { "instruction": "Bottom entry: $2\\cdot10 + 7\\cdot0$.", "answer": "20", "accept": [], "hint": "$20 + 0$." },
+        { "instruction": "Write tomorrow's state vector as <a, b>.", "answer": "<80, 20>", "accept": [], "hint": "Stack the two entries." }
+      ],
+      "finalAnswer": { "value": "<80, 20>", "unit": "" },
+      "solutionNarrative": "$T \\cdot \\langle 10, 0 \\rangle = \\langle 8\\cdot10, 2\\cdot10 \\rangle = \\langle 80, 20 \\rangle$ — a strong lean toward sunny tomorrow."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s15",
+      "concepts": ["multiplication-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A direct-flight matrix $F = \\begin{bmatrix} 0 & 1 & 2 \\\\ 1 & 0 & 1 \\\\ 2 & 1 & 0 \\end{bmatrix}$ counts direct flights between cities A, B, C. The number of two-leg routes is $F^2 = FF$. Compute the entry (1,1) and the full first row's middle entry, then give all of $F^2$.",
+      "steps": [
+        { "instruction": "Entry (1,1) of $FF$: row 1 of $F$ dot column 1 of $F$, $0\\cdot0 + 1\\cdot1 + 2\\cdot2$.", "answer": "5", "accept": [], "hint": "$0 + 1 + 4$." },
+        { "instruction": "Entry (1,2) of $FF$: $0\\cdot1 + 1\\cdot0 + 2\\cdot1$.", "answer": "2", "accept": [], "hint": "$0 + 0 + 2$." },
+        { "instruction": "Write the full $F^2$ as [[a, b, c], [d, e, f], [g, h, i]].", "answer": "[[5, 2, 1], [2, 2, 2], [1, 2, 5]]", "accept": [], "hint": "Row 2: $2, 2, 2$. Row 3: $1, 2, 5$. The matrix is symmetric." }
+      ],
+      "finalAnswer": { "value": "[[5, 2, 1], [2, 2, 2], [1, 2, 5]]", "unit": "" },
+      "solutionNarrative": "$F^2$ counts two-leg routes; the dot products give $\\begin{bmatrix} 5 & 2 & 1 \\\\ 2 & 2 & 2 \\\\ 1 & 2 & 5 \\end{bmatrix}$ (e.g. 5 ways from A back to A in two legs)."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s16",
+      "concepts": ["multiplication-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Three job candidates are scored on (skills, experience) as rows of $\\begin{bmatrix} 8 & 6 \\\\ 5 & 9 \\\\ 7 & 7 \\end{bmatrix}$. The employer weights skills and experience as the column $\\begin{bmatrix} 3 \\\\ 2 \\end{bmatrix}$. Compute each candidate's weighted score, the vector $\\begin{bmatrix} 8 & 6 \\\\ 5 & 9 \\\\ 7 & 7 \\end{bmatrix}\\begin{bmatrix} 3 \\\\ 2 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Candidate 1: $8\\cdot3 + 6\\cdot2$.", "answer": "36", "accept": [], "hint": "$24 + 12$." },
+        { "instruction": "Candidate 2: $5\\cdot3 + 9\\cdot2$.", "answer": "33", "accept": [], "hint": "$15 + 18$." },
+        { "instruction": "Write all three weighted scores as the vector <a, b, c>.", "answer": "<36, 33, 35>", "accept": [], "hint": "Candidate 3: $7\\cdot3 + 7\\cdot2 = 35$." }
+      ],
+      "finalAnswer": { "value": "<36, 33, 35>", "unit": "" },
+      "solutionNarrative": "Weighted scores are $\\langle 36, 33, 35 \\rangle$, so Candidate 1 ranks highest — the score matrix times the weight vector ranks everyone at once."
+    },
+    {
+      "id": "matrix-algebra.matrix-multiplication.s17",
+      "concepts": ["multiplication-properties"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The identity also does nothing from the left. Compute $\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}\\begin{bmatrix} 4 & 9 \\\\ 2 & 6 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Since $IA = A$, write the result as [[a, b], [c, d]].", "answer": "[[4, 9], [2, 6]]", "accept": [], "hint": "Multiplying by the identity on the left leaves the matrix unchanged." }
+      ],
+      "finalAnswer": { "value": "[[4, 9], [2, 6]]", "unit": "" },
+      "solutionNarrative": "$IA = A$, so the product is the original matrix $\\begin{bmatrix} 4 & 9 \\\\ 2 & 6 \\end{bmatrix}$."
+    }
+  ]
+}

@@ -1,0 +1,258 @@
+{
+  "id": "differential-equations.numerical-methods",
+  "subject": "differential-equations",
+  "title": "Numerical Methods (Euler's Method)",
+  "prerequisites": ["differential-equations.introduction"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "eulers-method-single-step",
+      "label": "One Euler step",
+      "microLesson": "Euler's method walks forward along a curve using its slope. If you know $y$ at $x$ and the differential equation gives the slope $\\\\frac{dy}{dx} = f(x, y)$, then one step of size $h$ estimates the next value: $y_{n+1} = y_n + h \\\\cdot f(x_n, y_n)$. Example: with $\\\\frac{dy}{dx} = x + y$, starting at $(0, 1)$ and $h = 0.1$, the slope is $0 + 1 = 1$, so $y_1 = 1 + 0.1(1) = 1.1$. You moved one small step in the direction the equation points."
+    },
+    {
+      "id": "eulers-method-multi-step",
+      "label": "Iterating many steps",
+      "microLesson": "To reach a far-off $x$, repeat the single-step update over and over, each time using the value you just computed. The output of one step becomes the input of the next. From $(0, 1)$ with $\\\\frac{dy}{dx} = y$ and $h = 1$: step 1 gives $y = 1 + 1(1) = 2$; step 2 gives $y = 2 + 1(2) = 4$; step 3 gives $y = 4 + 1(4) = 8$. Three steps march you from $x = 0$ to $x = 3$. Keep a running $x$ and $y$ and apply the same rule each line."
+    },
+    {
+      "id": "step-size-and-error",
+      "label": "Step size and error",
+      "microLesson": "Euler's method approximates a curve with straight segments, so it carries error. A **smaller step size $h$** hugs the curve more closely and gives a better estimate — at the cost of more arithmetic. Compare an estimate to a known exact value to measure the error: error $= |\\\\text{exact} - \\\\text{estimate}|$. Halving $h$ roughly halves the error for Euler's method. That trade-off — accuracy versus work — is the central tension of every numerical method."
+    },
+    {
+      "id": "numerical-applied",
+      "label": "Applying Euler to a model",
+      "microLesson": "Most real differential equations have no tidy formula solution, so engineers and scientists simulate them step by step with Euler's method. Newton's cooling $\\\\frac{dT}{dt} = -k(T - T_{env})$, population growth $\\\\frac{dP}{dt} = rP$, and motion under a force all fit the pattern $y_{n+1} = y_n + h \\\\cdot f$. You pick a step size, start from the known initial condition, and march forward to estimate temperature, population, or position at a future time."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When there's no formula, you simulate\n\nMost differential equations that describe the real world — a cooling engine, a spreading population, a rocket fighting drag — **cannot be solved with a neat formula**. There's no $y = \\\\dots$ to plug a time into. So how do engineers and scientists predict tomorrow's temperature or next year's population? They **march forward in small steps**, and the simplest way to do that is **Euler's method**.\n\n## The one idea: follow the slope\n\nA first-order differential equation tells you the **slope** of the solution curve at any point:\n\n$$\\\\frac{dy}{dx} = f(x, y).$$\n\nIt doesn't hand you the curve — it hands you the *direction* the curve is heading at wherever you currently stand. Euler's method exploits this: if you know where you are, take a short straight step in the direction the equation points, then look again and repeat.\n\nThe update rule is one line:\n\n$$y_{n+1} = y_n + h \\\\cdot f(x_n, y_n).$$\n\nHere $h$ is the **step size** (how far you move in $x$ each time), $f(x_n, y_n)$ is the current slope, and $h \\\\cdot f$ is the rise you add to $y$. After updating $y$, advance $x$ by $h$ and do it again.\n\n### Worked example — one step\n\nSuppose $\\\\frac{dy}{dx} = x + y$ with the starting point $(0, 1)$ and step size $h = 0.1$.\n\n- Current slope: $f(0, 1) = 0 + 1 = 1$.\n- Step: $y_1 = 1 + 0.1 \\\\cdot 1 = 1.1$, and $x$ advances to $0.1$.\n\nThat's a complete Euler step. The true solution is slightly above $1.1$, but for one short step we're close.\n\n## Marching many steps\n\nTo reach a distant $x$, you **repeat**, feeding each result into the next step. With $\\\\frac{dy}{dx} = y$, start $(0, 1)$, $h = 1$:\n\n| step | $x$ | slope $= y$ | new $y = y + h \\\\cdot \\\\text{slope}$ |\n|------|-----|-------------|-------------------------------------|\n| 1 | 0 | 1 | $1 + 1(1) = 2$ |\n| 2 | 1 | 2 | $2 + 1(2) = 4$ |\n| 3 | 2 | 4 | $4 + 1(4) = 8$ |\n\nAfter three steps we estimate $y(3) \\\\approx 8$. (The exact answer is $e^3 \\\\approx 20.1$ — a big gap, because $h = 1$ is a very coarse step.)\n\nDrawn out, the gap is unmistakable — each Euler segment sets off along the current slope, but the true curve $y = e^x$ bends up and away, and the misses compound:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,3.6],\"yRange\":[0,22],\"grid\":true,\"curves\":[{\"fn\":\"exp(x)\",\"label\":\"y = e^x\",\"color\":\"accent\",\"labelAt\":2.6}],\"segments\":[{\"from\":[0,1],\"to\":[1,2],\"color\":\"warn\"},{\"from\":[1,2],\"to\":[2,4],\"color\":\"warn\"},{\"from\":[2,4],\"to\":[3,8],\"color\":\"warn\"}],\"points\":[{\"x\":0,\"y\":1,\"color\":\"warn\"},{\"x\":1,\"y\":2,\"color\":\"warn\"},{\"x\":2,\"y\":4,\"color\":\"warn\"},{\"x\":3,\"y\":8,\"label\":\"Euler: 8\",\"color\":\"warn\"},{\"x\":3,\"y\":20.09,\"label\":\"e^3\",\"color\":\"accent\"}],\"caption\":\"Euler’s method on dy/dx = y with h = 1: the polygon through (0,1), (1,2), (2,4), (3,8) falls far below the true curve, which reaches e^3 ≈ 20.1\"}\n```\n\n## Step size controls accuracy\n\nEuler's method replaces a curve with straight segments, so it **always carries some error**. The fix is a **smaller step size**: shorter segments hug the curve more tightly. Halving $h$ roughly halves the error — but doubles the number of steps you must compute. That tug-of-war between **accuracy and effort** is the heart of numerical computing.\n\nRerun the same march with $h = 0.5$ and you can watch the payoff: six shorter segments hug the curve noticeably better than three long ones.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,3.6],\"yRange\":[0,22],\"grid\":true,\"curves\":[{\"fn\":\"exp(x)\",\"label\":\"y = e^x\",\"color\":\"accent\",\"labelAt\":2.6}],\"segments\":[{\"from\":[0,1],\"to\":[1,2],\"color\":\"warn\"},{\"from\":[1,2],\"to\":[2,4],\"color\":\"warn\"},{\"from\":[2,4],\"to\":[3,8],\"color\":\"warn\"},{\"from\":[0,1],\"to\":[0.5,1.5],\"color\":\"success\"},{\"from\":[0.5,1.5],\"to\":[1,2.25],\"color\":\"success\"},{\"from\":[1,2.25],\"to\":[1.5,3.375],\"color\":\"success\"},{\"from\":[1.5,3.375],\"to\":[2,5.0625],\"color\":\"success\"},{\"from\":[2,5.0625],\"to\":[2.5,7.59375],\"color\":\"success\"},{\"from\":[2.5,7.59375],\"to\":[3,11.390625],\"color\":\"success\"}],\"points\":[{\"x\":0,\"y\":1,\"r\":3,\"color\":\"warn\"},{\"x\":1,\"y\":2,\"r\":3,\"color\":\"warn\"},{\"x\":2,\"y\":4,\"r\":3,\"color\":\"warn\"},{\"x\":3,\"y\":8,\"r\":3,\"label\":\"8\",\"color\":\"warn\"},{\"x\":0.5,\"y\":1.5,\"r\":3,\"color\":\"success\"},{\"x\":1,\"y\":2.25,\"r\":3,\"color\":\"success\"},{\"x\":1.5,\"y\":3.375,\"r\":3,\"color\":\"success\"},{\"x\":2,\"y\":5.0625,\"r\":3,\"color\":\"success\"},{\"x\":2.5,\"y\":7.59375,\"r\":3,\"color\":\"success\"},{\"x\":3,\"y\":11.390625,\"r\":3,\"label\":\"11.39\",\"color\":\"success\"}],\"caption\":\"Same problem, two step sizes: the h = 0.5 polygon ends at 11.39 and the h = 1 polygon at 8, while the exact value at x = 3 is e^3 ≈ 20.1\"}\n```\n\nWhen an exact value is known, measure the error directly:\n\n$$\\\\text{error} = |\\\\text{exact} - \\\\text{estimate}|.$$\n\nShrinking $h$ should shrink that number. If it doesn't, something is wrong with your arithmetic or your model.\n\n## Why this matters\n\nEvery flight simulator, weather forecast, and circuit simulation is, underneath, a vast number of tiny update steps just like $y_{n+1} = y_n + h \\\\cdot f$. Euler's method is the plainest version — slower and less accurate than its cousins, but the one that makes the core idea unmistakable: **to predict the future of a changing system, follow its rate of change one small step at a time.**"
+  },
+  "application": {
+    "summary": "Euler's method estimates the future of any system whose rate of change is known but whose exact solution isn't — cooling objects, growing populations, moving bodies. You start from a known state and step forward, which is exactly how engineering simulations, forecasts, and control systems compute.",
+    "domains": ["engineering", "biology", "physics", "finance"],
+    "workedExample": "**How fast does coffee cool?**\n\nA cup of coffee at \\\\$95^\\\\circ$C sits in a \\\\$20^\\\\circ$C room. Newton's law of cooling says the temperature obeys $\\\\frac{dT}{dt} = -0.1(T - 20)$, with $t$ in minutes. There's no slip-of-paper formula handy, so we estimate $T$ after 2 minutes with Euler's method and step size $h = 1$.\n\n- Start: $T = 95$ at $t = 0$. Slope $= -0.1(95 - 20) = -0.1(75) = -7.5$. Step: $T = 95 + 1(-7.5) = 87.5$.\n- Now $t = 1$, $T = 87.5$. Slope $= -0.1(87.5 - 20) = -0.1(67.5) = -6.75$. Step: $T = 87.5 + 1(-6.75) = 80.75$.\n\nAfter 2 minutes the coffee is roughly $\\\\$80.75^\\\\circ$C. The slope shrinks as the coffee approaches room temperature — cooling slows down — which Euler captures automatically because it recomputes the slope every step. Use a smaller $h$ (say 0.5) and you'd get a slightly higher, more accurate estimate, since Euler overshoots the drop on a curve that's flattening.",
+    "domainNotes": [
+      "**Engineering:** simulating heat flow, fluid pressure, or circuit voltage where no closed-form solution exists.",
+      "**Biology:** projecting population or epidemic size from a growth-rate model.",
+      "**Physics:** integrating velocity and position for a body under a changing force (drag, gravity, thrust).",
+      "**Finance:** stepping a model of a quantity that grows at a rate proportional to its current size."
+    ]
+  },
+  "generators": ["euler-1step-v1", "euler-2step-v1", "def-eulers-method-single-step-d2", "def-eulers-method-single-step-d3", "def-eulers-method-multi-step-d1", "def-eulers-method-multi-step-d3", "def-step-size-and-error-d1", "def-step-size-and-error-d2", "def-step-size-and-error-d3", "def-numerical-applied-d1", "def-numerical-applied-d2", "def-numerical-applied-d3"],
+  "problems": [
+    {
+      "id": "differential-equations.numerical-methods.s01",
+      "concepts": ["eulers-method-single-step"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\\\frac{dy}{dx} = x + y$ with $y(0) = 1$ and step size $h = 0.1$, perform one Euler step to estimate $y(0.1)$.",
+      "steps": [
+        { "instruction": "Compute the slope $f(0, 1) = x + y$ at the starting point.", "answer": "1", "accept": [], "hint": "Plug $x = 0$ and $y = 1$ into $x + y$." },
+        { "instruction": "Apply $y_1 = y_0 + h \\\\cdot f$. Compute $y_1$.", "answer": "1.1", "accept": [], "hint": "$1 + 0.1 \\\\times 1$." }
+      ],
+      "finalAnswer": { "value": "1.1", "unit": "" },
+      "solutionNarrative": "Slope at $(0,1)$ is $0 + 1 = 1$. One step: $y_1 = 1 + 0.1(1) = 1.1$."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s02",
+      "concepts": ["eulers-method-single-step"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\\\frac{dy}{dx} = 2y$ with $y(0) = 3$ and step size $h = 0.5$, perform one Euler step to estimate $y(0.5)$.",
+      "steps": [
+        { "instruction": "Compute the slope $f = 2y$ at the start.", "answer": "6", "accept": [], "hint": "$2 \\\\times 3$." },
+        { "instruction": "Apply $y_1 = y_0 + h \\\\cdot f$. Compute $y_1$.", "answer": "6", "accept": [], "hint": "$3 + 0.5 \\\\times 6$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Slope $= 2(3) = 6$. Step: $y_1 = 3 + 0.5(6) = 3 + 3 = 6$."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s03",
+      "concepts": ["eulers-method-single-step"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $\\\\frac{dy}{dx} = x - 2y$ with $y(1) = 4$ and step size $h = 0.5$, perform one Euler step to estimate $y(1.5)$.",
+      "steps": [
+        { "instruction": "Compute the slope $f(1, 4) = x - 2y$.", "answer": "-7", "accept": [], "hint": "$1 - 2(4) = 1 - 8$." },
+        { "instruction": "Apply $y_1 = y_0 + h \\\\cdot f$. Compute $y_1$.", "answer": "0.5", "accept": [], "hint": "$4 + 0.5 \\\\times (-7)$." }
+      ],
+      "finalAnswer": { "value": "0.5", "unit": "" },
+      "solutionNarrative": "Slope $= 1 - 2(4) = -7$. Step: $y_1 = 4 + 0.5(-7) = 4 - 3.5 = 0.5$."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s04",
+      "concepts": ["eulers-method-single-step"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Given $\\\\frac{dy}{dx} = xy - 1$ with $y(2) = 1.5$ and step size $h = 0.2$, perform one Euler step to estimate $y(2.2)$.",
+      "steps": [
+        { "instruction": "Compute the slope $f(2, 1.5) = xy - 1$.", "answer": "2", "accept": [], "hint": "$2 \\\\times 1.5 - 1 = 3 - 1$." },
+        { "instruction": "Apply $y_1 = y_0 + h \\\\cdot f$. Compute $y_1$.", "answer": "1.9", "accept": [], "hint": "$1.5 + 0.2 \\\\times 2$." }
+      ],
+      "finalAnswer": { "value": "1.9", "unit": "" },
+      "solutionNarrative": "Slope $= 2(1.5) - 1 = 2$. Step: $y_1 = 1.5 + 0.2(2) = 1.5 + 0.4 = 1.9$."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s05",
+      "concepts": ["eulers-method-multi-step"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\\\frac{dy}{dx} = y$ with $y(0) = 1$ and step size $h = 1$, take two Euler steps to estimate $y(2)$.",
+      "steps": [
+        { "instruction": "Step 1: slope $= y = 1$. Compute $y_1 = 1 + 1(1)$.", "answer": "2", "accept": [], "hint": "$1 + 1 \\\\times 1$." },
+        { "instruction": "Step 2: slope $= y_1 = 2$. Compute $y_2 = 2 + 1(2)$.", "answer": "4", "accept": [], "hint": "$2 + 1 \\\\times 2$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Step 1: $y_1 = 1 + 1(1) = 2$. Step 2: $y_2 = 2 + 1(2) = 4$. So $y(2) \\\\approx 4$."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s06",
+      "concepts": ["eulers-method-multi-step"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $\\\\frac{dy}{dx} = x + y$ with $y(0) = 1$ and step size $h = 0.5$, take two Euler steps to estimate $y(1)$.",
+      "steps": [
+        { "instruction": "Step 1 at $(0, 1)$: slope $= 0 + 1 = 1$. Compute $y_1 = 1 + 0.5(1)$.", "answer": "1.5", "accept": [], "hint": "$1 + 0.5 \\\\times 1$." },
+        { "instruction": "Step 2 at $(0.5, 1.5)$: slope $= 0.5 + 1.5 = 2$. Compute $y_2 = 1.5 + 0.5(2)$.", "answer": "2.5", "accept": [], "hint": "$1.5 + 0.5 \\\\times 2$." }
+      ],
+      "finalAnswer": { "value": "2.5", "unit": "" },
+      "solutionNarrative": "Step 1: $y_1 = 1 + 0.5(1) = 1.5$ at $x = 0.5$. Step 2: slope $= 0.5 + 1.5 = 2$, so $y_2 = 1.5 + 0.5(2) = 2.5$. Thus $y(1) \\\\approx 2.5$."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s07",
+      "concepts": ["eulers-method-multi-step"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Given $\\\\frac{dy}{dx} = y - x$ with $y(0) = 2$ and step size $h = 0.5$, take three Euler steps to estimate $y(1.5)$.",
+      "steps": [
+        { "instruction": "Step 1 at $(0, 2)$: slope $= 2 - 0 = 2$. Compute $y_1 = 2 + 0.5(2)$.", "answer": "3", "accept": [], "hint": "$2 + 0.5 \\\\times 2$." },
+        { "instruction": "Step 2 at $(0.5, 3)$: slope $= 3 - 0.5 = 2.5$. Compute $y_2 = 3 + 0.5(2.5)$.", "answer": "4.25", "accept": [], "hint": "$3 + 0.5 \\\\times 2.5$." },
+        { "instruction": "Step 3 at $(1, 4.25)$: slope $= 4.25 - 1 = 3.25$. Compute $y_3 = 4.25 + 0.5(3.25)$.", "answer": "5.875", "accept": [], "hint": "$4.25 + 0.5 \\\\times 3.25$." }
+      ],
+      "finalAnswer": { "value": "5.875", "unit": "" },
+      "solutionNarrative": "Step 1: $y_1 = 2 + 0.5(2) = 3$. Step 2: slope $= 3 - 0.5 = 2.5$, $y_2 = 3 + 0.5(2.5) = 4.25$. Step 3: slope $= 4.25 - 1 = 3.25$, $y_3 = 4.25 + 0.5(3.25) = 5.875$. So $y(1.5) \\\\approx 5.875$."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s08",
+      "concepts": ["step-size-and-error"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $\\\\frac{dy}{dx} = y$ with $y(0) = 1$, one Euler step with $h = 1$ estimates $y(1) \\\\approx 2$. The exact value is $y(1) = e \\\\approx 2.718$. What is the error $|\\\\text{exact} - \\\\text{estimate}|$? Round to 3 decimals.",
+      "plot": {"type":"cartesian","xRange":[0,1.3],"yRange":[0,3.2],"grid":true,"curves":[{"fn":"exp(x)","label":"y = e^x","color":"accent","labelAt":0.55}],"segments":[{"from":[0,1],"to":[1,2],"color":"warn"},{"from":[1,2],"to":[1,2.718],"dashed":true,"color":"error"}],"points":[{"x":0,"y":1,"color":"warn"},{"x":1,"y":2,"label":"Euler: 2","color":"warn"},{"x":1,"y":2.718,"label":"e ≈ 2.718","color":"accent"}],"caption":"One Euler step with h = 1 lands at (1, 2); the dashed gap up to the true value e ≈ 2.718 is the error"},
+      "steps": [
+        { "instruction": "Subtract the estimate from the exact value (then take the absolute value). Compute $|2.718 - 2|$.", "answer": "0.718", "accept": [], "hint": "$2.718 - 2$." }
+      ],
+      "finalAnswer": { "value": "0.718", "unit": "" },
+      "solutionNarrative": "Error $= |2.718 - 2| = 0.718$. A single coarse step undershoots the true exponential growth."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s09",
+      "concepts": ["step-size-and-error"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $\\\\frac{dy}{dx} = y$ with $y(0) = 1$, use $h = 0.5$ and take two Euler steps to re-estimate $y(1)$, then compare to the exact $e \\\\approx 2.718$.",
+      "steps": [
+        { "instruction": "Step 1: slope $= 1$, so $y_1 = 1 + 0.5(1)$. Compute $y_1$.", "answer": "1.5", "accept": [], "hint": "$1 + 0.5 \\\\times 1$." },
+        { "instruction": "Step 2: slope $= 1.5$, so $y_2 = 1.5 + 0.5(1.5)$. Compute $y_2$.", "answer": "2.25", "accept": [], "hint": "$1.5 + 0.5 \\\\times 1.5$." },
+        { "instruction": "Compute the error $|2.718 - 2.25|$. Round to 3 decimals.", "answer": "0.468", "accept": [], "hint": "$2.718 - 2.25$." }
+      ],
+      "finalAnswer": { "value": "0.468", "unit": "" },
+      "solutionNarrative": "With $h = 0.5$: $y_1 = 1.5$, $y_2 = 2.25$. Error $= |2.718 - 2.25| = 0.468$ — smaller than the $0.718$ error from a single $h = 1$ step, confirming that a smaller step size improves accuracy."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s10",
+      "concepts": ["step-size-and-error"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $\\\\frac{dy}{dx} = -y$ with $y(0) = 4$, estimate $y(1)$ two ways and compare to the exact value $4e^{-1} \\\\approx 1.4715$. First with $h = 1$ (one step), then with $h = 0.5$ (two steps).",
+      "steps": [
+        { "instruction": "One step, $h = 1$: slope $= -y = -4$, so $y_1 = 4 + 1(-4)$. Compute $y_1$.", "answer": "0", "accept": [], "hint": "$4 + 1 \\\\times (-4)$." },
+        { "instruction": "Two steps, $h = 0.5$: step 1 slope $= -4$, $y_1 = 4 + 0.5(-4) = 2$; step 2 slope $= -2$, $y_2 = 2 + 0.5(-2)$. Compute $y_2$.", "answer": "1", "accept": [], "hint": "$2 + 0.5 \\\\times (-2)$." },
+        { "instruction": "Which estimate is closer to 1.4715 — type the error of the better one, $|1.4715 - 1|$, rounded to 4 decimals.", "answer": "0.4715", "accept": [], "hint": "The $h = 0.5$ estimate is 1; compute $1.4715 - 1$." }
+      ],
+      "finalAnswer": { "value": "0.4715", "unit": "" },
+      "solutionNarrative": "With $h = 1$: $y_1 = 0$ (error $1.4715$). With $h = 0.5$: $y_1 = 2$, $y_2 = 1$ (error $|1.4715 - 1| = 0.4715$). The finer step is far closer, so its error $0.4715$ is the smaller of the two."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s11",
+      "concepts": ["numerical-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bacterial culture grows by $\\\\frac{dP}{dt} = 0.2P$ (thousands of cells, $t$ in hours). It starts at $P = 10$ thousand. Use one Euler step with $h = 1$ to estimate the population after 1 hour.",
+      "steps": [
+        { "instruction": "Compute the growth rate $\\\\frac{dP}{dt} = 0.2P$ at the start.", "answer": "2", "accept": [], "hint": "$0.2 \\\\times 10$." },
+        { "instruction": "Apply $P_1 = P_0 + h \\\\cdot \\\\frac{dP}{dt}$. Compute $P_1$.", "answer": "12", "accept": [], "hint": "$10 + 1 \\\\times 2$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "thousand cells" },
+      "solutionNarrative": "Rate $= 0.2(10) = 2$. One step: $P_1 = 10 + 1(2) = 12$ thousand cells after 1 hour."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s12",
+      "concepts": ["numerical-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cup of coffee at $95^\\\\circ$C cools in a $20^\\\\circ$C room following $\\\\frac{dT}{dt} = -0.1(T - 20)$ ($t$ in minutes). Use two Euler steps with $h = 1$ to estimate the temperature after 2 minutes.",
+      "steps": [
+        { "instruction": "Step 1 at $T = 95$: rate $= -0.1(95 - 20) = -0.1(75)$. Compute $T_1 = 95 + 1 \\\\cdot \\\\text{rate}$.", "answer": "87.5", "accept": [], "hint": "Rate $= -7.5$, so $95 + 1(-7.5)$." },
+        { "instruction": "Step 2 at $T = 87.5$: rate $= -0.1(87.5 - 20) = -0.1(67.5) = -6.75$. Compute $T_2 = 87.5 + 1(-6.75)$.", "answer": "80.75", "accept": [], "hint": "$87.5 - 6.75$." }
+      ],
+      "finalAnswer": { "value": "80.75", "unit": "degrees C" },
+      "solutionNarrative": "Step 1: rate $-7.5$, $T_1 = 95 - 7.5 = 87.5$. Step 2: rate $-6.75$, $T_2 = 87.5 - 6.75 = 80.75^\\\\circ$C after 2 minutes."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s13",
+      "concepts": ["numerical-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A falling object with drag has velocity governed by $\\\\frac{dv}{dt} = 10 - 0.5v$ (m/s, $t$ in seconds), starting from rest, $v(0) = 0$. Use three Euler steps with $h = 1$ to estimate the velocity after 3 seconds.",
+      "steps": [
+        { "instruction": "Step 1 at $v = 0$: acceleration $= 10 - 0.5(0) = 10$. Compute $v_1 = 0 + 1(10)$.", "answer": "10", "accept": [], "hint": "$0 + 1 \\\\times 10$." },
+        { "instruction": "Step 2 at $v = 10$: acceleration $= 10 - 0.5(10) = 5$. Compute $v_2 = 10 + 1(5)$.", "answer": "15", "accept": [], "hint": "$10 + 1 \\\\times 5$." },
+        { "instruction": "Step 3 at $v = 15$: acceleration $= 10 - 0.5(15) = 2.5$. Compute $v_3 = 15 + 1(2.5)$.", "answer": "17.5", "accept": [], "hint": "$15 + 1 \\\\times 2.5$." }
+      ],
+      "finalAnswer": { "value": "17.5", "unit": "m/s" },
+      "solutionNarrative": "Step 1: $a = 10$, $v_1 = 10$. Step 2: $a = 5$, $v_2 = 15$. Step 3: $a = 2.5$, $v_3 = 17.5$ m/s. The acceleration shrinks as drag grows, so the velocity climbs toward a terminal value of 20 m/s."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s14",
+      "concepts": ["numerical-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A town's population (thousands) follows $\\\\frac{dP}{dt} = 0.05P$ ($t$ in years), starting at $P = 40$. Use two Euler steps with $h = 1$ to estimate the population after 2 years.",
+      "steps": [
+        { "instruction": "Step 1 at $P = 40$: rate $= 0.05(40) = 2$. Compute $P_1 = 40 + 1(2)$.", "answer": "42", "accept": [], "hint": "$40 + 1 \\\\times 2$." },
+        { "instruction": "Step 2 at $P = 42$: rate $= 0.05(42) = 2.1$. Compute $P_2 = 42 + 1(2.1)$.", "answer": "44.1", "accept": [], "hint": "$42 + 1 \\\\times 2.1$." }
+      ],
+      "finalAnswer": { "value": "44.1", "unit": "thousand people" },
+      "solutionNarrative": "Step 1: rate $2$, $P_1 = 42$. Step 2: rate $0.05(42) = 2.1$, $P_2 = 44.1$ thousand people after 2 years."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s15",
+      "concepts": ["eulers-method-multi-step", "numerical-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A savings account earns continuously, modeled by $\\\\frac{dA}{dt} = 0.1A$ (dollars in thousands, $t$ in years), starting at $A = 5$. Use two Euler steps with $h = 1$ to estimate the balance after 2 years.",
+      "steps": [
+        { "instruction": "Step 1 at $A = 5$: rate $= 0.1(5) = 0.5$. Compute $A_1 = 5 + 1(0.5)$.", "answer": "5.5", "accept": [], "hint": "$5 + 1 \\\\times 0.5$." },
+        { "instruction": "Step 2 at $A = 5.5$: rate $= 0.1(5.5) = 0.55$. Compute $A_2 = 5.5 + 1(0.55)$.", "answer": "6.05", "accept": [], "hint": "$5.5 + 1 \\\\times 0.55$." }
+      ],
+      "finalAnswer": { "value": "6.05", "unit": "thousand dollars" },
+      "solutionNarrative": "Step 1: rate $0.5$, $A_1 = 5.5$. Step 2: rate $0.55$, $A_2 = 6.05$ thousand dollars after 2 years."
+    },
+    {
+      "id": "differential-equations.numerical-methods.s16",
+      "concepts": ["step-size-and-error", "numerical-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "For the cooling model $\\\\frac{dT}{dt} = -0.1(T - 20)$ starting at $T = 95$, the exact temperature after 2 minutes is about $81.41^\\\\circ$C. Earlier, two steps with $h = 1$ gave the estimate $80.75^\\\\circ$C. What is the error $|\\\\text{exact} - \\\\text{estimate}|$? Round to 2 decimals.",
+      "steps": [
+        { "instruction": "Compute $|81.41 - 80.75|$.", "answer": "0.66", "accept": [], "hint": "$81.41 - 80.75$." }
+      ],
+      "finalAnswer": { "value": "0.66", "unit": "degrees C" },
+      "solutionNarrative": "Error $= |81.41 - 80.75| = 0.66^\\\\circ$C. Euler slightly overshoots the temperature drop on a flattening curve; a smaller step size would shrink this gap."
+    }
+  ]
+}

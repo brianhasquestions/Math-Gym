@@ -1,0 +1,274 @@
+{
+  "id": "trigonometry.law-of-sines-and-cosines",
+  "subject": "trigonometry",
+  "title": "The Law of Sines and Cosines",
+  "prerequisites": ["geometry.right-triangle-trigonometry"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "law-of-sines-sides",
+      "label": "Law of Sines: finding a side",
+      "microLesson": "In ANY triangle — right angle or not — each side stands in the same proportion to the sine of its opposite angle: $\\frac{a}{\\sin A} = \\frac{b}{\\sin B} = \\frac{c}{\\sin C}$. Know two angles and any side (AAS or ASA) and you can find every other side. If $A = 35^\\circ$, $B = 80^\\circ$, and $a = 12$, then $b = \\frac{12\\sin 80^\\circ}{\\sin 35^\\circ} \\approx 20.6$. Round lengths to 1 decimal place."
+    },
+    {
+      "id": "law-of-sines-angles",
+      "label": "Law of Sines: finding an angle (and the ambiguous case)",
+      "microLesson": "Know two sides and a non-included angle (SSA) and the Law of Sines finds another angle: $\\sin B = \\frac{b\\sin A}{a}$, then $B = \\sin^{-1}$ of that value, rounded to the nearest degree. But beware: SSA is the **ambiguous case**. If $b\\sin A < a < b$, BOTH the acute angle and its supplement $180^\\circ - B$ produce valid triangles — two different triangles fit the same data. Always compare $a$ against $b\\sin A$ and $b$ to count the possibilities."
+    },
+    {
+      "id": "law-of-cosines",
+      "label": "Law of Cosines",
+      "microLesson": "When the Law of Sines has no complete ratio to work with — two sides with the *included* angle (SAS), or all three sides (SSS) — use the Law of Cosines: $c^2 = a^2 + b^2 - 2ab\\cos C$. It is the Pythagorean theorem with a correction term; at $C = 90^\\circ$ the $\\cos$ term vanishes and you get $c^2 = a^2 + b^2$ back. For SSS, solve it for the angle: $\\cos C = \\frac{a^2 + b^2 - c^2}{2ab}$. Round sides to 1 decimal place and angles to the nearest degree."
+    },
+    {
+      "id": "triangle-area-applied",
+      "label": "Triangle area from two sides and the included angle",
+      "microLesson": "No height needed: the area of any triangle is $K = \\frac{1}{2}ab\\sin C$, where $C$ is the angle *between* sides $a$ and $b$. With a special angle the answer is exact: sides 12 and 10 meeting at $60^\\circ$ give $K = \\frac{1}{2}(12)(10)\\sin 60^\\circ = 60 \\cdot \\frac{\\sqrt{3}}{2} = 30\\sqrt{3}$. With any other angle, compute and round to 1 decimal place. Surveyors price land with this formula."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When the right angle disappears\n\nRight-triangle trigonometry is powerful, but the world rarely hands you a $90^\\circ$ angle. A surveyor sighting a tree across a river, two ships diverging from a port, a roof truss meeting at $115^\\circ$ — these are **oblique triangles**, and SOH-CAH-TOA alone can't touch them. Two laws extend trig to *every* triangle, and between them they solve any triangle you have enough information to pin down.\n\nLabel the triangle the standard way: angles $A$, $B$, $C$ with side $a$ opposite $A$, side $b$ opposite $B$, side $c$ opposite $C$.\n\n## The Law of Sines\n\nIn any triangle, each side is proportional to the sine of its opposite angle:\n\n$$\\frac{a}{\\sin A} = \\frac{b}{\\sin B} = \\frac{c}{\\sin C}$$\n\nUse it whenever you have a **complete opposite pair** — a side and its opposite angle — plus one more piece.\n\n**Worked example (AAS).** $A = 35^\\circ$, $B = 80^\\circ$, and $a = 12$. Then\n\n$$\\frac{b}{\\sin 80^\\circ} = \\frac{12}{\\sin 35^\\circ} \\;\\Rightarrow\\; b = \\frac{12\\sin 80^\\circ}{\\sin 35^\\circ} \\approx \\frac{12(0.9848)}{0.5736} \\approx 20.6.$$\n\nAs in right-triangle work, **round lengths to 1 decimal place** and **angles to the nearest degree**.\n\n## The ambiguous case (SSA)\n\nSolving for an angle flips the equation: $\\sin B = \\frac{b\\sin A}{a}$, then apply $\\sin^{-1}$. But here's the trap: $\\sin B = \\sin(180^\\circ - B)$, so an SSA setup can describe **two different triangles**. Given acute $A$, compare $a$ to the height $b\\sin A$:\n\n- $a < b\\sin A$: the side is too short to reach — **no triangle**.\n- $a = b\\sin A$ or $a \\geq b$: exactly **one triangle**.\n- $b\\sin A < a < b$: **two triangles** — one with the acute $B$, one with its supplement $180^\\circ - B$.\n\nDrawing the 'swinging side' makes this visible: side $a$ hinged at $C$ can cross the base once, twice, or not at all.\n\n## The Law of Cosines\n\nSAS and SSS setups have no complete opposite pair, so the Law of Sines stalls. The Law of Cosines takes over:\n\n$$c^2 = a^2 + b^2 - 2ab\\cos C$$\n\nIt's the **Pythagorean theorem with a correction term**: when $C = 90^\\circ$, $\\cos C = 0$ and the formula collapses to $c^2 = a^2 + b^2$. An acute $C$ shrinks $c$; an obtuse $C$ (negative cosine) stretches it.\n\n**SAS worked example.** Sides 5 and 8 meet at $60^\\circ$. Then $c^2 = 25 + 64 - 2(5)(8)\\cos 60^\\circ = 89 - 40 = 49$, so $c = 7$ — exactly.\n\nHere is that triangle to scale — the $60^\\circ$ corner at $C$ sits between the two given sides, and the side the law computes closes the gap:\n\n```plot\n{ \"xRange\": [-1.5, 7.5], \"yRange\": [-1, 8], \"width\": 340, \"height\": 340, \"grid\": false, \"segments\": [ { \"from\": [0, 0], \"to\": [5, 0], \"color\": \"accent\", \"label\": \"a = 5\" }, { \"from\": [0, 0], \"to\": [4, 6.928], \"color\": \"accent\", \"label\": \"b = 8\" }, { \"from\": [5, 0], \"to\": [4, 6.928], \"color\": \"warn\", \"label\": \"c = 7\" } ], \"points\": [ { \"x\": 0, \"y\": 0, \"label\": \"C = 60°\", \"color\": \"text\" }, { \"x\": 5, \"y\": 0, \"label\": \"B\", \"color\": \"accent\" }, { \"x\": 4, \"y\": 6.928, \"label\": \"A\", \"color\": \"accent\" } ], \"caption\": \"SAS: a = 5 and b = 8 meet at C = 60°, so c² = 25 + 64 − 40 = 49 and c = 7\" }\n```\n\n**SSS:** solve for the angle instead: $\\cos C = \\frac{a^2 + b^2 - c^2}{2ab}$. A negative result simply means $C$ is obtuse — the inverse cosine handles it automatically, no ambiguity.\n\n## Area without a height\n\nDrop the perpendicular from one vertex and you find every triangle's area is\n\n$$K = \\tfrac{1}{2}ab\\sin C,$$\n\nwhere $C$ is the angle **between** sides $a$ and $b$. Special angles give exact answers ($\\sin 30^\\circ = \\frac{1}{2}$, $\\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$); anything else, round to 1 decimal place.\n\n## Choosing the right tool\n\n- **AAS / ASA** → Law of Sines (find the third angle first if needed: angles sum to $180^\\circ$).\n- **SSA** → Law of Sines, but *count the triangles first*.\n- **SAS / SSS** → Law of Cosines.\n- **Two sides + included angle, want area** → $\\frac{1}{2}ab\\sin C$."
+  },
+  "application": {
+    "summary": "The Law of Sines and Cosines solve triangles with no right angle — which is how surveyors measure across rivers, navigators fix positions from bearings, engineers size truss members, and assessors compute the area of irregular land.",
+    "domains": ["surveying", "navigation", "structural engineering", "land measurement"],
+    "workedExample": "**How far is the tree across the river?**\n\nA surveyor on the near bank marks two points $A$ and $B$ that are 100 m apart, and sights a tree $T$ on the far bank from both. At $A$ the angle between the baseline and the tree is $40^\\circ$; at $B$ it is $75^\\circ$. No tape measure crosses the river — but the triangle is already solved.\n\nThe third angle, at the tree, is $T = 180^\\circ - 40^\\circ - 75^\\circ = 65^\\circ$, and it sits opposite the known 100 m baseline. The distance from $B$ to the tree sits opposite the $40^\\circ$ angle, so the Law of Sines gives\n\n$$\\frac{BT}{\\sin 40^\\circ} = \\frac{100}{\\sin 65^\\circ} \\;\\Rightarrow\\; BT = \\frac{100\\sin 40^\\circ}{\\sin 65^\\circ} \\approx \\frac{64.28}{0.9063} \\approx 70.9 \\text{ m}.$$\n\n**Two angle sightings and one taped baseline replace a river crossing.** The same triangulation locates mountain peaks, ships from paired lighthouses, and cell phones from towers — and when the known data is two sides with the angle between them, the Law of Cosines steps in the same way.",
+    "domainNotes": [
+      "**Surveying:** triangulate distances to inaccessible points (across rivers, canyons, property lines) from one measured baseline and two angle sightings.",
+      "**Navigation:** two bearings on the same landmark fix a ship's position; the Law of Cosines gives the distance between two craft diverging on known headings.",
+      "**Structural engineering:** truss and bracket members meet at non-right angles; the Law of Cosines sizes the third member and the SSS form checks fabricated angles.",
+      "**Land measurement:** $\\frac{1}{2}ab\\sin C$ prices an irregular parcel from two fence lines and the corner angle — no height survey required."
+    ]
+  },
+  "generators": [
+    "trg2-los-side-d1",
+    "trg2-los-side-d2",
+    "trg2-los-side-d3",
+    "trg2-los-angle-d1",
+    "trg2-los-angle-d2",
+    "trg2-los-angle-d3",
+    "trg2-loc-side-d1",
+    "trg2-loc-side-d2",
+    "trg2-loc-angle-d3",
+    "trg2-area-d1",
+    "trg2-area-d2",
+    "trg2-area-d3"
+  ],
+  "problems": [
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s01",
+      "concepts": ["law-of-sines-sides"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In triangle $ABC$, $A = 35^\\circ$, $B = 80^\\circ$, and $a = 12$. Find side $b$. Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Set up the Law of Sines proportion that contains $b$.", "answer": "b/sin(80) = 12/sin(35)", "accept": ["b/sin80=12/sin35", "sin(80)/b = sin(35)/12", "b = 12sin(80)/sin(35)", "b/sin(80)=12/sin(35)"], "hint": "Match each side with the sine of its OPPOSITE angle: $\\frac{b}{\\sin B} = \\frac{a}{\\sin A}$." },
+        { "instruction": "Solve $b = \\frac{12\\sin 80^\\circ}{\\sin 35^\\circ}$ and round to 1 decimal place.", "answer": "20.6", "accept": [], "hint": "$\\sin 80^\\circ \\approx 0.9848$ and $\\sin 35^\\circ \\approx 0.5736$, so $b \\approx 12(0.9848)/0.5736 \\approx 20.60$." }
+      ],
+      "finalAnswer": { "value": "20.6", "unit": "" },
+      "solutionNarrative": "Side $b$ is opposite $B$: $\\frac{b}{\\sin 80^\\circ} = \\frac{12}{\\sin 35^\\circ}$, so $b = 12\\sin 80^\\circ / \\sin 35^\\circ \\approx 20.6$."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s02",
+      "concepts": ["law-of-sines-sides"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A surveyor marks points $A$ and $B$ 100 m apart on one bank of a river and sights a tree $T$ on the far bank. The angle at $A$ (between $AB$ and the tree) is $40^\\circ$ and the angle at $B$ is $75^\\circ$. How far is the tree from point $B$? Round to 1 decimal place. The setup is shown in the figure.",
+      "plot": { "xRange": [-10, 115], "yRange": [-10, 80], "width": 440, "height": 320, "grid": false, "segments": [ { "from": [0, 0], "to": [100, 0], "color": "accent", "label": "100 m" }, { "from": [0, 0], "to": [81.6, 68.5], "color": "dim", "dashed": true }, { "from": [100, 0], "to": [81.6, 68.5], "color": "warn", "dashed": true, "label": "BT = ?" } ], "points": [ { "x": 0, "y": 0, "label": "A: 40°", "color": "accent" }, { "x": 100, "y": 0, "label": "B: 75°", "color": "accent" }, { "x": 81.6, "y": 68.5, "label": "T (tree)", "color": "warn" } ], "caption": "Sight lines from A (40°) and B (75°) across the 100 m baseline meet at the tree T" },
+      "steps": [
+        { "instruction": "Find the angle at the tree $T$ (the angles of a triangle sum to $180^\\circ$).", "answer": "65", "accept": ["T = 65", "65 degrees"], "hint": "$180 - 40 - 75$." },
+        { "instruction": "The distance $BT$ is opposite the $40^\\circ$ angle and the 100 m baseline is opposite $T$. Set up the Law of Sines for $BT$.", "answer": "BT/sin(40) = 100/sin(65)", "accept": ["BT/sin40=100/sin65", "BT = 100sin(40)/sin(65)", "b/sin(40) = 100/sin(65)"], "hint": "$\\frac{BT}{\\sin 40^\\circ} = \\frac{100}{\\sin 65^\\circ}$." },
+        { "instruction": "Solve $BT = \\frac{100\\sin 40^\\circ}{\\sin 65^\\circ}$ and round to 1 decimal place (meters).", "answer": "70.9", "accept": [], "hint": "$\\sin 40^\\circ \\approx 0.6428$ and $\\sin 65^\\circ \\approx 0.9063$, so $BT \\approx 64.28/0.9063 \\approx 70.92$." }
+      ],
+      "finalAnswer": { "value": "70.9", "unit": "meters" },
+      "solutionNarrative": "The angle at the tree is $180 - 40 - 75 = 65^\\circ$, opposite the 100 m baseline. Then $BT = 100\\sin 40^\\circ/\\sin 65^\\circ \\approx 70.9$ m — measured without crossing the river."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s03",
+      "concepts": ["law-of-sines-sides"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Engineers planning a tunnel mark points $A$ and $B$ 300 m apart at the base of a mountain. A target point $C$ on the far side is sighted from both: the angle at $A$ is $52^\\circ$ and the angle at $B$ is $68^\\circ$. Find the distance $AC$ (the tunnel line from $A$). Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Find the angle at $C$.", "answer": "60", "accept": ["C = 60", "60 degrees"], "hint": "$180 - 52 - 68$." },
+        { "instruction": "Side $AC$ is opposite the angle at $B$, and the 300 m baseline $AB$ is opposite $C$. Set up the Law of Sines for $AC$.", "answer": "AC/sin(68) = 300/sin(60)", "accept": ["AC/sin68=300/sin60", "AC = 300sin(68)/sin(60)", "b/sin(68) = 300/sin(60)"], "hint": "$\\frac{AC}{\\sin 68^\\circ} = \\frac{300}{\\sin 60^\\circ}$ — each side over the sine of its opposite angle." },
+        { "instruction": "Solve $AC = \\frac{300\\sin 68^\\circ}{\\sin 60^\\circ}$ and round to 1 decimal place (meters).", "answer": "321.2", "accept": [], "hint": "$\\sin 68^\\circ \\approx 0.9272$ and $\\sin 60^\\circ \\approx 0.8660$, so $AC \\approx 278.16/0.8660 \\approx 321.19$." }
+      ],
+      "finalAnswer": { "value": "321.2", "unit": "meters" },
+      "solutionNarrative": "$C = 180 - 52 - 68 = 60^\\circ$ sits opposite the 300 m baseline. $AC$ is opposite $B = 68^\\circ$, so $AC = 300\\sin 68^\\circ/\\sin 60^\\circ \\approx 321.2$ m."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s04",
+      "concepts": ["law-of-sines-angles"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In triangle $ABC$, $A = 30^\\circ$, $a = 8$, and $b = 12$. Find the acute angle $B$. Round to the nearest degree.",
+      "steps": [
+        { "instruction": "Solve the Law of Sines for $\\sin B$ and compute its value as a fraction or decimal.", "answer": "0.75", "accept": ["3/4", "sinB = 0.75", "sin(B) = 3/4"], "hint": "$\\sin B = \\frac{b\\sin A}{a} = \\frac{12\\sin 30^\\circ}{8} = \\frac{12(0.5)}{8}$." },
+        { "instruction": "Apply $\\sin^{-1}$ and round to the nearest degree.", "answer": "49", "accept": ["B = 49", "49 degrees"], "hint": "$\\sin^{-1}(0.75) \\approx 48.59^\\circ$." }
+      ],
+      "finalAnswer": { "value": "49", "unit": "degrees" },
+      "solutionNarrative": "$\\sin B = 12\\sin 30^\\circ/8 = 0.75$, so $B = \\sin^{-1}(0.75) \\approx 48.59^\\circ \\approx 49^\\circ$."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s05",
+      "concepts": ["law-of-sines-angles"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A triangular sail has a 15 ft edge opposite a $42^\\circ$ corner, and a second edge of 13 ft. Find the acute angle opposite the 13 ft edge. Round to the nearest degree.",
+      "steps": [
+        { "instruction": "Solve the Law of Sines for the sine of the unknown angle $B$ and round the value to 4 decimal places.", "answer": "0.5799", "accept": ["sinB = 0.5799", "sin(B) = 0.5799"], "hint": "$\\sin B = \\frac{13\\sin 42^\\circ}{15}$ with $\\sin 42^\\circ \\approx 0.6691$." },
+        { "instruction": "Apply $\\sin^{-1}$ and round to the nearest degree.", "answer": "35", "accept": ["B = 35", "35 degrees"], "hint": "$\\sin^{-1}(0.5799) \\approx 35.4^\\circ$." }
+      ],
+      "finalAnswer": { "value": "35", "unit": "degrees" },
+      "solutionNarrative": "$\\sin B = 13\\sin 42^\\circ/15 \\approx 0.5799$, so $B \\approx \\sin^{-1}(0.5799) \\approx 35.4^\\circ \\approx 35^\\circ$."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s06",
+      "concepts": ["law-of-sines-angles"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "In triangle $ABC$, $A = 40^\\circ$, $a = 7$, and $b = 10$ — a classic SSA setup. Determine how many triangles are possible, then find every possible angle $B$. Round angles to the nearest degree.",
+      "steps": [
+        { "instruction": "Compute the height $b\\sin A$ and round to 1 decimal place.", "answer": "6.4", "accept": [], "hint": "$10\\sin 40^\\circ \\approx 10(0.6428)$." },
+        { "instruction": "Compare: $b\\sin A \\approx 6.4 < a = 7 < b = 10$. How many triangles are possible? (Type a number.)", "answer": "2", "accept": ["two"], "hint": "When $b\\sin A < a < b$, the swinging side crosses the base twice — one acute $B$, one obtuse." },
+        { "instruction": "Find the ACUTE possibility for $B$: $\\sin B = \\frac{10\\sin 40^\\circ}{7}$, then $\\sin^{-1}$, rounded to the nearest degree.", "answer": "67", "accept": ["B = 67", "67 degrees"], "hint": "$\\sin B \\approx 6.428/7 \\approx 0.9183$ and $\\sin^{-1}(0.9183) \\approx 66.7^\\circ$." },
+        { "instruction": "Find the OBTUSE possibility: subtract the rounded acute angle from $180^\\circ$.", "answer": "113", "accept": ["B = 113", "113 degrees"], "hint": "$\\sin\\theta = \\sin(180^\\circ - \\theta)$, so the supplement $180 - 67$ also works." }
+      ],
+      "finalAnswer": { "value": "2 triangles: B = 67 or B = 113", "unit": "" },
+      "solutionNarrative": "Since $b\\sin A \\approx 6.4 < 7 < 10$, two triangles fit. $\\sin B = 10\\sin 40^\\circ/7 \\approx 0.9183$ gives the acute $B \\approx 67^\\circ$; its supplement $113^\\circ$ also satisfies the data."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s07",
+      "concepts": ["law-of-cosines"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In triangle $ABC$, sides $a = 5$ and $b = 8$ meet at the included angle $C = 60^\\circ$. Find side $c$ exactly. The triangle is shown in the figure.",
+      "plot": { "xRange": [-1.5, 7.5], "yRange": [-1, 8], "width": 340, "height": 340, "grid": false, "segments": [ { "from": [0, 0], "to": [5, 0], "color": "accent", "label": "a = 5" }, { "from": [0, 0], "to": [4, 6.928], "color": "accent", "label": "b = 8" }, { "from": [5, 0], "to": [4, 6.928], "color": "warn", "dashed": true, "label": "c = ?" } ], "points": [ { "x": 0, "y": 0, "label": "C = 60°", "color": "text" }, { "x": 5, "y": 0, "label": "B", "color": "accent" }, { "x": 4, "y": 6.928, "label": "A", "color": "accent" } ], "caption": "Sides a = 5 and b = 8 with included angle C = 60°" },
+      "steps": [
+        { "instruction": "Apply the Law of Cosines: compute $c^2 = 5^2 + 8^2 - 2(5)(8)\\cos 60^\\circ$. (Recall $\\cos 60^\\circ = \\frac{1}{2}$.)", "answer": "49", "accept": ["c^2 = 49"], "hint": "$25 + 64 - 80(0.5) = 89 - 40$." },
+        { "instruction": "Take the square root to find $c$.", "answer": "7", "accept": ["c = 7"], "hint": "$\\sqrt{49}$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "$c^2 = 25 + 64 - 2(5)(8)(\\tfrac{1}{2}) = 89 - 40 = 49$, so $c = 7$ exactly — a perfect Law of Cosines triangle."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s08",
+      "concepts": ["law-of-cosines"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two straight trails leave the same trailhead with a $65^\\circ$ angle between them. You hike 8 km along one trail; a friend hikes 11 km along the other. How far apart are you? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "This is SAS — two sides and the included angle. Compute $c^2 = 8^2 + 11^2 - 2(8)(11)\\cos 65^\\circ$ and round to 1 decimal place.", "answer": "110.6", "accept": ["c^2 = 110.6"], "hint": "$64 + 121 - 176(0.4226) \\approx 185 - 74.4$." },
+        { "instruction": "Take the square root of your rounded value and round to 1 decimal place (km).", "answer": "10.5", "accept": ["c = 10.5"], "hint": "$\\sqrt{110.6} \\approx 10.52$." }
+      ],
+      "finalAnswer": { "value": "10.5", "unit": "kilometers" },
+      "solutionNarrative": "SAS calls for the Law of Cosines: $c^2 = 64 + 121 - 176\\cos 65^\\circ \\approx 110.6$, so the distance is $\\sqrt{110.6} \\approx 10.5$ km."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s09",
+      "concepts": ["law-of-cosines"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A triangular steel brace has sides 7 m, 8 m, and 9 m. A fabricator needs the largest angle to set the welding jig. Find the angle opposite the 9 m side. Round to the nearest degree.",
+      "steps": [
+        { "instruction": "Solve the Law of Cosines for the cosine of the angle opposite 9: $\\cos C = \\frac{7^2 + 8^2 - 9^2}{2(7)(8)}$. Give the value as a fraction.", "answer": "32/112", "accept": ["2/7", "0.2857"], "hint": "$\\frac{49 + 64 - 81}{112}$." },
+        { "instruction": "Apply $\\cos^{-1}$ and round to the nearest degree.", "answer": "73", "accept": ["C = 73", "73 degrees"], "hint": "$\\cos^{-1}(0.2857) \\approx 73.4^\\circ$." }
+      ],
+      "finalAnswer": { "value": "73", "unit": "degrees" },
+      "solutionNarrative": "For SSS, solve for the cosine: $\\cos C = (49 + 64 - 81)/112 = 2/7 \\approx 0.2857$, so $C = \\cos^{-1}(2/7) \\approx 73^\\circ$. The largest angle always faces the longest side."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s10",
+      "concepts": ["law-of-cosines"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A triangle has sides 3, 5, and 7. Find the angle opposite the side of length 7 exactly — no rounding needed.",
+      "steps": [
+        { "instruction": "Compute $\\cos C = \\frac{3^2 + 5^2 - 7^2}{2(3)(5)}$ as a fraction.", "answer": "-1/2", "accept": ["-15/30", "-0.5"], "hint": "$\\frac{9 + 25 - 49}{30} = \\frac{-15}{30}$." },
+        { "instruction": "Which angle between $0^\\circ$ and $180^\\circ$ has cosine $-\\frac{1}{2}$? (Give degrees.)", "answer": "120", "accept": ["C = 120", "120 degrees"], "hint": "Cosine is negative for obtuse angles; recall $\\cos 60^\\circ = \\frac{1}{2}$, and $\\cos(180^\\circ - \\theta) = -\\cos\\theta$." }
+      ],
+      "finalAnswer": { "value": "120", "unit": "degrees" },
+      "solutionNarrative": "$\\cos C = (9 + 25 - 49)/30 = -1/2$, so $C = 120^\\circ$ exactly. The negative cosine flags an obtuse angle before you ever reach for the calculator."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s11",
+      "concepts": ["triangle-area-applied"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two sides of a triangle measure 10 and 6, and the angle between them is $30^\\circ$. Find the exact area.",
+      "steps": [
+        { "instruction": "What is $\\sin 30^\\circ$?", "answer": "1/2", "accept": ["0.5"], "hint": "A special value worth memorizing." },
+        { "instruction": "Compute the area $K = \\frac{1}{2}(10)(6)\\sin 30^\\circ$.", "answer": "15", "accept": ["K = 15"], "hint": "$\\frac{1}{2}(10)(6)(\\frac{1}{2}) = 30 \\cdot \\frac{1}{2}$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "$K = \\frac{1}{2}ab\\sin C = \\frac{1}{2}(10)(6)(\\frac{1}{2}) = 15$ — exact, because $30^\\circ$ is a special angle."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s12",
+      "concepts": ["triangle-area-applied"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Two sides of a triangle measure 12 and 10, meeting at a $60^\\circ$ angle. Find the exact area (in the form $k\\sqrt{3}$).",
+      "steps": [
+        { "instruction": "What is $\\sin 60^\\circ$? Give the exact value.", "answer": "sqrt(3)/2", "accept": ["√3/2", "0.8660254"], "hint": "One of the special values: $\\frac{\\sqrt{3}}{2}$." },
+        { "instruction": "Compute the exact area $K = \\frac{1}{2}(12)(10)\\sin 60^\\circ$.", "answer": "30sqrt(3)", "accept": ["30√3", "30*sqrt(3)"], "hint": "$\\frac{1}{2}(12)(10) = 60$, and $60 \\cdot \\frac{\\sqrt{3}}{2} = 30\\sqrt{3}$." }
+      ],
+      "finalAnswer": { "value": "30√3", "unit": "" },
+      "solutionNarrative": "$K = \\frac{1}{2}(12)(10)\\sin 60^\\circ = 60 \\cdot \\frac{\\sqrt{3}}{2} = 30\\sqrt{3} \\approx 52.0$."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s13",
+      "concepts": ["triangle-area-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A surveyor measures two fence lines of a triangular parcel: 80 m and 60 m, meeting at a corner angle of $50^\\circ$. Find the parcel's area. Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Set up the area formula with the two sides and the included angle.", "answer": "K = (1/2)(80)(60)sin(50)", "accept": ["K = 0.5(80)(60)sin(50)", "(1/2)(80)(60)sin(50)", "A = (1/2)(80)(60)sin(50)"], "hint": "$K = \\frac{1}{2}ab\\sin C$ with $a = 80$, $b = 60$, $C = 50^\\circ$." },
+        { "instruction": "Compute the area and round to 1 decimal place (square meters). Use $\\sin 50^\\circ \\approx 0.7660$.", "answer": "1838.5", "accept": [], "hint": "$\\frac{1}{2}(80)(60) = 2400$, and $2400(0.76604) \\approx 1838.5$." }
+      ],
+      "finalAnswer": { "value": "1838.5", "unit": "square meters" },
+      "solutionNarrative": "$K = \\frac{1}{2}(80)(60)\\sin 50^\\circ = 2400\\sin 50^\\circ \\approx 1838.5$ m² — the parcel is priced without ever measuring its height."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s14",
+      "concepts": ["law-of-sines-sides"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "In triangle $ABC$, $A = 48^\\circ$, $B = 62^\\circ$, and $a = 20$. Find side $b$. Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Set up the Law of Sines proportion that contains $b$.", "answer": "b/sin(62) = 20/sin(48)", "accept": ["b/sin62=20/sin48", "b = 20sin(62)/sin(48)", "sin(62)/b = sin(48)/20"], "hint": "$\\frac{b}{\\sin B} = \\frac{a}{\\sin A}$ — side $b$ pairs with its opposite angle $B = 62^\\circ$." },
+        { "instruction": "Solve $b = \\frac{20\\sin 62^\\circ}{\\sin 48^\\circ}$ and round to 1 decimal place.", "answer": "23.8", "accept": [], "hint": "$\\sin 62^\\circ \\approx 0.8829$ and $\\sin 48^\\circ \\approx 0.7431$, so $b \\approx 17.66/0.7431 \\approx 23.76$." }
+      ],
+      "finalAnswer": { "value": "23.8", "unit": "" },
+      "solutionNarrative": "$b = 20\\sin 62^\\circ/\\sin 48^\\circ \\approx 23.76 \\approx 23.8$."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s15",
+      "concepts": ["triangle-area-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A triangular gusset plate for a roof truss has two edges of 6 ft and 9 ft meeting at $45^\\circ$. Find its area. Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Set up the area formula with the two edges and the included angle.", "answer": "K = (1/2)(6)(9)sin(45)", "accept": ["(1/2)(6)(9)sin(45)", "K = 0.5(6)(9)sin(45)", "A = (1/2)(6)(9)sin(45)"], "hint": "$K = \\frac{1}{2}ab\\sin C$ with the $45^\\circ$ angle between the 6 and 9 ft edges." },
+        { "instruction": "Compute the area and round to 1 decimal place (square feet). Use $\\sin 45^\\circ \\approx 0.7071$.", "answer": "19.1", "accept": [], "hint": "$\\frac{1}{2}(6)(9) = 27$, and $27(0.70711) \\approx 19.09$." }
+      ],
+      "finalAnswer": { "value": "19.1", "unit": "square feet" },
+      "solutionNarrative": "$K = \\frac{1}{2}(6)(9)\\sin 45^\\circ = 27 \\cdot \\frac{\\sqrt{2}}{2} \\approx 19.09 \\approx 19.1$ ft²."
+    },
+    {
+      "id": "trigonometry.law-of-sines-and-cosines.s16",
+      "concepts": ["law-of-cosines"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In triangle $ABC$, sides $a = 8$ and $b = 15$ meet at the included angle $C = 60^\\circ$. Find side $c$ exactly.",
+      "steps": [
+        { "instruction": "Compute $c^2 = 8^2 + 15^2 - 2(8)(15)\\cos 60^\\circ$. (Recall $\\cos 60^\\circ = \\frac{1}{2}$.)", "answer": "169", "accept": ["c^2 = 169"], "hint": "$64 + 225 - 240(0.5) = 289 - 120$." },
+        { "instruction": "Take the square root to find $c$.", "answer": "13", "accept": ["c = 13"], "hint": "$\\sqrt{169}$." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "" },
+      "solutionNarrative": "$c^2 = 64 + 225 - 2(8)(15)(\\tfrac{1}{2}) = 289 - 120 = 169$, so $c = 13$ exactly."
+    }
+  ]
+}

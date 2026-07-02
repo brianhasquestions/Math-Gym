@@ -1,0 +1,247 @@
+{
+  "id": "calculus-2.integration-by-parts",
+  "subject": "calculus-2",
+  "title": "Integration by Parts",
+  "prerequisites": ["calculus-2.integration-by-substitution"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "parts-formula",
+      "label": "The parts formula",
+      "microLesson": "Integration by parts undoes the product rule. It says $\\int u\\,dv = uv - \\int v\\,du$. You split the integrand into a part to call $u$ (which you'll differentiate) and a part to call $dv$ (which you'll integrate). The whole game is choosing $u$ so that $du$ is *simpler* than $u$. A common guide is **LIATE** — pick $u$ as the first match in Logarithmic, Inverse-trig, Algebraic, Trig, Exponential. For a definite integral, evaluate $uv$ at the bounds and subtract the leftover integral."
+    },
+    {
+      "id": "polynomial-times-exponential",
+      "label": "Polynomial times exponential",
+      "microLesson": "For $\\int x\\,e^x\\,dx$, choose $u = x$ (algebraic, so $du = dx$) and $dv = e^x\\,dx$ (so $v = e^x$). Then $\\int x\\,e^x\\,dx = x e^x - \\int e^x\\,dx = x e^x - e^x + C = (x-1)e^x + C$. The trick is that differentiating the polynomial $u$ knocks its power down, making the remaining integral easier. A degree-2 polynomial needs parts applied twice."
+    },
+    {
+      "id": "logarithmic-integrals",
+      "label": "Logarithmic integrals",
+      "microLesson": "How do you integrate $\\ln x$ when it has no obvious antiderivative? Parts handles it: let $u = \\ln x$ (so $du = \\tfrac{1}{x}\\,dx$) and $dv = dx$ (so $v = x$). Then $\\int \\ln x\\,dx = x\\ln x - \\int x\\cdot\\tfrac{1}{x}\\,dx = x\\ln x - x + C$. The same move handles $\\int x\\ln x\\,dx$: differentiating the $\\ln$ turns it into a clean power you can integrate."
+    },
+    {
+      "id": "parts-applications",
+      "label": "Applications of parts",
+      "microLesson": "Many accumulation problems produce integrands that are a product — a force that ramps up times distance, an income stream times a discount factor $e^{-rt}$, or a decaying quantity averaged over time. These don't yield to substitution, but parts cracks them. Set up the definite integral from the physical quantities, choose $u$ and $dv$ by LIATE, apply $\\int u\\,dv = uv - \\int v\\,du$, then evaluate at the bounds for a single number: total work, present value, or average value."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When substitution fails on a product\n\nSubstitution works when an integrand contains a function *and its derivative*. But what about $\\int x\\,e^x\\,dx$, or $\\int \\ln x\\,dx$? There's no inner function whose derivative is sitting there. These are **products of two unrelated functions**, and they show up constantly in applications: a variable force times distance gives **work**, an income stream times a discount factor gives **present value**, a growing-or-decaying signal integrated over time gives an **average**. The tool for all of these is **integration by parts**.\n\n## The formula, and where it comes from\n\nParts is just the product rule run backwards. The product rule says $\\frac{d}{dx}(uv) = u\\,\\frac{dv}{dx} + v\\,\\frac{du}{dx}$. Integrate both sides and rearrange:\n\n$$\\int u\\,dv = uv - \\int v\\,du.$$\n\nFor a **definite** integral the bounds attach to the $uv$ term too:\n\n$$\\int_a^b u\\,dv = \\Big[uv\\Big]_a^b - \\int_a^b v\\,du.$$\n\nYou trade the integral you can't do, $\\int u\\,dv$, for one you hopefully can, $\\int v\\,du$. The art is the split.\n\n## Choosing $u$: the LIATE rule\n\nYou want to pick $u$ so that **$du$ is simpler than $u$**, and $dv$ so that you can actually integrate it to get $v$. A reliable priority order for what to call $u$ is **LIATE**:\n\n- **L** — Logarithmic ($\\ln x$)\n- **I** — Inverse trig ($\\arctan x$)\n- **A** — Algebraic (powers of $x$)\n- **T** — Trig ($\\sin x$, $\\cos x$)\n- **E** — Exponential ($e^x$)\n\nWhatever appears **earliest** in this list becomes $u$; the rest is $dv$.\n\n### Worked example: $\\int x\\,e^x\\,dx$\n\nBy LIATE, $x$ (Algebraic) beats $e^x$ (Exponential), so $u = x$ and $dv = e^x\\,dx$. Then $du = dx$ and $v = e^x$:\n\n$$\\int x\\,e^x\\,dx = x e^x - \\int e^x\\,dx = x e^x - e^x + C = (x-1)e^x + C.$$\n\nNotice the payoff: differentiating $u = x$ collapsed the algebraic part to a constant, leaving a clean $\\int e^x\\,dx$.\n\n### Worked example: $\\int \\ln x\\,dx$\n\nThere's only one function — but you can still split it as $u = \\ln x$ and $dv = dx$. Then $du = \\tfrac{1}{x}\\,dx$ and $v = x$:\n\n$$\\int \\ln x\\,dx = x\\ln x - \\int x\\cdot\\tfrac{1}{x}\\,dx = x\\ln x - \\int 1\\,dx = x\\ln x - x + C.$$\n\n## Definite integrals give a clean number\n\nBecause applied questions ask *how much* total — total work, total present value — you'll usually want a **definite** integral evaluated to a number. For example,\n\n$$\\int_1^e \\ln x\\,dx = \\Big[x\\ln x - x\\Big]_1^e = (e\\cdot 1 - e) - (1\\cdot 0 - 1) = 0 - (-1) = 1.$$\n\nUsing $e \\approx 2.718$ and $\\pi \\approx 3.14$ where they appear, and rounding at the end, you get a single decimal answer you can act on.\n\n## When to apply parts twice\n\nIf $u$ is a degree-2 polynomial like $x^2$, one round of parts drops it to degree 1 but leaves another product — so you **apply parts again**. Each pass peels off one power. $\\int x^2 e^x\\,dx$ takes two passes and lands at $(x^2 - 2x + 2)e^x + C$."
+  },
+  "application": {
+    "summary": "Integration by parts is the tool for integrating products that substitution can't touch — exactly the integrands that arise when you accumulate a variable rate against another factor: a ramping force over distance (work), an income stream against a discount factor (present value), or a growing/decaying quantity averaged over an interval (average value).",
+    "domains": ["physics", "finance", "engineering", "economics"],
+    "workedExample": "**Present value of a growing income stream**\n\nA small business expects income to flow at a rate of $R(t) = t$ thousand dollars per year (it ramps up linearly), over the next 2 years. With continuous discounting at rate $r$, money arriving at time $t$ is worth $e^{-rt}$ today, so the present value is\n\n$$PV = \\int_0^2 t\\,e^{-rt}\\,dt.$$\n\nThat integrand is a **product** of an algebraic factor $t$ and an exponential $e^{-rt}$ — a textbook parts setup. Take $u = t$, $dv = e^{-rt}\\,dt$, so $du = dt$ and $v = -\\tfrac{1}{r}e^{-rt}$:\n\n$$\\int t\\,e^{-rt}\\,dt = -\\frac{t}{r}e^{-rt} + \\frac{1}{r}\\int e^{-rt}\\,dt = -\\frac{t}{r}e^{-rt} - \\frac{1}{r^2}e^{-rt} + C.$$\n\nEvaluating from 0 to 2 turns a stream of future dollars into one number you can compare against today's cost. The very same parts structure computes the **work** done by a force $F(x) = x e^{-x}$ over a distance, or the **average value** of a decaying signal — change the labels, keep the method.",
+    "domainNotes": [
+      "**Physics (work):** work $= \\int_a^b F(x)\\,dx$; when the force is a product like $x e^{-x}$ or $x\\sin x$, parts is the only way through.",
+      "**Finance (present value):** $\\int_0^T R(t)e^{-rt}\\,dt$ discounts a time-varying income or payment stream to today's dollars.",
+      "**Engineering (average value):** the average of a signal $f(t)$ over $[a,b]$ is $\\tfrac{1}{b-a}\\int_a^b f(t)\\,dt$; decaying products like $t e^{-t}$ need parts.",
+      "**Economics (consumer/producer accumulation):** marginal quantities multiplied by a weighting factor accumulate via parts into totals."
+    ]
+  },
+  "generators": ["parts-xex-v1", "parts-lnx-v1", "parts-formula-v1"],
+  "problems": [
+    {
+      "id": "calculus-2.integration-by-parts.s01",
+      "concepts": ["parts-formula"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Set up integration by parts for $\\int_0^1 x\\,e^x\\,dx$ and evaluate it.",
+      "steps": [
+        { "instruction": "By the LIATE rule, which factor should you call $u$? (Type the factor.)", "answer": "x", "accept": [], "hint": "Algebraic (A) comes before Exponential (E), so $u$ is the algebraic factor." },
+        { "instruction": "With $u = x$ and $dv = e^x\\,dx$, the antiderivative is $(x-1)e^x$. Evaluate $\\big[(x-1)e^x\\big]_0^1$ using $e \\approx 2.718$. Round to 2 decimal places.", "answer": "1.00", "accept": ["1", "1.0"], "hint": "At $x=1$: $(0)e^1 = 0$. At $x=0$: $(-1)e^0 = -1$. So $0 - (-1) = 1$." }
+      ],
+      "finalAnswer": { "value": "1.00", "unit": "" },
+      "solutionNarrative": "Choose $u=x$, $dv=e^x dx$, giving antiderivative $(x-1)e^x$. Evaluating from 0 to 1: $0 - (-1) = 1.00$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s02",
+      "concepts": ["parts-formula"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_0^1 x\\,e^{2x}\\,dx$ using parts. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "With $u = x$ and $dv = e^{2x}\\,dx$, find $v$.", "answer": "e^{2x}/2", "accept": ["(1/2)e^{2x}", "0.5e^{2x}", "e^(2x)/2"], "hint": "$\\int e^{2x}\\,dx = \\tfrac{1}{2}e^{2x}$." },
+        { "instruction": "The antiderivative is $\\tfrac{x}{2}e^{2x} - \\tfrac{1}{4}e^{2x}$. Evaluate it from 0 to 1 using $e^2 \\approx 7.389$. Round to 2 decimal places.", "answer": "2.10", "accept": [], "hint": "At $x=1$: $\\tfrac{1}{2}(7.389) - \\tfrac{1}{4}(7.389) = 3.6945 - 1.847 = 1.847$. At $x=0$: $0 - \\tfrac{1}{4}(1) = -0.25$. Subtract: $1.847 - (-0.25) = 2.097$." }
+      ],
+      "finalAnswer": { "value": "2.10", "unit": "" },
+      "solutionNarrative": "With $u=x$, $v=\\tfrac{1}{2}e^{2x}$, the antiderivative is $\\tfrac{x}{2}e^{2x} - \\tfrac{1}{4}e^{2x}$. From 0 to 1: $1.847 - (-0.25) = 2.097 \\approx 2.10$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s03",
+      "concepts": ["parts-formula"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_0^{\\pi} x\\,\\cos x\\,dx$ using integration by parts. Use $\\pi \\approx 3.14$.",
+      "steps": [
+        { "instruction": "By LIATE, which factor is $u$? (Type the factor.)", "answer": "x", "accept": [], "hint": "Algebraic (A) beats Trig (T), so $u = x$." },
+        { "instruction": "With $u = x$ and $dv = \\cos x\\,dx$, the antiderivative is $x\\sin x + \\cos x$. Evaluate $\\big[x\\sin x + \\cos x\\big]_0^{\\pi}$. Round to 2 decimal places.", "answer": "-2.00", "accept": ["-2", "-2.0"], "hint": "At $x=\\pi$: $\\pi\\sin\\pi + \\cos\\pi = 0 + (-1) = -1$. At $x=0$: $0 + \\cos 0 = 1$. So $-1 - 1 = -2$." }
+      ],
+      "finalAnswer": { "value": "-2.00", "unit": "" },
+      "solutionNarrative": "With $u=x$, $dv=\\cos x\\,dx$, the antiderivative is $x\\sin x + \\cos x$. From 0 to $\\pi$: $-1 - 1 = -2.00$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s04",
+      "concepts": ["polynomial-times-exponential"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_1^3 x\\,e^x\\,dx$. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "The antiderivative of $x e^x$ is $(x-1)e^x$. Evaluate $\\big[(x-1)e^x\\big]_1^3$ using $e^3 \\approx 20.09$ and $e^1 \\approx 2.718$. Round to 2 decimal places.", "answer": "40.18", "accept": ["40.17", "40.16"], "hint": "At $x=3$: $(2)(20.09) = 40.18$. At $x=1$: $(0)(2.718) = 0$. Subtract: $40.18 - 0 = 40.18$." }
+      ],
+      "finalAnswer": { "value": "40.18", "unit": "" },
+      "solutionNarrative": "Antiderivative $(x-1)e^x$. At 3: $2e^3 \\approx 40.18$; at 1: $0$. Result $\\approx 40.18$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s05",
+      "concepts": ["polynomial-times-exponential"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_0^1 x\\,e^{-x}\\,dx$ using parts. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "With $u = x$ and $dv = e^{-x}\\,dx$, find $v$.", "answer": "-e^{-x}", "accept": ["-e^(-x)"], "hint": "$\\int e^{-x}\\,dx = -e^{-x}$." },
+        { "instruction": "The antiderivative is $-x e^{-x} - e^{-x} = -(x+1)e^{-x}$. Evaluate it from 0 to 1 using $e^{-1} \\approx 0.3679$. Round to 2 decimal places.", "answer": "0.26", "accept": [], "hint": "At $x=1$: $-(2)(0.3679) = -0.7358$. At $x=0$: $-(1)(1) = -1$. Subtract: $-0.7358 - (-1) = 0.2642$." }
+      ],
+      "finalAnswer": { "value": "0.26", "unit": "" },
+      "solutionNarrative": "Antiderivative $-(x+1)e^{-x}$. From 0 to 1: $-0.7358 - (-1) = 0.264 \\approx 0.26$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s06",
+      "concepts": ["polynomial-times-exponential"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_0^1 x^2\\,e^x\\,dx$. This requires applying parts twice. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "After applying parts twice, the antiderivative of $x^2 e^x$ is $(x^2 - 2x + 2)e^x$. Confirm the bracket polynomial by typing it.", "answer": "x^2 - 2x + 2", "accept": ["x^2-2x+2"], "hint": "First pass gives $x^2 e^x - 2\\int x e^x dx$; the inner integral is $(x-1)e^x$, so combine." },
+        { "instruction": "Evaluate $\\big[(x^2 - 2x + 2)e^x\\big]_0^1$ using $e \\approx 2.718$. Round to 2 decimal places.", "answer": "0.72", "accept": [], "hint": "At $x=1$: $(1)(2.718) = 2.718$. At $x=0$: $(2)(1) = 2$. Subtract: $2.718 - 2 = 0.718$." }
+      ],
+      "finalAnswer": { "value": "0.72", "unit": "" },
+      "solutionNarrative": "Two passes give antiderivative $(x^2-2x+2)e^x$. From 0 to 1: $2.718 - 2 = 0.718 \\approx 0.72$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s07",
+      "concepts": ["logarithmic-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_1^e \\ln x\\,dx$ using parts. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "With $u = \\ln x$ and $dv = dx$, the antiderivative is $x\\ln x - x$. Evaluate $\\big[x\\ln x - x\\big]_1^e$. Round to 2 decimal places.", "answer": "1.00", "accept": ["1", "1.0"], "hint": "At $x=e$: $e(1) - e = 0$. At $x=1$: $1(0) - 1 = -1$. Subtract: $0 - (-1) = 1$." }
+      ],
+      "finalAnswer": { "value": "1.00", "unit": "" },
+      "solutionNarrative": "Antiderivative $x\\ln x - x$. From 1 to $e$: $0 - (-1) = 1.00$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s08",
+      "concepts": ["logarithmic-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_1^2 \\ln x\\,dx$. Use $\\ln 2 \\approx 0.6931$.",
+      "steps": [
+        { "instruction": "The antiderivative of $\\ln x$ is $x\\ln x - x$. Evaluate $\\big[x\\ln x - x\\big]_1^2$ using $\\ln 2 \\approx 0.6931$. Round to 2 decimal places.", "answer": "0.39", "accept": [], "hint": "At $x=2$: $2(0.6931) - 2 = 1.3863 - 2 = -0.6137$. At $x=1$: $0 - 1 = -1$. Subtract: $-0.6137 - (-1) = 0.3863$." }
+      ],
+      "finalAnswer": { "value": "0.39", "unit": "" },
+      "solutionNarrative": "Antiderivative $x\\ln x - x$. From 1 to 2: $-0.6137 - (-1) = 0.386 \\approx 0.39$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s09",
+      "concepts": ["logarithmic-integrals"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_1^2 x\\,\\ln x\\,dx$ using parts. Use $\\ln 2 \\approx 0.6931$.",
+      "steps": [
+        { "instruction": "By LIATE, which factor is $u$? (Type the factor.)", "answer": "ln x", "accept": ["lnx", "ln(x)"], "hint": "Logarithmic (L) comes first, so $u = \\ln x$." },
+        { "instruction": "With $u = \\ln x$, $dv = x\\,dx$, the antiderivative is $\\tfrac{x^2}{2}\\ln x - \\tfrac{x^2}{4}$. Evaluate it from 1 to 2 using $\\ln 2 \\approx 0.6931$. Round to 2 decimal places.", "answer": "0.64", "accept": [], "hint": "At $x=2$: $2(0.6931) - 1 = 1.3863 - 1 = 0.3863$. At $x=1$: $0 - 0.25 = -0.25$. Subtract: $0.3863 - (-0.25) = 0.6363$." }
+      ],
+      "finalAnswer": { "value": "0.64", "unit": "" },
+      "solutionNarrative": "With $u=\\ln x$, antiderivative $\\tfrac{x^2}{2}\\ln x - \\tfrac{x^2}{4}$. From 1 to 2: $0.3863 - (-0.25) = 0.636 \\approx 0.64$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s10",
+      "concepts": ["parts-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A variable force $F(x) = x\\,e^x$ newtons pushes an object along the x-axis from $x = 0$ to $x = 1$ meters. The work done is $W = \\int_0^1 x\\,e^x\\,dx$. Find the work. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "The antiderivative of $x e^x$ is $(x-1)e^x$. Evaluate $\\big[(x-1)e^x\\big]_0^1$. Round to 2 decimal places.", "answer": "1.00", "accept": ["1", "1.0"], "hint": "At $x=1$: $0$. At $x=0$: $-1$. So $0 - (-1) = 1$." }
+      ],
+      "finalAnswer": { "value": "1.00", "unit": "joules" },
+      "solutionNarrative": "Work $= \\int_0^1 x e^x dx = [(x-1)e^x]_0^1 = 0 - (-1) = 1.00$ joules."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s11",
+      "concepts": ["parts-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A business earns income at a rate of $R(t) = t$ thousand dollars per year for 2 years. With continuous discounting at $r = 0$ (no discount, for a baseline), the accumulated income is $\\int_0^2 t\\,dt$ — but now add a discount factor: the present value is $PV = \\int_0^2 t\\,e^{-t}\\,dt$ (thousands of dollars). Find the present value. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "With $u = t$ and $dv = e^{-t}\\,dt$, the antiderivative is $-(t+1)e^{-t}$. Evaluate $\\big[-(t+1)e^{-t}\\big]_0^2$ using $e^{-2} \\approx 0.1353$. Round to 2 decimal places.", "answer": "0.59", "accept": [], "hint": "At $t=2$: $-(3)(0.1353) = -0.4060$. At $t=0$: $-(1)(1) = -1$. Subtract: $-0.4060 - (-1) = 0.5940$." }
+      ],
+      "finalAnswer": { "value": "0.59", "unit": "thousand dollars" },
+      "solutionNarrative": "$PV = \\int_0^2 t e^{-t} dt = [-(t+1)e^{-t}]_0^2 = -0.406 - (-1) = 0.594 \\approx 0.59$ thousand dollars."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s12",
+      "concepts": ["parts-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A decaying signal has value $f(t) = t\\,e^{-t}$ over the interval $[0, 2]$ seconds. Its average value is $\\bar{f} = \\tfrac{1}{2-0}\\int_0^2 t\\,e^{-t}\\,dt$. Find the average value. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "First find $\\int_0^2 t\\,e^{-t}\\,dt$ using antiderivative $-(t+1)e^{-t}$ and $e^{-2} \\approx 0.1353$. Round to 2 decimal places.", "answer": "0.59", "accept": [], "hint": "At $t=2$: $-(3)(0.1353) = -0.4060$. At $t=0$: $-1$. So $-0.4060 - (-1) = 0.594$." },
+        { "instruction": "Divide by the interval length $2$ to get the average value. Round to 2 decimal places.", "answer": "0.30", "accept": ["0.3"], "hint": "$0.594 / 2 = 0.297$." }
+      ],
+      "finalAnswer": { "value": "0.30", "unit": "" },
+      "solutionNarrative": "$\\int_0^2 t e^{-t} dt = 0.594$. Average $= 0.594 / 2 = 0.297 \\approx 0.30$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s13",
+      "concepts": ["parts-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A spring-like force $F(x) = x\\,e^{-x}$ newtons acts over $x = 0$ to $x = 2$ meters. The work done is $W = \\int_0^2 x\\,e^{-x}\\,dx$. Find the work. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "The antiderivative of $x e^{-x}$ is $-(x+1)e^{-x}$. Evaluate $\\big[-(x+1)e^{-x}\\big]_0^2$ using $e^{-2} \\approx 0.1353$. Round to 2 decimal places.", "answer": "0.59", "accept": [], "hint": "At $x=2$: $-(3)(0.1353) = -0.406$. At $x=0$: $-1$. So $-0.406 - (-1) = 0.594$." }
+      ],
+      "finalAnswer": { "value": "0.59", "unit": "joules" },
+      "solutionNarrative": "$W = \\int_0^2 x e^{-x} dx = [-(x+1)e^{-x}]_0^2 = -0.406 - (-1) = 0.594 \\approx 0.59$ joules."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s14",
+      "concepts": ["polynomial-times-exponential", "parts-formula"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\int_0^2 x\\,e^x\\,dx$. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "The antiderivative is $(x-1)e^x$. Evaluate $\\big[(x-1)e^x\\big]_0^2$ using $e^2 \\approx 7.389$. Round to 2 decimal places.", "answer": "8.39", "accept": ["8.39"], "hint": "At $x=2$: $(1)(7.389) = 7.389$. At $x=0$: $(-1)(1) = -1$. Subtract: $7.389 - (-1) = 8.389$." }
+      ],
+      "finalAnswer": { "value": "8.39", "unit": "" },
+      "solutionNarrative": "Antiderivative $(x-1)e^x$. From 0 to 2: $7.389 - (-1) = 8.389 \\approx 8.39$."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s15",
+      "concepts": ["logarithmic-integrals", "parts-formula"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The marginal cost of producing items follows $\\ln x$ (in dollars) for $x$ between 1 and 4 units. The total added cost is $\\int_1^4 \\ln x\\,dx$. Find it. Use $\\ln 4 \\approx 1.3863$.",
+      "steps": [
+        { "instruction": "The antiderivative of $\\ln x$ is $x\\ln x - x$. Evaluate $\\big[x\\ln x - x\\big]_1^4$ using $\\ln 4 \\approx 1.3863$. Round to 2 decimal places.", "answer": "2.55", "accept": ["2.54", "2.55"], "hint": "At $x=4$: $4(1.3863) - 4 = 5.5452 - 4 = 1.5452$. At $x=1$: $0 - 1 = -1$. Subtract: $1.5452 - (-1) = 2.5452$." }
+      ],
+      "finalAnswer": { "value": "2.55", "unit": "dollars" },
+      "solutionNarrative": "Antiderivative $x\\ln x - x$. From 1 to 4: $1.5452 - (-1) = 2.545 \\approx 2.55$ dollars."
+    },
+    {
+      "id": "calculus-2.integration-by-parts.s16",
+      "concepts": ["parts-formula", "polynomial-times-exponential"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An object's velocity is $v(t) = t\\,e^{-t}$ m/s for $t$ from 0 to 3 seconds. The distance traveled is $\\int_0^3 t\\,e^{-t}\\,dt$. Find the distance. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "By LIATE, which factor is $u$? (Type the factor.)", "answer": "t", "accept": [], "hint": "Algebraic (A) beats Exponential (E), so $u = t$." },
+        { "instruction": "The antiderivative of $t e^{-t}$ is $-(t+1)e^{-t}$. Evaluate $\\big[-(t+1)e^{-t}\\big]_0^3$ using $e^{-3} \\approx 0.0498$. Round to 2 decimal places.", "answer": "0.80", "accept": ["0.80", "0.8"], "hint": "At $t=3$: $-(4)(0.0498) = -0.1992$. At $t=0$: $-1$. Subtract: $-0.1992 - (-1) = 0.8008$." }
+      ],
+      "finalAnswer": { "value": "0.80", "unit": "meters" },
+      "solutionNarrative": "$\\int_0^3 t e^{-t} dt = [-(t+1)e^{-t}]_0^3 = -0.1992 - (-1) = 0.801 \\approx 0.80$ meters."
+    }
+  ]
+}

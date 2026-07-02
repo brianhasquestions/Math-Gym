@@ -1,0 +1,260 @@
+{
+  "id": "calculus-3.partial-derivatives",
+  "subject": "calculus-3",
+  "title": "Partial Derivatives",
+  "prerequisites": ["calculus-1.differentiation-rules"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "first-partials",
+      "label": "First partial derivatives",
+      "microLesson": "A function of several variables, like $f(x, y)$, has a separate derivative for each input. To find $\\frac{\\partial f}{\\partial x}$ (read 'partial f, partial x'), differentiate with respect to $x$ while treating $y$ as a constant. For $f = x^2 y$, the $y$ rides along as a constant multiplier, so $f_x = 2xy$. Flip it for $f_y$: hold $x$ fixed, so $f_y = x^2$. Each partial measures how the output moves when you nudge one input and freeze the rest."
+    },
+    {
+      "id": "evaluate-partials",
+      "label": "Evaluating a partial at a point",
+      "microLesson": "Once you have a partial like $f_x = 2xy$, you can plug in a specific point $(x, y)$ to get a single number — the instantaneous rate of change in that direction at that spot. At $(3, 5)$, $f_x = 2(3)(5) = 30$. This number is a slope: it says how fast the output rises per unit step in $x$, with $y$ pinned at 5. Always differentiate first, then substitute."
+    },
+    {
+      "id": "second-partials",
+      "label": "Second partial derivatives",
+      "microLesson": "Differentiate a partial again to get a second partial. $f_{xx}$ means differentiate with respect to $x$ twice; $f_{yy}$ twice with respect to $y$. The **mixed partial** $f_{xy}$ means take $f_x$ first, then differentiate that with respect to $y$. A useful fact: for ordinary polynomials, $f_{xy} = f_{yx}$ — the order doesn't matter. For $f = x^2 y^3$: $f_x = 2x y^3$, so $f_{xy} = 6x y^2$; check via $f_y = 3 x^2 y^2$, then $f_{yx} = 6x y^2$. They match."
+    },
+    {
+      "id": "partials-applied",
+      "label": "Partials as rates with units",
+      "microLesson": "In an applied model, each partial is a **marginal effect**: how much output changes per unit of one input, holding everything else fixed. If production is $P(L, K)$ in units, then $\\frac{\\partial P}{\\partial L}$ is extra output per extra unit of labor (units per worker), evaluated at the current $L, K$. Units come straight from output-units over input-units. The held-fixed clause is the whole point: it isolates the effect of one lever."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The world has more than one knob\n\nReal quantities almost never depend on a single input. A factory's output depends on **both** labor and capital. The pressure of a gas depends on **both** temperature and volume. Your monthly cost depends on **both** how much you drive and the price of fuel. To reason about systems like these, you need to answer a sharp question: *if I change just one input and hold the others fixed, how fast does the output respond?* That is exactly what a **partial derivative** measures.\n\n## One derivative per input\n\nFor a function $f(x, y)$, there are two first partial derivatives:\n\n$$\\frac{\\partial f}{\\partial x} \\quad\\text{and}\\quad \\frac{\\partial f}{\\partial y}.$$\n\nThe curly $\\partial$ signals 'partial.' We also write them compactly as $f_x$ and $f_y$. The rule is wonderfully simple:\n\n> **To compute $f_x$, differentiate with respect to $x$ and treat every other variable as a constant.**\n\nEverything you already know from single-variable calculus — the power rule, sums, constant multiples — carries over unchanged. The only new habit is deciding, for each derivative, which letter is the variable and which letters are frozen.\n\n### Worked example\n\nLet $f(x, y) = x^2 y + 3 y$. \n\n- For $f_x$, treat $y$ as a constant. The term $x^2 y$ differentiates to $2x y$ (the $y$ is a constant multiplier), and $3y$ is a pure constant, so it vanishes: $f_x = 2xy$.\n- For $f_y$, treat $x$ as a constant. Now $x^2 y$ differentiates to $x^2$, and $3y$ differentiates to $3$: $f_y = x^2 + 3$.\n\nNotice each partial is itself a formula in $x$ and $y$. To get an actual rate at a location, **plug in a point**. At $(2, 5)$: $f_x = 2(2)(5) = 20$ and $f_y = 2^2 + 3 = 7$.\n\n## Second partials and the mixed partial\n\nPartials are functions, so you can differentiate again. This gives the **second partial derivatives**:\n\n- $f_{xx}$: differentiate with respect to $x$, twice.\n- $f_{yy}$: differentiate with respect to $y$, twice.\n- $f_{xy}$: the **mixed partial** — take $f_x$ first, then differentiate *that* with respect to $y$.\n\nFor the smooth polynomial functions in this topic, a remarkable symmetry holds: $f_{xy} = f_{yx}$. The order you differentiate in doesn't change the answer, which gives you a built-in way to check your work.\n\n## Reading partials as rates\n\nThe payoff is interpretation. Suppose a factory's output is $P(L, K)$, with $L$ workers and $K$ units of capital. Then\n\n$$\\frac{\\partial P}{\\partial L}$$\n\nis the extra output produced by adding one more worker **while capital stays fixed** — economists call it the *marginal product of labor*. Its units are output-units per worker. Evaluate it at the current $(L, K)$ and you get a concrete number that informs a decision: hire, or invest in equipment? Every partial in an applied model carries units, and the 'hold everything else fixed' clause is precisely what makes it a clean answer about one lever at a time."
+  },
+  "application": {
+    "summary": "Partial derivatives isolate the effect of one variable while the rest are held fixed, which is exactly what real systems demand: marginal product of labor vs. capital, how a gas's pressure responds to temperature vs. volume, how cost responds to usage vs. price. Each partial is a rate with units; evaluating it at the current operating point turns a model into an actionable number.",
+    "domains": ["economics", "physics", "engineering", "data science"],
+    "workedExample": "**Should the factory hire or buy equipment?**\n\nA simplified production model gives output (in units) as $P(L, K) = 4 L K + L^2$, where $L$ is workers and $K$ is machines. The plant currently runs with $L = 10$ workers and $K = 6$ machines. Which lever raises output faster right now?\n\nCompute both marginal effects. Holding $K$ fixed, the **marginal product of labor** is\n\n$$\\frac{\\partial P}{\\partial L} = 4K + 2L.$$\n\nHolding $L$ fixed, the **marginal product of capital** is\n\n$$\\frac{\\partial P}{\\partial K} = 4L.$$\n\nEvaluate at $(L, K) = (10, 6)$: $P_L = 4(6) + 2(10) = 44$ units per added worker, and $P_K = 4(10) = 40$ units per added machine. At this operating point one more worker adds slightly more output than one more machine — so if a worker and a machine cost the same, hire. The two partials turned a vague 'it depends' into a 44-vs-40 comparison.",
+    "domainNotes": [
+      "**Economics:** marginal product of labor and capital, marginal cost and marginal utility — each is a partial holding the other inputs fixed.",
+      "**Physics:** how pressure changes with temperature at fixed volume, or with volume at fixed temperature; heat flow depends on partials of temperature in space.",
+      "**Engineering:** sensitivity analysis — which design parameter most affects performance when the others are held constant.",
+      "**Data science:** gradient descent steps along the partials of a loss function, adjusting one weight at a time relative to the rest."
+    ]
+  },
+  "generators": ["first-partials-v1", "eval-partial-v1", "second-partial-v1"],
+  "problems": [
+    {
+      "id": "calculus-3.partial-derivatives.s01",
+      "concepts": ["first-partials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = x^2 + y^3$, find both first partial derivatives.",
+      "steps": [
+        { "instruction": "Find $f_x$ (treat $y$ as a constant).", "answer": "2x", "accept": [], "hint": "The $y^3$ term is constant with respect to $x$, so it vanishes." },
+        { "instruction": "Find $f_y$ (treat $x$ as a constant).", "answer": "3y^2", "accept": [], "hint": "The $x^2$ term is constant with respect to $y$; differentiate $y^3$." }
+      ],
+      "finalAnswer": { "value": "f_x = 2x, f_y = 3y^2", "unit": "" },
+      "solutionNarrative": "Holding $y$ fixed, $f_x = 2x$. Holding $x$ fixed, $f_y = 3y^2$. The other variable's term is a constant and differentiates to zero."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s02",
+      "concepts": ["first-partials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = x^2 y$, find both first partial derivatives.",
+      "steps": [
+        { "instruction": "Find $f_x$ (treat $y$ as a constant multiplier).", "answer": "2xy", "accept": [], "hint": "Differentiate $x^2$ to get $2x$, keeping the constant factor $y$." },
+        { "instruction": "Find $f_y$ (treat $x$ as a constant).", "answer": "x^2", "accept": [], "hint": "With $x$ fixed, $x^2 y$ is a constant times $y$; its derivative is that constant." }
+      ],
+      "finalAnswer": { "value": "f_x = 2xy, f_y = x^2", "unit": "" },
+      "solutionNarrative": "Treating $y$ as constant, $f_x = 2xy$. Treating $x$ as constant, $f_y = x^2$."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s03",
+      "concepts": ["first-partials"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = 3x^2 y + 4x y^2$, find both first partial derivatives.",
+      "steps": [
+        { "instruction": "Find $f_x$ (treat $y$ as a constant).", "answer": "6xy + 4y^2", "accept": ["4y^2 + 6xy"], "hint": "Differentiate each term in $x$: $3x^2 y \\to 6xy$ and $4x y^2 \\to 4y^2$." },
+        { "instruction": "Find $f_y$ (treat $x$ as a constant).", "answer": "3x^2 + 8xy", "accept": ["8xy + 3x^2"], "hint": "Differentiate each term in $y$: $3x^2 y \\to 3x^2$ and $4x y^2 \\to 8xy$." }
+      ],
+      "finalAnswer": { "value": "f_x = 6xy + 4y^2, f_y = 3x^2 + 8xy", "unit": "" },
+      "solutionNarrative": "In $x$: $3x^2 y \\to 6xy$, $4x y^2 \\to 4y^2$, so $f_x = 6xy + 4y^2$. In $y$: $3x^2 y \\to 3x^2$, $4x y^2 \\to 8xy$, so $f_y = 3x^2 + 8xy$."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s04",
+      "concepts": ["first-partials"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x, y, z) = x^2 y z + x z^3$, find all three first partial derivatives.",
+      "steps": [
+        { "instruction": "Find $f_x$ (treat $y$ and $z$ as constants).", "answer": "2xyz + z^3", "accept": ["z^3 + 2xyz"], "hint": "Differentiate in $x$: $x^2 y z \\to 2xyz$ and $x z^3 \\to z^3$." },
+        { "instruction": "Find $f_y$ (treat $x$ and $z$ as constants).", "answer": "x^2 z", "accept": [], "hint": "Only the first term has $y$; the $x z^3$ term vanishes." },
+        { "instruction": "Find $f_z$ (treat $x$ and $y$ as constants).", "answer": "x^2 y + 3x z^2", "accept": ["3x z^2 + x^2 y"], "hint": "Differentiate in $z$: $x^2 y z \\to x^2 y$ and $x z^3 \\to 3x z^2$." }
+      ],
+      "finalAnswer": { "value": "f_x = 2xyz + z^3, f_y = x^2 z, f_z = x^2 y + 3x z^2", "unit": "" },
+      "solutionNarrative": "Freeze the other two variables for each: $f_x = 2xyz + z^3$, $f_y = x^2 z$, $f_z = x^2 y + 3x z^2$."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s05",
+      "concepts": ["evaluate-partials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = x^2 y$, find $f_x$ and then evaluate it at the point $(3, 5)$.",
+      "steps": [
+        { "instruction": "Find $f_x$ (treat $y$ as constant).", "answer": "2xy", "accept": [], "hint": "Differentiate $x^2$ keeping the factor $y$." },
+        { "instruction": "Evaluate $f_x$ at $(3, 5)$.", "answer": "30", "accept": [], "hint": "Substitute $x = 3$, $y = 5$ into $2xy$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "" },
+      "solutionNarrative": "$f_x = 2xy$, and at $(3, 5)$ that is $2(3)(5) = 30$."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s06",
+      "concepts": ["evaluate-partials"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = x^2 + 4xy + y^2$, find $f_y$ and evaluate it at the point $(2, 1)$.",
+      "steps": [
+        { "instruction": "Find $f_y$ (treat $x$ as constant).", "answer": "4x + 2y", "accept": ["2y + 4x"], "hint": "Differentiate in $y$: $x^2 \\to 0$, $4xy \\to 4x$, $y^2 \\to 2y$." },
+        { "instruction": "Evaluate $f_y$ at $(2, 1)$.", "answer": "10", "accept": [], "hint": "Substitute $x = 2$, $y = 1$ into $4x + 2y$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "$f_y = 4x + 2y$; at $(2, 1)$ this is $4(2) + 2(1) = 10$."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s07",
+      "concepts": ["evaluate-partials", "first-partials"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = x^3 y - 2x y^2$, find $f_x$ and evaluate it at the point $(2, 3)$.",
+      "steps": [
+        { "instruction": "Find $f_x$ (treat $y$ as constant).", "answer": "3x^2 y - 2y^2", "accept": ["-2y^2 + 3x^2 y"], "hint": "Differentiate in $x$: $x^3 y \\to 3x^2 y$ and $-2x y^2 \\to -2y^2$." },
+        { "instruction": "Evaluate $f_x$ at $(2, 3)$.", "answer": "18", "accept": [], "hint": "Substitute $x = 2$, $y = 3$: $3(4)(3) - 2(9) = 36 - 18$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "" },
+      "solutionNarrative": "$f_x = 3x^2 y - 2y^2$. At $(2, 3)$: $3(4)(3) - 2(9) = 36 - 18 = 18$."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s08",
+      "concepts": ["second-partials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = x^3 + y^4$, find $f_{xx}$ and $f_{yy}$.",
+      "steps": [
+        { "instruction": "Find $f_{xx}$ (differentiate with respect to $x$ twice).", "answer": "6x", "accept": [], "hint": "$f_x = 3x^2$, then differentiate again in $x$." },
+        { "instruction": "Find $f_{yy}$ (differentiate with respect to $y$ twice).", "answer": "12y^2", "accept": [], "hint": "$f_y = 4y^3$, then differentiate again in $y$." }
+      ],
+      "finalAnswer": { "value": "f_xx = 6x, f_yy = 12y^2", "unit": "" },
+      "solutionNarrative": "$f_x = 3x^2 \\Rightarrow f_{xx} = 6x$. $f_y = 4y^3 \\Rightarrow f_{yy} = 12y^2$."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s09",
+      "concepts": ["second-partials"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = x^2 y^3$, find the mixed partial $f_{xy}$.",
+      "steps": [
+        { "instruction": "First find $f_x$ (treat $y$ as constant).", "answer": "2x y^3", "accept": ["2xy^3"], "hint": "Differentiate $x^2$ keeping $y^3$." },
+        { "instruction": "Now differentiate $f_x$ with respect to $y$ to get $f_{xy}$.", "answer": "6x y^2", "accept": ["6xy^2"], "hint": "Differentiate $2x y^3$ in $y$: the $y^3$ becomes $3y^2$." }
+      ],
+      "finalAnswer": { "value": "6x y^2", "unit": "" },
+      "solutionNarrative": "$f_x = 2x y^3$; differentiating in $y$ gives $f_{xy} = 6x y^2$. (Check: $f_y = 3 x^2 y^2$, $f_{yx} = 6x y^2$ — they match.)"
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s10",
+      "concepts": ["second-partials"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x, y) = x^3 y^2 + x^2 y$, find $f_{xx}$, $f_{yy}$, and the mixed partial $f_{xy}$.",
+      "steps": [
+        { "instruction": "Find $f_x$ first (treat $y$ as constant).", "answer": "3x^2 y^2 + 2xy", "accept": ["2xy + 3x^2 y^2"], "hint": "Differentiate each term in $x$." },
+        { "instruction": "Find $f_{xx}$ by differentiating $f_x$ in $x$ again.", "answer": "6x y^2 + 2y", "accept": ["2y + 6xy^2", "6xy^2 + 2y"], "hint": "Differentiate $3x^2 y^2 + 2xy$ in $x$." },
+        { "instruction": "Find $f_{xy}$ by differentiating $f_x$ in $y$.", "answer": "6x^2 y + 2x", "accept": ["2x + 6x^2 y"], "hint": "Differentiate $3x^2 y^2 + 2xy$ in $y$." },
+        { "instruction": "Find $f_{yy}$ (differentiate the original twice in $y$).", "answer": "2x^3", "accept": [], "hint": "$f_y = 2x^3 y + x^2$; differentiate again in $y$." }
+      ],
+      "finalAnswer": { "value": "f_xx = 6x y^2 + 2y, f_xy = 6x^2 y + 2x, f_yy = 2x^3", "unit": "" },
+      "solutionNarrative": "$f_x = 3x^2 y^2 + 2xy$, so $f_{xx} = 6x y^2 + 2y$ and $f_{xy} = 6x^2 y + 2x$. Also $f_y = 2x^3 y + x^2$, so $f_{yy} = 2x^3$."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s11",
+      "concepts": ["partials-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A factory's output (in units) is $P(L, K) = 5L K$, where $L$ is the number of workers and $K$ the number of machines. The marginal product of labor is $\\frac{\\partial P}{\\partial L}$. Find it and evaluate at $L = 4$, $K = 3$ to get the extra units per added worker.",
+      "steps": [
+        { "instruction": "Find $P_L$ (treat $K$ as constant).", "answer": "5K", "accept": [], "hint": "Differentiate $5LK$ in $L$, keeping $K$ as a constant factor." },
+        { "instruction": "Evaluate $P_L$ at $K = 3$.", "answer": "15", "accept": [], "hint": "Substitute $K = 3$ into $5K$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "units per worker" },
+      "solutionNarrative": "$P_L = 5K$, which is 15 at $K = 3$. Each additional worker adds about 15 units of output, with machines held fixed."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s12",
+      "concepts": ["partials-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A factory's output (units) is $P(L, K) = 4LK + L^2$, with $L$ workers and $K$ machines. Currently $L = 10$, $K = 6$. Find the marginal product of labor $\\frac{\\partial P}{\\partial L}$ and evaluate it at the current operating point.",
+      "steps": [
+        { "instruction": "Find $P_L$ (treat $K$ as constant).", "answer": "4K + 2L", "accept": ["2L + 4K"], "hint": "Differentiate $4LK + L^2$ in $L$: $4LK \\to 4K$ and $L^2 \\to 2L$." },
+        { "instruction": "Evaluate $P_L$ at $L = 10$, $K = 6$.", "answer": "44", "accept": [], "hint": "Substitute: $4(6) + 2(10)$." }
+      ],
+      "finalAnswer": { "value": "44", "unit": "units per worker" },
+      "solutionNarrative": "$P_L = 4K + 2L$; at $(10, 6)$ this is $4(6) + 2(10) = 44$ units per added worker, with capital held fixed."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s13",
+      "concepts": ["partials-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "For an ideal gas, a simplified pressure model is $P(T, V) = 8T V$ (in suitable units), where $T$ is temperature and $V$ is a volume-related quantity. The rate of pressure change with temperature at fixed volume is $\\frac{\\partial P}{\\partial T}$. Find it and evaluate at $V = 5$.",
+      "steps": [
+        { "instruction": "Find $P_T$ (treat $V$ as constant).", "answer": "8V", "accept": [], "hint": "Differentiate $8TV$ in $T$, keeping $V$ fixed." },
+        { "instruction": "Evaluate $P_T$ at $V = 5$.", "answer": "40", "accept": [], "hint": "Substitute $V = 5$ into $8V$." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "pressure units per degree" },
+      "solutionNarrative": "$P_T = 8V = 40$ at $V = 5$: pressure rises 40 units per degree of temperature, with volume held fixed."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s14",
+      "concepts": ["partials-applied", "evaluate-partials"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A driver's monthly fuel cost (in dollars) is modeled as $C(m, p) = m p$, where $m$ is miles driven (in hundreds) and $p$ is the price per gallon proxy. Right now $m = 12$ and $p = 4$. Find $\\frac{\\partial C}{\\partial p}$ (how cost responds to price, at fixed mileage) and evaluate it.",
+      "steps": [
+        { "instruction": "Find $C_p$ (treat $m$ as constant).", "answer": "m", "accept": [], "hint": "Differentiate $mp$ in $p$; $m$ is the constant factor." },
+        { "instruction": "Evaluate $C_p$ at $m = 12$, $p = 4$.", "answer": "12", "accept": [], "hint": "$C_p = m$ does not depend on $p$; just substitute $m = 12$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "dollars per price unit" },
+      "solutionNarrative": "$C_p = m = 12$. With mileage held fixed, each unit rise in the price proxy adds about \\$12 to the monthly cost."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s15",
+      "concepts": ["partials-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A company's revenue (in thousands of dollars) is $R(x, y) = 2x^2 + 3xy$, where $x$ is spending on online ads and $y$ on TV ads (both in thousands). At $x = 5$, $y = 4$, find the marginal revenue from online ad spending $\\frac{\\partial R}{\\partial x}$ and evaluate it.",
+      "steps": [
+        { "instruction": "Find $R_x$ (treat $y$ as constant).", "answer": "4x + 3y", "accept": ["3y + 4x"], "hint": "Differentiate $2x^2 + 3xy$ in $x$: $2x^2 \\to 4x$, $3xy \\to 3y$." },
+        { "instruction": "Evaluate $R_x$ at $x = 5$, $y = 4$.", "answer": "32", "accept": [], "hint": "Substitute: $4(5) + 3(4) = 20 + 12$." }
+      ],
+      "finalAnswer": { "value": "32", "unit": "thousand dollars per thousand spent" },
+      "solutionNarrative": "$R_x = 4x + 3y$; at $(5, 4)$ this is $20 + 12 = 32$. Each extra \\$1k on online ads raises revenue by about \\$32k at this point, with TV spend fixed."
+    },
+    {
+      "id": "calculus-3.partial-derivatives.s16",
+      "concepts": ["first-partials", "evaluate-partials"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The temperature on a metal plate is $T(x, y) = 100 - x^2 - 2y^2$ degrees, where $(x, y)$ is the position. Find $T_x$ and $T_y$, then evaluate both at the point $(3, 2)$ to see how temperature changes per unit step in each direction.",
+      "steps": [
+        { "instruction": "Find $T_x$ (treat $y$ as constant).", "answer": "-2x", "accept": [], "hint": "Differentiate $100 - x^2 - 2y^2$ in $x$; only $-x^2$ has $x$." },
+        { "instruction": "Find $T_y$ (treat $x$ as constant).", "answer": "-4y", "accept": [], "hint": "Differentiate in $y$; only $-2y^2$ has $y$." },
+        { "instruction": "Evaluate $T_x$ at $(3, 2)$.", "answer": "-6", "accept": [], "hint": "Substitute $x = 3$ into $-2x$." },
+        { "instruction": "Evaluate $T_y$ at $(3, 2)$.", "answer": "-8", "accept": [], "hint": "Substitute $y = 2$ into $-4y$." }
+      ],
+      "finalAnswer": { "value": "T_x = -6, T_y = -8", "unit": "degrees per unit" },
+      "solutionNarrative": "$T_x = -2x = -6$ and $T_y = -4y = -8$ at $(3, 2)$. Temperature falls 6 degrees per unit step in $x$ and 8 per unit step in $y$ — cooling faster in the $y$ direction."
+    }
+  ]
+}

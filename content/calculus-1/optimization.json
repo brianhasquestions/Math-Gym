@@ -1,0 +1,265 @@
+{
+  "id": "calculus-1.optimization",
+  "subject": "calculus-1",
+  "title": "Optimization",
+  "prerequisites": ["calculus-1.differentiation-rules"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "max-min-from-derivative",
+      "label": "Max/min from the derivative",
+      "microLesson": "The derivative measures slope, and at a smooth peak or valley the slope is flat — so the **maximum or minimum lives where $f'(x) = 0$** (a critical point). To find the extreme *value*, solve $f'(x) = 0$, then plug those $x$ back into the original $f$. On a closed interval $[a, b]$, also test the endpoints $a$ and $b$; the largest output is the max, the smallest is the min."
+    },
+    {
+      "id": "geometry-optimization",
+      "label": "Geometry optimization",
+      "microLesson": "To get the biggest area or the least material, write the quantity you care about as a function of **one** variable, using a constraint to eliminate the other. For a rectangle with fixed perimeter, $P = 2x + 2y$ lets you write $y$ in terms of $x$, so area $A = xy$ becomes a single-variable function. Differentiate, set $A'(x) = 0$, solve, and check it's a max."
+    },
+    {
+      "id": "business-optimization",
+      "label": "Business optimization",
+      "microLesson": "Profit, revenue, and cost are functions of price or quantity. To maximize profit $P(q)$ or minimize cost $C(q)$, take the derivative and set it to zero — the optimum sits where **marginal profit is zero** (or marginal revenue equals marginal cost). Solve $P'(q) = 0$ for the optimal quantity or price, then substitute back into $P$ to get the actual maximum dollars."
+    },
+    {
+      "id": "distance-time-optimization",
+      "label": "Distance & time optimization",
+      "microLesson": "Shortest-path and fastest-route problems express total distance or total time as a function of one position variable — often using the Pythagorean theorem for a diagonal leg, and time $= \\\\dfrac{\\\\text{distance}}{\\\\text{speed}}$. Build $T(x)$ or $D(x)$, differentiate, set it to zero, and solve for the crossing point or landing point that minimizes the trip."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The question every optimization problem asks\n\nReal decisions almost always come down to *\"what's the best I can do?\"* — the most area for a fixed budget of fence, the cheapest can that still holds a liter, the price that squeezes out the most profit, the route that gets you there fastest. **Optimization** is the calculus of *best*, and the engine behind it is the derivative.\n\nHere's the whole idea in one picture. As you slide along a smooth curve, the slope tells you which way is uphill. At a genuine peak or valley the curve momentarily levels off — the slope is **zero**. So the candidates for a maximum or minimum are exactly the points where\n\n$$f'(x) = 0.$$\n\nThese are the **critical points**. Optimization is the discipline of finding them and then sorting out which one is the answer you want.\n\n## The standard recipe\n\nNearly every applied optimization problem follows the same five steps:\n\n1. **Name the quantity to optimize** — area, cost, profit, time — and write it as a formula.\n2. **Use the constraint** (the fixed fence length, the fixed volume, the road geometry) to rewrite that formula in terms of **one** variable.\n3. **Differentiate** and set the derivative equal to zero.\n4. **Solve** for the critical point.\n5. **Confirm and report** — check it's a max vs. a min, then plug back in to get the actual best value.\n\nThe calculus is usually the easy part. The skill is steps 1–2: turning a word problem into a single-variable function.\n\n### Worked example: the biggest rectangular pen\n\nYou have **40 ft of fencing** to build a rectangular pen. What dimensions enclose the most area?\n\nThe constraint is the perimeter: $2x + 2y = 40$, so $y = 20 - x$. The area is\n\n$$A(x) = x\\,(20 - x) = 20x - x^2.$$\n\nDifferentiate and set to zero:\n\n$$A'(x) = 20 - 2x = 0 \\;\\Rightarrow\\; x = 10.$$\n\nThen $y = 20 - 10 = 10$. The best pen is a **10 ft by 10 ft square**, enclosing $100\\\\text{ ft}^2$. (A square always wins for a fixed-perimeter rectangle — a fact this method proves rather than assumes.)\n\nThe graph makes the answer visible: the area climbs, levels off exactly where $A'(x) = 0$, and falls away again.\n\n```plot\n{ \"xRange\": [0, 20], \"yRange\": [0, 115], \"curves\": [ { \"fn\": \"20*x - x^2\", \"label\": \"A(x) = x(20 - x)\", \"labelAt\": 3.5, \"color\": \"accent\" } ], \"segments\": [ { \"from\": [10, 0], \"to\": [10, 100], \"dashed\": true, \"color\": \"dim\" } ], \"points\": [ { \"x\": 10, \"y\": 100, \"label\": \"max (10, 100)\", \"color\": \"warn\" } ], \"caption\": \"The pen's area A(x) = 20x - x² peaks at x = 10 ft, where A′(x) = 20 - 2x = 0 — a 10 × 10 square enclosing 100 ft².\" }\n```\n\n## Is it a max or a min?\n\nA critical point could be either. Two quick checks settle it:\n\n- **Second-derivative test:** if $f''(x) < 0$ there, the curve is frowning — a **maximum**. If $f''(x) > 0$, it's smiling — a **minimum**.\n- **Endpoints matter on a closed interval.** On $[a, b]$, the extreme value might sit at an endpoint, not at a critical point. So evaluate $f$ at every critical point *and* at $a$ and $b$, then compare.\n\n## Discard answers that make no physical sense\n\nA length, a price, or an amount of time can't be negative. If the algebra hands you $x = -3$ for a width, throw it out — just as you would a negative time for a falling ball. The mathematics offers candidates; the **context** decides which ones are real.\n\nThat's optimization: model the goal, reduce to one variable, set the derivative to zero, and read off the best the situation allows."
+  },
+  "application": {
+    "summary": "Optimization finds the best achievable outcome under a constraint: the most area for a fixed fence, the least material for a required volume, the price that maximizes profit, and the route that minimizes time. Set the derivative of the goal to zero, solve, and confirm it's the max or min you want.",
+    "domains": ["business", "engineering", "manufacturing", "logistics"],
+    "workedExample": "**The cheapest can for a fixed volume**\n\nA cylindrical can must hold a set volume, and metal costs money, so manufacturers minimize surface area. Suppose the surface-area cost (in arbitrary units) of one design family reduces to\n\n$$S(r) = 2r^2 + \\\\frac{16}{r},$$\n\nwhere $r$ is the radius. Differentiate:\n\n$$S'(r) = 4r - \\\\frac{16}{r^2}.$$\n\nSet it to zero: $4r = \\\\dfrac{16}{r^2}$, so $4r^3 = 16$, giving $r^3 = 4$... but with friendlier numbers chosen so $r^3 = 8$, the optimum is $r = 2$. Plugging back gives the least material. The same setup — write the cost, reduce to one variable, set the derivative to zero — decides the dimensions of a box, the gauge of a beam, or the size of an order, turning 'use less, spend less' into an exact number instead of a guess.",
+    "domainNotes": [
+      "**Business:** the price or production quantity that maximizes profit, where marginal revenue equals marginal cost.",
+      "**Manufacturing:** least material (sheet metal, cardboard, plastic) for a container of required volume.",
+      "**Logistics:** the route, crossing point, or landing point that minimizes total travel time across different speeds.",
+      "**Engineering:** the dimension that maximizes strength or capacity under a fixed budget of material."
+    ]
+  },
+  "generators": ["max-rect-area-v1", "max-profit-v1", "min-fence-cost-v1"],
+  "problems": [
+    {
+      "id": "calculus-1.optimization.s01",
+      "concepts": ["max-min-from-derivative"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A small drone's altitude (in meters) over a flight is modeled by $h(t) = -t^2 + 6t + 5$ for $t$ in seconds. Find the time at which it reaches its maximum altitude.",
+      "steps": [
+        { "instruction": "Differentiate $h(t)$ with respect to $t$.", "answer": "-2t + 6", "accept": ["6 - 2t"], "hint": "Use the power rule term by term; the constant 5 differentiates to 0." },
+        { "instruction": "Set the derivative equal to 0 and solve for $t$.", "answer": "t = 3", "accept": ["3"], "hint": "Solve $-2t + 6 = 0$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "seconds" },
+      "solutionNarrative": "$h'(t) = -2t + 6$. Setting $-2t + 6 = 0$ gives $t = 3$ seconds, the peak (the parabola opens downward, so it is a maximum)."
+    },
+    {
+      "id": "calculus-1.optimization.s02",
+      "concepts": ["max-min-from-derivative"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A factory's hourly running cost (in dollars) depends on output rate $x$ as $C(x) = x^2 - 8x + 30$. Find the output rate $x$ that minimizes the hourly cost.",
+      "steps": [
+        { "instruction": "Differentiate $C(x)$.", "answer": "2x - 8", "accept": [], "hint": "Power rule term by term." },
+        { "instruction": "Set the derivative to 0 and solve for $x$.", "answer": "x = 4", "accept": ["4"], "hint": "Solve $2x - 8 = 0$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "units per hour" },
+      "solutionNarrative": "$C'(x) = 2x - 8$. Setting it to 0 gives $x = 4$; since the parabola opens upward, this is the minimum."
+    },
+    {
+      "id": "calculus-1.optimization.s03",
+      "concepts": ["max-min-from-derivative"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A company's daily profit (in hundreds of dollars) is $P(x) = -x^2 + 10x - 9$, where $x$ is the number of items (in thousands) sold. What is the maximum daily profit, in hundreds of dollars?",
+      "steps": [
+        { "instruction": "Differentiate $P(x)$.", "answer": "-2x + 10", "accept": ["10 - 2x"], "hint": "Power rule term by term." },
+        { "instruction": "Set $P'(x) = 0$ and solve for $x$.", "answer": "x = 5", "accept": ["5"], "hint": "Solve $-2x + 10 = 0$." },
+        { "instruction": "Substitute $x = 5$ into $P(x)$ to get the maximum profit.", "answer": "16", "accept": [], "hint": "Compute $-(5)^2 + 10(5) - 9 = -25 + 50 - 9$." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "hundreds of dollars" },
+      "solutionNarrative": "$P'(x) = -2x + 10 = 0$ gives $x = 5$. Then $P(5) = -25 + 50 - 9 = 16$ hundred dollars, the maximum since the parabola opens downward."
+    },
+    {
+      "id": "calculus-1.optimization.s04",
+      "concepts": ["max-min-from-derivative"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Over a work shift $0 \\\\le t \\\\le 6$ hours, a machine's efficiency score is $E(t) = t^3 - 9t^2 + 24t + 5$. The maximum on this closed interval could be at a critical point or an endpoint. Find the highest efficiency score on $[0, 6]$ (the curve is shown in the figure).",
+      "plot": { "xRange": [0, 6], "yRange": [0, 45], "curves": [ { "fn": "x^3 - 9*x^2 + 24*x + 5", "label": "E(t)", "labelAt": 5.2, "color": "accent" } ], "caption": "Efficiency E(t) = t³ - 9t² + 24t + 5 over the shift 0 ≤ t ≤ 6: two interior turning points, then a rising finish." },
+      "steps": [
+        { "instruction": "Differentiate $E(t)$.", "answer": "3t^2 - 18t + 24", "accept": [], "hint": "Power rule term by term." },
+        { "instruction": "Set $E'(t) = 0$ and find the critical points (the smaller one first, as a list).", "answer": "t = 2, t = 4", "accept": ["2, 4", "t=2, t=4"], "hint": "Divide by 3: $t^2 - 6t + 8 = 0$ factors as $(t-2)(t-4)$." },
+        { "instruction": "Evaluate $E$ at the critical points $t=2$, $t=4$ and the endpoints $t=0$, $t=6$. What is the largest value?", "answer": "41", "accept": [], "hint": "Compute E(0)=5, E(2)=25, E(4)=21, E(6)=41 and pick the biggest." }
+      ],
+      "finalAnswer": { "value": "41", "unit": "points" },
+      "solutionNarrative": "$E'(t) = 3t^2 - 18t + 24 = 3(t-2)(t-4)$, so critical points are $t=2,4$. Comparing $E(0)=5$, $E(2)=25$, $E(4)=21$, $E(6)=41$, the endpoint $t=6$ gives the maximum score of 41."
+    },
+    {
+      "id": "calculus-1.optimization.s05",
+      "concepts": ["geometry-optimization"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A farmer has 24 feet of fencing to build a rectangular pen against an existing wall, so fencing is needed on only the two widths and one length: $2x + y = 24$, where $x$ is the width and $y$ the length. The area is $A = xy$. Find the width $x$ that maximizes the area.",
+      "steps": [
+        { "instruction": "Use the constraint to write the area as a function of $x$ alone (substitute $y = 24 - 2x$).", "answer": "24x - 2x^2", "accept": ["x(24 - 2x)", "-2x^2 + 24x"], "hint": "$A = x \\\\cdot y = x(24 - 2x)$." },
+        { "instruction": "Differentiate and set $A'(x) = 0$, then solve for $x$.", "answer": "x = 6", "accept": ["6"], "hint": "$A'(x) = 24 - 4x = 0$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "feet" },
+      "solutionNarrative": "With $y = 24 - 2x$, $A(x) = 24x - 2x^2$. Then $A'(x) = 24 - 4x = 0$ gives $x = 6$ feet (and $y = 12$ ft), the maximizing width."
+    },
+    {
+      "id": "calculus-1.optimization.s06",
+      "concepts": ["geometry-optimization"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You have 100 meters of fencing to enclose a full rectangular field, so $2x + 2y = 100$. Find the largest possible area, in square meters.",
+      "steps": [
+        { "instruction": "Solve the constraint for $y$ in terms of $x$.", "answer": "y = 50 - x", "accept": ["50 - x"], "hint": "Divide $2x + 2y = 100$ by 2 to get $x + y = 50$." },
+        { "instruction": "Write the area $A = xy$ as a function of $x$, then differentiate and set to 0 to find $x$.", "answer": "x = 25", "accept": ["25"], "hint": "$A(x) = x(50 - x) = 50x - x^2$, so $A'(x) = 50 - 2x = 0$." },
+        { "instruction": "Find the maximum area by substituting back (use $x = 25$, $y = 25$).", "answer": "625", "accept": [], "hint": "$A = 25 \\\\times 25$." }
+      ],
+      "finalAnswer": { "value": "625", "unit": "square meters" },
+      "solutionNarrative": "From $x + y = 50$, $A(x) = 50x - x^2$ with $A'(x) = 50 - 2x = 0$ at $x = 25$, $y = 25$. The largest area is $25 \\\\times 25 = 625\\\\,\\\\text{m}^2$ (a square)."
+    },
+    {
+      "id": "calculus-1.optimization.s07",
+      "concepts": ["geometry-optimization"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An open-top box is made from material for the base and four sides. For a square base of side $x$ and a required volume, the total material (in square inches) reduces to $M(x) = x^2 + \\\\frac{432}{x}$. Find the base side $x$ that minimizes material.",
+      "steps": [
+        { "instruction": "Differentiate $M(x)$. (Recall $\\\\frac{432}{x} = 432x^{-1}$.)", "answer": "2x - 432/x^2", "accept": ["2x - 432x^(-2)", "2x-432/x^2"], "hint": "$\\\\frac{d}{dx}[432x^{-1}] = -432x^{-2}$." },
+        { "instruction": "Set $M'(x) = 0$ and clear the fraction to get a cubic. Write it as $x^3 = \\\\text{number}$.", "answer": "x^3 = 216", "accept": ["x^3=216"], "hint": "$2x = \\\\frac{432}{x^2}$ means $2x^3 = 432$." },
+        { "instruction": "Solve for $x$ (take the cube root).", "answer": "x = 6", "accept": ["6"], "hint": "$\\\\sqrt[3]{216} = 6$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "inches" },
+      "solutionNarrative": "$M'(x) = 2x - 432x^{-2}$. Setting it to 0: $2x^3 = 432$, so $x^3 = 216$ and $x = 6$ inches. ($M''(x) > 0$ confirms a minimum.)"
+    },
+    {
+      "id": "calculus-1.optimization.s08",
+      "concepts": ["business-optimization"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A vendor's daily profit (in dollars) as a function of price $p$ (in dollars) is $P(p) = -2p^2 + 40p - 50$. Find the price that maximizes profit.",
+      "steps": [
+        { "instruction": "Differentiate $P(p)$.", "answer": "-4p + 40", "accept": ["40 - 4p"], "hint": "Power rule term by term." },
+        { "instruction": "Set $P'(p) = 0$ and solve for $p$.", "answer": "p = 10", "accept": ["10"], "hint": "Solve $-4p + 40 = 0$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "dollars" },
+      "solutionNarrative": "$P'(p) = -4p + 40 = 0$ gives $p = 10$. The parabola opens downward, so \\$10 is the profit-maximizing price."
+    },
+    {
+      "id": "calculus-1.optimization.s09",
+      "concepts": ["business-optimization"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A theater's revenue (in dollars) from selling $q$ hundred tickets is $R(q) = -3q^2 + 36q$. Find the maximum revenue, in dollars.",
+      "steps": [
+        { "instruction": "Differentiate $R(q)$.", "answer": "-6q + 36", "accept": ["36 - 6q"], "hint": "Power rule term by term." },
+        { "instruction": "Set $R'(q) = 0$ and solve for $q$.", "answer": "q = 6", "accept": ["6"], "hint": "Solve $-6q + 36 = 0$." },
+        { "instruction": "Substitute $q = 6$ into $R(q)$ to find the maximum revenue.", "answer": "108", "accept": [], "hint": "Compute $-3(6)^2 + 36(6) = -108 + 216$." }
+      ],
+      "finalAnswer": { "value": "108", "unit": "dollars" },
+      "solutionNarrative": "$R'(q) = -6q + 36 = 0$ gives $q = 6$. Then $R(6) = -108 + 216 = 108$ dollars, the maximum revenue."
+    },
+    {
+      "id": "calculus-1.optimization.s10",
+      "concepts": ["business-optimization"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An online store sells a gadget. If it charges price $p$ dollars, it sells $(120 - 2p)$ units, and each unit costs \\$20 to make. Profit is $P(p) = (p - 20)(120 - 2p)$. Find the price that maximizes profit and the maximum profit (in dollars).",
+      "steps": [
+        { "instruction": "Expand the profit into a polynomial in $p$.", "answer": "-2p^2 + 160p - 2400", "accept": ["-2p^2+160p-2400"], "hint": "$(p-20)(120-2p) = 120p - 2p^2 - 2400 + 40p$." },
+        { "instruction": "Differentiate and set $P'(p) = 0$ to find the optimal price.", "answer": "p = 40", "accept": ["40"], "hint": "$P'(p) = -4p + 160 = 0$." },
+        { "instruction": "Substitute $p = 40$ to find the maximum profit.", "answer": "800", "accept": [], "hint": "$(40 - 20)(120 - 80) = 20 \\\\times 40$." }
+      ],
+      "finalAnswer": { "value": "800", "unit": "dollars" },
+      "solutionNarrative": "Expanding, $P(p) = -2p^2 + 160p - 2400$, so $P'(p) = -4p + 160 = 0$ at $p = 40$. Then profit is $(20)(40) = 800$ dollars."
+    },
+    {
+      "id": "calculus-1.optimization.s11",
+      "concepts": ["distance-time-optimization"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A delivery van's total trip time (in minutes) depends on its cruising choice $x$ as $T(x) = x^2 - 12x + 50$. Find the value of $x$ that minimizes the trip time.",
+      "steps": [
+        { "instruction": "Differentiate $T(x)$.", "answer": "2x - 12", "accept": [], "hint": "Power rule term by term." },
+        { "instruction": "Set $T'(x) = 0$ and solve for $x$.", "answer": "x = 6", "accept": ["6"], "hint": "Solve $2x - 12 = 0$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$T'(x) = 2x - 12 = 0$ gives $x = 6$; the upward parabola makes this the minimum-time choice."
+    },
+    {
+      "id": "calculus-1.optimization.s12",
+      "concepts": ["distance-time-optimization"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A lifeguard runs to a point $x$ meters down the beach before swimming. The total time (in seconds) works out to $T(x) = \\\\frac{1}{2}x^2 - 8x + 90$. Find the value of $x$ that minimizes travel time, and the minimum time.",
+      "steps": [
+        { "instruction": "Differentiate $T(x)$.", "answer": "x - 8", "accept": [], "hint": "$\\\\frac{d}{dx}[\\\\frac{1}{2}x^2] = x$." },
+        { "instruction": "Set $T'(x) = 0$ and solve for $x$.", "answer": "x = 8", "accept": ["8"], "hint": "Solve $x - 8 = 0$." },
+        { "instruction": "Substitute $x = 8$ to find the minimum time.", "answer": "58", "accept": [], "hint": "$\\\\frac{1}{2}(64) - 8(8) + 90 = 32 - 64 + 90$." }
+      ],
+      "finalAnswer": { "value": "58", "unit": "seconds" },
+      "solutionNarrative": "$T'(x) = x - 8 = 0$ gives $x = 8$. Then $T(8) = 32 - 64 + 90 = 58$ seconds, the minimum travel time."
+    },
+    {
+      "id": "calculus-1.optimization.s13",
+      "concepts": ["distance-time-optimization"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A courier crosses from a road to a point in a field. Minimizing total time leads to the function $T(x) = \\\\frac{1}{3}x^3 - 4x^2 + 15x + 2$ (in minutes), for $x \\\\ge 0$. Among its critical points, find the value of $x$ that gives a local minimum of time.",
+      "steps": [
+        { "instruction": "Differentiate $T(x)$.", "answer": "x^2 - 8x + 15", "accept": [], "hint": "$\\\\frac{d}{dx}[\\\\frac{1}{3}x^3] = x^2$." },
+        { "instruction": "Set $T'(x) = 0$ and find the critical points (smaller first, as a list).", "answer": "x = 3, x = 5", "accept": ["3, 5", "x=3, x=5"], "hint": "$x^2 - 8x + 15 = (x - 3)(x - 5)$." },
+        { "instruction": "Using the second derivative $T''(x) = 2x - 8$, which critical point is the local minimum?", "answer": "x = 5", "accept": ["5"], "hint": "A local min needs $T''(x) > 0$; check $T''(5) = 2$ versus $T''(3) = -2$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$T'(x) = x^2 - 8x + 15 = (x-3)(x-5)$, so critical points are $x = 3, 5$. Since $T''(x) = 2x - 8$, $T''(5) = 2 > 0$, making $x = 5$ the local minimum (while $x = 3$ is a local max)."
+    },
+    {
+      "id": "calculus-1.optimization.s14",
+      "concepts": ["geometry-optimization"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rectangular garden is split into two equal halves by one internal fence parallel to the width. The total fencing satisfies $2x + 3y = 60$ (two lengths $x$, plus three widths $y$). Find the width $y$ that maximizes the total area $A = xy$.",
+      "steps": [
+        { "instruction": "Solve the constraint for $x$ in terms of $y$.", "answer": "x = 30 - 1.5y", "accept": ["30 - 1.5y", "(60 - 3y)/2"], "hint": "From $2x + 3y = 60$, $2x = 60 - 3y$." },
+        { "instruction": "Write $A = xy$ as a function of $y$, differentiate, set to 0, and solve for $y$.", "answer": "y = 10", "accept": ["10"], "hint": "$A(y) = 30y - 1.5y^2$, so $A'(y) = 30 - 3y = 0$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "With $x = 30 - 1.5y$, $A(y) = 30y - 1.5y^2$ and $A'(y) = 30 - 3y = 0$ gives $y = 10$ (then $x = 15$), the area-maximizing width."
+    },
+    {
+      "id": "calculus-1.optimization.s15",
+      "concepts": ["business-optimization"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A shop's cost to produce $q$ batches is $C(q) = q^2 - 14q + 60$ (in hundreds of dollars). Find the production level $q$ that minimizes cost, and the minimum cost.",
+      "steps": [
+        { "instruction": "Differentiate $C(q)$.", "answer": "2q - 14", "accept": [], "hint": "Power rule term by term." },
+        { "instruction": "Set $C'(q) = 0$ and solve for $q$.", "answer": "q = 7", "accept": ["7"], "hint": "Solve $2q - 14 = 0$." },
+        { "instruction": "Substitute $q = 7$ to find the minimum cost.", "answer": "11", "accept": [], "hint": "$49 - 98 + 60 = 11$." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "hundreds of dollars" },
+      "solutionNarrative": "$C'(q) = 2q - 14 = 0$ gives $q = 7$. Then $C(7) = 49 - 98 + 60 = 11$ hundred dollars, the minimum cost."
+    },
+    {
+      "id": "calculus-1.optimization.s16",
+      "concepts": ["max-min-from-derivative"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A reservoir's water level (in meters) over a day is $L(t) = -\\\\frac{1}{3}t^3 + 2t^2 + 12$ for $0 \\\\le t \\\\le 5$ hours. Find the time $t$ at which the level is highest (a critical point inside the interval).",
+      "steps": [
+        { "instruction": "Differentiate $L(t)$.", "answer": "-t^2 + 4t", "accept": ["4t - t^2"], "hint": "$\\\\frac{d}{dt}[-\\\\frac{1}{3}t^3] = -t^2$." },
+        { "instruction": "Set $L'(t) = 0$ and find the positive critical point.", "answer": "t = 4", "accept": ["4"], "hint": "$-t^2 + 4t = -t(t - 4) = 0$, so $t = 0$ or $t = 4$; take the interior one." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "hours" },
+      "solutionNarrative": "$L'(t) = -t^2 + 4t = -t(t-4)$, so critical points are $t = 0$ and $t = 4$. Since $L''(t) = -2t + 4$ gives $L''(4) = -4 < 0$, $t = 4$ hours is the maximum level."
+    }
+  ]
+}

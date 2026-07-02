@@ -1,0 +1,275 @@
+{
+  "id": "calculus-3.multiple-integrals",
+  "subject": "calculus-3",
+  "title": "Double and Triple Integrals",
+  "prerequisites": ["calculus-2.definite-integrals", "calculus-3.partial-derivatives"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "double-integrals-rectangular",
+      "label": "Double integrals over a rectangle",
+      "microLesson": "A double integral $\\iint_R f\\,dA$ over a rectangle $R = [a,b]\\times[c,d]$ adds up $f(x,y)$ over a flat region. You evaluate it as an **iterated integral**: integrate with respect to one variable while treating the other as a constant, then integrate the result. $\\int_0^2\\!\\int_0^3 (x+y)\\,dx\\,dy$ means do the inner $x$-integral first (from 0 to 3), then the outer $y$-integral (from 0 to 2). Over a rectangle the order doesn't change the answer."
+    },
+    {
+      "id": "double-integrals-general",
+      "label": "Double integrals over general regions",
+      "microLesson": "When the region isn't a rectangle, the bounds of the inner integral can depend on the outer variable. For a region where $y$ runs from $0$ to $x$ while $x$ runs from $0$ to $2$, you write $\\int_0^2\\!\\int_0^{x} f\\,dy\\,dx$. The inner limits are **functions of $x$**, the outer limits are **constants**. Always sketch the region: the inner variable is swept across first, leaving a single-variable integral in the outer one."
+    },
+    {
+      "id": "triple-integrals",
+      "label": "Triple integrals",
+      "microLesson": "A triple integral $\\iiint_E f\\,dV$ extends the idea to solids. Over a box $[a,b]\\times[c,d]\\times[p,q]$ you peel off one integral at a time, innermost first, holding the others constant: $\\int\\!\\int\\!\\int f\\,dz\\,dy\\,dx$. Each step collapses one variable. For a simple solid the innermost limits can depend on the outer variables, but the outermost limits are always plain numbers."
+    },
+    {
+      "id": "integral-applications",
+      "label": "Applications of multiple integrals",
+      "microLesson": "The same machinery answers many physical questions. The **volume** under a surface $z=f(x,y)$ over region $R$ is $\\iint_R f\\,dA$. The **total mass** of a plate with density $\\rho(x,y)$ is $\\iint_R \\rho\\,dA$ (and total charge, total rainfall, total population work the same way). The **average value** of $f$ over $R$ is $\\frac{1}{\\text{area}(R)}\\iint_R f\\,dA$. The **area** of $R$ itself is $\\iint_R 1\\,dA$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Adding up over a region, not just a line\n\nA single integral $\\int_a^b f(x)\\,dx$ totals a quantity along a line — distance from speed, area under a curve. But real quantities are spread over **areas** and **volumes**: rainfall over a county, mass over a metal plate, heat through a block of material. A **double integral** totals a function over a flat region; a **triple integral** totals one over a solid. The core trick is the same in both: turn the multi-dimensional sum into nested ordinary integrals you already know how to do.\n\n## Double integrals over a rectangle\n\nFor a rectangle $R = [a,b]\\times[c,d]$, the double integral becomes an **iterated integral**:\n\n$$\\iint_R f(x,y)\\,dA = \\int_c^d\\!\\int_a^b f(x,y)\\,dx\\,dy.$$\n\nYou work from the inside out. Do the inner integral first, treating the *other* variable as a constant (just like a partial derivative in reverse). That collapses one variable and leaves a single-variable integral in the other.\n\n### Worked example\n\nCompute $\\displaystyle\\int_0^2\\!\\int_0^3 (x + y)\\,dx\\,dy$.\n\n**Inner** ($x$ from 0 to 3, treat $y$ as constant):\n\n$$\\int_0^3 (x+y)\\,dx = \\left[\\tfrac{1}{2}x^2 + yx\\right]_0^3 = \\tfrac{9}{2} + 3y.$$\n\n**Outer** ($y$ from 0 to 2):\n\n$$\\int_0^2 \\left(\\tfrac{9}{2} + 3y\\right)dy = \\left[\\tfrac{9}{2}y + \\tfrac{3}{2}y^2\\right]_0^2 = 9 + 6 = 15.$$\n\nOver a rectangle, **Fubini's theorem** guarantees the order of integration doesn't change the answer — integrate $dy\\,dx$ and you get 15 too.\n\n## Double integrals over general regions\n\nMost regions aren't rectangles. Then the **inner** limits can be functions of the outer variable. For a triangular region where $y$ runs from $0$ up to the line $y = x$, while $x$ runs from $0$ to $2$:\n\n$$\\int_0^2\\!\\int_0^{x} f(x,y)\\,dy\\,dx.$$\n\nThe rule: **inner limits may depend on the outer variable; outer limits are always constants.** Sketch the region every time — decide which variable you sweep first, and read its limits off the boundary curves.\n\n## Triple integrals\n\nA solid works the same way with one more layer. Over a box $[a,b]\\times[c,d]\\times[p,q]$:\n\n$$\\iiint_E f(x,y,z)\\,dV = \\int_a^b\\!\\int_c^d\\!\\int_p^q f\\,dz\\,dy\\,dx.$$\n\nPeel off the innermost integral first, holding the rest constant, then the next, then the last. Each step removes one variable until a plain number remains.\n\n## What multiple integrals compute\n\n- **Volume** under a surface $z = f(x,y) \\ge 0$ over $R$: $\\iint_R f\\,dA$.\n- **Total mass** of a plate with density $\\rho(x,y)$: $\\iint_R \\rho\\,dA$. The same integral gives total electric charge, total rainfall, or total population when $\\rho$ is the relevant *per-unit-area* density.\n- **Average value** of $f$ over $R$: divide the integral by the size of the region, $\\dfrac{1}{\\text{area}(R)}\\iint_R f\\,dA$.\n- **Area or volume of the region itself**: integrate the constant $1$.\n\nThat's the whole topic: set up the right region, integrate from the inside out, and interpret the number."
+  },
+  "application": {
+    "summary": "Multiple integrals total a quantity spread over an area or a volume: the volume under a surface, the mass of a plate from its density, the total rainfall over a region, or the average temperature across a plate. Set up the region, integrate from the inside out, and read off a single meaningful number.",
+    "domains": ["physics", "engineering", "environmental science", "manufacturing"],
+    "workedExample": "**Total rainfall over a field**\n\nA rectangular field stretches $0 \\le x \\le 4$ km east and $0 \\le y \\le 3$ km north. During a storm the rainfall depth in centimeters varies across the field as $\\rho(x,y) = 2 + x + y$ (heavier toward the far corner). What total volume of water lands, in cm·km²?\n\nTotal $= \\displaystyle\\iint_R (2 + x + y)\\,dA = \\int_0^3\\!\\int_0^4 (2 + x + y)\\,dx\\,dy$.\n\n**Inner** ($x$ from 0 to 4): $\\int_0^4 (2 + x + y)\\,dx = \\left[2x + \\tfrac12 x^2 + yx\\right]_0^4 = 8 + 8 + 4y = 16 + 4y.$\n\n**Outer** ($y$ from 0 to 3): $\\int_0^3 (16 + 4y)\\,dy = \\left[16y + 2y^2\\right]_0^3 = 48 + 18 = 66.$\n\nSo **66 cm·km²** of water falls. Divide by the area ($12$ km²) and you also get the *average* rainfall depth, $5.5$ cm — the same integral, two readings. Swap $\\rho$ for mass density and you get the mass of a plate; swap it for charge density and you get total charge.",
+    "domainNotes": [
+      "**Physics:** mass, charge, and moment of inertia of plates and solids from a density function.",
+      "**Environmental science:** total rainfall, pollutant load, or biomass over a mapped region.",
+      "**Engineering:** heat content of a block, average stress over a cross-section, fluid volume in a tank.",
+      "**Manufacturing:** material volume of a milled part, average thickness of a coated surface."
+    ]
+  },
+  "generators": ["double-rect-v1", "double-general-v1", "triple-box-v1", "integral-volume-v1"],
+  "problems": [
+    {
+      "id": "calculus-3.multiple-integrals.s01",
+      "concepts": ["double-integrals-rectangular"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate the iterated integral $\\displaystyle\\int_0^2\\!\\int_0^3 1 \\,dx\\,dy$.",
+      "steps": [
+        { "instruction": "Do the inner integral $\\int_0^3 1\\,dx$.", "answer": "3", "accept": [], "hint": "The integral of 1 from 0 to 3 is just the length 3." },
+        { "instruction": "Now integrate the result: $\\int_0^2 3\\,dy$.", "answer": "6", "accept": [], "hint": "Integrate the constant 3 over a y-interval of length 2." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Inner: $\\int_0^3 1\\,dx = 3$. Outer: $\\int_0^2 3\\,dy = 6$. This is just the area of the rectangle."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s02",
+      "concepts": ["double-integrals-rectangular"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^1\\!\\int_0^2 (x + y)\\,dx\\,dy$.",
+      "steps": [
+        { "instruction": "Inner integral over $x$ from 0 to 2 (treat $y$ as constant): $\\int_0^2 (x+y)\\,dx$.", "answer": "2 + 2y", "accept": ["2y + 2", "2y+2", "2+2y"], "hint": "$\\int_0^2 x\\,dx = 2$ and $\\int_0^2 y\\,dx = 2y$." },
+        { "instruction": "Outer integral: $\\int_0^1 (2 + 2y)\\,dy$.", "answer": "3", "accept": [], "hint": "$\\int_0^1 2\\,dy = 2$ and $\\int_0^1 2y\\,dy = 1$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Inner gives $2 + 2y$; outer $\\int_0^1 (2+2y)\\,dy = 2 + 1 = 3$."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s03",
+      "concepts": ["double-integrals-rectangular"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_1^2\\!\\int_0^3 (2x + 4y)\\,dx\\,dy$.",
+      "steps": [
+        { "instruction": "Inner integral over $x$ from 0 to 3: $\\int_0^3 (2x + 4y)\\,dx$.", "answer": "9 + 12y", "accept": ["12y + 9", "12y+9", "9+12y"], "hint": "$\\int_0^3 2x\\,dx = 9$ and $\\int_0^3 4y\\,dx = 12y$." },
+        { "instruction": "Outer integral: $\\int_1^2 (9 + 12y)\\,dy$.", "answer": "27", "accept": [], "hint": "$\\int_1^2 9\\,dy = 9$; $\\int_1^2 12y\\,dy = 6(4-1) = 18$. Add them." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "" },
+      "solutionNarrative": "Inner: $9 + 12y$. Outer: $\\int_1^2 (9+12y)\\,dy = 9 + 18 = 27$."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s04",
+      "concepts": ["double-integrals-rectangular"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^2\\!\\int_0^1 (6x^2 y + 2y)\\,dx\\,dy$.",
+      "steps": [
+        { "instruction": "Inner integral over $x$ from 0 to 1: $\\int_0^1 (6x^2 y + 2y)\\,dx$.", "answer": "2y + 2y", "accept": ["4y"], "hint": "$\\int_0^1 6x^2 y\\,dx = 6y\\cdot\\tfrac13 = 2y$, and $\\int_0^1 2y\\,dx = 2y$." },
+        { "instruction": "Simplify the inner result to a single term.", "answer": "4y", "accept": [], "hint": "$2y + 2y = 4y$." },
+        { "instruction": "Outer integral: $\\int_0^2 4y\\,dy$.", "answer": "8", "accept": [], "hint": "$\\int_0^2 4y\\,dy = 2y^2\\big|_0^2 = 8$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "Inner: $2y + 2y = 4y$. Outer: $\\int_0^2 4y\\,dy = 8$."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s05",
+      "concepts": ["double-integrals-general"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate the integral over the triangular region where $y$ runs from 0 to $x$ and $x$ runs from 0 to 2: $\\displaystyle\\int_0^2\\!\\int_0^{x} 1\\,dy\\,dx$.",
+      "steps": [
+        { "instruction": "Inner integral over $y$ from 0 to $x$: $\\int_0^{x} 1\\,dy$.", "answer": "x", "accept": [], "hint": "Integrating 1 from 0 to x gives x." },
+        { "instruction": "Outer integral: $\\int_0^2 x\\,dx$.", "answer": "2", "accept": [], "hint": "$\\int_0^2 x\\,dx = \\tfrac12 x^2\\big|_0^2 = 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Inner gives $x$; outer $\\int_0^2 x\\,dx = 2$, which is the area of the triangle."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s06",
+      "concepts": ["double-integrals-general"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^2\\!\\int_0^{x} (x + y)\\,dy\\,dx$ over the region where $y$ runs from 0 to $x$.",
+      "steps": [
+        { "instruction": "Inner integral over $y$ from 0 to $x$: $\\int_0^{x} (x + y)\\,dy$.", "answer": "x^2 + x^2/2", "accept": ["3x^2/2", "(3/2)x^2", "1.5x^2"], "hint": "$\\int_0^x x\\,dy = x^2$ and $\\int_0^x y\\,dy = \\tfrac12 x^2$." },
+        { "instruction": "Simplify the inner result.", "answer": "3x^2/2", "accept": ["(3/2)x^2", "1.5x^2"], "hint": "$x^2 + \\tfrac12 x^2 = \\tfrac32 x^2$." },
+        { "instruction": "Outer integral: $\\int_0^2 \\tfrac32 x^2\\,dx$.", "answer": "4", "accept": [], "hint": "$\\tfrac32\\cdot\\tfrac{x^3}{3}\\big|_0^2 = \\tfrac12 x^3\\big|_0^2 = \\tfrac12\\cdot 8 = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Inner: $x^2 + \\tfrac12 x^2 = \\tfrac32 x^2$. Outer: $\\int_0^2 \\tfrac32 x^2\\,dx = \\tfrac12 x^3\\big|_0^2 = 4$."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s07",
+      "concepts": ["double-integrals-general"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^1\\!\\int_{x^2}^{x} 1\\,dy\\,dx$ over the region between $y = x^2$ and $y = x$.",
+      "steps": [
+        { "instruction": "Inner integral over $y$ from $x^2$ to $x$: $\\int_{x^2}^{x} 1\\,dy$.", "answer": "x - x^2", "accept": ["x-x^2"], "hint": "Integrating 1 gives the top limit minus the bottom limit: $x - x^2$." },
+        { "instruction": "Outer integral: $\\int_0^1 (x - x^2)\\,dx$.", "answer": "1/6", "accept": ["0.16667", "0.1667"], "hint": "$\\int_0^1 x\\,dx = \\tfrac12$ and $\\int_0^1 x^2\\,dx = \\tfrac13$; subtract." }
+      ],
+      "finalAnswer": { "value": "1/6", "unit": "" },
+      "solutionNarrative": "Inner: $x - x^2$. Outer: $\\tfrac12 - \\tfrac13 = \\tfrac16$, the area between the curves."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s08",
+      "concepts": ["triple-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^1\\!\\int_0^2\\!\\int_0^3 1\\,dz\\,dy\\,dx$ over the box.",
+      "steps": [
+        { "instruction": "Inner integral $\\int_0^3 1\\,dz$.", "answer": "3", "accept": [], "hint": "Integrate 1 over a z-interval of length 3." },
+        { "instruction": "Middle integral $\\int_0^2 3\\,dy$.", "answer": "6", "accept": [], "hint": "Constant 3 over a y-interval of length 2." },
+        { "instruction": "Outer integral $\\int_0^1 6\\,dx$.", "answer": "6", "accept": [], "hint": "Constant 6 over an x-interval of length 1." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Peeling off each integral: $3$, then $6$, then $6$ — the volume of the box $1\\times2\\times3$."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s09",
+      "concepts": ["triple-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^1\\!\\int_0^1\\!\\int_0^2 (x + z)\\,dz\\,dy\\,dx$.",
+      "steps": [
+        { "instruction": "Inner integral over $z$ from 0 to 2: $\\int_0^2 (x + z)\\,dz$.", "answer": "2x + 2", "accept": ["2x+2", "2 + 2x"], "hint": "$\\int_0^2 x\\,dz = 2x$ and $\\int_0^2 z\\,dz = 2$." },
+        { "instruction": "Middle integral over $y$ from 0 to 1: $\\int_0^1 (2x + 2)\\,dy$.", "answer": "2x + 2", "accept": ["2x+2", "2 + 2x"], "hint": "The integrand has no $y$, so integrating over a unit interval leaves it unchanged." },
+        { "instruction": "Outer integral over $x$ from 0 to 1: $\\int_0^1 (2x + 2)\\,dx$.", "answer": "3", "accept": [], "hint": "$\\int_0^1 2x\\,dx = 1$ and $\\int_0^1 2\\,dx = 2$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Inner: $2x + 2$. Middle (no $y$): still $2x + 2$. Outer: $1 + 2 = 3$."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s10",
+      "concepts": ["triple-integrals"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^2\\!\\int_0^1\\!\\int_0^1 8xyz\\,dz\\,dy\\,dx$.",
+      "steps": [
+        { "instruction": "Inner integral over $z$ from 0 to 1: $\\int_0^1 8xyz\\,dz$.", "answer": "4xy", "accept": [], "hint": "$\\int_0^1 z\\,dz = \\tfrac12$, so $8xy\\cdot\\tfrac12 = 4xy$." },
+        { "instruction": "Middle integral over $y$ from 0 to 1: $\\int_0^1 4xy\\,dy$.", "answer": "2x", "accept": [], "hint": "$\\int_0^1 y\\,dy = \\tfrac12$, so $4x\\cdot\\tfrac12 = 2x$." },
+        { "instruction": "Outer integral over $x$ from 0 to 2: $\\int_0^2 2x\\,dx$.", "answer": "4", "accept": [], "hint": "$\\int_0^2 2x\\,dx = x^2\\big|_0^2 = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Inner: $4xy$. Middle: $2x$. Outer: $\\int_0^2 2x\\,dx = 4$."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s11",
+      "concepts": ["integral-applications", "double-integrals-rectangular"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A thin rectangular metal plate covers $0 \\le x \\le 3$ m and $0 \\le y \\le 2$ m. Its density is constant at $5$ kg/m². The mass is $\\iint_R 5\\,dA$. Find the total mass.",
+      "steps": [
+        { "instruction": "Set up and do the inner integral $\\int_0^3 5\\,dx$.", "answer": "15", "accept": [], "hint": "Constant density 5 over an x-length of 3." },
+        { "instruction": "Outer integral $\\int_0^2 15\\,dy$.", "answer": "30", "accept": [], "hint": "$15$ over a y-length of 2." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "kg" },
+      "solutionNarrative": "Mass $= \\iint_R 5\\,dA = 5\\times(\\text{area}) = 5\\times 6 = 30$ kg. Constant density times area."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s12",
+      "concepts": ["integral-applications", "double-integrals-rectangular"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A flat roof spans $0 \\le x \\le 4$ m and $0 \\le y \\le 2$ m. The surface height above the floor is $z = 3 + x$ meters. The volume of space beneath it is $\\iint_R (3 + x)\\,dA$. Find that volume.",
+      "steps": [
+        { "instruction": "Inner integral over $x$ from 0 to 4: $\\int_0^4 (3 + x)\\,dx$.", "answer": "20", "accept": [], "hint": "$\\int_0^4 3\\,dx = 12$ and $\\int_0^4 x\\,dx = 8$." },
+        { "instruction": "Outer integral over $y$ from 0 to 2: $\\int_0^2 20\\,dy$.", "answer": "40", "accept": [], "hint": "The inner result 20 has no $y$; integrate over length 2." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "cubic meters" },
+      "solutionNarrative": "Inner: $12 + 8 = 20$. Outer: $20\\times 2 = 40$ m³ of space under the surface."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s13",
+      "concepts": ["integral-applications", "double-integrals-rectangular"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A heated metal plate covers $0 \\le x \\le 2$ and $0 \\le y \\le 2$ (meters). Its temperature is $T(x,y) = 10 + 3x + 6y$ °C. The average temperature is $\\frac{1}{\\text{area}}\\iint_R T\\,dA$. First find $\\iint_R T\\,dA$.",
+      "steps": [
+        { "instruction": "Inner integral over $x$ from 0 to 2: $\\int_0^2 (10 + 3x + 6y)\\,dx$.", "answer": "26 + 12y", "accept": ["12y + 26", "12y+26", "26+12y"], "hint": "$\\int_0^2 10\\,dx = 20$, $\\int_0^2 3x\\,dx = 6$, $\\int_0^2 6y\\,dx = 12y$." },
+        { "instruction": "Outer integral over $y$ from 0 to 2: $\\int_0^2 (26 + 12y)\\,dy$.", "answer": "76", "accept": [], "hint": "$\\int_0^2 26\\,dy = 52$ and $\\int_0^2 12y\\,dy = 24$." },
+        { "instruction": "Divide by the area (4) to get the average temperature.", "answer": "19", "accept": [], "hint": "$76 / 4 = 19$." }
+      ],
+      "finalAnswer": { "value": "19", "unit": "°C" },
+      "solutionNarrative": "$\\iint_R T\\,dA = 76$; dividing by the area 4 gives an average temperature of $19$ °C."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s14",
+      "concepts": ["integral-applications", "double-integrals-rectangular"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A square sensor plate covers $0 \\le x \\le 2$ and $0 \\le y \\le 2$ (cm). Surface charge density is $\\sigma(x,y) = 3x^2 + 2y$ (in microcoulombs/cm²). Total charge is $\\iint_R \\sigma\\,dA$. Find it.",
+      "steps": [
+        { "instruction": "Inner integral over $x$ from 0 to 2: $\\int_0^2 (3x^2 + 2y)\\,dx$.", "answer": "8 + 4y", "accept": ["4y + 8", "4y+8", "8+4y"], "hint": "$\\int_0^2 3x^2\\,dx = x^3\\big|_0^2 = 8$ and $\\int_0^2 2y\\,dx = 4y$." },
+        { "instruction": "Outer integral over $y$ from 0 to 2: $\\int_0^2 (8 + 4y)\\,dy$.", "answer": "24", "accept": [], "hint": "$\\int_0^2 8\\,dy = 16$ and $\\int_0^2 4y\\,dy = 8$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "microcoulombs" },
+      "solutionNarrative": "Inner: $8 + 4y$. Outer: $16 + 8 = 24$ microcoulombs of total charge."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s15",
+      "concepts": ["integral-applications", "double-integrals-general"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A triangular garden plot has $y$ running from 0 to $x$ while $x$ runs from 0 to 3 (meters). Soil-moisture density is $\\rho(x,y) = 2x$ (liters/m²). The total water held is $\\int_0^3\\!\\int_0^{x} 2x\\,dy\\,dx$. Find it.",
+      "steps": [
+        { "instruction": "Inner integral over $y$ from 0 to $x$: $\\int_0^{x} 2x\\,dy$.", "answer": "2x^2", "accept": ["2x*x"], "hint": "$2x$ is constant in $y$, so integrating over a $y$-length of $x$ gives $2x\\cdot x = 2x^2$." },
+        { "instruction": "Outer integral over $x$ from 0 to 3: $\\int_0^3 2x^2\\,dx$.", "answer": "18", "accept": [], "hint": "$2\\cdot\\tfrac{x^3}{3}\\big|_0^3 = \\tfrac{2}{3}\\cdot 27 = 18$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "liters" },
+      "solutionNarrative": "Inner: $2x\\cdot x = 2x^2$. Outer: $\\int_0^3 2x^2\\,dx = \\tfrac23\\cdot 27 = 18$ liters."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s16",
+      "concepts": ["integral-applications", "triple-integrals"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A solid block of foam fills $0 \\le x \\le 2$, $0 \\le y \\le 1$, $0 \\le z \\le 1$ (meters). Its density is $\\rho(x,y,z) = 6x$ (kg/m³). Total mass is $\\int_0^2\\!\\int_0^1\\!\\int_0^1 6x\\,dz\\,dy\\,dx$. Find it.",
+      "steps": [
+        { "instruction": "Inner integral over $z$ from 0 to 1: $\\int_0^1 6x\\,dz$.", "answer": "6x", "accept": [], "hint": "$6x$ is constant in $z$; the interval has length 1." },
+        { "instruction": "Middle integral over $y$ from 0 to 1: $\\int_0^1 6x\\,dy$.", "answer": "6x", "accept": [], "hint": "Again constant in $y$, length-1 interval." },
+        { "instruction": "Outer integral over $x$ from 0 to 2: $\\int_0^2 6x\\,dx$.", "answer": "12", "accept": [], "hint": "$3x^2\\big|_0^2 = 12$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "kg" },
+      "solutionNarrative": "The $z$ and $y$ integrations leave $6x$ unchanged (unit lengths); $\\int_0^2 6x\\,dx = 12$ kg."
+    },
+    {
+      "id": "calculus-3.multiple-integrals.s17",
+      "concepts": ["double-integrals-rectangular", "integral-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A rain gauge grid covers a field $0 \\le x \\le 5$ km and $0 \\le y \\le 4$ km. The rainfall depth is uniform at $2$ cm everywhere, so total water $= \\iint_R 2\\,dA$. Find the total (in cm·km²).",
+      "steps": [
+        { "instruction": "Inner integral $\\int_0^5 2\\,dx$.", "answer": "10", "accept": [], "hint": "Constant 2 over an x-length of 5." },
+        { "instruction": "Outer integral $\\int_0^4 10\\,dy$.", "answer": "40", "accept": [], "hint": "Constant 10 over a y-length of 4." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "cm·km²" },
+      "solutionNarrative": "Uniform depth: total $= 2\\times\\text{area} = 2\\times 20 = 40$ cm·km²."
+    }
+  ]
+}

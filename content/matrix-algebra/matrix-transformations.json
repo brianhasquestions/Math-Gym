@@ -1,0 +1,249 @@
+{
+  "id": "matrix-algebra.matrix-transformations",
+  "subject": "matrix-algebra",
+  "title": "Matrix Transformations and Applications",
+  "prerequisites": ["matrix-algebra.matrix-multiplication"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "apply-transformation",
+      "label": "Applying a matrix to a vector",
+      "microLesson": "A $2\\times 2$ matrix is a machine that moves points. To transform a point $(x, y)$, write it as a column vector and multiply: $\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}\\begin{bmatrix} x \\\\ y \\end{bmatrix} = \\begin{bmatrix} ax + by \\\\ cx + dy \\end{bmatrix}$. The new vector is where the point lands. For example, $\\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}\\begin{bmatrix} 3 \\\\ 1 \\end{bmatrix} = \\begin{bmatrix} 6 \\\\ 2 \\end{bmatrix}$ — the point doubles its distance from the origin."
+    },
+    {
+      "id": "rotation-reflection-scaling",
+      "label": "Rotations, reflections, and scalings",
+      "microLesson": "A few standard matrices do the common moves. **Rotation** by $90°$ counterclockwise is $\\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}$; by $180°$ it is $\\begin{bmatrix} -1 & 0 \\\\ 0 & -1 \\end{bmatrix}$; by $270°$ it is $\\begin{bmatrix} 0 & 1 \\\\ -1 & 0 \\end{bmatrix}$. **Reflection** across the $x$-axis is $\\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}$, across the $y$-axis is $\\begin{bmatrix} -1 & 0 \\\\ 0 & 1 \\end{bmatrix}$. **Scaling** by factor $k$ is $\\begin{bmatrix} k & 0 \\\\ 0 & k \\end{bmatrix}$. Memorize these and you can build almost anything."
+    },
+    {
+      "id": "composition-of-transformations",
+      "label": "Composing transformations",
+      "microLesson": "To do one transformation **then** another, multiply their matrices. If you apply $A$ first and then $B$, the combined matrix is $BA$ — the second transformation goes on the **left**. Order matters: $BA \\neq AB$ in general. Once you have the single combined matrix, you apply it to a point just once instead of running both steps separately. This is exactly how graphics engines collapse a whole chain of moves into one fast multiply."
+    },
+    {
+      "id": "applications",
+      "label": "Graphics and Markov chains",
+      "microLesson": "Transformation matrices power **computer graphics**: every rotate, flip, and zoom of a sprite is a matrix times its corner points. Matrices also drive **Markov chains**, where a transition matrix $P$ times a current state vector gives the next state. Multiply repeatedly and the state often settles to a **steady state** $s$ satisfying $Ps = s$ — the long-run distribution that no longer changes, used to predict customer churn, weather, and web-page ranking."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Matrices that move the world\n\nEvery time a video game rotates a character, a photo app flips an image, or a CAD program zooms a blueprint, the same operation runs underneath: a **matrix multiplied by a list of points**. A $2\\times 2$ matrix is not just a grid of numbers — it is a *machine that takes a point and moves it somewhere else*. That single idea, **matrix as transformation**, is one of the most useful in applied math.\n\n## Applying a matrix to a point\n\nWrite a point $(x, y)$ as a column vector and multiply on the left by the matrix:\n\n$$\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix} \\begin{bmatrix} x \\\\ y \\end{bmatrix} = \\begin{bmatrix} ax + by \\\\ cx + dy \\end{bmatrix}.$$\n\nThe output column is the point's new location. To transform a whole shape, you just transform each of its corner points and reconnect them.\n\n## The standard moves\n\nMost real transformations are built from a small vocabulary of matrices:\n\n- **Rotate $90°$ counterclockwise:** $\\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}$\n- **Rotate $180°$:** $\\begin{bmatrix} -1 & 0 \\\\ 0 & -1 \\end{bmatrix}$\n- **Rotate $270°$ counterclockwise:** $\\begin{bmatrix} 0 & 1 \\\\ -1 & 0 \\end{bmatrix}$\n- **Reflect across the $x$-axis:** $\\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}$ (flips the sign of $y$)\n- **Reflect across the $y$-axis:** $\\begin{bmatrix} -1 & 0 \\\\ 0 & 1 \\end{bmatrix}$ (flips the sign of $x$)\n- **Scale by factor $k$:** $\\begin{bmatrix} k & 0 \\\\ 0 & k \\end{bmatrix}$ (stretches if $k > 1$, shrinks if $0 < k < 1$)\n\nTest one to convince yourself. Rotating $(3, 1)$ by $90°$: $\\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}\\begin{bmatrix} 3 \\\\ 1 \\end{bmatrix} = \\begin{bmatrix} -1 \\\\ 3 \\end{bmatrix}$. The point swings a quarter turn around the origin, exactly as expected.\n\n## Composing: do two things at once\n\nWhat if you want to **rotate and then reflect**? You could run both steps in sequence, but it is faster to combine them into a **single matrix** first. If you apply $A$ first and then $B$, the combined transformation is the product $BA$ — the second one written on the **left**:\n\n$$\\text{(apply } A \\text{ then } B) = B A.$$\n\nApply that one matrix to every point and you have done both moves in a single multiply. **Order matters:** rotating then reflecting is generally *not* the same as reflecting then rotating, because $BA \\neq AB$. This is why graphics pipelines are careful about the order they stack their transformations.\n\n## From graphics to forecasting: Markov chains\n\nThe same machinery predicts the future of a *system that hops between states*. Suppose customers are either \"subscribed\" or \"cancelled\" each month, and a **transition matrix** $P$ holds the probabilities of moving between them. If $v$ is today's state vector (the fraction in each state), then $Pv$ is **next month's** state vector. Multiply again for the month after, and so on.\n\nKeep multiplying and the state usually settles down to a **steady state** vector $s$ that no longer changes:\n\n$$P s = s.$$\n\nThat steady state is the long-run answer — the eventual market share, the equilibrium weather mix, the stable rank of a web page. One matrix, applied over and over, turns today's snapshot into a confident long-term forecast."
+  },
+  "application": {
+    "summary": "Matrix transformations move points: they rotate, flip, and zoom shapes in computer graphics, and — as transition matrices — they step a Markov chain from today's state to tomorrow's, settling to a steady-state forecast. The same multiply that spins a game sprite predicts customer churn and weather.",
+    "domains": ["computer graphics", "data science", "robotics", "operations"],
+    "workedExample": "**Spinning a sprite a quarter turn**\n\nA game sprite has a corner at $(4, 2)$, and you want to rotate it $90°$ counterclockwise around the origin. The rotation matrix is $R = \\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}$. Apply it:\n\n$$R \\begin{bmatrix} 4 \\\\ 2 \\end{bmatrix} = \\begin{bmatrix} 0\\cdot 4 + (-1)\\cdot 2 \\\\ 1\\cdot 4 + 0\\cdot 2 \\end{bmatrix} = \\begin{bmatrix} -2 \\\\ 4 \\end{bmatrix}.$$\n\nThe corner moves to $(-2, 4)$. Do this for all four corners and the whole sprite has turned. Now suppose you also want to **double its size** after rotating. Scaling is $S = \\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}$, and rotate-then-scale combines into $SR = \\begin{bmatrix} 0 & -2 \\\\ 2 & 0 \\end{bmatrix}$. One multiply now does both jobs at once — exactly the trick a graphics engine uses to stay fast.",
+    "domainNotes": [
+      "**Computer graphics:** every rotation, flip, and zoom of a shape is its corner points multiplied by a transformation matrix; chains of moves collapse into one matrix.",
+      "**Data science:** Markov transition matrices forecast customer churn, web traffic, and weather; the steady state gives the long-run distribution.",
+      "**Robotics:** rotating and scaling coordinate frames to track an arm or sensor in space.",
+      "**Operations:** modeling how a population flows between states (employed/unemployed, brand A/brand B) month over month."
+    ]
+  },
+  "generators": ["transform-apply-v1", "rotation-v1"],
+  "problems": [
+    {
+      "id": "matrix-algebra.matrix-transformations.s01",
+      "concepts": ["apply-transformation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Apply the matrix $\\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}$ to the point $(3, 1)$. Where does it land?",
+      "steps": [
+        { "instruction": "Multiply the matrix by the column vector to get the new point.", "answer": "(6, 2)", "accept": ["<6, 2>", "6, 2"], "hint": "Top row: $2\\cdot 3 + 0\\cdot 1$. Bottom row: $0\\cdot 3 + 2\\cdot 1$." }
+      ],
+      "finalAnswer": { "value": "(6, 2)", "unit": "" },
+      "solutionNarrative": "$\\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}\\begin{bmatrix} 3 \\\\ 1 \\end{bmatrix} = \\begin{bmatrix} 6 \\\\ 2 \\end{bmatrix}$, so the point lands at $(6, 2)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s02",
+      "concepts": ["apply-transformation"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Apply the matrix $\\begin{bmatrix} 1 & 2 \\\\ 3 & -1 \\end{bmatrix}$ to the point $(2, 1)$.",
+      "steps": [
+        { "instruction": "Compute the top entry: $1\\cdot 2 + 2\\cdot 1$.", "answer": "4", "accept": [], "hint": "Multiply the first row by the vector." },
+        { "instruction": "Compute the bottom entry: $3\\cdot 2 + (-1)\\cdot 1$.", "answer": "5", "accept": [], "hint": "Multiply the second row by the vector." },
+        { "instruction": "State the resulting point as a vector.", "answer": "(4, 5)", "accept": ["<4, 5>", "4, 5"], "hint": "Combine the two entries you found." }
+      ],
+      "finalAnswer": { "value": "(4, 5)", "unit": "" },
+      "solutionNarrative": "Top: $1\\cdot 2 + 2\\cdot 1 = 4$. Bottom: $3\\cdot 2 - 1 = 5$. The image is $(4, 5)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s03",
+      "concepts": ["apply-transformation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A robot arm uses the matrix $\\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}$ to reorient its gripper. The gripper is at sensor reading $(5, -3)$. Find the reoriented coordinates.",
+      "steps": [
+        { "instruction": "Compute the top entry: $0\\cdot 5 + (-1)\\cdot(-3)$.", "answer": "3", "accept": [], "hint": "A negative times a negative is positive." },
+        { "instruction": "Compute the bottom entry: $1\\cdot 5 + 0\\cdot(-3)$.", "answer": "5", "accept": [], "hint": "Only the first term survives." },
+        { "instruction": "State the new gripper position as a vector.", "answer": "(3, 5)", "accept": ["<3, 5>", "3, 5"], "hint": "Pair the two entries in order." }
+      ],
+      "finalAnswer": { "value": "(3, 5)", "unit": "" },
+      "solutionNarrative": "$\\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ -3 \\end{bmatrix} = \\begin{bmatrix} 3 \\\\ 5 \\end{bmatrix}$, so the gripper moves to $(3, 5)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s04",
+      "concepts": ["rotation-reflection-scaling"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Reflect the point $(4, 7)$ across the $x$-axis using $\\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Apply the reflection: $x$ stays, $y$ flips sign. Give the new point.", "answer": "(4, -7)", "accept": ["<4, -7>", "4, -7"], "hint": "Reflecting across the $x$-axis negates the $y$-coordinate." }
+      ],
+      "finalAnswer": { "value": "(4, -7)", "unit": "" },
+      "solutionNarrative": "Reflection across the $x$-axis sends $(4, 7)$ to $(4, -7)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s05",
+      "concepts": ["rotation-reflection-scaling"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Rotate the point $(2, 5)$ by $90°$ counterclockwise about the origin.",
+      "steps": [
+        { "instruction": "Write the $90°$ counterclockwise rotation matrix in row-major bracket form.", "answer": "[[0, -1], [1, 0]]", "accept": [], "hint": "It sends $(1,0)$ to $(0,1)$ and $(0,1)$ to $(-1,0)$." },
+        { "instruction": "Apply it to $(2, 5)$ and give the new point.", "answer": "(-5, 2)", "accept": ["<-5, 2>", "-5, 2"], "hint": "Top: $0\\cdot 2 - 1\\cdot 5$. Bottom: $1\\cdot 2 + 0\\cdot 5$." }
+      ],
+      "finalAnswer": { "value": "(-5, 2)", "unit": "" },
+      "solutionNarrative": "Using $\\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}$, the point $(2, 5)$ rotates to $(-5, 2)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s06",
+      "concepts": ["rotation-reflection-scaling"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An image editor reflects a logo across the $y$-axis and the design team also wants it tripled in size. The logo's anchor point is at $(3, -4)$. First reflect across the $y$-axis, then triple the size (scale by 3). Where does the anchor end up?",
+      "steps": [
+        { "instruction": "Reflect $(3, -4)$ across the $y$-axis (negate $x$). Give the point.", "answer": "(-3, -4)", "accept": ["<-3, -4>", "-3, -4"], "hint": "Reflection across the $y$-axis flips the sign of $x$ only." },
+        { "instruction": "Now scale that result by 3. Give the final point.", "answer": "(-9, -12)", "accept": ["<-9, -12>", "-9, -12"], "hint": "Multiply both coordinates by 3." }
+      ],
+      "finalAnswer": { "value": "(-9, -12)", "unit": "" },
+      "solutionNarrative": "Reflecting $(3, -4)$ across the $y$-axis gives $(-3, -4)$; scaling by 3 gives $(-9, -12)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s07",
+      "concepts": ["rotation-reflection-scaling"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Rotate the point $(6, 2)$ by $180°$ about the origin.",
+      "steps": [
+        { "instruction": "Apply the $180°$ rotation (both coordinates negate). Give the new point.", "answer": "(-6, -2)", "accept": ["<-6, -2>", "-6, -2"], "hint": "$\\begin{bmatrix} -1 & 0 \\\\ 0 & -1 \\end{bmatrix}$ flips the sign of both coordinates." }
+      ],
+      "finalAnswer": { "value": "(-6, -2)", "unit": "" },
+      "solutionNarrative": "A $180°$ rotation sends $(6, 2)$ to $(-6, -2)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s08",
+      "concepts": ["composition-of-transformations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "You scale by 2 using $S = \\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}$, then rotate $180°$ using $R = \\begin{bmatrix} -1 & 0 \\\\ 0 & -1 \\end{bmatrix}$. Find the combined matrix $RS$.",
+      "steps": [
+        { "instruction": "Multiply $R S$ and write the result in row-major bracket form.", "answer": "[[-2, 0], [0, -2]]", "accept": [], "hint": "Multiply each diagonal entry: $-1\\cdot 2 = -2$; off-diagonals stay 0." }
+      ],
+      "finalAnswer": { "value": "[[-2, 0], [0, -2]]", "unit": "" },
+      "solutionNarrative": "$RS = \\begin{bmatrix} -1 & 0 \\\\ 0 & -1 \\end{bmatrix}\\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix} = \\begin{bmatrix} -2 & 0 \\\\ 0 & -2 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s09",
+      "concepts": ["composition-of-transformations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Apply $A = \\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}$ (reflect across $x$-axis) first, then $B = \\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}$ (rotate $90°$). Find the combined matrix $BA$.",
+      "steps": [
+        { "instruction": "Compute the product $B A$ and write it in row-major bracket form.", "answer": "[[0, 1], [1, 0]]", "accept": [], "hint": "Row 1 of $B$ times columns of $A$: $[0\\cdot1 + (-1)\\cdot0,\\; 0\\cdot0 + (-1)\\cdot(-1)] = [0, 1]$." }
+      ],
+      "finalAnswer": { "value": "[[0, 1], [1, 0]]", "unit": "" },
+      "solutionNarrative": "$BA = \\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}\\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix} = \\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$, which is the reflection across the line $y = x$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s10",
+      "concepts": ["composition-of-transformations", "apply-transformation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A graphics engine rotates a sprite $90°$ counterclockwise ($R = \\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}$), then doubles its size ($S = \\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}$). The sprite has a corner at $(1, 3)$. Build the combined matrix and apply it.",
+      "steps": [
+        { "instruction": "The sprite is rotated first, then scaled, so the combined matrix is $SR$. Compute it in row-major bracket form.", "answer": "[[0, -2], [2, 0]]", "accept": [], "hint": "$\\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}\\begin{bmatrix} 0 & -1 \\\\ 1 & 0 \\end{bmatrix}$: multiply row by column." },
+        { "instruction": "Apply the combined matrix to the corner $(1, 3)$. Give the new point.", "answer": "(-6, 2)", "accept": ["<-6, 2>", "-6, 2"], "hint": "Top: $0\\cdot 1 + (-2)\\cdot 3$. Bottom: $2\\cdot 1 + 0\\cdot 3$." }
+      ],
+      "finalAnswer": { "value": "(-6, 2)", "unit": "" },
+      "solutionNarrative": "$SR = \\begin{bmatrix} 0 & -2 \\\\ 2 & 0 \\end{bmatrix}$. Applying it to $(1, 3)$ gives $\\begin{bmatrix} -6 \\\\ 2 \\end{bmatrix}$, so the corner lands at $(-6, 2)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s11",
+      "concepts": ["applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A streaming service finds that each month 90% of subscribers stay and 10% cancel, while 20% of cancelled users resubscribe and 80% stay cancelled. Today there are 600 subscribed and 400 cancelled users. The transition gives next month's subscribers as $0.9\\cdot 600 + 0.2\\cdot 400$. How many will be subscribed next month?",
+      "steps": [
+        { "instruction": "Compute next month's subscribers: $0.9\\cdot 600 + 0.2\\cdot 400$.", "answer": "620", "accept": [], "hint": "$540 + 80$." }
+      ],
+      "finalAnswer": { "value": "620", "unit": "subscribers" },
+      "solutionNarrative": "$0.9\\cdot 600 + 0.2\\cdot 400 = 540 + 80 = 620$ subscribers next month."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s12",
+      "concepts": ["applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Weather follows a Markov chain. If today is sunny, tomorrow is sunny with probability 0.8 and rainy with 0.2. If today is rainy, tomorrow is sunny with probability 0.4 and rainy with 0.6. Today's state vector is $\\begin{bmatrix} 0.5 \\\\ 0.5 \\end{bmatrix}$ (sunny, rainy). Find tomorrow's state vector using $P = \\begin{bmatrix} 0.8 & 0.4 \\\\ 0.2 & 0.6 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Compute the probability sunny tomorrow: $0.8\\cdot 0.5 + 0.4\\cdot 0.5$.", "answer": "0.6", "accept": ["3/5"], "hint": "$0.4 + 0.2$." },
+        { "instruction": "Compute the probability rainy tomorrow: $0.2\\cdot 0.5 + 0.6\\cdot 0.5$.", "answer": "0.4", "accept": ["2/5"], "hint": "$0.1 + 0.3$." },
+        { "instruction": "State tomorrow's state vector (sunny, rainy).", "answer": "(0.6, 0.4)", "accept": ["<0.6, 0.4>", "0.6, 0.4"], "hint": "Pair the two probabilities you computed." }
+      ],
+      "finalAnswer": { "value": "(0.6, 0.4)", "unit": "" },
+      "solutionNarrative": "$P\\begin{bmatrix} 0.5 \\\\ 0.5 \\end{bmatrix} = \\begin{bmatrix} 0.6 \\\\ 0.4 \\end{bmatrix}$: 60% chance sunny, 40% rainy tomorrow."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s13",
+      "concepts": ["applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two brands compete. Each month 70% of brand A's customers stay with A (30% switch to B), and 40% of brand B's customers switch to A (60% stay with B). In the long run, the market reaches a steady state where the shares stop changing. Let $a$ be A's steady-state share and $b = 1 - a$. The steady state satisfies $0.7a + 0.4b = a$. Find A's long-run market share $a$.",
+      "steps": [
+        { "instruction": "Substitute $b = 1 - a$ into $0.7a + 0.4(1 - a) = a$ and simplify to an equation in $a$. Write it in the form $0.4 = 0.7a$ after collecting terms.", "answer": "0.4 = 0.7a", "accept": ["0.7a = 0.4", "0.7a=0.4", "0.4=0.7a"], "hint": "$0.7a + 0.4 - 0.4a = a$ gives $0.3a + 0.4 = a$, so $0.4 = 0.7a$." },
+        { "instruction": "Solve for $a$ (round to 2 decimals).", "answer": "0.57", "accept": ["4/7", "0.571"], "hint": "$a = 0.4 / 0.7$." }
+      ],
+      "finalAnswer": { "value": "0.57", "unit": "" },
+      "solutionNarrative": "From $0.7a + 0.4(1-a) = a$ we get $0.4 = 0.7a$, so $a = 0.4/0.7 = 4/7 \\approx 0.57$. Brand A holds about 57% in the long run."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s14",
+      "concepts": ["apply-transformation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A map app rotates a navigation arrow using $\\begin{bmatrix} 0 & 1 \\\\ -1 & 0 \\end{bmatrix}$ (a $270°$ counterclockwise rotation). The arrow tip is at $(0, 4)$. Find the new tip position.",
+      "steps": [
+        { "instruction": "Apply the matrix to $(0, 4)$ and give the new point.", "answer": "(4, 0)", "accept": ["<4, 0>", "4, 0"], "hint": "Top: $0\\cdot 0 + 1\\cdot 4$. Bottom: $-1\\cdot 0 + 0\\cdot 4$." }
+      ],
+      "finalAnswer": { "value": "(4, 0)", "unit": "" },
+      "solutionNarrative": "$\\begin{bmatrix} 0 & 1 \\\\ -1 & 0 \\end{bmatrix}\\begin{bmatrix} 0 \\\\ 4 \\end{bmatrix} = \\begin{bmatrix} 4 \\\\ 0 \\end{bmatrix}$, so the tip moves to $(4, 0)$."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s15",
+      "concepts": ["rotation-reflection-scaling"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Write the matrix that scales every point by a factor of 5. Use row-major bracket form.",
+      "steps": [
+        { "instruction": "Give the scaling matrix for factor 5.", "answer": "[[5, 0], [0, 5]]", "accept": [], "hint": "Put the scale factor on both diagonal entries and 0 off the diagonal." }
+      ],
+      "finalAnswer": { "value": "[[5, 0], [0, 5]]", "unit": "" },
+      "solutionNarrative": "Scaling by 5 is $\\begin{bmatrix} 5 & 0 \\\\ 0 & 5 \\end{bmatrix}$, which multiplies every coordinate by 5."
+    },
+    {
+      "id": "matrix-algebra.matrix-transformations.s16",
+      "concepts": ["composition-of-transformations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "You reflect across the $x$-axis using $A = \\begin{bmatrix} 1 & 0 \\\\ 0 & -1 \\end{bmatrix}$, then reflect across the $x$-axis again. Find the combined matrix $A A$.",
+      "steps": [
+        { "instruction": "Compute $A A$ in row-major bracket form.", "answer": "[[1, 0], [0, 1]]", "accept": [], "hint": "Reflecting twice undoes itself, giving the identity matrix." }
+      ],
+      "finalAnswer": { "value": "[[1, 0], [0, 1]]", "unit": "" },
+      "solutionNarrative": "$A A = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$, the identity — reflecting twice returns every point to its start."
+    }
+  ]
+}

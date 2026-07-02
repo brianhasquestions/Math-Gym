@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>try { document.documentElement.setAttribute("data-theme", localStorage.getItem("mathgym.theme") || "terminal"); } catch (e) {}</script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <title>MathGym — Train Applied Mathematics</title>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+  <script type="module">
+    import { applyTheme } from "./js/theme.js";
+    import { buildShell } from "./js/shell.js";
+    import { exportProgress, importProgress, resetAll } from "./js/progress-store.js";
+    import { el } from "./js/app.js";
+    applyTheme();
+
+    const { main } = await buildShell({});
+
+    main.appendChild(el("h1", {}, "Train the math the real world actually uses."));
+    main.appendChild(el("p", { class: "lede" },
+      "Pick a subject in the sidebar, choose a topic, and master it for real — " +
+      "every topic leads with where the math shows up in real life, then drills you " +
+      "with fresh problems until each underlying skill is genuinely solid."));
+
+    const start = el("div", { class: "card", style: "margin-top: var(--space-4)" }, [
+      el("h3", { style: "margin-top:0" }, "How it works"),
+      el("ul", {}, [
+        el("li", { html: "<strong>Browse</strong> — expand a subject in the sidebar to see its topics." }),
+        el("li", { html: "<strong>Learn</strong> — each topic opens with an applied lecture and real-world uses." }),
+        el("li", { html: "<strong>Train</strong> — the adaptive engine serves step-by-step problems and keeps drilling your weak spots until you've mastered every skill." }),
+      ]),
+    ]);
+    main.appendChild(start);
+
+    // Progress data controls
+    const msg = el("span", { class: "footer-note", role: "status", "aria-live": "polite", style: "margin:0" }, "");
+    const setMsg = (t, ok = true) => { msg.textContent = t; msg.style.color = ok ? "var(--success)" : "var(--error)"; };
+    const fileInput = el("input", { type: "file", accept: "application/json", style: "display:none" });
+
+    const exportBtn = el("button", { class: "btn secondary" }, "Export progress");
+    const importBtn = el("button", { class: "btn secondary" }, "Import progress");
+    const resetBtn = el("button", { class: "btn ghost" }, "Reset all");
+
+    exportBtn.addEventListener("click", () => {
+      const blob = new Blob([exportProgress()], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = el("a", { href: url, download: "mathgym-progress.json" });
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      setMsg("Progress exported.");
+    });
+    importBtn.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", async () => {
+      const f = fileInput.files[0]; if (!f) return;
+      try { importProgress(await f.text()); setMsg("Imported. Reloading…"); setTimeout(() => location.reload(), 600); }
+      catch (e) { setMsg(`Import failed: ${e.message}`, false); }
+      fileInput.value = "";
+    });
+    resetBtn.addEventListener("click", () => {
+      if (confirm("Erase ALL saved progress across every topic? This cannot be undone.")) {
+        resetAll(); setMsg("Progress reset. Reloading…"); setTimeout(() => location.reload(), 600);
+      }
+    });
+
+    main.appendChild(el("section", { class: "card", style: "margin-top: var(--space-3)" }, [
+      el("h3", { style: "margin-top:0" }, "Your progress"),
+      el("p", { class: "blurb", style: "color: var(--text-dim)" },
+        "Saved in this browser only. Export to back it up or move devices; importing replaces what's here."),
+      el("div", { style: "display:flex; gap: var(--space-2); flex-wrap: wrap; align-items:center" },
+        [exportBtn, importBtn, resetBtn, fileInput, msg]),
+    ]));
+  </script>
+</body>
+</html>

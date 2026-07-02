@@ -1,0 +1,258 @@
+{
+  "id": "algebra-2.logarithms",
+  "subject": "algebra-2",
+  "title": "Logarithms",
+  "prerequisites": ["algebra-2.exponential-functions"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "log-definition",
+      "label": "A logarithm is an exponent",
+      "microLesson": "A logarithm just asks *\"what power do I raise the base to?\"* The statement $\\log_b(y) = x$ means exactly the same thing as $b^x = y$. So $\\log_2(8) = 3$ because $2^3 = 8$, and $\\log_{10}(1000) = 3$ because $10^3 = 1000$. To evaluate a log of an exact power, rewrite it as a question about exponents. Converting between $b^x = y$ and $\\log_b(y) = x$ is the whole game."
+    },
+    {
+      "id": "log-properties",
+      "label": "Product, quotient, and power rules",
+      "microLesson": "Logs turn multiplication into addition. The three rules: **product** $\\log_b(MN) = \\log_b M + \\log_b N$; **quotient** $\\log_b\\left(\\dfrac{M}{N}\\right) = \\log_b M - \\log_b N$; **power** $\\log_b(M^k) = k\\log_b M$. They let you break a complicated log into simple pieces or combine pieces into one. For example $\\log_2 8 + \\log_2 2 = \\log_2 16 = 4$."
+    },
+    {
+      "id": "solve-with-logs",
+      "label": "Solving exponential and log equations",
+      "microLesson": "To solve for an unknown exponent, take a log; to solve for an unknown inside a log, rewrite in exponential form. If $10^x = 1000$, then $x = \\log_{10}(1000) = 3$. If $\\log_3(x) = 4$, rewrite as $x = 3^4 = 81$. The definition $\\log_b(y) = x \\Leftrightarrow b^x = y$ is the bridge that lets you move the unknown out of the exponent or out of the log."
+    },
+    {
+      "id": "log-applications",
+      "label": "Log scales in the real world",
+      "microLesson": "Many natural scales are logarithmic because the quantities span huge ranges. **pH** $= -\\log_{10}[\\text{H}^+]$ measures acidity; **decibels** $= 10\\log_{10}(I/I_0)$ measure loudness; the **Richter scale** measures earthquake size. The key feature: each whole step means a factor of 10. A pH drop of 1 is 10× more acidic; a magnitude-6 quake shakes 10× harder than a magnitude-5. Logs compress the 'times 10' into a simple '+1'."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The question logarithms answer\n\nExponential growth is everywhere — money compounding, populations, viral spread, radioactive decay. The natural follow-up question is always: *\"How long until it reaches X?\"* or *\"How many times bigger is this than that?\"* Those are questions about an **exponent**, and the tool that pulls an exponent out into the open is the **logarithm**.\n\nA logarithm is simply an exponent in disguise. The statement\n\n$$\\log_b(y) = x \\quad\\text{means exactly}\\quad b^x = y.$$\n\nRead it out loud: *\"the log base $b$ of $y$ is the power you raise $b$ to in order to get $y$.\"* So $\\log_2(8) = 3$ because $2^3 = 8$, and $\\log_{10}(1000) = 3$ because $10^3 = 1000$. Every log fact is just an exponent fact wearing a different hat.\n\nBecause a log just swaps input and output, its graph is the exponential's mirror image. Reflect $y = 2^x$ across the dashed line $y = x$ and you get $y = \\log_2(x)$: the point $(0, 1)$ flips to $(1, 0)$.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-3, 7], \"yRange\": [-3, 7], \"grid\": true, \"curves\": [ { \"fn\": \"2^x\", \"label\": \"y=2^x\", \"color\": \"accent\", \"labelAt\": 2.2 }, { \"fn\": \"ln(x)/ln(2)\", \"label\": \"y=log2(x)\", \"color\": \"success\", \"labelAt\": 5.5 } ], \"points\": [ { \"x\": 0, \"y\": 1, \"label\": \"(0,1)\", \"color\": \"warn\" }, { \"x\": 1, \"y\": 0, \"label\": \"(1,0)\", \"color\": \"warn\" } ], \"segments\": [ { \"from\": [-3, -3], \"to\": [7, 7], \"dashed\": true, \"label\": \"y=x\", \"color\": \"dim\" } ], \"caption\": \"y = 2^x and its mirror y = log₂(x), reflected across the dashed line y = x\" }\n```\n\n## Evaluating and converting\n\nTo evaluate $\\log_b(y)$ when $y$ is an exact power of $b$, ask *\"$b$ to what gives $y$?\"*\n\n- $\\log_5(25) = 2$ because $5^2 = 25$.\n- $\\log_3\\left(\\dfrac{1}{9}\\right) = -2$ because $3^{-2} = \\dfrac{1}{9}$.\n- $\\log_9(3) = \\dfrac{1}{2}$ because $9^{1/2} = 3$.\n\nGoing the other way is just as mechanical: $2^5 = 32$ rewrites as $\\log_2(32) = 5$.\n\n## The three properties: why logs are so useful\n\nLogs were invented to turn hard multiplication into easy addition, and that property still powers every log scale today:\n\n- **Product rule:** $\\log_b(MN) = \\log_b M + \\log_b N$.\n- **Quotient rule:** $\\log_b\\!\\left(\\dfrac{M}{N}\\right) = \\log_b M - \\log_b N$.\n- **Power rule:** $\\log_b(M^k) = k\\,\\log_b M$.\n\nThese let you collapse $\\log_2 8 + \\log_2 2$ into $\\log_2 16 = 4$, or expand $\\log_{10}(1000) = \\log_{10}(10^3) = 3$.\n\n## Solving equations\n\nThe definition is a two-way bridge:\n\n- **Unknown in the exponent:** $10^x = 1000 \\Rightarrow x = \\log_{10}(1000) = 3$.\n- **Unknown inside a log:** $\\log_3(x) = 4 \\Rightarrow x = 3^4 = 81$.\n\nWhichever side the unknown is trapped on, the definition $\\log_b(y) = x \\Leftrightarrow b^x = y$ sets it free.\n\n## Why the world is built on log scales\n\nSome quantities range over so many orders of magnitude that no ordinary ruler fits them. Sound power, acid concentration, and earthquake energy each span billions to one. A **log scale** compresses 'times 10' into 'plus 1', so a manageable number like 7 can stand for ten million. That single idea is why **pH**, **decibels**, and the **Richter scale** all use logarithms — and why a one-point difference on any of them means a tenfold difference in reality."
+  },
+  "application": {
+    "summary": "Logarithms answer 'what exponent?' and 'how many times bigger?' They are the backbone of every scale that spans huge ranges — pH for acidity, decibels for loudness, the Richter scale for earthquakes — and of any question about the time it takes exponential growth to hit a target.",
+    "domains": ["chemistry", "acoustics", "geology", "finance"],
+    "workedExample": "**How much stronger was the earthquake?**\n\nThe Richter magnitude of a quake is $M = \\log_{10}\\!\\left(\\dfrac{A}{A_0}\\right)$, where $A$ is the measured shaking amplitude and $A_0$ is a fixed reference. Because the scale is base-10 logarithmic, each whole step up means **10 times** the amplitude.\n\nSuppose one earthquake measures magnitude 7 and another measures magnitude 5. How many times stronger is the first? The difference in magnitude is $7 - 5 = 2$, and each step is a factor of 10, so the amplitude ratio is\n\n$$10^{(7-5)} = 10^2 = 100.$$\n\nThe magnitude-7 quake shakes the ground **100 times** harder than the magnitude-5 one — even though the numbers '7' and '5' look close. That compression is exactly why log scales are used: a small, readable number stands in for an enormous physical ratio. The identical logic governs decibels ($+10$ dB = 10× the sound power) and pH ($-1$ pH = 10× the acidity).",
+    "domainNotes": [
+      "**Chemistry:** $\\text{pH} = -\\log_{10}[\\text{H}^+]$; each whole pH unit is a tenfold change in acidity.",
+      "**Acoustics:** loudness in decibels is $10\\log_{10}(I/I_0)$; every $+10$ dB is ten times the intensity.",
+      "**Geology:** the Richter scale is base-10, so a one-magnitude jump is a tenfold jump in amplitude.",
+      "**Finance/science:** taking a log finds the time for a compounding or decaying quantity to reach a target."
+    ]
+  },
+  "generators": ["log-eval-v1", "log-convert-v1", "log-property-v1", "log-solve-v1"],
+  "problems": [
+    {
+      "id": "algebra-2.logarithms.s01",
+      "concepts": ["log-definition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\log_2(8)$.",
+      "steps": [
+        { "instruction": "Ask: 2 to what power equals 8? Enter that exponent.", "answer": "3", "accept": [], "hint": "$2^3 = 8$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$\\log_2(8)$ asks '2 to what power is 8?' Since $2^3 = 8$, the value is 3."
+    },
+    {
+      "id": "algebra-2.logarithms.s02",
+      "concepts": ["log-definition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\log_{10}(1000)$.",
+      "steps": [
+        { "instruction": "Ask: 10 to what power equals 1000? Enter that exponent.", "answer": "3", "accept": [], "hint": "$10^3 = 1000$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$10^3 = 1000$, so $\\log_{10}(1000) = 3$."
+    },
+    {
+      "id": "algebra-2.logarithms.s03",
+      "concepts": ["log-definition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Rewrite $2^5 = 32$ in logarithmic form and read off the value of $\\log_2(32)$.",
+      "steps": [
+        { "instruction": "The form $b^x = y$ becomes $\\log_b(y) = x$. What is $\\log_2(32)$?", "answer": "5", "accept": [], "hint": "$2^5 = 32$, so the exponent is 5." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$2^5 = 32$ converts to $\\log_2(32) = 5$."
+    },
+    {
+      "id": "algebra-2.logarithms.s04",
+      "concepts": ["log-definition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\log_9(3)$. (Hint: think of 3 as a power of 9.)",
+      "steps": [
+        { "instruction": "Express 3 as $9$ raised to some power: $9^{?} = 3$. Enter that exponent as a fraction.", "answer": "1/2", "accept": ["0.5"], "hint": "$9^{1/2} = \\sqrt{9} = 3$." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "$\\sqrt{9} = 3$, so $9^{1/2} = 3$ and therefore $\\log_9(3) = \\tfrac{1}{2}$."
+    },
+    {
+      "id": "algebra-2.logarithms.s05",
+      "concepts": ["log-definition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\log_5\\left(\\dfrac{1}{25}\\right)$.",
+      "steps": [
+        { "instruction": "Write $\\dfrac{1}{25}$ as a power of 5: $5^{?} = \\dfrac{1}{25}$. Enter that exponent.", "answer": "-2", "accept": [], "hint": "$5^{-2} = \\dfrac{1}{5^2} = \\dfrac{1}{25}$." }
+      ],
+      "finalAnswer": { "value": "-2", "unit": "" },
+      "solutionNarrative": "$5^{-2} = \\tfrac{1}{25}$, so $\\log_5\\!\\left(\\tfrac{1}{25}\\right) = -2$."
+    },
+    {
+      "id": "algebra-2.logarithms.s06",
+      "concepts": ["log-properties"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the product rule to evaluate $\\log_2(8) + \\log_2(2)$.",
+      "steps": [
+        { "instruction": "Combine into a single log: $\\log_2(8) + \\log_2(2) = \\log_2(8 \\cdot 2) = \\log_2(16)$. Evaluate it.", "answer": "4", "accept": [], "hint": "$2^4 = 16$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "By the product rule the sum is $\\log_2(16)$, and $2^4 = 16$, so the value is 4."
+    },
+    {
+      "id": "algebra-2.logarithms.s07",
+      "concepts": ["log-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the quotient rule to evaluate $\\log_3(81) - \\log_3(3)$.",
+      "steps": [
+        { "instruction": "Combine into one log: $\\log_3(81) - \\log_3(3) = \\log_3\\left(\\dfrac{81}{3}\\right) = \\log_3(27)$. Evaluate it.", "answer": "3", "accept": [], "hint": "$3^3 = 27$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "The quotient rule gives $\\log_3(27)$, and $3^3 = 27$, so the value is 3."
+    },
+    {
+      "id": "algebra-2.logarithms.s08",
+      "concepts": ["log-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the power rule to evaluate $\\log_{10}(10^4)$.",
+      "steps": [
+        { "instruction": "The power rule gives $\\log_{10}(10^4) = 4 \\cdot \\log_{10}(10)$. Since $\\log_{10}(10) = 1$, what is the result?", "answer": "4", "accept": [], "hint": "$4 \\times 1 = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\log_{10}(10^4) = 4\\log_{10}(10) = 4 \\cdot 1 = 4$."
+    },
+    {
+      "id": "algebra-2.logarithms.s09",
+      "concepts": ["log-properties", "log-definition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\log_2(48) - \\log_2(3)$ using a log property.",
+      "steps": [
+        { "instruction": "Apply the quotient rule to write it as a single log. What single log $\\log_2(N)$ results?", "answer": "log_2(16)", "accept": [], "hint": "$\\dfrac{48}{3} = 16$." },
+        { "instruction": "Evaluate $\\log_2(16)$.", "answer": "4", "accept": [], "hint": "$2^4 = 16$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\log_2(48) - \\log_2(3) = \\log_2(48/3) = \\log_2(16) = 4$."
+    },
+    {
+      "id": "algebra-2.logarithms.s10",
+      "concepts": ["solve-with-logs"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve for $x$: $10^x = 1000$.",
+      "steps": [
+        { "instruction": "Rewrite in log form, $x = \\log_{10}(1000)$, and evaluate.", "answer": "3", "accept": ["x=3", "x = 3"], "hint": "10 to what power is 1000?" }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$10^x = 1000$ means $x = \\log_{10}(1000) = 3$."
+    },
+    {
+      "id": "algebra-2.logarithms.s11",
+      "concepts": ["solve-with-logs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve for $x$: $\\log_3(x) = 4$.",
+      "steps": [
+        { "instruction": "Rewrite in exponential form: $x = 3^4$. Compute it.", "answer": "81", "accept": ["x=81", "x = 81"], "hint": "$3^4 = 81$." }
+      ],
+      "finalAnswer": { "value": "81", "unit": "" },
+      "solutionNarrative": "$\\log_3(x) = 4$ rewrites as $x = 3^4 = 81$."
+    },
+    {
+      "id": "algebra-2.logarithms.s12",
+      "concepts": ["solve-with-logs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve for $x$: $2^{x+1} = 16$.",
+      "steps": [
+        { "instruction": "Write 16 as a power of 2, then match exponents: $2^{x+1} = 2^4$, so $x + 1 = ?$", "answer": "4", "accept": [], "hint": "$16 = 2^4$, so the exponents must be equal." },
+        { "instruction": "Solve $x + 1 = 4$ for $x$.", "answer": "3", "accept": ["x=3", "x = 3"], "hint": "Subtract 1 from both sides." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$16 = 2^4$, so $2^{x+1} = 2^4$ gives $x + 1 = 4$, hence $x = 3$."
+    },
+    {
+      "id": "algebra-2.logarithms.s13",
+      "concepts": ["log-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "The acidity of a solution is measured by $\\text{pH} = -\\log_{10}[\\text{H}^+]$, where $[\\text{H}^+]$ is the hydrogen-ion concentration. A solution has $[\\text{H}^+] = 10^{-4}$. What is its pH?",
+      "steps": [
+        { "instruction": "Compute $\\log_{10}(10^{-4})$.", "answer": "-4", "accept": [], "hint": "$\\log_{10}(10^{-4}) = -4$." },
+        { "instruction": "Apply the negative sign: pH $= -(-4)$. What is the pH?", "answer": "4", "accept": [], "hint": "Negate $-4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "pH" },
+      "solutionNarrative": "$\\log_{10}(10^{-4}) = -4$, so $\\text{pH} = -(-4) = 4$."
+    },
+    {
+      "id": "algebra-2.logarithms.s14",
+      "concepts": ["log-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "On the Richter scale, each whole magnitude is a tenfold increase in shaking amplitude. How many times stronger is a magnitude-7 earthquake than a magnitude-5 earthquake?",
+      "steps": [
+        { "instruction": "Find the difference in magnitude.", "answer": "2", "accept": [], "hint": "$7 - 5$." },
+        { "instruction": "Each step is a factor of 10, so the ratio is $10^2$. Compute it.", "answer": "100", "accept": [], "hint": "$10^2 = 100$." }
+      ],
+      "finalAnswer": { "value": "100", "unit": "times" },
+      "solutionNarrative": "The magnitudes differ by $7 - 5 = 2$, and each step multiplies amplitude by 10, so the ratio is $10^2 = 100$ times."
+    },
+    {
+      "id": "algebra-2.logarithms.s15",
+      "concepts": ["log-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Sound intensity level in decibels is $L = 10\\log_{10}(I/I_0)$, where $I_0$ is the reference intensity. A sound has intensity $I = 1000 \\, I_0$ (a thousand times the reference). What is its level in decibels?",
+      "steps": [
+        { "instruction": "Compute $\\log_{10}(1000)$.", "answer": "3", "accept": [], "hint": "$10^3 = 1000$." },
+        { "instruction": "Multiply by 10: $L = 10 \\times 3$. What is $L$?", "answer": "30", "accept": [], "hint": "$10 \\times 3 = 30$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "decibels" },
+      "solutionNarrative": "$\\log_{10}(1000) = 3$, so $L = 10 \\times 3 = 30$ decibels."
+    },
+    {
+      "id": "algebra-2.logarithms.s16",
+      "concepts": ["log-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two solutions differ by 3 units of pH. Since pH $= -\\log_{10}[\\text{H}^+]$, each whole pH step is a tenfold change in acidity. How many times more acidic is the solution with the lower pH?",
+      "steps": [
+        { "instruction": "Each pH unit is a factor of 10 in acidity. A difference of 3 units gives a ratio of $10^?$. Enter the exponent.", "answer": "3", "accept": [], "hint": "The exponent equals the pH difference." },
+        { "instruction": "Compute $10^3$.", "answer": "1000", "accept": [], "hint": "$10^3 = 1000$." }
+      ],
+      "finalAnswer": { "value": "1000", "unit": "times" },
+      "solutionNarrative": "A 3-unit pH drop means $10^3 = 1000$ times more acidic, because each pH unit is a tenfold change."
+    },
+    {
+      "id": "algebra-2.logarithms.s17",
+      "concepts": ["solve-with-logs", "log-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A colony of bacteria doubles every hour, so after $t$ hours it is $2^t$ times its starting size. After how many hours will it be 64 times its starting size?",
+      "steps": [
+        { "instruction": "Set up the equation $2^t = 64$ and write 64 as a power of 2. What power of 2 is 64?", "answer": "6", "accept": [], "hint": "$2^6 = 64$." },
+        { "instruction": "Since $2^t = 2^6$, what is $t$?", "answer": "6", "accept": ["t=6", "t = 6"], "hint": "Match the exponents." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "hours" },
+      "solutionNarrative": "$2^t = 64 = 2^6$, so $t = \\log_2(64) = 6$ hours."
+    }
+  ]
+}

@@ -1,0 +1,259 @@
+{
+  "id": "calculus-1.derivative-rates-of-change",
+  "subject": "calculus-1",
+  "title": "The Derivative: Rates of Change",
+  "prerequisites": ["calculus-1.limits-and-continuity"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "limit-definition",
+      "label": "The limit definition",
+      "microLesson": "The derivative is built from one limit: $f'(x) = \\lim_{h \\to 0} \\dfrac{f(x+h) - f(x)}{h}$. That fraction is the slope of a line through two nearby points; shrinking $h$ to zero slides the second point onto the first, so the slope becomes the *instantaneous* rate. For $f(x) = x^2$: $\\dfrac{(x+h)^2 - x^2}{h} = \\dfrac{2xh + h^2}{h} = 2x + h$, and letting $h \\to 0$ gives $f'(x) = 2x$."
+    },
+    {
+      "id": "slope-and-tangent",
+      "label": "Slope and the tangent line",
+      "microLesson": "The derivative *value* $f'(a)$ is the slope of the tangent line — the straight line that just grazes the curve at $x = a$. Once you have that slope $m = f'(a)$ and the point $(a, f(a))$, the tangent line is $y - f(a) = m(x - a)$. Example: for $f(x) = x^2$ at $x = 3$, $f'(3) = 6$ and $f(3) = 9$, so the tangent is $y = 6x - 9$."
+    },
+    {
+      "id": "average-vs-instantaneous",
+      "label": "Average vs. instantaneous rate",
+      "microLesson": "The **average rate** of $f$ over $[a, b]$ is $\\dfrac{f(b) - f(a)}{b - a}$ — total change divided by total time, like your average speed on a trip. The **instantaneous rate** is $f'(a)$ — the speedometer reading at one instant. For position $s(t)$, average rate is average velocity over an interval; the derivative $s'(t)$ is the velocity *right now*. They usually differ, and the derivative is the limit of the average as the interval shrinks."
+    },
+    {
+      "id": "interpret-derivative",
+      "label": "Interpreting the derivative",
+      "microLesson": "A derivative always answers *\"how fast is the output changing per one unit of input?\"* — and it carries **units**: output units divided by input units. If $C(x)$ is cost in dollars for $x$ items, $C'(x)$ is dollars per item (marginal cost). If $s(t)$ is feet at $t$ seconds, $s'(t)$ is feet per second. The sign matters too: positive means rising, negative means falling. Reading the number *and* its units is how a derivative becomes a real-world statement."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The question behind every rate\n\nDrive 120 miles in 2 hours and your *average* speed is 60 mph — but your speedometer almost never reads exactly 60. It dips in traffic and climbs on the open road. The number on the speedometer at a single instant is a different, sharper question than the trip average, and answering it is the whole point of the **derivative**.\n\nThe pattern shows up everywhere: cost rising per extra item produced, a tank filling per second, a population growing per year. In each case we want the rate of change *right now*, not averaged over a chunk. The derivative is the tool that delivers exactly that.\n\n## From average to instantaneous\n\nStart with the average rate of a function $f$ between two inputs $x$ and $x + h$:\n\n$$\\text{average rate} = \\frac{f(x+h) - f(x)}{h}.$$\n\nGeometrically this is the slope of the straight line through the two points $(x, f(x))$ and $(x+h, f(x+h))$ — a **secant** line. Now shrink the gap $h$ toward zero. The second point slides toward the first, and the secant pivots until it just grazes the curve: it becomes the **tangent** line. Its slope is the instantaneous rate.\n\n## The limit definition\n\nThat limiting process is the definition of the **derivative**:\n\n$$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}.$$\n\nThe machinery is always the same three moves: form the difference quotient, simplify it algebraically until the $h$ in the denominator cancels, then let $h \\to 0$.\n\n### Worked example\n\nLet $f(x) = x^2$. Then\n\n$$\\frac{(x+h)^2 - x^2}{h} = \\frac{x^2 + 2xh + h^2 - x^2}{h} = \\frac{2xh + h^2}{h} = 2x + h.$$\n\nNow let $h \\to 0$: the leftover $h$ vanishes and $f'(x) = 2x$. So the slope of $y = x^2$ at any point is $2x$ — at $x = 3$ the curve climbs with slope $6$.\n\n## The tangent line\n\nThe derivative *value* $f'(a)$ is a slope, so it builds a line. With the point $(a, f(a))$ on the curve and slope $m = f'(a)$, point-slope form gives the **tangent line**:\n\n$$y - f(a) = f'(a)\\,(x - a).$$\n\nFor $f(x) = x^2$ at $x = 3$: $f(3) = 9$ and $f'(3) = 6$, so $y - 9 = 6(x - 3)$, i.e. $y = 6x - 9$. Near $x = 3$ this line is a near-perfect stand-in for the curve.\n\nThe picture below tells the whole limiting story at once: a dashed secant through $(3, 9)$ and $(4, 16)$, and the tangent it pivots into as the second point slides in.\n\n```plot\n{ \"xRange\": [0, 5], \"yRange\": [-2, 25], \"curves\": [ { \"fn\": \"x^2\", \"label\": \"y = x²\", \"labelAt\": 1.2, \"color\": \"accent\" } ], \"segments\": [ { \"from\": [2.2, 3.4], \"to\": [4.5, 19.5], \"dashed\": true, \"label\": \"secant, slope 7\", \"color\": \"dim\" }, { \"from\": [1.5, 0], \"to\": [4.5, 18], \"label\": \"tangent, slope 6\", \"color\": \"warn\" } ], \"points\": [ { \"x\": 3, \"y\": 9, \"label\": \"(3, 9)\", \"color\": \"warn\" }, { \"x\": 4, \"y\": 16, \"label\": \"(4, 16)\", \"color\": \"dim\" } ], \"caption\": \"The secant through (3, 9) and (4, 16) has slope 7; as the second point slides toward x = 3, the secant pivots into the tangent y = 6x - 9 with slope f′(3) = 6.\" }\n```\n\n## Reading the number: units and sign\n\nA derivative is never just a number — it carries **units of output per unit of input**, and that's what turns it into a sentence about the world:\n\n- If $s(t)$ is position in feet and $t$ is seconds, then $s'(t)$ is **feet per second** — a velocity.\n- If $C(x)$ is cost in dollars to make $x$ items, then $C'(x)$ is **dollars per item** — the *marginal cost*, roughly the cost of one more.\n- If $V(t)$ is volume in liters and $t$ is seconds, then $V'(t)$ is **liters per second** — a flow rate.\n\nThe **sign** matters too: a positive derivative means the quantity is rising at that instant; negative means it's falling; zero means it's momentarily level (a peak, a valley, or a pause). Read the value, attach the units, check the sign — that's how a derivative becomes a real decision."
+  },
+  "application": {
+    "summary": "The derivative answers 'how fast is this changing right now?' — the question behind velocity from a position record, marginal cost from a cost curve, flow rate from a filling tank, and the steepness of any distance-time graph. It converts a formula for a quantity into a formula for that quantity's instantaneous rate.",
+    "domains": ["physics", "business", "engineering", "everyday life"],
+    "workedExample": "**From position to velocity.**\n\nA drone rises so that its height after $t$ seconds is $s(t) = t^2 + 4t$ feet. How fast is it climbing at exactly $t = 3$ seconds?\n\nThe *average* speed over the first 3 seconds is $\\dfrac{s(3) - s(0)}{3 - 0} = \\dfrac{21 - 0}{3} = 7$ ft/s — but that blends the slow start with the faster finish. For the speed at the instant $t = 3$, we need the derivative.\n\nUsing the limit definition on $s(t) = t^2 + 4t$ gives $s'(t) = 2t + 4$. At $t = 3$: $s'(3) = 2(3) + 4 = 10$ ft/s. So the drone is climbing at **10 feet per second** right at that moment — faster than its 7 ft/s average, because it's still speeding up. The same move turns a cost formula into marginal cost (dollars per item) or a volume formula into flow rate (liters per second).",
+    "domainNotes": [
+      "**Physics:** position $\\to$ velocity $\\to$ acceleration; each derivative gives the instantaneous rate of the one before it.",
+      "**Business:** marginal cost, marginal revenue, and marginal profit are derivatives — the approximate effect of making or selling one more unit.",
+      "**Engineering:** flow rate from accumulated volume, current from accumulated charge, any 'per second' quantity from its running total.",
+      "**Everyday life:** the slope of a distance-time graph is speed; a steeper graph means you're moving faster at that instant."
+    ]
+  },
+  "generators": ["deriv-from-def-v1", "slope-at-point-v1", "avg-velocity-v1", "marginal-cost-v1"],
+  "problems": [
+    {
+      "id": "calculus-1.derivative-rates-of-change.s01",
+      "concepts": ["limit-definition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the limit definition to find $f'(x)$ for $f(x) = x^2$.",
+      "steps": [
+        { "instruction": "Form the difference quotient $\\dfrac{f(x+h) - f(x)}{h}$ and simplify it (cancel the $h$). What expression remains?", "answer": "2x + h", "accept": [], "hint": "$(x+h)^2 - x^2 = 2xh + h^2$; divide by $h$." },
+        { "instruction": "Let $h \\to 0$. Write $f'(x)$.", "answer": "2x", "accept": [], "hint": "Drop the term that goes to 0." }
+      ],
+      "finalAnswer": { "value": "2x", "unit": "" },
+      "solutionNarrative": "The difference quotient simplifies to $2x + h$; letting $h \\to 0$ gives $f'(x) = 2x$."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s02",
+      "concepts": ["limit-definition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the limit definition to find $f'(x)$ for $f(x) = x^2 - 4x$.",
+      "steps": [
+        { "instruction": "Simplify the difference quotient $\\dfrac{f(x+h) - f(x)}{h}$ until the $h$ cancels. What expression remains?", "answer": "2x - 4 + h", "accept": ["2x + h - 4"], "hint": "$f(x+h) = (x+h)^2 - 4(x+h)$; subtract $f(x)$, expand, divide by $h$." },
+        { "instruction": "Let $h \\to 0$. Write $f'(x)$.", "answer": "2x - 4", "accept": [], "hint": "The lone $h$ term vanishes." }
+      ],
+      "finalAnswer": { "value": "2x - 4", "unit": "" },
+      "solutionNarrative": "The quotient simplifies to $2x - 4 + h$; as $h \\to 0$, $f'(x) = 2x - 4$."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s03",
+      "concepts": ["limit-definition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use the limit definition to find $f'(x)$ for $f(x) = x^3$, then evaluate the slope at $x = 2$.",
+      "steps": [
+        { "instruction": "Expand $(x+h)^3 - x^3$ and divide by $h$. What expression remains before taking the limit?", "answer": "3x^2 + 3xh + h^2", "accept": [], "hint": "$(x+h)^3 = x^3 + 3x^2 h + 3x h^2 + h^3$." },
+        { "instruction": "Let $h \\to 0$. Write $f'(x)$.", "answer": "3x^2", "accept": [], "hint": "Every term with an $h$ goes to 0." },
+        { "instruction": "Evaluate $f'(2)$ (a number).", "answer": "12", "accept": [], "hint": "Substitute $x = 2$ into $3x^2$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "The quotient is $3x^2 + 3xh + h^2$; as $h \\to 0$, $f'(x) = 3x^2$, and $f'(2) = 3(4) = 12$."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s04",
+      "concepts": ["limit-definition", "interpret-derivative"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A ball rolls so its distance is $s(t) = t^2 + 3t$ feet after $t$ seconds. Use the limit definition to find the velocity function $s'(t)$ (in feet per second).",
+      "steps": [
+        { "instruction": "Simplify the difference quotient for $s(t) = t^2 + 3t$ until $h$ cancels. What expression remains?", "answer": "2t + 3 + h", "accept": ["2t + h + 3"], "hint": "$s(t+h) = (t+h)^2 + 3(t+h)$." },
+        { "instruction": "Let $h \\to 0$ to get the velocity function $s'(t)$.", "answer": "2t + 3", "accept": [], "hint": "The $h$ term vanishes." }
+      ],
+      "finalAnswer": { "value": "2t + 3", "unit": "feet per second" },
+      "solutionNarrative": "The quotient simplifies to $2t + 3 + h$; as $h \\to 0$ the velocity is $s'(t) = 2t + 3$ ft/s."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s05",
+      "concepts": ["slope-and-tangent"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2$ with derivative $f'(x) = 2x$, find the slope of the tangent line at $x = 4$.",
+      "steps": [
+        { "instruction": "Evaluate $f'(4)$ (a number).", "answer": "8", "accept": [], "hint": "Substitute $x = 4$ into $2x$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$f'(x) = 2x$, so the tangent slope at $x = 4$ is $f'(4) = 8$."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s06",
+      "concepts": ["slope-and-tangent"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2$ (so $f'(x) = 2x$), find the equation of the tangent line at $x = 3$ (shown in the figure).",
+      "plot": { "xRange": [0, 5], "yRange": [-2, 25], "curves": [ { "fn": "x^2", "label": "y = x²", "labelAt": 1.2, "color": "accent" } ], "segments": [ { "from": [1.5, 0], "to": [4.5, 18], "label": "tangent", "color": "warn" } ], "points": [ { "x": 3, "y": 9, "color": "warn" } ], "caption": "The tangent line grazing y = x² at x = 3." },
+      "steps": [
+        { "instruction": "Find the slope $f'(3)$ (a number).", "answer": "6", "accept": [], "hint": "Substitute into $2x$." },
+        { "instruction": "Find the point's $y$-value, $f(3)$ (a number).", "answer": "9", "accept": [], "hint": "$f(3) = 3^2$." },
+        { "instruction": "Write the tangent line in the form $y = mx + b$.", "answer": "y = 6x - 9", "accept": [], "hint": "Use $y - 9 = 6(x - 3)$ and simplify." }
+      ],
+      "finalAnswer": { "value": "y = 6x - 9", "unit": "" },
+      "solutionNarrative": "Slope $f'(3) = 6$ and point $(3, 9)$ give $y - 9 = 6(x - 3)$, i.e. $y = 6x - 9$."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s07",
+      "concepts": ["slope-and-tangent"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2 - 2x$ (so $f'(x) = 2x - 2$), find the tangent line at $x = 4$.",
+      "steps": [
+        { "instruction": "Find the slope $f'(4)$ (a number).", "answer": "6", "accept": [], "hint": "Substitute into $2x - 2$." },
+        { "instruction": "Find $f(4)$ (a number).", "answer": "8", "accept": [], "hint": "$f(4) = 4^2 - 2(4)$." },
+        { "instruction": "Write the tangent line in the form $y = mx + b$.", "answer": "y = 6x - 16", "accept": [], "hint": "Use $y - 8 = 6(x - 4)$ and simplify." }
+      ],
+      "finalAnswer": { "value": "y = 6x - 16", "unit": "" },
+      "solutionNarrative": "Slope $f'(4) = 6$ and point $(4, 8)$ give $y - 8 = 6(x - 4)$, i.e. $y = 6x - 16$."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s08",
+      "concepts": ["slope-and-tangent", "interpret-derivative"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A drone's height is $s(t) = t^2 + 4t$ feet, with velocity $s'(t) = 2t + 4$ ft/s. Find the equation of the tangent line to the height graph at $t = 2$ (write it as $y = mt + b$).",
+      "steps": [
+        { "instruction": "Find the slope $s'(2)$ — the velocity at $t = 2$ (a number).", "answer": "8", "accept": [], "hint": "Substitute into $2t + 4$." },
+        { "instruction": "Find the height $s(2)$ (a number).", "answer": "12", "accept": [], "hint": "$s(2) = 2^2 + 4(2)$." },
+        { "instruction": "Write the tangent line $y = mt + b$.", "answer": "y = 8t - 4", "accept": [], "hint": "Use $y - 12 = 8(t - 2)$ and simplify." }
+      ],
+      "finalAnswer": { "value": "y = 8t - 4", "unit": "" },
+      "solutionNarrative": "At $t = 2$ the slope is $s'(2) = 8$ and the point is $(2, 12)$, giving $y - 12 = 8(t - 2)$, i.e. $y = 8t - 4$."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s09",
+      "concepts": ["average-vs-instantaneous"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A car's position is $s(t) = t^2$ miles after $t$ hours. Find its average velocity over the interval from $t = 1$ to $t = 3$ hours.",
+      "steps": [
+        { "instruction": "Compute the average rate $\\dfrac{s(3) - s(1)}{3 - 1}$ (a number, in mph).", "answer": "4", "accept": [], "hint": "$s(3) = 9$, $s(1) = 1$; divide the change by 2." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "miles per hour" },
+      "solutionNarrative": "Average velocity $= \\dfrac{9 - 1}{3 - 1} = \\dfrac{8}{2} = 4$ mph."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s10",
+      "concepts": ["average-vs-instantaneous"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A ball's position is $s(t) = t^2 + 3t$ feet after $t$ seconds, with velocity $s'(t) = 2t + 3$ ft/s. Compare the average velocity over $[0, 4]$ with the instantaneous velocity at $t = 4$.",
+      "steps": [
+        { "instruction": "Compute the average velocity $\\dfrac{s(4) - s(0)}{4 - 0}$ (a number, ft/s).", "answer": "7", "accept": [], "hint": "$s(4) = 28$, $s(0) = 0$; divide by 4." },
+        { "instruction": "Compute the instantaneous velocity $s'(4)$ (a number, ft/s).", "answer": "11", "accept": [], "hint": "Substitute into $2t + 3$." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "feet per second" },
+      "solutionNarrative": "Average velocity $= \\dfrac{28 - 0}{4} = 7$ ft/s; instantaneous velocity $s'(4) = 2(4) + 3 = 11$ ft/s — faster, since the ball is speeding up."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s11",
+      "concepts": ["average-vs-instantaneous"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rocket's height is $s(t) = t^3$ meters after $t$ seconds, with velocity $s'(t) = 3t^2$ m/s. Find the average velocity over $[1, 3]$ and the instantaneous velocity at $t = 2$, then state which is larger.",
+      "steps": [
+        { "instruction": "Compute the average velocity $\\dfrac{s(3) - s(1)}{3 - 1}$ (a number, m/s).", "answer": "13", "accept": [], "hint": "$s(3) = 27$, $s(1) = 1$; divide the change by 2." },
+        { "instruction": "Compute the instantaneous velocity $s'(2)$ (a number, m/s).", "answer": "12", "accept": [], "hint": "Substitute into $3t^2$." },
+        { "instruction": "Which is larger — the average over $[1,3]$ or the instant at $t=2$? Type 'average' or 'instantaneous'.", "answer": "average", "accept": [], "hint": "Compare 13 and 12." }
+      ],
+      "finalAnswer": { "value": "average", "unit": "" },
+      "solutionNarrative": "Average velocity $= \\dfrac{27 - 1}{2} = 13$ m/s; instantaneous $s'(2) = 3(4) = 12$ m/s. The average (13) is larger than the instant at $t = 2$ (12)."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s12",
+      "concepts": ["interpret-derivative"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "The cost to produce $x$ items is $C(x) = x^2 + 10x$ dollars, with marginal cost $C'(x) = 2x + 10$ (dollars per item). What is the marginal cost at $x = 5$ items?",
+      "steps": [
+        { "instruction": "Evaluate $C'(5)$ (a number, in dollars per item).", "answer": "20", "accept": [], "hint": "Substitute into $2x + 10$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "dollars per item" },
+      "solutionNarrative": "$C'(5) = 2(5) + 10 = 20$, so the 6th item costs about \\$20 to make."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s13",
+      "concepts": ["interpret-derivative"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A tank's volume is $V(t) = t^2 + 2t$ liters after $t$ seconds, so the flow rate is $V'(t) = 2t + 2$. Give the units of $V'(t)$, then find the flow rate at $t = 6$ seconds.",
+      "steps": [
+        { "instruction": "What are the units of $V'(t)$? Type your answer (e.g. 'liters per second').", "answer": "liters per second", "accept": ["liters/second", "liters/sec", "L/s"], "hint": "Output units (liters) divided by input units (seconds)." },
+        { "instruction": "Find the flow rate $V'(6)$ (a number).", "answer": "14", "accept": [], "hint": "Substitute into $2t + 2$." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "liters per second" },
+      "solutionNarrative": "$V'(t)$ has units of liters per second; $V'(6) = 2(6) + 2 = 14$ L/s."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s14",
+      "concepts": ["interpret-derivative"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A company's profit on $x$ units is $P(x) = -x^2 + 40x$ dollars, with marginal profit $P'(x) = -2x + 40$ (dollars per unit). Find the marginal profit at $x = 25$, then state whether profit is rising or falling there.",
+      "steps": [
+        { "instruction": "Evaluate $P'(25)$ (a number, dollars per unit).", "answer": "-10", "accept": [], "hint": "Substitute into $-2x + 40$." },
+        { "instruction": "Is profit rising or falling at $x = 25$? Type 'rising' or 'falling'.", "answer": "falling", "accept": [], "hint": "A negative derivative means the quantity is decreasing." }
+      ],
+      "finalAnswer": { "value": "-10", "unit": "dollars per unit" },
+      "solutionNarrative": "$P'(25) = -2(25) + 40 = -10$ dollars per unit; the negative sign means each additional unit now *reduces* profit, so profit is falling."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s15",
+      "concepts": ["limit-definition", "slope-and-tangent"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $f(x) = 2x^2 - 3x$. Use the limit definition to find $f'(x)$, then find the slope of the tangent at $x = 1$.",
+      "steps": [
+        { "instruction": "Simplify the difference quotient until $h$ cancels. What expression remains before the limit?", "answer": "4x - 3 + 2h", "accept": ["4x + 2h - 3"], "hint": "$f(x+h) = 2(x+h)^2 - 3(x+h)$; subtract $f(x)$ and divide by $h$." },
+        { "instruction": "Let $h \\to 0$. Write $f'(x)$.", "answer": "4x - 3", "accept": [], "hint": "The $2h$ term vanishes." },
+        { "instruction": "Find the tangent slope $f'(1)$ (a number).", "answer": "1", "accept": [], "hint": "Substitute $x = 1$ into $4x - 3$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "The quotient simplifies to $4x - 3 + 2h$; as $h \\to 0$, $f'(x) = 4x - 3$, and $f'(1) = 4 - 3 = 1$."
+    },
+    {
+      "id": "calculus-1.derivative-rates-of-change.s16",
+      "concepts": ["average-vs-instantaneous", "interpret-derivative"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A hiker's distance from the trailhead is $d(t) = t^2 + t$ kilometers after $t$ hours, with speed $d'(t) = 2t + 1$ km/h. Find the average speed over $[0, 2]$ and the instantaneous speed at $t = 2$.",
+      "steps": [
+        { "instruction": "Compute the average speed $\\dfrac{d(2) - d(0)}{2 - 0}$ (a number, km/h).", "answer": "3", "accept": [], "hint": "$d(2) = 6$, $d(0) = 0$; divide by 2." },
+        { "instruction": "Compute the instantaneous speed $d'(2)$ (a number, km/h).", "answer": "5", "accept": [], "hint": "Substitute into $2t + 1$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "kilometers per hour" },
+      "solutionNarrative": "Average speed $= \\dfrac{6 - 0}{2} = 3$ km/h; instantaneous speed $d'(2) = 2(2) + 1 = 5$ km/h, faster because the hiker is accelerating."
+    }
+  ]
+}

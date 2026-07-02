@@ -1,0 +1,259 @@
+{
+  "id": "calculus-1.differentiation-rules",
+  "subject": "calculus-1",
+  "title": "Differentiation Rules",
+  "prerequisites": ["calculus-1.derivative-rates-of-change"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "power-rule",
+      "label": "The power rule (and sums)",
+      "microLesson": "To differentiate a power, multiply by the exponent and drop the exponent by one: $\\frac{d}{dx}x^n = n x^{n-1}$. A constant multiplier rides along ($\\frac{d}{dx}(5x^3) = 15x^2$), the derivative of a constant is $0$, and you differentiate a sum term by term. So $\\frac{d}{dx}(x^4 - 3x^2 + 5) = 4x^3 - 6x$. This single rule handles every polynomial."
+    },
+    {
+      "id": "product-rule",
+      "label": "The product rule",
+      "microLesson": "The derivative of a product is **not** the product of the derivatives. Instead, $\\frac{d}{dx}[f g] = f' g + f g'$ — derivative of the first times the second, plus the first times the derivative of the second. For $(x^2)(x+3)$: $f'=2x$, $g'=1$, so the derivative is $2x(x+3) + x^2(1) = 3x^2 + 6x$. Differentiate each piece, keep the other intact, add."
+    },
+    {
+      "id": "quotient-rule",
+      "label": "The quotient rule",
+      "microLesson": "For a fraction $\\frac{f}{g}$, the derivative is $\\frac{f' g - f g'}{g^2}$ — 'low d-high minus high d-low, over low squared.' Order matters: the numerator's derivative comes first. For $\\frac{x}{x+1}$: $f'=1$, $g'=1$, giving $\\frac{(1)(x+1) - x(1)}{(x+1)^2} = \\frac{1}{(x+1)^2}$. Because the result is a fraction in $x$, we usually evaluate it at a specific point to get a number."
+    },
+    {
+      "id": "chain-rule",
+      "label": "The chain rule",
+      "microLesson": "To differentiate a composition like $(\\text{inside})^n$, differentiate the outside, then multiply by the derivative of the inside: $\\frac{d}{dx}[u^n] = n\\, u^{n-1} \\cdot u'$. For $(x^2+1)^3$ the derivative is $3(x^2+1)^2 \\cdot 2x = 6x(x^2+1)^2$. Small powers can be expanded into a polynomial; otherwise evaluate at a point to get a clean number."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Derivatives without the limit grind\n\nYou already know a derivative measures an instantaneous rate of change — how fast cost rises per extra unit, how fast a rocket's height changes per second. Computing one from the limit definition every time is brutal. **Differentiation rules** turn that limit into bookkeeping: a handful of patterns that let you write down the derivative of almost any business or physics formula on sight.\n\nThis is where calculus becomes practical. An economist's cost curve, an engineer's position equation, a revenue model — all of them are built from powers, products, quotients, and compositions, and there is exactly one rule for each.\n\n## The power rule: the workhorse\n\nFor any power of $x$,\n\n$$\\frac{d}{dx} x^n = n\\, x^{n-1}.$$\n\nMultiply by the exponent, then knock the exponent down by one. Two helpers come for free:\n\n- A **constant multiplier** stays put: $\\frac{d}{dx}(7x^3) = 21x^2$.\n- The derivative of a **constant** is $0$ (a flat line has no slope).\n- Sums differentiate **term by term**.\n\nSo a whole polynomial falls in one pass:\n\n$$\\frac{d}{dx}\\left(x^4 - 3x^2 + 5\\right) = 4x^3 - 6x.$$\n\nIf an object's position is $s(t) = t^3 - 6t^2 + 9t$, its **velocity** is $s'(t) = 3t^2 - 12t + 9$ and its **acceleration** is $s''(t) = 6t - 12$ — successive derivatives, each one power rule away.\n\n## The product rule: when two things multiply\n\nIt is tempting to guess that $\\frac{d}{dx}[fg] = f'g'$. **That is wrong.** The correct rule is\n\n$$\\frac{d}{dx}[f\\,g] = f'\\,g + f\\,g'.$$\n\nDifferentiate the first factor (leaving the second alone), then add the first factor times the derivative of the second. For revenue $R = (\\text{price})(\\text{quantity})$ where both depend on a variable, this is the rule that gives **marginal revenue**.\n\nExample: $\\frac{d}{dx}\\left[x^2(x+3)\\right] = 2x(x+3) + x^2(1) = 3x^2 + 6x.$\n\n## The quotient rule: when one thing divides another\n\nFor a ratio,\n\n$$\\frac{d}{dx}\\!\\left[\\frac{f}{g}\\right] = \\frac{f'\\,g - f\\,g'}{g^2}.$$\n\nThe order in the numerator matters — derivative of the **top** comes first, then minus top times derivative of the bottom, all over the bottom **squared**. Average-cost-per-unit, concentration, and efficiency are all quotients, so this is the rule for their rates. Because the answer is itself a fraction in $x$, in practice we **plug in a specific value** to read off a concrete rate.\n\n## The chain rule: a function inside a function\n\nWhen something is raised to a power — $(x^2+1)^3$, $(3t+5)^4$ — you have a **composition**, and you peel it like an onion:\n\n$$\\frac{d}{dx}\\big[u^n\\big] = n\\, u^{\\,n-1}\\cdot u'.$$\n\nDifferentiate the outer power, **then multiply by the derivative of the inside**. Forgetting that last factor $u'$ is the single most common calculus mistake.\n\n$$\\frac{d}{dx}\\big[(x^2+1)^3\\big] = 3(x^2+1)^2 \\cdot 2x = 6x\\,(x^2+1)^2.$$\n\nThe chain rule is what lets you connect rates that pass through an intermediate quantity — how fast cost changes with time when cost depends on output and output depends on time.\n\n## The strategy\n\nLook at the structure first. **Sum?** Differentiate term by term. **Product?** Product rule. **Quotient?** Quotient rule. **Something inside a power?** Chain rule. Most real formulas combine these, so you apply them in layers — but every layer is one of these four moves."
+  },
+  "application": {
+    "summary": "Differentiation rules turn any polynomial, product, quotient, or composite model into its rate of change instantly. That powers marginal cost and marginal revenue in business, velocity and acceleration in physics, and chained rates where one quantity drives another through an intermediate variable.",
+    "domains": ["business", "physics", "engineering", "economics"],
+    "workedExample": "**Marginal cost from a product model**\n\nA factory's total cost (in dollars) for producing $x$ batches is modeled as $C(x) = x^2(x + 4)$ — a per-batch term that interacts with a scaling factor. **Marginal cost** is the derivative $C'(x)$: the extra cost of one more batch.\n\nThis is a product, so use the product rule with $f = x^2$ ($f' = 2x$) and $g = x + 4$ ($g' = 1$):\n\n$$C'(x) = 2x(x+4) + x^2(1) = 2x^2 + 8x + x^2 = 3x^2 + 8x.$$\n\nAt the current output of $x = 5$ batches, marginal cost is $C'(5) = 3(25) + 8(5) = 75 + 40 = \\$115$ per additional batch. That single number tells the manager whether the next batch is worth making — if it sells for more than \\$115, produce it; if less, stop. The same derivative, read at different $x$, traces how that decision shifts as the plant scales.",
+    "domainNotes": [
+      "**Business:** marginal cost and marginal revenue are just derivatives of cost and revenue models; the product rule handles revenue = price × quantity.",
+      "**Physics:** velocity is the derivative of a position polynomial, acceleration the derivative of velocity — two power-rule passes.",
+      "**Economics:** average cost per unit is a quotient, so its rate of change uses the quotient rule (evaluated at a production level).",
+      "**Engineering:** composite relationships (a stress raised to a power, a flow through nested dependencies) call for the chain rule to connect rates."
+    ]
+  },
+  "generators": ["power-rule-v1", "product-eval-v1", "quotient-eval-v1", "chain-eval-v1"],
+  "problems": [
+    {
+      "id": "calculus-1.differentiation-rules.s01",
+      "concepts": ["power-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Differentiate: $f(x) = x^5$.",
+      "steps": [
+        { "instruction": "Apply the power rule: multiply by the exponent and lower it by one.", "answer": "5x^4", "accept": [], "hint": "$\\frac{d}{dx}x^n = n x^{n-1}$, so bring down the 5 and reduce the exponent to 4." }
+      ],
+      "finalAnswer": { "value": "5x^4", "unit": "" },
+      "solutionNarrative": "By the power rule, $\\frac{d}{dx}x^5 = 5x^4$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s02",
+      "concepts": ["power-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Differentiate: $f(x) = 3x^2 + 7x - 4$.",
+      "steps": [
+        { "instruction": "Differentiate each term using the power rule (the constant differentiates to 0).", "answer": "6x + 7", "accept": [], "hint": "$\\frac{d}{dx}(3x^2)=6x$, $\\frac{d}{dx}(7x)=7$, $\\frac{d}{dx}(-4)=0$." }
+      ],
+      "finalAnswer": { "value": "6x + 7", "unit": "" },
+      "solutionNarrative": "Term by term: $6x + 7 + 0 = 6x + 7$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s03",
+      "concepts": ["power-rule"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An object moves so its position (in meters) after $t$ seconds is $s(t) = t^3 - 6t^2 + 9t$. Find its velocity function $s'(t)$, then its velocity at $t = 4$ s.",
+      "steps": [
+        { "instruction": "Differentiate the position to get the velocity function.", "answer": "3t^2 - 12t + 9", "accept": [], "hint": "Power rule on each term: $3t^2$, $-12t$, $+9$." },
+        { "instruction": "Evaluate the velocity at $t = 4$. Give a number (m/s).", "answer": "9", "accept": [], "hint": "$3(16) - 12(4) + 9 = 48 - 48 + 9$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "m/s" },
+      "solutionNarrative": "Velocity is $s'(t) = 3t^2 - 12t + 9$. At $t=4$: $48 - 48 + 9 = 9$ m/s."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s04",
+      "concepts": ["power-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ball's height (in feet) after $t$ seconds is $h(t) = -16t^2 + 48t + 5$. Acceleration is the second derivative $h''(t)$. Find the velocity function $h'(t)$ and the acceleration.",
+      "steps": [
+        { "instruction": "Differentiate the height to get velocity $h'(t)$.", "answer": "-32t + 48", "accept": [], "hint": "Power rule: $\\frac{d}{dt}(-16t^2) = -32t$, $\\frac{d}{dt}(48t)=48$, constant goes to 0." },
+        { "instruction": "Differentiate again to get the acceleration $h''(t)$. Give a number (ft/s²).", "answer": "-32", "accept": [], "hint": "The derivative of $-32t + 48$ is the constant $-32$." }
+      ],
+      "finalAnswer": { "value": "-32", "unit": "ft/s^2" },
+      "solutionNarrative": "Velocity $h'(t) = -32t + 48$; differentiating again gives the constant acceleration $h''(t) = -32$ ft/s² (gravity)."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s05",
+      "concepts": ["product-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the product rule to differentiate $f(x) = x(x + 5)$. Give the simplified polynomial.",
+      "steps": [
+        { "instruction": "Apply $f'g + fg'$ with $f=x$, $g=x+5$, then simplify.", "answer": "2x + 5", "accept": [], "hint": "$(1)(x+5) + x(1) = x + 5 + x = 2x + 5$." }
+      ],
+      "finalAnswer": { "value": "2x + 5", "unit": "" },
+      "solutionNarrative": "Product rule: $(1)(x+5) + x(1) = 2x + 5$. (Check: expanding first gives $x^2 + 5x$, derivative $2x + 5$.)"
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s06",
+      "concepts": ["product-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the product rule to differentiate $f(x) = (x^2)(x + 3)$. Give the simplified polynomial.",
+      "steps": [
+        { "instruction": "Set $f = x^2$, $g = x+3$. Apply $f'g + fg'$ and simplify.", "answer": "3x^2 + 6x", "accept": [], "hint": "$2x(x+3) + x^2(1) = 2x^2 + 6x + x^2$." }
+      ],
+      "finalAnswer": { "value": "3x^2 + 6x", "unit": "" },
+      "solutionNarrative": "$2x(x+3) + x^2(1) = 2x^2 + 6x + x^2 = 3x^2 + 6x$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s07",
+      "concepts": ["product-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A firm's total cost (dollars) to make $x$ units is $C(x) = x^2(x + 4)$. Marginal cost is $C'(x)$. Find $C'(x)$, then the marginal cost at $x = 5$ units.",
+      "steps": [
+        { "instruction": "With $f = x^2$ and $g = x+4$, apply the product rule and simplify to a polynomial.", "answer": "3x^2 + 8x", "accept": [], "hint": "$2x(x+4) + x^2(1) = 2x^2 + 8x + x^2$." },
+        { "instruction": "Evaluate $C'(5)$. Give a number (dollars per unit).", "answer": "115", "accept": [], "hint": "$3(25) + 8(5) = 75 + 40$." }
+      ],
+      "finalAnswer": { "value": "115", "unit": "dollars per unit" },
+      "solutionNarrative": "$C'(x) = 2x(x+4) + x^2 = 3x^2 + 8x$. At $x=5$: $75 + 40 = \\$115$ per additional unit."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s08",
+      "concepts": ["quotient-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $f(x) = \\dfrac{x}{x + 1}$. Its derivative is $\\dfrac{1}{(x+1)^2}$. Evaluate the derivative at $x = 1$.",
+      "steps": [
+        { "instruction": "Substitute $x = 1$ into $\\frac{1}{(x+1)^2}$. Give a number (a decimal is fine).", "answer": "0.25", "accept": ["1/4"], "hint": "$(1+1)^2 = 4$, so the value is $1/4$." }
+      ],
+      "finalAnswer": { "value": "0.25", "unit": "" },
+      "solutionNarrative": "Quotient rule gives $f'(x) = \\frac{(1)(x+1) - x(1)}{(x+1)^2} = \\frac{1}{(x+1)^2}$. At $x=1$: $\\frac{1}{4} = 0.25$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s09",
+      "concepts": ["quotient-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $f(x) = \\dfrac{x + 2}{x - 1}$. Use the quotient rule to find $f'(x)$, then evaluate it at $x = 3$.",
+      "steps": [
+        { "instruction": "Compute the numerator $f'g - fg'$ with $f = x+2$, $g = x-1$. Simplify it to a constant.", "answer": "-3", "accept": [], "hint": "$(1)(x-1) - (x+2)(1) = x - 1 - x - 2 = -3$." },
+        { "instruction": "So $f'(x) = \\frac{-3}{(x-1)^2}$. Evaluate at $x = 3$. Give a number (a decimal is fine).", "answer": "-0.75", "accept": ["-3/4"], "hint": "$(3-1)^2 = 4$, so $\\frac{-3}{4} = -0.75$." }
+      ],
+      "finalAnswer": { "value": "-0.75", "unit": "" },
+      "solutionNarrative": "$f'(x) = \\frac{(x-1) - (x+2)}{(x-1)^2} = \\frac{-3}{(x-1)^2}$. At $x=3$: $\\frac{-3}{4} = -0.75$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s10",
+      "concepts": ["quotient-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A company's average cost per unit is $A(x) = \\dfrac{x^2 + 100}{x}$ dollars when making $x$ units. The rate of change of average cost is $A'(x)$. The quotient rule gives $A'(x) = \\dfrac{x^2 - 100}{x^2}$. Find the rate of change of average cost at $x = 20$ units.",
+      "steps": [
+        { "instruction": "Confirm the numerator: with $f = x^2 + 100$, $g = x$, compute $f'g - fg'$ and simplify.", "answer": "x^2 - 100", "accept": [], "hint": "$(2x)(x) - (x^2 + 100)(1) = 2x^2 - x^2 - 100$." },
+        { "instruction": "Evaluate $A'(20) = \\frac{x^2 - 100}{x^2}$ at $x = 20$. Give a number (a decimal is fine).", "answer": "0.75", "accept": ["3/4"], "hint": "$\\frac{400 - 100}{400} = \\frac{300}{400}$." }
+      ],
+      "finalAnswer": { "value": "0.75", "unit": "dollars per unit" },
+      "solutionNarrative": "$A'(x) = \\frac{(2x)(x) - (x^2+100)}{x^2} = \\frac{x^2 - 100}{x^2}$. At $x=20$: $\\frac{300}{400} = 0.75$, so average cost is rising by \\$0.75 per unit."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s11",
+      "concepts": ["chain-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the chain rule to differentiate $f(x) = (x + 1)^2$. Give the expanded polynomial.",
+      "steps": [
+        { "instruction": "Apply $n u^{n-1} u'$ with $u = x+1$, $n = 2$, $u' = 1$, then simplify.", "answer": "2x + 2", "accept": [], "hint": "$2(x+1)^1 \\cdot 1 = 2(x+1) = 2x + 2$." }
+      ],
+      "finalAnswer": { "value": "2x + 2", "unit": "" },
+      "solutionNarrative": "Chain rule: $2(x+1)\\cdot 1 = 2x + 2$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s12",
+      "concepts": ["chain-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the chain rule to differentiate $f(x) = (2x + 3)^2$. Give the expanded polynomial.",
+      "steps": [
+        { "instruction": "With $u = 2x+3$, $n = 2$, $u' = 2$, apply $n u^{n-1} u'$ and expand.", "answer": "8x + 12", "accept": [], "hint": "$2(2x+3)\\cdot 2 = 4(2x+3) = 8x + 12$." }
+      ],
+      "finalAnswer": { "value": "8x + 12", "unit": "" },
+      "solutionNarrative": "$2(2x+3)^1 \\cdot 2 = 4(2x+3) = 8x + 12$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s13",
+      "concepts": ["chain-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A spreading circular oil slick has radius $r(t) = (t + 1)^3$ meters after $t$ hours. Its rate of growth is $r'(t)$. Find $r'(t)$ using the chain rule, then the growth rate at $t = 2$ hours.",
+      "steps": [
+        { "instruction": "With $u = t+1$, $n = 3$, $u' = 1$, apply $n u^{n-1} u'$.", "answer": "3(t + 1)^2", "accept": ["3*(t+1)^2"], "hint": "$3(t+1)^2 \\cdot 1$." },
+        { "instruction": "Evaluate $r'(2)$. Give a number (meters per hour).", "answer": "27", "accept": [], "hint": "$3(2+1)^2 = 3 \\cdot 9$." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "meters per hour" },
+      "solutionNarrative": "$r'(t) = 3(t+1)^2$. At $t=2$: $3(3)^2 = 3\\cdot 9 = 27$ m/hr."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s14",
+      "concepts": ["power-rule", "product-rule"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Revenue (dollars) is $R(x) = x(20 - x)$ where $x$ is units sold. Marginal revenue is $R'(x)$. Find $R'(x)$ using the product rule, then the marginal revenue at $x = 6$ units.",
+      "steps": [
+        { "instruction": "With $f = x$, $g = 20 - x$, apply the product rule and simplify.", "answer": "20 - 2x", "accept": [], "hint": "$(1)(20 - x) + x(-1) = 20 - x - x$." },
+        { "instruction": "Evaluate $R'(6)$. Give a number (dollars per unit).", "answer": "8", "accept": [], "hint": "$20 - 2(6) = 20 - 12$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "dollars per unit" },
+      "solutionNarrative": "$R'(x) = (1)(20 - x) + x(-1) = 20 - 2x$. At $x=6$: $20 - 12 = \\$8$ per additional unit."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s15",
+      "concepts": ["chain-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the chain rule to differentiate $f(x) = (x^2 + 1)^3$, then evaluate the derivative at $x = 1$.",
+      "steps": [
+        { "instruction": "With $u = x^2 + 1$, $n = 3$, $u' = 2x$, write $n u^{n-1} u'$ (you may leave it factored).", "answer": "6x(x^2 + 1)^2", "accept": ["6*x*(x^2+1)^2"], "hint": "$3(x^2+1)^2 \\cdot 2x = 6x(x^2+1)^2$." },
+        { "instruction": "Evaluate the derivative at $x = 1$. Give a number.", "answer": "24", "accept": [], "hint": "$6(1)(1+1)^2 = 6 \\cdot 4$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "$f'(x) = 3(x^2+1)^2 \\cdot 2x = 6x(x^2+1)^2$. At $x=1$: $6\\cdot 1 \\cdot 4 = 24$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s16",
+      "concepts": ["power-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Differentiate: $f(x) = 2x^4 - x^3 + 6x^2 - 8x + 1$.",
+      "steps": [
+        { "instruction": "Differentiate term by term using the power rule.", "answer": "8x^3 - 3x^2 + 12x - 8", "accept": [], "hint": "$8x^3$, $-3x^2$, $12x$, $-8$, and the constant goes to 0." }
+      ],
+      "finalAnswer": { "value": "8x^3 - 3x^2 + 12x - 8", "unit": "" },
+      "solutionNarrative": "Term by term: $8x^3 - 3x^2 + 12x - 8$."
+    },
+    {
+      "id": "calculus-1.differentiation-rules.s17",
+      "concepts": ["product-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the product rule to differentiate $f(x) = (x + 2)(3x - 1)$. Give the simplified polynomial.",
+      "steps": [
+        { "instruction": "With $f = x+2$, $g = 3x-1$, apply $f'g + fg'$ and simplify.", "answer": "6x + 5", "accept": [], "hint": "$(1)(3x-1) + (x+2)(3) = 3x - 1 + 3x + 6$." }
+      ],
+      "finalAnswer": { "value": "6x + 5", "unit": "" },
+      "solutionNarrative": "$(1)(3x-1) + (x+2)(3) = 3x - 1 + 3x + 6 = 6x + 5$."
+    }
+  ]
+}

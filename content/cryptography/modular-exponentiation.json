@@ -1,0 +1,275 @@
+{
+  "id": "cryptography.modular-exponentiation",
+  "subject": "cryptography",
+  "title": "Modular Exponentiation and Fermat–Euler",
+  "prerequisites": ["cryptography.modular-arithmetic", "algebra.exponents"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "square-and-multiply",
+      "label": "Square-and-multiply (fast exponentiation)",
+      "microLesson": "Never compute $a^k \\bmod n$ by multiplying $a$ by itself $k$ times. Instead, square repeatedly: each squaring DOUBLES the exponent ($a \\to a^2 \\to a^4 \\to a^8 \\to \\dots$), and after every squaring you reduce mod $n$, so the numbers never grow. Write the exponent in binary to know which squares to multiply together: $5^{13} = 5^{8} \\cdot 5^{4} \\cdot 5^{1}$ because $13 = 8 + 4 + 1$. A 256-bit exponent needs only about 256 squarings — that's why crypto-sized powers are fast."
+    },
+    {
+      "id": "fermats-little-theorem",
+      "label": "Fermat's little theorem",
+      "microLesson": "If $p$ is prime and $p \\nmid a$, then $a^{p-1} \\equiv 1 \\pmod{p}$. This lets you shrink a giant exponent before computing anything: exponents work mod $p-1$. To find $3^{100} \\bmod 7$, reduce the exponent: $100 \\bmod 6 = 4$, so $3^{100} \\equiv 3^4 = 81 \\equiv 4 \\pmod 7$. Reduce the exponent mod $p-1$ first, THEN evaluate the small power."
+    },
+    {
+      "id": "euler-totient",
+      "label": "Euler's totient and Euler's theorem",
+      "microLesson": "$\\varphi(n)$ counts the integers in $1..n$ that share no factor with $n$. Key formulas: $\\varphi(p) = p-1$ for prime $p$; $\\varphi(pq) = (p-1)(q-1)$ for distinct primes; $\\varphi(p^k) = p^k - p^{k-1}$. Euler's theorem generalizes Fermat: if $\\gcd(a,n)=1$ then $a^{\\varphi(n)} \\equiv 1 \\pmod n$, so exponents work mod $\\varphi(n)$. The formula $\\varphi(pq)=(p-1)(q-1)$ is the beating heart of RSA."
+    },
+    {
+      "id": "diffie-hellman",
+      "label": "Diffie–Hellman key exchange",
+      "microLesson": "Two people agree publicly on a prime $p$ and base $g$. Alice picks secret $a$ and sends $A = g^a \\bmod p$; Bob picks secret $b$ and sends $B = g^b \\bmod p$. Each computes the same shared secret: $s = B^a = A^b = g^{ab} \\bmod p$. It's safe because going FORWARD ($g^a \\bmod p$) is fast squaring, but going BACKWARD (recovering $a$ from $A$ — the discrete logarithm) has no known fast method: an eavesdropper who sees $p, g, A, B$ is stuck."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The handshake your browser just did\n\nWhen you loaded this page over HTTPS, your computer and a server that had never met before agreed on a secret key — while anyone on the network could read every byte they exchanged. That trick (Diffie–Hellman key exchange) and its cousin RSA both run on one operation: **modular exponentiation**, computing $a^k \\bmod n$. The entire security story is an asymmetry: this operation is *fast to do* and, for the sizes used in practice, *hopeless to undo*.\n\n## Square-and-multiply: why $2^{256}$-sized exponents are no problem\n\nComputing $a^k$ by multiplying $a$ by itself $k-1$ times is a disaster when $k \\approx 2^{256}$ — the universe ends first. The fix is **repeated squaring**: each squaring doubles the exponent,\n\n$$a \\to a^2 \\to a^4 \\to a^8 \\to a^{16} \\to \\dots$$\n\nand because we reduce mod $n$ after every squaring, the numbers stay small forever. To hit an exponent that isn't a power of two, write it in binary and multiply the right squares together: $13 = 8 + 4 + 1$, so\n\n$$5^{13} = 5^8 \\cdot 5^4 \\cdot 5^1.$$\n\nA 256-bit exponent needs about 256 squarings plus at most 256 extra multiplies — a few hundred small steps instead of $2^{256}$. Your phone does thousands of these per second.\n\n## Fermat's little theorem: shrinking the exponent itself\n\nFor a prime $p$ and any $a$ not divisible by $p$:\n\n$$a^{p-1} \\equiv 1 \\pmod{p}.$$\n\nMultiplying by $a^{p-1}$ is multiplying by 1 — so **exponents only matter mod $p-1$**. Faced with $3^{100} \\bmod 7$: reduce $100 \\bmod 6 = 4$, then $3^4 = 81 \\equiv 4 \\pmod 7$. Two lines. Always reduce the exponent first, then evaluate the small power (with squaring if needed).\n\n## Euler's totient: Fermat for composite moduli\n\n$\\varphi(n)$ counts how many of $1, \\dots, n$ are coprime to $n$. The formulas you need:\n\n- $\\varphi(p) = p - 1$ for prime $p$\n- $\\varphi(pq) = (p-1)(q-1)$ for distinct primes $p, q$\n- $\\varphi(p^k) = p^k - p^{k-1}$\n\n**Euler's theorem**: if $\\gcd(a, n) = 1$, then $a^{\\varphi(n)} \\equiv 1 \\pmod n$. With a prime modulus, $\\varphi(p) = p-1$ and this IS Fermat — Euler is the generalization. The composite case $\\varphi(pq) = (p-1)(q-1)$ looks like a footnote now; in the next topic it becomes the entire mechanism of RSA. Notice something important: computing $\\varphi(pq)$ is trivial *if you know $p$ and $q$* — and there is no known fast way to get it from $pq$ alone.\n\n## Diffie–Hellman: agreeing on a secret in public\n\nAlice and Bob agree (publicly!) on a prime $p$ and a base $g$. Then:\n\n1. Alice picks a secret $a$, sends $A = g^a \\bmod p$.\n2. Bob picks a secret $b$, sends $B = g^b \\bmod p$.\n3. Alice computes $B^a \\bmod p$; Bob computes $A^b \\bmod p$. Both get $g^{ab} \\bmod p$ — the shared secret.\n\nAn eavesdropper sees $p, g, A, B$. To get the secret she needs $a$ or $b$ — that is, she must solve $g^a \\equiv A \\pmod p$ for the exponent. This is the **discrete logarithm problem**, and for well-chosen 2048-bit primes nobody knows how to do it. You'll feel the asymmetry directly in the problems: computing $g^a$ takes seconds; finding $a$ from $g^a$, even at toy size, is trial after trial.\n\n## Toy vs. real\n\nOur problems use $p = 23$; real deployments use 2048-bit primes or elliptic curves (a later topic), and secret exponents with 256 bits of randomness. And a confession about purpose: DH and RSA are *slow* per byte, so real systems (TLS, Signal, SSH) use them only to establish a shared key — then hand the conversation to a fast symmetric cipher like AES-256. Public-key math opens the door; AES carries the traffic. Keep that division of labor in mind as you head to RSA next."
+  },
+  "application": {
+    "summary": "Modular exponentiation is the workhorse of key exchange: fast forward via square-and-multiply, intractable backward (discrete log), with Fermat–Euler as the exponent-shrinking toolkit that makes RSA possible.",
+    "domains": ["network security", "cryptography", "web infrastructure", "messaging"],
+    "workedExample": "**A complete Diffie–Hellman exchange ($p = 23$, $g = 5$).**\n\nAlice picks secret $a = 6$; Bob picks secret $b = 15$.\n\n*Alice's public value:* $5^2 = 25 \\equiv 2 \\pmod{23}$, so $A = 5^6 = (5^2)^3 \\equiv 2^3 = 8$.\n\n*Bob's public value:* $B = 5^{15} \\bmod 23 = 19$ (same squaring game on his side).\n\n*Shared secret, Alice's side:* $s = B^a = 19^6 \\bmod 23$. Squaring: $19^2 = 361 \\equiv 16$, then $19^4 \\equiv 16^2 = 256 \\equiv 3$, so $19^6 \\equiv 3 \\cdot 16 = 48 \\equiv 2 \\pmod{23}$.\n\n*Shared secret, Bob's side:* $s = A^b = 8^{15} \\bmod 23 = 2$. **Same answer** — both computed $g^{ab}$.\n\nAn eavesdropper saw $p=23$, $g=5$, $A=8$, $B=19$ — and to find $s=2$ she must solve $5^a \\equiv 8 \\pmod{23}$ by brute force. At $p = 23$ that's minutes; at 2048 bits it's longer than the age of the universe. That gap IS the security.",
+    "domainNotes": [
+      "**TLS/HTTPS:** every modern browser handshake runs (elliptic-curve) Diffie–Hellman to establish the session key that then feeds AES — billions of exchanges per day.",
+      "**SSH:** the very first packets of an SSH connection are a DH exchange; the server's host key only signs the result.",
+      "**Messaging apps:** Signal and WhatsApp run DH repeatedly (the 'double ratchet') so each message batch gets fresh keys — leaking one key doesn't expose old messages.",
+      "**VPNs:** IPsec/IKE and WireGuard tunnels start with a DH-style exchange before any traffic flows."
+    ]
+  },
+  "generators": [
+    "cr2-sqmul-d1", "cr2-sqmul-d2", "cr2-sqmul-d3",
+    "cr2-fermat-d1", "cr2-fermat-d2", "cr2-fermat-d3",
+    "cr2-totient-d1", "cr2-totient-d2", "cr2-totient-d3",
+    "cr2-dh-d1", "cr2-dh-d2", "cr2-dh-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.modular-exponentiation.s01",
+      "concepts": ["square-and-multiply"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $7^4 \\bmod 11$ by repeated squaring — two squarings, and the numbers never get big.",
+      "steps": [
+        { "instruction": "Compute $7^2 \\bmod 11$.", "answer": "5", "accept": [], "hint": "$7^2 = 49 = 44 + 5$, and $44$ is a multiple of 11." },
+        { "instruction": "Square the result: $7^4 = (7^2)^2 \\equiv 5^2 \\pmod{11}$. What is $5^2 \\bmod 11$?", "answer": "3", "accept": [], "hint": "$25 = 22 + 3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$7^2 = 49 \\equiv 5 \\pmod{11}$, then $7^4 \\equiv 5^2 = 25 \\equiv 3 \\pmod{11}$. Reducing after each squaring keeps every number under 121."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s02",
+      "concepts": ["square-and-multiply"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $7^8 \\bmod 13$ by squaring three times, reducing mod 13 after each squaring.",
+      "steps": [
+        { "instruction": "Compute $7^2 \\bmod 13$.", "answer": "10", "accept": [], "hint": "$49 = 39 + 10$." },
+        { "instruction": "Square it: $7^4 \\equiv 10^2 \\pmod{13}$. What is $10^2 \\bmod 13$?", "answer": "9", "accept": [], "hint": "$100 = 91 + 9$, and $91 = 7 \\times 13$." },
+        { "instruction": "Square once more: $7^8 \\equiv 9^2 \\pmod{13}$. What is $9^2 \\bmod 13$?", "answer": "3", "accept": [], "hint": "$81 = 78 + 3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Three squarings: $7^2 \\equiv 10$, $7^4 \\equiv 100 \\equiv 9$, $7^8 \\equiv 81 \\equiv 3 \\pmod{13}$. Eight multiplications collapsed into three."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s03",
+      "concepts": ["square-and-multiply"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $5^{13} \\bmod 23$ with full square-and-multiply: decompose the exponent in binary, build the squares, and combine.",
+      "steps": [
+        { "instruction": "Write 13 as a sum of powers of 2: $13 = 8 + 4 + {?}$", "answer": "1", "accept": [], "hint": "13 in binary is 1101." },
+        { "instruction": "Compute $5^2 \\bmod 23$.", "answer": "2", "accept": [], "hint": "$25 = 23 + 2$." },
+        { "instruction": "Square it: $5^4 \\equiv 2^2 \\pmod{23}$. What is that?", "answer": "4", "accept": [], "hint": "$2^2 = 4$, already below 23." },
+        { "instruction": "Square again: $5^8 \\equiv 4^2 \\pmod{23}$. What is that?", "answer": "16", "accept": [], "hint": "$16$ is already below 23." },
+        { "instruction": "Combine: $5^{13} = 5^8 \\cdot 5^4 \\cdot 5^1 \\equiv 16 \\cdot 4 \\cdot 5 \\pmod{23}$. What is $320 \\bmod 23$?", "answer": "21", "accept": [], "hint": "$23 \\times 13 = 299$, and $320 - 299 = 21$." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "" },
+      "solutionNarrative": "$13 = 8+4+1$, so $5^{13} = 5^8 \\cdot 5^4 \\cdot 5$. Squaring chain: $5^2 \\equiv 2$, $5^4 \\equiv 4$, $5^8 \\equiv 16$. Then $16 \\cdot 4 \\cdot 5 = 320 \\equiv 21 \\pmod{23}$."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s04",
+      "concepts": ["square-and-multiply"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A server needs $x^{256} \\bmod n$ during a handshake. Compare the naive method against repeated squaring.",
+      "steps": [
+        { "instruction": "Using repeated squaring ($x \\to x^2 \\to x^4 \\to \\dots$), how many squarings reach $x^{256}$?", "answer": "8", "accept": [], "hint": "$256 = 2^8$, and each squaring doubles the exponent." },
+        { "instruction": "The naive method multiplies $x$ by itself over and over. How many multiplications does it need for $x^{256}$?", "answer": "255", "accept": [], "hint": "Building $x^k$ one factor at a time takes $k - 1$ multiplications." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "squarings" },
+      "solutionNarrative": "Squaring doubles the exponent, so $2^8 = 256$ means just 8 squarings versus 255 naive multiplications. For a real 256-BIT exponent (around $2^{256}$), squaring needs ~256 steps while the naive method needs more steps than there are atoms in the universe."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s05",
+      "concepts": ["fermats-little-theorem"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use Fermat's little theorem to evaluate $2^{10} \\bmod 11$ without computing $2^{10} = 1024$.",
+      "steps": [
+        { "instruction": "Fermat says $a^{p-1} \\equiv 1 \\pmod p$ when $p$ is prime and $p \\nmid a$. Here $p = 11$: what is $p - 1$?", "answer": "10", "accept": [], "hint": "Just subtract 1 from the prime." },
+        { "instruction": "The exponent is exactly $p-1$, so what is $2^{10} \\bmod 11$?", "answer": "1", "accept": [], "hint": "That's the whole point of the theorem: $a^{p-1} \\equiv 1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "Since 11 is prime and $11 \\nmid 2$, Fermat gives $2^{10} \\equiv 1 \\pmod{11}$ instantly. (Check: $1024 = 93 \\times 11 + 1$.)"
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s06",
+      "concepts": ["fermats-little-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $3^{100} \\bmod 7$ by reducing the EXPONENT first, then computing a small power.",
+      "steps": [
+        { "instruction": "Fermat lets exponents be reduced mod $p - 1 = 6$. What is $100 \\bmod 6$?", "answer": "4", "accept": [], "hint": "$96 = 16 \\times 6$, so the remainder is 4." },
+        { "instruction": "Now evaluate the small power: $3^4 = 81$. What is $81 \\bmod 7$?", "answer": "4", "accept": [], "hint": "$77 = 11 \\times 7$, so $81 = 77 + 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$3^{100} = (3^6)^{16} \\cdot 3^4 \\equiv 1^{16} \\cdot 3^4 = 81 \\equiv 4 \\pmod 7$. A 48-digit number tamed in two lines."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s07",
+      "concepts": ["fermats-little-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $5^{2026} \\bmod 13$. Reduce the exponent with Fermat, then finish with a clever square.",
+      "steps": [
+        { "instruction": "Exponents reduce mod $p - 1 = 12$. What is $2026 \\bmod 12$?", "answer": "10", "accept": [], "hint": "$2016 = 168 \\times 12$, so the remainder is $2026 - 2016$." },
+        { "instruction": "So we need $5^{10} \\bmod 13$. First compute $5^2 \\bmod 13$.", "answer": "12", "accept": [], "hint": "$25 = 13 + 12$." },
+        { "instruction": "Note $12 \\equiv -1 \\pmod{13}$, so $5^{10} = (5^2)^5 \\equiv (-1)^5 \\pmod{13}$. Give the answer as a residue in $0..12$.", "answer": "12", "accept": [], "hint": "$(-1)^5 = -1$, and $-1 \\equiv 12 \\pmod{13}$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$2026 \\equiv 10 \\pmod{12}$, so $5^{2026} \\equiv 5^{10}$. Since $5^2 = 25 \\equiv -1 \\pmod{13}$, we get $5^{10} = (5^2)^5 \\equiv (-1)^5 = -1 \\equiv 12 \\pmod{13}$."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s08",
+      "concepts": ["euler-totient"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute two totients: $\\varphi(13)$ and $\\varphi(10)$.",
+      "steps": [
+        { "instruction": "13 is prime. What is $\\varphi(13)$?", "answer": "12", "accept": [], "hint": "For a prime $p$, every one of $1..p-1$ is coprime to $p$: $\\varphi(p) = p - 1$." },
+        { "instruction": "$10 = 2 \\times 5$. Using $\\varphi(pq) = (p-1)(q-1)$, what is $\\varphi(10)$?", "answer": "4", "accept": [], "hint": "$(2-1)(5-1) = 1 \\times 4$. Check: 1, 3, 7, 9 are the units mod 10." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\varphi(13) = 12$ (prime), and $\\varphi(10) = (2-1)(5-1) = 4$ — indeed exactly 1, 3, 7, 9 are coprime to 10."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s09",
+      "concepts": ["euler-totient"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\varphi(77)$ and $\\varphi(16)$ using the product and prime-power formulas.",
+      "steps": [
+        { "instruction": "$77 = 7 \\times 11$. What is $\\varphi(77) = (7-1)(11-1)$?", "answer": "60", "accept": [], "hint": "$6 \\times 10$." },
+        { "instruction": "$16 = 2^4$. Using $\\varphi(p^k) = p^k - p^{k-1}$, what is $\\varphi(16)$?", "answer": "8", "accept": [], "hint": "$16 - 8$: exactly the odd numbers below 16 are coprime to it." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "" },
+      "solutionNarrative": "$\\varphi(77) = 6 \\times 10 = 60$ and $\\varphi(16) = 16 - 8 = 8$. Distinct-prime products multiply $(p-1)$ factors; prime powers subtract the multiples of $p$."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s10",
+      "concepts": ["euler-totient"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use Euler's theorem to evaluate $2^{43} \\bmod 55$. (Note $\\gcd(2, 55) = 1$, so the theorem applies.)",
+      "steps": [
+        { "instruction": "$55 = 5 \\times 11$. What is $\\varphi(55)$?", "answer": "40", "accept": [], "hint": "$(5-1)(11-1) = 4 \\times 10$." },
+        { "instruction": "Euler: exponents reduce mod $\\varphi(55) = 40$. What is $43 \\bmod 40$?", "answer": "3", "accept": [], "hint": "$43 = 40 + 3$." },
+        { "instruction": "Finish: what is $2^3 \\bmod 55$?", "answer": "8", "accept": [], "hint": "$2^3 = 8$, already below 55." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$\\varphi(55) = 40$, so $2^{43} = 2^{40} \\cdot 2^3 \\equiv 1 \\cdot 8 = 8 \\pmod{55}$. This exponent-reduction-mod-$\\varphi(n)$ move is exactly why RSA decryption works."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s11",
+      "concepts": ["diffie-hellman"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Alice starts a Diffie–Hellman exchange with public parameters $p = 23$, $g = 5$. Her secret is $a = 4$. Compute her public value $A = 5^4 \\bmod 23$.",
+      "steps": [
+        { "instruction": "Compute $5^2 \\bmod 23$.", "answer": "2", "accept": [], "hint": "$25 = 23 + 2$." },
+        { "instruction": "Square it: $A = 5^4 \\equiv 2^2 \\pmod{23}$. What is $A$?", "answer": "4", "accept": [], "hint": "$2^2 = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$5^2 \\equiv 2$, so $5^4 \\equiv 4 \\pmod{23}$. Alice sends $A = 4$ in the clear — recovering her secret $a = 4$ from it would require solving a discrete log."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s12",
+      "concepts": ["diffie-hellman"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Diffie–Hellman with $p = 23$, $g = 5$. Alice's secret is $a = 6$; Bob has already sent his public value $B = 19$. Compute Alice's public value and then the shared secret.",
+      "steps": [
+        { "instruction": "First $5^2 \\bmod 23$.", "answer": "2", "accept": [], "hint": "$25 = 23 + 2$." },
+        { "instruction": "Alice's public value: $A = 5^6 = (5^2)^3 \\equiv 2^3 \\pmod{23}$. What is $A$?", "answer": "8", "accept": [], "hint": "$2^3 = 8$." },
+        { "instruction": "Now the shared secret $s = B^a = 19^6 \\bmod 23$. Start with $19^2 \\bmod 23$.", "answer": "16", "accept": [], "hint": "$361 = 345 + 16$, and $345 = 15 \\times 23$." },
+        { "instruction": "Square: $19^4 \\equiv 16^2 = 256 \\pmod{23}$. What is $256 \\bmod 23$?", "answer": "3", "accept": [], "hint": "$253 = 11 \\times 23$." },
+        { "instruction": "Combine: $s = 19^6 = 19^4 \\cdot 19^2 \\equiv 3 \\cdot 16 = 48 \\pmod{23}$. What is $s$?", "answer": "2", "accept": [], "hint": "$48 - 46 = 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Alice sends $A = 5^6 \\equiv 8$. The shared secret is $s = 19^6 \\equiv 3 \\cdot 16 = 48 \\equiv 2 \\pmod{23}$. Bob gets the same 2 by computing $A^b = 8^{15} \\bmod 23$ with his own secret $b = 15$."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s13",
+      "concepts": ["diffie-hellman"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You're the eavesdropper. Parameters $p = 13$, $g = 2$ are public, and you intercepted Alice's public value $A = 3$. Recover her secret exponent $a$ the only way anyone knows how: brute force.",
+      "steps": [
+        { "instruction": "Try exponent 2: what is $2^2 \\bmod 13$?", "answer": "4", "accept": [], "hint": "Not 3 yet — keep going." },
+        { "instruction": "Try exponent 3: what is $2^3 \\bmod 13$?", "answer": "8", "accept": [], "hint": "Still not 3." },
+        { "instruction": "Try exponent 4: what is $2^4 \\bmod 13$?", "answer": "3", "accept": [], "hint": "$16 = 13 + 3$ — a match!" },
+        { "instruction": "So Alice's secret exponent $a$ is:", "answer": "4", "accept": [], "hint": "The exponent whose power matched $A = 3$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Powers of 2 mod 13 run $2, 4, 8, 3, \\dots$ — the first hit at $A = 3$ is exponent $a = 4$. You just solved a discrete log by trying every exponent. At $p = 13$ that's four tries; at a 2048-bit prime it's more tries than atoms in the observable universe. Computing $g^a$ forward took two squarings — THAT asymmetry is Diffie–Hellman's entire security."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s14",
+      "concepts": ["diffie-hellman", "square-and-multiply"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A full exchange with $p = 17$, $g = 3$. Alice's secret is $a = 6$; Bob's public value arrives as $B = 5$. Compute Alice's public value $A$ and the shared secret $s$, squaring all the way.",
+      "steps": [
+        { "instruction": "Compute $3^2 \\bmod 17$.", "answer": "9", "accept": [], "hint": "9 is already below 17." },
+        { "instruction": "Square: $3^4 \\equiv 9^2 = 81 \\pmod{17}$. What is $81 \\bmod 17$?", "answer": "13", "accept": [], "hint": "$68 = 4 \\times 17$, so $81 = 68 + 13$." },
+        { "instruction": "Combine: $A = 3^6 = 3^4 \\cdot 3^2 \\equiv 13 \\cdot 9 = 117 \\pmod{17}$. What is $A$?", "answer": "15", "accept": [], "hint": "$102 = 6 \\times 17$, so $117 = 102 + 15$." },
+        { "instruction": "Shared secret next: $s = B^a = 5^6 \\bmod 17$. Compute $5^2 \\bmod 17$.", "answer": "8", "accept": [], "hint": "$25 = 17 + 8$." },
+        { "instruction": "Square: $5^4 \\equiv 8^2 = 64 \\pmod{17}$. What is $64 \\bmod 17$?", "answer": "13", "accept": [], "hint": "$51 = 3 \\times 17$." },
+        { "instruction": "Combine: $s = 5^6 = 5^4 \\cdot 5^2 \\equiv 13 \\cdot 8 = 104 \\pmod{17}$. What is $s$?", "answer": "2", "accept": [], "hint": "$102 = 6 \\times 17$, so $104 = 102 + 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Alice sends $A = 3^6 \\equiv 15 \\pmod{17}$ and computes $s = 5^6 \\equiv 2 \\pmod{17}$. Bob's side, $15^5 \\bmod 17$, gives the same $s = 2$: both hold $3^{30} \\bmod 17$."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s15",
+      "concepts": ["fermats-little-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $7^{50} \\bmod 11$ — watch what happens when the reduced exponent is 0.",
+      "steps": [
+        { "instruction": "Reduce the exponent mod $p - 1 = 10$: what is $50 \\bmod 10$?", "answer": "0", "accept": [], "hint": "50 is a multiple of 10." },
+        { "instruction": "So $7^{50} = (7^{10})^5 \\equiv 1^5 \\pmod{11}$. What is $7^{50} \\bmod 11$?", "answer": "1", "accept": [], "hint": "Each $7^{10}$ block is 1 by Fermat; five blocks of 1 is still 1." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$50$ is an exact multiple of $p-1 = 10$, so $7^{50}$ is a stack of $7^{10} \\equiv 1$ blocks: the answer is 1 (not 0 — a reduced exponent of 0 means $a^0 = 1$)."
+    },
+    {
+      "id": "cryptography.modular-exponentiation.s16",
+      "concepts": ["euler-totient"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the totients of two prime powers: $\\varphi(9)$ and $\\varphi(25)$.",
+      "steps": [
+        { "instruction": "$9 = 3^2$. Using $\\varphi(p^k) = p^k - p^{k-1}$, what is $\\varphi(9)$?", "answer": "6", "accept": [], "hint": "$9 - 3$: strike out the multiples of 3 (3, 6, 9)." },
+        { "instruction": "$25 = 5^2$. What is $\\varphi(25)$?", "answer": "20", "accept": [], "hint": "$25 - 5$: only 5, 10, 15, 20, 25 share a factor with 25." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "" },
+      "solutionNarrative": "$\\varphi(9) = 9 - 3 = 6$ and $\\varphi(25) = 25 - 5 = 20$: among $1..p^k$, exactly the $p^{k-1}$ multiples of $p$ fail to be coprime."
+    }
+  ]
+}

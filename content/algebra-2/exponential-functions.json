@@ -1,0 +1,337 @@
+{
+  "id": "algebra-2.exponential-functions",
+  "subject": "algebra-2",
+  "title": "Exponential Functions",
+  "prerequisites": [],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "evaluate-exponential",
+      "label": "Evaluating exponential functions",
+      "microLesson": "An exponential function has the form $f(x) = a \\cdot b^x$, where $a$ is the **starting amount** and $b$ is the **growth factor** (how much it multiplies by each step). The variable is in the *exponent* — that's what makes growth explode. To evaluate, raise $b$ to the power $x$ first, then multiply by $a$. For $f(x) = 3 \\cdot 2^x$ at $x = 4$: $2^4 = 16$, then $3 \\cdot 16 = 48$."
+    },
+    {
+      "id": "growth-and-decay",
+      "label": "Growth and decay",
+      "microLesson": "If something changes by a fixed **percent** each period, it's exponential. **Growth:** the factor is $b = 1 + r$ (a 10% rise means $b = 1.10$). **Decay:** the factor is $b = 1 - r$ (a 15% drop means $b = 0.85$). The value after $n$ periods is $a \\cdot b^n$. A \\$20,000 car losing 15% a year is worth $20000 \\cdot 0.85^n$ after $n$ years. **Half-life** is decay with $b = 0.5$ each half-life period."
+    },
+    {
+      "id": "compound-interest",
+      "label": "Compound interest",
+      "microLesson": "Money in an account grows on its own past growth — interest earns interest. The formula is $A = P\\left(1 + \\dfrac{r}{n}\\right)^{nt}$, where $P$ is the principal, $r$ the annual rate (as a decimal), $n$ the number of compoundings per year, and $t$ the years. **Annual** compounding sets $n = 1$; **monthly** sets $n = 12$. Compute the inside parenthesis, raise it to the power $nt$, then multiply by $P$. Round money to the nearest cent."
+    },
+    {
+      "id": "exponential-equations",
+      "label": "Solving by matching bases",
+      "microLesson": "When both sides of an equation are powers of the **same base**, the exponents must be equal. Rewrite each side as a power of one common base, then set the exponents equal. $2^x = 32$ becomes $2^x = 2^5$, so $x = 5$. $9^x = 27$ rewrites both as powers of 3: $3^{2x} = 3^3$, giving $2x = 3$. This turns an exponential equation into a simple linear one."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Why a little percent becomes a lot\n\nLinear things add the same amount each step. **Exponential** things *multiply* by the same factor each step — and that difference is enormous over time. \\$1,000 earning a flat \\$50 a year reaches \\$1,500 in ten years. The same \\$1,000 earning 5% a year — multiplying by 1.05 each time — reaches about \\$1,629, because each year's interest then earns its own interest. Money, populations, viral posts, and radioactive decay all follow this multiply-each-step rule.\n\nThe shape is always:\n\n$$f(x) = a \\cdot b^x$$\n\n- $a$ is the **starting amount** (the value when $x = 0$).\n- $b$ is the **growth factor** — what you multiply by each step.\n- $x$ sits in the **exponent**, which is what makes the curve steepen so fast.\n\nThe two basic shapes sit side by side below. When $b > 1$ the curve **grows**, rising ever faster to the right; when $0 < b < 1$ it **decays**, falling toward the x-axis. Both curves pass through $(0, 1)$ — since $b^0 = 1$ for any base — and both hug the horizontal asymptote $y = 0$ without ever touching it.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-3, 3], \"yRange\": [-1, 8], \"grid\": true, \"curves\": [ { \"fn\": \"2^x\", \"label\": \"y=2^x (growth)\", \"color\": \"accent\", \"labelAt\": 2.3 }, { \"fn\": \"(1/2)^x\", \"label\": \"y=(1/2)^x (decay)\", \"color\": \"warn\", \"labelAt\": -2.6 } ], \"points\": [ { \"x\": 0, \"y\": 1, \"label\": \"(0,1)\", \"color\": \"dim\" } ], \"caption\": \"Growth 2^x vs decay (1/2)^x: both cross (0,1), both approach y = 0\" }\n```\n\n## Evaluating: power first, then multiply\n\nTo find $f(x) = 3 \\cdot 2^x$ at $x = 4$: handle the exponent **before** the multiplication. $2^4 = 16$, then $3 \\cdot 16 = 48$. Always raise the base to the power first, then scale by $a$.\n\n## Growth vs. decay: read the factor\n\nWhen something changes by a fixed percent $r$ each period, the factor $b$ tells the whole story:\n\n- **Growth:** $b = 1 + r$. A 10% annual rise gives $b = 1.10$.\n- **Decay:** $b = 1 - r$. A 15% annual drop gives $b = 0.85$.\n\nThe value after $n$ periods is $a \\cdot b^n$. A \\$20,000 car depreciating 15% a year is worth $20000 \\cdot 0.85^5 \\approx \\$8{,}874$ after five years. **Half-life** is just decay with $b = 0.5$: after each half-life, whatever remains is cut in half.\n\n## Compound interest: the headline application\n\nBank interest is exponential growth with a formula worth memorizing:\n\n$$A = P\\left(1 + \\frac{r}{n}\\right)^{nt}$$\n\n$P$ is what you deposit, $r$ the annual rate as a decimal, $n$ how many times a year it compounds, and $t$ the number of years. **Annual** compounding uses $n = 1$; **monthly** uses $n = 12$. More frequent compounding earns slightly more. Compute the parenthesis, raise it to the power $nt$, multiply by $P$, and **round to the nearest cent**.\n\n## Solving exponential equations by matching bases\n\nIf both sides are powers of the same base, their exponents must match. To solve $2^x = 32$, rewrite the right side: $32 = 2^5$, so $2^x = 2^5$ and $x = 5$. If the bases differ, rewrite them as powers of a common base first: $9^x = 27$ becomes $3^{2x} = 3^3$, so $2x = 3$. The exponential equation collapses into a simple linear one."
+  },
+  "application": {
+    "summary": "Exponential functions model anything that grows or shrinks by a fixed percent per period: savings under compound interest, populations and viral spread, and decay like depreciation, half-life of medication, and radioactive material. Evaluating one projects a future value; matching bases solves for an unknown number of periods.",
+    "domains": ["personal finance", "biology", "medicine", "everyday life"],
+    "workedExample": "**How much will the savings account hold?**\n\nYou deposit \\$2,000 in an account paying 6% annual interest, **compounded monthly**, and leave it for 2 years. Use $A = P\\left(1 + \\dfrac{r}{n}\\right)^{nt}$ with $P = 2000$, $r = 0.06$, $n = 12$, $t = 2$.\n\nThe monthly rate is $\\dfrac{0.06}{12} = 0.005$, so the factor is $1.005$. The number of compoundings is $nt = 12 \\times 2 = 24$.\n\n$$A = 2000 \\cdot (1.005)^{24} = 2000 \\cdot 1.127160 \\approx \\$2{,}254.32.$$\n\nThe \\$254.32 of growth is interest *plus* interest earned on that interest — exactly what makes compounding pull ahead of flat returns. The same formula projects a retirement balance, while the decay version ($b < 1$) tells you a car's resale value or how much medication remains in the bloodstream.",
+    "domainNotes": [
+      "**Finance:** compound interest on savings and loans, retirement projections, and asset depreciation.",
+      "**Biology:** population growth and the explosive early phase of viral or bacterial spread.",
+      "**Medicine:** drug half-life — how a dose clears from the body over fixed time intervals.",
+      "**Physics/everyday:** radioactive decay, carbon dating, and the resale value of cars and equipment."
+    ]
+  },
+  "generators": ["exp-fn-eval-v1", "exp-doubling-v1", "compound-interest-v1", "exp-equation-v1"],
+  "problems": [
+    {
+      "id": "algebra-2.exponential-functions.s01",
+      "concepts": ["evaluate-exponential"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A social media post starts with 3 shares and the share count doubles every hour, following $f(x) = 3 \\cdot 2^x$ where $x$ is hours. How many shares are there after 4 hours?",
+      "steps": [
+        { "instruction": "Evaluate the exponent part: what is $2^4$?", "answer": "16", "accept": [], "hint": "$2^4 = 2 \\cdot 2 \\cdot 2 \\cdot 2$." },
+        { "instruction": "Multiply by the starting amount 3 to find $f(4)$.", "answer": "48", "accept": [], "hint": "$3 \\times 16$." }
+      ],
+      "finalAnswer": { "value": "48", "unit": "shares" },
+      "solutionNarrative": "$2^4 = 16$, then $3 \\cdot 16 = 48$ shares after 4 hours."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s02",
+      "concepts": ["evaluate-exponential"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bacteria colony is modeled by $f(x) = 5 \\cdot 3^x$ thousand cells, where $x$ is the number of days. How many thousand cells are there after 3 days?",
+      "steps": [
+        { "instruction": "Evaluate the exponent part: what is $3^3$?", "answer": "27", "accept": [], "hint": "$3 \\cdot 3 \\cdot 3$." },
+        { "instruction": "Multiply by the starting amount 5 to find $f(3)$.", "answer": "135", "accept": [], "hint": "$5 \\times 27$." }
+      ],
+      "finalAnswer": { "value": "135", "unit": "thousand cells" },
+      "solutionNarrative": "$3^3 = 27$, then $5 \\cdot 27 = 135$ thousand cells after 3 days."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s03",
+      "concepts": ["evaluate-exponential"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x) = 2 \\cdot 5^x$, evaluate $f(3) - f(1)$.",
+      "steps": [
+        { "instruction": "Find $f(3)$ by computing $2 \\cdot 5^3$.", "answer": "250", "accept": [], "hint": "$5^3 = 125$, then times 2." },
+        { "instruction": "Find $f(1)$ by computing $2 \\cdot 5^1$.", "answer": "10", "accept": [], "hint": "$5^1 = 5$, then times 2." },
+        { "instruction": "Subtract: $f(3) - f(1)$.", "answer": "240", "accept": [], "hint": "$250 - 10$." }
+      ],
+      "finalAnswer": { "value": "240", "unit": "" },
+      "solutionNarrative": "$f(3) = 2 \\cdot 125 = 250$ and $f(1) = 2 \\cdot 5 = 10$, so $f(3) - f(1) = 240$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s04",
+      "concepts": ["growth-and-decay"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A town of 500 people doubles every 10 years. Using $500 \\cdot 2^n$ where $n$ is the number of 10-year periods, what is the population after 3 periods (30 years)?",
+      "steps": [
+        { "instruction": "Evaluate the growth factor raised to the power: what is $2^3$?", "answer": "8", "accept": [], "hint": "$2 \\cdot 2 \\cdot 2$." },
+        { "instruction": "Multiply by the starting population 500.", "answer": "4000", "accept": [], "hint": "$500 \\times 8$." }
+      ],
+      "finalAnswer": { "value": "4000", "unit": "people" },
+      "solutionNarrative": "$2^3 = 8$, so $500 \\cdot 8 = 4000$ people after 3 doubling periods."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s05",
+      "concepts": ["growth-and-decay"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A patient takes 100 mg of a medication, and half of it clears from the body every 6 hours (half-life). How many mg remain after 18 hours (3 half-lives)? Use $100 \\cdot 0.5^n$.",
+      "steps": [
+        { "instruction": "How many half-life periods is 18 hours? (Each is 6 hours.)", "answer": "3", "accept": [], "hint": "$18 \\div 6$." },
+        { "instruction": "Evaluate $0.5^3$.", "answer": "0.125", "accept": ["1/8"], "hint": "$0.5 \\cdot 0.5 \\cdot 0.5$." },
+        { "instruction": "Multiply by the starting 100 mg.", "answer": "12.5", "accept": [], "hint": "$100 \\times 0.125$." }
+      ],
+      "finalAnswer": { "value": "12.5", "unit": "mg" },
+      "solutionNarrative": "Three half-lives: $0.5^3 = 0.125$, so $100 \\cdot 0.125 = 12.5$ mg remain."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s06",
+      "concepts": ["growth-and-decay"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A new car costs \\$25,000 and loses 20% of its value each year. Its value after $n$ years is $25000 \\cdot 0.8^n$. What is it worth after 4 years? (Round to the nearest cent.)",
+      "steps": [
+        { "instruction": "A 20% loss means the value keeps what fraction each year? Enter the decay factor.", "answer": "0.8", "accept": ["0.80"], "hint": "$1 - 0.20$." },
+        { "instruction": "Evaluate $0.8^4$ (round to 4 decimal places).", "answer": "0.4096", "accept": [], "hint": "$0.8 \\cdot 0.8 \\cdot 0.8 \\cdot 0.8$." },
+        { "instruction": "Multiply by \\$25,000 to find the value (round to the nearest cent).", "answer": "10240", "accept": ["10240.00"], "hint": "$25000 \\times 0.4096$." }
+      ],
+      "finalAnswer": { "value": "10240.00", "unit": "dollars" },
+      "solutionNarrative": "The decay factor is $0.8$; $0.8^4 = 0.4096$, so $25000 \\cdot 0.4096 = \\$10{,}240.00$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s07",
+      "concepts": ["compound-interest"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You deposit \\$1,000 at 5% annual interest, compounded annually ($n = 1$), for 3 years. Use $A = P(1 + r/n)^{nt}$ to find the final amount. (Round to the nearest cent.)",
+      "steps": [
+        { "instruction": "Find the growth factor $1 + r/n$ for annual compounding.", "answer": "1.05", "accept": [], "hint": "$1 + 0.05/1$." },
+        { "instruction": "Raise it to the power $nt = 3$: compute $1.05^3$ (round to 6 decimal places).", "answer": "1.157625", "accept": [], "hint": "$1.05 \\cdot 1.05 \\cdot 1.05$." },
+        { "instruction": "Multiply by the principal \\$1,000 (round to the nearest cent).", "answer": "1157.63", "accept": [], "hint": "$1000 \\times 1.157625$." }
+      ],
+      "finalAnswer": { "value": "1157.63", "unit": "dollars" },
+      "solutionNarrative": "$A = 1000(1.05)^3 = 1000 \\cdot 1.157625 = \\$1{,}157.63$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s08",
+      "concepts": ["compound-interest"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You invest \\$2,000 at 6% annual interest, compounded monthly ($n = 12$), for 2 years. Use $A = P(1 + r/n)^{nt}$. (Round to the nearest cent.)",
+      "steps": [
+        { "instruction": "Find the monthly factor $1 + r/n = 1 + 0.06/12$.", "answer": "1.005", "accept": [], "hint": "$0.06 \\div 12 = 0.005$." },
+        { "instruction": "Find the exponent $nt = 12 \\times 2$.", "answer": "24", "accept": [], "hint": "Compoundings per year times years." },
+        { "instruction": "Compute $A = 2000 \\cdot 1.005^{24}$ (round to the nearest cent).", "answer": "2254.32", "accept": [], "hint": "$1.005^{24} \\approx 1.127160$, then times 2000." }
+      ],
+      "finalAnswer": { "value": "2254.32", "unit": "dollars" },
+      "solutionNarrative": "$A = 2000(1.005)^{24} = 2000 \\cdot 1.127160 = \\$2{,}254.32$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s09",
+      "concepts": ["compound-interest"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You leave \\$5,000 in a retirement account earning 4% annual interest, compounded annually, for 10 years. Use $A = P(1 + r/n)^{nt}$. (Round to the nearest cent.)",
+      "steps": [
+        { "instruction": "Find the annual growth factor $1 + r/n$.", "answer": "1.04", "accept": [], "hint": "$1 + 0.04/1$." },
+        { "instruction": "Raise it to the power 10: compute $1.04^{10}$ (round to 6 decimal places).", "answer": "1.480244", "accept": [], "hint": "Multiply 1.04 by itself 10 times." },
+        { "instruction": "Multiply by \\$5,000 (round to the nearest cent).", "answer": "7401.22", "accept": [], "hint": "$5000 \\times 1.480244$." }
+      ],
+      "finalAnswer": { "value": "7401.22", "unit": "dollars" },
+      "solutionNarrative": "$A = 5000(1.04)^{10} = 5000 \\cdot 1.480244 = \\$7{,}401.22$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s10",
+      "concepts": ["compound-interest"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You deposit \\$1,500 at 3% annual interest, compounded monthly ($n = 12$), for 5 years. Use $A = P(1 + r/n)^{nt}$. (Round to the nearest cent.)",
+      "steps": [
+        { "instruction": "Find the monthly factor $1 + 0.03/12$.", "answer": "1.0025", "accept": [], "hint": "$0.03 \\div 12 = 0.0025$." },
+        { "instruction": "Find the exponent $nt = 12 \\times 5$.", "answer": "60", "accept": [], "hint": "Months in 5 years." },
+        { "instruction": "Compute $A = 1500 \\cdot 1.0025^{60}$ (round to the nearest cent).", "answer": "1742.43", "accept": [], "hint": "$1.0025^{60} \\approx 1.161620$, then times 1500." }
+      ],
+      "finalAnswer": { "value": "1742.43", "unit": "dollars" },
+      "solutionNarrative": "$A = 1500(1.0025)^{60} = 1500 \\cdot 1.161620 = \\$1{,}742.43$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s11",
+      "concepts": ["exponential-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve by matching bases: $2^x = 32$.",
+      "steps": [
+        { "instruction": "Rewrite 32 as a power of 2. What exponent? (i.e. $32 = 2^?$)", "answer": "5", "accept": [], "hint": "$2^5 = 32$." },
+        { "instruction": "Set the exponents equal and solve for $x$.", "answer": "5", "accept": ["x=5", "x = 5"], "hint": "If $2^x = 2^5$ then $x = 5$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$32 = 2^5$, so $2^x = 2^5$ gives $x = 5$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s12",
+      "concepts": ["exponential-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve by matching bases: $3^x = 81$.",
+      "steps": [
+        { "instruction": "Rewrite 81 as a power of 3: $81 = 3^?$.", "answer": "4", "accept": [], "hint": "$3 \\cdot 3 \\cdot 3 \\cdot 3 = 81$." },
+        { "instruction": "Set the exponents equal and solve for $x$.", "answer": "4", "accept": ["x=4", "x = 4"], "hint": "$3^x = 3^4$ means $x = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$81 = 3^4$, so $3^x = 3^4$ gives $x = 4$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s13",
+      "concepts": ["exponential-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve by matching bases: $5^{x+1} = 125$.",
+      "steps": [
+        { "instruction": "Rewrite 125 as a power of 5: $125 = 5^?$.", "answer": "3", "accept": [], "hint": "$5^3 = 125$." },
+        { "instruction": "Set the exponents equal: $x + 1 = 3$. Solve for $x$.", "answer": "2", "accept": ["x=2", "x = 2"], "hint": "Subtract 1 from both sides." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$125 = 5^3$, so $x + 1 = 3$ and $x = 2$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s14",
+      "concepts": ["exponential-equations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve by matching bases: $9^x = 27$. (Hint: write both sides as powers of 3.)",
+      "steps": [
+        { "instruction": "Rewrite $9^x$ as a power of 3. What is the exponent in terms of $x$? (i.e. $9^x = 3^?$)", "answer": "2x", "accept": ["2*x"], "hint": "$9 = 3^2$, so $9^x = 3^{2x}$." },
+        { "instruction": "Rewrite 27 as a power of 3: $27 = 3^?$.", "answer": "3", "accept": [], "hint": "$3^3 = 27$." },
+        { "instruction": "Set the exponents equal ($2x = 3$) and solve for $x$.", "answer": "3/2", "accept": ["1.5", "x=3/2", "x = 1.5"], "hint": "Divide both sides by 2." }
+      ],
+      "finalAnswer": { "value": "3/2", "unit": "" },
+      "solutionNarrative": "$9^x = 3^{2x}$ and $27 = 3^3$, so $2x = 3$ and $x = \\tfrac{3}{2}$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s15",
+      "concepts": ["evaluate-exponential", "compound-interest"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An investment grows by 8% per year, compounded annually, starting from \\$250. Its value after $x$ years is $250 \\cdot 1.08^x$. What is it worth after 4 years? (Round to the nearest cent.)",
+      "steps": [
+        { "instruction": "Evaluate $1.08^4$ (round to 6 decimal places).", "answer": "1.360489", "accept": [], "hint": "$1.08 \\cdot 1.08 \\cdot 1.08 \\cdot 1.08$." },
+        { "instruction": "Multiply by the starting \\$250 (round to the nearest cent).", "answer": "340.12", "accept": [], "hint": "$250 \\times 1.360489$." }
+      ],
+      "finalAnswer": { "value": "340.12", "unit": "dollars" },
+      "solutionNarrative": "$1.08^4 = 1.360489$, so $250 \\cdot 1.360489 = \\$340.12$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s16",
+      "concepts": ["growth-and-decay"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A viral video gains views by tripling each day, starting at 2 thousand views, modeled by $2 \\cdot 3^x$ thousand. How many thousand views after 5 days?",
+      "steps": [
+        { "instruction": "Evaluate $3^5$.", "answer": "243", "accept": [], "hint": "$3 \\cdot 3 \\cdot 3 \\cdot 3 \\cdot 3$." },
+        { "instruction": "Multiply by the starting 2 thousand.", "answer": "486", "accept": [], "hint": "$2 \\times 243$." }
+      ],
+      "finalAnswer": { "value": "486", "unit": "thousand views" },
+      "solutionNarrative": "$3^5 = 243$, so $2 \\cdot 243 = 486$ thousand views after 5 days."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s17",
+      "concepts": ["compound-interest"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You invest \\$3,000 at 8% annual interest, compounded quarterly ($n = 4$), for 3 years. Use $A = P(1 + r/n)^{nt}$. (Round to the nearest cent.)",
+      "steps": [
+        { "instruction": "Find the quarterly factor $1 + 0.08/4$.", "answer": "1.02", "accept": [], "hint": "$0.08 \\div 4 = 0.02$." },
+        { "instruction": "Find the exponent $nt = 4 \\times 3$.", "answer": "12", "accept": [], "hint": "Quarters in 3 years." },
+        { "instruction": "Compute $A = 3000 \\cdot 1.02^{12}$ (round to the nearest cent).", "answer": "3804.73", "accept": [], "hint": "$1.02^{12} \\approx 1.268242$, then times 3000." }
+      ],
+      "finalAnswer": { "value": "3804.73", "unit": "dollars" },
+      "solutionNarrative": "$A = 3000(1.02)^{12} = 3000 \\cdot 1.268242 = \\$3{,}804.73$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s18",
+      "concepts": ["evaluate-exponential", "growth-and-decay"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The graph shows an exponential function $y = b^x$. Read values off the curve. (Each gridline is one unit.)",
+      "plot": { "type": "cartesian", "xRange": [-3, 4], "yRange": [-1, 9], "grid": true, "curves": [ { "fn": "2^x", "label": "y", "color": "accent", "labelAt": 2.7 } ], "points": [ { "x": 0, "y": 1, "label": "(0,1)", "color": "warn" }, { "x": 3, "y": 8, "label": "(3,8)", "color": "warn" } ], "caption": "An exponential curve through (0,1) and (3,8)" },
+      "steps": [
+        { "instruction": "Read the y-intercept — the $y$-value where the curve crosses the y-axis (at $x = 0$).", "answer": "1", "accept": ["(0,1)", "(0, 1)"], "hint": "The marked point on the y-axis is $(0, 1)$." },
+        { "instruction": "Does this curve show growth or decay? Type 'growth' or 'decay'.", "answer": "growth", "accept": ["growing"], "hint": "The curve rises as $x$ increases to the right." },
+        { "instruction": "Read the value of $y$ at $x = 3$ off the marked point.", "answer": "8", "accept": [], "hint": "The point $(3, 8)$ is marked on the curve." }
+      ],
+      "finalAnswer": { "value": "y-intercept 1, growth, y(3) = 8", "unit": "" },
+      "solutionNarrative": "The curve crosses the y-axis at $(0, 1)$, so the y-intercept is $1$. It rises to the right, so it is growth. At $x = 3$ the marked point gives $y = 8$ (indeed $2^3 = 8$)."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s19",
+      "concepts": ["evaluate-exponential"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Read values off the graphed exponential $y = b^x$. (Each gridline is one unit.)",
+      "plot": { "type": "cartesian", "xRange": [-3, 4], "yRange": [-1, 10], "grid": true, "curves": [ { "fn": "3^x", "label": "y", "color": "accent", "labelAt": 1.6 } ], "points": [ { "x": 0, "y": 1, "label": "(0,1)", "color": "warn" }, { "x": 2, "y": 9, "label": "(2,9)", "color": "warn" } ], "caption": "Read the y-intercept and the value at x = 2" },
+      "steps": [
+        { "instruction": "Read the y-intercept (the $y$-value at $x = 0$).", "answer": "1", "accept": ["(0,1)", "(0, 1)"], "hint": "Every curve $y = b^x$ passes through $(0, 1)$." },
+        { "instruction": "Read the value of $y$ at $x = 2$ off the marked point.", "answer": "9", "accept": [], "hint": "The point $(2, 9)$ is marked." },
+        { "instruction": "Since $y(2) = 9$ and $y = b^2$, what is the base $b$?", "answer": "3", "accept": ["b=3"], "hint": "$b^2 = 9$, so $b = \\sqrt{9}$." }
+      ],
+      "finalAnswer": { "value": "y-intercept 1, y(2) = 9, base 3", "unit": "" },
+      "solutionNarrative": "The curve passes through $(0, 1)$, so the y-intercept is $1$. At $x = 2$ the marked point is $(2, 9)$, and since $b^2 = 9$ the base is $b = 3$: the function is $y = 3^x$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s20",
+      "concepts": ["growth-and-decay", "evaluate-exponential"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The graph shows an exponential function. Read it. (Each gridline is one unit.)",
+      "plot": { "type": "cartesian", "xRange": [-4, 3], "yRange": [-1, 9], "grid": true, "curves": [ { "fn": "(1/2)^x", "label": "y", "color": "warn", "labelAt": -2.9 } ], "points": [ { "x": 0, "y": 1, "label": "(0,1)", "color": "accent" }, { "x": -3, "y": 8, "label": "(-3,8)", "color": "accent" } ], "caption": "Growth or decay? Read the marked points." },
+      "steps": [
+        { "instruction": "Read the y-intercept (the $y$-value at $x = 0$).", "answer": "1", "accept": ["(0,1)", "(0, 1)"], "hint": "The curve crosses the y-axis at the marked point $(0, 1)$." },
+        { "instruction": "Does the curve show growth or decay? Type 'growth' or 'decay'.", "answer": "decay", "accept": ["decaying"], "hint": "As $x$ increases to the right, the curve falls toward the x-axis." },
+        { "instruction": "Read the value of $y$ at $x = -3$ off the marked point.", "answer": "8", "accept": [], "hint": "The point $(-3, 8)$ is marked on the curve." }
+      ],
+      "finalAnswer": { "value": "y-intercept 1, decay, y(-3) = 8", "unit": "" },
+      "solutionNarrative": "The curve crosses the y-axis at $(0, 1)$. It falls to the right (rising to the left), so it is decay. At $x = -3$ the marked point is $(-3, 8)$, matching $(1/2)^{-3} = 8$."
+    },
+    {
+      "id": "algebra-2.exponential-functions.s21",
+      "concepts": ["evaluate-exponential"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bacteria sample is graphed as $y$ (thousands of cells) versus $x$ (days). Read the graph. (Each gridline is one unit.)",
+      "plot": { "type": "cartesian", "xRange": [-1, 4], "yRange": [-1, 9], "grid": true, "curves": [ { "fn": "2^x", "label": "cells", "color": "accent", "labelAt": 2.7 } ], "points": [ { "x": 0, "y": 1, "label": "(0,1)", "color": "warn" }, { "x": 2, "y": 4, "label": "(2,4)", "color": "warn" } ], "caption": "Thousands of cells over time" },
+      "steps": [
+        { "instruction": "Read the starting amount: how many thousand cells at $x = 0$?", "answer": "1", "accept": [], "hint": "The y-intercept is the marked point $(0, 1)$." },
+        { "instruction": "Read the number of thousand cells at $x = 2$ off the marked point.", "answer": "4", "accept": [], "hint": "The point $(2, 4)$ is marked." },
+        { "instruction": "The count went from 1 to 4 over 2 days, doubling each day. By what factor does it multiply per day?", "answer": "2", "accept": [], "hint": "Doubling means multiplying by $2$ each day; $1 \\to 2 \\to 4$." }
+      ],
+      "finalAnswer": { "value": "starts at 1 thousand, y(2) = 4, factor 2", "unit": "" },
+      "solutionNarrative": "The curve starts at $(0, 1)$ — one thousand cells — and reads $(2, 4)$ at day 2. Going $1 \\to 2 \\to 4$ is a daily doubling, a growth factor of $2$: the model is $y = 2^x$."
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "id": "geometry.similarity",
+  "subject": "geometry",
+  "title": "Similarity and Scale",
+  "prerequisites": ["geometry.triangles", "algebra.ratios-proportions-percent"],
+  "estimatedMinutes": 35,
+  "keyConcepts": [
+    {
+      "id": "scale-factor",
+      "label": "Scale factor and similar figures",
+      "microLesson": "Two figures are **similar** when they have the same shape but possibly different sizes: corresponding angles are equal and corresponding sides are proportional. The **scale factor** $k$ is the ratio of new side to matching old side. Every length multiplies by $k$: if a 4 in photo side becomes 12 in, then $k = 12/4 = 3$ and the 6 in side becomes $18$ in. **Areas scale by $k^2$**, not $k$ — triple the sides and the area grows ninefold."
+    },
+    {
+      "id": "solve-similar-triangles",
+      "label": "Solving with proportions",
+      "microLesson": "To find a missing side of similar triangles, match up corresponding sides and set up a **proportion**. If side 6 corresponds to side 9, the scale factor is $9/6 = 1.5$, so a side of 8 corresponds to $8 \\times 1.5 = 12$. Equivalently, cross-multiply: from $\\frac{6}{9} = \\frac{8}{x}$ you get $6x = 72$, so $x = 12$. The only real work is pairing the right sides — smallest with smallest, and sides opposite equal angles with each other."
+    },
+    {
+      "id": "triangle-similarity-criteria",
+      "label": "AA, SAS, and SSS similarity",
+      "microLesson": "You don't need all six measurements to prove two triangles similar. **AA**: two pairs of equal angles (the third pair is then automatic, since angles sum to $180^\\circ$). **SAS**: two pairs of sides in the same ratio with the included angle equal. **SSS**: all three pairs of sides in the same ratio. Parallel lines are an AA machine — a line parallel to one side of a triangle cuts off a smaller triangle with the same angles."
+    },
+    {
+      "id": "indirect-measurement",
+      "label": "Indirect measurement",
+      "microLesson": "Similar triangles measure what you can't reach. The sun makes you and a tree cast shadows at the same angle, so **height : shadow** is the same ratio for both: a 6 ft person with a 4 ft shadow means every object's height is $1.5$ times its shadow. Mirrors on the ground and map scales work the same way — one small triangle you can measure, one big triangle you want, one shared ratio between them."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Same shape, different size\n\nA phone photo zoomed to a billboard. A city shrunk onto a paper map. A 1:24 model of a real car. In every case, nothing about the *shape* changes — only the size. That is **similarity**, and it is the single most-used idea in all of practical geometry: it lets you measure a skyscraper with a shadow, price a rug from a catalog thumbnail, and read distance off a map.\n\nTwo figures are **similar** when corresponding angles are equal and corresponding sides are **proportional** — every length has been multiplied by the same number.\n\n## The scale factor\n\nThat one number is the **scale factor** $k$:\n\n$$k = \\frac{\\text{new length}}{\\text{corresponding old length}}$$\n\nOnce you know $k$, every length in the figure obeys it. A 4 in by 6 in photo enlarged so the short side is 12 in has $k = 12/4 = 3$, so the long side becomes $6 \\times 3 = 18$ in.\n\n**Watch out for area.** Lengths scale by $k$, but **area scales by $k^2$** — the figure grows in two directions at once. Triple a rug's sides and you need *nine* times the material. This $k$ vs. $k^2$ gap is why doubling a pizza's diameter far more than doubles the pizza.\n\n## Finding a missing side: proportions\n\nWith similar triangles, a missing side is one proportion away. Suppose $\\triangle ABC \\sim \\triangle DEF$ with $AB = 6$ matching $DE = 9$, and $BC = 8$ matching the unknown $EF = x$. Then\n\n$$\\frac{6}{9} = \\frac{8}{x} \\;\\Rightarrow\\; 6x = 72 \\;\\Rightarrow\\; x = 12.$$\n\nOr find $k = 9/6 = 1.5$ first and multiply: $x = 8 \\times 1.5 = 12$. Either way, the whole game is **pairing corresponding sides correctly** — smallest with smallest, and sides opposite equal angles together.\n\n## How do you *know* they're similar?\n\nThree shortcuts, each needing only a little information:\n\n- **AA** — two pairs of equal angles. The third pair is free, because angles sum to $180^\\circ$.\n- **SAS** — two pairs of sides in the same ratio, and the angles *between* them equal.\n- **SSS** — all three pairs of sides in the same ratio.\n\nAA appears constantly in disguise. A line drawn **parallel** to one side of a triangle creates matching corresponding angles, so the small triangle it cuts off is automatically similar to the whole one. Two triangles that **share an angle** are halfway to SAS before you measure anything.\n\n## Measuring what you can't reach\n\nHere is the payoff. The sun's rays hit you and a nearby tree at the same angle, so both of you form similar right triangles with your shadows:\n\n$$\\frac{\\text{your height}}{\\text{your shadow}} = \\frac{\\text{tree height}}{\\text{tree shadow}}$$\n\nA 6 ft person casting a 4 ft shadow gives ratio $1.5$; a tree with a 24 ft shadow is $24 \\times 1.5 = 36$ ft tall — measured without leaving the ground. A mirror on the pavement does the same job with reflected sight lines, and a map's scale (1 in : 20 mi) is nothing but a standing similarity ratio between paper and planet.\n\nFile this trick away: **Calculus 1's Related Rates problems lean on exactly this proportion setup.** The classic draining-cone and lengthening-shadow problems begin by writing the similar-triangles ratio you just practiced — calculus only adds *how fast* the quantities change. Master the proportion now and that unit gets dramatically easier."
+  },
+  "application": {
+    "summary": "Similarity turns one easy measurement into another that's out of reach: shadows and mirrors give building heights, map scales give real distances, model scale factors give full-size dimensions, and the k-squared area rule prices enlargements correctly.",
+    "domains": ["surveying", "design and modeling", "cartography", "everyday life"],
+    "workedExample": "**How tall is the flagpole? (No ladder required.)**\n\nYou are 6 ft tall and your shadow is 4 ft long. At the same moment, the flagpole's shadow is 18 ft long. The sun hits both of you at the same angle and both of you stand at right angles to the ground, so the two right triangles are similar by **AA**.\n\nSet the shared ratio: height over shadow is $\\frac{6}{4} = 1.5$ for you, so it is $1.5$ for the flagpole too:\n\n$$\\frac{h}{18} = \\frac{6}{4} \\;\\Rightarrow\\; h = 18 \\times 1.5 = 27.$$\n\n**The flagpole is 27 ft tall**, measured with nothing but two shadows and a tape measure on the ground. Surveyors, foresters, and astronomers (who sized the Earth this way over two thousand years ago) all run on the same one-line proportion.",
+    "domainNotes": [
+      "**Surveying and forestry:** heights of trees, towers, and cliffs from shadows, mirrors, or a proportional sighting stick.",
+      "**Design and modeling:** scale models, blueprints, and 3D prints — every dimension is the drawing times the scale factor, and material or paint scales by k².",
+      "**Cartography:** map and GPS distances are similarity ratios; 1 in : 20 mi turns a ruler measurement into real mileage.",
+      "**Everyday life:** resizing photos and screens without distortion, enlarging recipes' pan sizes, and judging whether the bigger pizza is the better deal (area grows by k²)."
+    ]
+  },
+  "generators": [
+    "gsm-scale-factor-d1",
+    "gsm-scale-factor-d2",
+    "gsm-scale-factor-d3",
+    "gsm-solve-similar-d1",
+    "gsm-solve-similar-d2",
+    "gsm-solve-similar-d3",
+    "gsm-criteria-d1",
+    "gsm-criteria-d2",
+    "gsm-criteria-d3",
+    "gsm-indirect-d1",
+    "gsm-indirect-d2",
+    "gsm-indirect-d3"
+  ],
+  "problems": [
+    {
+      "id": "geometry.similarity.s01",
+      "concepts": ["scale-factor"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 4 in by 6 in photo is enlarged so that the 4 in side becomes 12 in. How long does the 6 in side become?",
+      "steps": [
+        { "instruction": "Find the scale factor of the enlargement.", "answer": "3", "accept": ["k=3", "12/4"], "hint": "Scale factor = new side ÷ matching old side = $12 \\div 4$." },
+        { "instruction": "Multiply the other side by the scale factor.", "answer": "18", "accept": ["18 in", "18 inches"], "hint": "$6 \\times 3$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "inches" },
+      "solutionNarrative": "The scale factor is $12/4 = 3$, so the 6 in side becomes $6 \\times 3 = 18$ inches."
+    },
+    {
+      "id": "geometry.similarity.s02",
+      "concepts": ["scale-factor"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A rectangle 3 by 5 is similar to a rectangle 9 by $w$. Find the scale factor and $w$.",
+      "steps": [
+        { "instruction": "Find the scale factor from the corresponding sides 3 and 9.", "answer": "3", "accept": ["k=3", "9/3"], "hint": "$9 \\div 3$." },
+        { "instruction": "Find $w$.", "answer": "15", "accept": ["w=15"], "hint": "$5 \\times 3$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "The scale factor is $9/3 = 3$, so $w = 5 \\times 3 = 15$."
+    },
+    {
+      "id": "geometry.similarity.s03",
+      "concepts": ["scale-factor"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A model car is 7 inches long; the real car is 168 inches long. The model is 3 inches wide. How wide is the real car?",
+      "steps": [
+        { "instruction": "Find the scale factor from model to real car.", "answer": "24", "accept": ["k=24", "168/7"], "hint": "$168 \\div 7$." },
+        { "instruction": "Multiply the model's width by the scale factor.", "answer": "72", "accept": ["72 in", "72 inches"], "hint": "$3 \\times 24$." }
+      ],
+      "finalAnswer": { "value": "72", "unit": "inches" },
+      "solutionNarrative": "The scale factor is $168/7 = 24$, so the real width is $3 \\times 24 = 72$ inches."
+    },
+    {
+      "id": "geometry.similarity.s04",
+      "concepts": ["scale-factor"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A triangle has sides 5, 7, and 9. A similar triangle's shortest side is 15. Find the similar triangle's longest side.",
+      "steps": [
+        { "instruction": "Find the scale factor using the shortest sides.", "answer": "3", "accept": ["k=3", "15/5"], "hint": "Shortest corresponds to shortest: $15 \\div 5$." },
+        { "instruction": "Scale the longest side.", "answer": "27", "accept": [], "hint": "$9 \\times 3$." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "" },
+      "solutionNarrative": "Shortest sides give $k = 15/5 = 3$, so the longest side is $9 \\times 3 = 27$."
+    },
+    {
+      "id": "geometry.similarity.s05",
+      "concepts": ["scale-factor"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rectangular rug measures 2 m by 3 m. A similar rug is made with scale factor 3. What is the larger rug's area?",
+      "steps": [
+        { "instruction": "Find the area of the original rug in square meters.", "answer": "6", "accept": ["6 m^2"], "hint": "$2 \\times 3$." },
+        { "instruction": "Lengths scale by $k = 3$; by what factor does the AREA scale?", "answer": "9", "accept": ["k^2=9", "3^2"], "hint": "Area scales by $k^2 = 3^2$." },
+        { "instruction": "Find the larger rug's area in square meters.", "answer": "54", "accept": ["54 m^2"], "hint": "$6 \\times 9$." }
+      ],
+      "finalAnswer": { "value": "54", "unit": "square meters" },
+      "solutionNarrative": "The small rug's area is $2 \\times 3 = 6$ m². Area scales by $k^2 = 9$, so the large rug is $6 \\times 9 = 54$ m² — not $18$! Doubling or tripling sides multiplies area by the square of the factor."
+    },
+    {
+      "id": "geometry.similarity.s06",
+      "concepts": ["solve-similar-triangles"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "$\\triangle ABC \\sim \\triangle DEF$. Side $AB = 6$ corresponds to $DE = 9$, and $BC = 8$ corresponds to $EF = x$. Find $x$.",
+      "steps": [
+        { "instruction": "Find the scale factor from $\\triangle ABC$ to $\\triangle DEF$.", "answer": "1.5", "accept": ["3/2", "9/6", "k=1.5"], "hint": "$9 \\div 6$." },
+        { "instruction": "Find $x$.", "answer": "12", "accept": ["x=12"], "hint": "$8 \\times 1.5$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$k = 9/6 = 1.5$, so $x = 8 \\times 1.5 = 12$."
+    },
+    {
+      "id": "geometry.similarity.s07",
+      "concepts": ["solve-similar-triangles"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A small triangular sail has a base of 8 ft and a height of 6 ft. A similar large sail has a base of 20 ft. How tall is the large sail?",
+      "steps": [
+        { "instruction": "Find the scale factor from the small sail to the large sail.", "answer": "2.5", "accept": ["5/2", "20/8", "k=2.5"], "hint": "$20 \\div 8$." },
+        { "instruction": "Find the large sail's height in feet.", "answer": "15", "accept": ["15 ft", "15 feet"], "hint": "$6 \\times 2.5$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "feet" },
+      "solutionNarrative": "$k = 20/8 = 2.5$, so the large sail's height is $6 \\times 2.5 = 15$ ft."
+    },
+    {
+      "id": "geometry.similarity.s08",
+      "concepts": ["solve-similar-triangles"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "$\\triangle PQR \\sim \\triangle XYZ$ with $PQ = 7$ corresponding to $XY = 21$, and $QR = 5$ corresponding to $YZ$. Set up the cross products of $\\frac{7}{21} = \\frac{5}{YZ}$ and solve.",
+      "steps": [
+        { "instruction": "Cross-multiply the proportion $\\frac{7}{21} = \\frac{5}{y}$ (write the resulting equation in $y$).", "answer": "7y = 105", "accept": ["7y=105", "105=7y"], "hint": "$7 \\cdot y = 21 \\cdot 5$." },
+        { "instruction": "Solve for $y = YZ$.", "answer": "15", "accept": ["y=15", "yz=15"], "hint": "$105 \\div 7$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "Cross-multiplying gives $7y = 105$, so $YZ = 15$. (Equivalently, $k = 21/7 = 3$ and $5 \\times 3 = 15$.)"
+    },
+    {
+      "id": "geometry.similarity.s09",
+      "concepts": ["solve-similar-triangles", "triangle-similarity-criteria"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "In $\\triangle ABC$, segment $DE$ is drawn parallel to base $BC$, with $D$ on $AB$ and $E$ on $AC$. Given $AD = 4$, $DB = 6$, and $DE = 6$, find $BC$.",
+      "steps": [
+        { "instruction": "Because $DE \\parallel BC$, the small and large triangles have equal corresponding angles. Which similarity criterion applies?", "answer": "AA", "accept": ["aa similarity", "angle-angle"], "hint": "Two pairs of equal angles is all you need." },
+        { "instruction": "Find the full length $AB$.", "answer": "10", "accept": ["ab=10"], "hint": "$AD + DB = 4 + 6$." },
+        { "instruction": "Find the ratio $AB / AD$.", "answer": "2.5", "accept": ["5/2", "10/4"], "hint": "$10 \\div 4$." },
+        { "instruction": "Find $BC$.", "answer": "15", "accept": ["bc=15"], "hint": "$BC = DE \\times 2.5 = 6 \\times 2.5$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "$DE \\parallel BC$ gives AA similarity between $\\triangle ADE$ and $\\triangle ABC$. The ratio is $AB/AD = 10/4 = 2.5$, so $BC = 6 \\times 2.5 = 15$."
+    },
+    {
+      "id": "geometry.similarity.s10",
+      "concepts": ["triangle-similarity-criteria"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Triangle 1 has angles $50^\\circ$ and $60^\\circ$. Triangle 2 has angles $60^\\circ$ and $70^\\circ$. Are the triangles similar, and by which criterion?",
+      "steps": [
+        { "instruction": "Find the third angle of Triangle 1 in degrees.", "answer": "70", "accept": ["70 degrees"], "hint": "Angles sum to $180^\\circ$: $180 - 50 - 60$." },
+        { "instruction": "Do the triangles have two pairs of equal angles? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Both triangles contain $60^\\circ$ and $70^\\circ$." },
+        { "instruction": "Which similarity criterion applies?", "answer": "AA", "accept": ["aa similarity", "angle-angle"], "hint": "Two pairs of equal **A**ngles." }
+      ],
+      "finalAnswer": { "value": "AA", "unit": "" },
+      "solutionNarrative": "Triangle 1's angles are $50^\\circ, 60^\\circ, 70^\\circ$. Both triangles share the pair $60^\\circ$ and $70^\\circ$, so they are similar by AA."
+    },
+    {
+      "id": "geometry.similarity.s11",
+      "concepts": ["triangle-similarity-criteria"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Triangle 1 has sides 6, 8, 10. Triangle 2 has sides 9, 12, 15. Are they similar, and by which criterion?",
+      "steps": [
+        { "instruction": "Find the ratio of the shortest sides, $9/6$.", "answer": "1.5", "accept": ["3/2"], "hint": "$9 \\div 6$." },
+        { "instruction": "Find the ratio of the middle sides, $12/8$.", "answer": "1.5", "accept": ["3/2"], "hint": "$12 \\div 8$." },
+        { "instruction": "Find the ratio of the longest sides, $15/10$.", "answer": "1.5", "accept": ["3/2"], "hint": "$15 \\div 10$." },
+        { "instruction": "All three ratios match. Which similarity criterion applies?", "answer": "SSS", "accept": ["sss similarity", "side-side-side"], "hint": "All three pairs of **S**ides are proportional." }
+      ],
+      "finalAnswer": { "value": "SSS", "unit": "" },
+      "solutionNarrative": "All three ratios equal $1.5$ ($9/6 = 12/8 = 15/10$), so the triangles are similar by SSS."
+    },
+    {
+      "id": "geometry.similarity.s12",
+      "concepts": ["triangle-similarity-criteria"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "One right triangle has acute angle $35^\\circ$. Another right triangle has acute angle $55^\\circ$. Are they similar, and by which criterion?",
+      "steps": [
+        { "instruction": "Find the other acute angle of the first triangle in degrees.", "answer": "55", "accept": ["55 degrees"], "hint": "$180 - 90 - 35$." },
+        { "instruction": "Do the triangles share two equal angles? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Both have a $90^\\circ$ angle and a $55^\\circ$ angle." },
+        { "instruction": "Which similarity criterion applies?", "answer": "AA", "accept": ["aa similarity", "angle-angle"], "hint": "Two pairs of equal angles." }
+      ],
+      "finalAnswer": { "value": "AA", "unit": "" },
+      "solutionNarrative": "The first triangle's angles are $90^\\circ, 35^\\circ, 55^\\circ$; both triangles contain $90^\\circ$ and $55^\\circ$, so they are similar by AA."
+    },
+    {
+      "id": "geometry.similarity.s13",
+      "concepts": ["triangle-similarity-criteria"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A carpenter checks whether two triangular braces are similar. Both braces include the same corner angle of the frame. The sides forming that angle measure 4 ft and 6 ft on the small brace, and 6 ft and 9 ft on the large brace. Are the braces similar, and by which criterion?",
+      "steps": [
+        { "instruction": "Find the ratio of the first pair of sides, $6/4$.", "answer": "1.5", "accept": ["3/2"], "hint": "$6 \\div 4$." },
+        { "instruction": "Find the ratio of the second pair of sides, $9/6$.", "answer": "1.5", "accept": ["3/2"], "hint": "$9 \\div 6$." },
+        { "instruction": "Is the angle between those sides the same in both braces? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Both braces include the same corner angle of the frame." },
+        { "instruction": "Which similarity criterion applies?", "answer": "SAS", "accept": ["sas similarity", "side-angle-side"], "hint": "Two proportional **S**ides with the included **A**ngle equal." }
+      ],
+      "finalAnswer": { "value": "SAS", "unit": "" },
+      "solutionNarrative": "Both side ratios are $1.5$ and the included angle is shared, so the braces are similar by SAS."
+    },
+    {
+      "id": "geometry.similarity.s14",
+      "concepts": ["indirect-measurement"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 6 ft tall person casts a 4 ft shadow. At the same time, a tree casts a 24 ft shadow. How tall is the tree?",
+      "steps": [
+        { "instruction": "Find the height-to-shadow ratio.", "answer": "1.5", "accept": ["3/2", "6/4"], "hint": "$6 \\div 4$." },
+        { "instruction": "Multiply the tree's shadow by that ratio to get its height in feet.", "answer": "36", "accept": ["36 ft", "36 feet"], "hint": "$24 \\times 1.5$." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "feet" },
+      "solutionNarrative": "The sun makes similar triangles, so height/shadow is the same for both: $6/4 = 1.5$, and the tree is $24 \\times 1.5 = 36$ ft tall."
+    },
+    {
+      "id": "geometry.similarity.s15",
+      "concepts": ["indirect-measurement"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A model airplane is built at a 1:48 scale. The model is 9 inches long. How long is the real airplane, in feet?",
+      "steps": [
+        { "instruction": "Find the real airplane's length in inches.", "answer": "432", "accept": ["432 in", "432 inches"], "hint": "$9 \\times 48$." },
+        { "instruction": "Convert to feet (12 inches per foot).", "answer": "36", "accept": ["36 ft", "36 feet"], "hint": "$432 \\div 12$." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "feet" },
+      "solutionNarrative": "The real plane is $9 \\times 48 = 432$ inches, which is $432 \\div 12 = 36$ feet long."
+    },
+    {
+      "id": "geometry.similarity.s16",
+      "concepts": ["indirect-measurement"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "To measure a building, you place a mirror flat on the ground 3 m from your feet and back up until you see the building's top in it. The mirror is 12 m from the building, and your eyes are 1.5 m above the ground. How tall is the building? (The two sight-line triangles at the mirror are similar.)",
+      "steps": [
+        { "instruction": "Find the ratio of the building's distance to your distance from the mirror.", "answer": "4", "accept": ["12/3"], "hint": "$12 \\div 3$." },
+        { "instruction": "Multiply your eye height by that ratio to get the building's height in meters.", "answer": "6", "accept": ["6 m", "6 meters"], "hint": "$1.5 \\times 4$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "meters" },
+      "solutionNarrative": "Light reflects off the mirror at equal angles, making similar triangles: $h/12 = 1.5/3$, so $h = 1.5 \\times 4 = 6$ m."
+    },
+    {
+      "id": "geometry.similarity.s17",
+      "concepts": ["indirect-measurement"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A road-trip map uses a scale of 1 inch : 20 miles. Your planned route measures 4.5 inches on the map. How far is the drive, and how long will it take at an average of 60 mph?",
+      "steps": [
+        { "instruction": "Convert the map measurement to real miles.", "answer": "90", "accept": ["90 mi", "90 miles"], "hint": "$4.5 \\times 20$." },
+        { "instruction": "Find the driving time in hours at 60 mph.", "answer": "1.5", "accept": ["3/2", "1.5 hours"], "hint": "$90 \\div 60$." }
+      ],
+      "finalAnswer": { "value": "1.5", "unit": "hours" },
+      "solutionNarrative": "The map scale is a similarity ratio: $4.5 \\times 20 = 90$ miles. At 60 mph, that's $90/60 = 1.5$ hours."
+    }
+  ]
+}

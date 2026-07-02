@@ -1,0 +1,264 @@
+{
+  "id": "algebra.polynomials-operations",
+  "subject": "algebra",
+  "title": "Polynomial Operations",
+  "prerequisites": [],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "add-subtract-polynomials",
+      "label": "Adding and subtracting polynomials",
+      "microLesson": "To add or subtract polynomials, combine **like terms** — terms with the exact same variable and power. $3x^2$ and $5x^2$ combine; $3x^2$ and $5x$ do not. The trap is subtraction: a minus sign in front of a parenthesis flips **every** term inside. $(4x^2 + 2x) - (x^2 - 3x) = 4x^2 + 2x - x^2 + 3x = 3x^2 + 5x$. Distribute that sign before you collect."
+    },
+    {
+      "id": "multiply-monomial",
+      "label": "Multiplying a monomial through a polynomial",
+      "microLesson": "A single term multiplies **everything** inside the parenthesis, one term at a time: $a(b + c) = ab + ac$. Multiply the coefficients and **add the exponents** of like bases. $3x(2x^2 - 4x + 1) = 6x^3 - 12x^2 + 3x$. Watch signs: a negative monomial flips each sign inside."
+    },
+    {
+      "id": "multiply-binomials",
+      "label": "Multiplying two binomials (FOIL)",
+      "microLesson": "Each term in the first binomial multiplies each term in the second — **F**irst, **O**uter, **I**nner, **L**ast. $(x + 3)(x - 5) = x^2 - 5x + 3x - 15 = x^2 - 2x - 15$. The middle term is the sum of the outer and inner products; combine those two like terms to finish the trinomial."
+    },
+    {
+      "id": "degree-and-classification",
+      "label": "Degree and classification",
+      "microLesson": "The **degree** of a polynomial is its highest exponent: $5x^3 - 2x + 1$ has degree 3. Classify by the number of terms: one term is a **monomial**, two a **binomial**, three a **trinomial**. So $7x$ is a degree-1 monomial; $x^2 - 9$ is a degree-2 binomial; $x^2 + 2x + 1$ is a degree-2 trinomial."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Why bundle numbers into polynomials\n\nReal quantities rarely come as a single number — they come as a *recipe* that changes with some unknown. The area of a plot whose length is 3 ft more than its width is $x(x + 3)$. The total cost of producing $x$ units when one line costs $2x + 50$ and another costs $3x + 20$ is their sum. A **polynomial** is exactly this kind of expression: a sum of terms like $a x^n$, each a coefficient times the variable raised to a whole-number power.\n\nThe whole point of *polynomial operations* is to take these recipes and combine, expand, or simplify them into one clean expression you can read, evaluate, or graph.\n\n## Adding and subtracting: collect like terms\n\nYou can only combine **like terms** — terms with the identical variable and exponent. Think of $x^2$, $x$, and the constant as three different currencies; you add dollars to dollars, not dollars to cents.\n\n$$(4x^2 + 2x - 1) + (x^2 + 5x + 6) = 5x^2 + 7x + 5.$$\n\nSubtraction hides the only real trap in this topic: the minus sign distributes to **every** term in the second polynomial.\n\n$$(4x^2 + 2x) - (x^2 - 3x) = 4x^2 + 2x - x^2 + 3x = 3x^2 + 5x.$$\n\nNotice the $-(-3x)$ became $+3x$. Flip every sign first, then collect.\n\n## Multiplying a monomial through\n\nA single term multiplies everything inside the parentheses. Multiply the coefficients and **add exponents** on matching bases:\n\n$$3x(2x^2 - 4x + 1) = 6x^3 - 12x^2 + 3x.$$\n\nThis is how an area or a cost gets *scaled* — every part of the recipe is affected.\n\n## Multiplying two binomials: FOIL\n\nWhen two binomials multiply, each term of the first hits each term of the second. **FOIL** — First, Outer, Inner, Last — is just a way to make sure you catch all four products:\n\n$$(x + 3)(x - 5) = \\underbrace{x^2}_{F} \\underbrace{- 5x}_{O} \\underbrace{+ 3x}_{I} \\underbrace{- 15}_{L} = x^2 - 2x - 15.$$\n\nThe outer and inner products are like terms — combine them for the middle coefficient. This is the engine behind turning *(length)(width)* into an area polynomial.\n\n## Degree and classification: reading a polynomial at a glance\n\nTwo quick labels describe any polynomial:\n\n- **Degree** = the highest exponent. $5x^3 - 2x + 1$ has degree 3. The degree tells you the shape of its graph and how fast it grows.\n- **Number of terms**: one term → **monomial**, two → **binomial**, three → **trinomial**.\n\nSo $x^2 - 9$ is a degree-2 binomial, and the area expression $x^2 + 5x + 6$ is a degree-2 trinomial. Naming a result correctly is the fast way to sanity-check that your expansion came out the size you expected."
+  },
+  "application": {
+    "summary": "Polynomial operations build and simplify the 'recipes' behind real quantities: area as length times width, total cost as the sum of two production models, the volume of a box from its three dimensions, and revenue as price times quantity. Multiplying expands a product into a single polynomial; adding combines separate models into one.",
+    "domains": ["construction", "business", "manufacturing", "everyday life"],
+    "workedExample": "**The area of a bordered garden**\n\nA rectangular garden is $x$ feet wide and 4 feet longer than it is wide, so its length is $x + 4$. You also add a uniform strip that makes each side 2 ft larger, giving outer dimensions $(x + 2)$ by $(x + 6)$. What's the area of the outer rectangle as a single polynomial?\n\nMultiply the two side expressions with FOIL:\n\n$$(x + 2)(x + 6) = x^2 + 6x + 2x + 12 = x^2 + 8x + 12.$$\n\nSo the outer area is $x^2 + 8x + 12$ square feet. If the garden is 5 ft wide ($x = 5$), that's $25 + 40 + 12 = 77$ ft² — and you can read it straight off the polynomial without re-multiplying. The same move turns *price × quantity* into a revenue polynomial and *(x)(x+2)(x+3)* into a box's volume.",
+    "domainNotes": [
+      "**Construction:** area and volume of plots, rooms, and boxes expressed as products of dimension expressions.",
+      "**Business:** revenue = price × quantity when both depend on the same variable; combining two cost models by addition.",
+      "**Manufacturing:** total material as a sum of per-part polynomials; scaling a layout by multiplying through a monomial.",
+      "**Everyday life:** comparing or combining two changing quantities (like two phone-plan cost formulas) into one expression."
+    ]
+  },
+  "generators": ["poly-add-v1", "poly-subtract-v1", "poly-monomial-v1", "poly-foil-v1", "poly-degree-v1"],
+  "problems": [
+    {
+      "id": "algebra.polynomials-operations.s01",
+      "concepts": ["add-subtract-polynomials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Add the polynomials: $(3x^2 + 2x + 1) + (x^2 + 4x + 5)$.",
+      "steps": [
+        { "instruction": "Combine like terms to write the result as a single polynomial.", "answer": "4x^2 + 6x + 6", "accept": [], "hint": "Add the $x^2$ terms, the $x$ terms, and the constants separately." }
+      ],
+      "finalAnswer": { "value": "4x^2 + 6x + 6", "unit": "" },
+      "solutionNarrative": "Add like terms: $3x^2 + x^2 = 4x^2$, $2x + 4x = 6x$, $1 + 5 = 6$, giving $4x^2 + 6x + 6$."
+    },
+    {
+      "id": "algebra.polynomials-operations.s02",
+      "concepts": ["add-subtract-polynomials"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Subtract: $(5x^2 + 3x) - (2x^2 - 4x + 1)$.",
+      "steps": [
+        { "instruction": "Distribute the subtraction sign across the second polynomial.", "answer": "5x^2 + 3x - 2x^2 + 4x - 1", "accept": [], "hint": "The minus sign flips every term inside the second parenthesis." },
+        { "instruction": "Combine like terms into a single polynomial.", "answer": "3x^2 + 7x - 1", "accept": [], "hint": "$5x^2 - 2x^2$, $3x + 4x$, and the constant $-1$." }
+      ],
+      "finalAnswer": { "value": "3x^2 + 7x - 1", "unit": "" },
+      "solutionNarrative": "Distributing the minus gives $5x^2 + 3x - 2x^2 + 4x - 1$; combining like terms yields $3x^2 + 7x - 1$."
+    },
+    {
+      "id": "algebra.polynomials-operations.s03",
+      "concepts": ["add-subtract-polynomials"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Factory line A produces a cost of $2x^2 + 5x + 40$ dollars and line B a cost of $x^2 - 3x + 25$ dollars for $x$ units. Write the total combined cost as a single polynomial.",
+      "steps": [
+        { "instruction": "Add the two cost polynomials.", "answer": "(2x^2 + 5x + 40) + (x^2 - 3x + 25)", "accept": ["2x^2 + 5x + 40 + x^2 - 3x + 25"], "hint": "Total cost is the sum of the two models." },
+        { "instruction": "Combine like terms to write the total cost.", "answer": "3x^2 + 2x + 65", "accept": [], "hint": "$2x^2 + x^2$, $5x - 3x$, $40 + 25$." }
+      ],
+      "finalAnswer": { "value": "3x^2 + 2x + 65", "unit": "dollars" },
+      "solutionNarrative": "Adding the models: $2x^2 + x^2 = 3x^2$, $5x - 3x = 2x$, $40 + 25 = 65$, so the total cost is $3x^2 + 2x + 65$ dollars."
+    },
+    {
+      "id": "algebra.polynomials-operations.s04",
+      "concepts": ["add-subtract-polynomials"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A company's revenue is $4x^2 + 10x$ dollars and its cost is $x^2 + 6x + 12$ dollars for $x$ units. Profit is revenue minus cost. Write the profit as a single polynomial.",
+      "steps": [
+        { "instruction": "Set up profit as revenue minus cost, distributing the minus sign.", "answer": "4x^2 + 10x - x^2 - 6x - 12", "accept": [], "hint": "Subtracting the cost flips every sign inside its parenthesis." },
+        { "instruction": "Combine like terms to write the profit polynomial.", "answer": "3x^2 + 4x - 12", "accept": [], "hint": "$4x^2 - x^2$, $10x - 6x$, and $-12$." }
+      ],
+      "finalAnswer": { "value": "3x^2 + 4x - 12", "unit": "dollars" },
+      "solutionNarrative": "Profit $= (4x^2 + 10x) - (x^2 + 6x + 12) = 4x^2 + 10x - x^2 - 6x - 12 = 3x^2 + 4x - 12$ dollars."
+    },
+    {
+      "id": "algebra.polynomials-operations.s05",
+      "concepts": ["multiply-monomial"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Multiply: $3x(2x + 5)$.",
+      "steps": [
+        { "instruction": "Distribute the monomial across both terms.", "answer": "6x^2 + 15x", "accept": [], "hint": "$3x \\cdot 2x = 6x^2$ and $3x \\cdot 5 = 15x$." }
+      ],
+      "finalAnswer": { "value": "6x^2 + 15x", "unit": "" },
+      "solutionNarrative": "$3x \\cdot 2x = 6x^2$ and $3x \\cdot 5 = 15x$, giving $6x^2 + 15x$."
+    },
+    {
+      "id": "algebra.polynomials-operations.s06",
+      "concepts": ["multiply-monomial"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Multiply: $3x(2x^2 - 4x + 1)$.",
+      "steps": [
+        { "instruction": "Distribute the monomial across all three terms.", "answer": "6x^3 - 12x^2 + 3x", "accept": [], "hint": "Multiply $3x$ by each term, adding exponents on the $x$ bases." }
+      ],
+      "finalAnswer": { "value": "6x^3 - 12x^2 + 3x", "unit": "" },
+      "solutionNarrative": "$3x \\cdot 2x^2 = 6x^3$, $3x \\cdot (-4x) = -12x^2$, $3x \\cdot 1 = 3x$, giving $6x^3 - 12x^2 + 3x$."
+    },
+    {
+      "id": "algebra.polynomials-operations.s07",
+      "concepts": ["multiply-monomial"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rectangular solar panel array is $2x$ meters wide and $(3x^2 - x + 4)$ meters long. Write its area as a single polynomial.",
+      "steps": [
+        { "instruction": "Multiply width by length, distributing the monomial.", "answer": "2x(3x^2 - x + 4)", "accept": [], "hint": "Area = width × length = $2x(3x^2 - x + 4)$." },
+        { "instruction": "Expand to a single polynomial.", "answer": "6x^3 - 2x^2 + 8x", "accept": [], "hint": "$2x \\cdot 3x^2$, $2x \\cdot (-x)$, $2x \\cdot 4$." }
+      ],
+      "finalAnswer": { "value": "6x^3 - 2x^2 + 8x", "unit": "square meters" },
+      "solutionNarrative": "Area $= 2x(3x^2 - x + 4) = 6x^3 - 2x^2 + 8x$ square meters."
+    },
+    {
+      "id": "algebra.polynomials-operations.s08",
+      "concepts": ["multiply-monomial"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A square tile has side length $x$ inches. You lay out a row of them that is $5x$ inches long and $x$ inches tall. Write the area of the row as a polynomial.",
+      "steps": [
+        { "instruction": "Multiply the two side lengths.", "answer": "5x^2", "accept": [], "hint": "$5x \\cdot x = 5x^2$." }
+      ],
+      "finalAnswer": { "value": "5x^2", "unit": "square inches" },
+      "solutionNarrative": "$5x \\cdot x = 5x^2$ square inches."
+    },
+    {
+      "id": "algebra.polynomials-operations.s09",
+      "concepts": ["multiply-binomials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Multiply: $(x + 2)(x + 3)$.",
+      "steps": [
+        { "instruction": "Use FOIL and combine like terms.", "answer": "x^2 + 5x + 6", "accept": [], "hint": "$x \\cdot x$, then the outer + inner middle terms $3x + 2x$, then $2 \\cdot 3$." }
+      ],
+      "finalAnswer": { "value": "x^2 + 5x + 6", "unit": "" },
+      "solutionNarrative": "$(x+2)(x+3) = x^2 + 3x + 2x + 6 = x^2 + 5x + 6$."
+    },
+    {
+      "id": "algebra.polynomials-operations.s10",
+      "concepts": ["multiply-binomials"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Multiply: $(x + 3)(x - 5)$.",
+      "steps": [
+        { "instruction": "Apply FOIL to get the four products.", "answer": "x^2 - 5x + 3x - 15", "accept": [], "hint": "First $x^2$, Outer $-5x$, Inner $+3x$, Last $-15$." },
+        { "instruction": "Combine the like middle terms.", "answer": "x^2 - 2x - 15", "accept": [], "hint": "$-5x + 3x = -2x$." }
+      ],
+      "finalAnswer": { "value": "x^2 - 2x - 15", "unit": "" },
+      "solutionNarrative": "$(x+3)(x-5) = x^2 - 5x + 3x - 15 = x^2 - 2x - 15$."
+    },
+    {
+      "id": "algebra.polynomials-operations.s11",
+      "concepts": ["multiply-binomials"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rectangular patio is $(x + 4)$ feet long and $(x + 6)$ feet wide. Write its area as a single polynomial.",
+      "steps": [
+        { "instruction": "Multiply the length and width with FOIL.", "answer": "x^2 + 6x + 4x + 24", "accept": [], "hint": "First $x^2$, Outer $6x$, Inner $4x$, Last $24$." },
+        { "instruction": "Combine like terms to write the area.", "answer": "x^2 + 10x + 24", "accept": [], "hint": "$6x + 4x = 10x$." }
+      ],
+      "finalAnswer": { "value": "x^2 + 10x + 24", "unit": "square feet" },
+      "solutionNarrative": "Area $= (x+4)(x+6) = x^2 + 6x + 4x + 24 = x^2 + 10x + 24$ square feet."
+    },
+    {
+      "id": "algebra.polynomials-operations.s12",
+      "concepts": ["multiply-binomials", "multiply-monomial"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A storage box has height $x$, width $x + 2$, and length $x + 3$ (all in feet). Write its volume as a single polynomial. (First multiply the two binomial dimensions, then multiply by the height.)",
+      "steps": [
+        { "instruction": "Multiply the two binomial dimensions $(x + 2)(x + 3)$.", "answer": "x^2 + 5x + 6", "accept": [], "hint": "FOIL: $x^2 + 3x + 2x + 6$." },
+        { "instruction": "Multiply that result by the height $x$.", "answer": "x^3 + 5x^2 + 6x", "accept": [], "hint": "Distribute $x$ across $x^2 + 5x + 6$." }
+      ],
+      "finalAnswer": { "value": "x^3 + 5x^2 + 6x", "unit": "cubic feet" },
+      "solutionNarrative": "$(x+2)(x+3) = x^2 + 5x + 6$; then $x(x^2 + 5x + 6) = x^3 + 5x^2 + 6x$ cubic feet."
+    },
+    {
+      "id": "algebra.polynomials-operations.s13",
+      "concepts": ["multiply-binomials"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A concert sells tickets at price $(x + 5)$ dollars, and the number of tickets sold is $(40 - 2x)$. Revenue is price times quantity. Write the revenue as a single polynomial.",
+      "steps": [
+        { "instruction": "Multiply price by quantity using FOIL.", "answer": "40x - 2x^2 + 200 - 10x", "accept": [], "hint": "$(x+5)(40-2x)$: First $40x$, Outer $-2x^2$, Inner $200$, Last $-10x$." },
+        { "instruction": "Combine like terms and write the revenue polynomial.", "answer": "-2x^2 + 30x + 200", "accept": [], "hint": "$40x - 10x = 30x$; arrange in descending degree." }
+      ],
+      "finalAnswer": { "value": "-2x^2 + 30x + 200", "unit": "dollars" },
+      "solutionNarrative": "Revenue $= (x+5)(40-2x) = 40x - 2x^2 + 200 - 10x = -2x^2 + 30x + 200$ dollars."
+    },
+    {
+      "id": "algebra.polynomials-operations.s14",
+      "concepts": ["degree-and-classification"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the polynomial $7x + 2$. State its degree, then classify it by number of terms.",
+      "steps": [
+        { "instruction": "What is the degree of $7x + 2$?", "answer": "1", "accept": ["one"], "hint": "The highest exponent on $x$." },
+        { "instruction": "Classify it by number of terms (monomial, binomial, or trinomial).", "answer": "binomial", "accept": ["two-term", "two terms"], "hint": "Count the terms: it has two." }
+      ],
+      "finalAnswer": { "value": "degree 1, binomial", "unit": "" },
+      "solutionNarrative": "$7x + 2$ has highest exponent 1 (degree 1) and two terms, so it is a binomial."
+    },
+    {
+      "id": "algebra.polynomials-operations.s15",
+      "concepts": ["degree-and-classification"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Consider the polynomial $4x^3 - 2x + 9$. State its degree, then classify it by number of terms.",
+      "steps": [
+        { "instruction": "What is the degree of $4x^3 - 2x + 9$?", "answer": "3", "accept": ["three"], "hint": "The highest exponent present." },
+        { "instruction": "Classify it by number of terms (monomial, binomial, or trinomial).", "answer": "trinomial", "accept": ["three-term", "three terms"], "hint": "Count the terms: it has three." }
+      ],
+      "finalAnswer": { "value": "degree 3, trinomial", "unit": "" },
+      "solutionNarrative": "The highest exponent is 3 (degree 3), and there are three terms, so it is a trinomial."
+    },
+    {
+      "id": "algebra.polynomials-operations.s16",
+      "concepts": ["degree-and-classification", "multiply-monomial"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rectangular slab has width $4x$ feet and length $(2x^2 + 3)$ feet, so its area is $4x(2x^2 + 3)$. Expand the area, then state its degree and classify it by number of terms.",
+      "steps": [
+        { "instruction": "Expand the area $4x(2x^2 + 3)$.", "answer": "8x^3 + 12x", "accept": [], "hint": "$4x \\cdot 2x^2 = 8x^3$ and $4x \\cdot 3 = 12x$." },
+        { "instruction": "What is the degree of the expanded area?", "answer": "3", "accept": ["three"], "hint": "The highest exponent in $8x^3 + 12x$." },
+        { "instruction": "Classify the expanded area by number of terms.", "answer": "binomial", "accept": ["two-term", "two terms"], "hint": "It has two terms." }
+      ],
+      "finalAnswer": { "value": "8x^3 + 12x; degree 3, binomial", "unit": "" },
+      "solutionNarrative": "$4x(2x^2 + 3) = 8x^3 + 12x$. The highest exponent is 3 (degree 3) and there are two terms, so it is a binomial."
+    },
+    {
+      "id": "algebra.polynomials-operations.s17",
+      "concepts": ["degree-and-classification"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the polynomial $6x^2$. State its degree, then classify it by number of terms.",
+      "steps": [
+        { "instruction": "What is the degree of $6x^2$?", "answer": "2", "accept": ["two"], "hint": "The exponent on $x$." },
+        { "instruction": "Classify it by number of terms (monomial, binomial, or trinomial).", "answer": "monomial", "accept": ["one-term", "one term"], "hint": "It is a single term." }
+      ],
+      "finalAnswer": { "value": "degree 2, monomial", "unit": "" },
+      "solutionNarrative": "$6x^2$ has exponent 2 (degree 2) and a single term, so it is a monomial."
+    }
+  ]
+}

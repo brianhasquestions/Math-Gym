@@ -1,0 +1,270 @@
+{
+  "id": "geometry.circles",
+  "subject": "geometry",
+  "title": "Circles: Arcs, Angles, and Sectors",
+  "prerequisites": ["geometry.perimeter-and-area", "geometry.angles-and-lines"],
+  "estimatedMinutes": 35,
+  "keyConcepts": [
+    {
+      "id": "radius-diameter-circumference",
+      "label": "Radius, diameter, circumference, area",
+      "microLesson": "A circle is fixed by its **radius** $r$ (center to edge); the **diameter** $d = 2r$ crosses the whole circle through the center. The distance around is the **circumference** $C = 2\\pi r = \\pi d$, and the enclosed surface is the **area** $A = \\pi r^2$. Give exact answers with $\\pi$ in them: a pizza with $d = 16$ in has $r = 8$ and $C = 16\\pi \\approx 50.3$ in. These formulas also run backwards: from $A = 49\\pi$, the radius is $\\sqrt{49} = 7$."
+    },
+    {
+      "id": "central-inscribed-angles",
+      "label": "Central and inscribed angles",
+      "microLesson": "A **central angle** has its vertex at the center: it carves out an arc of exactly the same measure — a $80^\\circ$ central angle means an $80^\\circ$ arc. An **inscribed angle** has its vertex ON the circle and measures **half** its arc: the same $80^\\circ$ arc is seen as $40^\\circ$ from the rim. Special case (**Thales**): a triangle inscribed with one side on a diameter always has a $90^\\circ$ angle opposite that diameter, because the diameter's arc is $180^\\circ$."
+    },
+    {
+      "id": "arc-length-sector-area",
+      "label": "Arc length and sector area",
+      "microLesson": "A slice of a circle is just a **fraction of the whole**, and the fraction is $\\frac{\\theta}{360}$ for a central angle of $\\theta$ degrees. Arc length $= \\frac{\\theta}{360} \\cdot 2\\pi r$ and sector area $= \\frac{\\theta}{360} \\cdot \\pi r^2$. A $90^\\circ$ sprinkler with reach 12 m waters $\\frac{1}{4}$ of the full circle: $\\frac{1}{4} \\cdot 144\\pi = 36\\pi$ m². Find the fraction first — the rest is the formulas you already know."
+    },
+    {
+      "id": "chords-tangents",
+      "label": "Chords and tangents",
+      "microLesson": "A **chord** joins two points on the circle; a **tangent** touches the circle at exactly one point. Two workhorse facts: (1) a tangent is **perpendicular to the radius** at the point of contact, and the two tangent segments from an external point are equal; (2) a radius drawn perpendicular to a chord **bisects** it. Both hand you a right triangle, so the Pythagorean theorem finishes the job: radius 5, external point 13 away $\\Rightarrow$ tangent length $\\sqrt{13^2 - 5^2} = 12$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The roundest shape in your day\n\nPizza slices, Ferris wheels, lawn sprinklers, gears, GPS coverage zones — circles run more of your day than any other shape. This topic gives you the full toolkit: the two base formulas, what angles do inside a circle, how to price a *slice* of a circle, and the two straight lines (chords and tangents) that interact with it.\n\n## Radius, diameter, and the two base formulas\n\nEverything starts from the **radius** $r$, the distance from center to edge. The **diameter** $d = 2r$ spans the whole circle. Then:\n\n$$C = 2\\pi r = \\pi d \\quad (\\text{circumference — distance around}), \\qquad A = \\pi r^2 \\quad (\\text{area — surface inside}).$$\n\n**Convention for this topic:** give answers in exact $\\pi$ form ($16\\pi$, $36\\pi$) unless a problem explicitly asks you to round. A 16-inch pizza ($r = 8$) has circumference $C = 16\\pi \\approx 50.3$ in and area $64\\pi \\approx 201.1$ in². The formulas also run **backwards**: a sprinkler that waters $49\\pi$ m² has $r^2 = 49$, so its reach is 7 m.\n\n## Angles in a circle: center vs. rim\n\nA **central angle** (vertex at the center) cuts off an arc of *the same measure*: spin $80^\\circ$ at the hub of a Ferris wheel and you sweep an $80^\\circ$ arc of the rim.\n\nAn **inscribed angle** (vertex *on* the circle) sees its arc from the rim, and it always measures **half** the arc:\n\n$$\\text{inscribed angle} = \\tfrac{1}{2} \\cdot \\text{arc}.$$\n\nSo the $80^\\circ$ arc looks like $40^\\circ$ from anywhere on the far side of the circle — a fact camera crews use to stay in a 'viewing zone' with a constant angle on a stage.\n\n**Thales' theorem** is the star special case: if one side of an inscribed triangle is a **diameter**, the arc it subtends is $180^\\circ$, so the angle opposite is $\\frac{180}{2} = 90^\\circ$ — a guaranteed right angle, no protractor needed. Carpenters actually use this to find circle centers.\n\n## Slices: arc length and sector area\n\nA slice (a **sector**) is a fraction of the circle, and the central angle tells you the fraction:\n\n$$\\text{fraction} = \\frac{\\theta}{360}, \\qquad \\text{arc length} = \\frac{\\theta}{360} \\cdot 2\\pi r, \\qquad \\text{sector area} = \\frac{\\theta}{360} \\cdot \\pi r^2.$$\n\nOne slice of an 8-slice, 16-inch pizza has $\\theta = 45^\\circ$: fraction $\\frac{1}{8}$, area $\\frac{1}{8}(64\\pi) = 8\\pi \\approx 25.1$ in². A $90^\\circ$ sprinkler with a 12 m throw waters $\\frac{1}{4}(144\\pi) = 36\\pi$ m². **Find the fraction first**; everything else is the base formulas.\n\n## Chords and tangents: where lines meet circles\n\nA **chord** cuts across the circle; a **tangent** just grazes it at one point. Three facts do all the work:\n\n1. **Tangent ⊥ radius** at the point of contact.\n2. The **two tangent segments** from the same external point are equal in length.\n3. A radius **perpendicular to a chord bisects it** (cuts it in half).\n\nEach fact builds a right triangle, and the Pythagorean theorem finishes it. Standing 13 m from the center of a circular tank of radius 5 m, your line of sight grazes the tank along a tangent of length $\\sqrt{13^2 - 5^2} = \\sqrt{144} = 12$ m. A straight road passing 6 km from a cell tower with 10 km range is covered along a chord of $2\\sqrt{10^2 - 6^2} = 16$ km. Draw the radius, spot the right angle, and compute."
+  },
+  "application": {
+    "summary": "Circle geometry prices pizza fairly (area, not diameter), sizes Ferris wheel rides and gear trains (arc length), plans sprinkler and radar coverage (sectors), and turns tangent/chord right angles into distances for roads, GPS zones, and construction layouts.",
+    "domains": ["food and retail", "engineering", "landscaping", "navigation and coverage"],
+    "workedExample": "**The sprinkler bid**\n\nA landscaper's sprinkler pivots through $120^\\circ$ and sprays water 9 m. The client pays by the square meter of watered lawn — what area does one sprinkler cover?\n\nStep 1 — the fraction of a full circle: $\\frac{120}{360} = \\frac{1}{3}$.\n\nStep 2 — the full circle's area: $A = \\pi r^2 = \\pi (9)^2 = 81\\pi$ m².\n\nStep 3 — the sector: $\\frac{1}{3} \\cdot 81\\pi = 27\\pi \\approx 84.8$ m².\n\n**One sprinkler waters $27\\pi \\approx 84.8$ m².** The landscaper can now quote the job, count how many heads a lawn needs, and check the arc of wetted fence line ($\\frac{1}{3} \\cdot 18\\pi = 6\\pi \\approx 18.8$ m) — all from one fraction. Swap the sprinkler for a radar dish, a pizza slice, or a windshield wiper and the arithmetic is identical.",
+    "domainNotes": [
+      "**Food and retail:** pizza value per dollar is an area question ($\\pi r^2$), and one slice is a sector — a 16-inch pie is 4× the pizza of an 8-inch, not 2×.",
+      "**Engineering:** gear teeth spacing and belt lengths use circumference and central angles; a Ferris wheel car's travel is arc length.",
+      "**Landscaping and irrigation:** sprinkler throw and sweep angle set the watered sector; edging a circular bed is circumference.",
+      "**Navigation and coverage:** cell towers, radar, and GPS accuracy draw circles; the covered stretch of a straight road is a chord, found with the perpendicular-radius right triangle."
+    ]
+  },
+  "generators": [
+    "gci-circle-d1",
+    "gci-circle-d2",
+    "gci-circle-d3",
+    "gci-angles-d1",
+    "gci-angles-d2",
+    "gci-angles-d3",
+    "gci-arc-sector-d1",
+    "gci-arc-sector-d2",
+    "gci-arc-sector-d3",
+    "gci-chords-d1",
+    "gci-chords-d2",
+    "gci-chords-d3"
+  ],
+  "problems": [
+    {
+      "id": "geometry.circles.s01",
+      "concepts": ["radius-diameter-circumference"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A pizza has a diameter of 16 inches. Find its radius and its exact circumference.",
+      "steps": [
+        { "instruction": "Find the radius in inches.", "answer": "8", "accept": ["8 in", "8 inches"], "hint": "The radius is half the diameter: $16 \\div 2$." },
+        { "instruction": "Find the exact circumference (leave $\\pi$ in your answer).", "answer": "16pi", "accept": ["16π", "16*pi", "50.265482"], "hint": "$C = 2\\pi r = 2\\pi(8)$, or simply $\\pi d$." }
+      ],
+      "finalAnswer": { "value": "16π", "unit": "inches" },
+      "solutionNarrative": "$r = 16/2 = 8$ in, and $C = 2\\pi r = 16\\pi \\approx 50.3$ inches around the crust."
+    },
+    {
+      "id": "geometry.circles.s02",
+      "concepts": ["radius-diameter-circumference"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A circle has radius 6. Find its diameter and exact circumference.",
+      "steps": [
+        { "instruction": "Find the diameter.", "answer": "12", "accept": ["d=12"], "hint": "$d = 2r$." },
+        { "instruction": "Find the exact circumference (leave $\\pi$ in your answer).", "answer": "12pi", "accept": ["12π", "12*pi", "37.699112"], "hint": "$C = 2\\pi r = \\pi d$." }
+      ],
+      "finalAnswer": { "value": "12π", "unit": "" },
+      "solutionNarrative": "$d = 2(6) = 12$ and $C = 12\\pi \\approx 37.7$."
+    },
+    {
+      "id": "geometry.circles.s03",
+      "concepts": ["radius-diameter-circumference"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A circular garden has a radius of 9 m. Find its exact area, then its area rounded to 1 decimal place.",
+      "steps": [
+        { "instruction": "Find the exact area in square meters (leave $\\pi$ in your answer).", "answer": "81pi", "accept": ["81π", "81*pi", "254.469005"], "hint": "$A = \\pi r^2 = \\pi (9)^2$." },
+        { "instruction": "Now round the area to 1 decimal place.", "answer": "254.5", "accept": [], "hint": "$81\\pi = 254.469\\ldots$" }
+      ],
+      "finalAnswer": { "value": "81π ≈ 254.5", "unit": "square meters" },
+      "solutionNarrative": "$A = \\pi(9)^2 = 81\\pi$ m², which rounds to $254.5$ m²."
+    },
+    {
+      "id": "geometry.circles.s04",
+      "concepts": ["radius-diameter-circumference"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A sprinkler waters a full circular region with an area of exactly $49\\pi$ square meters. How far does it spray (the radius), and how much edging would surround the watered circle (the exact circumference)?",
+      "steps": [
+        { "instruction": "Find the radius in meters.", "answer": "7", "accept": ["7 m", "r=7"], "hint": "From $\\pi r^2 = 49\\pi$, solve $r^2 = 49$." },
+        { "instruction": "Find the exact circumference (leave $\\pi$ in your answer).", "answer": "14pi", "accept": ["14π", "14*pi", "43.982297"], "hint": "$C = 2\\pi r = 2\\pi(7)$." }
+      ],
+      "finalAnswer": { "value": "14π", "unit": "meters" },
+      "solutionNarrative": "From $\\pi r^2 = 49\\pi$ we get $r = 7$ m, so $C = 2\\pi(7) = 14\\pi \\approx 44.0$ m of edging."
+    },
+    {
+      "id": "geometry.circles.s05",
+      "concepts": ["central-inscribed-angles"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A central angle of a circle measures $80^\\circ$. Find the measure of its arc, and the measure of an inscribed angle that subtends the same arc.",
+      "steps": [
+        { "instruction": "What is the arc's measure in degrees?", "answer": "80", "accept": ["80 degrees"], "hint": "A central angle equals its arc." },
+        { "instruction": "What is the inscribed angle's measure in degrees?", "answer": "40", "accept": ["40 degrees"], "hint": "An inscribed angle is HALF its arc." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "degrees" },
+      "solutionNarrative": "The central angle equals its arc ($80^\\circ$); the inscribed angle on the same arc is half of that, $40^\\circ$."
+    },
+    {
+      "id": "geometry.circles.s06",
+      "concepts": ["central-inscribed-angles"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A Ferris wheel has 12 cars spaced evenly around the rim. Find the central angle between two adjacent cars, and the central angle between car 1 and car 4 (three gaps apart).",
+      "steps": [
+        { "instruction": "Find the central angle between adjacent cars in degrees.", "answer": "30", "accept": ["30 degrees"], "hint": "$360 \\div 12$." },
+        { "instruction": "Find the central angle spanning three gaps, in degrees.", "answer": "90", "accept": ["90 degrees"], "hint": "$3 \\times 30$." }
+      ],
+      "finalAnswer": { "value": "90", "unit": "degrees" },
+      "solutionNarrative": "Twelve even spaces split $360^\\circ$ into $30^\\circ$ gaps; three gaps span $3 \\times 30 = 90^\\circ$."
+    },
+    {
+      "id": "geometry.circles.s07",
+      "concepts": ["central-inscribed-angles"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An inscribed angle in a circle measures $65^\\circ$. Find the measure of its arc, and the measure of the central angle that subtends the same arc.",
+      "steps": [
+        { "instruction": "Find the arc's measure in degrees.", "answer": "130", "accept": ["130 degrees"], "hint": "Arc = $2 \\times$ inscribed angle." },
+        { "instruction": "Find the central angle's measure in degrees.", "answer": "130", "accept": ["130 degrees"], "hint": "A central angle equals its arc." }
+      ],
+      "finalAnswer": { "value": "130", "unit": "degrees" },
+      "solutionNarrative": "The arc is twice the inscribed angle: $130^\\circ$. The central angle equals the arc, so it is also $130^\\circ$."
+    },
+    {
+      "id": "geometry.circles.s08",
+      "concepts": ["central-inscribed-angles"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A triangle is inscribed in a circle so that one of its sides is a diameter. One of its other angles measures $35^\\circ$. Find the angle opposite the diameter, and the third angle of the triangle.",
+      "steps": [
+        { "instruction": "The diameter subtends a $180^\\circ$ arc. What is the inscribed angle opposite the diameter, in degrees?", "answer": "90", "accept": ["90 degrees"], "hint": "Thales' theorem: half of $180^\\circ$." },
+        { "instruction": "Find the third angle of the triangle in degrees.", "answer": "55", "accept": ["55 degrees"], "hint": "Angles sum to $180^\\circ$: $180 - 90 - 35$." }
+      ],
+      "finalAnswer": { "value": "55", "unit": "degrees" },
+      "solutionNarrative": "By Thales' theorem the angle in the semicircle is $90^\\circ$; then the third angle is $180 - 90 - 35 = 55^\\circ$."
+    },
+    {
+      "id": "geometry.circles.s09",
+      "concepts": ["arc-length-sector-area"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 16-inch-diameter pizza (radius 8 in) is cut into 8 equal slices. What fraction of the pizza is one slice, and what is the exact area of one slice?",
+      "steps": [
+        { "instruction": "What fraction of the full circle is one slice?", "answer": "1/8", "accept": ["0.125"], "hint": "8 equal slices." },
+        { "instruction": "Find the exact area of one slice in square inches (leave $\\pi$ in your answer).", "answer": "8pi", "accept": ["8π", "8*pi", "25.132741"], "hint": "$\\frac{1}{8} \\cdot \\pi (8)^2 = \\frac{64\\pi}{8}$." }
+      ],
+      "finalAnswer": { "value": "8π", "unit": "square inches" },
+      "solutionNarrative": "One slice is $\\frac{1}{8}$ of the pie: $\\frac{1}{8} \\cdot 64\\pi = 8\\pi \\approx 25.1$ in²."
+    },
+    {
+      "id": "geometry.circles.s10",
+      "concepts": ["arc-length-sector-area"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A lawn sprinkler sprays water 12 m and pivots through $90^\\circ$. What fraction of a full circle does it cover, and what is the exact watered area?",
+      "steps": [
+        { "instruction": "What fraction of a full circle is $90^\\circ$?", "answer": "1/4", "accept": ["0.25", "90/360"], "hint": "$\\frac{90}{360}$." },
+        { "instruction": "Find the exact watered area in square meters (leave $\\pi$ in your answer).", "answer": "36pi", "accept": ["36π", "36*pi", "113.097336"], "hint": "$\\frac{1}{4} \\cdot \\pi (12)^2 = \\frac{144\\pi}{4}$." }
+      ],
+      "finalAnswer": { "value": "36π", "unit": "square meters" },
+      "solutionNarrative": "$90^\\circ$ is $\\frac{1}{4}$ of the circle, so the watered sector is $\\frac{1}{4}(144\\pi) = 36\\pi \\approx 113.1$ m²."
+    },
+    {
+      "id": "geometry.circles.s11",
+      "concepts": ["arc-length-sector-area"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A circle has radius 10. Find the exact area of a sector with a central angle of $72^\\circ$.",
+      "steps": [
+        { "instruction": "What fraction of the circle is a $72^\\circ$ sector?", "answer": "1/5", "accept": ["0.2", "72/360"], "hint": "$\\frac{72}{360}$ reduces to..." },
+        { "instruction": "Find the exact sector area (leave $\\pi$ in your answer).", "answer": "20pi", "accept": ["20π", "20*pi", "62.831853"], "hint": "$\\frac{1}{5} \\cdot \\pi (10)^2 = \\frac{100\\pi}{5}$." }
+      ],
+      "finalAnswer": { "value": "20π", "unit": "" },
+      "solutionNarrative": "$\\frac{72}{360} = \\frac{1}{5}$, so the sector area is $\\frac{1}{5}(100\\pi) = 20\\pi$."
+    },
+    {
+      "id": "geometry.circles.s12",
+      "concepts": ["arc-length-sector-area"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A Ferris wheel has a radius of 20 m. Your car travels along the rim through a central angle of $135^\\circ$ before the wheel pauses. Find the exact distance your car traveled, then round it to 1 decimal place.",
+      "steps": [
+        { "instruction": "What fraction of a full revolution is $135^\\circ$?", "answer": "3/8", "accept": ["0.375", "135/360"], "hint": "$\\frac{135}{360}$ reduces by 45." },
+        { "instruction": "Find the exact arc length in meters (leave $\\pi$ in your answer).", "answer": "15pi", "accept": ["15π", "15*pi", "47.12389"], "hint": "$\\frac{3}{8} \\cdot 2\\pi(20) = \\frac{3}{8} \\cdot 40\\pi$." },
+        { "instruction": "Round the distance to 1 decimal place.", "answer": "47.1", "accept": [], "hint": "$15\\pi = 47.123\\ldots$" }
+      ],
+      "finalAnswer": { "value": "15π ≈ 47.1", "unit": "meters" },
+      "solutionNarrative": "$\\frac{135}{360} = \\frac{3}{8}$ of the $40\\pi$ m circumference is $15\\pi$ m, about $47.1$ m of travel."
+    },
+    {
+      "id": "geometry.circles.s13",
+      "concepts": ["chords-tangents"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A tangent line touches a circle of radius 5 at point $T$. The external point $P$ is 13 units from the circle's center. Find the angle between the tangent and the radius at $T$, then the length of tangent segment $PT$.",
+      "steps": [
+        { "instruction": "What is the angle (in degrees) between the tangent line and the radius drawn to the point of tangency?", "answer": "90", "accept": ["90 degrees"], "hint": "Tangent ⊥ radius, always." },
+        { "instruction": "Use the Pythagorean theorem to find $PT$.", "answer": "12", "accept": ["pt=12"], "hint": "$PT = \\sqrt{13^2 - 5^2} = \\sqrt{169 - 25}$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "The radius meets the tangent at $90^\\circ$, so $\\triangle OTP$ is right-angled: $PT = \\sqrt{13^2 - 5^2} = \\sqrt{144} = 12$."
+    },
+    {
+      "id": "geometry.circles.s14",
+      "concepts": ["chords-tangents"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A circle has radius 10. A chord lies 6 units from the center. A radius drawn perpendicular to the chord bisects it. Find half the chord's length, then the full chord.",
+      "steps": [
+        { "instruction": "Use the Pythagorean theorem to find HALF the chord's length.", "answer": "8", "accept": [], "hint": "The radius (10), the distance to the chord (6), and the half-chord form a right triangle: $\\sqrt{10^2 - 6^2}$." },
+        { "instruction": "Find the full chord length.", "answer": "16", "accept": [], "hint": "Double the half-chord." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "" },
+      "solutionNarrative": "Half the chord is $\\sqrt{10^2 - 6^2} = \\sqrt{64} = 8$, so the chord is $16$."
+    },
+    {
+      "id": "geometry.circles.s15",
+      "concepts": ["chords-tangents"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A zip line platform stands 25 m from the center of a circular pond of radius 7 m. Two straight cables run from the platform, each just grazing (tangent to) the pond. Find the length of one cable's tangent segment, and explain how long the other is.",
+      "steps": [
+        { "instruction": "Use the Pythagorean theorem to find one tangent segment's length in meters.", "answer": "24", "accept": ["24 m"], "hint": "$\\sqrt{25^2 - 7^2} = \\sqrt{625 - 49}$." },
+        { "instruction": "The two tangent segments from the same external point are equal. How long is the other cable's tangent segment, in meters?", "answer": "24", "accept": ["24 m"], "hint": "Tangent segments from one external point are always equal." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "meters" },
+      "solutionNarrative": "Tangent ⊥ radius gives a right triangle: $\\sqrt{25^2 - 7^2} = 24$ m. The second tangent segment from the same point is equal, so it is also 24 m."
+    },
+    {
+      "id": "geometry.circles.s16",
+      "concepts": ["chords-tangents"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A cell tower has a circular coverage radius of 17 miles. A straight highway passes 8 miles from the tower at its closest point. Find half the covered stretch of highway, the full covered stretch (a chord of the coverage circle), and how many minutes a car at 60 mph spends in coverage.",
+      "steps": [
+        { "instruction": "The radius to the highway's closest point is perpendicular to the highway and bisects the covered chord. Find HALF the covered stretch, in miles.", "answer": "15", "accept": ["15 mi", "15 miles"], "hint": "$\\sqrt{17^2 - 8^2} = \\sqrt{289 - 64}$." },
+        { "instruction": "Find the full covered stretch of highway in miles.", "answer": "30", "accept": ["30 mi", "30 miles"], "hint": "Double the half-chord." },
+        { "instruction": "At 60 mph (1 mile per minute), how many minutes does a car spend in coverage?", "answer": "30", "accept": ["30 min", "30 minutes"], "hint": "At 60 mph, each mile takes exactly one minute." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "minutes" },
+      "solutionNarrative": "Half the chord is $\\sqrt{17^2 - 8^2} = 15$ mi, so the covered stretch is 30 mi. At a mile a minute, that's 30 minutes of signal."
+    }
+  ]
+}

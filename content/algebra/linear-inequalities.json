@@ -1,0 +1,277 @@
+{
+  "id": "algebra.linear-inequalities",
+  "subject": "algebra",
+  "title": "Linear Inequalities",
+  "prerequisites": ["algebra.linear-equations"],
+  "estimatedMinutes": 35,
+  "keyConcepts": [
+    {
+      "id": "solve-inequality",
+      "label": "Solving a linear inequality",
+      "microLesson": "Solving an inequality like $2x + 3 \\leq 11$ works almost exactly like solving an equation: peel away constants, then the coefficient, doing the same thing to both sides. Subtract 3 to get $2x \\leq 8$, then divide by 2 to get $x \\leq 4$. The difference is the answer isn't a single number — it's a whole **range** of values, here every $x$ that is 4 or less."
+    },
+    {
+      "id": "flip-on-negative",
+      "label": "Flipping on a negative",
+      "microLesson": "There is exactly one new rule: when you **multiply or divide both sides by a negative number, the inequality sign reverses.** From $-3x < 12$, divide by $-3$ and flip: $x > -4$ (not $x < -4$). Why? $2 < 5$ is true, but multiply both sides by $-1$ and $-2 < -5$ is false — you must flip to $-2 > -5$ to keep it true. Adding or subtracting never flips; only multiplying/dividing by a negative does."
+    },
+    {
+      "id": "interval-notation",
+      "label": "Writing the solution set",
+      "microLesson": "A solution like $x > 3$ describes every number bigger than 3. In **interval notation** that's $(3, \\infty)$: a round bracket means the endpoint is *excluded* (strict $<$ or $>$), a square bracket means *included* ($\\leq$ or $\\geq$), and $\\infty$ always gets a round bracket. So $x \\leq 5$ is $(-\\infty, 5]$ and $-2 < x \\leq 5$ is $(-2, 5]$. Either form says the same thing; the inequality is just easier to read aloud."
+    },
+    {
+      "id": "compound-inequality",
+      "label": "Compound inequalities",
+      "microLesson": "A **compound inequality** joins two conditions. An **'and'** (intersection) traps $x$ between two values, like $-2 < x \\leq 5$ — both parts must hold, so you operate on all three pieces at once. An **'or'** (union) accepts either condition, like $x < 0$ or $x > 4$. 'And' gives a band in the middle; 'or' gives two pieces with a gap. Real ranges — a safe temperature, an acceptable weight — are almost always 'and' compounds."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The math of 'enough', 'at most', and 'within range'\n\nReal life rarely asks *exactly* how much. It asks **bounds**: can I afford this? Did I study *enough* to pass? Is the package *under* the weight limit? Is the patient's dose *within* the safe range? Every one of those is a **linear inequality** — the same straight-line math as an equation, but answering *\"for which values does this stay true?\"* instead of *\"for which one value is this equal?\"*\n\nAn inequality looks just like an equation with a different sign in the middle:\n\n$$ax + b \\leq c \\qquad ax + b > c \\qquad ax + b \\geq c$$\n\nThe four signs read: $<$ *less than*, $>$ *greater than*, $\\leq$ *less than or equal to* (at most), $\\geq$ *greater than or equal to* (at least). The phrases **at most** and **at least** are your translation keys: 'spend at most \\$50' is $\\text{cost} \\leq 50$; 'need at least 8 hours' is $\\text{hours} \\geq 8$.\n\n## Solving: almost identical to equations\n\nYou isolate $x$ exactly as before — undo addition/subtraction, then multiplication/division, doing the same thing to both sides:\n\n$$2x + 3 \\leq 11 \\;\\Rightarrow\\; 2x \\leq 8 \\;\\Rightarrow\\; x \\leq 4.$$\n\nThe answer is a **range**: every value 4 or below works. You can check it the same way — pick a number in your range (say $x = 0$): $2(0) + 3 = 3 \\leq 11$. ✓ Pick one outside it ($x = 10$): $23 \\leq 11$ is false, as it should be.\n\n## The one rule that's different: flip on a negative\n\nHere is the **only** thing that makes inequalities trickier than equations:\n\n> When you multiply or divide **both sides by a negative number, reverse the inequality sign.**\n\nWatch why it's necessary. Start with a true statement, $4 < 10$. Divide both sides by $-2$. The numbers become $-2$ and $-5$, and $-2 < -5$ is **false** — but $-2 > -5$ is true. The flip is what keeps the statement honest. So:\n\n$$-3x < 12 \\;\\Rightarrow\\; x > -4 \\quad(\\text{divided by } -3, \\text{ flipped } < \\text{ to } >).$$\n\nAdding or subtracting a negative is fine and never flips anything — *only* multiplying or dividing both sides by a negative does. When in doubt, test a number.\n\n## Writing the answer: inequality or interval\n\nThe solution $x > 3$ can be written in **interval notation** as $(3, \\infty)$. The rules:\n\n- A **round** bracket `(` or `)` means the endpoint is **excluded** — use it for strict $<$ and $>$, and always for $\\infty$.\n- A **square** bracket `[` or `]` means the endpoint is **included** — use it for $\\leq$ and $\\geq$.\n\nSo $x \\leq 5$ is $(-\\infty, 5]$, and $x \\geq -2$ is $[-2, \\infty)$. Same meaning, tidier notation.\n\n## Compound inequalities: bands and gaps\n\nMany real constraints are **two** conditions at once:\n\n- **'And'** (both must hold) traps $x$ in a band: a safe oven range $325 \\leq T \\leq 375$, or $-2 < x \\leq 5$. To solve, do the same operation to **all three** parts.\n- **'Or'** (either may hold) gives two separated pieces: $x < 0$ **or** $x > 100$.\n\nMost everyday ranges — acceptable weight, healthy blood pressure, a thermostat band — are 'and' compounds, a lower bound and an upper bound holding together."
+  },
+  "application": {
+    "summary": "Linear inequalities answer the bound questions life actually asks: can I afford it, did I do enough, is it under the limit, is it within range? They power budgeting, minimum requirements, passing-grade thresholds, weight and tolerance ranges, and 'how many units keep the cost under a cap'.",
+    "domains": ["personal finance", "education", "manufacturing", "everyday life"],
+    "workedExample": "**How many rides keep the night under budget?**\n\nYou're out with \\$40. A rideshare home is a flat \\$7, and each arcade game costs \\$2.50. You want the games plus the ride home to stay **at most** \\$40. How many games $x$ can you play?\n\nThe total must satisfy *at most*, so use $\\leq$:\n\n$$2.5x + 7 \\leq 40.$$\n\nSubtract the ride: $2.5x \\leq 33$. Divide by 2.5: $x \\leq 13.2$. Since you can't play a fraction of a game, you round **down** — $x \\leq 13$ games.\n\n**You can play at most 13 games and still afford the ride home.** Notice the rounding direction: with a $\\leq$ budget you round *down*, because 14 games ($\\$42$) would bust it. The same inequality decides how many guests fit a catering budget, how many prints stay under a shipping weight, or how many hours of overtime keep you under a tax bracket.",
+    "domainNotes": [
+      "**Finance:** staying within a budget, 'how many units keep cost under \\$Y', not overdrawing an account.",
+      "**Education:** the score you need on a final to pass, minimum study hours, GPA thresholds.",
+      "**Manufacturing:** tolerance ranges — a part must measure within $\\pm$ a few thousandths, a fill weight must land in a band.",
+      "**Health/everyday:** safe dosage ranges, a carry-on under the weight limit, a thermostat held between two temperatures."
+    ]
+  },
+  "generators": ["solve-ineq-v1", "flip-negative-v1", "interval-ineq-v1", "compound-ineq-v1"],
+  "problems": [
+    {
+      "id": "algebra.linear-inequalities.s01",
+      "concepts": ["solve-inequality"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A streaming plan costs \\$6 per month. You want to spend at most \\$48 total. For how many months $x$ can you keep it? Write your answer as an inequality.",
+      "steps": [
+        { "instruction": "Write an inequality: total cost is at most 48.", "answer": "6x <= 48", "accept": ["6x \\leq 48", "48 >= 6x"], "hint": "'At most' means $\\leq$. Total cost is $6x$." },
+        { "instruction": "Divide both sides by 6 to solve for $x$.", "answer": "x <= 8", "accept": ["x \\leq 8", "8 >= x"], "hint": "Dividing by a positive number does not flip the sign." }
+      ],
+      "finalAnswer": { "value": "x <= 8", "unit": "months" },
+      "solutionNarrative": "From $6x \\leq 48$, divide by 6 to get $x \\leq 8$. You can keep it for at most 8 months."
+    },
+    {
+      "id": "algebra.linear-inequalities.s02",
+      "concepts": ["solve-inequality"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "To pass a course you need at least 60 points. A project is worth a flat 12 points, and each of $x$ quizzes is worth 4 points. Write and solve an inequality for how many quizzes you need to pass.",
+      "steps": [
+        { "instruction": "Write an inequality: project plus quizzes is at least 60.", "answer": "4x + 12 >= 60", "accept": ["4x+12 \\geq 60", "12 + 4x >= 60"], "hint": "'At least' means $\\geq$. Points are $4x + 12$." },
+        { "instruction": "Subtract 12 from both sides.", "answer": "4x >= 48", "accept": ["4x \\geq 48"], "hint": "Undo the +12 first." },
+        { "instruction": "Divide both sides by 4 to solve for $x$.", "answer": "x >= 12", "accept": ["x \\geq 12", "12 <= x"], "hint": "Dividing by a positive does not flip the sign." }
+      ],
+      "finalAnswer": { "value": "x >= 12", "unit": "quizzes" },
+      "solutionNarrative": "$4x + 12 \\geq 60$ becomes $4x \\geq 48$, so $x \\geq 12$. You need at least 12 quizzes."
+    },
+    {
+      "id": "algebra.linear-inequalities.s03",
+      "concepts": ["solve-inequality"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A food truck has \\$200 of daily costs and earns \\$5 profit per meal. To clear at least \\$150 net (profit minus costs) it needs $5x - 200 \\geq 150$. How many meals $x$ must it sell?",
+      "steps": [
+        { "instruction": "Add 200 to both sides.", "answer": "5x >= 350", "accept": ["5x \\geq 350"], "hint": "Undo the -200 first." },
+        { "instruction": "Divide both sides by 5 to solve for $x$.", "answer": "x >= 70", "accept": ["x \\geq 70", "70 <= x"], "hint": "Dividing by a positive does not flip the sign." }
+      ],
+      "finalAnswer": { "value": "x >= 70", "unit": "meals" },
+      "solutionNarrative": "$5x - 200 \\geq 150$ gives $5x \\geq 350$, so $x \\geq 70$ meals."
+    },
+    {
+      "id": "algebra.linear-inequalities.s04",
+      "concepts": ["solve-inequality"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $3(x - 2) + 4 \\leq 19$.",
+      "steps": [
+        { "instruction": "Distribute and combine the constants on the left.", "answer": "3x - 2 <= 19", "accept": ["3x-2 \\leq 19"], "hint": "$3(x-2) = 3x - 6$, and $-6 + 4 = -2$." },
+        { "instruction": "Add 2 to both sides.", "answer": "3x <= 21", "accept": ["3x \\leq 21"], "hint": "Move the constant to the right." },
+        { "instruction": "Divide both sides by 3 to solve for $x$.", "answer": "x <= 7", "accept": ["x \\leq 7", "7 >= x"], "hint": "Dividing by a positive does not flip the sign." }
+      ],
+      "finalAnswer": { "value": "x <= 7", "unit": "" },
+      "solutionNarrative": "$3(x-2)+4 \\leq 19$ simplifies to $3x - 2 \\leq 19$, then $3x \\leq 21$, so $x \\leq 7$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s05",
+      "concepts": ["flip-on-negative"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $-2x < 10$. Be careful with the sign.",
+      "steps": [
+        { "instruction": "Divide both sides by $-2$, and remember to reverse the inequality.", "answer": "x > -5", "accept": ["-5 < x"], "hint": "Dividing by a negative flips $<$ to $>$." }
+      ],
+      "finalAnswer": { "value": "x > -5", "unit": "" },
+      "solutionNarrative": "Dividing $-2x < 10$ by $-2$ flips the sign: $x > -5$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s06",
+      "concepts": ["flip-on-negative"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $8 - 3x \\geq 23$.",
+      "steps": [
+        { "instruction": "Subtract 8 from both sides.", "answer": "-3x >= 15", "accept": ["-3x \\geq 15"], "hint": "Undo the +8; the sign does not flip for subtraction." },
+        { "instruction": "Divide both sides by $-3$, and reverse the inequality.", "answer": "x <= -5", "accept": ["x \\leq -5", "-5 >= x"], "hint": "Dividing by a negative flips $\\geq$ to $\\leq$." }
+      ],
+      "finalAnswer": { "value": "x <= -5", "unit": "" },
+      "solutionNarrative": "$8 - 3x \\geq 23$ gives $-3x \\geq 15$; dividing by $-3$ flips the sign to $x \\leq -5$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s07",
+      "concepts": ["flip-on-negative", "solve-inequality"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A diver starts at the surface (depth 0) and descends. Her depth below the surface is modeled by $50 - 4x$ feet of remaining air-line, where $x$ is minutes. Her line stays safe only while $50 - 4x > 18$. For how many minutes $x$ is she safe?",
+      "steps": [
+        { "instruction": "Subtract 50 from both sides.", "answer": "-4x > -32", "accept": ["-4x > -32"], "hint": "Undo the +50; subtraction does not flip the sign." },
+        { "instruction": "Divide both sides by $-4$, and reverse the inequality.", "answer": "x < 8", "accept": ["8 > x"], "hint": "Dividing by a negative flips $>$ to $<$." }
+      ],
+      "finalAnswer": { "value": "x < 8", "unit": "minutes" },
+      "solutionNarrative": "$50 - 4x > 18$ gives $-4x > -32$; dividing by $-4$ flips the sign to $x < 8$. She is safe for less than 8 minutes."
+    },
+    {
+      "id": "algebra.linear-inequalities.s08",
+      "concepts": ["interval-notation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $x + 4 \\geq 7$ and write the solution as an inequality. (In interval notation this is $[3, \\infty)$.)",
+      "steps": [
+        { "instruction": "Subtract 4 from both sides to solve for $x$.", "answer": "x >= 3", "accept": ["x \\geq 3", "3 <= x"], "hint": "The endpoint 3 is included because of the $\\geq$, giving a square bracket $[3, \\infty)$." }
+      ],
+      "finalAnswer": { "value": "x >= 3", "unit": "" },
+      "solutionNarrative": "$x + 4 \\geq 7$ gives $x \\geq 3$, which in interval notation is $[3, \\infty)$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s09",
+      "concepts": ["interval-notation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A parking garage charges \\$3 to enter plus \\$2 per hour. Your budget is under \\$15 (strictly less). Solve $3 + 2x < 15$ for the hours $x$ you can park, and give the answer as an inequality. (In interval notation, $(-\\infty, 6)$ — but only $x \\geq 0$ is meaningful.)",
+      "steps": [
+        { "instruction": "Subtract 3 from both sides.", "answer": "2x < 12", "accept": ["2x<12"], "hint": "Undo the +3 first." },
+        { "instruction": "Divide both sides by 2 to solve for $x$.", "answer": "x < 6", "accept": ["6 > x"], "hint": "The endpoint 6 is excluded because of the strict $<$, giving a round bracket." }
+      ],
+      "finalAnswer": { "value": "x < 6", "unit": "hours" },
+      "solutionNarrative": "$3 + 2x < 15$ gives $2x < 12$, so $x < 6$ hours. Strict inequality means a round bracket: $(-\\infty, 6)$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s10",
+      "concepts": ["interval-notation"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $\\frac{x}{2} - 5 \\leq -1$ and write the solution as an inequality. (In interval notation this is $(-\\infty, 8]$.)",
+      "steps": [
+        { "instruction": "Add 5 to both sides.", "answer": "x/2 <= 4", "accept": ["x/2 \\leq 4"], "hint": "Undo the -5 first." },
+        { "instruction": "Multiply both sides by 2 to solve for $x$. (Multiplying by a positive does not flip the sign.)", "answer": "x <= 8", "accept": ["x \\leq 8", "8 >= x"], "hint": "Multiply by positive 2; the endpoint is included, so $(-\\infty, 8]$." }
+      ],
+      "finalAnswer": { "value": "x <= 8", "unit": "" },
+      "solutionNarrative": "$\\frac{x}{2} - 5 \\leq -1$ gives $\\frac{x}{2} \\leq 4$; multiplying by 2 gives $x \\leq 8$, or $(-\\infty, 8]$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s11",
+      "concepts": ["compound-inequality"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve the compound inequality $-1 < x + 2 \\leq 5$ for $x$. Write the answer as a compound inequality.",
+      "steps": [
+        { "instruction": "Subtract 2 from all three parts.", "answer": "-3 < x <= 3", "accept": ["-3 < x \\leq 3"], "hint": "Whatever you do to the middle, do to both outer parts." }
+      ],
+      "finalAnswer": { "value": "-3 < x <= 3", "unit": "" },
+      "solutionNarrative": "Subtracting 2 from each part of $-1 < x + 2 \\leq 5$ gives $-3 < x \\leq 3$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s12",
+      "concepts": ["compound-inequality"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A recipe is safe to bake only when the oven holds between 325 and 375 degrees inclusive. The dial sets temperature as $25x + 100$ degrees for a setting $x$. Solve $325 \\leq 25x + 100 \\leq 375$ for the safe settings $x$. Write the answer as a compound inequality.",
+      "steps": [
+        { "instruction": "Subtract 100 from all three parts.", "answer": "225 <= 25x <= 275", "accept": ["225 \\leq 25x \\leq 275"], "hint": "Apply the subtraction to every part." },
+        { "instruction": "Divide all three parts by 25.", "answer": "9 <= x <= 11", "accept": ["9 \\leq x \\leq 11"], "hint": "Dividing by a positive keeps both signs the same." }
+      ],
+      "finalAnswer": { "value": "9 <= x <= 11", "unit": "" },
+      "solutionNarrative": "$325 \\leq 25x + 100 \\leq 375$ gives $225 \\leq 25x \\leq 275$, then $9 \\leq x \\leq 11$. Settings 9 through 11 are safe."
+    },
+    {
+      "id": "algebra.linear-inequalities.s13",
+      "concepts": ["compound-inequality", "flip-on-negative"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve the compound inequality $-4 \\leq -2x < 6$ for $x$. Watch the sign when you divide. Write the answer as a compound inequality.",
+      "steps": [
+        { "instruction": "Divide all three parts by $-2$ and reverse BOTH inequality signs.", "answer": "2 >= x > -3", "accept": ["-3 < x <= 2", "-3 < x \\leq 2", "2 \\geq x > -3"], "hint": "Dividing by a negative flips each sign; the order of the values reverses too." }
+      ],
+      "finalAnswer": { "value": "-3 < x <= 2", "unit": "" },
+      "solutionNarrative": "Dividing $-4 \\leq -2x < 6$ by $-2$ flips both signs to $2 \\geq x > -3$, the same as $-3 < x \\leq 2$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s14",
+      "concepts": ["solve-inequality"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A ride-share charges a \\$4 base plus \\$1.50 per mile. You have \\$25 and want to spend at most that. Solve $4 + 1.5x \\leq 25$ for the miles $x$ you can travel.",
+      "steps": [
+        { "instruction": "Subtract 4 from both sides.", "answer": "1.5x <= 21", "accept": ["1.5x \\leq 21"], "hint": "Undo the +4 first." },
+        { "instruction": "Divide both sides by 1.5 to solve for $x$.", "answer": "x <= 14", "accept": ["x \\leq 14", "14 >= x"], "hint": "$21 \\div 1.5 = 14$; dividing by a positive does not flip the sign." }
+      ],
+      "finalAnswer": { "value": "x <= 14", "unit": "miles" },
+      "solutionNarrative": "$4 + 1.5x \\leq 25$ gives $1.5x \\leq 21$, so $x \\leq 14$ miles."
+    },
+    {
+      "id": "algebra.linear-inequalities.s15",
+      "concepts": ["flip-on-negative"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $-x \\geq 7$.",
+      "steps": [
+        { "instruction": "Multiply both sides by $-1$ and reverse the inequality.", "answer": "x <= -7", "accept": ["x \\leq -7", "-7 >= x"], "hint": "Multiplying by $-1$ flips $\\geq$ to $\\leq$." }
+      ],
+      "finalAnswer": { "value": "x <= -7", "unit": "" },
+      "solutionNarrative": "Multiplying $-x \\geq 7$ by $-1$ flips the sign: $x \\leq -7$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s16",
+      "concepts": ["interval-notation", "solve-inequality"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A carry-on bag weighs 3 lb empty, and each packed item adds 1.5 lb. The airline limit is at most 18 lb. Solve $3 + 1.5x \\leq 18$ for the number of items $x$, and give the answer as an inequality. (Interval notation: $(-\\infty, 10]$, with $x \\geq 0$ meaningful.)",
+      "steps": [
+        { "instruction": "Subtract 3 from both sides.", "answer": "1.5x <= 15", "accept": ["1.5x \\leq 15"], "hint": "Undo the +3 first." },
+        { "instruction": "Divide both sides by 1.5 to solve for $x$.", "answer": "x <= 10", "accept": ["x \\leq 10", "10 >= x"], "hint": "The endpoint 10 is included ($\\leq$), so a square bracket: $(-\\infty, 10]$." }
+      ],
+      "finalAnswer": { "value": "x <= 10", "unit": "items" },
+      "solutionNarrative": "$3 + 1.5x \\leq 18$ gives $1.5x \\leq 15$, so $x \\leq 10$ items, i.e. $(-\\infty, 10]$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s17",
+      "concepts": ["compound-inequality"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A healthy fasting blood sugar reading $x$ (mg/dL) should be at least 70 and at most 99. Write this acceptable range as a single compound inequality.",
+      "steps": [
+        { "instruction": "Combine 'at least 70' and 'at most 99' into one compound inequality with $x$ in the middle.", "answer": "70 <= x <= 99", "accept": ["70 \\leq x \\leq 99", "99 >= x >= 70"], "hint": "'At least 70' is $70 \\leq x$; 'at most 99' is $x \\leq 99$." }
+      ],
+      "finalAnswer": { "value": "70 <= x <= 99", "unit": "mg/dL" },
+      "solutionNarrative": "'At least 70 and at most 99' becomes the compound inequality $70 \\leq x \\leq 99$."
+    },
+    {
+      "id": "algebra.linear-inequalities.s18",
+      "concepts": ["solve-inequality"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A worker earns \\$18/hour and already has \\$120 saved. To afford a \\$498 purchase they need their total to be at least 498. Solve $18x + 120 \\geq 498$ for the hours $x$ they must work.",
+      "steps": [
+        { "instruction": "Subtract 120 from both sides.", "answer": "18x >= 378", "accept": ["18x \\geq 378"], "hint": "Undo the +120 first." },
+        { "instruction": "Divide both sides by 18 to solve for $x$.", "answer": "x >= 21", "accept": ["x \\geq 21", "21 <= x"], "hint": "$378 \\div 18 = 21$; dividing by a positive does not flip the sign." }
+      ],
+      "finalAnswer": { "value": "x >= 21", "unit": "hours" },
+      "solutionNarrative": "$18x + 120 \\geq 498$ gives $18x \\geq 378$, so $x \\geq 21$ hours."
+    }
+  ]
+}

@@ -1,0 +1,301 @@
+{
+  "id": "calculus-3.vector-proofs",
+  "subject": "calculus-3",
+  "title": "Vector Proofs and Identities",
+  "prerequisites": ["calculus-3.dot-and-cross-products"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "component-expansion-proofs",
+      "label": "Proofs by component expansion",
+      "microLesson": "Most vector algebra facts are proven the same honest way: **write out the components and watch ordinary algebra finish the job**. To prove the dot product is commutative, expand both sides: $\\vec{u} \\cdot \\vec{v} = u_1v_1 + u_2v_2 + u_3v_3$ and $\\vec{v} \\cdot \\vec{u} = v_1u_1 + v_2u_2 + v_3u_3$. Since ordinary multiplication commutes ($v_1u_1 = u_1v_1$), the two expansions are the same polynomial — proof done. The same three-step pattern (expand LHS, expand RHS, compare) proves distributivity $\\vec{u} \\cdot (\\vec{v}+\\vec{w}) = \\vec{u}\\cdot\\vec{v} + \\vec{u}\\cdot\\vec{w}$ and the scalar pull-out $(k\\vec{v}) \\cdot \\vec{w} = k(\\vec{v} \\cdot \\vec{w})$. Type subscripts inline: $u_1 v_1$ is typed as u1v1."
+    },
+    {
+      "id": "orthogonality-proofs",
+      "label": "Orthogonality of the cross product",
+      "microLesson": "The claim that $\\vec{v} \\times \\vec{w}$ is **perpendicular to both** $\\vec{v}$ and $\\vec{w}$ is a theorem, not a decree — and you can prove it. Compute the cross product $\\langle v_2w_3 - v_3w_2,\\; v_3w_1 - v_1w_3,\\; v_1w_2 - v_2w_1 \\rangle$, then dot it with $\\vec{v}$: $v_1(v_2w_3 - v_3w_2) + v_2(v_3w_1 - v_1w_3) + v_3(v_1w_2 - v_2w_1)$. Expand and every term appears twice with opposite signs — the whole thing **collapses to 0**, and a zero dot product means perpendicular. It works for concrete integer vectors and for fully symbolic ones, which is why it works for *all* vectors."
+    },
+    {
+      "id": "identity-verification",
+      "label": "Verifying vector identities",
+      "microLesson": "**Lagrange's identity** says $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$ — it links the two products and is why $|\\vec{v} \\times \\vec{w}| = |\\vec{v}||\\vec{w}|\\sin\\theta$. The **scalar triple product** $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w})$ has *cyclic symmetry*: rotating the three vectors ($\\vec{u} \\to \\vec{v} \\to \\vec{w} \\to \\vec{u}$) leaves the number unchanged, so $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = \\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$. Verifying an identity on concrete integer vectors means computing both sides independently and checking they agree — a numeric spot-check of the general proof."
+    },
+    {
+      "id": "geometric-vector-proofs",
+      "label": "Geometric proofs with vectors",
+      "microLesson": "Classical geometry facts become short algebra once you set up **position vectors**. Parallelogram $OACB$ with $\\vec{C} = \\vec{A} + \\vec{B}$: the midpoint of diagonal $OC$ is $\\tfrac{1}{2}(\\vec{A}+\\vec{B})$ and the midpoint of diagonal $AB$ is also $\\tfrac{1}{2}(\\vec{A}+\\vec{B})$ — same point, so the **diagonals bisect each other**. The **midsegment** joining midpoints of two triangle sides equals half the third side: $\\tfrac{1}{2}\\vec{R} - \\tfrac{1}{2}\\vec{P} = \\tfrac{1}{2}(\\vec{R}-\\vec{P})$. And the **gradient is perpendicular to the level curve**: at a point on the circle $x^2+y^2 = r^2$, dot $\\nabla f = \\langle 2x_0, 2y_0 \\rangle$ with the tangent direction $\\langle -y_0, x_0 \\rangle$ and get 0."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Why prove what a formula already does?\n\nEvery frame, a game engine computes a cross product of two triangle edges and *trusts* that the result points straight out of the surface — that trust is what makes the lighting look right. A physics simulator trusts that torque $\\vec{r} \\times \\vec{F}$ is perpendicular to both the lever arm and the force. A robot controller trusts that a zero dot product really means a right angle. None of that trust comes from checking a million examples. It comes from **proofs**: short algebraic arguments showing the formulas *must* behave, for every vector, forever. This topic teaches you to build and verify those arguments yourself.\n\nThere is a second, very practical payoff: **identities are speed**. If $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$ (Lagrange's identity), an engine can get a parallelogram's area from three cheap dot products instead of assembling a whole cross product. Graphics pipelines, CAD kernels, and physics engines are full of such swaps — each one justified by an identity somebody proved.\n\n## The master move: expand into components\n\nAlmost every proof in this topic is the same three steps:\n\n1. **Expand the left side** into components.\n2. **Expand the right side** into components.\n3. **Compare** — ordinary algebra (commuting, distributing) shows they are the same polynomial.\n\n### Worked proof: the dot product commutes\n\nClaim: $\\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u}$ for all vectors. Let $\\vec{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\vec{v} = \\langle v_1, v_2, v_3 \\rangle$.\n\n$$\\vec{u} \\cdot \\vec{v} = u_1v_1 + u_2v_2 + u_3v_3$$\n$$\\vec{v} \\cdot \\vec{u} = v_1u_1 + v_2u_2 + v_3u_3$$\n\nEach term $v_iu_i$ equals $u_iv_i$ because multiplying *numbers* commutes. The two sides are literally the same sum, so the identity holds — not for one example, but for **every** pair of vectors, because $u_1, \\dots, v_3$ were never given values. That's the whole trick: a symbol you never pin down stands for *all* numbers at once.\n\n## The showpiece: why the cross product is perpendicular\n\nDot $\\vec{v} \\times \\vec{w} = \\langle v_2w_3 - v_3w_2,\\; v_3w_1 - v_1w_3,\\; v_1w_2 - v_2w_1 \\rangle$ with $\\vec{v}$ itself:\n\n$$v_1(v_2w_3 - v_3w_2) + v_2(v_3w_1 - v_1w_3) + v_3(v_1w_2 - v_2w_1)$$\n\nExpand: $v_1v_2w_3 - v_1v_3w_2 + v_2v_3w_1 - v_1v_2w_3 + v_1v_3w_2 - v_2v_3w_1$. Every term appears twice with opposite signs. Total: $0$. A zero dot product means perpendicular — so the normal vector your renderer computes is *guaranteed* perpendicular, no matter which triangle it came from.\n\n## Verifying identities, and proving geometry\n\nFor heavier identities — Lagrange's, or the cyclic symmetry $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = \\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$ — you'll **verify on concrete integer vectors**: compute both sides independently and watch them agree. A verification isn't a full proof, but it's how working engineers sanity-check formulas and how you'll catch a sign error instantly.\n\nFinally, vectors turn classical geometry into short algebra. Put one vertex at the origin, name the others with position vectors, and midpoints become averages: the two diagonals of a parallelogram have the *same* midpoint $\\tfrac{1}{2}(\\vec{A} + \\vec{B})$, so they bisect each other — a one-line proof of a fact Euclid needed a whole construction for."
+  },
+  "application": {
+    "summary": "Proofs are what let software trust vector formulas: a renderer's normal vectors are guaranteed perpendicular because the cross product is proven orthogonal, and identities like Lagrange's let engines swap expensive computations for cheap algebraically-equal ones.",
+    "domains": ["computer graphics", "game engines", "robotics", "physics simulation", "CAD"],
+    "workedExample": "**Is the renderer's normal vector actually correct?**\n\nA graphics engine shades a triangle using the normal $\\vec{n} = \\vec{a} \\times \\vec{b}$, where $\\vec{a} = \\langle 2, 1, 3 \\rangle$ and $\\vec{b} = \\langle 1, 0, 2 \\rangle$ are two edge vectors. If $\\vec{n}$ is not truly perpendicular to the face, every lighting calculation on it is wrong. Prove it is.\n\nCompute the normal: $\\vec{n} = \\langle 1(2) - 3(0),\\; 3(1) - 2(2),\\; 2(0) - 1(1) \\rangle = \\langle 2, -1, -1 \\rangle$.\n\nCheck it against **both** edges with dot products:\n\n$$\\vec{n} \\cdot \\vec{a} = 2(2) + (-1)(1) + (-1)(3) = 4 - 1 - 3 = 0$$\n$$\\vec{n} \\cdot \\vec{b} = 2(1) + (-1)(0) + (-1)(2) = 2 - 0 - 2 = 0$$\n\nBoth are zero, so $\\vec{n}$ is perpendicular to both edges — a valid normal. And because the symbolic proof (expand, cancel in pairs, get 0) never used these particular numbers, the engine gets this guarantee for **every triangle in every scene**, millions of times per second, with no runtime checking needed.",
+    "domainNotes": [
+      "**Graphics/game engines:** surface normals from cross products are trusted perpendicular *by proof*; Lagrange's identity computes areas and $\\sin\\theta$ from cheap dot products.",
+      "**Robotics:** controllers verify perpendicularity of joint axes with dot products; cyclic triple-product symmetry simplifies volume and torque bookkeeping.",
+      "**Physics simulation:** torque, angular momentum, and magnetic-force code all lean on proven cross-product orthogonality and anticommutativity.",
+      "**CAD:** midpoint and bisection theorems, proven with position vectors, underlie snapping, symmetry detection, and constraint solvers."
+    ]
+  },
+  "generators": [
+    "c3p-dot-commute-d1",
+    "c3p-dot-scalar-d2",
+    "c3p-dot-distribute-d3",
+    "c3p-orth-plane-d1",
+    "c3p-orth-3d-d2",
+    "c3p-orth-symbolic-d3",
+    "c3p-lagrange-axis-d1",
+    "c3p-lagrange-d2",
+    "c3p-triple-cyclic-d3",
+    "c3p-geom-parallelogram-d1",
+    "c3p-geom-midsegment-d2",
+    "c3p-geom-gradient-d3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-3.vector-proofs.s01",
+      "concepts": ["component-expansion-proofs"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Prove that the dot product is commutative: for $\\vec{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\vec{v} = \\langle v_1, v_2, v_3 \\rangle$, show $\\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u}$. (Type subscripts inline: $u_1 v_1$ is typed u1v1.)",
+      "steps": [
+        { "instruction": "Expand the left side $\\vec{u} \\cdot \\vec{v}$ in components.", "answer": "u1v1 + u2v2 + u3v3", "accept": ["u1*v1 + u2*v2 + u3*v3"], "hint": "Multiply matching components and add: $u_1v_1 + u_2v_2 + u_3v_3$." },
+        { "instruction": "Expand the right side $\\vec{v} \\cdot \\vec{u}$ in components.", "answer": "v1u1 + v2u2 + v3u3", "accept": ["u1v1 + u2v2 + u3v3"], "hint": "Same recipe, factors in the other order: $v_1u_1 + v_2u_2 + v_3u_3$." },
+        { "instruction": "Multiplication of ordinary numbers commutes, so $v_iu_i = u_iv_i$ for each term. Are the two expansions equal? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Term by term, $v_1u_1 = u_1v_1$, etc." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Both sides expand to $u_1v_1 + u_2v_2 + u_3v_3$ (using that number multiplication commutes), so $\\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u}$ for all vectors."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s02",
+      "concepts": ["component-expansion-proofs"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A physics engine computes work as $W = \\vec{F} \\cdot \\vec{d}$, but a teammate's code computes $\\vec{d} \\cdot \\vec{F}$. Prove the two always agree for $\\vec{F} = \\langle a, b, c \\rangle$ and $\\vec{d} = \\langle p, q, r \\rangle$.",
+      "steps": [
+        { "instruction": "Expand $\\vec{F} \\cdot \\vec{d}$ in components.", "answer": "ap + bq + cr", "accept": ["a*p + b*q + c*r"], "hint": "Multiply matching components and add: $ap + bq + cr$." },
+        { "instruction": "Expand $\\vec{d} \\cdot \\vec{F}$ in components.", "answer": "pa + qb + rc", "accept": ["ap + bq + cr"], "hint": "Same components, opposite order: $pa + qb + rc$." },
+        { "instruction": "Do the two codes always compute the same work? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$pa = ap$ because multiplying numbers commutes." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\vec{F} \\cdot \\vec{d} = ap + bq + cr$ and $\\vec{d} \\cdot \\vec{F} = pa + qb + rc$ — the same sum, so both codes agree for every force and displacement."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s03",
+      "concepts": ["component-expansion-proofs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Prove the scalar pull-out rule: $(k\\vec{v}) \\cdot \\vec{w} = k(\\vec{v} \\cdot \\vec{w})$ for $\\vec{v} = \\langle v_1, v_2, v_3 \\rangle$, $\\vec{w} = \\langle w_1, w_2, w_3 \\rangle$, and any scalar $k$. (Type subscripts inline: $kv_1w_1$ is kv1w1.)",
+      "steps": [
+        { "instruction": "The scaled vector is $k\\vec{v} = \\langle kv_1, kv_2, kv_3 \\rangle$. Expand the left side $(k\\vec{v}) \\cdot \\vec{w}$.", "answer": "k*v1*w1 + k*v2*w2 + k*v3*w3", "accept": ["kv1w1 + kv2w2 + kv3w3", "k(v1w1 + v2w2 + v3w3)"], "hint": "Each term is (scaled component)(matching component): $kv_1w_1 + kv_2w_2 + kv_3w_3$." },
+        { "instruction": "Expand the right side $k(\\vec{v} \\cdot \\vec{w})$ (you may leave $k$ factored out).", "answer": "k(v1w1 + v2w2 + v3w3)", "accept": ["k*v1*w1 + k*v2*w2 + k*v3*w3", "kv1w1 + kv2w2 + kv3w3"], "hint": "First dot, then scale: $k(v_1w_1 + v_2w_2 + v_3w_3)$." },
+        { "instruction": "Distributing $k$ over the sum makes the sides identical. Are they equal for every $k$, $\\vec{v}$, $\\vec{w}$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$k(v_1w_1 + v_2w_2 + v_3w_3) = kv_1w_1 + kv_2w_2 + kv_3w_3$ by the distributive law." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The left side expands to $kv_1w_1 + kv_2w_2 + kv_3w_3$, which is exactly $k$ distributed over $v_1w_1 + v_2w_2 + v_3w_3$ — the right side. The scalar pulls out."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s04",
+      "concepts": ["component-expansion-proofs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Prove the dot product distributes over addition: $\\vec{u} \\cdot (\\vec{v} + \\vec{w}) = \\vec{u} \\cdot \\vec{v} + \\vec{u} \\cdot \\vec{w}$ for $\\vec{u} = \\langle u_1, u_2, u_3 \\rangle$, $\\vec{v} = \\langle v_1, v_2, v_3 \\rangle$, $\\vec{w} = \\langle w_1, w_2, w_3 \\rangle$.",
+      "steps": [
+        { "instruction": "What is the first component of $\\vec{v} + \\vec{w}$?", "answer": "v1 + w1", "accept": ["v1+w1"], "hint": "Vectors add componentwise." },
+        { "instruction": "Expand the left side $\\vec{u} \\cdot (\\vec{v} + \\vec{w})$.", "answer": "u1(v1+w1) + u2(v2+w2) + u3(v3+w3)", "accept": ["u1v1 + u1w1 + u2v2 + u2w2 + u3v3 + u3w3"], "hint": "Dot $\\vec{u}$ with $\\langle v_1+w_1, v_2+w_2, v_3+w_3 \\rangle$: $u_1(v_1+w_1) + u_2(v_2+w_2) + u_3(v_3+w_3)$." },
+        { "instruction": "Expand the right side $\\vec{u} \\cdot \\vec{v} + \\vec{u} \\cdot \\vec{w}$.", "answer": "u1v1 + u2v2 + u3v3 + u1w1 + u2w2 + u3w3", "accept": ["u1(v1+w1) + u2(v2+w2) + u3(v3+w3)"], "hint": "Two dot products added: $u_1v_1 + u_2v_2 + u_3v_3 + u_1w_1 + u_2w_2 + u_3w_3$." },
+        { "instruction": "Distributing each $u_i$ on the left gives exactly the right side's six terms. Does the identity hold for all vectors? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$u_1(v_1+w_1) = u_1v_1 + u_1w_1$, and similarly for the other components." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Expanding $\\vec{u} \\cdot (\\vec{v}+\\vec{w})$ gives $u_1(v_1+w_1) + u_2(v_2+w_2) + u_3(v_3+w_3)$; distributing each $u_i$ yields the six terms of $\\vec{u}\\cdot\\vec{v} + \\vec{u}\\cdot\\vec{w}$. The two sides are the same polynomial."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s05",
+      "concepts": ["orthogonality-proofs"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Show that $\\vec{v} \\times \\vec{w}$ is perpendicular to $\\vec{v}$ for $\\vec{v} = \\langle 1, 2, 0 \\rangle$ and $\\vec{w} = \\langle 3, 1, 0 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute the cross product $\\vec{v} \\times \\vec{w}$.", "answer": "<0, 0, -5>", "accept": ["(0, 0, -5)", "<0,0,-5>"], "hint": "First: $2(0)-0(1)=0$; second: $0(3)-1(0)=0$; third: $1(1)-2(3)=-5$." },
+        { "instruction": "Compute the dot product $(\\vec{v} \\times \\vec{w}) \\cdot \\vec{v}$.", "answer": "0", "accept": [], "hint": "$0(1) + 0(2) + (-5)(0) = 0$." },
+        { "instruction": "Is $\\vec{v} \\times \\vec{w}$ perpendicular to $\\vec{v}$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "A zero dot product means perpendicular." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\vec{v} \\times \\vec{w} = \\langle 0, 0, -5 \\rangle$, and $\\langle 0, 0, -5 \\rangle \\cdot \\langle 1, 2, 0 \\rangle = 0$, so the cross product is perpendicular to $\\vec{v}$."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s06",
+      "concepts": ["orthogonality-proofs"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rendering engine computes the normal of a triangle with edge vectors $\\vec{a} = \\langle 2, 1, 3 \\rangle$ and $\\vec{b} = \\langle 1, 0, 2 \\rangle$ as $\\vec{n} = \\vec{a} \\times \\vec{b}$. Verify the normal is genuinely perpendicular to both edges.",
+      "steps": [
+        { "instruction": "Compute the normal $\\vec{n} = \\vec{a} \\times \\vec{b}$.", "answer": "<2, -1, -1>", "accept": ["(2, -1, -1)", "<2,-1,-1>"], "hint": "First: $1(2)-3(0)=2$; second: $3(1)-2(2)=-1$; third: $2(0)-1(1)=-1$." },
+        { "instruction": "Compute $\\vec{n} \\cdot \\vec{a}$.", "answer": "0", "accept": [], "hint": "$2(2) + (-1)(1) + (-1)(3) = 4 - 1 - 3$." },
+        { "instruction": "Compute $\\vec{n} \\cdot \\vec{b}$.", "answer": "0", "accept": [], "hint": "$2(1) + (-1)(0) + (-1)(2) = 2 - 0 - 2$." },
+        { "instruction": "Is $\\vec{n}$ a valid normal (perpendicular to both edges)? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Both dot products came out zero." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\vec{n} = \\langle 2, -1, -1 \\rangle$; dotting with each edge gives $4-1-3 = 0$ and $2-0-2 = 0$, so the normal is perpendicular to both edges — the lighting math can trust it."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s07",
+      "concepts": ["orthogonality-proofs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Prove, for ALL vectors, that $\\vec{v} \\times \\vec{w}$ is perpendicular to $\\vec{v}$, where $\\vec{v} = \\langle v_1, v_2, v_3 \\rangle$ and $\\vec{w} = \\langle w_1, w_2, w_3 \\rangle$. (Type subscripts inline: $v_2 w_3$ is v2w3.)",
+      "steps": [
+        { "instruction": "Write the first component of $\\vec{v} \\times \\vec{w}$.", "answer": "v2w3 - v3w2", "accept": ["v2*w3 - v3*w2"], "hint": "$v_2w_3 - v_3w_2$." },
+        { "instruction": "Write the second component of $\\vec{v} \\times \\vec{w}$.", "answer": "v3w1 - v1w3", "accept": ["v3*w1 - v1*w3"], "hint": "The middle component uses the 'backwards' pairing: $v_3w_1 - v_1w_3$." },
+        { "instruction": "Write the third component of $\\vec{v} \\times \\vec{w}$.", "answer": "v1w2 - v2w1", "accept": ["v1*w2 - v2*w1"], "hint": "$v_1w_2 - v_2w_1$." },
+        { "instruction": "Now expand $(\\vec{v} \\times \\vec{w}) \\cdot \\vec{v}$ fully and simplify. What does it equal?", "answer": "0", "accept": ["v1(v2w3-v3w2) + v2(v3w1-v1w3) + v3(v1w2-v2w1)"], "hint": "$v_1(v_2w_3-v_3w_2) + v_2(v_3w_1-v_1w_3) + v_3(v_1w_2-v_2w_1)$ — every term cancels in pairs." },
+        { "instruction": "Since no values were ever assigned to the components, this holds for every $\\vec{v}$ and $\\vec{w}$. Is $\\vec{v} \\times \\vec{w}$ always perpendicular to $\\vec{v}$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The dot product is identically 0, and 0 means perpendicular." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Dotting $\\langle v_2w_3-v_3w_2, v_3w_1-v_1w_3, v_1w_2-v_2w_1 \\rangle$ with $\\vec{v}$ gives six terms that cancel in opposite-sign pairs, leaving 0 — so the cross product is perpendicular to $\\vec{v}$ for all vectors."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s08",
+      "concepts": ["identity-verification"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Verify Lagrange's identity $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$ for $\\vec{v} = \\langle 3, 0, 0 \\rangle$ and $\\vec{w} = \\langle 0, 2, 0 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute the dot product $\\vec{v} \\cdot \\vec{w}$.", "answer": "0", "accept": [], "hint": "$3(0) + 0(2) + 0(0) = 0$." },
+        { "instruction": "Compute $|\\vec{v}|^2 |\\vec{w}|^2$.", "answer": "36", "accept": [], "hint": "$|\\vec{v}|^2 = 9$ and $|\\vec{w}|^2 = 4$." },
+        { "instruction": "Compute the cross product $\\vec{v} \\times \\vec{w}$.", "answer": "<0, 0, 6>", "accept": ["(0, 0, 6)", "<0,0,6>"], "hint": "Only the third component survives: $3(2) - 0(0) = 6$." },
+        { "instruction": "Compute $|\\vec{v} \\times \\vec{w}|^2$ and compare with $|\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2 = 36 - 0$. What is $|\\vec{v} \\times \\vec{w}|^2$?", "answer": "36", "accept": [], "hint": "$0^2 + 0^2 + 6^2 = 36$ — both sides agree." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "" },
+      "solutionNarrative": "$\\vec{v} \\cdot \\vec{w} = 0$, $|\\vec{v}|^2|\\vec{w}|^2 = 36$, and $|\\vec{v} \\times \\vec{w}|^2 = |\\langle 0,0,6 \\rangle|^2 = 36 = 36 - 0$. Lagrange's identity checks out."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s09",
+      "concepts": ["identity-verification"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Verify Lagrange's identity $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$ for $\\vec{v} = \\langle 1, 2, 2 \\rangle$ and $\\vec{w} = \\langle 2, 0, 1 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute $\\vec{v} \\cdot \\vec{w}$.", "answer": "4", "accept": [], "hint": "$1(2) + 2(0) + 2(1) = 4$." },
+        { "instruction": "Compute $|\\vec{v}|^2$.", "answer": "9", "accept": [], "hint": "$1^2 + 2^2 + 2^2 = 9$." },
+        { "instruction": "Compute $|\\vec{w}|^2$.", "answer": "5", "accept": [], "hint": "$2^2 + 0^2 + 1^2 = 5$." },
+        { "instruction": "Compute the right side $|\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$.", "answer": "29", "accept": [], "hint": "$9 \\cdot 5 - 4^2 = 45 - 16$." },
+        { "instruction": "Compute the cross product $\\vec{v} \\times \\vec{w}$.", "answer": "<2, 3, -4>", "accept": ["(2, 3, -4)", "<2,3,-4>"], "hint": "First: $2(1)-2(0)=2$; second: $2(2)-1(1)=3$; third: $1(0)-2(2)=-4$." },
+        { "instruction": "Compute the left side $|\\vec{v} \\times \\vec{w}|^2$. Does it match the right side?", "answer": "29", "accept": [], "hint": "$2^2 + 3^2 + (-4)^2 = 4 + 9 + 16 = 29$ — the identity holds." }
+      ],
+      "finalAnswer": { "value": "29", "unit": "" },
+      "solutionNarrative": "Right side: $9(5) - 16 = 29$. Left side: $\\vec{v} \\times \\vec{w} = \\langle 2, 3, -4 \\rangle$ with $|\\cdot|^2 = 29$. Both sides equal 29, verifying Lagrange's identity."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s10",
+      "concepts": ["identity-verification"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A CAD kernel needs the area of the parallelogram spanned by $\\vec{v} = \\langle 2, 2, 1 \\rangle$ and $\\vec{w} = \\langle 2, 1, 0 \\rangle$ (meters), but wants to avoid building the cross product. Use Lagrange's identity: $|\\vec{v} \\times \\vec{w}| = \\sqrt{|\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2}$.",
+      "steps": [
+        { "instruction": "Compute $\\vec{v} \\cdot \\vec{w}$.", "answer": "6", "accept": [], "hint": "$2(2) + 2(1) + 1(0) = 6$." },
+        { "instruction": "Compute $|\\vec{v}|^2|\\vec{w}|^2$.", "answer": "45", "accept": [], "hint": "$|\\vec{v}|^2 = 4+4+1 = 9$ and $|\\vec{w}|^2 = 4+1+0 = 5$." },
+        { "instruction": "Compute $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$.", "answer": "9", "accept": [], "hint": "$45 - 36 = 9$." },
+        { "instruction": "The area is $|\\vec{v} \\times \\vec{w}| = \\sqrt{9}$. What is it?", "answer": "3", "accept": [], "hint": "Take the square root of 9." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "square meters" },
+      "solutionNarrative": "Three cheap products give $45 - 36 = 9$, so the area is $\\sqrt{9} = 3$ m² — no cross product assembled. (Check: $\\vec{v} \\times \\vec{w} = \\langle -1, 2, -2 \\rangle$, magnitude 3.)"
+    },
+    {
+      "id": "calculus-3.vector-proofs.s11",
+      "concepts": ["identity-verification"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Verify the cyclic symmetry of the scalar triple product, $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = \\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$, for $\\vec{u} = \\langle 1, 2, 0 \\rangle$, $\\vec{v} = \\langle 0, 1, 3 \\rangle$, $\\vec{w} = \\langle 2, 0, 1 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute $\\vec{v} \\times \\vec{w}$.", "answer": "<1, 6, -2>", "accept": ["(1, 6, -2)", "<1,6,-2>"], "hint": "First: $1(1)-3(0)=1$; second: $3(2)-0(1)=6$; third: $0(0)-1(2)=-2$." },
+        { "instruction": "Compute $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w})$.", "answer": "13", "accept": [], "hint": "$1(1) + 2(6) + 0(-2) = 13$." },
+        { "instruction": "Now compute $\\vec{w} \\times \\vec{u}$.", "answer": "<-2, 1, 4>", "accept": ["(-2, 1, 4)", "<-2,1,4>"], "hint": "First: $0(0)-1(2)=-2$; second: $1(1)-2(0)=1$; third: $2(2)-0(1)=4$." },
+        { "instruction": "Compute $\\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$.", "answer": "13", "accept": [], "hint": "$0(-2) + 1(1) + 3(4) = 13$." },
+        { "instruction": "Do the two triple products agree, confirming the cyclic symmetry? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Both computations gave 13." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "" },
+      "solutionNarrative": "$\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = 13$ and $\\vec{v} \\cdot (\\vec{w} \\times \\vec{u}) = 13$ — rotating the three vectors cyclically leaves the scalar triple product (a signed volume) unchanged."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s12",
+      "concepts": ["geometric-vector-proofs"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Parallelogram $OACB$ has vertices $O = (0,0)$, $A = (6,2)$, $B = (2,4)$, and $C = A + B$. Show its diagonals $OC$ and $AB$ bisect each other. (Give points as 2D vectors like <4, 3>.)",
+      "steps": [
+        { "instruction": "Find the coordinates of $C = A + B$.", "answer": "<8, 6>", "accept": ["(8, 6)", "<8,6>"], "hint": "Add componentwise: $(6+2, 2+4)$." },
+        { "instruction": "Find the midpoint of diagonal $OC$.", "answer": "<4, 3>", "accept": ["(4, 3)", "<4,3>"], "hint": "Halve each coordinate of $C$." },
+        { "instruction": "Find the midpoint of diagonal $AB$.", "answer": "<4, 3>", "accept": ["(4, 3)", "<4,3>"], "hint": "Average the coordinates: $\\left(\\frac{6+2}{2}, \\frac{2+4}{2}\\right)$." },
+        { "instruction": "The midpoints coincide. Do the diagonals bisect each other? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Same midpoint means each diagonal cuts the other in half." }
+      ],
+      "finalAnswer": { "value": "<4, 3>", "unit": "" },
+      "solutionNarrative": "$C = (8,6)$; the midpoint of $OC$ is $(4,3)$ and the midpoint of $AB$ is also $(4,3)$. One shared midpoint means the diagonals bisect each other."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s13",
+      "concepts": ["geometric-vector-proofs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Triangle $ABC$ has $A = (0,0)$, $B = (6,2)$, $C = (2,8)$. Verify the midsegment theorem: the segment joining the midpoints of $AB$ and $AC$ is parallel to $BC$ and half its length.",
+      "steps": [
+        { "instruction": "Find $M_1$, the midpoint of $AB$.", "answer": "<3, 1>", "accept": ["(3, 1)", "<3,1>"], "hint": "Halve $B$'s coordinates." },
+        { "instruction": "Find $M_2$, the midpoint of $AC$.", "answer": "<1, 4>", "accept": ["(1, 4)", "<1,4>"], "hint": "Halve $C$'s coordinates." },
+        { "instruction": "Compute the midsegment vector $M_2 - M_1$.", "answer": "<-2, 3>", "accept": ["(-2, 3)", "<-2,3>"], "hint": "$(1-3, 4-1)$." },
+        { "instruction": "Compute the side vector $\\vec{BC} = C - B$.", "answer": "<-4, 6>", "accept": ["(-4, 6)", "<-4,6>"], "hint": "$(2-6, 8-2)$." },
+        { "instruction": "$\\vec{BC}$ is how many times the midsegment vector? (Give a number.)", "answer": "2", "accept": [], "hint": "$\\langle -4, 6 \\rangle = 2\\langle -2, 3 \\rangle$ — parallel, and the midsegment is half as long." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$M_1 = (3,1)$, $M_2 = (1,4)$, midsegment $= \\langle -2,3 \\rangle$, and $\\vec{BC} = \\langle -4,6 \\rangle = 2\\langle -2,3 \\rangle$: parallel and exactly twice the midsegment, verifying the theorem."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s14",
+      "concepts": ["geometric-vector-proofs"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A drone follows the circular level curve $f(x,y) = x^2 + y^2 = 25$. At the point $(3, 4)$ its velocity points along the tangent direction $\\langle -4, 3 \\rangle$. Show the gradient of $f$ there is perpendicular to the drone's motion.",
+      "steps": [
+        { "instruction": "The gradient is $\\nabla f = \\langle 2x, 2y \\rangle$. Evaluate it at $(3, 4)$.", "answer": "<6, 8>", "accept": ["(6, 8)", "<6,8>"], "hint": "$\\langle 2(3), 2(4) \\rangle$." },
+        { "instruction": "Compute the dot product of the gradient with the tangent direction $\\langle -4, 3 \\rangle$.", "answer": "0", "accept": [], "hint": "$6(-4) + 8(3) = -24 + 24$." },
+        { "instruction": "Is the gradient perpendicular to the level curve at this point? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The dot product with the tangent direction is zero." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\nabla f(3,4) = \\langle 6, 8 \\rangle$ and $\\langle 6,8 \\rangle \\cdot \\langle -4,3 \\rangle = -24 + 24 = 0$ — the gradient points straight out of the circle, perpendicular to the drone's tangent motion."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s15",
+      "concepts": ["geometric-vector-proofs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Prove (for ALL parallelograms) that the diagonals bisect each other. Place one vertex at the origin: $O = (0,0)$, $A = (a, b)$, $B = (p, q)$, and $C = A + B = (a+p, b+q)$. The diagonals are $OC$ and $AB$.",
+      "steps": [
+        { "instruction": "Write the x-coordinate of the midpoint of diagonal $OC$.", "answer": "(a+p)/2", "accept": ["a/2 + p/2"], "hint": "Halve the x-coordinate of $C = (a+p, b+q)$." },
+        { "instruction": "Write the y-coordinate of the midpoint of diagonal $OC$.", "answer": "(b+q)/2", "accept": ["b/2 + q/2"], "hint": "Halve the y-coordinate of $C$." },
+        { "instruction": "Now write the x-coordinate of the midpoint of diagonal $AB$ (average the endpoints).", "answer": "(a+p)/2", "accept": ["a/2 + p/2"], "hint": "Average the x-coordinates of $A = (a,b)$ and $B = (p,q)$: $\\frac{a+p}{2}$." },
+        { "instruction": "Both midpoints are $\\left(\\frac{a+p}{2}, \\frac{b+q}{2}\\right)$, with $a, b, p, q$ never assigned values. Do the diagonals of EVERY parallelogram bisect each other? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The same symbolic point works for any choice of $a, b, p, q$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Midpoint of $OC$: $\\left(\\frac{a+p}{2}, \\frac{b+q}{2}\\right)$. Midpoint of $AB$: also $\\left(\\frac{a+p}{2}, \\frac{b+q}{2}\\right)$. Identical for all $a,b,p,q$, so the diagonals of every parallelogram bisect each other."
+    },
+    {
+      "id": "calculus-3.vector-proofs.s16",
+      "concepts": ["geometric-vector-proofs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Prove the midsegment theorem for ALL triangles. Place a vertex at the origin: $O = (0,0)$, $P = (p, q)$, $R = (r, s)$. Let $M_1$ be the midpoint of $OP$ and $M_2$ the midpoint of $OR$.",
+      "steps": [
+        { "instruction": "Write the x-coordinate of $M_1$.", "answer": "p/2", "accept": ["0.5p"], "hint": "Halve $P$'s x-coordinate." },
+        { "instruction": "Write the x-component of the midsegment vector $M_2 - M_1$.", "answer": "(r-p)/2", "accept": ["r/2 - p/2"], "hint": "$\\frac{r}{2} - \\frac{p}{2} = \\frac{r-p}{2}$." },
+        { "instruction": "Write the x-component of the side vector $\\vec{PR} = R - P$.", "answer": "r - p", "accept": ["r-p"], "hint": "Subtract componentwise." },
+        { "instruction": "$\\vec{PR}$ is how many times the midsegment vector $M_2 - M_1$? (Give a number.)", "answer": "2", "accept": [], "hint": "$r - p = 2 \\cdot \\frac{r-p}{2}$, and the y-components scale identically." },
+        { "instruction": "Since the components were never given values, is the midsegment always parallel to the third side and half its length? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$M_2 - M_1 = \\frac{1}{2}(R - P)$ holds symbolically for every triangle." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$M_2 - M_1 = \\frac{R}{2} - \\frac{P}{2} = \\frac{1}{2}(R - P) = \\frac{1}{2}\\vec{PR}$: a scalar multiple (parallel) at exactly half the length, for every triangle."
+    }
+  ]
+}

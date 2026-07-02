@@ -1,0 +1,276 @@
+{
+  "id": "differential-equations.separable-equations",
+  "subject": "differential-equations",
+  "title": "Separable Differential Equations",
+  "prerequisites": ["differential-equations.introduction"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "separate-and-integrate",
+      "label": "Separate the variables and integrate",
+      "microLesson": "A differential equation is **separable** if you can shove every $y$ (and $dy$) to one side and every $x$ (and $dx$) to the other: $\\\\frac{dy}{dx} = g(x)h(y)$ becomes $\\\\frac{dy}{h(y)} = g(x)\\\\,dx$. Then integrate both sides separately. Example: $\\\\frac{dy}{dx} = 2x$ separates to $dy = 2x\\\\,dx$, and integrating gives $y = x^2 + C$. The constant $C$ is pinned down later by a known data point."
+    },
+    {
+      "id": "exponential-model",
+      "label": "Exponential growth and decay",
+      "microLesson": "When a quantity changes at a rate proportional to its own size, $\\\\frac{dy}{dt} = ky$, separating and integrating gives the workhorse of applied math: $y = y_0 e^{kt}$. Here $y_0$ is the starting amount and $k$ is the rate constant — positive $k$ means growth (populations, money), negative $k$ means decay (radioactive material, drug in the bloodstream). Plug in a time $t$ to get an actual number out."
+    },
+    {
+      "id": "initial-value-problems",
+      "label": "Initial-value problems",
+      "microLesson": "A general solution carries an unknown constant $C$; an **initial condition** like $y(0) = 5$ nails it down to one specific curve. The recipe: integrate to get the general solution, substitute the known point to solve for $C$, then you have a concrete formula you can evaluate anywhere. The constant isn't optional bookkeeping — it's what turns a family of curves into the one that matches your situation."
+    },
+    {
+      "id": "separable-applied",
+      "label": "Applied separable models",
+      "microLesson": "Most first-order models in science are separable. **Newton's law of cooling**: $\\\\frac{dT}{dt} = -k(T - T_s)$ gives $T = T_s + (T_0 - T_s)e^{-kt}$. **Radioactive decay**: $\\\\frac{dN}{dt} = -kN$ gives $N = N_0 e^{-kt}$, with half-life $t_{1/2} = \\\\frac{\\\\ln 2}{k}$. The pattern is always the same — separate, integrate, fit the constants to data, then evaluate at the time you care about."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The equations that describe change\n\nMost laws of nature don't tell you *how much* of something there is — they tell you *how fast it's changing*. A bank account grows in proportion to its balance. A hot coffee cools faster when it's far above room temperature. A lump of uranium decays in proportion to how much is left. Each of these is a sentence about a **rate**, and a rate is a derivative. Writing the sentence in symbols gives a **differential equation**.\n\nThe good news: a huge fraction of the differential equations you meet in practice are **separable**, meaning they yield to a single, reliable trick.\n\n## What 'separable' means\n\nA first-order equation is separable when you can write it as\n\n$$\\\\frac{dy}{dx} = g(x)\\\\,h(y),$$\n\na product of one piece that depends only on $x$ and one piece that depends only on $y$. When that's possible, you **separate the variables** — collect all the $y$'s with $dy$ on the left and all the $x$'s with $dx$ on the right:\n\n$$\\\\frac{dy}{h(y)} = g(x)\\\\,dx.$$\n\nNow each side has only one variable, so you can **integrate both sides independently**. That's the whole method.\n\n### Worked example\n\nSolve $\\\\frac{dy}{dx} = 2x$.\n\n- Separate: $dy = 2x\\\\,dx$.\n- Integrate both sides: $\\\\int dy = \\\\int 2x\\\\,dx$, giving $y = x^2 + C$.\n\nThe $+C$ appears because infinitely many curves have the same slope formula — they're vertical shifts of one another. You need one extra fact to choose the right one.\n\n## Initial conditions pin down the constant\n\nAn **initial-value problem** hands you that extra fact: a known point the solution must pass through, like $y(0) = 3$. Substitute it into the general solution and solve for $C$.\n\nIf $y = x^2 + C$ and $y(0) = 3$, then $3 = 0 + C$, so $C = 3$ and the specific solution is $y = x^2 + 3$. Now you can evaluate it anywhere — at $x = 2$, $y = 7$.\n\n## The star of the show: $y' = ky$\n\nThe single most important separable equation is\n\n$$\\\\frac{dy}{dt} = ky.$$\n\nSeparate: $\\\\frac{dy}{y} = k\\\\,dt$. Integrate: $\\\\ln|y| = kt + C$. Exponentiate: $y = y_0 e^{kt}$, where $y_0 = y(0)$ is the starting amount.\n\nThis one formula governs population growth, compound interest, radioactive decay, and the clearance of a drug from your blood — anything whose rate of change is proportional to its current size. Positive $k$ grows; negative $k$ decays.\n\n## Always fit, then evaluate\n\nIn applied problems the work splits cleanly: **fit** the constants ($y_0$, $k$, $C$) to the data you're given, then **evaluate** the finished formula at the time or place the question asks about. The answer is a number — a temperature, a mass, a count — and that's what makes these models useful. (Throughout, use $e \\\\approx 2.718$ and $\\\\ln 2 \\\\approx 0.693$ when a decimal is wanted.)"
+  },
+  "application": {
+    "summary": "Separable equations turn 'this changes at a rate proportional to ...' into a concrete formula you can plug numbers into. They predict population and account sizes, the temperature of a cooling object after t minutes, how much radioactive material remains, and how fast a drug or pollutant clears.",
+    "domains": ["physics", "biology", "finance", "medicine"],
+    "workedExample": "**How long until the coffee is drinkable?**\n\nCoffee at $90^\\\\circ$C sits in a $20^\\\\circ$C room. After 5 minutes it has cooled to $70^\\\\circ$C. Newton's law of cooling says $\\\\frac{dT}{dt} = -k(T - T_s)$, which separates and integrates to\n\n$$T = T_s + (T_0 - T_s)e^{-kt} = 20 + 70e^{-kt}.$$\n\nFirst **fit** $k$ from the 5-minute reading: $70 = 20 + 70e^{-5k}$ gives $e^{-5k} = \\\\frac{50}{70} = \\\\frac{5}{7}$, so $k = \\\\frac{1}{5}\\\\ln\\\\frac{7}{5} \\\\approx 0.0673$ per minute.\n\nNow **evaluate**: the temperature after 10 minutes is $T = 20 + 70e^{-0.673} \\\\approx 20 + 70(0.510) \\\\approx 55.7^\\\\circ$C. The same separate-integrate-fit-evaluate pipeline tells a pharmacist when a drug drops below its effective level, or a physicist how much of an isotope is left.",
+    "domainNotes": [
+      "**Physics:** radioactive decay $N = N_0 e^{-kt}$, half-life, and Newton's law of cooling for any object exchanging heat with its surroundings.",
+      "**Biology:** unconstrained population growth $P = P_0 e^{kt}$ over short horizons before resources bite.",
+      "**Finance:** continuously compounded balances $A = A_0 e^{rt}$ — the same equation with $k$ renamed $r$.",
+      "**Medicine:** first-order drug elimination, where concentration falls exponentially and half-life sets the dosing schedule."
+    ]
+  },
+  "generators": ["de-exp-model-v1", "de-sep-integrate-v1", "def-separate-and-integrate-d2", "def-separate-and-integrate-d3", "def-exponential-model-d1", "def-exponential-model-d3", "def-initial-value-problems-d1", "def-initial-value-problems-d2", "def-initial-value-problems-d3", "def-separable-applied-d1", "def-separable-applied-d2", "def-separable-applied-d3"],
+  "problems": [
+    {
+      "id": "differential-equations.separable-equations.s01",
+      "concepts": ["separate-and-integrate"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $\\\\frac{dy}{dx} = 2x$ with $y(0) = 3$, then evaluate the solution at $x = 2$.",
+      "steps": [
+        { "instruction": "Separate and integrate to get the general solution $y = \\\\,?$ (use $C$ for the constant).", "answer": "y = x^2 + C", "accept": ["x^2+C", "x^2 + C"], "hint": "Separate to $dy = 2x\\\\,dx$, then integrate both sides." },
+        { "instruction": "Use $y(0) = 3$ to find $C$.", "answer": "3", "accept": ["C = 3", "C=3"], "hint": "Substitute $x = 0$, $y = 3$: $3 = 0 + C$." },
+        { "instruction": "Evaluate $y$ at $x = 2$.", "answer": "7", "accept": ["y = 7", "y=7"], "hint": "$y = 2^2 + 3$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "Separating gives $dy = 2x\\\\,dx$, so $y = x^2 + C$. The condition $y(0) = 3$ forces $C = 3$, hence $y = x^2 + 3$ and $y(2) = 4 + 3 = 7$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s02",
+      "concepts": ["separate-and-integrate"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $\\\\frac{dy}{dx} = 3x^2$ with $y(1) = 5$, then evaluate at $x = 2$.",
+      "steps": [
+        { "instruction": "Integrate to get the general solution (use $C$).", "answer": "y = x^3 + C", "accept": ["x^3+C", "x^3 + C"], "hint": "$\\\\int 3x^2\\\\,dx = x^3$." },
+        { "instruction": "Use $y(1) = 5$ to find $C$.", "answer": "4", "accept": ["C = 4", "C=4"], "hint": "$5 = 1^3 + C$." },
+        { "instruction": "Evaluate $y$ at $x = 2$.", "answer": "12", "accept": ["y = 12", "y=12"], "hint": "$y = 2^3 + 4 = 8 + 4$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "Integrating gives $y = x^3 + C$. From $y(1) = 5$, $C = 4$, so $y = x^3 + 4$ and $y(2) = 8 + 4 = 12$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s03",
+      "concepts": ["separate-and-integrate"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $\\\\frac{dy}{dx} = \\\\frac{x}{y}$ with $y(0) = 4$ (take the positive branch), then find $y$ at $x = 3$.",
+      "steps": [
+        { "instruction": "Separate the variables. Write the equation after multiplying both sides by $y$.", "answer": "y dy = x dx", "accept": ["y\\\\,dy = x\\\\,dx", "ydy=xdx"], "hint": "Move $y$ to the left with $dy$ and $x$ to the right with $dx$." },
+        { "instruction": "Integrate both sides. The implicit solution is $\\\\frac{y^2}{2} = \\\\frac{x^2}{2} + C$, i.e. $y^2 - x^2 = \\\\,?$ Use $y(0)=4$ to find that constant.", "answer": "16", "accept": ["y^2 - x^2 = 16", "y^2-x^2=16"], "hint": "At $x=0$, $y=4$: $16 - 0 = 16$." },
+        { "instruction": "Evaluate $y$ at $x = 3$ (positive branch).", "answer": "5", "accept": ["y = 5", "y=5"], "hint": "$y^2 = 16 + 9 = 25$, so $y = 5$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Separating gives $y\\\\,dy = x\\\\,dx$; integrating, $y^2 - x^2 = C$. From $y(0) = 4$, $C = 16$, so $y^2 = x^2 + 16$. At $x = 3$, $y^2 = 25$ and $y = 5$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s04",
+      "concepts": ["separate-and-integrate", "initial-value-problems"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $\\\\frac{dy}{dx} = 6x^2 - 4x$ with $y(1) = 10$, then evaluate at $x = 2$.",
+      "steps": [
+        { "instruction": "Integrate to get the general solution (use $C$).", "answer": "y = 2x^3 - 2x^2 + C", "accept": ["2x^3-2x^2+C", "2x^3 - 2x^2 + C"], "hint": "$\\\\int 6x^2\\\\,dx = 2x^3$ and $\\\\int -4x\\\\,dx = -2x^2$." },
+        { "instruction": "Use $y(1) = 10$ to find $C$.", "answer": "10", "accept": ["C = 10", "C=10"], "hint": "$10 = 2(1) - 2(1) + C = C$." },
+        { "instruction": "Evaluate $y$ at $x = 2$.", "answer": "18", "accept": ["y = 18", "y=18"], "hint": "$y = 2(8) - 2(4) + 10 = 16 - 8 + 10$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "" },
+      "solutionNarrative": "Integrating gives $y = 2x^3 - 2x^2 + C$. From $y(1) = 10$: $10 = 2 - 2 + C$, so $C = 10$. Then $y(2) = 16 - 8 + 10 = 18$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s05",
+      "concepts": ["exponential-model"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bacteria culture grows by $\\\\frac{dP}{dt} = 0.5P$ (time in hours), starting at $P_0 = 200$ cells. The solution is $P = 200e^{0.5t}$. How many cells are there after $t = 2$ hours? (Use $e \\\\approx 2.718$; round to the nearest whole cell.)",
+      "steps": [
+        { "instruction": "Evaluate the exponent $0.5 \\\\times 2$.", "answer": "1", "accept": ["1.0"], "hint": "$0.5 \\\\times 2 = 1$." },
+        { "instruction": "Compute $P = 200 e^{1}$ and round to the nearest whole cell.", "answer": "544", "accept": ["544 cells"], "hint": "$200 \\\\times 2.718 = 543.6$." }
+      ],
+      "finalAnswer": { "value": "544", "unit": "cells" },
+      "solutionNarrative": "With $P = 200e^{0.5t}$ and $t = 2$, the exponent is $1$, so $P = 200e \\\\approx 200(2.718) = 543.6 \\\\approx 544$ cells."
+    },
+    {
+      "id": "differential-equations.separable-equations.s06",
+      "concepts": ["exponential-model"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A sample of 80 mg of a radioactive isotope decays by $\\\\frac{dN}{dt} = -kN$. After 10 years, 40 mg remain. Find the decay constant $k$ (per year, rounded to 4 decimals). (Use $\\\\ln 2 \\\\approx 0.693$.)",
+      "steps": [
+        { "instruction": "The solution is $N = 80e^{-kt}$. Set up the equation for the 10-year reading: $40 = 80e^{-10k}$. Solve for $e^{-10k}$ as a fraction.", "answer": "0.5", "accept": ["1/2", "0.50"], "hint": "Divide both sides by 80: $e^{-10k} = 40/80$." },
+        { "instruction": "Take logs: $-10k = \\\\ln(0.5) = -0.693$. Solve for $k$ (round to 4 decimals).", "answer": "0.0693", "accept": ["k = 0.0693", "k=0.0693"], "hint": "$k = 0.693 / 10$." }
+      ],
+      "finalAnswer": { "value": "0.0693", "unit": "per year" },
+      "solutionNarrative": "From $40 = 80e^{-10k}$, $e^{-10k} = 0.5$, so $-10k = \\\\ln 0.5 = -0.693$ and $k = 0.0693$ per year. (This matches a 10-year half-life.)"
+    },
+    {
+      "id": "differential-equations.separable-equations.s07",
+      "concepts": ["exponential-model"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An account earns continuously compounded interest: $\\\\frac{dA}{dt} = 0.04A$, with $A_0 = \\\\$5000$. The balance is $A = 5000e^{0.04t}$. What is the balance after 25 years? (Use $e \\\\approx 2.718$; round to the nearest dollar.)",
+      "steps": [
+        { "instruction": "Compute the exponent $0.04 \\\\times 25$.", "answer": "1", "accept": ["1.0"], "hint": "$0.04 \\\\times 25 = 1$." },
+        { "instruction": "Compute $A = 5000 e^{1}$ and round to the nearest dollar.", "answer": "13590", "accept": ["\\\\$13590", "13590 dollars"], "hint": "$5000 \\\\times 2.718 = 13590$." }
+      ],
+      "finalAnswer": { "value": "13590", "unit": "dollars" },
+      "solutionNarrative": "The exponent is $0.04 \\\\times 25 = 1$, so $A = 5000e \\\\approx 5000(2.718) = \\\\$13{,}590$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s08",
+      "concepts": ["initial-value-problems"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve the initial-value problem $\\\\frac{dy}{dx} = 4$ with $y(0) = -2$, then evaluate at $x = 5$.",
+      "steps": [
+        { "instruction": "Integrate to get the general solution (use $C$).", "answer": "y = 4x + C", "accept": ["4x+C", "4x + C"], "hint": "$\\\\int 4\\\\,dx = 4x$." },
+        { "instruction": "Use $y(0) = -2$ to find $C$.", "answer": "-2", "accept": ["C = -2", "C=-2"], "hint": "$-2 = 0 + C$." },
+        { "instruction": "Evaluate $y$ at $x = 5$.", "answer": "18", "accept": ["y = 18", "y=18"], "hint": "$y = 4(5) - 2 = 20 - 2$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "" },
+      "solutionNarrative": "Integrating gives $y = 4x + C$. From $y(0) = -2$, $C = -2$, so $y = 4x - 2$ and $y(5) = 20 - 2 = 18$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s09",
+      "concepts": ["initial-value-problems"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $\\\\frac{dy}{dx} = e^{x}$ with $y(0) = 1$, then evaluate at $x = 0$ to confirm, and report $y$ at $x = \\\\ln 2$. (Use $e^{\\\\ln 2} = 2$.)",
+      "steps": [
+        { "instruction": "Integrate to get the general solution (use $C$).", "answer": "y = e^x + C", "accept": ["e^x+C", "e^x + C"], "hint": "$\\\\int e^x\\\\,dx = e^x$." },
+        { "instruction": "Use $y(0) = 1$ (recall $e^0 = 1$) to find $C$.", "answer": "0", "accept": ["C = 0", "C=0"], "hint": "$1 = e^0 + C = 1 + C$." },
+        { "instruction": "Evaluate $y$ at $x = \\\\ln 2$.", "answer": "2", "accept": ["y = 2", "y=2"], "hint": "$y = e^{\\\\ln 2} + 0 = 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Integrating gives $y = e^x + C$. From $y(0) = 1$: $1 = 1 + C$, so $C = 0$ and $y = e^x$. At $x = \\\\ln 2$, $y = e^{\\\\ln 2} = 2$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s10",
+      "concepts": ["initial-value-problems"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $\\\\frac{dy}{dx} = \\\\frac{1}{y}$ with $y(0) = 2$ (positive branch), then evaluate at $x = 6$.",
+      "steps": [
+        { "instruction": "Separate: $y\\\\,dy = dx$. Integrate to the implicit form $\\\\frac{y^2}{2} = x + C$. Use $y(0)=2$ to find $C$.", "answer": "2", "accept": ["C = 2", "C=2"], "hint": "At $x=0$, $y=2$: $\\\\frac{4}{2} = 0 + C$." },
+        { "instruction": "So $y^2 = 2x + 4$. Evaluate $y$ at $x = 6$ (positive branch).", "answer": "4", "accept": ["y = 4", "y=4"], "hint": "$y^2 = 2(6) + 4 = 16$, so $y = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Separating gives $y\\\\,dy = dx$, so $\\\\frac{y^2}{2} = x + C$. From $y(0)=2$, $C = 2$, giving $y^2 = 2x + 4$. At $x = 6$, $y^2 = 16$ and $y = 4$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s11",
+      "concepts": ["separable-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A radioactive sample starts at 100 mg and decays as $N = 100e^{-kt}$ with $k = 0.1$ per year. How much remains after 10 years? (Use $e \\\\approx 2.718$; round to 1 decimal place.)",
+      "steps": [
+        { "instruction": "Compute the exponent $-0.1 \\\\times 10$.", "answer": "-1", "accept": ["-1.0"], "hint": "$-0.1 \\\\times 10 = -1$." },
+        { "instruction": "Compute $N = 100 e^{-1}$ (note $e^{-1} \\\\approx 0.368$) and round to 1 decimal.", "answer": "36.8", "accept": ["36.8 mg"], "hint": "$100 \\\\times 0.368 = 36.8$." }
+      ],
+      "finalAnswer": { "value": "36.8", "unit": "mg" },
+      "solutionNarrative": "The exponent is $-1$, so $N = 100e^{-1} \\\\approx 100(0.368) = 36.8$ mg remaining after 10 years."
+    },
+    {
+      "id": "differential-equations.separable-equations.s12",
+      "concepts": ["separable-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cup of coffee at $90^\\\\circ$C cools in a $20^\\\\circ$C room following $T = 20 + 70e^{-kt}$ with $k = 0.05$ per minute. What is the temperature after 20 minutes? (Use $e^{-1} \\\\approx 0.368$; round to 1 decimal place.)",
+      "steps": [
+        { "instruction": "Compute the exponent $-0.05 \\\\times 20$.", "answer": "-1", "accept": ["-1.0"], "hint": "$-0.05 \\\\times 20 = -1$." },
+        { "instruction": "Compute $T = 20 + 70e^{-1}$ and round to 1 decimal.", "answer": "45.8", "accept": ["45.8 C", "45.8°C"], "hint": "$70 \\\\times 0.368 = 25.76$; add 20." }
+      ],
+      "finalAnswer": { "value": "45.8", "unit": "°C" },
+      "solutionNarrative": "The exponent is $-1$, so $T = 20 + 70e^{-1} \\\\approx 20 + 70(0.368) = 20 + 25.8 = 45.8^\\\\circ$C after 20 minutes."
+    },
+    {
+      "id": "differential-equations.separable-equations.s13",
+      "concepts": ["separable-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A drug clears the bloodstream by $\\\\frac{dC}{dt} = -kC$ with half-life 4 hours, starting at 64 mg/L. First find $k$ from the half-life, then find the concentration after 12 hours. (Use $\\\\ln 2 \\\\approx 0.693$; the answer is a clean number.)",
+      "steps": [
+        { "instruction": "Find $k$ from the half-life: $k = \\\\frac{\\\\ln 2}{t_{1/2}} = \\\\frac{0.693}{4}$ (round to 4 decimals).", "answer": "0.1733", "accept": ["k = 0.1733", "k=0.1733"], "hint": "$0.693 / 4 = 0.17325$." },
+        { "instruction": "12 hours is how many half-lives? ($12 \\\\div 4$)", "answer": "3", "accept": ["3 half-lives"], "hint": "$12 / 4 = 3$." },
+        { "instruction": "Halve 64 mg/L three times to get the concentration after 12 hours.", "answer": "8", "accept": ["8 mg/L"], "hint": "$64 \\\\to 32 \\\\to 16 \\\\to 8$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "mg/L" },
+      "solutionNarrative": "The half-life gives $k = 0.693/4 \\\\approx 0.1733$ per hour. In 12 hours the drug passes through $12/4 = 3$ half-lives, so $64 \\\\to 32 \\\\to 16 \\\\to 8$ mg/L."
+    },
+    {
+      "id": "differential-equations.separable-equations.s14",
+      "concepts": ["exponential-model", "separable-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A town's population follows $P = 5000e^{0.02t}$ ($t$ in years). The exponent at $t = 35$ works out to a round number — use it. What is the population after 35 years? (Use $e^{0.7} \\\\approx 2.014$; round to the nearest person.)",
+      "steps": [
+        { "instruction": "Compute the exponent $0.02 \\\\times 35$.", "answer": "0.7", "accept": ["0.70"], "hint": "$0.02 \\\\times 35 = 0.7$." },
+        { "instruction": "Compute $P = 5000 e^{0.7}$ and round to the nearest person.", "answer": "10070", "accept": ["10070 people"], "hint": "$5000 \\\\times 2.014 = 10070$." }
+      ],
+      "finalAnswer": { "value": "10070", "unit": "people" },
+      "solutionNarrative": "The exponent is $0.02 \\\\times 35 = 0.7$, so $P = 5000e^{0.7} \\\\approx 5000(2.014) = 10{,}070$ people."
+    },
+    {
+      "id": "differential-equations.separable-equations.s15",
+      "concepts": ["separate-and-integrate", "exponential-model"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\\\frac{dy}{dt} = 3y$ with $y(0) = 1$, the solution is $y = e^{3t}$. Evaluate $y$ at $t = 0$.",
+      "steps": [
+        { "instruction": "Separating $\\\\frac{dy}{y} = 3\\\\,dt$ and integrating gives $y = y_0 e^{3t}$. What is $y_0$ here?", "answer": "1", "accept": ["y_0 = 1", "y0=1"], "hint": "$y_0 = y(0) = 1$." },
+        { "instruction": "Evaluate $y = e^{3t}$ at $t = 0$ (recall $e^0 = 1$).", "answer": "1", "accept": ["y = 1", "y=1"], "hint": "$e^{3 \\\\times 0} = e^0 = 1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "Separating gives $y = y_0 e^{3t}$ with $y_0 = 1$, so $y = e^{3t}$ and $y(0) = e^0 = 1$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s16",
+      "concepts": ["initial-value-problems", "exponential-model"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A population grows as $P = P_0 e^{kt}$. It is 1000 at $t = 0$ and 2000 at $t = 5$ years. Find $k$, then predict the population at $t = 10$ years. (Use $\\\\ln 2 \\\\approx 0.693$; the 10-year answer is a clean number.)",
+      "steps": [
+        { "instruction": "From $2000 = 1000e^{5k}$, solve for $e^{5k}$.", "answer": "2", "accept": ["e^{5k} = 2", "2.0"], "hint": "Divide both sides by 1000." },
+        { "instruction": "Take logs: $5k = \\\\ln 2 = 0.693$. Find $k$ (round to 4 decimals).", "answer": "0.1386", "accept": ["k = 0.1386", "k=0.1386"], "hint": "$k = 0.693 / 5$." },
+        { "instruction": "$t = 10$ is two doubling periods. Double 1000 twice to get $P(10)$.", "answer": "4000", "accept": ["4000 people"], "hint": "$1000 \\\\to 2000 \\\\to 4000$." }
+      ],
+      "finalAnswer": { "value": "4000", "unit": "people" },
+      "solutionNarrative": "From $2000 = 1000e^{5k}$, $e^{5k} = 2$, so $k = \\\\ln 2 / 5 \\\\approx 0.1386$ per year. The population doubles every 5 years, so at $t = 10$ (two doublings) it is $1000 \\\\to 2000 \\\\to 4000$."
+    },
+    {
+      "id": "differential-equations.separable-equations.s17",
+      "concepts": ["separable-applied", "initial-value-problems"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A tank holds 100 L of pure water. Brine drains out and the salt added obeys $\\\\frac{dS}{dt} = -0.2S$ once mixing stops, with $S(0) = 50$ grams. The solution is $S = 50e^{-0.2t}$. How much salt remains after 5 minutes? (Use $e^{-1} \\\\approx 0.368$; round to 1 decimal.)",
+      "steps": [
+        { "instruction": "Compute the exponent $-0.2 \\\\times 5$.", "answer": "-1", "accept": ["-1.0"], "hint": "$-0.2 \\\\times 5 = -1$." },
+        { "instruction": "Compute $S = 50e^{-1}$ and round to 1 decimal.", "answer": "18.4", "accept": ["18.4 g", "18.4 grams"], "hint": "$50 \\\\times 0.368 = 18.4$." }
+      ],
+      "finalAnswer": { "value": "18.4", "unit": "grams" },
+      "solutionNarrative": "The exponent is $-1$, so $S = 50e^{-1} \\\\approx 50(0.368) = 18.4$ grams of salt after 5 minutes."
+    }
+  ]
+}

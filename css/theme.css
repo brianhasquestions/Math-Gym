@@ -1,0 +1,118 @@
+/* theme.css — design tokens for each theme + theme-specific decorations.
+   Components in base.css consume these tokens and stay theme-neutral; anything
+   that's distinctly terminal (uppercase buttons, > prefixes, glow, brackets,
+   blinking cursor) is scoped under [data-theme="terminal"] here. */
+
+:root {
+  /* Spacing + layout scale (shared across themes). */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 16px;
+  --space-4: 24px; --space-5: 40px; --space-6: 64px;
+  --maxw: 880px;
+  --sidebar-w: 260px;
+  --font-mono: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", "Courier New", monospace;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ============================ Matrix Terminal (default) ============================ */
+:root, :root[data-theme="terminal"] {
+  --bg: #020602;
+  --surface: #050b05;
+  --surface-2: #081208;
+  --border: #14361a;
+  --border-bright: #1f7a32;
+  --text: #2bdd5a;
+  --text-dim: #1aa642;
+  --text-faint: #117a30;
+  --accent: #00ff41;
+  --accent-2: #ffb000;
+  --accent-fg: #000000;          /* text/icon color on an accent fill */
+  --success: #00ff41;
+  --error: #ff3b30;
+  --warn: #ffb000;
+  --radius: 0px;
+  --radius-sm: 0px;
+  --shadow: 0 0 0 1px #0b1f0b, 0 0 22px rgba(0, 255, 65, 0.05);
+  --glow: 0 0 6px rgba(0, 255, 65, 0.45);
+  --glow-amber: 0 0 6px rgba(255, 176, 0, 0.45);
+  --font-ui: var(--font-mono);
+}
+
+/* ============================ Daylight Blue (white + blue) ============================ */
+:root[data-theme="light"] {
+  --bg: #f5f8fc;
+  --surface: #ffffff;
+  --surface-2: #eef3fa;
+  --border: #dbe3ee;
+  --border-bright: #b7c6dc;
+  --text: #16202e;
+  --text-dim: #56657a;
+  --text-faint: #8a98ac;
+  --accent: #2563eb;
+  --accent-2: #0ea5e9;
+  --accent-fg: #ffffff;
+  --success: #16a34a;
+  --error: #dc2626;
+  --warn: #d97706;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(20, 35, 70, 0.06), 0 10px 30px rgba(20, 35, 70, 0.07);
+  --glow: none;
+  --glow-amber: none;
+  --font-ui: var(--font-sans);
+}
+
+/* ============================ Slate Dark ============================ */
+:root[data-theme="slate"] {
+  --bg: #0f172a;
+  --surface: #16213a;
+  --surface-2: #1d2b48;
+  --border: #2a3a5c;
+  --border-bright: #3b5279;
+  --text: #e6edf6;
+  --text-dim: #9fb0c8;
+  --text-faint: #6b7d99;
+  --accent: #3b82f6;
+  --accent-2: #22d3ee;
+  --accent-fg: #ffffff;
+  --success: #34d399;
+  --error: #f87171;
+  --warn: #fbbf24;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px rgba(0, 0, 0, 0.35);
+  --glow: none;
+  --glow-amber: none;
+  --font-ui: var(--font-sans);
+}
+
+/* ===================== Terminal-only decorations ===================== */
+[data-theme="terminal"] .brand, [data-theme="terminal"] h1, [data-theme="terminal"] h2 { text-shadow: var(--glow); }
+[data-theme="terminal"] .katex { color: var(--text); }
+[data-theme="terminal"] .logo .logo-badge { rx: 0; }
+[data-theme="terminal"] .logo { filter: drop-shadow(0 0 4px rgba(0, 255, 65, 0.5)); }
+
+[data-theme="terminal"] .btn {
+  background: #000; color: var(--accent); border-color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
+}
+[data-theme="terminal"] .btn::before { content: ">"; opacity: 0.55; margin-right: 2px; }
+[data-theme="terminal"] .btn:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
+[data-theme="terminal"] .btn.secondary { color: var(--text); border-color: var(--border-bright); background: #000; }
+[data-theme="terminal"] .btn.secondary:hover { background: var(--border-bright); color: #000; box-shadow: none; }
+[data-theme="terminal"] .btn.ghost { color: var(--text-dim); border-color: var(--border); background: transparent; }
+[data-theme="terminal"] .btn.ghost:hover { background: var(--surface-2); color: var(--text); box-shadow: none; }
+
+[data-theme="terminal"] .tab { text-transform: uppercase; letter-spacing: 0.06em; }
+[data-theme="terminal"] .badge { text-transform: uppercase; letter-spacing: 0.06em; box-shadow: none; }
+[data-theme="terminal"] .badge.mastered { box-shadow: var(--glow); }
+[data-theme="terminal"] .context-chip::before { content: "["; }
+[data-theme="terminal"] .context-chip::after { content: "]"; }
+[data-theme="terminal"] .meter .fill { box-shadow: var(--glow); transition: width 0.5s steps(20); }
+[data-theme="terminal"] .particle { box-shadow: 0 0 5px currentColor; }
+[data-theme="terminal"] .concept-name.active { text-shadow: var(--glow); }
+[data-theme="terminal"] .step-input { background: #000; color: var(--accent); caret-color: var(--accent); }
+[data-theme="terminal"] .step-input:focus { box-shadow: var(--glow); }
+[data-theme="terminal"] .reward-banner { text-transform: uppercase; letter-spacing: 0.12em; text-shadow: var(--glow); box-shadow: var(--glow); }
+[data-theme="terminal"] .reward-topic { text-shadow: var(--glow-amber); box-shadow: var(--glow-amber); }
+[data-theme="terminal"] .brand::after { content: "\2588"; margin-left: 3px; color: var(--accent); animation: blink 1.1s step-end infinite; }
+@media (prefers-reduced-motion: reduce) { [data-theme="terminal"] .brand::after { animation: none; } }

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>try { document.documentElement.setAttribute("data-theme", localStorage.getItem("mathgym.theme") || "terminal"); } catch (e) {}</script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <title>MathGym — Topic</title>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <script src="vendor/katex/katex.min.js" defer></script>
+</head>
+<body>
+  <script type="module">
+    import { applyTheme } from "./js/theme.js";
+    import { buildShell } from "./js/shell.js";
+    import { loadTopic } from "./js/content-loader.js";
+    import { isTopicMastered } from "./js/progress-store.js";
+    import { unmetPrerequisites } from "./js/insights.js";
+    import { renderMarkdown } from "./js/renderer.js";
+    import { el, qs, showError } from "./js/app.js";
+    applyTheme();
+
+    const id = qs("id");
+    const { main } = await buildShell({ activeTopicId: id, crumbs: '<a href="index.html">All subjects</a>' });
+
+    if (!id) { showError(main, "No topic specified."); }
+    else try {
+      const topic = await loadTopic(id);
+      document.title = `MathGym — ${topic.title}`;
+      const mastered = isTopicMastered(topic.id);
+      const app = topic.application;
+
+      const lectureEl = el("div", { class: "prose card", html: renderMarkdown(topic.lecture.body) });
+      const appParts = [`## Where this shows up\n\n${app.summary}`];
+      if (app.workedExample) appParts.push(app.workedExample);
+      if (app.domainNotes && app.domainNotes.length) appParts.push(app.domainNotes.map((d) => `- ${d}`).join("\n"));
+      const appEl = el("div", { class: "prose card", html: renderMarkdown(appParts.join("\n\n")) });
+      const skillsEl = el("div", { class: "card" }, [
+        el("h3", { style: "margin-top:0" }, "Skills you'll master here"),
+        el("p", { class: "blurb", style: "color: var(--text-dim)" }, "Each is tracked independently. You clear the topic only when every one is mastered."),
+        el("ul", {}, topic.keyConcepts.map((c) => el("li", {}, c.label))),
+      ]);
+
+      const tabRow = el("div", { class: "section-tab-row" });
+      const panes = {};
+      const activate = (key) => {
+        for (const [k, p] of Object.entries(panes)) {
+          p.tab.classList.toggle("active", k === key);
+          p.contentEl.style.display = k === key ? "" : "none";
+        }
+      };
+      const makeTab = (key, label, contentEl) => {
+        const tab = el("button", { class: "tab" }, label);
+        tab.addEventListener("click", () => activate(key));
+        panes[key] = { tab, contentEl };
+        tabRow.appendChild(tab);
+      };
+      makeTab("lecture", "Lecture", lectureEl);
+      makeTab("app", "Real-world use", appEl);
+      makeTab("skills", "Skills", skillsEl);
+
+      main.appendChild(el("h1", {}, topic.title));
+      main.appendChild(el("p", { class: "lede" }, app.summary));
+
+      // Prerequisite gate: advisory, never blocking. If this topic builds on
+      // skills the learner hasn't mastered, say so and link to them first.
+      if (!mastered) {
+        const unmet = await unmetPrerequisites(topic.id);
+        if (unmet.length) {
+          const links = unmet.map((p) =>
+            el("a", { href: `topic.html?id=${encodeURIComponent(p.id)}`, class: "prereq-link unmet" }, p.title));
+          const body = el("div", { class: "insight-body" }, [
+            el("strong", {}, "Builds on skills you haven't mastered yet. "),
+            el("span", {}, "You can train this now, but nailing "),
+          ]);
+          links.forEach((l, i) => {
+            body.appendChild(l);
+            if (i < links.length - 2) body.appendChild(document.createTextNode(", "));
+            else if (i === links.length - 2) body.appendChild(document.createTextNode(" and "));
+          });
+          body.appendChild(document.createTextNode(" first will make this click faster."));
+          main.appendChild(el("div", { class: "insight-banner warn" }, [body]));
+        }
+      }
+
+      main.appendChild(tabRow);
+      main.append(lectureEl, appEl, skillsEl);
+      activate("lecture");
+
+      main.appendChild(el("div", { style: "margin-top: var(--space-4); display:flex; gap: var(--space-3); align-items:center; flex-wrap:wrap" }, [
+        el("a", { class: "btn", href: `train.html?id=${encodeURIComponent(topic.id)}` },
+          mastered ? "Re-train this topic" : "Start training"),
+        mastered ? el("span", { class: "badge mastered" }, "Mastered")
+          : el("span", { class: "blurb", style: "color: var(--text-dim)" }, "Be ready to work — this won't let you coast."),
+      ]));
+    } catch (e) {
+      showError(main, `Could not load topic: ${e.message}`);
+    }
+  </script>
+</body>
+</html>

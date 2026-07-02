@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>try { document.documentElement.setAttribute("data-theme", localStorage.getItem("mathgym.theme") || "terminal"); } catch (e) {}</script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <title>MathGym — Training</title>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <script src="vendor/katex/katex.min.js" defer></script>
+</head>
+<body data-page="train">
+  <header class="site-header">
+    <div class="brand"><a href="index.html"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect class="logo-badge" x="2" y="2" width="28" height="28" rx="6"/><path class="logo-mark" d="M6 16.5 l3 0 l3.6 7 l5.4 -14 l8 0" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Math<span class="dot">Gym</span></span></a></div>
+    <div class="header-right">
+      <nav class="crumbs" id="crumbs"></nav>
+      <span id="theme-mount"></span>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="train-root">
+      <p class="empty">Loading session…</p>
+    </div>
+  </main>
+
+  <script type="module">
+    import { loadTopic, conceptById } from "./js/content-loader.js";
+    import { getTopicState, setTopicState, resetTopic } from "./js/progress-store.js";
+    import { initState, selectConcept, grade, topicProgress, conceptProgress, CONFIG } from "./js/mastery-model.js";
+    import { ProblemSource, checkStep } from "./js/problem-engine.js";
+    import { unmetPrerequisites } from "./js/insights.js";
+    import { renderInlineInto, renderMarkdown } from "./js/renderer.js";
+    import { plotToSvg } from "./js/plot.js";
+    import {
+      pulse, stampStep, celebrateConcept, celebrateTopic, setMeter,
+    } from "./js/animations.js";
+    import { el, qs, showError, initMotionToggle } from "./js/app.js";
+    import { applyTheme, themePicker } from "./js/theme.js";
+
+    applyTheme();
+    document.getElementById("theme-mount").appendChild(themePicker());
+    initMotionToggle();
+
+    const root = document.getElementById("train-root");
+    const id = qs("id");
+    if (!id) showError(root, "No topic specified.");
+
+    let topic, source, state;
+    // Cross-topic intelligence: prerequisites this topic builds on that the
+    // learner hasn't mastered. Fetched once at session start; used to nudge them
+    // toward a shaky foundation the first time they hit a real wall (below).
+    let unmetPrereqs = [];
+    let prereqNudgeShown = false;
+    // Per-problem working state.
+    let current = null;
+    // DOM handles, populated by buildLayout(). Declared up here so the bootstrap
+    // try-block below can call buildLayout() without hitting a temporal dead zone.
+    let nodes = {};
+
+    try {
+      topic = await loadTopic(id);
+      document.title = `MathGym — Training: ${topic.title}`;
+      document.getElementById("crumbs").innerHTML =
+        `<a href="topic.html?id=${encodeURIComponent(topic.id)}">${topic.title}</a> / Training`;
+      source = new ProblemSource(topic);
+      state = initState(topic.id, topic.keyConcepts.map((c) => c.id), getTopicState(topic.id));
+      unmetPrereqs = await unmetPrerequisites(topic.id);
+      buildLayout();
+      refreshMastery();
+      nextProblem();
+    } catch (e) {
+      showError(root, `Could not start training: ${e.message}`);
+    }
+
+    // ---- Layout -------------------------------------------------------------
+    function buildLayout() {
+      root.innerHTML = "";
+      const wrap = el("div", { class: "train-wrap" });
+
+      // Mastery panel
+      const panel = el("div", { class: "card mastery-panel" });
+      panel.appendChild(el("h3", { style: "margin:0 0 var(--space-2)" }, "Mastery"));
+      const big = el("div", { class: "meter meter-big" });
+      const bigFill = el("div", { class: "fill" });
+      big.appendChild(bigFill);
+      panel.appendChild(big);
+      const overallLabel = el("div", { class: "blurb", style: "margin-top:4px" }, "");
+      panel.appendChild(overallLabel);
+      const rows = el("div", { style: "margin-top: var(--space-3); display:grid; gap:8px;" });
+      panel.appendChild(rows);
+
+      // Problem card
+      const pcard = el("div", { class: "card" });
+      const meta = el("div", { class: "session-meta", style: "margin-bottom: var(--space-2)" });
+      const chip = el("span", { class: "context-chip" }, "");
+      const figure = el("div", { class: "problem-figure" }); // optional plot
+      const prompt = el("div", { class: "problem-prompt" });
+      const steps = el("div", { class: "steps" });
+      const extra = el("div"); // micro-lesson / solution / completion
+      pcard.append(meta, chip, figure, prompt, steps, extra);
+
+      wrap.append(panel, pcard);
+      root.appendChild(wrap);
+
+      nodes = { bigFill, overallLabel, rows, meta, chip, figure, prompt, steps, extra };
+    }
+
+    // ---- Mastery panel refresh ---------------------------------------------
+    function refreshMastery() {
+      setMeter(nodes.bigFill, topicProgress(state));
+      const mastered = Object.values(state.concepts).filter((c) => c.mastered).length;
+      nodes.overallLabel.textContent =
+        `${mastered} of ${topic.keyConcepts.length} skills mastered · ${state.totalAnswered} problems answered`;
+      nodes.rows.innerHTML = "";
+      const activeId = current && current.conceptId;
+      for (const c of topic.keyConcepts) {
+        const cs = state.concepts[c.id];
+        const isActive = c.id === activeId && !cs.mastered;
+        const prefix = cs.mastered ? "✓ " : isActive ? "› " : "  ";
+        const name = el("div", {
+          class: "concept-name" + (cs.mastered ? " done" : "") + (isActive ? " active" : ""),
+        }, prefix + c.label);
+        const meter = el("div", { class: "meter", style: "width:160px" });
+        const fill = el("div", { class: "fill" });
+        meter.appendChild(fill);
+        setMeter(fill, conceptProgress(cs));
+        nodes.rows.appendChild(el("div", { class: "concept-row" }, [name, meter]));
+      }
+    }
+
+    // ---- Problem flow -------------------------------------------------------
+    function nextProblem() {
+      nodes.extra.innerHTML = "";
+      const concept = selectConcept(state);
+      if (!concept) return showCompletion();
+
+      const cs = state.concepts[concept.id];
+      const problem = source.next(concept.id, cs.currentDifficulty);
+      if (!problem) {
+        nodes.extra.appendChild(el("p", { class: "empty" },
+          "No problems available for this skill yet."));
+        return;
+      }
+
+      const conceptMeta = conceptById(topic, concept.id);
+      current = {
+        problem, conceptId: concept.id, conceptLabel: conceptMeta.label,
+        stepIndex: 0, hintsUsed: 0, gaveUp: false, stepWrongs: 0, locked: false,
+      };
+
+      // Header meta
+      const tierName = ["", "Intro", "Standard", "Challenge"][cs.currentDifficulty] || "—";
+      nodes.meta.innerHTML = "";
+      nodes.meta.append(
+        el("span", {}, `Skill: ${conceptMeta.label}`),
+        el("span", {}, `Difficulty: ${tierName}`),
+      );
+      nodes.chip.textContent = problem.context === "applied" ? "Real-world problem" : "Practice";
+      nodes.figure.innerHTML = problem.plot ? plotToSvg(problem.plot) : "";
+      renderInlineInto(nodes.prompt, problem.prompt);
+
+      renderSteps();
+      refreshMastery(); // re-highlight the skill now being drilled
+    }
+
+    function renderSteps() {
+      const { problem, stepIndex } = current;
+      nodes.steps.innerHTML = "";
+      problem.steps.forEach((step, i) => {
+        const done = i < stepIndex;
+        const active = i === stepIndex && !current.locked;
+        const stepEl = el("div", { class: "step" + (done ? " step-correct" : active ? " active" : "") });
+        const instr = el("div", { class: "step-instruction" });
+        renderInlineInto(instr, step.instruction);
+        stepEl.appendChild(instr);
+
+        if (done) {
+          const ans = el("div", { class: "step-answer-reveal" });
+          renderInlineInto(ans, "✓ " + step.answer);
+          stepEl.appendChild(ans);
+        } else if (current.locked) {
+          // Problem is over (given up): reveal the answer for unsolved steps,
+          // muted and without the ✓, so it's clearly not something they solved.
+          const ans = el("div", { class: "step-answer-reveal" });
+          renderInlineInto(ans, step.answer);
+          stepEl.appendChild(ans);
+        } else if (active) {
+          const input = el("input", {
+            class: "step-input", type: "text", autocomplete: "off",
+            placeholder: "Type your answer…", "aria-label": "Your answer for this step",
+          });
+          const checkBtn = el("button", { class: "btn" }, "Check");
+          const hintBtn = el("button", { class: "btn ghost" }, "Hint");
+          const row = el("div", { class: "step-row" }, [input, checkBtn, hintBtn]);
+          const feedback = el("div", { class: "step-feedback", "aria-live": "polite", role: "status" });
+          stepEl.append(row, feedback);
+
+          const submit = () => handleAnswer(stepEl, input, feedback);
+          checkBtn.addEventListener("click", submit);
+          input.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+          hintBtn.addEventListener("click", () => showHint(stepEl, feedback));
+          setTimeout(() => input.focus(), 0);
+        }
+        nodes.steps.appendChild(stepEl);
+      });
+    }
+
+    function showHint(stepEl, feedback) {
+      const step = current.problem.steps[current.stepIndex];
+      if (!stepEl.querySelector(".step-hint")) {
+        current.hintsUsed += 1;
+        const hint = el("div", { class: "step-hint" });
+        renderInlineInto(hint, "💡 " + (step.hint || "Work it one operation at a time."));
+        stepEl.appendChild(hint);
+      }
+    }
+
+    function handleAnswer(stepEl, input, feedback) {
+      const step = current.problem.steps[current.stepIndex];
+      const ok = checkStep(step, input.value);
+      if (ok) {
+        feedback.className = "step-feedback ok";
+        feedback.textContent = "Correct.";
+        stampStep(stepEl);
+        current.stepIndex += 1;
+        current.stepWrongs = 0;
+        if (current.stepIndex >= current.problem.steps.length) {
+          completeProblem();
+        } else {
+          renderSteps();
+        }
+      } else {
+        feedback.className = "step-feedback no";
+        // Targeted nudge: if a factored-form step got the right expression but
+        // not in product form, say so specifically instead of just "wrong".
+        if (step.form === "factored" && checkStep({ ...step, form: undefined }, input.value)) {
+          feedback.textContent = "That's algebraically equal — but it isn't factored. Write it as a product, e.g. (x + a)(x + b).";
+        } else {
+          feedback.textContent = "Not quite — check your arithmetic and signs, then try again.";
+        }
+        pulse(stepEl, "error");
+        current.stepWrongs += 1;
+        // After the first miss, surface the hint automatically (counts as help).
+        if (current.stepWrongs === 1) showHint(stepEl, feedback);
+        // After repeated misses, offer to reveal the worked solution and move on.
+        if (current.stepWrongs >= 2 && !stepEl.querySelector(".giveup")) {
+          const give = el("button", { class: "btn secondary giveup", style: "margin-top:8px" },
+            "Show solution & try a fresh one");
+          give.addEventListener("click", giveUpProblem);
+          stepEl.appendChild(give);
+        }
+        input.select();
+      }
+    }
+
+    function completeProblem() {
+      // Lock the board so the final step stops being editable and shows its ✓.
+      current.locked = true;
+      renderSteps();
+      const summary = grade(state, {
+        correct: true, hintsUsed: current.hintsUsed, conceptId: current.conceptId,
+      });
+      setTopicState(topic.id, state);
+      reactToGrade(summary, true);
+    }
+
+    function giveUpProblem() {
+      current.gaveUp = true;
+      current.locked = true;
+      renderSteps();
+      const summary = grade(state, {
+        correct: false, hintsUsed: current.hintsUsed, conceptId: current.conceptId,
+      });
+      setTopicState(topic.id, state);
+      // Always show the full worked solution when giving up.
+      showSolution(current.problem);
+      reactToGrade(summary, false);
+    }
+
+    function reactToGrade(summary, correct) {
+      refreshMastery();
+
+      if (summary.masteredNow) celebrateConcept(current.conceptLabel);
+      if (summary.topicMastered) {
+        celebrateTopic(topic.title);
+        setTimeout(showCompletion, 900);
+        return;
+      }
+
+      // Micro-lesson injection when struggling on a concept.
+      if (summary.showMicroLesson || summary.showSolution) {
+        const cm = conceptById(topic, summary.conceptId);
+        if (cm && cm.microLesson) {
+          const box = el("div", { class: "micro-lesson" });
+          box.appendChild(el("h4", {}, `Let's reset: ${cm.label}`));
+          const body = el("div", { class: "prose" });
+          body.innerHTML = renderMarkdown(cm.microLesson);
+          box.appendChild(body);
+          nodes.extra.appendChild(box);
+        }
+      }
+
+      // Cross-topic nudge: the first time the learner hits a real wall (struggle
+      // deep enough to trigger the worked solution) and this topic rests on a
+      // prerequisite they haven't mastered, point them at the likely root cause.
+      // Advisory and shown at most once per session, so it never nags.
+      if (summary.showSolution && !prereqNudgeShown && unmetPrereqs.length) {
+        prereqNudgeShown = true;
+        const box = el("div", { class: "insight-banner warn", style: "margin-top: var(--space-3)" });
+        const body = el("div", { class: "insight-body" }, [
+          el("strong", {}, "Hitting a wall? "),
+          el("span", {}, "This topic builds on "),
+        ]);
+        unmetPrereqs.forEach((p, i) => {
+          body.appendChild(el("a", { href: `train.html?id=${encodeURIComponent(p.id)}`, class: "prereq-link unmet" }, p.title));
+          if (i < unmetPrereqs.length - 2) body.appendChild(document.createTextNode(", "));
+          else if (i === unmetPrereqs.length - 2) body.appendChild(document.createTextNode(" and "));
+        });
+        body.appendChild(document.createTextNode(", which you haven't mastered. If the basics feel shaky, drilling that first is often the fastest way through."));
+        box.appendChild(body);
+        nodes.extra.appendChild(box);
+      }
+
+      // §6.4 "prove it landed" guardrail messaging.
+      if (summary.provedIt) {
+        nodes.extra.appendChild(el("div", { class: "step-feedback ok", role: "status" },
+          "You solved one unaided — that lesson landed. Back to building mastery."));
+      } else if (summary.mustProveClean) {
+        nodes.extra.appendChild(el("div", { class: "micro-lesson", role: "status" },
+          [el("strong", {}, "Prove it: "),
+           "solve the next problem with no hints. Until you clear one on your own, your progress on this skill is paused — that's how we make sure the explanation actually stuck."]));
+      }
+
+      // Continue button (so the learner controls pacing; not auto-advanced).
+      const nextLabel = summary.mustProveClean
+        ? "Prove it — fresh problem"
+        : correct ? "Next problem" : "Try a fresh problem";
+      const cont = el("button", { class: "btn", style: "margin-top: var(--space-3)" }, nextLabel);
+      cont.addEventListener("click", nextProblem);
+      nodes.extra.appendChild(cont);
+      setTimeout(() => cont.focus(), 0);
+    }
+
+    function showSolution(problem) {
+      const box = el("div", { class: "card", style: "margin-top: var(--space-3); border-color: var(--border)" });
+      box.appendChild(el("h4", { style: "margin-top:0" }, "Worked solution"));
+      const body = el("div", { class: "prose" });
+      body.innerHTML = renderMarkdown(problem.solutionNarrative || "");
+      box.appendChild(body);
+      nodes.extra.appendChild(box);
+    }
+
+    function showCompletion() {
+      current = null;
+      nodes.meta.innerHTML = "";
+      nodes.chip.textContent = "";
+      nodes.prompt.innerHTML = "";
+      nodes.steps.innerHTML = "";
+      nodes.extra.innerHTML = "";
+      const card = el("div", {}, [
+        el("h2", { style: "margin-top:0; color: var(--success)" }, "[ TOPIC MASTERED ]"),
+        el("p", {}, `You cleared every skill in "${topic.title}" — including the top-difficulty problems, cleanly. That's real mastery, not a lucky guess.`),
+        el("div", { style: "display:flex; gap: var(--space-3); flex-wrap:wrap; margin-top: var(--space-3)" }, [
+          el("a", { class: "btn", href: "index.html" }, "Back to subjects"),
+          el("button", { class: "btn ghost" , onclick: () => {
+            if (confirm("Reset your progress on this topic and train it again from scratch?")) {
+              resetTopic(topic.id);
+              location.reload();
+            }
+          }}, "Reset & re-train"),
+        ]),
+      ]);
+      nodes.extra.appendChild(card);
+      refreshMastery();
+    }
+  </script>
+</body>
+</html>

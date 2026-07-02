@@ -1,0 +1,286 @@
+{
+  "id": "algebra.real-numbers",
+  "subject": "algebra",
+  "title": "Real Numbers and Operations",
+  "prerequisites": [],
+  "estimatedMinutes": 35,
+  "keyConcepts": [
+    {
+      "id": "order-of-operations",
+      "label": "Order of operations (PEMDAS)",
+      "microLesson": "A single expression has exactly one correct value, so everyone must evaluate it the same way: **P**arentheses, **E**xponents, **M**ultiplication/**D**ivision (left to right), then **A**ddition/**S**ubtraction (left to right). For example $2 + 3 \\times 4 = 2 + 12 = 14$, not $20$ — multiplication happens before addition no matter the order written."
+    },
+    {
+      "id": "integer-operations",
+      "label": "Integer operations",
+      "microLesson": "Negative numbers track debts, temperatures below zero, and losses. Adding a negative is the same as subtracting: $5 + (-3) = 2$. Subtracting a negative flips to adding: $5 - (-3) = 8$. For multiplication and division, **same signs give a positive, different signs give a negative**: $(-4)\\times(-3) = 12$ but $(-4)\\times 3 = -12$."
+    },
+    {
+      "id": "fraction-operations",
+      "label": "Fraction operations",
+      "microLesson": "To add or subtract fractions you need a **common denominator**: $\\frac{1}{2} + \\frac{1}{3} = \\frac{3}{6} + \\frac{2}{6} = \\frac{5}{6}$. To multiply, multiply straight across: $\\frac{2}{3} \\times \\frac{4}{5} = \\frac{8}{15}$. To divide, **multiply by the reciprocal** (flip the second fraction): $\\frac{1}{2} \\div \\frac{3}{4} = \\frac{1}{2} \\times \\frac{4}{3} = \\frac{4}{6} = \\frac{2}{3}$."
+    },
+    {
+      "id": "absolute-value",
+      "label": "Absolute value and distance",
+      "microLesson": "The **absolute value** $|x|$ is the distance from $x$ to $0$ on the number line, so it is never negative: $|-7| = 7$ and $|7| = 7$. The distance between any two numbers $a$ and $b$ is $|a - b|$, which is why $|3 - 9| = 6$ measures the gap between them regardless of which is larger."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The arithmetic running underneath everything\n\nBefore any equation, graph, or model, there's a quieter skill doing the real work: combining numbers correctly. Your bank does it every time a paycheck lands and a debit clears. A thermostat does it when the temperature swings below zero overnight. You do it when four friends split a \\$73 dinner or when you halve a recipe that serves eight. **Real numbers and their operations** are the bedrock — get these reliable and everything built on top stops collapsing.\n\nThe real numbers include the whole numbers, the negatives, the fractions, and the decimals — basically every number you can place on a number line. This topic is about operating on them *without making the small mistakes that quietly wreck a final answer*.\n\n## Order of operations: one expression, one value\n\nWrite $2 + 3 \\times 4$ and hand it to ten people. If some add first and some multiply first, you get two different answers — chaos. So mathematics fixes a single agreed order, **PEMDAS**:\n\n1. **P**arentheses (innermost first)\n2. **E**xponents\n3. **M**ultiplication and **D**ivision, left to right\n4. **A**ddition and **S**ubtraction, left to right\n\nSo $2 + 3 \\times 4 = 2 + 12 = 14$. The two letters that trip people up are the pairs: multiplication and division share a tier (do whichever comes first reading left to right), and so do addition and subtraction. $8 \\div 2 \\times 4$ is $16$, not $1$, because you go left to right.\n\n## Negative numbers: debts, cold, and losses\n\nNegatives aren't abstract — they're the language of *below a baseline*. A balance of $-\\$40$ is an overdraft. A temperature of $-5^\\circ$ is five degrees below freezing. The rules worth burning in:\n\n- **Adding a negative is subtracting:** $5 + (-3) = 2$.\n- **Subtracting a negative is adding:** $5 - (-3) = 8$ (taking away a debt *helps* you).\n- **Signs in multiplication/division:** same signs → positive, different signs → negative. $(-6)\\times(-2)=12$, but $\\dfrac{-12}{4} = -3$.\n\n## Fractions: parts of a whole\n\nFractions show up the instant you split or scale something.\n\n- **Add/subtract:** get a common denominator first. $\\dfrac{1}{2} + \\dfrac{1}{3} = \\dfrac{3}{6} + \\dfrac{2}{6} = \\dfrac{5}{6}$.\n- **Multiply:** straight across. $\\dfrac{2}{3} \\times \\dfrac{4}{5} = \\dfrac{8}{15}$.\n- **Divide:** flip the second fraction and multiply. $\\dfrac{3}{4} \\div \\dfrac{1}{2} = \\dfrac{3}{4} \\times \\dfrac{2}{1} = \\dfrac{6}{4} = \\dfrac{3}{2}$.\n\nA fraction and its decimal are the *same number* — $\\dfrac{1}{2}$ and $0.5$ are interchangeable. Use whichever is cleaner for the situation.\n\n## Absolute value: distance, not direction\n\nThe **absolute value** $|x|$ asks a simple question: *how far is this number from zero?* Distance is never negative, so $|-7| = 7$ and $|7| = 7$.\n\nIts most useful form is the **distance between two values**:\n\n$$\\text{distance}(a, b) = |a - b|.$$\n\nThis is why the gap between a $-3^\\circ$ morning and an $18^\\circ$ afternoon is $|{-3} - 18| = |-21| = 21$ degrees — and you get the same $21$ no matter which temperature you subtract from which. Whenever you care *how far apart* two things are, not which is bigger, absolute value is the tool.\n\n## The habit that saves you\n\nEvery one of these operations rewards the same discipline: **work one step at a time, watch the signs, and don't skip ahead.** Most arithmetic errors aren't conceptual — they're a dropped minus sign or a multiply done before a parenthesis. Slow is smooth, and smooth is correct."
+  },
+  "application": {
+    "summary": "Real-number operations are the everyday math of money, temperature, and measurement: order of operations evaluates a multi-part bill correctly, integers track debits and credits and below-zero temperatures, fractions scale recipes and split costs, and absolute value measures the distance between two readings.",
+    "domains": ["personal finance", "everyday life", "cooking", "science"],
+    "workedExample": "**Reconciling a bank balance after a busy week.**\n\nYou start the week with \\$120 in checking. Then: a \\$45 debit (groceries), a \\$200 credit (paycheck), and two \\$30 debits (gas and a subscription). What's the ending balance, and how far is it from your \\$100 target?\n\nTreat credits as positive and debits as negative, then evaluate left to right:\n\n$$120 + (-45) + 200 + (-30) + (-30).$$\n\nStep through it: $120 - 45 = 75$; $75 + 200 = 275$; $275 - 30 = 245$; $245 - 30 = 215$. The ending balance is **\\$215**.\n\nHow far is that from your \\$100 target? Use absolute value for the distance: $|215 - 100| = 115$. You're **\\$115 above** target. Notice the two ideas working together — integer addition gets the balance, absolute value measures the gap — exactly the same pair of moves a checking app runs every time it updates your account.",
+    "domainNotes": [
+      "**Finance:** net a list of credits and debits to a running balance; absolute value gives how far you are above or below a target or a zero balance.",
+      "**Weather/science:** temperatures below zero are negatives, and the swing between a high and a low is $|\\text{high} - \\text{low}|$.",
+      "**Cooking:** scaling a recipe up or down multiplies every quantity by a fraction (e.g. $\\tfrac{1}{2}$ to halve, $\\tfrac{3}{2}$ to make 1.5 batches).",
+      "**Everyday life:** splitting a bill divides a total, and order of operations keeps a multi-item receipt or tip calculation from going wrong."
+    ]
+  },
+  "generators": ["pemdas-v1", "pemdas-parens-v1", "integer-arith-v1", "integer-mixed-v1", "fraction-mult-v1", "fraction-add-v1", "abs-eval-v1", "abs-distance-v1"],
+  "problems": [
+    {
+      "id": "algebra.real-numbers.s01",
+      "concepts": ["order-of-operations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate: $2 + 3 \\times 4$",
+      "steps": [
+        { "instruction": "Do the multiplication first.", "answer": "12", "accept": [], "hint": "$3 \\times 4$ comes before the addition." },
+        { "instruction": "Now add.", "answer": "14", "accept": [], "hint": "$2 + 12$." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "" },
+      "solutionNarrative": "Multiplication before addition: $3 \\times 4 = 12$, then $2 + 12 = 14$."
+    },
+    {
+      "id": "algebra.real-numbers.s02",
+      "concepts": ["order-of-operations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cafe receipt has 3 coffees at \\$4 each and 2 muffins at \\$3 each. Evaluate the total $3 \\times 4 + 2 \\times 3$ using order of operations.",
+      "steps": [
+        { "instruction": "Compute the coffee subtotal $3 \\times 4$.", "answer": "12", "accept": [], "hint": "Multiplications happen before the addition." },
+        { "instruction": "Compute the muffin subtotal $2 \\times 3$.", "answer": "6", "accept": [], "hint": "The other multiplication." },
+        { "instruction": "Add the two subtotals for the total.", "answer": "18", "accept": [], "hint": "$12 + 6$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "dollars" },
+      "solutionNarrative": "Do both multiplications first: $3 \\times 4 = 12$ and $2 \\times 3 = 6$, then add: $12 + 6 = \\$18$."
+    },
+    {
+      "id": "algebra.real-numbers.s03",
+      "concepts": ["order-of-operations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate: $3 + 2 \\times (8 - 5)^2 \\div 6$",
+      "steps": [
+        { "instruction": "Evaluate inside the parentheses first.", "answer": "3", "accept": [], "hint": "$8 - 5$." },
+        { "instruction": "Apply the exponent: square that result.", "answer": "9", "accept": [], "hint": "$3^2$." },
+        { "instruction": "Now do multiplication and division left to right: $2 \\times 9 \\div 6$.", "answer": "3", "accept": [], "hint": "$2 \\times 9 = 18$, then $18 \\div 6 = 3$." },
+        { "instruction": "Finally add.", "answer": "6", "accept": [], "hint": "$3 + 3$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Parentheses: $8 - 5 = 3$. Exponent: $3^2 = 9$. Left to right: $2 \\times 9 = 18$, $18 \\div 6 = 3$. Add: $3 + 3 = 6$."
+    },
+    {
+      "id": "algebra.real-numbers.s04",
+      "concepts": ["integer-operations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate: $5 + (-8)$",
+      "steps": [
+        { "instruction": "Rewrite adding a negative as a subtraction, then evaluate.", "answer": "-3", "accept": [], "hint": "$5 + (-8)$ is the same as $5 - 8$." }
+      ],
+      "finalAnswer": { "value": "-3", "unit": "" },
+      "solutionNarrative": "Adding a negative is subtracting: $5 - 8 = -3$."
+    },
+    {
+      "id": "algebra.real-numbers.s05",
+      "concepts": ["integer-operations"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "On a winter morning the temperature is $-6^\\circ$C. By afternoon it has risen 9 degrees. What is the afternoon temperature?",
+      "steps": [
+        { "instruction": "Write the calculation as a sum of integers.", "answer": "-6 + 9", "accept": ["9 + (-6)", "9 - 6"], "hint": "Start at the morning temperature and add the rise." },
+        { "instruction": "Evaluate it.", "answer": "3", "accept": [], "hint": "$-6 + 9$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "degrees C" },
+      "solutionNarrative": "Starting at $-6$ and adding 9: $-6 + 9 = 3^\\circ$C."
+    },
+    {
+      "id": "algebra.real-numbers.s06",
+      "concepts": ["integer-operations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Your checking account starts at \\$50. A \\$70 debit clears (an overdraft), then a \\$200 paycheck is deposited. What is the ending balance? (Debits are negative, credits positive.)",
+      "steps": [
+        { "instruction": "Write the running calculation as a sum of signed numbers.", "answer": "50 + (-70) + 200", "accept": ["50 - 70 + 200"], "hint": "Debit is $-70$, credit is $+200$." },
+        { "instruction": "Apply the debit: $50 + (-70)$.", "answer": "-20", "accept": [], "hint": "$50 - 70$ drops below zero." },
+        { "instruction": "Add the paycheck to that result.", "answer": "180", "accept": [], "hint": "$-20 + 200$." }
+      ],
+      "finalAnswer": { "value": "180", "unit": "dollars" },
+      "solutionNarrative": "$50 + (-70) = -20$ (overdrawn), then $-20 + 200 = \\$180$ ending balance."
+    },
+    {
+      "id": "algebra.real-numbers.s07",
+      "concepts": ["integer-operations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate: $-4 \\times (-3) + (-18) \\div 6$",
+      "steps": [
+        { "instruction": "Multiply the first two factors (watch the signs).", "answer": "12", "accept": [], "hint": "Negative times negative is positive: $(-4)\\times(-3)$." },
+        { "instruction": "Divide $-18$ by $6$ (watch the signs).", "answer": "-3", "accept": [], "hint": "Different signs give a negative." },
+        { "instruction": "Add the two results.", "answer": "9", "accept": [], "hint": "$12 + (-3)$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$(-4)\\times(-3) = 12$ and $-18 \\div 6 = -3$; then $12 + (-3) = 9$."
+    },
+    {
+      "id": "algebra.real-numbers.s08",
+      "concepts": ["fraction-operations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate: $\\frac{2}{3} \\times \\frac{4}{5}$",
+      "steps": [
+        { "instruction": "Multiply straight across (numerator times numerator, denominator times denominator).", "answer": "8/15", "accept": [], "hint": "$2 \\times 4$ over $3 \\times 5$." }
+      ],
+      "finalAnswer": { "value": "8/15", "unit": "" },
+      "solutionNarrative": "$\\frac{2}{3} \\times \\frac{4}{5} = \\frac{2 \\times 4}{3 \\times 5} = \\frac{8}{15}$."
+    },
+    {
+      "id": "algebra.real-numbers.s09",
+      "concepts": ["fraction-operations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A recipe calls for $\\frac{3}{4}$ cup of sugar, but you want to make only half a batch. How much sugar do you need?",
+      "steps": [
+        { "instruction": "Write the calculation as a product of fractions.", "answer": "1/2 * 3/4", "accept": ["3/4 * 1/2", "3/4 × 1/2", "1/2 × 3/4"], "hint": "Half a batch means multiply the amount by $\\frac{1}{2}$." },
+        { "instruction": "Multiply across to get the result.", "answer": "3/8", "accept": ["0.375"], "hint": "$\\frac{1 \\times 3}{2 \\times 4}$." }
+      ],
+      "finalAnswer": { "value": "3/8", "unit": "cup" },
+      "solutionNarrative": "Half of $\\frac{3}{4}$ is $\\frac{1}{2} \\times \\frac{3}{4} = \\frac{3}{8}$ cup."
+    },
+    {
+      "id": "algebra.real-numbers.s10",
+      "concepts": ["fraction-operations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate: $\\frac{1}{2} + \\frac{1}{3}$",
+      "steps": [
+        { "instruction": "Rewrite both fractions over the common denominator 6.", "answer": "3/6 + 2/6", "accept": ["2/6 + 3/6"], "hint": "$\\frac{1}{2} = \\frac{3}{6}$ and $\\frac{1}{3} = \\frac{2}{6}$." },
+        { "instruction": "Add the numerators over the common denominator.", "answer": "5/6", "accept": [], "hint": "$3 + 2$ over 6." }
+      ],
+      "finalAnswer": { "value": "5/6", "unit": "" },
+      "solutionNarrative": "Common denominator 6: $\\frac{3}{6} + \\frac{2}{6} = \\frac{5}{6}$."
+    },
+    {
+      "id": "algebra.real-numbers.s11",
+      "concepts": ["fraction-operations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You have $\\frac{3}{4}$ of a pizza left and want to split it equally among 3 people. What fraction of a whole pizza does each person get?",
+      "steps": [
+        { "instruction": "Write the division as a fraction divided by 3.", "answer": "3/4 ÷ 3", "accept": ["3/4 / 3", "3/4 ÷ 3/1"], "hint": "Splitting among 3 means dividing by 3." },
+        { "instruction": "Rewrite as multiplication by the reciprocal of 3.", "answer": "3/4 * 1/3", "accept": ["3/4 × 1/3", "1/3 * 3/4"], "hint": "Dividing by 3 is multiplying by $\\frac{1}{3}$." },
+        { "instruction": "Multiply and simplify.", "answer": "1/4", "accept": ["3/12", "0.25"], "hint": "$\\frac{3}{12}$ reduces." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "of a pizza" },
+      "solutionNarrative": "$\\frac{3}{4} \\div 3 = \\frac{3}{4} \\times \\frac{1}{3} = \\frac{3}{12} = \\frac{1}{4}$ each."
+    },
+    {
+      "id": "algebra.real-numbers.s12",
+      "concepts": ["absolute-value"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate: $|-7|$",
+      "steps": [
+        { "instruction": "Give the distance of $-7$ from zero.", "answer": "7", "accept": [], "hint": "Absolute value is never negative." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "$|-7|$ is the distance from $-7$ to $0$, which is $7$."
+    },
+    {
+      "id": "algebra.real-numbers.s13",
+      "concepts": ["absolute-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The overnight low was $-3^\\circ$C and the daytime high was $18^\\circ$C. How many degrees did the temperature swing between them?",
+      "steps": [
+        { "instruction": "Write the swing as the absolute value of the difference.", "answer": "|18 - (-3)|", "accept": ["|-3 - 18|", "|(-3) - 18|", "|18-(-3)|"], "hint": "Distance between two values is $|a - b|$." },
+        { "instruction": "Evaluate it.", "answer": "21", "accept": [], "hint": "$18 - (-3) = 21$, and the absolute value of 21 is 21." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "degrees C" },
+      "solutionNarrative": "The swing is $|18 - (-3)| = |21| = 21^\\circ$C."
+    },
+    {
+      "id": "algebra.real-numbers.s14",
+      "concepts": ["absolute-value"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two hikers report their elevations relative to sea level: one is at $-40$ m (in a valley) and another at $25$ m (on a ridge). How far apart are they vertically?",
+      "steps": [
+        { "instruction": "Write the vertical distance as an absolute value of the difference.", "answer": "|25 - (-40)|", "accept": ["|-40 - 25|", "|(-40) - 25|", "|25-(-40)|"], "hint": "Distance is $|a - b|$ regardless of which is higher." },
+        { "instruction": "Simplify inside the bars.", "answer": "|65|", "accept": ["|-65|"], "hint": "$25 - (-40) = 25 + 40$." },
+        { "instruction": "Evaluate the absolute value.", "answer": "65", "accept": [], "hint": "Distance is never negative." }
+      ],
+      "finalAnswer": { "value": "65", "unit": "meters" },
+      "solutionNarrative": "$|25 - (-40)| = |65| = 65$ meters apart vertically."
+    },
+    {
+      "id": "algebra.real-numbers.s15",
+      "concepts": ["order-of-operations", "integer-operations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate: $10 - 2 \\times (3 - 7)$",
+      "steps": [
+        { "instruction": "Evaluate the parentheses first (watch the sign).", "answer": "-4", "accept": [], "hint": "$3 - 7$." },
+        { "instruction": "Multiply: $2 \\times (-4)$.", "answer": "-8", "accept": [], "hint": "Different signs give a negative." },
+        { "instruction": "Subtract that result from 10.", "answer": "18", "accept": [], "hint": "$10 - (-8)$ is $10 + 8$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "" },
+      "solutionNarrative": "Parentheses: $3 - 7 = -4$. Multiply: $2 \\times (-4) = -8$. Then $10 - (-8) = 18$."
+    },
+    {
+      "id": "algebra.real-numbers.s16",
+      "concepts": ["fraction-operations", "integer-operations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Four friends split a \\$73 dinner bill evenly, but one friend already paid \\$10 toward it. Each of the other three must cover an equal share of the remaining \\$63. What does each of the three pay? Give a decimal.",
+      "steps": [
+        { "instruction": "Find the remaining amount after the \\$10 already paid.", "answer": "63", "accept": [], "hint": "$73 - 10$." },
+        { "instruction": "Write the share for each of the three as a division.", "answer": "63 / 3", "accept": ["63 ÷ 3", "63/3"], "hint": "Split the remaining amount among 3 people." },
+        { "instruction": "Evaluate the share.", "answer": "21", "accept": ["21.00"], "hint": "$63 \\div 3$." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "dollars" },
+      "solutionNarrative": "Remaining: $73 - 10 = 63$. Split among 3: $63 \\div 3 = \\$21$ each."
+    },
+    {
+      "id": "algebra.real-numbers.s17",
+      "concepts": ["fraction-operations"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A recipe needs $\\frac{1}{4}$ cup of oil per batch. You are making 2 batches. How much oil total?",
+      "steps": [
+        { "instruction": "Write the total as a product.", "answer": "2 * 1/4", "accept": ["1/4 * 2", "2 × 1/4", "2/1 * 1/4"], "hint": "Two batches means multiply by 2." },
+        { "instruction": "Evaluate and simplify.", "answer": "1/2", "accept": ["2/4", "0.5"], "hint": "$\\frac{2}{4}$ reduces." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "cup" },
+      "solutionNarrative": "$2 \\times \\frac{1}{4} = \\frac{2}{4} = \\frac{1}{2}$ cup."
+    },
+    {
+      "id": "algebra.real-numbers.s18",
+      "concepts": ["absolute-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Your bank balance is $-\\$15$ (overdrawn). How far is it from a zero balance?",
+      "steps": [
+        { "instruction": "Express the distance from zero as an absolute value and evaluate it.", "answer": "15", "accept": ["|-15|"], "hint": "$|-15|$ is the distance from $0$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "dollars" },
+      "solutionNarrative": "$|-15| = 15$, so the balance is \\$15 away from zero."
+    }
+  ]
+}

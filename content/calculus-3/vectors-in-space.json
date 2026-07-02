@@ -1,0 +1,248 @@
+{
+  "id": "calculus-3.vectors-in-space",
+  "subject": "calculus-3",
+  "title": "Vectors in Space",
+  "prerequisites": [],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "vector-components",
+      "label": "Components from two points",
+      "microLesson": "A vector stores a *displacement* — how far and in which direction to go, not a fixed location. To get the vector from point $P$ to point $Q$, subtract coordinates **tip minus tail**: $\\\\vec{PQ} = \\\\langle Q_x - P_x,\\\\ Q_y - P_y,\\\\ Q_z - P_z \\\\rangle$. From $P=(1,2,3)$ to $Q=(4,6,3)$ that's $\\\\langle 3, 4, 0 \\\\rangle$. The order matters: $\\\\vec{QP}$ is the same arrow reversed, $\\\\langle -3, -4, 0 \\\\rangle$."
+    },
+    {
+      "id": "magnitude-and-unit",
+      "label": "Magnitude and unit vector",
+      "microLesson": "The **magnitude** (length) of $\\\\vec{v} = \\\\langle a, b, c \\\\rangle$ is $\\\\|\\\\vec{v}\\\\| = \\\\sqrt{a^2 + b^2 + c^2}$ — the 3-D Pythagorean theorem. A **unit vector** points the same way but has length 1; you build it by dividing each component by the magnitude: $\\\\hat{u} = \\\\dfrac{1}{\\\\|\\\\vec{v}\\\\|}\\\\vec{v}$. For $\\\\langle 3, 4, 0 \\\\rangle$, $\\\\|\\\\vec{v}\\\\| = 5$ and $\\\\hat{u} = \\\\langle 3/5, 4/5, 0 \\\\rangle$. Unit vectors carry pure direction."
+    },
+    {
+      "id": "vector-operations",
+      "label": "Addition, subtraction, scaling",
+      "microLesson": "Vectors combine **component by component**. Add: $\\\\langle a_1,b_1,c_1 \\\\rangle + \\\\langle a_2,b_2,c_2 \\\\rangle = \\\\langle a_1+a_2,\\\\ b_1+b_2,\\\\ c_1+c_2 \\\\rangle$. Scalar multiply: $k\\\\vec{v} = \\\\langle ka, kb, kc \\\\rangle$ stretches (or flips, if $k<0$) the arrow. A **linear combination** like $2\\\\vec{u} - 3\\\\vec{v}$ just scales then adds. These let you chain motions and weight directions."
+    },
+    {
+      "id": "vectors-applied",
+      "label": "Displacement, force, velocity",
+      "microLesson": "Real quantities with both size and direction *are* vectors: a plane's velocity, the wind pushing it, the forces on a bracket. To find a **resultant**, add the vectors component-wise; the answer's **magnitude** is the net speed or net force, and a **unit vector** gives the heading. A displacement vector between two GPS points tells you exactly which way and how far to travel."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A number that points\n\nSome quantities need only a size: temperature, mass, your bank balance. But a huge class of real quantities also need a **direction** — a plane doesn't just fly *fast*, it flies fast *toward Denver*; wind doesn't just blow *hard*, it blows hard *from the west*. A **vector** packages both into one object, and 3-D space is where these live: north/east/up, or $x$/$y$/$z$.\n\nWe write a vector in **component form** as $\\\\vec{v} = \\\\langle a, b, c \\\\rangle$, meaning *go $a$ in the $x$-direction, $b$ in $y$, $c$ in $z$.* Crucially a vector is a **displacement**, not a place — the same arrow $\\\\langle 3, 4, 0 \\\\rangle$ describes the move whether it starts at the origin or anywhere else.\n\n## From two points to a vector\n\nMost vectors arrive as *\"get me from here to there.\"* Given a tail $P$ and a tip $Q$, the connecting vector is **tip minus tail**:\n\n$$\\\\vec{PQ} = \\\\langle Q_x - P_x,\\\\ Q_y - P_y,\\\\ Q_z - P_z \\\\rangle.$$\n\nFrom $P = (1, 2, 3)$ to $Q = (4, 6, 3)$ we get $\\\\vec{PQ} = \\\\langle 3, 4, 0 \\\\rangle$. Reverse the order and you reverse the arrow: $\\\\vec{QP} = \\\\langle -3, -4, 0 \\\\rangle$.\n\n## How long, and which way\n\nThe **magnitude** (length) of $\\\\vec{v} = \\\\langle a, b, c \\\\rangle$ is the straight-line distance the arrow covers — the Pythagorean theorem in three dimensions:\n\n$$\\\\|\\\\vec{v}\\\\| = \\\\sqrt{a^2 + b^2 + c^2}.$$\n\nFor $\\\\langle 3, 4, 0 \\\\rangle$ that's $\\\\sqrt{9 + 16 + 0} = 5$. To extract *pure direction*, divide every component by the magnitude to get a **unit vector** (length exactly 1):\n\n$$\\\\hat{u} = \\\\frac{1}{\\\\|\\\\vec{v}\\\\|}\\\\,\\\\vec{v} = \\\\left\\\\langle \\\\tfrac{3}{5},\\\\ \\\\tfrac{4}{5},\\\\ 0 \\\\right\\\\rangle.$$\n\n## Combining vectors\n\nThe arithmetic is refreshingly mechanical — work **component by component**:\n\n- **Add** (tip-to-tail, the combined effect of two moves): $\\\\langle 1, 2, 0 \\\\rangle + \\\\langle 3, -1, 4 \\\\rangle = \\\\langle 4, 1, 4 \\\\rangle$.\n- **Subtract** (the displacement from one to the other): $\\\\vec{u} - \\\\vec{v}$.\n- **Scale** by a number $k$: $k\\\\vec{v} = \\\\langle ka, kb, kc \\\\rangle$ stretches the arrow, and a negative $k$ flips it around.\n\nA **linear combination** like $2\\\\vec{u} - 3\\\\vec{v}$ is just scaling followed by adding — the engine behind blending velocities, weighting forces, and steering.\n\n## Why this is the whole game\n\nForce, velocity, and displacement are all vectors. When several act at once, their net effect is the **resultant** — found by adding components. The resultant's magnitude tells you the net speed or net force; its unit vector tells you the heading. A plane's true course over the ground is *its* velocity vector plus the *wind's*; a boat's true track is its velocity plus the *current*. That single idea — add the arrows — answers a startling range of navigation and engineering questions."
+  },
+  "application": {
+    "summary": "Vectors are the language of anything with size and direction: displacement between GPS points, the resultant of forces on a structure, and the true velocity of a plane or boat once wind or current is added in. You add components to combine effects, take a magnitude to get net speed or force, and read off a unit vector for the heading.",
+    "domains": ["navigation", "physics", "engineering", "aviation"],
+    "workedExample": "**A plane's true velocity in a crosswind**\n\nAn airplane's engines push it with velocity $\\\\vec{p} = \\\\langle 200, 0, 0 \\\\rangle$ km/h (due east). A wind blows with velocity $\\\\vec{w} = \\\\langle 0, 50, 0 \\\\rangle$ km/h (due north). What is the plane's actual velocity over the ground, and how fast is it really moving?\n\nAdd the two vectors component by component to get the **resultant** (the true ground velocity):\n\n$$\\\\vec{v} = \\\\vec{p} + \\\\vec{w} = \\\\langle 200, 50, 0 \\\\rangle \\\\text{ km/h}.$$\n\nIts **magnitude** is the true ground speed:\n\n$$\\\\|\\\\vec{v}\\\\| = \\\\sqrt{200^2 + 50^2} = \\\\sqrt{42500} \\\\approx 206.2 \\\\text{ km/h}.$$\n\nSo despite the engines reading 200 km/h, the wind pushes the plane to about **206 km/h over the ground**, nudged north of due east. The identical recipe — *add the vectors, then take the magnitude* — finds the resultant of two forces on a bracket or the true track of a boat fighting a current.",
+    "domainNotes": [
+      "**Navigation:** the displacement vector between two GPS points gives both the bearing to travel and the distance.",
+      "**Aviation/marine:** true ground velocity = aircraft velocity + wind, or boat velocity + current; the magnitude is the real speed.",
+      "**Engineering:** the resultant force on a joint is the vector sum of the individual forces; its magnitude must stay within limits.",
+      "**Physics:** displacement, velocity, and acceleration are all vectors, combined by component-wise addition."
+    ]
+  },
+  "generators": ["vec-components-v1", "vec-magnitude-v1", "vec-operations-v1"],
+  "problems": [
+    {
+      "id": "calculus-3.vectors-in-space.s01",
+      "concepts": ["vector-components"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the component form of the vector from $P = (1, 2, 3)$ to $Q = (4, 6, 3)$.",
+      "steps": [
+        { "instruction": "Subtract tail from tip: compute $\\\\langle Q_x - P_x,\\\\ Q_y - P_y,\\\\ Q_z - P_z \\\\rangle$.", "answer": "<3, 4, 0>", "accept": ["(3, 4, 0)"], "hint": "Do tip minus tail in each coordinate: $4-1$, $6-2$, $3-3$." }
+      ],
+      "finalAnswer": { "value": "<3, 4, 0>", "unit": "" },
+      "solutionNarrative": "$\\\\vec{PQ} = \\\\langle 4-1,\\\\ 6-2,\\\\ 3-3 \\\\rangle = \\\\langle 3, 4, 0 \\\\rangle$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s02",
+      "concepts": ["vector-components"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the component form of the vector from $A = (-2, 5, 1)$ to $B = (3, -1, 4)$.",
+      "steps": [
+        { "instruction": "Compute the $x$-component, $B_x - A_x$.", "answer": "5", "accept": [], "hint": "$3 - (-2)$." },
+        { "instruction": "Now give the full vector $\\\\vec{AB}$ in component form.", "answer": "<5, -6, 3>", "accept": ["(5, -6, 3)"], "hint": "$y$: $-1-5=-6$; $z$: $4-1=3$." }
+      ],
+      "finalAnswer": { "value": "<5, -6, 3>", "unit": "" },
+      "solutionNarrative": "$\\\\vec{AB} = \\\\langle 3-(-2),\\\\ -1-5,\\\\ 4-1 \\\\rangle = \\\\langle 5, -6, 3 \\\\rangle$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s03",
+      "concepts": ["vector-components"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Points $P = (2, -3, 5)$ and $Q = (7, 1, -2)$ are given. Find $\\\\vec{QP}$ (from $Q$ to $P$) in component form.",
+      "steps": [
+        { "instruction": "Note the direction: $\\\\vec{QP}$ means tip $P$ minus tail $Q$. Write the subtraction setup as a vector and evaluate it.", "answer": "<-5, -4, 7>", "accept": ["(-5, -4, 7)"], "hint": "Tip minus tail = $\\\\langle 2-7,\\\\ -3-1,\\\\ 5-(-2) \\\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<-5, -4, 7>", "unit": "" },
+      "solutionNarrative": "$\\\\vec{QP} = \\\\langle 2-7,\\\\ -3-1,\\\\ 5-(-2) \\\\rangle = \\\\langle -5, -4, 7 \\\\rangle$ — the reverse of $\\\\vec{PQ}$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s04",
+      "concepts": ["magnitude-and-unit"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the magnitude of $\\\\vec{v} = \\\\langle 3, 4, 0 \\\\rangle$.",
+      "steps": [
+        { "instruction": "Apply $\\\\|\\\\vec{v}\\\\| = \\\\sqrt{a^2 + b^2 + c^2}$ and simplify to a number.", "answer": "5", "accept": [], "hint": "$\\\\sqrt{9 + 16 + 0} = \\\\sqrt{25}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$\\\\|\\\\vec{v}\\\\| = \\\\sqrt{3^2 + 4^2 + 0^2} = \\\\sqrt{25} = 5$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s05",
+      "concepts": ["magnitude-and-unit"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $\\\\vec{v} = \\\\langle 2, 3, 6 \\\\rangle$, find its magnitude and then the unit vector in its direction.",
+      "steps": [
+        { "instruction": "Compute the magnitude $\\\\sqrt{a^2+b^2+c^2}$.", "answer": "7", "accept": [], "hint": "$\\\\sqrt{4 + 9 + 36} = \\\\sqrt{49}$." },
+        { "instruction": "Divide each component by the magnitude to get the unit vector.", "answer": "<2/7, 3/7, 6/7>", "accept": ["(2/7, 3/7, 6/7)"], "hint": "$\\\\hat{u} = \\\\langle 2/7,\\\\ 3/7,\\\\ 6/7 \\\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<2/7, 3/7, 6/7>", "unit": "" },
+      "solutionNarrative": "$\\\\|\\\\vec{v}\\\\| = \\\\sqrt{4+9+36} = 7$, so $\\\\hat{u} = \\\\langle 2/7, 3/7, 6/7 \\\\rangle$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s06",
+      "concepts": ["magnitude-and-unit"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $\\\\vec{v} = \\\\langle 2, -1, 2 \\\\rangle$, find its magnitude, then the unit vector in the direction of $-\\\\vec{v}$.",
+      "steps": [
+        { "instruction": "Compute $\\\\|\\\\vec{v}\\\\|$.", "answer": "3", "accept": [], "hint": "$\\\\sqrt{4 + 1 + 4} = \\\\sqrt{9}$." },
+        { "instruction": "The unit vector for $-\\\\vec{v}$ flips each sign, then divides by the magnitude. Give it in component form.", "answer": "<-2/3, 1/3, -2/3>", "accept": ["(-2/3, 1/3, -2/3)"], "hint": "$-\\\\vec{v} = \\\\langle -2, 1, -2 \\\\rangle$; divide each by 3." }
+      ],
+      "finalAnswer": { "value": "<-2/3, 1/3, -2/3>", "unit": "" },
+      "solutionNarrative": "$\\\\|\\\\vec{v}\\\\| = \\\\sqrt{4+1+4} = 3$. Then $-\\\\vec{v} = \\\\langle -2, 1, -2 \\\\rangle$, and dividing by 3 gives $\\\\langle -2/3, 1/3, -2/3 \\\\rangle$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s07",
+      "concepts": ["vector-operations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\\\vec{u} = \\\\langle 1, 2, 0 \\\\rangle$ and $\\\\vec{v} = \\\\langle 3, -1, 4 \\\\rangle$, find $\\\\vec{u} + \\\\vec{v}$.",
+      "steps": [
+        { "instruction": "Add component by component.", "answer": "<4, 1, 4>", "accept": ["(4, 1, 4)"], "hint": "$1+3$, $2+(-1)$, $0+4$." }
+      ],
+      "finalAnswer": { "value": "<4, 1, 4>", "unit": "" },
+      "solutionNarrative": "$\\\\vec{u} + \\\\vec{v} = \\\\langle 1+3,\\\\ 2-1,\\\\ 0+4 \\\\rangle = \\\\langle 4, 1, 4 \\\\rangle$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s08",
+      "concepts": ["vector-operations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $\\\\vec{u} = \\\\langle 4, 0, -2 \\\\rangle$ and $\\\\vec{v} = \\\\langle 1, 5, 3 \\\\rangle$, compute $3\\\\vec{u} - \\\\vec{v}$.",
+      "steps": [
+        { "instruction": "First scale: find $3\\\\vec{u}$.", "answer": "<12, 0, -6>", "accept": ["(12, 0, -6)"], "hint": "Multiply each component of $\\\\vec{u}$ by 3." },
+        { "instruction": "Now subtract $\\\\vec{v}$ component by component.", "answer": "<11, -5, -9>", "accept": ["(11, -5, -9)"], "hint": "$\\\\langle 12-1,\\\\ 0-5,\\\\ -6-3 \\\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<11, -5, -9>", "unit": "" },
+      "solutionNarrative": "$3\\\\vec{u} = \\\\langle 12, 0, -6 \\\\rangle$; subtracting $\\\\vec{v}$ gives $\\\\langle 11, -5, -9 \\\\rangle$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s09",
+      "concepts": ["vector-operations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Given $\\\\vec{a} = \\\\langle 2, -1, 3 \\\\rangle$ and $\\\\vec{b} = \\\\langle 0, 4, -2 \\\\rangle$, find the linear combination $2\\\\vec{a} + 3\\\\vec{b}$.",
+      "steps": [
+        { "instruction": "Compute $2\\\\vec{a}$.", "answer": "<4, -2, 6>", "accept": ["(4, -2, 6)"], "hint": "Double each component of $\\\\vec{a}$." },
+        { "instruction": "Compute $3\\\\vec{b}$.", "answer": "<0, 12, -6>", "accept": ["(0, 12, -6)"], "hint": "Triple each component of $\\\\vec{b}$." },
+        { "instruction": "Add the two scaled vectors.", "answer": "<4, 10, 0>", "accept": ["(4, 10, 0)"], "hint": "$\\\\langle 4+0,\\\\ -2+12,\\\\ 6-6 \\\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<4, 10, 0>", "unit": "" },
+      "solutionNarrative": "$2\\\\vec{a} = \\\\langle 4, -2, 6 \\\\rangle$ and $3\\\\vec{b} = \\\\langle 0, 12, -6 \\\\rangle$; their sum is $\\\\langle 4, 10, 0 \\\\rangle$."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s10",
+      "concepts": ["vectors-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A drone takes off from a launch pad at position $(2, 1, 0)$ meters and flies to a window at $(5, 5, 12)$ meters. What is its displacement vector?",
+      "steps": [
+        { "instruction": "Displacement is destination minus start. Write it in component form.", "answer": "<3, 4, 12>", "accept": ["(3, 4, 12)"], "hint": "$\\\\langle 5-2,\\\\ 5-1,\\\\ 12-0 \\\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<3, 4, 12>", "unit": "meters" },
+      "solutionNarrative": "Displacement $= \\\\langle 5-2,\\\\ 5-1,\\\\ 12-0 \\\\rangle = \\\\langle 3, 4, 12 \\\\rangle$ meters."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s11",
+      "concepts": ["vectors-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A boat's engine drives it with velocity $\\\\langle 8, 0 \\\\rangle$ km/h and a current pushes it with velocity $\\\\langle 0, 6 \\\\rangle$ km/h. What is the boat's resultant (net) velocity vector?",
+      "steps": [
+        { "instruction": "Add the engine and current velocities component by component.", "answer": "<8, 6>", "accept": ["(8, 6)"], "hint": "$\\\\langle 8+0,\\\\ 0+6 \\\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<8, 6>", "unit": "km/h" },
+      "solutionNarrative": "Net velocity $= \\\\langle 8, 0 \\\\rangle + \\\\langle 0, 6 \\\\rangle = \\\\langle 8, 6 \\\\rangle$ km/h."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s12",
+      "concepts": ["vectors-applied", "vector-operations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two cables pull on a ring. Cable 1 exerts force $\\\\langle 30, 40, 0 \\\\rangle$ N and cable 2 exerts $\\\\langle -10, 20, 50 \\\\rangle$ N. Find the resultant force vector on the ring.",
+      "steps": [
+        { "instruction": "Add the two force vectors component by component.", "answer": "<20, 60, 50>", "accept": ["(20, 60, 50)"], "hint": "$\\\\langle 30-10,\\\\ 40+20,\\\\ 0+50 \\\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<20, 60, 50>", "unit": "N" },
+      "solutionNarrative": "Resultant $= \\\\langle 30-10,\\\\ 40+20,\\\\ 0+50 \\\\rangle = \\\\langle 20, 60, 50 \\\\rangle$ N."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s13",
+      "concepts": ["vectors-applied", "magnitude-and-unit"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An airplane flies with velocity $\\\\langle 200, 0, 0 \\\\rangle$ km/h and a wind blows with velocity $\\\\langle 0, 50, 0 \\\\rangle$ km/h. Find the plane's true ground speed (the magnitude of the resultant), rounded to 1 decimal place.",
+      "steps": [
+        { "instruction": "Add the two velocities to get the resultant ground-velocity vector.", "answer": "<200, 50, 0>", "accept": ["(200, 50, 0)"], "hint": "$\\\\langle 200+0,\\\\ 0+50,\\\\ 0 \\\\rangle$." },
+        { "instruction": "Take the magnitude of the resultant and round to 1 decimal place.", "answer": "206.2", "accept": [], "hint": "$\\\\sqrt{200^2 + 50^2} = \\\\sqrt{42500} \\\\approx 206.2$." }
+      ],
+      "finalAnswer": { "value": "206.2", "unit": "km/h" },
+      "solutionNarrative": "Resultant $= \\\\langle 200, 50, 0 \\\\rangle$; its magnitude is $\\\\sqrt{42500} \\\\approx 206.2$ km/h."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s14",
+      "concepts": ["vectors-applied", "vector-components"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A hiker walks from GPS position $(100, 200, 50)$ meters to $(160, 280, 50)$ meters (east, north, elevation). Find the displacement vector, then the straight-line distance traveled, rounded to 1 decimal place.",
+      "steps": [
+        { "instruction": "Find the displacement vector (destination minus start).", "answer": "<60, 80, 0>", "accept": ["(60, 80, 0)"], "hint": "$\\\\langle 160-100,\\\\ 280-200,\\\\ 50-50 \\\\rangle$." },
+        { "instruction": "Compute the magnitude of that displacement, rounded to 1 decimal place.", "answer": "100", "accept": ["100.0"], "hint": "$\\\\sqrt{60^2 + 80^2} = \\\\sqrt{10000}$." }
+      ],
+      "finalAnswer": { "value": "100", "unit": "meters" },
+      "solutionNarrative": "Displacement $= \\\\langle 60, 80, 0 \\\\rangle$; its magnitude is $\\\\sqrt{3600 + 6400} = \\\\sqrt{10000} = 100$ meters."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s15",
+      "concepts": ["vectors-applied", "magnitude-and-unit"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Three forces act on a bolt: $\\\\langle 2, 3, 6 \\\\rangle$ N, $\\\\langle -2, 0, 0 \\\\rangle$ N, and $\\\\langle 0, 1, 0 \\\\rangle$ N. Find the resultant force and its magnitude.",
+      "steps": [
+        { "instruction": "Add all three force vectors component by component.", "answer": "<0, 4, 6>", "accept": ["(0, 4, 6)"], "hint": "$x: 2-2+0$; $y: 3+0+1$; $z: 6+0+0$." },
+        { "instruction": "Take the magnitude of the resultant $\\\\langle 0, 4, 6 \\\\rangle$, rounded to 1 decimal place.", "answer": "7.2", "accept": [], "hint": "$\\\\sqrt{0^2 + 4^2 + 6^2} = \\\\sqrt{52} \\\\approx 7.2$." }
+      ],
+      "finalAnswer": { "value": "7.2", "unit": "N" },
+      "solutionNarrative": "Resultant $= \\\\langle 0, 4, 6 \\\\rangle$; its magnitude is $\\\\sqrt{0 + 16 + 36} = \\\\sqrt{52} \\\\approx 7.2$ N."
+    },
+    {
+      "id": "calculus-3.vectors-in-space.s16",
+      "concepts": ["vector-operations", "vector-components"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $\\\\vec{u} = \\\\langle 5, -2, 1 \\\\rangle$ and $\\\\vec{v} = \\\\langle 1, 3, -4 \\\\rangle$. Find $\\\\vec{u} - \\\\vec{v}$.",
+      "steps": [
+        { "instruction": "Subtract component by component.", "answer": "<4, -5, 5>", "accept": ["(4, -5, 5)"], "hint": "$\\\\langle 5-1,\\\\ -2-3,\\\\ 1-(-4) \\\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<4, -5, 5>", "unit": "" },
+      "solutionNarrative": "$\\\\vec{u} - \\\\vec{v} = \\\\langle 5-1,\\\\ -2-3,\\\\ 1+4 \\\\rangle = \\\\langle 4, -5, 5 \\\\rangle$."
+    }
+  ]
+}

@@ -1,0 +1,265 @@
+{
+  "id": "calculus-1.limits-and-continuity",
+  "subject": "calculus-1",
+  "title": "Limits and Continuity",
+  "prerequisites": [],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "evaluate-limits",
+      "label": "Evaluating limits",
+      "microLesson": "A limit asks: as $x$ creeps toward some value $a$, what number does $f(x)$ head toward? Most of the time you just **substitute**: $\\\\lim_{x \\\\to 3}(2x + 1) = 7$. The interesting case is the **$0/0$ form**, where plugging in gives nonsense. Then you fix the algebra first — factor and cancel the troublemaker. $\\\\lim_{x \\\\to 2}\\\\frac{x^2 - 4}{x - 2} = \\\\lim_{x \\\\to 2}(x + 2) = 4$. The hole at $x = 2$ never stops the function from approaching 4."
+    },
+    {
+      "id": "one-sided-and-infinite",
+      "label": "One-sided and infinite limits",
+      "microLesson": "Sometimes the approach from the left differs from the approach from the right. A **two-sided limit exists only when both one-sided limits agree.** For **limits at infinity** of a rational function, compare the leading terms: $\\\\lim_{x \\\\to \\\\infty}\\\\frac{3x^2 + 1}{6x^2 - x}$ heads to the ratio of leading coefficients, $3/6 = 1/2$. Near a **vertical asymptote** a denominator shrinks to zero while the top stays nonzero, so the value blows up to $+\\\\infty$ or $-\\\\infty$."
+    },
+    {
+      "id": "continuity",
+      "label": "Continuity",
+      "microLesson": "A function is **continuous at $a$** if you can draw through that point without lifting your pen: $\\\\lim_{x \\\\to a}f(x)$ exists, $f(a)$ exists, and the two are equal. A **removable discontinuity** is a single hole you could patch; a **jump** is a step where the two sides disagree. For a piecewise function, you often pick a constant $k$ that forces the pieces to meet — set the two side values equal at the seam and solve for $k$."
+    },
+    {
+      "id": "limits-applied",
+      "label": "The limit as instantaneous rate",
+      "microLesson": "Average rate over an interval is $\\\\frac{\\\\Delta y}{\\\\Delta x}$ — easy. But the **instantaneous** rate at a single instant needs a limit: compute the average rate over a shrinking interval and watch where it settles. For position $s(t)$, average speed over $[t, t+h]$ is $\\\\frac{s(t+h) - s(t)}{h}$, and the instantaneous speed is its limit as $h \\\\to 0$. This single idea — average over a vanishing window — is the seed of the entire derivative."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The question behind every rate\n\nHere is a problem you cannot solve with ordinary algebra: *how fast is a car going at the exact instant the clock reads 4 seconds?* Speed is distance over time — but at a single instant, no time passes and no distance is covered, so the formula reads $0/0$. The honest answer comes from sneaking up on the instant: measure the average speed over shorter and shorter stretches around it and see what number those averages close in on. That closing-in number is a **limit**, and it is the idea the whole of calculus is built on.\n\n## What a limit is\n\nThe statement\n\n$$\\\\lim_{x \\\\to a} f(x) = L$$\n\nmeans: *as $x$ gets arbitrarily close to $a$, $f(x)$ gets arbitrarily close to $L$.* Crucially, it never asks what happens **at** $a$ — only what the function is heading toward nearby. A function can have a hole exactly at $a$ and still have a perfectly good limit there.\n\n### Evaluating: substitute first\n\nFor most functions, the limit is just the value: $\\\\lim_{x \\\\to 3}(2x + 1) = 7$. Try direct substitution first — it usually works.\n\nThe interesting case is the **indeterminate $0/0$ form**, where substitution gives $\\\\frac{0}{0}$, which means nothing on its own. The cure is algebra: factor the top and bottom and cancel the shared factor that was causing the zero.\n\n$$\\\\lim_{x \\\\to 2} \\\\frac{x^2 - 4}{x - 2} = \\\\lim_{x \\\\to 2} \\\\frac{(x-2)(x+2)}{x - 2} = \\\\lim_{x \\\\to 2}(x + 2) = 4.$$\n\nThe original function is undefined at $x = 2$, yet it still approaches $4$ — the hole is invisible to the limit.\n\nHere is the picture: away from $x = 2$ the graph is simply the line $y = x + 2$ with a single point missing, and the dashed guides show the value the function closes in on.\n\n```plot\n{ \"xRange\": [-1, 5], \"yRange\": [0, 8], \"curves\": [ { \"fn\": \"x + 2\", \"label\": \"y = (x² - 4)/(x - 2)\", \"labelAt\": 3.4, \"color\": \"accent\" } ], \"segments\": [ { \"from\": [2, 0], \"to\": [2, 4], \"dashed\": true, \"color\": \"dim\" }, { \"from\": [0, 4], \"to\": [2, 4], \"dashed\": true, \"color\": \"dim\" } ], \"points\": [ { \"x\": 2, \"y\": 4, \"label\": \"hole at (2, 4)\", \"color\": \"warn\" } ], \"caption\": \"The graph is the line y = x + 2 except at x = 2, where there is a hole — yet the limit as x approaches 2 is still 4.\" }\n```\n\n## One-sided and infinite limits\n\nApproaching $a$ from below (the **left**, $x \\\\to a^-$) can give a different result than approaching from above (the **right**, $x \\\\to a^+$). The two-sided limit **exists only when both sides agree.** When they disagree — as at a step in a pricing tier — the limit **does not exist**.\n\nTwo more flavors matter constantly in applications:\n\n- **Limits at infinity** describe long-run behavior. For a rational function, only the leading terms survive: $\\\\lim_{x \\\\to \\\\infty} \\\\frac{3x^2 + 1}{6x^2 - x} = \\\\frac{3}{6} = \\\\frac{1}{2}$. If the bottom grows faster, the limit is $0$; if the top grows faster, it runs off to $\\\\pm\\\\infty$. This is how a process settles toward a **steady state** or **terminal value**.\n- **Infinite limits** happen at a **vertical asymptote**: the denominator shrinks to zero while the numerator stays nonzero, so $f(x)$ blows up to $+\\\\infty$ or $-\\\\infty$.\n\n## Continuity: no holes, no jumps\n\nA function is **continuous at $a$** when three things all hold:\n\n1. $f(a)$ exists,\n2. $\\\\lim_{x \\\\to a} f(x)$ exists, and\n3. they are equal.\n\nIntuitively, you can trace the graph through $x = a$ without lifting your pen. A **removable discontinuity** is a single patchable hole; a **jump discontinuity** is a step where the left and right limits differ. For a piecewise function with an unknown constant, continuity is a tool: set the two pieces equal at the seam and solve for the constant $k$ that makes them meet.\n\n## The payoff: instantaneous rate\n\nReturn to the car. If position is $s(t)$, the average speed over $[t, t+h]$ is\n\n$$\\\\frac{s(t+h) - s(t)}{h}.$$\n\nPlug in $h = 0$ and you get $0/0$ — the same trap. So take the **limit** as $h \\\\to 0$ instead: the average speeds over shrinking windows settle on the **instantaneous speed**. That limit is the derivative, and every rate you will ever compute — velocity, marginal cost, reaction rate — is born from exactly this move."
+  },
+  "application": {
+    "summary": "Limits turn 'average over an interval' into 'value at an instant', which is the only honest way to define instantaneous speed, marginal cost, and reaction rate. Limits at infinity describe the steady-state or terminal value a process settles toward, and continuity decides whether a model has hidden jumps or holes that would break a prediction.",
+    "domains": ["physics", "engineering", "business", "biology"],
+    "workedExample": "**Instantaneous speed from shrinking intervals**\n\nA dropped object falls $s(t) = 16t^2$ feet in $t$ seconds. How fast is it moving at exactly $t = 2$ s?\n\nThe average speed over $[2, 2+h]$ is\n\n$$\\\\frac{s(2+h) - s(2)}{h} = \\\\frac{16(2+h)^2 - 16(2)^2}{h} = \\\\frac{16(4 + 4h + h^2) - 64}{h} = \\\\frac{64h + 16h^2}{h} = 64 + 16h.$$\n\nWatch the averages as the window shrinks: $h = 1 \\\\Rightarrow 80$, $h = 0.1 \\\\Rightarrow 81.6$, $h = 0.01 \\\\Rightarrow 81.76$. They close in on a single number. Taking the limit,\n\n$$\\\\lim_{h \\\\to 0}(64 + 16h) = 64.$$\n\n**The object is moving at exactly 64 ft/s at $t = 2$.** We never divided by zero — we let $h$ approach zero and read off where the averages were headed. The identical move defines marginal cost in business (cost of one more unit as the batch size's window shrinks) and instantaneous reaction rate in chemistry.",
+    "domainNotes": [
+      "**Physics:** instantaneous velocity and acceleration as limits of averages over vanishing time intervals.",
+      "**Engineering:** terminal velocity, steady-state temperature, or settling voltage as a limit at infinity.",
+      "**Business:** marginal cost and marginal revenue as the limit of average change per additional unit; long-run market share as a limit at infinity.",
+      "**Biology:** a population or drug concentration leveling off toward a carrying capacity or steady-state value."
+    ]
+  },
+  "generators": ["limit-sub-v1", "limit-factor-v1", "limit-infinity-v1", "continuity-hole-v1", "limit-diffquotient-v1"],
+  "problems": [
+    {
+      "id": "calculus-1.limits-and-continuity.s01",
+      "concepts": ["evaluate-limits"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate by direct substitution: $\\\\lim_{x \\\\to 3}(2x + 1)$.",
+      "steps": [
+        { "instruction": "Substitute $x = 3$ into $2x + 1$ and simplify.", "answer": "7", "accept": [], "hint": "The function is a polynomial, so just plug in: $2(3) + 1$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "The function is continuous, so $\\\\lim_{x \\\\to 3}(2x+1) = 2(3) + 1 = 7$."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s02",
+      "concepts": ["evaluate-limits"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate: $\\\\lim_{x \\\\to 4}(x^2 - 5)$.",
+      "steps": [
+        { "instruction": "Substitute $x = 4$ and simplify.", "answer": "11", "accept": [], "hint": "$4^2 - 5 = 16 - 5$." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "" },
+      "solutionNarrative": "Direct substitution: $4^2 - 5 = 11$."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s03",
+      "concepts": ["evaluate-limits"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate the $0/0$ form by factoring: $\\\\lim_{x \\\\to 2}\\\\frac{x^2 - 4}{x - 2}$ (shown in the figure).",
+      "plot": { "xRange": [-1, 5], "yRange": [0, 8], "curves": [ { "fn": "x + 2", "color": "accent" } ], "segments": [ { "from": [2, 0], "to": [2, 4], "dashed": true, "color": "dim" }, { "from": [0, 4], "to": [2, 4], "dashed": true, "color": "dim" } ], "points": [ { "x": 2, "y": 4, "label": "hole", "color": "warn" } ], "caption": "y = (x² - 4)/(x - 2): a line with a single hole at x = 2." },
+      "steps": [
+        { "instruction": "Factor the numerator $x^2 - 4$.", "answer": "(x - 2)(x + 2)", "accept": ["(x+2)(x-2)"], "hint": "It is a difference of squares: $x^2 - 4 = (x-2)(x+2)$." },
+        { "instruction": "Cancel the common factor, then substitute $x = 2$ into what remains.", "answer": "4", "accept": [], "hint": "After canceling $(x-2)$, you are left with $x + 2$; plug in 2." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\\\frac{(x-2)(x+2)}{x-2} = x + 2$, and at $x = 2$ this gives $4$."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s04",
+      "concepts": ["evaluate-limits"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate: $\\\\lim_{x \\\\to 3}\\\\frac{x^2 - 9}{x^2 - x - 6}$.",
+      "steps": [
+        { "instruction": "Factor the numerator $x^2 - 9$.", "answer": "(x - 3)(x + 3)", "accept": ["(x+3)(x-3)"], "hint": "Difference of squares." },
+        { "instruction": "Factor the denominator $x^2 - x - 6$.", "answer": "(x - 3)(x + 2)", "accept": ["(x+2)(x-3)"], "hint": "Two numbers multiplying to $-6$ and adding to $-1$: $-3$ and $2$." },
+        { "instruction": "Cancel $(x - 3)$ and substitute $x = 3$ into $\\\\frac{x + 3}{x + 2}$. Give a fraction.", "answer": "6/5", "accept": ["1.2"], "hint": "$\\\\frac{3 + 3}{3 + 2} = \\\\frac{6}{5}$." }
+      ],
+      "finalAnswer": { "value": "6/5", "unit": "" },
+      "solutionNarrative": "Both factor with $(x-3)$: $\\\\frac{(x-3)(x+3)}{(x-3)(x+2)} = \\\\frac{x+3}{x+2}$, which at $x=3$ is $\\\\frac{6}{5}$."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s05",
+      "concepts": ["one-sided-and-infinite"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the limit at infinity: $\\\\lim_{x \\\\to \\\\infty}\\\\frac{3x^2 + 1}{6x^2 - x}$.",
+      "steps": [
+        { "instruction": "Take the ratio of the leading coefficients and simplify to a fraction.", "answer": "1/2", "accept": ["0.5"], "hint": "Both top and bottom are degree 2, so the limit is $\\\\frac{3}{6}$." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Same degree top and bottom, so the limit is the ratio of leading coefficients, $\\\\frac{3}{6} = \\\\frac{1}{2}$."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s06",
+      "concepts": ["one-sided-and-infinite"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the limit at infinity: $\\\\lim_{x \\\\to \\\\infty}\\\\frac{5x + 2}{2x^2 + 7}$.",
+      "steps": [
+        { "instruction": "Compare the degrees. The bottom (degree 2) grows faster than the top (degree 1), so what is the limit?", "answer": "0", "accept": [], "hint": "When the denominator's degree is higher, the fraction is squeezed to 0." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "The denominator grows faster (degree 2 vs degree 1), so the ratio approaches 0."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s07",
+      "concepts": ["one-sided-and-infinite"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A function jumps at $x = 1$ (shown in the figure): for $x < 1$ it equals $2$, and for $x > 1$ it equals $5$. Does $\\\\lim_{x \\\\to 1}f(x)$ exist? Answer 'yes' or 'no'.",
+      "plot": { "xRange": [-1, 3], "yRange": [0, 7], "segments": [ { "from": [-1, 2], "to": [1, 2], "color": "accent" }, { "from": [1, 5], "to": [3, 5], "color": "accent" } ], "points": [ { "x": 1, "y": 2, "label": "left value", "color": "warn" }, { "x": 1, "y": 5, "label": "right value", "color": "success" } ], "caption": "A jump at x = 1: the two pieces approach different values from the left and the right." },
+      "steps": [
+        { "instruction": "State the left-hand limit (the value as $x \\\\to 1^-$).", "answer": "2", "accept": [], "hint": "For $x < 1$ the function is 2." },
+        { "instruction": "State the right-hand limit (the value as $x \\\\to 1^+$).", "answer": "5", "accept": [], "hint": "For $x > 1$ the function is 5." },
+        { "instruction": "Do the two one-sided limits agree, so the two-sided limit exists? Answer 'yes' or 'no'.", "answer": "no", "accept": ["dne"], "hint": "A two-sided limit exists only when both sides match." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The left limit is 2 and the right limit is 5; they disagree, so the two-sided limit does not exist."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s08",
+      "concepts": ["one-sided-and-infinite"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Near the vertical asymptote, evaluate $\\\\lim_{x \\\\to 0^+}\\\\frac{1}{x}$. Use 'infinity' or '-infinity' if it is infinite.",
+      "steps": [
+        { "instruction": "As $x$ approaches 0 from the positive side, $1/x$ grows without bound. What is the limit?", "answer": "infinity", "accept": ["inf"], "hint": "Tiny positive denominators make $1/x$ huge and positive." }
+      ],
+      "finalAnswer": { "value": "infinity", "unit": "" },
+      "solutionNarrative": "As $x \\\\to 0^+$ the denominator is a tiny positive number, so $1/x \\\\to +\\\\infty$."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s09",
+      "concepts": ["continuity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is $f(x) = 3x - 4$ continuous at $x = 2$? Answer 'yes' or 'no'.",
+      "steps": [
+        { "instruction": "Compute $f(2)$.", "answer": "2", "accept": [], "hint": "$3(2) - 4$." },
+        { "instruction": "Since a polynomial has a limit equal to its value everywhere, is it continuous at $x = 2$? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Polynomials are continuous at every point." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Polynomials are continuous everywhere; $f(2) = 2$ equals the limit, so $f$ is continuous at $x = 2$."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s10",
+      "concepts": ["continuity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A piecewise function is $f(x) = x + 3$ for $x \\\\le 1$ and $f(x) = 2x + k$ for $x > 1$. What value of $k$ makes $f$ continuous at $x = 1$?",
+      "steps": [
+        { "instruction": "Evaluate the left piece at $x = 1$.", "answer": "4", "accept": [], "hint": "$1 + 3$." },
+        { "instruction": "Set the right piece equal to that value at $x = 1$: $2(1) + k = 4$. Solve for $k$.", "answer": "2", "accept": ["k=2"], "hint": "$2 + k = 4$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Left piece at 1 is $4$; setting $2 + k = 4$ gives $k = 2$, which makes the pieces meet."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s11",
+      "concepts": ["continuity"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A piecewise function is $f(x) = \\\\frac{x^2 - 9}{x - 3}$ for $x \\\\ne 3$ and $f(x) = k$ for $x = 3$. What value of $k$ removes the discontinuity at $x = 3$?",
+      "steps": [
+        { "instruction": "Factor and cancel: simplify $\\\\frac{x^2 - 9}{x - 3}$ to a polynomial.", "answer": "x + 3", "accept": [], "hint": "$x^2 - 9 = (x-3)(x+3)$; cancel $(x-3)$." },
+        { "instruction": "Take the limit as $x \\\\to 3$ of $x + 3$. This is the value $k$ must equal.", "answer": "6", "accept": ["k=6"], "hint": "$3 + 3 = 6$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "The function simplifies to $x + 3$, whose limit at 3 is $6$; setting $k = 6$ patches the hole."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s12",
+      "concepts": ["limits-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A runner's position is $s(t) = 5t$ meters at time $t$ seconds. Since the rate is constant, the average speed over any interval equals the instantaneous speed. What is the instantaneous speed (m/s)?",
+      "steps": [
+        { "instruction": "The average speed over any interval is the change in position over the change in time. For $s(t) = 5t$, what is that constant rate?", "answer": "5", "accept": [], "hint": "Position increases by 5 meters each second." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "m/s" },
+      "solutionNarrative": "For a constant rate, every average speed is $5$ m/s, so the limit (instantaneous speed) is also $5$ m/s."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s13",
+      "concepts": ["limits-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A dropped object has fallen $s(t) = 16t^2$ feet after $t$ seconds. The average speed over $[2, 2+h]$ simplifies to $64 + 16h$. Find the instantaneous speed at $t = 2$ by taking the limit as $h \\\\to 0$ (ft/s).",
+      "steps": [
+        { "instruction": "Evaluate the limit of $64 + 16h$ as $h \\\\to 0$.", "answer": "64", "accept": [], "hint": "Substitute $h = 0$ into $64 + 16h$." }
+      ],
+      "finalAnswer": { "value": "64", "unit": "ft/s" },
+      "solutionNarrative": "As the interval shrinks, $64 + 16h \\\\to 64$, so the instantaneous speed at $t = 2$ is $64$ ft/s."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s14",
+      "concepts": ["limits-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An object's position is $s(t) = t^2$ meters. The average velocity over $[3, 3+h]$ is $\\\\frac{(3+h)^2 - 9}{h}$. Simplify it and take the limit as $h \\\\to 0$ to find the instantaneous velocity at $t = 3$ (m/s).",
+      "steps": [
+        { "instruction": "Expand $(3+h)^2 - 9$.", "answer": "6h + h^2", "accept": ["h^2 + 6h"], "hint": "$(3+h)^2 = 9 + 6h + h^2$; subtract 9." },
+        { "instruction": "Divide by $h$ to simplify the average velocity.", "answer": "6 + h", "accept": ["h + 6"], "hint": "$\\\\frac{6h + h^2}{h} = 6 + h$." },
+        { "instruction": "Take the limit as $h \\\\to 0$.", "answer": "6", "accept": [], "hint": "Substitute $h = 0$ into $6 + h$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "m/s" },
+      "solutionNarrative": "$\\\\frac{(3+h)^2 - 9}{h} = 6 + h$, whose limit as $h \\\\to 0$ is $6$ m/s — the instantaneous velocity at $t = 3$."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s15",
+      "concepts": ["one-sided-and-infinite", "limits-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A cooling object's temperature above room temperature is modeled by $T(t) = \\\\frac{80}{t + 1}$ degrees after $t$ minutes. What steady-state value does the excess temperature approach as $t \\\\to \\\\infty$ (degrees)?",
+      "steps": [
+        { "instruction": "As $t$ grows, the denominator grows without bound while the top stays 80. What does $\\\\frac{80}{t+1}$ approach?", "answer": "0", "accept": [], "hint": "A fixed number over an ever-larger denominator shrinks toward 0." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "degrees" },
+      "solutionNarrative": "As $t \\\\to \\\\infty$, $\\\\frac{80}{t+1} \\\\to 0$, so the excess temperature dies away to 0 — the object settles to room temperature."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s16",
+      "concepts": ["one-sided-and-infinite"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A factory's average cost per unit is $C(x) = \\\\frac{500}{x} + 4$ dollars when making $x$ units. As production $x$ grows very large, what value does the average cost approach (dollars)?",
+      "steps": [
+        { "instruction": "As $x \\\\to \\\\infty$, the term $\\\\frac{500}{x}$ approaches what value?", "answer": "0", "accept": [], "hint": "A fixed number over a huge denominator goes to 0." },
+        { "instruction": "Add that to the constant 4 to get the limiting average cost.", "answer": "4", "accept": [], "hint": "$0 + 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "dollars" },
+      "solutionNarrative": "$\\\\frac{500}{x} \\\\to 0$ as $x \\\\to \\\\infty$, so average cost settles toward $\\\\$4$ per unit."
+    },
+    {
+      "id": "calculus-1.limits-and-continuity.s17",
+      "concepts": ["evaluate-limits", "limits-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A drug's concentration model gives the $0/0$ form $\\\\lim_{h \\\\to 0}\\\\frac{(2+h)^2 - 4}{h}$ for an instantaneous rate. Evaluate it.",
+      "steps": [
+        { "instruction": "Expand $(2+h)^2 - 4$.", "answer": "4h + h^2", "accept": ["h^2 + 4h"], "hint": "$(2+h)^2 = 4 + 4h + h^2$; subtract 4." },
+        { "instruction": "Divide by $h$ and take the limit as $h \\\\to 0$.", "answer": "4", "accept": [], "hint": "$\\\\frac{4h + h^2}{h} = 4 + h \\\\to 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\\\frac{(2+h)^2 - 4}{h} = 4 + h$, whose limit as $h \\\\to 0$ is $4$."
+    }
+  ]
+}

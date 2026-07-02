@@ -1,0 +1,258 @@
+{
+  "id": "calculus-1.related-rates",
+  "subject": "calculus-1",
+  "title": "Related Rates",
+  "prerequisites": ["calculus-1.differentiation-rules", "calculus-1.implicit-differentiation", "geometry.similarity"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "expanding-shrinking",
+      "label": "Expanding and shrinking shapes",
+      "microLesson": "When a circle or sphere grows, its radius and its area or volume all change together over time. Differentiate the geometry formula with respect to time $t$ and the chain rule links the rates. For a circle, $A = \\pi r^2$ gives $\\frac{dA}{dt} = 2\\pi r \\frac{dr}{dt}$. The radius's rate $\\frac{dr}{dt}$ drives the area's rate $\\frac{dA}{dt}$, and the current radius $r$ scales how fast that happens."
+    },
+    {
+      "id": "ladder-and-distance",
+      "label": "Pythagorean separations",
+      "microLesson": "A ladder against a wall, or two objects pulling apart, obey $x^2 + y^2 = z^2$. Differentiate with respect to time: $2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 2z\\frac{dz}{dt}$. A sliding ladder has fixed length, so $\\frac{dz}{dt}=0$ and the two motions trade off: as the base slides out ($\\frac{dx}{dt}>0$), the top slides down ($\\frac{dy}{dt}<0$). Sign tells you the direction."
+    },
+    {
+      "id": "filling-draining",
+      "label": "Filling and draining tanks",
+      "microLesson": "Water entering or leaving a tank changes its volume; you want the rate the height (or radius) changes. Differentiate the volume formula in time. For a cone, similar triangles let you write the radius in terms of height first, so $V$ depends on $h$ alone, then $\\frac{dV}{dt} = (\\text{stuff})\\, h^2 \\frac{dh}{dt}$. Draining makes $\\frac{dV}{dt}$ negative."
+    },
+    {
+      "id": "rates-in-motion",
+      "label": "Rates in real motion",
+      "microLesson": "Shadows, approaching cars, and rising angles are related rates in disguise. Set up the geometry — similar triangles for shadows, $x^2+y^2=z^2$ for converging paths, trig for angles — then differentiate in time. A receding object gives a positive distance rate; an approaching one gives a negative rate. Always identify which quantities are given and which one you're solving for before differentiating."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The clock is the hidden variable\n\nA ripple spreads on a pond. A balloon inflates. A ladder slips. In every one of these, *several quantities are changing at once, and they're locked together by geometry.* **Related rates** is the calculus of that lock: knowing how fast one quantity changes, you find how fast another changes, because a formula ties them and **time** ties the formula.\n\nThe trigger is always the same. You're told one rate — say a pump delivers $\\frac{dV}{dt} = 2\\ \\text{ft}^3/\\text{min}$ — and asked for a different rate, like how fast the water level rises, $\\frac{dh}{dt}$. The bridge between them is a geometric relationship and the **chain rule**.\n\n## The core move: differentiate the geometry in time\n\nStart from the equation that relates the quantities (area, volume, the Pythagorean theorem). Then differentiate **both sides with respect to $t$**, treating every variable as a function of time. The chain rule sprinkles a rate onto each variable.\n\nTake a circular ripple, area $A = \\pi r^2$. Differentiate in time:\n\n$$\\frac{dA}{dt} = 2\\pi r \\frac{dr}{dt}.$$\n\nThat single equation relates the rate the area grows to the rate the radius grows. If the ripple's radius expands at $\\frac{dr}{dt} = 3$ ft/s when $r = 4$ ft, then $\\frac{dA}{dt} = 2\\pi(4)(3) \\approx 75.4\\ \\text{ft}^2/\\text{s}$.\n\n## The reliable four-step recipe\n\n1. **Name the quantities and their rates.** Write what's given ($\\frac{dr}{dt}$, $\\frac{dV}{dt}$, …) and what you want.\n2. **Find an equation** relating the quantities — geometry, the Pythagorean theorem, or similar triangles.\n3. **Differentiate both sides with respect to $t$.** Every variable picks up a $\\frac{d(\\,)}{dt}$ by the chain rule.\n4. **Substitute the instant's values last** and solve for the unknown rate.\n\n> **Substitute numbers *after* differentiating, never before.** If you plug in $r = 4$ before differentiating, $r$ becomes a constant and its rate vanishes — a classic wrong answer.\n\n## Reducing variables: similar triangles\n\nA cone-shaped tank is the signature hard case. Its volume $V = \\frac{1}{3}\\pi r^2 h$ has *two* changing lengths, $r$ and $h$. But the cone's shape fixes their ratio — by **similar triangles**, $\\frac{r}{h}$ equals the ratio at the rim. Substitute $r$ in terms of $h$ *first*, so $V$ depends on $h$ alone, then differentiate. One variable, one rate, clean solve.\n\n## Signs carry meaning\n\nA rate's sign is physical information. A **sliding ladder**'s top moves *down*, so $\\frac{dy}{dt} < 0$. A **draining** tank has $\\frac{dV}{dt} < 0$. **Approaching** cars have a *negative* separation rate. Get the sign wrong and you've described the opposite event. When the problem asks 'how fast,' report the magnitude, but track the sign through the algebra so the physics stays honest."
+  },
+  "application": {
+    "summary": "Related rates answer 'how fast is THIS changing, given how fast THAT is changing?' — the question behind inflating balloons, spreading ripples, draining tanks, sliding ladders, lengthening shadows, and vehicles converging on an intersection. Geometry plus the chain rule turns one known rate into the rate you actually need.",
+    "domains": ["physics", "engineering", "environmental science", "everyday life"],
+    "workedExample": "**A conical tank filling up**\n\nWater pours into an inverted cone (point down) at $\\frac{dV}{dt} = 2\\ \\text{ft}^3/\\text{min}$. The cone is 6 ft deep and 4 ft across the top (top radius 2 ft). How fast is the water level rising when the water is 3 ft deep? Use $\\pi \\approx 3.14$.\n\nThe rim ratio is $\\frac{r}{h} = \\frac{2}{6} = \\frac{1}{3}$, so $r = \\frac{h}{3}$. Substitute into $V = \\frac{1}{3}\\pi r^2 h$ *before* differentiating:\n\n$$V = \\frac{1}{3}\\pi \\left(\\frac{h}{3}\\right)^2 h = \\frac{\\pi}{27} h^3.$$\n\nNow differentiate in time: $\\frac{dV}{dt} = \\frac{\\pi}{9} h^2 \\frac{dh}{dt}$. Solve for the level's rate and substitute $h = 3$, $\\frac{dV}{dt} = 2$:\n\n$$\\frac{dh}{dt} = \\frac{9}{\\pi h^2}\\cdot \\frac{dV}{dt} = \\frac{9}{3.14 \\cdot 9}\\cdot 2 \\approx 0.6\\ \\text{ft/min}.$$\n\n**The level rises about 0.6 ft/min at that instant** — and it slows as the water gets deeper, because the same volume now spreads over a wider surface. The identical setup sizes pumps, fish-tank fills, and reservoir drawdown.",
+    "domainNotes": [
+      "**Physics:** how fast a shadow lengthens, a distance closes, or an angle of elevation rises as objects move.",
+      "**Engineering:** pump and drain sizing for tanks of any shape by relating volume rate to level rate.",
+      "**Environmental science:** the spread rate of an oil slick or a ripple given how fast its radius grows.",
+      "**Everyday life:** judging when two cars heading for an intersection are actually getting closer, and how fast."
+    ]
+  },
+  "generators": ["circle-area-rate-v1", "sphere-volume-rate-v1", "ladder-rate-v1"],
+  "problems": [
+    {
+      "id": "calculus-1.related-rates.s01",
+      "concepts": ["expanding-shrinking"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A stone dropped in a pond makes a circular ripple whose radius grows at $\\frac{dr}{dt} = 2$ ft/s. How fast is the enclosed area growing when the radius is 5 ft? Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Differentiate $A = \\pi r^2$ with respect to time. Write the related-rate equation.", "answer": "dA/dt = 2*pi*r*dr/dt", "accept": ["dA/dt=2*pi*r*dr/dt", "dA/dt = 2 pi r dr/dt"], "hint": "Chain rule: $\\frac{dA}{dt} = 2\\pi r \\frac{dr}{dt}$." },
+        { "instruction": "Substitute $r = 5$, $\\frac{dr}{dt} = 2$, and $\\pi \\approx 3.14$, then compute the rate in ft²/s (1 decimal).", "answer": "62.8", "accept": [], "hint": "$2(3.14)(5)(2)$." }
+      ],
+      "finalAnswer": { "value": "62.8", "unit": "ft^2/s" },
+      "solutionNarrative": "From $A = \\pi r^2$, $\\frac{dA}{dt} = 2\\pi r \\frac{dr}{dt} = 2(3.14)(5)(2) = 62.8\\ \\text{ft}^2/\\text{s}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s02",
+      "concepts": ["expanding-shrinking"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A spherical balloon is inflated so its radius grows at $\\frac{dr}{dt} = 0.5$ cm/s. How fast is its volume increasing when the radius is 10 cm? ($V = \\frac{4}{3}\\pi r^3$.) Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Differentiate $V = \\frac{4}{3}\\pi r^3$ in time. Write the related-rate equation.", "answer": "dV/dt = 4*pi*r^2*dr/dt", "accept": ["dV/dt=4*pi*r^2*dr/dt", "dV/dt = 4 pi r^2 dr/dt"], "hint": "$\\frac{d}{dt}\\left(\\frac{4}{3}\\pi r^3\\right) = 4\\pi r^2 \\frac{dr}{dt}$." },
+        { "instruction": "Substitute $r = 10$, $\\frac{dr}{dt} = 0.5$, $\\pi \\approx 3.14$ and compute in cm³/s (1 decimal).", "answer": "628.0", "accept": ["628"], "hint": "$4(3.14)(10^2)(0.5) = 4(3.14)(100)(0.5)$." }
+      ],
+      "finalAnswer": { "value": "628.0", "unit": "cm^3/s" },
+      "solutionNarrative": "$\\frac{dV}{dt} = 4\\pi r^2 \\frac{dr}{dt} = 4(3.14)(100)(0.5) = 628.0\\ \\text{cm}^3/\\text{s}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s03",
+      "concepts": ["expanding-shrinking"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An oil slick spreads as a circle. The area grows at a steady $\\frac{dA}{dt} = 12$ m²/s. How fast is the radius increasing when the radius is 4 m? ($A = \\pi r^2$.) Use $\\pi \\approx 3.14$ and round to 2 decimal places.",
+      "steps": [
+        { "instruction": "Differentiate $A = \\pi r^2$ in time. Write the related-rate equation.", "answer": "dA/dt = 2*pi*r*dr/dt", "accept": ["dA/dt=2*pi*r*dr/dt"], "hint": "$\\frac{dA}{dt} = 2\\pi r \\frac{dr}{dt}$." },
+        { "instruction": "Solve for $\\frac{dr}{dt}$ in terms of the knowns.", "answer": "dr/dt = dA/dt/(2*pi*r)", "accept": ["dr/dt=dA/dt/(2*pi*r)", "dr/dt = (dA/dt)/(2 pi r)"], "hint": "Divide both sides by $2\\pi r$." },
+        { "instruction": "Substitute $\\frac{dA}{dt} = 12$, $r = 4$, $\\pi \\approx 3.14$ and compute in m/s (2 decimals).", "answer": "0.48", "accept": [], "hint": "$\\frac{12}{2(3.14)(4)} = \\frac{12}{25.12}$." }
+      ],
+      "finalAnswer": { "value": "0.48", "unit": "m/s" },
+      "solutionNarrative": "From $\\frac{dA}{dt} = 2\\pi r \\frac{dr}{dt}$, solve $\\frac{dr}{dt} = \\frac{12}{2(3.14)(4)} = \\frac{12}{25.12} \\approx 0.48\\ \\text{m/s}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s04",
+      "concepts": ["ladder-and-distance"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 13 ft ladder leans against a wall. Its base is pulled away from the wall at $\\frac{dx}{dt} = 2$ ft/s. When the base is 5 ft from the wall, the top is 12 ft up. How fast is the top sliding down? (Report the rate; it will be negative because the top descends.)",
+      "steps": [
+        { "instruction": "Differentiate $x^2 + y^2 = 169$ in time (the length is constant). Write the related-rate equation.", "answer": "2x*dx/dt + 2y*dy/dt = 0", "accept": ["2x*dx/dt+2y*dy/dt=0", "x*dx/dt + y*dy/dt = 0"], "hint": "Right side is 0 since $z = 13$ is constant: $2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 0$." },
+        { "instruction": "Substitute $x = 5$, $y = 12$, $\\frac{dx}{dt} = 2$ and solve for $\\frac{dy}{dt}$ in ft/s (1 decimal).", "answer": "-0.8", "accept": [], "hint": "$\\frac{dy}{dt} = -\\frac{x}{y}\\frac{dx}{dt} = -\\frac{5}{12}(2)$." }
+      ],
+      "finalAnswer": { "value": "-0.8", "unit": "ft/s" },
+      "solutionNarrative": "$2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 0 \\Rightarrow \\frac{dy}{dt} = -\\frac{x}{y}\\frac{dx}{dt} = -\\frac{5}{12}(2) \\approx -0.8\\ \\text{ft/s}$ (the top descends)."
+    },
+    {
+      "id": "calculus-1.related-rates.s05",
+      "concepts": ["ladder-and-distance"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two ships leave the same port. One sails north at 6 km/h, the other east at 8 km/h. One hour later they are 4 km north and 8 km east... actually: at the moment the north ship is 6 km out and the east ship is 8 km out, how fast is the distance between them increasing? ($x^2 + y^2 = z^2$.)",
+      "steps": [
+        { "instruction": "Find the current separation $z$ from $x = 8$, $y = 6$.", "answer": "10", "accept": ["z = 10", "z=10"], "hint": "$\\sqrt{8^2 + 6^2} = \\sqrt{100}$." },
+        { "instruction": "Differentiate $x^2 + y^2 = z^2$ in time. Write the related-rate equation.", "answer": "2x*dx/dt + 2y*dy/dt = 2z*dz/dt", "accept": ["x*dx/dt + y*dy/dt = z*dz/dt", "2x*dx/dt+2y*dy/dt=2z*dz/dt"], "hint": "$2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 2z\\frac{dz}{dt}$." },
+        { "instruction": "Substitute $x=8$, $\\frac{dx}{dt}=8$, $y=6$, $\\frac{dy}{dt}=6$, $z=10$ and solve for $\\frac{dz}{dt}$ in km/h (1 decimal).", "answer": "10.0", "accept": ["10"], "hint": "$\\frac{dz}{dt} = \\frac{x\\frac{dx}{dt} + y\\frac{dy}{dt}}{z} = \\frac{8(8)+6(6)}{10} = \\frac{100}{10}$." }
+      ],
+      "finalAnswer": { "value": "10.0", "unit": "km/h" },
+      "solutionNarrative": "With $z = 10$, $\\frac{dz}{dt} = \\frac{x\\frac{dx}{dt}+y\\frac{dy}{dt}}{z} = \\frac{8(8)+6(6)}{10} = \\frac{100}{10} = 10.0\\ \\text{km/h}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s06",
+      "concepts": ["ladder-and-distance"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 25 ft ladder slides down a wall. The base moves away at $\\frac{dx}{dt} = 3$ ft/s. At the instant the base is 7 ft from the wall (top is 24 ft up), how fast is the top of the ladder moving? (It descends, so the rate is negative.) Round to 2 decimals.",
+      "steps": [
+        { "instruction": "Confirm the top height $y$ when $x = 7$ (ladder length 25).", "answer": "24", "accept": ["y = 24", "y=24"], "hint": "$\\sqrt{25^2 - 7^2} = \\sqrt{625 - 49} = \\sqrt{576}$." },
+        { "instruction": "Differentiate $x^2 + y^2 = 625$ in time. Write the related-rate equation.", "answer": "2x*dx/dt + 2y*dy/dt = 0", "accept": ["x*dx/dt + y*dy/dt = 0", "2x*dx/dt+2y*dy/dt=0"], "hint": "Constant length means the right side is 0." },
+        { "instruction": "Substitute $x=7$, $y=24$, $\\frac{dx}{dt}=3$ and solve for $\\frac{dy}{dt}$ in ft/s (2 decimals).", "answer": "-0.88", "accept": [], "hint": "$\\frac{dy}{dt} = -\\frac{x}{y}\\frac{dx}{dt} = -\\frac{7}{24}(3) = -\\frac{21}{24}$." }
+      ],
+      "finalAnswer": { "value": "-0.88", "unit": "ft/s" },
+      "solutionNarrative": "$y = 24$; $\\frac{dy}{dt} = -\\frac{x}{y}\\frac{dx}{dt} = -\\frac{7}{24}(3) = -\\frac{21}{24} \\approx -0.88\\ \\text{ft/s}$ (descending)."
+    },
+    {
+      "id": "calculus-1.related-rates.s07",
+      "concepts": ["filling-draining"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A rectangular pool with a flat 20 m² surface is being filled at $\\frac{dV}{dt} = 5$ m³/min. Because the surface area is constant, $V = 20h$. How fast is the water level $h$ rising? Round to 2 decimals.",
+      "steps": [
+        { "instruction": "Differentiate $V = 20h$ in time. Write the related-rate equation.", "answer": "dV/dt = 20*dh/dt", "accept": ["dV/dt=20*dh/dt", "dV/dt = 20 dh/dt"], "hint": "Area is constant, so $\\frac{dV}{dt} = 20\\frac{dh}{dt}$." },
+        { "instruction": "Substitute $\\frac{dV}{dt} = 5$ and solve for $\\frac{dh}{dt}$ in m/min (2 decimals).", "answer": "0.25", "accept": [], "hint": "$\\frac{dh}{dt} = \\frac{5}{20}$." }
+      ],
+      "finalAnswer": { "value": "0.25", "unit": "m/min" },
+      "solutionNarrative": "$\\frac{dV}{dt} = 20\\frac{dh}{dt} \\Rightarrow \\frac{dh}{dt} = \\frac{5}{20} = 0.25\\ \\text{m/min}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s08",
+      "concepts": ["filling-draining"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cylindrical tank of radius 2 ft is being drained at $\\frac{dV}{dt} = -3$ ft³/min (negative because it's draining). How fast is the water level falling? ($V = \\pi r^2 h$ with $r = 2$ fixed.) Use $\\pi \\approx 3.14$ and round to 2 decimals.",
+      "steps": [
+        { "instruction": "With $r = 2$ fixed, $V = \\pi(4)h = 4\\pi h$. Differentiate in time. Write the related-rate equation.", "answer": "dV/dt = 4*pi*dh/dt", "accept": ["dV/dt=4*pi*dh/dt", "dV/dt = 4 pi dh/dt"], "hint": "$\\frac{dV}{dt} = 4\\pi \\frac{dh}{dt}$ since the cross-section is constant." },
+        { "instruction": "Substitute $\\frac{dV}{dt} = -3$, $\\pi \\approx 3.14$ and solve for $\\frac{dh}{dt}$ in ft/min (2 decimals).", "answer": "-0.24", "accept": [], "hint": "$\\frac{dh}{dt} = \\frac{-3}{4(3.14)} = \\frac{-3}{12.56}$." }
+      ],
+      "finalAnswer": { "value": "-0.24", "unit": "ft/min" },
+      "solutionNarrative": "$\\frac{dV}{dt} = 4\\pi\\frac{dh}{dt} \\Rightarrow \\frac{dh}{dt} = \\frac{-3}{12.56} \\approx -0.24\\ \\text{ft/min}$ (falling)."
+    },
+    {
+      "id": "calculus-1.related-rates.s09",
+      "concepts": ["filling-draining"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An inverted conical tank is 6 ft deep with a 2 ft top radius. Water flows in at $\\frac{dV}{dt} = 2$ ft³/min. How fast is the level rising when the depth is 3 ft? Use similar triangles ($r = h/3$) and $\\pi \\approx 3.14$; round to 2 decimals.",
+      "steps": [
+        { "instruction": "Using $r = h/3$, substitute into $V = \\frac{1}{3}\\pi r^2 h$ to get $V$ in terms of $h$ alone.", "answer": "V = pi*h^3/27", "accept": ["V=pi*h^3/27", "V = (pi/27)*h^3", "V = pi/27 h^3"], "hint": "$V = \\frac{1}{3}\\pi\\left(\\frac{h}{3}\\right)^2 h = \\frac{\\pi}{27}h^3$." },
+        { "instruction": "Differentiate in time. Write the related-rate equation.", "answer": "dV/dt = (pi/9)*h^2*dh/dt", "accept": ["dV/dt=(pi/9)*h^2*dh/dt", "dV/dt = pi/9 h^2 dh/dt"], "hint": "$\\frac{d}{dt}\\left(\\frac{\\pi}{27}h^3\\right) = \\frac{3\\pi}{27}h^2\\frac{dh}{dt} = \\frac{\\pi}{9}h^2\\frac{dh}{dt}$." },
+        { "instruction": "Substitute $h = 3$, $\\frac{dV}{dt} = 2$, $\\pi \\approx 3.14$ and solve for $\\frac{dh}{dt}$ in ft/min (2 decimals).", "answer": "0.64", "accept": [], "hint": "$\\frac{dh}{dt} = \\frac{2}{(3.14/9)(9)} = \\frac{2}{3.14}$." }
+      ],
+      "finalAnswer": { "value": "0.64", "unit": "ft/min" },
+      "solutionNarrative": "$V = \\frac{\\pi}{27}h^3 \\Rightarrow \\frac{dV}{dt} = \\frac{\\pi}{9}h^2\\frac{dh}{dt}$. At $h=3$: $\\frac{\\pi}{9}(9) = \\pi$, so $\\frac{dh}{dt} = \\frac{2}{3.14} \\approx 0.64\\ \\text{ft/min}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s10",
+      "concepts": ["rates-in-motion"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A person walks directly away from a streetlight. A similar-triangles analysis shows the shadow length $s$ and walking distance always satisfy $\\frac{ds}{dt} = \\frac{1}{2}\\frac{dx}{dt}$ for this lamp. If they walk at $\\frac{dx}{dt} = 4$ ft/s, how fast does the shadow lengthen?",
+      "steps": [
+        { "instruction": "Substitute $\\frac{dx}{dt} = 4$ into $\\frac{ds}{dt} = \\frac{1}{2}\\frac{dx}{dt}$ to find $\\frac{ds}{dt}$ in ft/s.", "answer": "2", "accept": ["2.0", "ds/dt = 2"], "hint": "Half of 4." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "ft/s" },
+      "solutionNarrative": "$\\frac{ds}{dt} = \\frac{1}{2}(4) = 2\\ \\text{ft/s}$ — the shadow grows at half the walking speed."
+    },
+    {
+      "id": "calculus-1.related-rates.s11",
+      "concepts": ["rates-in-motion"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two cars approach the same intersection on perpendicular roads. Car A is 0.3 km north of it moving south at 60 km/h; car B is 0.4 km east moving west at 80 km/h. How fast is the distance between them changing right now? (Both are approaching, so expect a negative rate.) Round to 1 decimal.",
+      "steps": [
+        { "instruction": "Find the current separation $z$ from $x = 0.4$, $y = 0.3$ via $x^2 + y^2 = z^2$.", "answer": "0.5", "accept": ["z = 0.5", "z=0.5"], "hint": "$\\sqrt{0.4^2 + 0.3^2} = \\sqrt{0.25}$." },
+        { "instruction": "Differentiate $x^2 + y^2 = z^2$ in time. Write the related-rate equation.", "answer": "2x*dx/dt + 2y*dy/dt = 2z*dz/dt", "accept": ["x*dx/dt + y*dy/dt = z*dz/dt", "2x*dx/dt+2y*dy/dt=2z*dz/dt"], "hint": "$2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 2z\\frac{dz}{dt}$. Approaching means $\\frac{dx}{dt}$, $\\frac{dy}{dt}$ are negative." },
+        { "instruction": "Substitute $x=0.4$, $\\frac{dx}{dt}=-80$, $y=0.3$, $\\frac{dy}{dt}=-60$, $z=0.5$ and solve for $\\frac{dz}{dt}$ in km/h (1 decimal).", "answer": "-100.0", "accept": ["-100"], "hint": "$\\frac{dz}{dt} = \\frac{0.4(-80)+0.3(-60)}{0.5} = \\frac{-32-18}{0.5} = \\frac{-50}{0.5}$." }
+      ],
+      "finalAnswer": { "value": "-100.0", "unit": "km/h" },
+      "solutionNarrative": "$\\frac{dz}{dt} = \\frac{x\\frac{dx}{dt}+y\\frac{dy}{dt}}{z} = \\frac{0.4(-80)+0.3(-60)}{0.5} = \\frac{-50}{0.5} = -100.0\\ \\text{km/h}$ (closing)."
+    },
+    {
+      "id": "calculus-1.related-rates.s12",
+      "concepts": ["rates-in-motion"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 6 ft tall person walks away from a 15 ft streetlight at $\\frac{dx}{dt} = 5$ ft/s ($x$ is distance from the lamp post). By similar triangles the shadow tip is at distance $L = \\frac{5}{3}x$ from the post. How fast is the shadow tip moving? Round to 2 decimals.",
+      "steps": [
+        { "instruction": "Differentiate $L = \\frac{5}{3}x$ in time. Write the related-rate equation.", "answer": "dL/dt = (5/3)*dx/dt", "accept": ["dL/dt=(5/3)*dx/dt", "dL/dt = 5/3 dx/dt"], "hint": "The $\\frac{5}{3}$ is constant: $\\frac{dL}{dt} = \\frac{5}{3}\\frac{dx}{dt}$." },
+        { "instruction": "Substitute $\\frac{dx}{dt} = 5$ and compute $\\frac{dL}{dt}$ in ft/s (2 decimals).", "answer": "8.33", "accept": [], "hint": "$\\frac{5}{3}(5) = \\frac{25}{3}$." }
+      ],
+      "finalAnswer": { "value": "8.33", "unit": "ft/s" },
+      "solutionNarrative": "$\\frac{dL}{dt} = \\frac{5}{3}\\frac{dx}{dt} = \\frac{5}{3}(5) = \\frac{25}{3} \\approx 8.33\\ \\text{ft/s}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s13",
+      "concepts": ["expanding-shrinking"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A circular metal plate is heated so its radius expands at $\\frac{dr}{dt} = 0.03$ cm/min. How fast is its area increasing when the radius is 20 cm? ($A = \\pi r^2$.) Use $\\pi \\approx 3.14$ and round to 2 decimals.",
+      "steps": [
+        { "instruction": "Differentiate $A = \\pi r^2$ in time and substitute $r = 20$, $\\frac{dr}{dt} = 0.03$, $\\pi \\approx 3.14$. Compute $\\frac{dA}{dt}$ in cm²/min (2 decimals).", "answer": "3.77", "accept": [], "hint": "$2\\pi r \\frac{dr}{dt} = 2(3.14)(20)(0.03)$." }
+      ],
+      "finalAnswer": { "value": "3.77", "unit": "cm^2/min" },
+      "solutionNarrative": "$\\frac{dA}{dt} = 2\\pi r\\frac{dr}{dt} = 2(3.14)(20)(0.03) = 3.768 \\approx 3.77\\ \\text{cm}^2/\\text{min}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s14",
+      "concepts": ["filling-draining"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A trough has a triangular cross-section; its water volume is $V = 3h^2$ (cubic feet, $h$ in feet) when filled to depth $h$. Water enters at $\\frac{dV}{dt} = 4$ ft³/min. How fast is the depth rising when $h = 2$ ft? Round to 2 decimals.",
+      "steps": [
+        { "instruction": "Differentiate $V = 3h^2$ in time. Write the related-rate equation.", "answer": "dV/dt = 6*h*dh/dt", "accept": ["dV/dt=6*h*dh/dt", "dV/dt = 6 h dh/dt"], "hint": "$\\frac{d}{dt}(3h^2) = 6h\\frac{dh}{dt}$." },
+        { "instruction": "Substitute $h = 2$, $\\frac{dV}{dt} = 4$ and solve for $\\frac{dh}{dt}$ in ft/min (2 decimals).", "answer": "0.33", "accept": [], "hint": "$\\frac{dh}{dt} = \\frac{4}{6(2)} = \\frac{4}{12}$." }
+      ],
+      "finalAnswer": { "value": "0.33", "unit": "ft/min" },
+      "solutionNarrative": "$\\frac{dV}{dt} = 6h\\frac{dh}{dt} \\Rightarrow \\frac{dh}{dt} = \\frac{4}{12} \\approx 0.33\\ \\text{ft/min}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s15",
+      "concepts": ["ladder-and-distance"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A kite flies horizontally at a constant height of 30 ft, moving away from the person holding the string at $\\frac{dx}{dt} = 4$ ft/s. How fast is the string $z$ paying out when 50 ft of string is out? ($x^2 + 30^2 = z^2$, and $x = 40$ at that moment.) Round to 2 decimals.",
+      "steps": [
+        { "instruction": "Differentiate $x^2 + 900 = z^2$ in time. Write the related-rate equation.", "answer": "2x*dx/dt = 2z*dz/dt", "accept": ["x*dx/dt = z*dz/dt", "2x*dx/dt=2z*dz/dt"], "hint": "The height 30 is constant, so its derivative is 0: $2x\\frac{dx}{dt} = 2z\\frac{dz}{dt}$." },
+        { "instruction": "Substitute $x = 40$, $z = 50$, $\\frac{dx}{dt} = 4$ and solve for $\\frac{dz}{dt}$ in ft/s (2 decimals).", "answer": "3.20", "accept": ["3.2"], "hint": "$\\frac{dz}{dt} = \\frac{x}{z}\\frac{dx}{dt} = \\frac{40}{50}(4)$." }
+      ],
+      "finalAnswer": { "value": "3.20", "unit": "ft/s" },
+      "solutionNarrative": "$\\frac{dz}{dt} = \\frac{x}{z}\\frac{dx}{dt} = \\frac{40}{50}(4) = 3.20\\ \\text{ft/s}$."
+    },
+    {
+      "id": "calculus-1.related-rates.s16",
+      "concepts": ["rates-in-motion"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A balloon rises straight up at $\\frac{dy}{dt} = 8$ ft/s. An observer stands 100 ft away. When the balloon is 100 ft high, the line of sight is $z$ where $z^2 = 100^2 + y^2$ and $z = 141.4$ ft. How fast is the line-of-sight distance to the balloon increasing? Round to 2 decimals.",
+      "steps": [
+        { "instruction": "Differentiate $z^2 = 10000 + y^2$ in time. Write the related-rate equation.", "answer": "2z*dz/dt = 2y*dy/dt", "accept": ["z*dz/dt = y*dy/dt", "2z*dz/dt=2y*dy/dt"], "hint": "The 100 ft ground distance is constant: $2z\\frac{dz}{dt} = 2y\\frac{dy}{dt}$." },
+        { "instruction": "Substitute $y = 100$, $z = 141.4$, $\\frac{dy}{dt} = 8$ and solve for $\\frac{dz}{dt}$ in ft/s (2 decimals).", "answer": "5.66", "accept": [], "hint": "$\\frac{dz}{dt} = \\frac{y}{z}\\frac{dy}{dt} = \\frac{100}{141.4}(8)$." }
+      ],
+      "finalAnswer": { "value": "5.66", "unit": "ft/s" },
+      "solutionNarrative": "$\\frac{dz}{dt} = \\frac{y}{z}\\frac{dy}{dt} = \\frac{100}{141.4}(8) \\approx 5.66\\ \\text{ft/s}$."
+    }
+  ]
+}

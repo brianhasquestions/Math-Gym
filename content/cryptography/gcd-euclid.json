@@ -1,0 +1,289 @@
+{
+  "id": "cryptography.gcd-euclid",
+  "subject": "cryptography",
+  "title": "GCD, Primes, and the Euclidean Algorithm",
+  "prerequisites": ["cryptography.modular-arithmetic"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "primes-and-coprimality",
+      "label": "Primes, factorization, and coprimality",
+      "microLesson": "A **prime** has exactly two divisors: 1 and itself. To test a small $n$, try dividing by primes up to $\\sqrt{n}$ — for $n = 51$ you only test 2, 3, 5, 7, and $51 = 3 \\cdot 17$ fails at 3. Every integer factors into primes in exactly one way ($84 = 2^2 \\cdot 3 \\cdot 7$). Two numbers are **coprime** when they share no prime factor, i.e. $\\gcd(a,b) = 1$: 91 and 187 are coprime because $91 = 7 \\cdot 13$ and $187 = 11 \\cdot 17$ share nothing."
+    },
+    {
+      "id": "euclidean-algorithm",
+      "label": "The Euclidean algorithm",
+      "microLesson": "$\\gcd(a, b)$ is found by a cascade of divisions: replace $(a, b)$ with $(b, a \\bmod b)$ until the remainder is 0 — the last **nonzero** remainder is the gcd. Example: $\\gcd(48, 18)$: $48 = 2 \\cdot 18 + 12$, then $18 = 1 \\cdot 12 + 6$, then $12 = 2 \\cdot 6 + 0$, so $\\gcd = 6$. No factoring needed — which is why it works even on 2048-bit numbers where factoring is hopeless."
+    },
+    {
+      "id": "extended-euclid",
+      "label": "Extended Euclid and Bézout coefficients",
+      "microLesson": "Running Euclid backwards (**back-substitution**) writes the gcd as an exact combination $ax + by = \\gcd(a,b)$ — the numbers $x, y$ are the **Bézout coefficients**. From $\\gcd(7,5)$: $1 = 5 - 2 \\cdot 2 = 5 - 2(7 - 5) = 3 \\cdot 5 - 2 \\cdot 7$. When $\\gcd(a, n) = 1$, the identity $ax + ny = 1$ says $ax \\equiv 1 \\pmod n$ — so $x$ **is** the modular inverse $a^{-1}$. This is exactly how RSA computes its private key."
+    },
+    {
+      "id": "gcd-in-crypto",
+      "label": "Where gcd runs the show",
+      "microLesson": "RSA demands $\\gcd(e, \\varphi(n)) = 1$ so the public exponent $e$ has an inverse (the private key $d$). The same gcd reduces fractions to lowest terms ($\\tfrac{18}{24} = \\tfrac{3}{4}$ after dividing by $\\gcd = 6$), and gives the least common multiple via $\\mathrm{lcm}(a,b) = \\tfrac{a \\cdot b}{\\gcd(a,b)}$ — which answers every cycle-alignment question: two gears with 8 and 12 teeth realign after $\\mathrm{lcm}(8,12) = 24$ teeth."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The workhorse under every key generation\n\nWhen a server generates an RSA key pair — the thing that lets your browser trust it — the very first computations are the ones in this topic: pick primes, check that two numbers are **coprime**, and run the **extended Euclidean algorithm** to produce the private key. None of it is exotic. All of it is hand-computable at toy sizes, and the *same* procedures run unchanged on 2048-bit numbers.\n\n## Primes and coprimality\n\nA **prime** has no divisors except 1 and itself. To test a small number, trial-divide by primes up to $\\sqrt{n}$: for 51, $\\sqrt{51} < 8$, so testing 2, 3, 5, 7 suffices — and $51 = 3 \\cdot 17$, composite. Every integer has exactly **one** prime factorization ($84 = 2^2 \\cdot 3 \\cdot 7$); this uniqueness is the bedrock fact of number theory.\n\nTwo numbers are **coprime** (relatively prime) when they share no prime factor — equivalently\n\n$$\\gcd(a, b) = 1.$$\n\nCryptography cares about coprimality constantly: an affine cipher key $a$ must be coprime to 26, and RSA's public exponent $e$ must be coprime to $\\varphi(n)$, or no decryption key exists at all.\n\n## The Euclidean algorithm: gcd without factoring\n\nFactoring a 617-digit number is (as far as anyone knows) infeasible — that's the whole security bet of RSA. Yet computing a **gcd** of such numbers takes microseconds, thanks to a 2300-year-old algorithm. The key fact:\n\n$$\\gcd(a, b) = \\gcd(b,\\; a \\bmod b).$$\n\nDivide, keep the remainder, repeat; the last nonzero remainder is the gcd:\n\n$$\\gcd(48, 18): \\quad 48 = 2 \\cdot 18 + 12, \\quad 18 = 1 \\cdot 12 + 6, \\quad 12 = 2 \\cdot 6 + 0 \\;\\Rightarrow\\; \\gcd = 6.$$\n\nEach step shrinks the numbers fast (at least halving every two steps), so even enormous inputs finish in a few thousand divisions.\n\n## Extended Euclid: the RSA-critical skill\n\nThe cascade above hides a bonus. Reading it **backwards** and substituting each remainder expresses the gcd as an exact integer combination of the original pair — **Bézout's identity**:\n\n$$ax + by = \\gcd(a, b).$$\n\nExample with $\\gcd(7,5) = 1$: from $7 = 1 \\cdot 5 + 2$ and $5 = 2 \\cdot 2 + 1$,\n\n$$1 = 5 - 2 \\cdot 2 = 5 - 2(7 - 5) = 3 \\cdot 5 - 2 \\cdot 7.$$\n\nWhy is this the crown jewel? Take the identity mod $n$: if $\\gcd(a, n) = 1$ and $ax + ny = 1$, then $ny$ vanishes mod $n$, leaving\n\n$$ax \\equiv 1 \\pmod{n}.$$\n\nSo $x$ is the **modular inverse** of $a$ — found by pure division and back-substitution, no brute-force testing. When RSA key generation computes the private exponent $d$ from the public $e$, it runs *exactly* this: $d = e^{-1} \\bmod \\varphi(n)$ via extended Euclid. Do it by hand mod 26 or mod 40 here, and you have performed real key generation, just small.\n\n## One gcd, many jobs\n\n- **Key validity:** $\\gcd(e, \\varphi(n)) = 1$ or the key pair simply doesn't exist.\n- **Fractions:** dividing numerator and denominator by their gcd gives lowest terms in one step.\n- **Cycles:** $\\mathrm{lcm}(a,b) = \\frac{a b}{\\gcd(a,b)}$ answers when two repeating processes realign — gear teeth, cipher rotor wheels, scheduled jobs.\n\nToy honesty, as always: we'll run Euclid on numbers like 1071 and 462. Real RSA runs it on numbers with 600+ digits. The algorithm doesn't change — only the size of the divisions."
+  },
+  "application": {
+    "summary": "The Euclidean algorithm and its extended form are the literal machinery of RSA key generation (checking gcd(e, φ(n)) = 1 and computing d = e⁻¹), and gcd/lcm answer coprimality, reduced-fraction, and cycle-alignment questions across engineering.",
+    "domains": ["cryptography", "computer science", "engineering", "number theory"],
+    "workedExample": "**Computing an RSA private key by hand — exactly as key generation does.**\n\nToy RSA: pick primes $p = 5$, $q = 11$, so $n = 55$ and $\\varphi(n) = (p-1)(q-1) = 4 \\cdot 10 = 40$. Choose public exponent $e = 7$ (valid, since $\\gcd(7, 40) = 1$). The private key is $d = 7^{-1} \\bmod 40$.\n\n*Forward pass (Euclid):* $40 = 5 \\cdot 7 + 5$, then $7 = 1 \\cdot 5 + 2$, then $5 = 2 \\cdot 2 + 1$, then $2 = 2 \\cdot 1 + 0$. Last nonzero remainder 1 — coprime confirmed.\n\n*Backward pass (extended Euclid):*\n$$1 = 5 - 2 \\cdot 2 = 5 - 2(7 - 5) = 3 \\cdot 5 - 2 \\cdot 7 = 3(40 - 5 \\cdot 7) - 2 \\cdot 7 = 3 \\cdot 40 - 17 \\cdot 7.$$\n\nSo $7 \\cdot (-17) \\equiv 1 \\pmod{40}$, and $d = -17 \\bmod 40 = 23$. *Check:* $7 \\cdot 23 = 161 = 4 \\cdot 40 + 1 \\equiv 1$ ✓.\n\nThe key pair is $(e, d) = (7, 23)$. OpenSSL performs these identical steps with 2048-bit numbers every time it mints a certificate.",
+    "domainNotes": [
+      "**Key generation:** every RSA keypair requires gcd(e, φ(n)) = 1 checked by Euclid and d computed by extended Euclid; ECC similarly needs inverses mod the curve order for signing.",
+      "**TLS/HTTPS:** certificate signing and verification lean on the modular inverses this algorithm produces; a bad gcd check has caused real-world weak-key incidents (shared-prime RSA keys found by pairwise gcd scans).",
+      "**Software engineering:** reducing fractions, rational arithmetic libraries, and hash-ring/cycle scheduling all call gcd/lcm as primitives.",
+      "**Machinery and signals:** gear-train alignment, polyrhythm periods, and interleaved sampling all repeat at the lcm of their component cycles."
+    ]
+  },
+  "generators": [
+    "cr1-prime-d1", "cr1-prime-d2", "cr1-prime-d3",
+    "cr1-euclid-d1", "cr1-euclid-d2", "cr1-euclid-d3",
+    "cr1-exteuclid-d1", "cr1-exteuclid-d2", "cr1-exteuclid-d3",
+    "cr1-gcdcrypto-d1", "cr1-gcdcrypto-d2", "cr1-gcdcrypto-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.gcd-euclid.s01",
+      "concepts": ["primes-and-coprimality"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is 51 prime? Test it.",
+      "steps": [
+        { "instruction": "The digit sum of 51 is $5 + 1 = 6$, which is divisible by 3 — so 51 is divisible by 3. Compute $51 \\div 3$.", "answer": "17", "accept": [], "hint": "$3 \\cdot 17 = 51$." },
+        { "instruction": "So is 51 prime? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "It has a divisor other than 1 and itself." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$51 = 3 \\cdot 17$, so it is composite. (51 fools a lot of people — always run the divisibility-by-3 digit-sum check.)"
+    },
+    {
+      "id": "cryptography.gcd-euclid.s02",
+      "concepts": ["primes-and-coprimality"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is 29 prime? You only need to trial-divide by primes up to $\\sqrt{29}$.",
+      "steps": [
+        { "instruction": "$\\sqrt{29}$ is between 5 and 6, so the largest prime you must test is which one?", "answer": "5", "accept": [], "hint": "The primes up to 5 are 2, 3, 5." },
+        { "instruction": "Does 2, 3, or 5 divide 29? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "29 is odd, its digit sum 11 is not a multiple of 3, and it doesn't end in 0 or 5." },
+        { "instruction": "So is 29 prime? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "If no prime up to $\\sqrt{n}$ divides $n$, then $n$ is prime." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Any factor pair of $n$ has one member at most $\\sqrt{n}$, so testing 2, 3, 5 suffices for 29. None divide it: 29 is prime."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s03",
+      "concepts": ["primes-and-coprimality"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the prime factorization of 84 by peeling off small primes.",
+      "steps": [
+        { "instruction": "Divide by 2: $84 \\div 2 = $ ?", "answer": "42", "accept": [], "hint": "84 is even." },
+        { "instruction": "Divide by 2 again: $42 \\div 2 = $ ?", "answer": "21", "accept": [], "hint": "42 is still even." },
+        { "instruction": "21 is odd. Its smallest prime factor is 3; compute $21 \\div 3$.", "answer": "7", "accept": [], "hint": "Digit sum $2+1 = 3$." },
+        { "instruction": "7 is prime, so we're done. How many prime factors does 84 have, counted with multiplicity?", "answer": "4", "accept": [], "hint": "$84 = 2 \\cdot 2 \\cdot 3 \\cdot 7$ — count them all." }
+      ],
+      "finalAnswer": { "value": "84 = 2^2 * 3 * 7", "unit": "" },
+      "solutionNarrative": "$84 = 2 \\cdot 42 = 2 \\cdot 2 \\cdot 21 = 2^2 \\cdot 3 \\cdot 7$: four prime factors with multiplicity. By unique factorization, this is the ONLY way 84 breaks into primes."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s04",
+      "concepts": ["primes-and-coprimality"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Are 91 and 187 coprime? Factor each and compare.",
+      "steps": [
+        { "instruction": "91 is not divisible by 2, 3, or 5. Test 7: $91 \\div 7 = $ ?", "answer": "13", "accept": [], "hint": "$7 \\cdot 13 = 91$." },
+        { "instruction": "187 has digit pattern $1 - 8 + 7 = 0$, a multiple of 11 — so 11 divides it. Compute $187 \\div 11$.", "answer": "17", "accept": [], "hint": "$11 \\cdot 17 = 187$." },
+        { "instruction": "So $91 = 7 \\cdot 13$ and $187 = 11 \\cdot 17$. Do they share any prime factor? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Compare the factor lists: $\\{7, 13\\}$ vs $\\{11, 17\\}$." },
+        { "instruction": "Therefore $\\gcd(91, 187) = $ ?", "answer": "1", "accept": [], "hint": "No shared prime factors means the gcd is 1 — coprime." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$91 = 7 \\cdot 13$ and $187 = 11 \\cdot 17$ share no prime, so $\\gcd = 1$: coprime. (Both are composite — coprimality is about *shared* factors, not primality.)"
+    },
+    {
+      "id": "cryptography.gcd-euclid.s05",
+      "concepts": ["euclidean-algorithm"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Run the Euclidean algorithm to find $\\gcd(48, 18)$. Each line divides and keeps the remainder.",
+      "steps": [
+        { "instruction": "Divide 48 by 18: what is the remainder? ($48 = 2 \\cdot 18 + r$)", "answer": "12", "accept": [], "hint": "$48 - 36$." },
+        { "instruction": "Divide 18 by 12: what is the remainder?", "answer": "6", "accept": [], "hint": "$18 - 12$." },
+        { "instruction": "Divide 12 by 6: what is the remainder?", "answer": "0", "accept": [], "hint": "6 divides 12 exactly." },
+        { "instruction": "The remainder hit 0. What is the last NONZERO remainder — the gcd?", "answer": "6", "accept": [], "hint": "Look one line up." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$48 = 2 \\cdot 18 + 12$; $18 = 1 \\cdot 12 + 6$; $12 = 2 \\cdot 6 + 0$. The last nonzero remainder is 6, so $\\gcd(48, 18) = 6$."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s06",
+      "concepts": ["euclidean-algorithm"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $\\gcd(252, 105)$ with the Euclidean algorithm.",
+      "steps": [
+        { "instruction": "Divide 252 by 105: what is the remainder?", "answer": "42", "accept": [], "hint": "$252 - 2 \\cdot 105 = 252 - 210$." },
+        { "instruction": "Divide 105 by 42: what is the remainder?", "answer": "21", "accept": [], "hint": "$105 - 2 \\cdot 42 = 105 - 84$." },
+        { "instruction": "Divide 42 by 21: what is the remainder?", "answer": "0", "accept": [], "hint": "21 divides 42 exactly." },
+        { "instruction": "So $\\gcd(252, 105) = $ ?", "answer": "21", "accept": [], "hint": "The last nonzero remainder." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "" },
+      "solutionNarrative": "$252 = 2 \\cdot 105 + 42$; $105 = 2 \\cdot 42 + 21$; $42 = 2 \\cdot 21 + 0$. So $\\gcd = 21$ — found in three divisions, no factoring."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s07",
+      "concepts": ["euclidean-algorithm"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An RSA setup wants to use public exponent $e = 13$ with $\\varphi = 101$... actually, let's check a rawer pair: run Euclid on $\\gcd(101, 13)$ to see whether 101 and 13 are coprime.",
+      "steps": [
+        { "instruction": "Divide 101 by 13: what is the remainder? ($13 \\cdot 7 = 91$)", "answer": "10", "accept": [], "hint": "$101 - 91$." },
+        { "instruction": "Divide 13 by 10: what is the remainder?", "answer": "3", "accept": [], "hint": "$13 - 10$." },
+        { "instruction": "Divide 10 by 3: what is the remainder?", "answer": "1", "accept": [], "hint": "$10 - 9$." },
+        { "instruction": "Divide 3 by 1: remainder 0, so $\\gcd(101, 13) = $ ?", "answer": "1", "accept": [], "hint": "The last nonzero remainder was 1." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$101 = 7 \\cdot 13 + 10$; $13 = 1 \\cdot 10 + 3$; $10 = 3 \\cdot 3 + 1$; $3 = 3 \\cdot 1 + 0$. Gcd is 1: coprime, so 13 would be a legal exponent — a gcd of 1 is exactly the green light RSA needs."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s08",
+      "concepts": ["euclidean-algorithm"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The classic: find $\\gcd(1071, 462)$ — big enough that factoring would be annoying, but Euclid doesn't care.",
+      "steps": [
+        { "instruction": "Divide 1071 by 462: what is the remainder? ($462 \\cdot 2 = 924$)", "answer": "147", "accept": [], "hint": "$1071 - 924$." },
+        { "instruction": "Divide 462 by 147: what is the remainder? ($147 \\cdot 3 = 441$)", "answer": "21", "accept": [], "hint": "$462 - 441$." },
+        { "instruction": "Divide 147 by 21: what is the remainder?", "answer": "0", "accept": [], "hint": "$21 \\cdot 7 = 147$ exactly." },
+        { "instruction": "So $\\gcd(1071, 462) = $ ?", "answer": "21", "accept": [], "hint": "Last nonzero remainder." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "" },
+      "solutionNarrative": "$1071 = 2 \\cdot 462 + 147$; $462 = 3 \\cdot 147 + 21$; $147 = 7 \\cdot 21 + 0$. Gcd 21 in three lines. The same three-line pattern, with 617-digit numbers, runs inside every RSA key check."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s09",
+      "concepts": ["extended-euclid"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Bézout's identity claims integers $x, y$ exist with $12x + 23y = \\gcd(12, 23)$. Verify that $x = 2$, $y = -1$ works.",
+      "steps": [
+        { "instruction": "Compute $12 \\cdot 2$.", "answer": "24", "accept": [], "hint": "Just multiply." },
+        { "instruction": "Compute $23 \\cdot (-1)$.", "answer": "-23", "accept": [], "hint": "Keep the sign." },
+        { "instruction": "Add them: $24 + (-23) = $ ?", "answer": "1", "accept": [], "hint": "The combination should equal the gcd." },
+        { "instruction": "12 and 23 share no factors, so $\\gcd(12, 23) = $ ?", "answer": "1", "accept": [], "hint": "23 is prime and doesn't divide 12." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$12 \\cdot 2 + 23 \\cdot (-1) = 24 - 23 = 1 = \\gcd(12, 23)$. Bézout coefficients are never unique, but extended Euclid always finds one valid pair."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s10",
+      "concepts": ["extended-euclid"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find Bézout coefficients for $\\gcd(7, 5)$: integers $x, y$ with $7x + 5y = 1$. First run Euclid forward, then substitute backwards.",
+      "steps": [
+        { "instruction": "Forward: $7 = 1 \\cdot 5 + r$. What is $r$?", "answer": "2", "accept": [], "hint": "$7 - 5$." },
+        { "instruction": "Forward: $5 = 2 \\cdot 2 + r$. What is $r$?", "answer": "1", "accept": [], "hint": "$5 - 4$. The gcd is this 1." },
+        { "instruction": "Backward: $1 = 5 - 2 \\cdot 2$, and $2 = 7 - 5$. Substituting gives $1 = 3 \\cdot 5 - 2 \\cdot 7$. So the coefficient $y$ on 5 is?", "answer": "3", "accept": [], "hint": "$5 - 2(7 - 5) = 5 - 2 \\cdot 7 + 2 \\cdot 5 = 3 \\cdot 5 - 2 \\cdot 7$." },
+        { "instruction": "And the coefficient $x$ on 7 is?", "answer": "-2", "accept": [], "hint": "Read it off $1 = 3 \\cdot 5 - 2 \\cdot 7$." },
+        { "instruction": "Verify: $7 \\cdot (-2) + 5 \\cdot 3 = $ ?", "answer": "1", "accept": [], "hint": "$-14 + 15$." }
+      ],
+      "finalAnswer": { "value": "x = -2, y = 3", "unit": "" },
+      "solutionNarrative": "Forward: remainders 2 then 1. Backward: $1 = 5 - 2 \\cdot 2 = 5 - 2(7-5) = 3 \\cdot 5 - 2 \\cdot 7$. So $x = -2$, $y = 3$, and indeed $-14 + 15 = 1$."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s11",
+      "concepts": ["extended-euclid"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Affine ciphers need $7^{-1} \\bmod 26$. Compute it with extended Euclid — the same routine RSA uses for its private key.",
+      "steps": [
+        { "instruction": "Forward pass. $26 = 3 \\cdot 7 + r$: what is $r$?", "answer": "5", "accept": [], "hint": "$26 - 21$." },
+        { "instruction": "$7 = 1 \\cdot 5 + r$: what is $r$?", "answer": "2", "accept": [], "hint": "$7 - 5$." },
+        { "instruction": "$5 = 2 \\cdot 2 + r$: what is $r$? (This confirms $\\gcd = 1$.)", "answer": "1", "accept": [], "hint": "$5 - 4$." },
+        { "instruction": "Backward pass: $1 = 5 - 2 \\cdot 2 = 5 - 2(7 - 5) = 3 \\cdot 5 - 2 \\cdot 7 = 3(26 - 3 \\cdot 7) - 2 \\cdot 7$. What integer multiplies 7 in the final expression $1 = 3 \\cdot 26 + (\\,?\\,) \\cdot 7$?", "answer": "-11", "accept": [], "hint": "$3 \\cdot (-3) - 2 = -11$." },
+        { "instruction": "So $7 \\cdot (-11) \\equiv 1 \\pmod{26}$. Convert to the standard range: $-11 \\bmod 26 = $ ?", "answer": "15", "accept": [], "hint": "$-11 + 26$." },
+        { "instruction": "Check: $7 \\cdot 15 = 105$. What is $105 \\bmod 26$?", "answer": "1", "accept": [], "hint": "$104 = 4 \\cdot 26$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "Euclid: $26, 7 \\to 5 \\to 2 \\to 1$. Back-substitution gives $1 = 3 \\cdot 26 - 11 \\cdot 7$, so $7^{-1} \\equiv -11 \\equiv 15 \\pmod{26}$. Check: $7 \\cdot 15 = 105 = 4 \\cdot 26 + 1$ ✓."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s12",
+      "concepts": ["extended-euclid"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $5^{-1} \\bmod 12$ via extended Euclid.",
+      "steps": [
+        { "instruction": "Forward: $12 = 2 \\cdot 5 + r$. What is $r$?", "answer": "2", "accept": [], "hint": "$12 - 10$." },
+        { "instruction": "Forward: $5 = 2 \\cdot 2 + r$. What is $r$? (gcd confirmed = 1)", "answer": "1", "accept": [], "hint": "$5 - 4$." },
+        { "instruction": "Backward: $1 = 5 - 2 \\cdot 2 = 5 - 2(12 - 2 \\cdot 5)$. What integer multiplies 5 in the final form $1 = (\\,?\\,) \\cdot 5 - 2 \\cdot 12$?", "answer": "5", "accept": [], "hint": "$5 - 2 \\cdot 12 + 4 \\cdot 5 = 5 \\cdot 5 - 2 \\cdot 12$." },
+        { "instruction": "So $5^{-1} \\bmod 12 = 5$. Check: $5 \\cdot 5 \\bmod 12 = $ ?", "answer": "1", "accept": [], "hint": "$25 - 24$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$1 = 5 - 2 \\cdot 2 = 5 \\cdot 5 - 2 \\cdot 12$, so $5^{-1} \\equiv 5 \\pmod{12}$ — 5 is its own inverse here, and $25 = 2 \\cdot 12 + 1$ confirms it."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s13",
+      "concepts": ["gcd-in-crypto"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A cipher wheel advances 18 positions out of every 24. As a fraction of a full turn, reduce $\\frac{18}{24}$ to lowest terms.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(18, 24)$.", "answer": "6", "accept": [], "hint": "Euclid: $24 = 1 \\cdot 18 + 6$; $18 = 3 \\cdot 6 + 0$." },
+        { "instruction": "Divide the numerator by the gcd: $18 \\div 6 = $ ?", "answer": "3", "accept": [], "hint": "One division." },
+        { "instruction": "Divide the denominator by the gcd: $24 \\div 6 = $ ?", "answer": "4", "accept": [], "hint": "One division." }
+      ],
+      "finalAnswer": { "value": "3/4", "unit": "" },
+      "solutionNarrative": "$\\gcd(18, 24) = 6$, so $\\frac{18}{24} = \\frac{3}{4}$ — lowest terms in a single gcd, no repeated cancelling."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s14",
+      "concepts": ["gcd-in-crypto"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Toy RSA key check. With primes $p = 3$ and $q = 11$, we get $n = 33$ and $\\varphi(n) = (p-1)(q-1)$. Is $e = 7$ a valid public exponent? (Valid means $\\gcd(e, \\varphi) = 1$.)",
+      "steps": [
+        { "instruction": "Compute $\\varphi(33) = (3-1)(11-1)$.", "answer": "20", "accept": [], "hint": "$2 \\cdot 10$." },
+        { "instruction": "Compute $\\gcd(7, 20)$.", "answer": "1", "accept": [], "hint": "7 is prime and does not divide 20." },
+        { "instruction": "Is $e = 7$ a valid exponent? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Coprime to $\\varphi$ means an inverse (the private key $d$) exists." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\varphi = 20$ and $\\gcd(7, 20) = 1$, so $e = 7$ is legal — the private key $d = 7^{-1} \\bmod 20 = 3$ exists ($7 \\cdot 3 = 21 \\equiv 1$). An $e$ like 15 would fail: $\\gcd(15, 20) = 5$."
+    },
+    {
+      "id": "cryptography.gcd-euclid.s15",
+      "concepts": ["gcd-in-crypto"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\mathrm{lcm}(12, 18)$ using the identity $\\mathrm{lcm}(a,b) = \\dfrac{a \\cdot b}{\\gcd(a,b)}$.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(12, 18)$.", "answer": "6", "accept": [], "hint": "Euclid: $18 = 1 \\cdot 12 + 6$; $12 = 2 \\cdot 6 + 0$." },
+        { "instruction": "Compute the product $12 \\cdot 18$.", "answer": "216", "accept": [], "hint": "Multiply." },
+        { "instruction": "Divide: $\\mathrm{lcm} = 216 \\div 6 = $ ?", "answer": "36", "accept": [], "hint": "One division finishes it." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "" },
+      "solutionNarrative": "$\\gcd = 6$, so $\\mathrm{lcm} = \\frac{12 \\cdot 18}{6} = 36$. (Check: 36 is a multiple of both, and nothing smaller is.)"
+    },
+    {
+      "id": "cryptography.gcd-euclid.s16",
+      "concepts": ["gcd-in-crypto"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two meshed cipher-machine rotors have 8 and 12 teeth, with painted marks currently aligned. The marks realign after $\\mathrm{lcm}(8, 12)$ teeth have passed. Find when — and how many full turns each rotor makes.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(8, 12)$.", "answer": "4", "accept": [], "hint": "Euclid: $12 = 1 \\cdot 8 + 4$; $8 = 2 \\cdot 4 + 0$." },
+        { "instruction": "Compute $\\mathrm{lcm}(8, 12) = \\dfrac{8 \\cdot 12}{\\gcd}$.", "answer": "24", "accept": [], "hint": "$96 \\div 4$." },
+        { "instruction": "How many full turns does the 8-tooth rotor make in 24 teeth?", "answer": "3", "accept": [], "hint": "$24 \\div 8$." },
+        { "instruction": "And the 12-tooth rotor?", "answer": "2", "accept": [], "hint": "$24 \\div 12$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "teeth" },
+      "solutionNarrative": "$\\gcd(8,12) = 4$, so $\\mathrm{lcm} = 96/4 = 24$: the marks realign after 24 teeth — 3 turns of the small rotor and 2 of the large. Rotor-period alignment like this is exactly what made Enigma's cycle structure attackable."
+    }
+  ]
+}

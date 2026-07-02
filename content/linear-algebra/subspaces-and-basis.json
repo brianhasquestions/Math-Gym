@@ -1,0 +1,256 @@
+{
+  "id": "linear-algebra.subspaces-and-basis",
+  "subject": "linear-algebra",
+  "title": "Subspaces, Basis, and Dimension",
+  "prerequisites": ["linear-algebra.linear-independence"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "subspace-test",
+      "label": "The subspace test",
+      "microLesson": "A **subspace** is a set of vectors that behaves like a flat space through the origin — a line, a plane, or the whole space. To qualify it must pass three checks: it **contains the zero vector**, it's **closed under addition** (add two members, you stay inside), and it's **closed under scalar multiplication** (scale a member, you stay inside). If any check fails, it's not a subspace. The set of all $(x, y)$ with $y = 2x$ passes; the set with $y = 2x + 1$ fails because it misses the origin."
+    },
+    {
+      "id": "basis-test",
+      "label": "Basis: independent and spanning",
+      "microLesson": "A **basis** for a space is a set of vectors that does two jobs at once: it is **linearly independent** (no redundancy) and it **spans** the space (reaches every vector). Too few vectors can't span; too many can't be independent. For $\\\\mathbb{R}^n$ you need exactly $n$ vectors, and if you have $n$ independent vectors in $\\\\mathbb{R}^n$ they automatically form a basis. A basis is the smallest set that still describes everything."
+    },
+    {
+      "id": "dimension-and-rank",
+      "label": "Dimension, rank, and nullity",
+      "microLesson": "The **dimension** of a space is the number of vectors in any basis — its count of independent directions. For a matrix, the **rank** is the dimension of its column space (the number of independent columns / pivots), and the **nullity** is the dimension of its null space (the free variables). They are tied together by the **rank-nullity theorem**: for a matrix with $n$ columns, $\\\\text{rank} + \\\\text{nullity} = n$. Knowing one gives you the other for free."
+    },
+    {
+      "id": "coordinates",
+      "label": "Coordinates relative to a basis",
+      "microLesson": "A basis is a **coordinate system**. Once you fix a basis $\\\\{b_1, b_2, \\\\dots\\\\}$, every vector $v$ can be written **uniquely** as $v = c_1 b_1 + c_2 b_2 + \\\\cdots$, and the scalars $(c_1, c_2, \\\\dots)$ are its **coordinates** in that basis. To find them you solve for the weights. In the standard basis the coordinates are just the usual entries; in another basis they re-express the same vector from a new point of view."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Finding the real degrees of freedom\n\nEvery dataset, every system of constraints, every physical model lives inside some space of possibilities — but the *useful* question is almost never \"how many numbers did we write down?\" It's \"**how many independent directions can actually vary?**\" A spreadsheet with 50 columns may really only have 3 independent quantities; a robot arm with many joints may have only 2 ways to move its hand. The language of **subspaces, basis, and dimension** is how we measure that true count.\n\n## Subspaces: flat spaces through the origin\n\nA **subspace** of $\\\\mathbb{R}^n$ is a subset that is itself a self-contained vector space. Concretely, a nonempty set $S$ is a subspace when it passes three checks:\n\n1. It **contains the zero vector** $\\\\mathbf{0}$.\n2. It is **closed under addition**: if $u$ and $v$ are in $S$, so is $u + v$.\n3. It is **closed under scalar multiplication**: if $v$ is in $S$ and $c$ is any scalar, $cv$ is in $S$.\n\nGeometrically these are exactly the lines, planes, and hyperplanes that **pass through the origin**, plus the trivial space $\\\\{\\\\mathbf{0}\\\\}$ and all of $\\\\mathbb{R}^n$. The line $y = 2x$ is a subspace; the parallel line $y = 2x + 1$ is **not**, because it misses the origin — and once the origin is gone, scaling a point by 0 throws you out of the set.\n\n## Spanning, independence, and basis\n\nTwo ideas combine to pin down a space:\n\n- A set **spans** a space if every vector in the space is some combination of the set — the set *reaches everything*.\n- A set is **linearly independent** if no vector is a combination of the others — the set has *no redundancy*.\n\nA **basis** is a set that does both at once: independent **and** spanning. That balance makes it the *smallest possible* spanning set and the *largest possible* independent set. Crucially, once you fix a basis, every vector has **exactly one** representation in terms of it — uniqueness is the whole point.\n\n## Dimension: one number for the whole space\n\nEvery basis of a given space has the **same number of vectors**, and that number is the **dimension** — the count of independent directions. $\\\\mathbb{R}^3$ has dimension 3; a plane through the origin has dimension 2; a line has dimension 1.\n\nFor a matrix $A$ two subspaces matter:\n\n- The **column space**, whose dimension is the **rank** — the number of independent columns, equivalently the number of pivots.\n- The **null space**, whose dimension is the **nullity** — the number of free variables in $Ax = \\\\mathbf{0}$.\n\nThe **rank-nullity theorem** ties them together for a matrix with $n$ columns:\n\n$$\\\\text{rank}(A) + \\\\text{nullity}(A) = n.$$\n\nThis is a conservation law: every column is either a pivot (contributing to rank) or free (contributing to nullity). Find one count and the other follows.\n\n## Coordinates: a basis is a ruler\n\nFixing a basis turns a space into a coordinate grid. If $\\\\mathcal{B} = \\\\{b_1, \\\\dots, b_k\\\\}$ is a basis and\n\n$$v = c_1 b_1 + c_2 b_2 + \\\\cdots + c_k b_k,$$\n\nthen $(c_1, \\\\dots, c_k)$ are the **coordinates of $v$ relative to $\\\\mathcal{B}$**. The standard basis gives the everyday entries; a different basis re-describes the *same* vector from a different vantage point — which is exactly what changing units, rotating axes, or picking \"natural\" data directions all amount to."
+  },
+  "application": {
+    "summary": "Subspaces, basis, and dimension answer 'how many things can really vary?' — the true degrees of freedom behind a system, the independent dimensions hiding in a dataset, and the coordinate systems used to describe everything compactly. Rank measures the genuine information in data; a basis is the set of axes you measure against.",
+    "domains": ["data science", "engineering", "robotics", "economics"],
+    "workedExample": "**How many independent quantities are in the data?**\n\nA store logs three columns per sale: units sold $u$, price-per-unit $p$, and revenue $r$. You stack many sales as rows and ask: how many *independent* dimensions does this data actually have?\n\nBecause $r = u \\\\cdot p$ is a product, the columns are not linearly related — but suppose instead the columns were `subtotal`, `tax` (always 10% of subtotal), and `total` (subtotal + tax). Then every row satisfies $\\\\text{total} = \\\\text{subtotal} + \\\\text{tax}$ and $\\\\text{tax} = 0.1 \\\\times \\\\text{subtotal}$. Two exact relations mean only **one** column is truly free: the data matrix has **rank 1**, even though it has 3 columns.\n\nRank-nullity makes this precise: with $n = 3$ columns and rank 1, the nullity is $3 - 1 = 2$ — there are **2 independent relations** among the columns. That single number, the rank, tells a data scientist the data lives on a line: store one column, reconstruct the rest. The same computation underlies dimensionality reduction, redundant-sensor detection, and counting degrees of freedom in a mechanism.",
+    "domainNotes": [
+      "**Data science:** the rank of a data matrix is its true information content; low rank means columns are redundant and the data compresses (PCA, dimensionality reduction).",
+      "**Engineering:** the nullity of a constraint matrix counts the degrees of freedom left in a structure or circuit after the constraints are applied.",
+      "**Robotics:** the rank of a Jacobian tells you how many independent directions an arm's end-effector can move; a rank drop is a singular, stuck configuration.",
+      "**Economics/coordinates:** choosing a basis means choosing the independent factors you describe everything else in terms of — a compact coordinate system for a high-dimensional model."
+    ]
+  },
+  "generators": ["rank-nullity-v1", "basis-count-v1", "laf-subspace-test-d1", "laf-subspace-test-d2", "laf-subspace-test-d3", "laf-basis-test-d2", "laf-basis-test-d3", "laf-dimension-and-rank-d1", "laf-dimension-and-rank-d3", "laf-coordinates-d1", "laf-coordinates-d2", "laf-coordinates-d3"],
+  "problems": [
+    {
+      "id": "linear-algebra.subspaces-and-basis.s01",
+      "concepts": ["subspace-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is the line $\\\\{(x, y) : y = 3x\\\\}$ in $\\\\mathbb{R}^2$ a subspace? Answer yes or no.",
+      "steps": [
+        { "instruction": "Does the set contain the zero vector $(0,0)$? Answer yes or no.", "answer": "yes", "accept": ["true"], "hint": "Plug in $x = 0$: does $y = 3(0) = 0$ give the point $(0,0)$?" },
+        { "instruction": "Is the set a subspace? Answer yes or no.", "answer": "yes", "accept": ["true", "it is a subspace"], "hint": "A line through the origin is closed under addition and scaling, so it passes all three tests." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The line $y = 3x$ passes through the origin and is closed under addition and scalar multiplication, so it is a subspace of $\\\\mathbb{R}^2$."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s02",
+      "concepts": ["subspace-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is the line $\\\\{(x, y) : y = 3x + 1\\\\}$ in $\\\\mathbb{R}^2$ a subspace? Answer yes or no.",
+      "steps": [
+        { "instruction": "Does the set contain the zero vector $(0,0)$? Answer yes or no.", "answer": "no", "accept": ["false"], "hint": "Plug in $x = 0$: you get $y = 1$, the point $(0,1)$, not $(0,0)$." },
+        { "instruction": "Is the set a subspace? Answer yes or no.", "answer": "no", "accept": ["false", "it is not a subspace", "not a subspace"], "hint": "Failing the zero-vector test is enough to disqualify it." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The line $y = 3x + 1$ does not pass through the origin (at $x=0$, $y=1$), so it fails the zero-vector test and is not a subspace."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s03",
+      "concepts": ["subspace-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Is the set of all vectors $(x, y, z)$ in $\\\\mathbb{R}^3$ with $x + y + z = 0$ a subspace? Answer yes or no.",
+      "steps": [
+        { "instruction": "Does $(0,0,0)$ satisfy $x + y + z = 0$? Answer yes or no.", "answer": "yes", "accept": ["true"], "hint": "Add the three zeros." },
+        { "instruction": "If $(x_1,y_1,z_1)$ and $(x_2,y_2,z_2)$ both satisfy the equation, does their sum also satisfy it? Answer yes or no.", "answer": "yes", "accept": ["true"], "hint": "Adding two equations that each sum to 0 gives a sum that is still 0." },
+        { "instruction": "Is the set a subspace? Answer yes or no.", "answer": "yes", "accept": ["true", "it is a subspace"], "hint": "It contains zero and is closed under addition and scaling — a plane through the origin." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The set $x + y + z = 0$ contains the origin and is closed under addition and scalar multiplication, so it is a subspace — a plane through the origin in $\\\\mathbb{R}^3$."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s04",
+      "concepts": ["subspace-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A budget model tracks spending vectors $(f, t, s)$ for food, transport, and savings. The 'on-budget' set is all vectors with $f + t + s = 200$ (dollars). Is this set a subspace of $\\\\mathbb{R}^3$? Answer yes or no.",
+      "steps": [
+        { "instruction": "Does the zero vector $(0,0,0)$ belong to the on-budget set? Check whether $0 + 0 + 0 = 200$. Answer yes or no.", "answer": "no", "accept": ["false"], "hint": "$0 + 0 + 0 = 0$, which is not 200." },
+        { "instruction": "Is the on-budget set a subspace? Answer yes or no.", "answer": "no", "accept": ["false", "it is not a subspace", "not a subspace"], "hint": "It fails the zero-vector test, so it cannot be a subspace (it is an affine plane offset from the origin)." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Because $f + t + s = 200$ excludes the origin, the on-budget set fails the zero-vector test. It is an affine plane, not a subspace — only constraints that equal 0 give subspaces."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s05",
+      "concepts": ["basis-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "How many vectors are needed for a basis of $\\\\mathbb{R}^4$?",
+      "steps": [
+        { "instruction": "State the number of vectors in any basis of $\\\\mathbb{R}^4$.", "answer": "4", "accept": [], "hint": "A basis of $\\\\mathbb{R}^n$ has exactly $n$ vectors." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "vectors" },
+      "solutionNarrative": "Any basis of $\\\\mathbb{R}^n$ has exactly $n$ vectors, so a basis of $\\\\mathbb{R}^4$ needs 4."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s06",
+      "concepts": ["basis-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Do the vectors $(1, 0)$ and $(2, 0)$ form a basis for $\\\\mathbb{R}^2$? Answer yes or no.",
+      "steps": [
+        { "instruction": "Are $(1,0)$ and $(2,0)$ linearly independent? Answer yes or no.", "answer": "no", "accept": ["false"], "hint": "$(2,0) = 2 \\\\cdot (1,0)$ — one is a multiple of the other." },
+        { "instruction": "Do they form a basis for $\\\\mathbb{R}^2$? Answer yes or no.", "answer": "no", "accept": ["false", "it is not a basis", "not a basis"], "hint": "Both lie on the x-axis, so they cannot span all of $\\\\mathbb{R}^2$ and are not independent." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$(2,0)$ is twice $(1,0)$, so the set is dependent and spans only the x-axis — not a basis for $\\\\mathbb{R}^2$."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s07",
+      "concepts": ["basis-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Do the vectors $(1, 0)$ and $(1, 1)$ form a basis for $\\\\mathbb{R}^2$? Answer yes or no.",
+      "steps": [
+        { "instruction": "Are $(1,0)$ and $(1,1)$ linearly independent? Answer yes or no.", "answer": "yes", "accept": ["true"], "hint": "Neither is a scalar multiple of the other." },
+        { "instruction": "Do they form a basis for $\\\\mathbb{R}^2$? Answer yes or no.", "answer": "yes", "accept": ["true", "it is a basis"], "hint": "Two independent vectors in $\\\\mathbb{R}^2$ automatically span it, so they form a basis." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$(1,0)$ and $(1,1)$ are independent, and any 2 independent vectors in $\\\\mathbb{R}^2$ form a basis."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s08",
+      "concepts": ["basis-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A robot's hand can move in a plane (2D) and can also rotate, giving 3 independent degrees of freedom total. An engineer proposes 4 control vectors to describe every configuration. Can those 4 vectors form a basis for the 3-dimensional configuration space? Answer yes or no, then give the number of vectors a basis actually needs.",
+      "steps": [
+        { "instruction": "A basis of a 3-dimensional space must be linearly independent. Can 4 vectors in a 3-dimensional space be linearly independent? Answer yes or no.", "answer": "no", "accept": ["false"], "hint": "More than 3 vectors in a 3-dimensional space must be dependent." },
+        { "instruction": "Can the 4 proposed vectors form a basis for the 3-dimensional space? Answer yes or no.", "answer": "no", "accept": ["false", "it is not a basis", "not a basis"], "hint": "Too many vectors cannot be independent, so they cannot form a basis." },
+        { "instruction": "How many vectors does a basis for the 3-dimensional configuration space need?", "answer": "3", "accept": [], "hint": "A basis has exactly as many vectors as the dimension." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "vectors" },
+      "solutionNarrative": "A 3-dimensional space has basis size 3. Four vectors in a 3-dimensional space are necessarily dependent, so they cannot be a basis; exactly 3 independent vectors are needed."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s09",
+      "concepts": ["dimension-and-rank"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "What is the dimension of $\\\\mathbb{R}^5$?",
+      "steps": [
+        { "instruction": "State the dimension of $\\\\mathbb{R}^5$.", "answer": "5", "accept": [], "hint": "The dimension of $\\\\mathbb{R}^n$ is $n$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "The standard basis of $\\\\mathbb{R}^5$ has 5 vectors, so its dimension is 5."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s10",
+      "concepts": ["dimension-and-rank"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A matrix $A$ has 6 columns. Its rank is 4. What is its nullity?",
+      "steps": [
+        { "instruction": "State the rank-nullity relation for a matrix with $n = 6$ columns: rank + nullity = ?", "answer": "6", "accept": [], "hint": "Rank-nullity says rank + nullity equals the number of columns." },
+        { "instruction": "Solve for the nullity when the rank is 4.", "answer": "2", "accept": [], "hint": "Nullity = 6 - 4." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "By rank-nullity, rank + nullity = 6 columns. With rank 4, nullity = 6 - 4 = 2."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s11",
+      "concepts": ["dimension-and-rank"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the rank of the matrix with rows $(1, 2, 3)$, $(2, 4, 6)$, and $(0, 0, 0)$.",
+      "steps": [
+        { "instruction": "How many of the three rows are nonzero and not a multiple of another? State the number of independent rows.", "answer": "1", "accept": [], "hint": "Row 2 is twice row 1, and row 3 is zero — only one independent row remains." },
+        { "instruction": "State the rank of the matrix.", "answer": "1", "accept": [], "hint": "Rank equals the number of independent rows." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "Row 2 is $2 \\\\times$ row 1 and row 3 is zero, so only one row is independent: the rank is 1."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s12",
+      "concepts": ["dimension-and-rank"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A dataset has 8 measured columns, but analysis finds the data lies in a subspace of rank 3 (only 3 independent measurements; the rest are exact combinations). How many independent linear relations (redundancies) exist among the columns? Use rank-nullity.",
+      "steps": [
+        { "instruction": "How many columns does the data matrix have? State $n$.", "answer": "8", "accept": [], "hint": "The dataset has 8 measured columns." },
+        { "instruction": "Using rank + nullity = n, compute the nullity when n = 8 and rank = 3.", "answer": "5", "accept": [], "hint": "Nullity = 8 - 3." },
+        { "instruction": "The number of independent relations among the columns equals the nullity. State that number.", "answer": "5", "accept": [], "hint": "It is the nullity you just computed." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "relations" },
+      "solutionNarrative": "With $n = 8$ columns and rank 3, rank-nullity gives nullity = 8 - 3 = 5. So there are 5 independent linear relations among the columns — the data truly lives in only 3 dimensions."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s13",
+      "concepts": ["coordinates"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Using the standard basis $\\\\{(1,0), (0,1)\\\\}$ of $\\\\mathbb{R}^2$, what are the coordinates of the vector $(4, 7)$? Give the coordinate vector as <a, b>.",
+      "steps": [
+        { "instruction": "Write $(4,7)$ as $a(1,0) + b(0,1)$ and give the coordinate vector <a, b>.", "answer": "<4, 7>", "accept": ["4, 7"], "hint": "In the standard basis the coordinates are just the entries themselves." }
+      ],
+      "finalAnswer": { "value": "<4, 7>", "unit": "" },
+      "solutionNarrative": "$(4,7) = 4(1,0) + 7(0,1)$, so the coordinates in the standard basis are <4, 7>."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s14",
+      "concepts": ["coordinates"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Relative to the basis $\\\\{(1, 0), (1, 1)\\\\}$ of $\\\\mathbb{R}^2$, find the coordinates of the vector $(5, 2)$. Give the coordinate vector as <a, b>.",
+      "steps": [
+        { "instruction": "Solve $a(1,0) + b(1,1) = (5,2)$. From the second component, find $b$.", "answer": "2", "accept": [], "hint": "The second component gives $b = 2$ directly." },
+        { "instruction": "Use the first component $a + b = 5$ to find $a$, then give the coordinate vector <a, b>.", "answer": "<3, 2>", "accept": ["3, 2"], "hint": "$a + 2 = 5$, so $a = 3$." }
+      ],
+      "finalAnswer": { "value": "<3, 2>", "unit": "" },
+      "solutionNarrative": "From the second component $b = 2$; then $a + b = 5$ gives $a = 3$. So $(5,2) = 3(1,0) + 2(1,1)$, coordinates <3, 2>."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s15",
+      "concepts": ["coordinates"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A signal is measured against two independent reference patterns $b_1 = (2, 0)$ and $b_2 = (0, 5)$ (a custom basis acting as scaled axes). A measurement reads $(6, 15)$. Express it in the reference coordinate system as <a, b>, where the measurement equals $a\\\\,b_1 + b\\\\,b_2$.",
+      "steps": [
+        { "instruction": "Match the first component: $2a = 6$. Solve for $a$.", "answer": "3", "accept": [], "hint": "Divide 6 by 2." },
+        { "instruction": "Match the second component: $5b = 15$. Solve for $b$.", "answer": "3", "accept": [], "hint": "Divide 15 by 5." },
+        { "instruction": "Give the coordinate vector <a, b>.", "answer": "<3, 3>", "accept": ["3, 3"], "hint": "Combine the two values you found." }
+      ],
+      "finalAnswer": { "value": "<3, 3>", "unit": "" },
+      "solutionNarrative": "Matching components, $2a = 6$ gives $a = 3$ and $5b = 15$ gives $b = 3$. In the reference basis the measurement is <3, 3> — the same vector seen through scaled axes."
+    },
+    {
+      "id": "linear-algebra.subspaces-and-basis.s16",
+      "concepts": ["coordinates"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Relative to the basis $\\\\{(2, 1), (1, 3)\\\\}$ of $\\\\mathbb{R}^2$, find the coordinates of $(5, 5)$. Give the coordinate vector as <a, b>.",
+      "steps": [
+        { "instruction": "Set up the system $2a + b = 5$ and $a + 3b = 5$. Solve for $a$.", "answer": "2", "accept": [], "hint": "From the equations, eliminate $b$: $a = 2$, $b = 1$ satisfy both." },
+        { "instruction": "Find $b$, then give the coordinate vector <a, b>.", "answer": "<2, 1>", "accept": ["2, 1"], "hint": "Check: $2(2,1) + 1(1,3) = (5,5)$." }
+      ],
+      "finalAnswer": { "value": "<2, 1>", "unit": "" },
+      "solutionNarrative": "Solving $2a + b = 5$ and $a + 3b = 5$ gives $a = 2$, $b = 1$. Indeed $2(2,1) + 1(1,3) = (5,5)$, so the coordinates are <2, 1>."
+    }
+  ]
+}

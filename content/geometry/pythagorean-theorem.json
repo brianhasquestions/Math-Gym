@@ -1,0 +1,260 @@
+{
+  "id": "geometry.pythagorean-theorem",
+  "subject": "geometry",
+  "title": "The Pythagorean Theorem",
+  "prerequisites": [],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "find-hypotenuse",
+      "label": "Finding the hypotenuse",
+      "microLesson": "In a right triangle, the two short sides (legs) and the longest side (hypotenuse, opposite the right angle) are tied together by $a^2 + b^2 = c^2$. To find the hypotenuse $c$, square both legs, add them, and take the square root: $c = \\sqrt{a^2 + b^2}$. With legs 3 and 4, $c = \\sqrt{9 + 16} = \\sqrt{25} = 5$."
+    },
+    {
+      "id": "find-leg",
+      "label": "Finding a missing leg",
+      "microLesson": "If you know the hypotenuse $c$ and one leg, rearrange $a^2 + b^2 = c^2$ to solve for the other leg: $a = \\sqrt{c^2 - b^2}$. You **subtract** here, not add — the hypotenuse is always the biggest, so it must lose a piece. With hypotenuse 13 and one leg 5, the other leg is $\\sqrt{169 - 25} = \\sqrt{144} = 12$."
+    },
+    {
+      "id": "distance-between-points",
+      "label": "Distance between two points",
+      "microLesson": "The distance between two points on a grid is just the Pythagorean theorem in disguise. The horizontal gap $(x_2 - x_1)$ and vertical gap $(y_2 - y_1)$ are the two legs of a right triangle, and the straight-line distance is the hypotenuse: $d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$. From $(0,0)$ to $(3,4)$: $d = \\sqrt{9 + 16} = 5$."
+    },
+    {
+      "id": "pythagorean-applications",
+      "label": "Real-world right triangles",
+      "microLesson": "Any time a problem hides a right angle — a ladder leaning on a wall, a guy-wire anchoring a pole, a TV's diagonal, a diagonal walk across a field — the Pythagorean theorem applies. The trick is spotting the right angle (usually where the ground meets a wall, or two sides of a rectangle meet) and labeling which side is the hypotenuse before you compute."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The most useful fact in geometry\n\nStand a ladder against a wall, stretch a wire from the top of a pole to the ground, or walk diagonally across a rectangular park instead of around it — every one of these hides the same shape: a **right triangle**. And right triangles obey one ironclad rule that lets you find a distance you can't measure directly from two you can.\n\nThat rule is the **Pythagorean theorem**:\n\n$$a^2 + b^2 = c^2$$\n\nHere $a$ and $b$ are the **legs** — the two sides that meet at the right angle — and $c$ is the **hypotenuse**, the longest side, always sitting opposite the right angle. Square the legs, add them, and you get the square of the hypotenuse. That's the whole engine.\n\n## Finding the hypotenuse\n\nWhen you know both legs, solve for $c$ directly:\n\n$$c = \\sqrt{a^2 + b^2}.$$\n\nWith legs of 3 and 4 (say, 3 m across and 4 m up), $c = \\sqrt{9 + 16} = \\sqrt{25} = 5$. The straight-line distance is 5 m. Notice how clean that came out — that's a **Pythagorean triple**, a set of three whole numbers that fit the theorem perfectly. The famous ones are $(3,4,5)$, $(5,12,13)$, $(8,15,17)$, and $(7,24,25)$, plus every multiple like $(6,8,10)$.\n\nSee it on the grid — count 3 squares across, 4 squares up, and the diagonal closes at exactly 5:\n\n```plot\n{ \"xRange\": [-1.5, 5.5], \"yRange\": [-1, 6], \"width\": 320, \"height\": 320, \"segments\": [ { \"from\": [0, 0], \"to\": [3, 0], \"color\": \"accent\", \"label\": \"a = 3\" }, { \"from\": [3, 0], \"to\": [3, 4], \"color\": \"accent\", \"label\": \"b = 4\" }, { \"from\": [0, 0], \"to\": [3, 4], \"color\": \"warn\", \"label\": \"c = 5\" } ], \"caption\": \"The 3-4-5 right triangle: 3² + 4² = 9 + 16 = 25 = 5². The right angle sits where the legs meet.\" }\n```\n\n## Finding a missing leg\n\nSometimes you know the hypotenuse and one leg — for instance, a 13 ft ladder whose base sits 5 ft from a wall, and you want how high it reaches. Rearrange the theorem to **subtract**:\n\n$$a = \\sqrt{c^2 - b^2} = \\sqrt{169 - 25} = \\sqrt{144} = 12.$$\n\nThe ladder reaches 12 ft up. The key difference: finding the hypotenuse you *add*; finding a leg you *subtract*, because the hypotenuse is the biggest side and must give a piece back.\n\n## Distance on a map is Pythagoras in disguise\n\nDrop two points on a grid. The horizontal gap and the vertical gap are the two legs of a right triangle, and the straight-line **distance** between the points is the hypotenuse:\n\n$$d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}.$$\n\nFrom $(1,2)$ to $(4,6)$ the gaps are $3$ and $4$, so $d = \\sqrt{9 + 16} = 5$. The distance formula isn't a new idea to memorize — it *is* the Pythagorean theorem, applied to coordinates.\n\n## Spotting the right angle\n\nThe entire skill in applied problems is recognizing the hidden right triangle. A wall meets the ground at a right angle. The two sides of a rectangular field meet at a right angle. A vertical pole meets flat ground at a right angle. Once you find that corner, label the side opposite it as the hypotenuse, the two sides forming it as the legs, and the theorem does the rest.\n\n## Always sanity-check\n\nThe hypotenuse must be the longest side. If you ever \"find\" a hypotenuse shorter than one of the legs, or a leg longer than the hypotenuse, you've mixed up which side is which — go back and re-label before trusting the number."
+  },
+  "application": {
+    "summary": "The Pythagorean theorem turns two measurable distances into a third you can't reach directly — the ladder's height, the wire's length, the screen's diagonal, the shortcut across a field. Anywhere a right angle hides, it converts horizontal-plus-vertical into straight-line distance.",
+    "domains": ["construction", "navigation", "sports", "everyday life"],
+    "workedExample": "**How long a ladder do you need?**\n\nYou must reach a window 24 ft up a wall, and for safety the base of the ladder has to sit 7 ft out from the wall. How long must the ladder be?\n\nThe wall is vertical, the ground is horizontal, so they meet at a right angle — the ladder is the hypotenuse. The legs are the height (24 ft) and the base distance (7 ft):\n\n$$c = \\sqrt{7^2 + 24^2} = \\sqrt{49 + 576} = \\sqrt{625} = 25.$$\n\nYou need a **25 ft ladder**. That's the $(7, 24, 25)$ triple at work. The same setup sizes a guy-wire from the top of a pole to an anchor point, finds the diagonal brace for a rectangular gate, or tells you the straight-line distance home when you've walked so far east and so far north.",
+    "domainNotes": [
+      "**Construction:** ladder reach and safe base distance, diagonal bracing for square frames, checking a corner is truly square (the 3-4-5 method).",
+      "**Navigation:** straight-line ('as the crow flies') distance from how far east and how far north you've traveled.",
+      "**Sports:** the throw across a baseball diamond from one base to the diagonal base, or the length of a diagonal sprint across a field.",
+      "**Everyday life:** the diagonal size of a TV or monitor from its width and height, and whether a long item fits across a room or through a doorway."
+    ]
+  },
+  "generators": ["pyth-hypotenuse-v1", "pyth-leg-v1", "pyth-distance-v1", "pyth-ladder-v1"],
+  "problems": [
+    {
+      "id": "geometry.pythagorean-theorem.s01",
+      "concepts": ["find-hypotenuse"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A small rectangular screen measures 6 inches wide and 8 inches tall. What is the length of its diagonal?",
+      "steps": [
+        { "instruction": "Write the Pythagorean relationship for the diagonal $c$ using legs 6 and 8.", "answer": "6^2 + 8^2 = c^2", "accept": ["36+64=c^2", "8^2+6^2=c^2"], "hint": "The width and height are the two legs; the diagonal is the hypotenuse $c$." },
+        { "instruction": "Add the squares of the two legs.", "answer": "100", "accept": [], "hint": "$36 + 64$." },
+        { "instruction": "Take the square root to find the diagonal $c$.", "answer": "10", "accept": ["c=10"], "hint": "$\\sqrt{100}$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "inches" },
+      "solutionNarrative": "The diagonal is the hypotenuse: $c = \\sqrt{6^2 + 8^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10$ inches. This is the $(6,8,10)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s02",
+      "concepts": ["find-hypotenuse"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You walk 9 blocks east and then 12 blocks north. How far are you from your starting point in a straight line? The path is shown in the figure.",
+      "plot": { "xRange": [-2, 14], "yRange": [-2, 14], "width": 320, "height": 320, "segments": [ { "from": [0, 0], "to": [9, 0], "color": "accent", "arrow": true, "label": "9 east" }, { "from": [9, 0], "to": [9, 12], "color": "accent", "arrow": true, "label": "12 north" }, { "from": [0, 0], "to": [9, 12], "color": "warn", "dashed": true, "label": "? blocks" } ], "points": [ { "x": 0, "y": 0, "label": "Start", "color": "text" } ], "caption": "Walk 9 blocks east, then 12 north; the dashed line is the straight-line distance back to the start" },
+      "steps": [
+        { "instruction": "The east and north legs are 9 and 12. Add the squares of the legs.", "answer": "225", "accept": [], "hint": "$9^2 + 12^2 = 81 + 144$." },
+        { "instruction": "Take the square root to find the straight-line distance.", "answer": "15", "accept": ["c=15"], "hint": "$\\sqrt{225}$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "blocks" },
+      "solutionNarrative": "$c = \\sqrt{9^2 + 12^2} = \\sqrt{81 + 144} = \\sqrt{225} = 15$ blocks. This is the $(9,12,15)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s03",
+      "concepts": ["find-hypotenuse"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rectangular room is 20 ft long and 21 ft wide. A carpenter wants to run a single straight diagonal board from one corner to the opposite corner. How long must the board be?",
+      "steps": [
+        { "instruction": "Identify the two legs of the right triangle formed by the room's sides, then add their squares.", "answer": "841", "accept": [], "hint": "$20^2 + 21^2 = 400 + 441$." },
+        { "instruction": "Take the square root to find the diagonal length.", "answer": "29", "accept": ["c=29"], "hint": "$\\sqrt{841}$. Note 29 is a whole number." }
+      ],
+      "finalAnswer": { "value": "29", "unit": "feet" },
+      "solutionNarrative": "The diagonal is $\\sqrt{20^2 + 21^2} = \\sqrt{400 + 441} = \\sqrt{841} = 29$ ft. This is the $(20,21,29)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s04",
+      "concepts": ["find-hypotenuse"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A right triangle has legs of length 3 and 4. Find the hypotenuse.",
+      "steps": [
+        { "instruction": "Add the squares of the two legs, then take the square root.", "answer": "5", "accept": ["c=5"], "hint": "$\\sqrt{3^2 + 4^2} = \\sqrt{9 + 16}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$c = \\sqrt{9 + 16} = \\sqrt{25} = 5$."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s05",
+      "concepts": ["find-leg"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 13 ft ladder leans against a wall with its base 5 ft from the wall. How high up the wall does the ladder reach?",
+      "steps": [
+        { "instruction": "The ladder (13) is the hypotenuse and the base distance (5) is a leg. Subtract the squares to find the missing leg's square.", "answer": "144", "accept": [], "hint": "$13^2 - 5^2 = 169 - 25$. Subtract because the hypotenuse is the biggest side." },
+        { "instruction": "Take the square root to find the height reached.", "answer": "12", "accept": ["a=12"], "hint": "$\\sqrt{144}$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "feet" },
+      "solutionNarrative": "Height $= \\sqrt{13^2 - 5^2} = \\sqrt{169 - 25} = \\sqrt{144} = 12$ ft. This is the $(5,12,13)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s06",
+      "concepts": ["find-leg"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 17 ft guy-wire runs from the top of a pole to an anchor 8 ft from the base of the pole. How tall is the pole (how high up does the wire attach)?",
+      "steps": [
+        { "instruction": "The wire (17) is the hypotenuse and the ground distance (8) is a leg. Subtract their squares.", "answer": "225", "accept": [], "hint": "$17^2 - 8^2 = 289 - 64$." },
+        { "instruction": "Take the square root to find the pole height.", "answer": "15", "accept": ["a=15"], "hint": "$\\sqrt{225}$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "feet" },
+      "solutionNarrative": "Height $= \\sqrt{17^2 - 8^2} = \\sqrt{289 - 64} = \\sqrt{225} = 15$ ft. This is the $(8,15,17)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s07",
+      "concepts": ["find-leg"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 25 ft ramp support reaches from a point on the ground to the top of a loading dock. The dock is 24 ft from that ground point measured horizontally. How tall is the dock?",
+      "steps": [
+        { "instruction": "The support (25) is the hypotenuse and the horizontal run (24) is a leg. Subtract their squares.", "answer": "49", "accept": [], "hint": "$25^2 - 24^2 = 625 - 576$." },
+        { "instruction": "Take the square root to find the dock height.", "answer": "7", "accept": ["a=7"], "hint": "$\\sqrt{49}$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "feet" },
+      "solutionNarrative": "Height $= \\sqrt{25^2 - 24^2} = \\sqrt{625 - 576} = \\sqrt{49} = 7$ ft. This is the $(7,24,25)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s08",
+      "concepts": ["find-leg"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A right triangle has hypotenuse 10 and one leg 6. Find the other leg.",
+      "steps": [
+        { "instruction": "Subtract the square of the known leg from the square of the hypotenuse.", "answer": "64", "accept": [], "hint": "$10^2 - 6^2 = 100 - 36$." },
+        { "instruction": "Take the square root to find the missing leg.", "answer": "8", "accept": ["b=8"], "hint": "$\\sqrt{64}$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "Missing leg $= \\sqrt{100 - 36} = \\sqrt{64} = 8$."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s09",
+      "concepts": ["distance-between-points"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "On a city map, a coffee shop is at point $(0, 0)$ and your office is at $(3, 4)$, where each unit is one block. What is the straight-line distance between them? Both points are shown in the figure.",
+      "plot": { "xRange": [-1.5, 5.5], "yRange": [-1, 6], "width": 320, "height": 320, "segments": [ { "from": [0, 0], "to": [3, 0], "color": "dim", "dashed": true, "label": "3" }, { "from": [3, 0], "to": [3, 4], "color": "dim", "dashed": true, "label": "4" }, { "from": [0, 0], "to": [3, 4], "color": "warn", "label": "d = ?" } ], "points": [ { "x": 0, "y": 0, "label": "Coffee (0,0)", "color": "accent" }, { "x": 3, "y": 4, "label": "Office (3,4)", "color": "accent" } ], "caption": "The horizontal and vertical gaps are the legs; the straight-line distance is the hypotenuse" },
+      "steps": [
+        { "instruction": "Find the horizontal gap and vertical gap, then add their squares.", "answer": "25", "accept": [], "hint": "Gaps are $3$ and $4$; $3^2 + 4^2 = 9 + 16$." },
+        { "instruction": "Take the square root to find the distance.", "answer": "5", "accept": ["d=5"], "hint": "$\\sqrt{25}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "blocks" },
+      "solutionNarrative": "$d = \\sqrt{(3-0)^2 + (4-0)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$ blocks."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s10",
+      "concepts": ["distance-between-points"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A drone flies in a straight line from $(2, 3)$ to $(14, 8)$ on a coordinate map (units in kilometers). How far does it fly?",
+      "steps": [
+        { "instruction": "Find the horizontal and vertical gaps between the points.", "answer": "12 and 5", "accept": ["12, 5", "5, 12", "5 and 12"], "hint": "$x$-gap $= 14 - 2$; $y$-gap $= 8 - 3$." },
+        { "instruction": "Add the squares of the two gaps.", "answer": "169", "accept": [], "hint": "$12^2 + 5^2 = 144 + 25$." },
+        { "instruction": "Take the square root to find the distance.", "answer": "13", "accept": ["d=13"], "hint": "$\\sqrt{169}$." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "kilometers" },
+      "solutionNarrative": "Gaps are $12$ and $5$; $d = \\sqrt{12^2 + 5^2} = \\sqrt{144 + 25} = \\sqrt{169} = 13$ km. This is the $(5,12,13)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s11",
+      "concepts": ["distance-between-points"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the distance between the points $(-3, -2)$ and $(5, 13)$.",
+      "steps": [
+        { "instruction": "Find the horizontal gap and the vertical gap.", "answer": "8 and 15", "accept": ["8, 15", "15, 8", "15 and 8"], "hint": "$x$-gap $= 5 - (-3) = 8$; $y$-gap $= 13 - (-2) = 15$." },
+        { "instruction": "Add the squares of the gaps.", "answer": "289", "accept": [], "hint": "$8^2 + 15^2 = 64 + 225$." },
+        { "instruction": "Take the square root to find the distance.", "answer": "17", "accept": ["d=17"], "hint": "$\\sqrt{289}$." }
+      ],
+      "finalAnswer": { "value": "17", "unit": "" },
+      "solutionNarrative": "Gaps are $8$ and $15$; $d = \\sqrt{8^2 + 15^2} = \\sqrt{64 + 225} = \\sqrt{289} = 17$. This is the $(8,15,17)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s12",
+      "concepts": ["pythagorean-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A baseball diamond is a square 90 ft on each side. A catcher at home plate throws straight to second base (the diagonally opposite corner). How far is that throw? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "The two sides from home to first to second are legs of 90 and 90. Add their squares.", "answer": "16200", "accept": [], "hint": "$90^2 + 90^2 = 8100 + 8100$." },
+        { "instruction": "Take the square root and round to 1 decimal place.", "answer": "127.3", "accept": [], "hint": "$\\sqrt{16200} \\approx 127.27$." }
+      ],
+      "finalAnswer": { "value": "127.3", "unit": "feet" },
+      "solutionNarrative": "The throw is the diagonal: $\\sqrt{90^2 + 90^2} = \\sqrt{16200} \\approx 127.3$ ft."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s13",
+      "concepts": ["pythagorean-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rectangular soccer field is 40 m wide and 30 m long. Instead of running along two sides, a player runs the diagonal from one corner to the opposite corner. How long is the diagonal run?",
+      "steps": [
+        { "instruction": "The width and length are the legs. Add their squares.", "answer": "2500", "accept": [], "hint": "$40^2 + 30^2 = 1600 + 900$." },
+        { "instruction": "Take the square root to find the diagonal.", "answer": "50", "accept": ["d=50", "c=50"], "hint": "$\\sqrt{2500}$." }
+      ],
+      "finalAnswer": { "value": "50", "unit": "meters" },
+      "solutionNarrative": "Diagonal $= \\sqrt{40^2 + 30^2} = \\sqrt{1600 + 900} = \\sqrt{2500} = 50$ m. This is a $(30,40,50)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s14",
+      "concepts": ["pythagorean-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A carpenter braces a rectangular gate with a single diagonal board. The gate is 9 ft wide, and the diagonal brace measures 41 ft. How tall is the gate?",
+      "steps": [
+        { "instruction": "The brace (41) is the hypotenuse and the width (9) is a leg. Subtract their squares to get the height's square.", "answer": "1600", "accept": [], "hint": "$41^2 - 9^2 = 1681 - 81$." },
+        { "instruction": "Take the square root to find the gate's height.", "answer": "40", "accept": ["a=40"], "hint": "$\\sqrt{1600}$." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "feet" },
+      "solutionNarrative": "Height $= \\sqrt{41^2 - 9^2} = \\sqrt{1681 - 81} = \\sqrt{1600} = 40$ ft. This is the $(9,40,41)$ triple."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s15",
+      "concepts": ["pythagorean-applications", "find-hypotenuse"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You want to buy a TV that is 36 inches wide and 27 inches tall. TVs are advertised by their diagonal size. What is the diagonal (advertised) size of this TV?",
+      "steps": [
+        { "instruction": "The width and height are the legs. Add their squares.", "answer": "2025", "accept": [], "hint": "$36^2 + 27^2 = 1296 + 729$." },
+        { "instruction": "Take the square root to find the diagonal.", "answer": "45", "accept": ["c=45"], "hint": "$\\sqrt{2025}$." }
+      ],
+      "finalAnswer": { "value": "45", "unit": "inches" },
+      "solutionNarrative": "Diagonal $= \\sqrt{36^2 + 27^2} = \\sqrt{1296 + 729} = \\sqrt{2025} = 45$ inches. This is a $(27,36,45)$ triple — the $(3,4,5)$ pattern scaled by 9."
+    },
+    {
+      "id": "geometry.pythagorean-theorem.s16",
+      "concepts": ["pythagorean-applications", "find-leg"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 26 ft ladder must reach a window. For safe footing the base sits 10 ft from the wall. The fire code requires the ladder to reach at least 23 ft up. Does it? First find how high it actually reaches.",
+      "steps": [
+        { "instruction": "The ladder (26) is the hypotenuse and the base (10) is a leg. Subtract their squares.", "answer": "576", "accept": [], "hint": "$26^2 - 10^2 = 676 - 100$." },
+        { "instruction": "Take the square root to find the height reached.", "answer": "24", "accept": ["a=24"], "hint": "$\\sqrt{576}$." },
+        { "instruction": "It reaches 24 ft. Does that meet the 23 ft minimum? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Compare 24 to 23." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "feet" },
+      "solutionNarrative": "Height $= \\sqrt{26^2 - 10^2} = \\sqrt{676 - 100} = \\sqrt{576} = 24$ ft, which meets the 23 ft minimum. This is the $(10,24,26)$ triple."
+    }
+  ]
+}

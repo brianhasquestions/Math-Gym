@@ -1,0 +1,165 @@
+{
+  "id": "algebra.quadratic-equations",
+  "subject": "algebra",
+  "title": "Solving Quadratic Equations",
+  "prerequisites": ["algebra.factoring"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "solve-by-factoring",
+      "label": "Solving by factoring",
+      "microLesson": "If a quadratic factors, this is the fastest method. Get the equation equal to zero, factor the left side, then use the **zero-product property**: a product is zero only when one of its factors is zero. So set each factor to zero and solve. $x^2 - 5x + 6 = 0$ factors to $(x - 2)(x - 3) = 0$, giving $x = 2$ or $x = 3$."
+    },
+    {
+      "id": "square-root-method",
+      "label": "The square-root method",
+      "microLesson": "When the quadratic is a perfect square equal to a number — like $x^2 = 49$ or $(x - 2)^2 = 9$ — just take the square root of both sides. The key: a square root has **two** signs. $x^2 = 49$ means $x = \\pm 7$. $(x - 2)^2 = 9$ means $x - 2 = \\pm 3$, so $x = 5$ or $x = -1$. Forgetting the $\\pm$ loses half your answers."
+    },
+    {
+      "id": "quadratic-formula",
+      "label": "The quadratic formula",
+      "microLesson": "The formula solves **every** quadratic $ax^2 + bx + c = 0$, factorable or not: $x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$. Identify $a$, $b$, $c$ (watch signs), compute the discriminant $b^2 - 4ac$ under the root, then evaluate both the $+$ and the $-$. It never fails — it's the tool you reach for when factoring isn't obvious."
+    },
+    {
+      "id": "discriminant",
+      "label": "The discriminant",
+      "microLesson": "The piece under the root, $b^2 - 4ac$, is the **discriminant** — it tells you how many real solutions exist *before* you solve. Positive → **two** real solutions; zero → **one** (a repeated root); negative → **no** real solutions (the parabola never crosses the x-axis). In a real model, a negative discriminant means the event never happens — the ball never reaches that height, the budget never breaks even."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When the unknown is squared\n\nA **quadratic equation** has the form $ax^2 + bx + c = 0$ — the variable shows up squared. These describe anything that curves: a thrown ball's path, the area of a region as a dimension grows, profit as price changes. Unlike a linear equation, a quadratic can have **two** answers, one, or none — and that count itself is often the useful information.\n\nThere are three tools. Reach for them in this order of convenience.\n\n## Tool 1: Factoring (fastest when it works)\n\nGet everything on one side so the equation equals zero, factor, then apply the **zero-product property**: if $A \\cdot B = 0$ then $A = 0$ or $B = 0$.\n\n$$x^2 - 5x + 6 = 0 \\;\\Rightarrow\\; (x - 2)(x - 3) = 0 \\;\\Rightarrow\\; x = 2 \\text{ or } x = 3.$$\n\nThose two numbers have a picture. Graph $y = x^2 - 5x + 6$ and the solutions are exactly where the parabola crosses the x-axis — solving a quadratic *is* finding the crossing points.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-1, 6], \"yRange\": [-2, 7], \"grid\": true, \"curves\": [ { \"fn\": \"x^2-5*x+6\", \"label\": \"y = x² − 5x + 6\", \"color\": \"accent\", \"labelAt\": 4.6 } ], \"points\": [ { \"x\": 2, \"y\": 0, \"label\": \"x=2\", \"color\": \"warn\" }, { \"x\": 3, \"y\": 0, \"label\": \"x=3\", \"color\": \"warn\" } ], \"caption\": \"y = x² − 5x + 6 crosses the x-axis at the solutions x = 2 and x = 3\" }\n```\n\n## Tool 2: The square-root method (for perfect squares)\n\nIf the quadratic is a square set equal to a number, take the square root of both sides — and **keep both signs**:\n\n$$(x - 2)^2 = 9 \\;\\Rightarrow\\; x - 2 = \\pm 3 \\;\\Rightarrow\\; x = 5 \\text{ or } x = -1.$$\n\nThe $\\pm$ is not optional: dropping it throws away a real solution.\n\n## Tool 3: The quadratic formula (always works)\n\nWhen factoring isn't obvious, the formula solves *any* quadratic:\n\n$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}.$$\n\nIdentify $a$, $b$, $c$, substitute carefully (signs matter), and evaluate both branches. It never fails.\n\n## The discriminant: how many answers, before you solve\n\nThe expression under the root, $b^2 - 4ac$, is the **discriminant**. Its sign alone tells you the number of real solutions:\n\n- $b^2 - 4ac > 0$: **two** real solutions (the curve crosses the axis twice).\n- $b^2 - 4ac = 0$: **one** real solution (it just touches the axis).\n- $b^2 - 4ac < 0$: **no** real solutions (it never reaches the axis).\n\nHere are the three cases side by side — the same parabola nudged down, level, and up:\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-3, 3], \"yRange\": [-2.5, 6], \"grid\": true, \"curves\": [ { \"fn\": \"x^2-1\", \"label\": \"two roots\", \"color\": \"success\", \"labelAt\": -2.4 }, { \"fn\": \"x^2\", \"label\": \"one root\", \"color\": \"warn\", \"labelAt\": 2 }, { \"fn\": \"x^2+1\", \"label\": \"no roots\", \"color\": \"error\", \"labelAt\": -1.5 } ], \"points\": [ { \"x\": -1, \"y\": 0, \"color\": \"success\" }, { \"x\": 1, \"y\": 0, \"color\": \"success\" }, { \"x\": 0, \"y\": 0, \"color\": \"warn\" } ], \"caption\": \"Positive discriminant: crosses twice (y = x² − 1). Zero: touches once (y = x²). Negative: never reaches the axis (y = x² + 1).\" }\n```\n\nThat single check answers questions like *\"is there any ticket price that breaks even?\"* without solving anything.\n\n## Always check\n\nWhatever tool you use, substitute your answers back into the original equation. And in applied problems, **discard answers that don't make physical sense** — a negative time or a negative length is mathematically valid but physically meaningless."
+  },
+  "application": {
+    "summary": "Quadratics model anything that accelerates or curves: projectile height over time, area as a dimension grows, and revenue/profit as price changes. Solving one finds the moments or values where the quantity hits a target (often zero); the discriminant tells you whether such a moment exists at all.",
+    "domains": ["physics", "business", "engineering", "construction"],
+    "workedExample": "**When does the ball hit the ground?**\n\nA ball is launched upward from a 48 ft ledge; its height (feet) after $t$ seconds is $h = -16t^2 + 32t + 48$. When does it land ($h = 0$)?\n\nSet it to zero and divide through by $-16$ to simplify:\n\n$$-16t^2 + 32t + 48 = 0 \\;\\Rightarrow\\; t^2 - 2t - 3 = 0.$$\n\nFactor: $(t - 3)(t + 1) = 0$, so $t = 3$ or $t = -1$. Time can't be negative, so we **discard $t = -1$**: the ball lands at $t = 3$ seconds. The same setup finds when a product breaks even (profit $= 0$); there, a *negative discriminant* would tell you it never does — a genuinely useful 'no' answer.",
+    "domainNotes": [
+      "**Physics:** when a projectile reaches a given height or hits the ground.",
+      "**Business:** the price(s) that produce a target profit, and (via the discriminant) whether any price does.",
+      "**Construction:** solving for a dimension when an area is fixed (e.g. width of a uniform border).",
+      "**Engineering:** resonance and stability questions that hinge on whether roots are real."
+    ]
+  },
+  "generators": ["quad-factorable-v1", "quad-sqrt-v1", "quad-formula-v1", "discriminant-v1"],
+  "problems": [
+    {
+      "id": "algebra.quadratic-equations.s01",
+      "concepts": ["solve-by-factoring"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve by factoring: $x^2 - 5x + 6 = 0$",
+      "steps": [
+        { "instruction": "Factor the left side.", "form": "factored", "answer": "(x - 2)(x - 3)", "accept": [], "hint": "Two numbers multiplying to 6 and adding to -5: both negative." },
+        { "instruction": "Find both solutions. Separate them with 'or' or a comma.", "form": "solutions", "answer": "x = 2 or x = 3", "accept": ["2, 3"], "hint": "Set each factor to zero." }
+      ],
+      "finalAnswer": { "value": "x = 2, x = 3", "unit": "" },
+      "solutionNarrative": "$(x-2)(x-3)=0$ gives $x = 2$ or $x = 3$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s02",
+      "concepts": ["square-root-method"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve: $x^2 = 49$",
+      "steps": [
+        { "instruction": "Take the square root of both sides (remember $\\pm$). Enter both solutions.", "form": "solutions", "answer": "x = 7 or x = -7", "accept": ["7, -7", "-7, 7"], "hint": "$\\sqrt{49} = 7$, and $x$ can be positive or negative." }
+      ],
+      "finalAnswer": { "value": "x = 7, x = -7", "unit": "" },
+      "solutionNarrative": "$x^2 = 49 \\Rightarrow x = \\pm 7$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s03",
+      "concepts": ["square-root-method"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve: $(x - 2)^2 = 9$",
+      "steps": [
+        { "instruction": "Square-root both sides and solve for $x$. Enter both solutions.", "form": "solutions", "answer": "x = 5 or x = -1", "accept": ["5, -1", "-1, 5"], "hint": "$x - 2 = \\pm 3$, so $x = 2 \\pm 3$." }
+      ],
+      "finalAnswer": { "value": "x = 5, x = -1", "unit": "" },
+      "solutionNarrative": "$x - 2 = \\pm 3$, so $x = 5$ or $x = -1$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s04",
+      "concepts": ["quadratic-formula"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve using the quadratic formula: $x^2 + 3x - 10 = 0$",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=3$, $c=-10$).", "answer": "49", "accept": [], "hint": "$3^2 - 4(1)(-10) = 9 + 40$." },
+        { "instruction": "Apply the formula to find both solutions.", "form": "solutions", "answer": "x = 2 or x = -5", "accept": ["2, -5", "-5, 2"], "hint": "$x = \\dfrac{-3 \\pm 7}{2}$." }
+      ],
+      "finalAnswer": { "value": "x = 2, x = -5", "unit": "" },
+      "solutionNarrative": "Discriminant 49; $x = \\dfrac{-3 \\pm 7}{2}$ gives $x = 2$ or $x = -5$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s05",
+      "concepts": ["quadratic-formula"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve using the quadratic formula: $2x^2 - 7x + 3 = 0$",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=2$, $b=-7$, $c=3$).", "answer": "25", "accept": [], "hint": "$(-7)^2 - 4(2)(3) = 49 - 24$." },
+        { "instruction": "Apply $x = \\dfrac{-b \\pm \\sqrt{D}}{2a}$ to find both solutions.", "form": "solutions", "answer": "x = 3 or x = 1/2", "accept": ["3, 1/2", "3, 0.5", "1/2, 3"], "hint": "$x = \\dfrac{7 \\pm 5}{4}$." }
+      ],
+      "finalAnswer": { "value": "x = 3, x = 1/2", "unit": "" },
+      "solutionNarrative": "Discriminant 25; $x = \\dfrac{7 \\pm 5}{4}$ gives $x = 3$ or $x = \\tfrac{1}{2}$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s06",
+      "concepts": ["discriminant"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Without solving, how many real solutions does $x^2 + x + 5 = 0$ have?",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=1$, $c=5$).", "answer": "-19", "accept": [], "hint": "$1 - 4(1)(5) = 1 - 20$." },
+        { "instruction": "How many real solutions? Type 'two', 'one', or 'none'.", "answer": "none", "accept": ["0"], "hint": "A negative discriminant means no real solutions." }
+      ],
+      "finalAnswer": { "value": "none", "unit": "" },
+      "solutionNarrative": "Discriminant $-19 < 0$, so there are no real solutions."
+    },
+    {
+      "id": "algebra.quadratic-equations.s07",
+      "concepts": ["discriminant"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "How many real solutions does $x^2 - 6x + 9 = 0$ have?",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac$.", "answer": "0", "accept": [], "hint": "$(-6)^2 - 4(1)(9) = 36 - 36$." },
+        { "instruction": "How many real solutions? Type 'two', 'one', or 'none'.", "answer": "one", "accept": ["1"], "hint": "A zero discriminant means exactly one (repeated) solution." }
+      ],
+      "finalAnswer": { "value": "one", "unit": "" },
+      "solutionNarrative": "Discriminant 0, so there is exactly one real (repeated) solution, $x = 3$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s08",
+      "concepts": ["solve-by-factoring"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ball launched from a 48 ft ledge has height $-16t^2 + 32t + 48$ feet after $t$ seconds. When does it hit the ground? (Its flight is shown in the figure.)",
+      "plot": { "type": "cartesian", "xRange": [-2, 4.5], "yRange": [-20, 75], "grid": true, "curves": [ { "fn": "-16*x^2+32*x+48", "label": "height", "color": "accent", "labelAt": 1.8 } ], "points": [ { "x": 0, "y": 48, "label": "launch (0,48)", "color": "warn" } ], "caption": "Height of the ball (feet) vs. time t (seconds)" },
+      "steps": [
+        { "instruction": "Set the height to 0 and divide every term by $-16$ to simplify. Write the resulting equation.", "answer": "t^2 - 2t - 3 = 0", "accept": ["t^2-2t-3=0"], "hint": "Dividing $-16t^2 + 32t + 48 = 0$ by $-16$ flips signs: $t^2 - 2t - 3 = 0$." },
+        { "instruction": "Factor the left side.", "form": "factored", "answer": "(t - 3)(t + 1)", "accept": [], "hint": "Two numbers multiplying to -3 and adding to -2." },
+        { "instruction": "Both factors give a solution, but time can't be negative. At what time $t$ does it land? (seconds)", "answer": "t = 3", "accept": ["3"], "hint": "Discard the negative root." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "seconds" },
+      "solutionNarrative": "Dividing by $-16$ gives $t^2 - 2t - 3 = 0 = (t-3)(t+1)$, so $t = 3$ or $t = -1$; discard $-1$, so it lands at $t = 3$ s."
+    },
+    {
+      "id": "algebra.quadratic-equations.s09",
+      "concepts": ["solve-by-factoring"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rectangle's length is 3 ft more than its width, and its area is 40 ft². Let $w$ be the width; then $w(w + 3) = 40$. Find the width.",
+      "steps": [
+        { "instruction": "Expand and set equal to zero. Write the quadratic equation in standard form.", "answer": "w^2 + 3w - 40 = 0", "accept": ["w^2+3w-40=0"], "hint": "$w(w+3) = w^2 + 3w$; move 40 over." },
+        { "instruction": "Factor the left side.", "form": "factored", "answer": "(w + 8)(w - 5)", "accept": [], "hint": "Two numbers multiplying to -40 and adding to 3." },
+        { "instruction": "Width must be positive. What is the width? (feet)", "answer": "w = 5", "accept": ["5"], "hint": "Discard the negative root $w = -8$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "feet" },
+      "solutionNarrative": "$w^2 + 3w - 40 = 0 = (w + 8)(w - 5)$, so $w = 5$ (discarding $-8$)."
+    }
+  ]
+}

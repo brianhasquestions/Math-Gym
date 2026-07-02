@@ -1,0 +1,257 @@
+{
+  "id": "calculus-2.series-and-convergence",
+  "subject": "calculus-2",
+  "title": "Series and Convergence",
+  "prerequisites": ["algebra-2.sequences-and-series"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "geometric-series",
+      "label": "Geometric series",
+      "microLesson": "A **geometric series** adds terms that each multiply the previous by a fixed ratio $r$: $a + ar + ar^2 + \\cdots$. It **converges** only when $|r| < 1$ — the terms shrink toward zero fast enough to settle on a finite total. When it converges, the infinite sum is $S = \\dfrac{a}{1 - r}$, where $a$ is the first term. If $|r| \\geq 1$ the terms don't shrink, the running total runs away, and the series **diverges**. Example: $3 + 1.5 + 0.75 + \\cdots$ has $a = 3$, $r = 0.5$, so $S = \\dfrac{3}{1 - 0.5} = 6$."
+    },
+    {
+      "id": "convergence-tests",
+      "label": "Convergence tests",
+      "microLesson": "Two quick tests. The **nth-term (divergence) test**: if the terms $a_n$ do **not** approach $0$, the series **diverges** — no exception. (But terms going to $0$ does NOT guarantee convergence.) The **ratio test**: compute $L = \\lim \\left|\\dfrac{a_{n+1}}{a_n}\\right|$. If $L < 1$ the series **converges**; if $L > 1$ it **diverges**; if $L = 1$ the test is inconclusive. The ratio test shines on series with factorials or powers, like $\\sum \\dfrac{1}{n!}$."
+    },
+    {
+      "id": "p-series-and-harmonic",
+      "label": "p-series and the harmonic series",
+      "microLesson": "A **p-series** is $\\sum_{n=1}^{\\infty} \\dfrac{1}{n^p}$. The single rule: it **converges if $p > 1$** and **diverges if $p \\leq 1$**. The borderline case $p = 1$ is the **harmonic series** $1 + \\tfrac{1}{2} + \\tfrac{1}{3} + \\cdots$, which famously **diverges** even though its terms shrink to zero — they just don't shrink fast enough. Meanwhile $\\sum \\dfrac{1}{n^2}$ ($p = 2$) converges. The exponent $p$ is the whole story."
+    },
+    {
+      "id": "series-applications",
+      "label": "Series in the real world",
+      "microLesson": "Infinite sums settle real totals. A **repeating decimal** like $0.7777\\ldots$ is the geometric series $0.7 + 0.07 + \\cdots$, summing to a clean fraction. A **bouncing ball** that rebounds to a fraction of its height travels a finite total distance. A **perpetuity** pays forever yet has a finite present value, and a repeated **drug dose** that partly clears between doses builds to a finite steady-state amount. Each is $S = \\dfrac{a}{1 - r}$ in disguise."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Adding infinitely many things and getting a finite answer\n\nIt sounds impossible, but you do it every day. When you write $0.3333\\ldots = \\tfrac{1}{3}$, you are claiming that an **infinite** sum of pieces — $0.3 + 0.03 + 0.003 + \\cdots$ — lands on a single finite number. A loan with monthly payments forever, a ball that bounces and re-bounces, a drug taken on a schedule: all of these are infinite sums that nonetheless add up to something you can put on a spreadsheet.\n\nThe central question of this topic is therefore: **does an infinite sum settle on a finite total (converge), or does it run away to infinity (diverge)?** And when it converges, **what is the total?**\n\n## Geometric series: the workhorse\n\nThe most useful infinite sum in applied math is the **geometric series**, where every term is the previous one times a fixed ratio $r$:\n\n$$a + ar + ar^2 + ar^3 + \\cdots = \\sum_{n=0}^{\\infty} a\\, r^n.$$\n\nThe behavior depends entirely on $r$:\n\n- If $|r| < 1$, the terms shrink toward zero, the running total settles, and the series **converges** to\n\n$$S = \\frac{a}{1 - r},$$\n\nwhere $a$ is the **first term**.\n- If $|r| \\geq 1$, the terms don't shrink, the sum **diverges**.\n\nThat one formula, $S = \\dfrac{a}{1 - r}$, quietly powers repeating decimals, perpetuities, bouncing balls, and steady-state drug levels. Memorize it.\n\n## Does it converge? Two fast tests\n\nFor series that aren't geometric, you need tests.\n\n**The nth-term (divergence) test.** Look at the terms $a_n$ themselves. If they do **not** approach $0$, the series **diverges** — guaranteed. For example $\\sum \\dfrac{n}{n+1}$ has terms heading to $1$, not $0$, so it diverges. *Caution:* terms going to $0$ does **not** prove convergence — it only removes one way to fail.\n\n**The ratio test.** Compute\n\n$$L = \\lim_{n \\to \\infty} \\left| \\frac{a_{n+1}}{a_n} \\right|.$$\n\nThen $L < 1$ means **converges**, $L > 1$ means **diverges**, and $L = 1$ is inconclusive. The ratio test is the tool of choice when terms contain factorials or powers, such as $\\sum \\dfrac{1}{n!}$ (here $L = 0$, so it converges).\n\n## p-series and the surprising harmonic series\n\nA **p-series** has the form\n\n$$\\sum_{n=1}^{\\infty} \\frac{1}{n^p}.$$\n\nThe rule is delightfully simple: it **converges if $p > 1$** and **diverges if $p \\leq 1$**.\n\nThe knife-edge case $p = 1$ is the **harmonic series** $1 + \\tfrac{1}{2} + \\tfrac{1}{3} + \\tfrac{1}{4} + \\cdots$. Its terms march to zero, so the nth-term test can't condemn it — yet it **diverges**. The terms simply don't shrink fast enough. Bump the exponent to $p = 2$ and $\\sum \\dfrac{1}{n^2}$ **converges**. The exponent $p$ decides everything.\n\n## Why this matters\n\nConvergence is not academic hair-splitting. A perpetuity's price, a recall total, or a steady-state dose is finite **only because** the underlying series converges. If a model's series diverges, the quantity it predicts is unbounded — a genuinely useful warning. The rest of this topic is learning to spot which case you're in, and to compute the total when it's finite."
+  },
+  "application": {
+    "summary": "Infinite series turn 'forever' into a finite number. The geometric-sum formula $S = a/(1-r)$ converts repeating decimals to fractions, totals the distance a bouncing ball travels, prices a perpetuity that pays forever, and finds the steady-state amount of a repeatedly taken drug. Convergence tests tell you whether a running total settles at all.",
+    "domains": ["finance", "physics", "medicine", "engineering"],
+    "workedExample": "**What is a perpetuity worth?**\n\nA charity offers to pay you \\$1{,}000 at the end of every year, forever. With money worth 5% per year, a dollar paid $n$ years out is worth only $\\dfrac{1}{1.05^n}$ today. The present value is the infinite sum\n\n$$PV = \\frac{1000}{1.05} + \\frac{1000}{1.05^2} + \\frac{1000}{1.05^3} + \\cdots$$\n\nThis is geometric with first term $a = \\dfrac{1000}{1.05}$ and ratio $r = \\dfrac{1}{1.05}$. Since $|r| < 1$, it converges:\n\n$$PV = \\frac{a}{1 - r} = \\frac{1000/1.05}{1 - 1/1.05} = \\frac{1000}{0.05} = 20{,}000.$$\n\n**An endless \\$1{,}000-a-year stream is worth exactly \\$20{,}000 today.** The same $S = a/(1-r)$ converts $0.4545\\ldots$ to $\\tfrac{5}{11}$, totals a bouncing ball's travel, and finds a drug's steady-state level — one formula, four very different 'forevers.'",
+    "domainNotes": [
+      "**Finance:** present value of a perpetuity or endless dividend stream; total interest paid; the constant-growth stock-pricing model.",
+      "**Physics:** total distance traveled by a bouncing or damped oscillating object before it comes to rest.",
+      "**Medicine:** steady-state drug concentration when a dose is taken repeatedly and the body clears a fixed fraction between doses.",
+      "**Math/everyday:** converting any repeating decimal into an exact fraction via a geometric series."
+    ]
+  },
+  "generators": ["geom-series-sum-v1", "geom-converge-v1", "pseries-v1", "repeating-decimal-v1"],
+  "problems": [
+    {
+      "id": "calculus-2.series-and-convergence.s01",
+      "concepts": ["geometric-series"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the geometric series $4 + 2 + 1 + 0.5 + \\cdots$, where each term is half the previous one.",
+      "steps": [
+        { "instruction": "Identify the common ratio $r$.", "answer": "0.5", "accept": ["1/2"], "hint": "Divide any term by the one before it: $2 \\div 4$." },
+        { "instruction": "Since $|r| < 1$, does the series converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "A geometric series converges when $|r| < 1$." },
+        { "instruction": "Find the infinite sum using $S = \\dfrac{a}{1 - r}$ with $a = 4$.", "answer": "8", "accept": [], "hint": "$S = \\dfrac{4}{1 - 0.5}$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "Here $a = 4$ and $r = 0.5$. Since $|r| < 1$ the series converges, and $S = \\dfrac{4}{1 - 0.5} = \\dfrac{4}{0.5} = 8$."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s02",
+      "concepts": ["geometric-series"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A geometric series has first term $a = 5$ and common ratio $r = 3$.",
+      "steps": [
+        { "instruction": "Is $|r| < 1$? Based on that, does the series converge or diverge?", "answer": "diverges", "accept": ["divergent"], "hint": "With $r = 3$, the terms grow instead of shrinking." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "Since $|r| = 3 \\geq 1$, the terms do not shrink to zero, so the series diverges — there is no finite sum."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s03",
+      "concepts": ["geometric-series"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the sum of $\\sum_{n=0}^{\\infty} 6 \\left(\\tfrac{1}{3}\\right)^n = 6 + 2 + \\tfrac{2}{3} + \\cdots$.",
+      "steps": [
+        { "instruction": "Identify the first term $a$ and ratio $r$.", "answer": "a = 6, r = 1/3", "accept": ["6, 1/3", "a=6, r=1/3"], "hint": "The $n=0$ term is $6$; each term multiplies by $\\tfrac{1}{3}$." },
+        { "instruction": "Confirm convergence, then compute $S = \\dfrac{a}{1 - r}$.", "answer": "9", "accept": [], "hint": "$S = \\dfrac{6}{1 - 1/3} = \\dfrac{6}{2/3}$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "With $a = 6$ and $r = \\tfrac{1}{3}$ (so $|r| < 1$), $S = \\dfrac{6}{1 - 1/3} = \\dfrac{6}{2/3} = 9$."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s04",
+      "concepts": ["geometric-series"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the sum of $\\sum_{n=1}^{\\infty} \\left(\\tfrac{2}{5}\\right)^n = \\tfrac{2}{5} + \\tfrac{4}{25} + \\cdots$. Note the index starts at $n = 1$.",
+      "steps": [
+        { "instruction": "What is the first term $a$ (the $n = 1$ term) and the ratio $r$?", "answer": "a = 2/5, r = 2/5", "accept": ["2/5, 2/5", "a=2/5, r=2/5"], "hint": "Plug $n = 1$ into $(2/5)^n$ for the first term; the ratio is $2/5$." },
+        { "instruction": "Compute $S = \\dfrac{a}{1 - r}$.", "answer": "2/3", "accept": ["0.6667", "0.667"], "hint": "$S = \\dfrac{2/5}{1 - 2/5} = \\dfrac{2/5}{3/5}$." }
+      ],
+      "finalAnswer": { "value": "2/3", "unit": "" },
+      "solutionNarrative": "Starting at $n = 1$, the first term is $a = \\tfrac{2}{5}$ and $r = \\tfrac{2}{5}$. So $S = \\dfrac{2/5}{1 - 2/5} = \\dfrac{2/5}{3/5} = \\dfrac{2}{3}$."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s05",
+      "concepts": ["convergence-tests"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Apply the nth-term (divergence) test to $\\sum_{n=1}^{\\infty} \\dfrac{n}{n + 1} = \\tfrac{1}{2} + \\tfrac{2}{3} + \\tfrac{3}{4} + \\cdots$.",
+      "steps": [
+        { "instruction": "What value do the terms $\\dfrac{n}{n+1}$ approach as $n \\to \\infty$?", "answer": "1", "accept": [], "hint": "For huge $n$, $\\dfrac{n}{n+1}$ is nearly $\\dfrac{n}{n} = 1$." },
+        { "instruction": "Since the terms do not approach 0, does the series converge or diverge?", "answer": "diverges", "accept": ["divergent"], "hint": "The nth-term test condemns any series whose terms don't go to 0." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "The terms $\\dfrac{n}{n+1} \\to 1 \\neq 0$, so by the nth-term (divergence) test the series diverges."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s06",
+      "concepts": ["convergence-tests"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the ratio test on $\\sum_{n=1}^{\\infty} \\dfrac{1}{n!} = 1 + \\tfrac{1}{2} + \\tfrac{1}{6} + \\cdots$.",
+      "steps": [
+        { "instruction": "Form the ratio $\\dfrac{a_{n+1}}{a_n} = \\dfrac{1/(n+1)!}{1/n!}$ and simplify it.", "answer": "1/(n+1)", "accept": ["1/(n + 1)"], "hint": "$\\dfrac{n!}{(n+1)!} = \\dfrac{1}{n+1}$." },
+        { "instruction": "What is the limit $L$ of that ratio as $n \\to \\infty$?", "answer": "0", "accept": [], "hint": "$\\dfrac{1}{n+1} \\to 0$ as $n$ grows." },
+        { "instruction": "Since $L < 1$, does the series converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "Ratio test: $L < 1$ means convergence." }
+      ],
+      "finalAnswer": { "value": "converges", "unit": "" },
+      "solutionNarrative": "The ratio is $\\dfrac{n!}{(n+1)!} = \\dfrac{1}{n+1}$, whose limit is $L = 0 < 1$, so by the ratio test the series converges."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s07",
+      "concepts": ["convergence-tests"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use the ratio test on $\\sum_{n=1}^{\\infty} \\dfrac{2^n}{n!} = 2 + 2 + \\tfrac{4}{3} + \\cdots$.",
+      "steps": [
+        { "instruction": "Simplify the ratio $\\dfrac{a_{n+1}}{a_n} = \\dfrac{2^{n+1}/(n+1)!}{2^n/n!}$.", "answer": "2/(n+1)", "accept": ["2/(n + 1)"], "hint": "$\\dfrac{2^{n+1}}{2^n} = 2$ and $\\dfrac{n!}{(n+1)!} = \\dfrac{1}{n+1}$, so the product is $\\dfrac{2}{n+1}$." },
+        { "instruction": "Find the limit $L$ as $n \\to \\infty$.", "answer": "0", "accept": [], "hint": "$\\dfrac{2}{n+1} \\to 0$." },
+        { "instruction": "Since $L < 1$, does the series converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "$L < 1$ means convergence." }
+      ],
+      "finalAnswer": { "value": "converges", "unit": "" },
+      "solutionNarrative": "The ratio simplifies to $\\dfrac{2}{n+1}$, with limit $L = 0 < 1$, so the ratio test gives convergence."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s08",
+      "concepts": ["p-series-and-harmonic"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the p-series $\\sum_{n=1}^{\\infty} \\dfrac{1}{n^3}$.",
+      "steps": [
+        { "instruction": "Identify the value of $p$.", "answer": "3", "accept": [], "hint": "The exponent on $n$ in the denominator is $p$." },
+        { "instruction": "Since $p > 1$, does the series converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "A p-series converges exactly when $p > 1$." }
+      ],
+      "finalAnswer": { "value": "converges", "unit": "" },
+      "solutionNarrative": "Here $p = 3 > 1$, so the p-series converges."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s09",
+      "concepts": ["p-series-and-harmonic"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The harmonic series is $\\sum_{n=1}^{\\infty} \\dfrac{1}{n} = 1 + \\tfrac{1}{2} + \\tfrac{1}{3} + \\cdots$.",
+      "steps": [
+        { "instruction": "What is the value of $p$ for the harmonic series?", "answer": "1", "accept": [], "hint": "$\\dfrac{1}{n} = \\dfrac{1}{n^1}$." },
+        { "instruction": "Since $p = 1$ (not greater than 1), does it converge or diverge?", "answer": "diverges", "accept": ["divergent"], "hint": "The harmonic series is the famous borderline case that diverges." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "The harmonic series has $p = 1$, which is not greater than 1, so it diverges — even though its terms shrink to zero."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s10",
+      "concepts": ["p-series-and-harmonic"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Classify $\\sum_{n=1}^{\\infty} \\dfrac{1}{\\sqrt{n}} = \\sum_{n=1}^{\\infty} \\dfrac{1}{n^{1/2}}$ as convergent or divergent.",
+      "steps": [
+        { "instruction": "Rewrite $\\dfrac{1}{\\sqrt{n}}$ as $\\dfrac{1}{n^p}$ and state $p$.", "answer": "1/2", "accept": ["0.5"], "hint": "$\\sqrt{n} = n^{1/2}$, so $p = \\tfrac{1}{2}$." },
+        { "instruction": "Since $p \\leq 1$, does the series converge or diverge?", "answer": "diverges", "accept": ["divergent"], "hint": "A p-series with $p \\leq 1$ diverges; here $p = \\tfrac{1}{2}$." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "Writing $\\dfrac{1}{\\sqrt{n}} = \\dfrac{1}{n^{1/2}}$ shows $p = \\tfrac{1}{2} \\leq 1$, so the p-series diverges."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s11",
+      "concepts": ["series-applications", "geometric-series"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Write the repeating decimal $0.6666\\ldots$ as a geometric series and find its exact fractional value. The series is $0.6 + 0.06 + 0.006 + \\cdots$.",
+      "steps": [
+        { "instruction": "Identify the first term $a$ and ratio $r$ of the series.", "answer": "a = 0.6, r = 0.1", "accept": ["0.6, 0.1", "a=0.6, r=0.1"], "hint": "Each term is one-tenth of the previous: $r = 0.1$." },
+        { "instruction": "Compute $S = \\dfrac{a}{1 - r}$ as a fraction.", "answer": "2/3", "accept": ["0.6667", "0.667"], "hint": "$S = \\dfrac{0.6}{1 - 0.1} = \\dfrac{0.6}{0.9}$." }
+      ],
+      "finalAnswer": { "value": "2/3", "unit": "" },
+      "solutionNarrative": "With $a = 0.6$ and $r = 0.1$, $S = \\dfrac{0.6}{0.9} = \\dfrac{6}{9} = \\dfrac{2}{3}$, so $0.6666\\ldots = \\tfrac{2}{3}$."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s12",
+      "concepts": ["series-applications", "geometric-series"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Convert the repeating decimal $0.272727\\ldots$ to a fraction. The repeating block is $27$, so the series is $0.27 + 0.0027 + 0.000027 + \\cdots$.",
+      "steps": [
+        { "instruction": "Identify the first term $a$ and ratio $r$ (each term is the block shifted two places).", "answer": "a = 0.27, r = 0.01", "accept": ["0.27, 0.01", "a=0.27, r=0.01"], "hint": "The two-digit block means each term is $\\tfrac{1}{100}$ of the previous, so $r = 0.01$." },
+        { "instruction": "Compute $S = \\dfrac{a}{1 - r}$ as a fraction.", "answer": "3/11", "accept": ["0.2727"], "hint": "$S = \\dfrac{0.27}{1 - 0.01} = \\dfrac{0.27}{0.99} = \\dfrac{27}{99}$." }
+      ],
+      "finalAnswer": { "value": "3/11", "unit": "" },
+      "solutionNarrative": "With $a = 0.27$ and $r = 0.01$, $S = \\dfrac{0.27}{0.99} = \\dfrac{27}{99} = \\dfrac{3}{11}$, so $0.272727\\ldots = \\tfrac{3}{11}$."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s13",
+      "concepts": ["series-applications", "geometric-series"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A charity pays you \\$2{,}000 at the end of every year forever. With money worth 4% per year, the present value is the geometric series $\\dfrac{2000}{1.04} + \\dfrac{2000}{1.04^2} + \\cdots$. A shortcut for a perpetuity is $PV = \\dfrac{\\text{payment}}{\\text{rate}}$. What is the present value?",
+      "steps": [
+        { "instruction": "Using $PV = \\dfrac{\\text{payment}}{\\text{rate}}$ with payment \\$2{,}000 and rate 0.04, compute the present value.", "answer": "50000", "accept": ["50,000"], "hint": "$PV = \\dfrac{2000}{0.04}$." }
+      ],
+      "finalAnswer": { "value": "50000", "unit": "dollars" },
+      "solutionNarrative": "The geometric series has $a = \\tfrac{2000}{1.04}$ and $r = \\tfrac{1}{1.04}$, giving $PV = \\dfrac{a}{1-r} = \\dfrac{2000}{0.04} = 50{,}000$ dollars."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s14",
+      "concepts": ["series-applications", "geometric-series"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ball is dropped from 10 meters. Each bounce returns it to 60% of its previous height. The total vertical distance traveled is the drop (10 m) plus each rebound counted twice (up and down): $10 + 2(6) + 2(3.6) + \\cdots$. Find the total distance.",
+      "steps": [
+        { "instruction": "The rebound distances form a geometric series $2(6) + 2(3.6) + \\cdots = 12 + 7.2 + \\cdots$. Find its first term $a$ and ratio $r$.", "answer": "a = 12, r = 0.6", "accept": ["12, 0.6", "a=12, r=0.6"], "hint": "First rebound up-and-down is $2 \\times 6 = 12$; each rebound is 60% of the last, so $r = 0.6$." },
+        { "instruction": "Sum the rebound series with $S = \\dfrac{a}{1 - r}$.", "answer": "30", "accept": [], "hint": "$S = \\dfrac{12}{1 - 0.6} = \\dfrac{12}{0.4}$." },
+        { "instruction": "Add the initial 10 m drop to get the total distance.", "answer": "40", "accept": [], "hint": "Total = 10 + (rebound sum)." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "meters" },
+      "solutionNarrative": "The rebounds sum to $\\dfrac{12}{1 - 0.6} = \\dfrac{12}{0.4} = 30$ m. Adding the initial 10 m drop gives a total distance of $40$ meters."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s15",
+      "concepts": ["series-applications", "geometric-series"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A patient takes a 50 mg dose of a drug every day. Each day the body clears 80% of what's present, leaving 20% by the next dose. Just after dosing, the steady-state amount is the geometric series $50 + 50(0.2) + 50(0.2)^2 + \\cdots$. Find the steady-state amount in the body.",
+      "steps": [
+        { "instruction": "Identify the first term $a$ and ratio $r$ of the steady-state series.", "answer": "a = 50, r = 0.2", "accept": ["50, 0.2", "a=50, r=0.2"], "hint": "The newest dose is 50 mg; each older dose has decayed by the retained fraction $r = 0.2$." },
+        { "instruction": "Compute the steady-state total with $S = \\dfrac{a}{1 - r}$.", "answer": "62.5", "accept": ["125/2"], "hint": "$S = \\dfrac{50}{1 - 0.2} = \\dfrac{50}{0.8}$." }
+      ],
+      "finalAnswer": { "value": "62.5", "unit": "mg" },
+      "solutionNarrative": "With $a = 50$ and $r = 0.2$, the steady-state amount is $S = \\dfrac{50}{1 - 0.2} = \\dfrac{50}{0.8} = 62.5$ mg."
+    },
+    {
+      "id": "calculus-2.series-and-convergence.s16",
+      "concepts": ["convergence-tests", "geometric-series"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify $\\sum_{n=1}^{\\infty} \\left(\\tfrac{3}{2}\\right)^n = \\tfrac{3}{2} + \\tfrac{9}{4} + \\cdots$ as convergent or divergent.",
+      "steps": [
+        { "instruction": "What value do the terms $\\left(\\tfrac{3}{2}\\right)^n$ approach as $n \\to \\infty$?", "answer": "infinity", "accept": ["infinite", "does not approach 0"], "hint": "A base greater than 1 raised to growing powers blows up." },
+        { "instruction": "Since the terms do not approach 0 (and $|r| > 1$), does the series converge or diverge?", "answer": "diverges", "accept": ["divergent"], "hint": "Both the nth-term test and the geometric rule ($|r| \\geq 1$) condemn it." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "Here $r = \\tfrac{3}{2}$, so $|r| \\geq 1$ and the terms grow without bound. The series diverges."
+    }
+  ]
+}

@@ -1,0 +1,270 @@
+{
+  "id": "calculus-1.transcendental-derivatives",
+  "subject": "calculus-1",
+  "title": "Derivatives of Exponential, Log, and Trig Functions",
+  "prerequisites": ["calculus-1.differentiation-rules"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "exp-derivatives",
+      "label": "Exponential derivatives",
+      "microLesson": "The function $e^x$ is its own derivative: $\\frac{d}{dx}e^x = e^x$ — its rate of growth always equals its current size, which is exactly why $e$ shows up in population, interest, and decay models. With the chain rule, $\\frac{d}{dx}e^{kx} = k\\,e^{kx}$: the derivative is the original function times the inner constant. So $\\frac{d}{dx}e^{5x} = 5e^{5x}$, and $\\frac{d}{dx}e^{-2x} = -2e^{-2x}$."
+    },
+    {
+      "id": "log-derivatives",
+      "label": "Logarithm derivatives",
+      "microLesson": "The natural log has the surprisingly simple derivative $\\frac{d}{dx}\\ln x = \\frac{1}{x}$ — big inputs barely move the log (diminishing returns). With the chain rule, $\\frac{d}{dx}\\ln(u) = \\frac{u'}{u}$: derivative of the inside over the inside. So $\\frac{d}{dx}\\ln(7x) = \\frac{7}{7x} = \\frac{1}{x}$ (the constant cancels!) and $\\frac{d}{dx}\\ln(x^2+1) = \\frac{2x}{x^2+1}$."
+    },
+    {
+      "id": "trig-derivatives",
+      "label": "Trig derivatives",
+      "microLesson": "The core pair cycles: $\\frac{d}{dx}\\sin x = \\cos x$ and $\\frac{d}{dx}\\cos x = -\\sin x$ (watch the minus). Also $\\frac{d}{dx}\\tan x = \\sec^2 x$. The chain rule adds a factor of the inner derivative: $\\frac{d}{dx}\\sin(3x) = 3\\cos(3x)$. To get numbers, evaluate at clean angles: the slope of $\\sin x$ at $x = 0$ is $\\cos 0 = 1$."
+    },
+    {
+      "id": "transcendental-rates",
+      "label": "Rates in exponential, log, and oscillating models",
+      "microLesson": "These three families are how real quantities change: populations and investments grow like $P_0e^{kt}$ (rate $= kP_0e^{kt}$, proportional to the current amount), perceived loudness or pH follows a log (rate $= \\frac{k}{x}$, flattening as input grows), and springs, tides, and signals oscillate like $A\\sin(kt)$ (velocity $= Ak\\cos(kt)$). Differentiate the model, plug in the time or input, read the rate. For numbers, use $e \\approx 2.718$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The three function families that run the world\n\nPolynomials are the warm-up act. The quantities people actually track — money compounding, populations growing, isotopes decaying, sound levels, acidity, tides, alternating current, heartbeats — are built from three **transcendental** families: exponentials $e^{kx}$, logarithms $\\ln x$, and the trig pair $\\sin$ and $\\cos$. This topic gives you their derivatives, and with them the *rates* behind every one of those models.\n\n## Exponentials: the function that is its own rate\n\nThe number $e \\approx 2.718$ is special for exactly one reason:\n\n$$\\frac{d}{dx}e^x = e^x.$$\n\nThe slope of $e^x$ at any point *equals its height* there. That is the mathematical signature of natural growth: a population's growth rate is proportional to how many individuals there are; an account's interest is proportional to its balance. With the chain rule,\n\n$$\\frac{d}{dx}e^{kx} = k\\,e^{kx},$$\n\nso $\\frac{d}{dx}e^{5x} = 5e^{5x}$ and, for decay, $\\frac{d}{dx}e^{-2x} = -2e^{-2x}$. **Pattern:** the exponential survives untouched; a copy of the inner constant drops out front. A model $P(t) = P_0e^{kt}$ therefore has rate $P'(t) = kP_0e^{kt} = k\\,P(t)$ — growth proportional to current size, always. When a numeric rate is needed, evaluate with $e \\approx 2.718$ (so $200e^{t}$ at $t=1$ gives rate $200 \\times 2.718 = 543.6$).\n\n## Logarithms: the mathematics of diminishing returns\n\nThe natural log undoes $e^x$, and its derivative is startlingly simple:\n\n$$\\frac{d}{dx}\\ln x = \\frac{1}{x}.$$\n\nAt $x = 10$ the log climbs at rate $\\frac{1}{10}$; at $x = 1000$, only $\\frac{1}{1000}$. That flattening is why decibels, pH, and earthquake magnitudes are logarithmic — our senses and instruments compress huge ranges. The chain rule version is worth memorizing as a slogan:\n\n$$\\frac{d}{dx}\\ln(u) = \\frac{u'}{u} \\quad \\text{— derivative of the inside, over the inside.}$$\n\nTwo instructive cases: $\\frac{d}{dx}\\ln(7x) = \\frac{7}{7x} = \\frac{1}{x}$ — the inner constant *cancels completely* — and $\\frac{d}{dx}\\ln(x^2+1) = \\frac{2x}{x^2+1}$, a clean rational expression.\n\n## Trig: the derivatives that cycle\n\nOscillation is everywhere — springs, tides, AC circuits, sound waves — and its calculus is a two-step dance:\n\n$$\\frac{d}{dx}\\sin x = \\cos x, \\qquad \\frac{d}{dx}\\cos x = -\\sin x, \\qquad \\frac{d}{dx}\\tan x = \\sec^2 x.$$\n\nSine's slope is cosine (steepest, slope 1, at $x=0$ where cosine is 1; flat at the peaks where cosine is 0). The **minus sign on cosine's derivative** is the classic slip — watch it. The chain rule multiplies by the inner derivative:\n\n$$\\frac{d}{dx}\\sin(kx) = k\\cos(kx), \\qquad \\frac{d}{dx}\\big[A\\cos(kx)\\big] = -Ak\\sin(kx).$$\n\nTo turn these into numbers, evaluate at clean angles: $\\cos 0 = 1$, $\\sin\\frac{\\pi}{2} = 1$, $\\cos \\pi = -1$, $\\sec^2\\frac{\\pi}{4} = 2$.\n\n## Reading rates out of real models\n\nThe workflow is identical across all three families: **differentiate the model, substitute the moment of interest, interpret the number.** A bacteria colony $P(t) = 100e^{0.5t}$ grows at $P'(t) = 50e^{0.5t}$, so at $t=0$ it adds 50 bacteria per hour. A buoy at height $y(t) = 3\\sin(2t)$ has velocity $y'(t) = 6\\cos(2t)$, so at $t = \\frac{\\pi}{2}$ it moves at $6\\cos\\pi = -6$ m/s — falling. A loudness model $L(x) = 20\\ln(3x)$ changes at $L'(x) = \\frac{20}{x}$: each extra unit of input matters less and less. Three families, one skill."
+  },
+  "application": {
+    "summary": "Exponential, log, and trig derivatives are the rate laws of applied science: growth and decay proportional to current size, diminishing log-scale returns in perception and chemistry, and oscillation velocities in springs, tides, and circuits.",
+    "domains": ["biology", "finance", "physics", "chemistry", "acoustics"],
+    "workedExample": "**How fast is the culture growing right now?**\n\nA bacteria culture grows as $P(t) = 200e^{t}$ cells, with $t$ in hours. The lab needs the growth *rate* at $t = 1$ hour.\n\nDifferentiate: since $\\frac{d}{dt}e^{t} = e^{t}$, the rate is $P'(t) = 200e^{t}$ — the colony's growth rate always equals its current size (the defining property of $e$).\n\nEvaluate at $t = 1$ using $e \\approx 2.718$:\n\n$$P'(1) = 200 \\times 2.718 = 543.6 \\text{ cells per hour.}$$\n\nCompare that to $P'(0) = 200$ cells/hour at the start: in one hour the *rate itself* has nearly tripled — that acceleration of the rate is what 'exponential growth' actually means, and it's why exponential trends (epidemics, compound interest, viral content) consistently ambush linear intuition. The same one-line differentiation prices continuous compound interest and dates radioactive samples (with $k < 0$).",
+    "domainNotes": [
+      "**Biology/finance:** $P(t) = P_0e^{kt}$ has rate $kP_0e^{kt}$ — growth or decay proportional to the current amount; evaluate with $e \\approx 2.718$.",
+      "**Chemistry/acoustics:** pH and decibels are logs, so their sensitivity is $\\frac{k}{x}$ — huge for small inputs, tiny for large ones (diminishing returns).",
+      "**Physics/engineering:** a spring or buoy at $A\\sin(kt)$ has velocity $Ak\\cos(kt)$ — maximum speed mid-swing, zero at the turning points.",
+      "**Signal processing:** the derivative of a sinusoidal signal scales with frequency $k$ — high-frequency signals change faster, which is why differentiation amplifies noise."
+    ]
+  },
+  "generators": [
+    "c1t-exp-d1", "c1t-exp-d2", "c1t-exp-d3",
+    "c1t-log-d1", "c1t-log-d2", "c1t-log-d3",
+    "c1t-trig-d1", "c1t-trig-d2", "c1t-trig-d3",
+    "c1t-rate-d1", "c1t-rate-d2", "c1t-rate-d3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-1.transcendental-derivatives.s01",
+      "concepts": ["exp-derivatives"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = e^{3x}$.",
+      "steps": [
+        { "instruction": "Apply the chain rule: the exponential stays, times the derivative of the inside. (Type it like 3e^(3x).)", "answer": "3e^(3x)", "accept": ["3e^{3x}", "3*e^(3x)", "3e^3x"], "hint": "$\\frac{d}{dx}e^{kx} = k\\,e^{kx}$ with $k = 3$." }
+      ],
+      "finalAnswer": { "value": "3e^(3x)", "unit": "" },
+      "solutionNarrative": "The inside $3x$ has derivative 3, so $\\frac{d}{dx}e^{3x} = 3e^{3x}$."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s02",
+      "concepts": ["exp-derivatives"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = e^{x}$, then find the slope of its graph at $x = 0$.",
+      "steps": [
+        { "instruction": "What is $f'(x)$? (Type it like e^x.)", "answer": "e^x", "accept": ["e^(x)", "1e^x", "exp(x)"], "hint": "$e^x$ is the unique function that is its own derivative." },
+        { "instruction": "Evaluate the slope at $x = 0$. Give a number.", "answer": "1", "accept": ["e^0"], "hint": "$e^0 = 1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$f'(x) = e^x$, and at $x = 0$ the slope is $e^0 = 1$ — the height and slope of $e^x$ agree everywhere."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s03",
+      "concepts": ["exp-derivatives"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = 5e^{2x}$, then evaluate $f'(0)$.",
+      "steps": [
+        { "instruction": "Find $f'(x)$. (Type it like 10e^(2x).)", "answer": "10e^(2x)", "accept": ["10e^{2x}", "10*e^(2x)", "10e^2x"], "hint": "The constant 5 rides along and the chain rule contributes a 2: $5 \\cdot 2 = 10$." },
+        { "instruction": "Evaluate $f'(0)$. Give a number.", "answer": "10", "accept": ["10e^0"], "hint": "$e^{0} = 1$, so $f'(0) = 10 \\cdot 1$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "$f'(x) = 5 \\cdot 2e^{2x} = 10e^{2x}$; at $x = 0$, $e^0 = 1$, so $f'(0) = 10$."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s04",
+      "concepts": ["exp-derivatives"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = e^{x^2}$ (the inside is $x^2$, not a constant multiple of $x$), then evaluate $f'(1)$ exactly in terms of $e$.",
+      "steps": [
+        { "instruction": "Apply the chain rule with inside $u = x^2$. (Type it like 2xe^(x^2).)", "answer": "2xe^(x^2)", "accept": ["2xe^{x^2}", "2x e^(x^2)", "2*x*e^(x^2)", "2xe^x^2"], "hint": "The exponential stays; multiply by $u' = 2x$." },
+        { "instruction": "Evaluate $f'(1)$ exactly, in terms of $e$.", "answer": "2e", "accept": ["2*e", "2e^1", "2e^(1)"], "hint": "$2(1)e^{1^2} = 2e$." }
+      ],
+      "finalAnswer": { "value": "2e", "unit": "" },
+      "solutionNarrative": "Chain rule: $f'(x) = e^{x^2} \\cdot 2x = 2xe^{x^2}$. At $x = 1$: $2e^{1} = 2e$."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s05",
+      "concepts": ["log-derivatives"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = \\ln x$.",
+      "steps": [
+        { "instruction": "State the derivative of the natural log.", "answer": "1/x", "accept": ["x^(-1)", "x^-1"], "hint": "$\\frac{d}{dx}\\ln x = \\frac{1}{x}$ — the fundamental log derivative." }
+      ],
+      "finalAnswer": { "value": "1/x", "unit": "" },
+      "solutionNarrative": "$\\frac{d}{dx}\\ln x = \\frac{1}{x}$: the log climbs ever more slowly as $x$ grows."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s06",
+      "concepts": ["log-derivatives"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = \\ln(7x)$ using the chain rule, and simplify.",
+      "steps": [
+        { "instruction": "Apply $\\frac{d}{dx}\\ln(u) = \\frac{u'}{u}$ with $u = 7x$.", "answer": "7/(7x)", "accept": ["1/x", "7/7x"], "hint": "Derivative of the inside (7) over the inside ($7x$)." },
+        { "instruction": "Simplify the fraction.", "answer": "1/x", "accept": ["7/(7x)"], "hint": "The 7s cancel — the inner constant never matters for $\\ln(kx)$." }
+      ],
+      "finalAnswer": { "value": "1/x", "unit": "" },
+      "solutionNarrative": "$\\frac{u'}{u} = \\frac{7}{7x} = \\frac{1}{x}$. Any $\\ln(kx)$ has derivative $\\frac{1}{x}$ — the constant cancels."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s07",
+      "concepts": ["log-derivatives"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = \\ln(x^2 + 1)$.",
+      "steps": [
+        { "instruction": "Apply $\\frac{d}{dx}\\ln(u) = \\frac{u'}{u}$ with $u = x^2 + 1$. Give a single fraction.", "answer": "2x/(x^2+1)", "accept": ["(2x)/(x^2+1)", "2x/(1+x^2)"], "hint": "Derivative of the inside is $2x$; put it over the inside." }
+      ],
+      "finalAnswer": { "value": "2x/(x^2+1)", "unit": "" },
+      "solutionNarrative": "Inside derivative $2x$, over the inside: $f'(x) = \\frac{2x}{x^2+1}$."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s08",
+      "concepts": ["log-derivatives"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = \\ln(x^3 - 2x)$, then evaluate $f'(2)$.",
+      "steps": [
+        { "instruction": "Apply $\\frac{u'}{u}$ with $u = x^3 - 2x$. Give a single fraction.", "answer": "(3x^2-2)/(x^3-2x)", "accept": ["(3x^2 - 2)/(x^3 - 2x)", "(3x^2-2)/(x(x^2-2))"], "hint": "$u' = 3x^2 - 2$ goes on top; the whole inside goes on the bottom." },
+        { "instruction": "Evaluate $f'(2)$. Give a fraction or decimal.", "answer": "5/2", "accept": ["2.5", "10/4"], "hint": "$\\frac{3(4) - 2}{8 - 4} = \\frac{10}{4}$." }
+      ],
+      "finalAnswer": { "value": "5/2", "unit": "" },
+      "solutionNarrative": "$f'(x) = \\frac{3x^2 - 2}{x^3 - 2x}$. At $x = 2$: $\\frac{10}{4} = \\frac{5}{2}$."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s09",
+      "concepts": ["trig-derivatives"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = \\sin x$, then find the slope of the sine curve at $x = 0$.",
+      "steps": [
+        { "instruction": "What is $f'(x)$? (Type it like cos(x).)", "answer": "cos(x)", "accept": ["cosx", "cos x"], "hint": "The derivative of sine is cosine." },
+        { "instruction": "Evaluate the slope at $x = 0$. Give a number.", "answer": "1", "accept": ["cos(0)"], "hint": "$\\cos 0 = 1$ — sine rises steepest right at the origin." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\frac{d}{dx}\\sin x = \\cos x$, and $\\cos 0 = 1$."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s10",
+      "concepts": ["trig-derivatives"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = \\cos x$.",
+      "steps": [
+        { "instruction": "State the derivative — mind the sign. (Type it like -sin(x).)", "answer": "-sin(x)", "accept": ["-sinx", "-sin x"], "hint": "Cosine's derivative is **negative** sine." }
+      ],
+      "finalAnswer": { "value": "-sin(x)", "unit": "" },
+      "solutionNarrative": "$\\frac{d}{dx}\\cos x = -\\sin x$ — the minus sign is the classic trap."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s11",
+      "concepts": ["trig-derivatives"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = \\sin(3x)$, then evaluate $f'(0)$.",
+      "steps": [
+        { "instruction": "Apply the chain rule. (Type it like 3cos(3x).)", "answer": "3cos(3x)", "accept": ["3cos3x", "3*cos(3x)", "3 cos(3x)"], "hint": "Outer: $\\cos(3x)$. Inner derivative: 3." },
+        { "instruction": "Evaluate $f'(0)$. Give a number.", "answer": "3", "accept": ["3cos(0)"], "hint": "$\\cos 0 = 1$, so $f'(0) = 3 \\cdot 1$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$f'(x) = 3\\cos(3x)$; at $x = 0$, $\\cos 0 = 1$, giving 3 — the tripled frequency triples the slope."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s12",
+      "concepts": ["trig-derivatives"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = \\tan x$, then evaluate the derivative at $x = \\frac{\\pi}{4}$.",
+      "steps": [
+        { "instruction": "State the derivative of tangent. (Type it like sec^2(x).)", "answer": "sec^2(x)", "accept": ["sec^2x", "(sec(x))^2", "(secx)^2", "1/cos^2(x)"], "hint": "$\\frac{d}{dx}\\tan x = \\sec^2 x$." },
+        { "instruction": "Evaluate at $x = \\frac{\\pi}{4}$, where $\\sec\\frac{\\pi}{4} = \\sqrt{2}$. Give a number.", "answer": "2", "accept": ["sqrt(2)^2"], "hint": "$(\\sqrt{2})^2 = 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$f'(x) = \\sec^2 x$; at $\\frac{\\pi}{4}$, $\\sec^2\\frac{\\pi}{4} = (\\sqrt 2)^2 = 2$."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s13",
+      "concepts": ["trig-derivatives"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Differentiate $f(x) = 4\\cos(2x)$, then evaluate $f'\\left(\\frac{\\pi}{4}\\right)$.",
+      "steps": [
+        { "instruction": "Apply the chain rule — watch the sign. (Type it like -8sin(2x).)", "answer": "-8sin(2x)", "accept": ["-8sin2x", "-8*sin(2x)", "-8 sin(2x)"], "hint": "$\\frac{d}{dx}\\cos(2x) = -2\\sin(2x)$; the 4 multiplies in: $4 \\cdot (-2) = -8$." },
+        { "instruction": "Evaluate at $x = \\frac{\\pi}{4}$, where $2x = \\frac{\\pi}{2}$ and $\\sin\\frac{\\pi}{2} = 1$. Give a number.", "answer": "-8", "accept": [], "hint": "$-8 \\cdot 1 = -8$." }
+      ],
+      "finalAnswer": { "value": "-8", "unit": "" },
+      "solutionNarrative": "$f'(x) = -8\\sin(2x)$. At $x = \\frac{\\pi}{4}$: $-8\\sin\\frac{\\pi}{2} = -8$."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s14",
+      "concepts": ["transcendental-rates"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bacteria colony has population $P(t) = 100e^{0.5t}$ after $t$ hours. Find the growth-rate function $P'(t)$ and the growth rate at $t = 0$.",
+      "steps": [
+        { "instruction": "Differentiate $P(t)$. (Type it like 50e^(0.5t).)", "answer": "50e^(0.5t)", "accept": ["50e^{0.5t}", "50*e^(0.5t)", "50e^0.5t"], "hint": "$\\frac{d}{dt}e^{0.5t} = 0.5e^{0.5t}$, and $100 \\cdot 0.5 = 50$." },
+        { "instruction": "Evaluate $P'(0)$. Give a number (bacteria per hour).", "answer": "50", "accept": ["50e^0"], "hint": "$e^0 = 1$." }
+      ],
+      "finalAnswer": { "value": "50", "unit": "bacteria per hour" },
+      "solutionNarrative": "$P'(t) = 100 \\cdot 0.5 e^{0.5t} = 50e^{0.5t}$; at $t = 0$ the colony grows at 50 bacteria/hour."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s15",
+      "concepts": ["transcendental-rates"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A culture grows as $P(t) = 200e^{t}$ cells after $t$ hours. Find the growth rate at $t = 1$ hour. Use $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "Differentiate $P(t)$. (Type it like 200e^t.)", "answer": "200e^t", "accept": ["200e^(t)", "200*e^t", "200e^{t}"], "hint": "$e^t$ is its own derivative, so the rate is just $200e^t$." },
+        { "instruction": "Evaluate $P'(1)$ using $e \\approx 2.718$. Give a number (cells per hour).", "answer": "543.6", "accept": ["543.60", "544"], "hint": "$200 \\times 2.718$." }
+      ],
+      "finalAnswer": { "value": "543.6", "unit": "cells per hour" },
+      "solutionNarrative": "$P'(t) = 200e^t$, so $P'(1) = 200 \\times 2.718 = 543.6$ cells/hour — the rate itself has nearly tripled in one hour."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s16",
+      "concepts": ["transcendental-rates"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A buoy bobs with height $y(t) = 3\\sin(2t)$ meters after $t$ seconds. Find its vertical velocity at $t = \\frac{\\pi}{2}$ seconds.",
+      "steps": [
+        { "instruction": "Differentiate to get the velocity $y'(t)$. (Type it like 6cos(2t).)", "answer": "6cos(2t)", "accept": ["6cos2t", "6*cos(2t)", "6 cos(2t)"], "hint": "Chain rule: $3 \\cdot 2\\cos(2t)$." },
+        { "instruction": "Evaluate at $t = \\frac{\\pi}{2}$, where $2t = \\pi$ and $\\cos\\pi = -1$. Give a number (m/s).", "answer": "-6", "accept": [], "hint": "$6 \\times (-1)$." }
+      ],
+      "finalAnswer": { "value": "-6", "unit": "m/s" },
+      "solutionNarrative": "$y'(t) = 6\\cos(2t)$; at $t = \\frac{\\pi}{2}$, $\\cos\\pi = -1$, so the buoy is falling at 6 m/s."
+    },
+    {
+      "id": "calculus-1.transcendental-derivatives.s17",
+      "concepts": ["transcendental-rates"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A perceived-loudness model is $L(x) = 20\\ln(3x)$ (loudness units) for signal power $x$. Find how sensitive loudness is to power at $x = 5$: compute $L'(5)$.",
+      "steps": [
+        { "instruction": "Differentiate using $\\frac{u'}{u}$ with $u = 3x$, keeping the factor 20. Give a single fraction.", "answer": "60/(3x)", "accept": ["20/x", "60/3x"], "hint": "$20 \\cdot \\frac{3}{3x}$." },
+        { "instruction": "Simplify the derivative.", "answer": "20/x", "accept": ["60/(3x)"], "hint": "The 3s cancel." },
+        { "instruction": "Evaluate $L'(5)$. Give a number (loudness units per power unit).", "answer": "4", "accept": ["20/5"], "hint": "$\\frac{20}{5}$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "loudness units per power unit" },
+      "solutionNarrative": "$L'(x) = 20 \\cdot \\frac{3}{3x} = \\frac{20}{x}$; at $x = 5$ the sensitivity is 4 — and it keeps shrinking as power grows, the signature of a log scale."
+    }
+  ]
+}

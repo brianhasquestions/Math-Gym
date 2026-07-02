@@ -1,0 +1,277 @@
+{
+  "id": "discrete-math.logic-and-propositions",
+  "subject": "discrete-math",
+  "title": "Propositional Logic and Truth Tables",
+  "prerequisites": [],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "propositions-and-connectives",
+      "label": "Propositions and connectives",
+      "microLesson": "A proposition is a statement with a definite truth value: '$17$ is prime' qualifies, 'close the door' does not. Three connectives build compound statements: $p \\land q$ (AND) is true only when both parts are true; $p \\lor q$ (OR) is true when at least one is — inclusive, so 'both' counts; $\\lnot p$ (NOT) flips the value. Evaluate inside-out like arithmetic, with $\\lnot$ binding tightest. Example: with $p$ true, $q$ false, $r$ true, $(p \\lor q) \\land \\lnot r$ gives true $\\land$ false, which is false."
+    },
+    {
+      "id": "truth-tables",
+      "label": "Truth tables",
+      "microLesson": "A truth table checks a formula on every possible input: $n$ variables give $2^n$ rows (two choices per variable, multiplied), listed for two variables in the standard order $(p, q) = $ TT, TF, FT, FF. Fill one column per subformula, working inside-out. A formula true in every row is a tautology — $p \\lor \\lnot p$ has column T, T — and one false in every row is a contradiction, like $p \\land \\lnot p$; everything else is contingent. Because the rows are finite, the table is a complete proof, a luxury most of mathematics never gets."
+    },
+    {
+      "id": "implication-and-contrapositive",
+      "label": "Implication and contrapositive",
+      "microLesson": "$p \\to q$ ('if $p$ then $q$') is false in exactly one case: $p$ true and $q$ false — a promise is broken only when the condition fired and the payoff didn't — so its column in TT, TF, FT, FF order is T, F, T, T. When $p$ is false the implication is vacuously true. The contrapositive $\\lnot q \\to \\lnot p$ has the identical column, so it is logically equivalent to $p \\to q$. The converse $q \\to p$ is NOT: with $p$ false and $q$ true, $p \\to q$ is true while $q \\to p$ is false."
+    },
+    {
+      "id": "demorgan-and-equivalence",
+      "label": "De Morgan's laws and equivalence",
+      "microLesson": "Negation flips the connective as it passes inside: $\\lnot(p \\land q) \\equiv \\lnot p \\lor \\lnot q$ and $\\lnot(p \\lor q) \\equiv \\lnot p \\land \\lnot q$. In code, `!(x > 0 && y > 0)` becomes `x <= 0 || y <= 0`. Two formulas are logically equivalent exactly when their truth-table columns agree on all $2^n$ rows — check $\\lnot(p \\land q)$ against $\\lnot p \\lor \\lnot q$: both read F, T, T, T. The classic error keeps the connective: $\\lnot p \\land \\lnot q$ has column F, F, F, T, which is $\\lnot(p \\lor q)$, a different statement entirely."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The logic inside every `if`\n\nEvery `if` statement in every program ever written is propositional logic. `if (user.isLoggedIn && !user.isBanned)` is the formula $p \\land \\lnot q$ wearing a costume. The AND and OR gates etched into your CPU — billions of them, switching billions of times a second — are physical implementations of the connectives on this page. SQL `WHERE` clauses, search filters, firewall rules, spreadsheet formulas: all of it compiles down to the same tiny algebra of true and false. This is the rare topic where the math *is* the application, symbol for symbol.\n\n## Propositions and the three basic connectives\n\nA **proposition** is a statement that is definitively true or false: '$17$ is prime' (true), '$2 + 2 = 5$' (false), 'it is raining in Oslo right now' (one of the two, even if you don't know which). Questions, commands, and opinions don't qualify — 'close the door' has no truth value.\n\nCompound statements are built from three connectives:\n\n- **AND** ($p \\land q$): true only when *both* parts are true.\n- **OR** ($p \\lor q$): true when *at least one* part is true — inclusive, so 'both' counts. (The either-or of everyday speech, exclusive or, is a different, derived operator.)\n- **NOT** ($\\lnot p$): flips the value.\n\nEvaluation works inside-out, exactly like arithmetic, with $\\lnot$ binding tightest. Take $p$ true, $q$ false, $r$ true and evaluate $(p \\lor q) \\land \\lnot r$: the parenthesis gives true, $\\lnot r$ gives false, and true AND false is **false**. Two small operations, zero ambiguity, machine-checkable — that is the whole game.\n\n## Truth tables: brute-force certainty\n\nA formula with $n$ variables has only $2^n$ possible input combinations — two choices per variable, multiplied. Three variables? $2^3 = 8$ rows. Ten? 1024. Small enough to check *every single case*, which is a kind of total proof most of mathematics can only dream about.\n\nA **truth table** lists each combination in a fixed order — conventionally $(p, q) = $ TT, TF, FT, FF — and computes the formula row by row, one column per subformula. For $(p \\lor q) \\land \\lnot(p \\land q)$ you would compute $p \\lor q$, then $p \\land q$, then its negation, then the final AND, getting F, T, T, F down the rows. (That formula is exclusive or: true when the inputs *differ*.)\n\nTwo special verdicts matter. A **tautology** is true in every row — $p \\lor \\lnot p$ cannot fail. A **contradiction** is false in every row — $p \\land \\lnot p$ cannot succeed. Everything else is *contingent*: its truth depends on the inputs.\n\n## Implication, the connective everyone gets wrong\n\nThe conditional $p \\to q$ ('if $p$ then $q$') is false in exactly one case: $p$ true and $q$ false. That's it. The full column, in TT, TF, FT, FF order, is T, F, T, T.\n\nWhy is false-implies-anything true? Read $p \\to q$ as a promise: 'if it rains, I'll cancel the game.' If it doesn't rain, the promise is unbroken no matter what happens — canceling anyway doesn't make me a liar. A promise is only *broken* when the condition fired and the payoff didn't. Logicians call the false-$p$ rows **vacuously true**.\n\nThree relatives of $p \\to q$ have names worth memorizing:\n\n- the **converse** $q \\to p$ — *not* equivalent to the original;\n- the **inverse** $\\lnot p \\to \\lnot q$ — also not equivalent (it is the converse in disguise);\n- the **contrapositive** $\\lnot q \\to \\lnot p$ — **logically equivalent** ($\\equiv$), same column in every row.\n\nThe contrapositive is a workhorse: proving 'if $n^2$ is even then $n$ is even' head-on is awkward, but its contrapositive 'if $n$ is odd then $n^2$ is odd' is one line of algebra. Confusing a statement with its converse, meanwhile, is *the* classic fallacy — 'this bug always crashes the app' does not mean 'every crash is that bug.'\n\n## De Morgan's laws: how negation moves\n\nNegation does not distribute politely; it flips the connective as it passes through:\n\n$$\\lnot(p \\land q) \\equiv \\lnot p \\lor \\lnot q, \\qquad \\lnot(p \\lor q) \\equiv \\lnot p \\land \\lnot q$$\n\n'Not (rich and famous)' means 'not rich *or* not famous' — the everyday mistake is keeping the AND. Programmers live these laws daily: `!(x > 0 && y > 0)` rewrites to `x <= 0 || y <= 0`, which is usually the version a human can actually read. Applied repeatedly, De Morgan pushes a negation through any nesting: $\\lnot(p \\land (q \\lor r)) \\equiv \\lnot p \\lor (\\lnot q \\land \\lnot r)$.\n\nAnd how do you *know* a rewrite is safe? Truth tables again: two formulas are **logically equivalent** exactly when their columns match on every row. With $n$ variables that is a finite, mechanical check — which is why hardware verifiers can certify that an optimized circuit computes the same function as the reference design on *all* inputs before a chip is ever manufactured.\n\n## Where you'll use it by Friday\n\nSimplifying a gnarly conditional with De Morgan, reading a contract's 'unless' correctly, writing a search filter that returns what you actually meant, debugging why a guard clause never fires: propositional logic is the assembly language of clear thinking. Learn the truth tables cold — predicates, proofs, sets, and counting all stand on this floor."
+  },
+  "application": {
+    "summary": "Propositional logic is the one topic you already run in production: every program conditional, logic gate, SQL filter, and formal-verification query is a compound proposition, and De Morgan plus truth-table equivalence is how you refactor them without changing behavior.",
+    "domains": ["digital circuits and logic gates", "programming and code review", "databases and search queries", "formal verification", "law and contracts"],
+    "workedExample": "**Untangling a guard clause with De Morgan.**\n\nYou inherit this access check in a code review:\n\n`if (!(user.isAdmin || (user.hasLicense && !user.isSuspended))) denyAccess();`\n\nLet $a$ = 'user is admin', $l$ = 'user has a license', $s$ = 'user is suspended'. The condition is $\\lnot(a \\lor (l \\land \\lnot s))$ — a negation wrapped around the whole policy, which is exactly why nobody on the team can read it.\n\n*Push the negation through the outer OR* (De Morgan, flipping $\\lor$ to $\\land$): $\\lnot a \\land \\lnot(l \\land \\lnot s)$.\n\n*Push it through the inner AND* (flipping $\\land$ to $\\lor$, and cancelling the double negation on $s$): $\\lnot(l \\land \\lnot s) \\equiv \\lnot l \\lor s$. The whole condition becomes $\\lnot a \\land (\\lnot l \\lor s)$:\n\n`if (!user.isAdmin && (!user.hasLicense || user.isSuspended)) denyAccess();`\n\nRead aloud, the rewrite finally states the policy: deny when the user is not an admin AND either has no license or is suspended.\n\n*Trust, but verify.* Spot-check the row $a = F$, $l = T$, $s = T$ (a suspended, licensed non-admin). Original: $l \\land \\lnot s = T \\land F = F$; then $a \\lor F = F$; negated gives **true** — deny. Rewrite: $\\lnot a = T$ and $\\lnot l \\lor s = F \\lor T = T$; $T \\land T$ is **true** — deny. Same verdict. Run all $2^3 = 8$ rows and the columns match everywhere, so the refactor is *provably* behavior-preserving, not just 'looks right.' That is the same move — scaled up to millions of gates and run by a SAT solver — that chip designers use to prove an optimized circuit equals its specification.",
+    "domainNotes": [
+      "**Circuits:** AND, OR, and NOT gates are propositional connectives in silicon; every truth table you write is a component specification, and full-table equivalence checking is how an optimized chip design is proven identical to the reference.",
+      "**Programming:** `&&`, `||`, `!` short-circuit — `p && q` never evaluates `q` when `p` is false — which is why `x != 0 && y / x > 1` is safe and why swapping its operands is a bug.",
+      "**Databases and search:** an SQL `WHERE NOT (a OR b)` and a search query like `-(cats OR dogs)` obey De Morgan; negate a compound filter wrong and the query silently returns the wrong rows.",
+      "**Formal verification:** SAT solvers decide the satisfiability of propositional formulas with millions of variables; they power the model checkers that have caught real bugs in CPU designs and flight software before shipping.",
+      "**Law and contracts:** 'unless', 'except when', and nested 'and/or' clauses are compound propositions; a drafting error in a negation is a De Morgan error with money attached."
+    ]
+  },
+  "generators": [],
+  "problems": [
+    {
+      "id": "discrete-math.logic-and-propositions.s01",
+      "concepts": ["propositions-and-connectives"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $p$ be true and $q$ be false. Evaluate each compound statement. (Type 'true' or 'false' for each step.)",
+      "steps": [
+        { "instruction": "Evaluate $p \\land q$. Type 'true' or 'false'.", "answer": "false", "accept": [], "hint": "AND needs *both* parts true; $q$ is false." },
+        { "instruction": "Evaluate $p \\lor q$. Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "OR needs at least one true part; $p$ is true." },
+        { "instruction": "Evaluate $\\lnot p$. Type 'true' or 'false'.", "answer": "false", "accept": [], "hint": "NOT flips the value of $p$." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "With $p = T$, $q = F$: $p \\land q$ fails (both needed), $p \\lor q$ holds (one suffices), and $\\lnot p$ flips true to false."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s02",
+      "concepts": ["propositions-and-connectives"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Your code contains `if (x > 3 && x < 10)`. In logic this is $p \\land q$ with $p$: '$x > 3$' and $q$: '$x < 10$'. Suppose $x = 12$.",
+      "steps": [
+        { "instruction": "Is $p$ ($x > 3$) true or false? Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "$12 > 3$." },
+        { "instruction": "Is $q$ ($x < 10$) true or false?", "answer": "false", "accept": [], "hint": "$12$ is not below $10$." },
+        { "instruction": "Does the `if` body run — is $p \\land q$ true or false?", "answer": "false", "accept": [], "hint": "AND needs both; one conjunct failed." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "At $x = 12$: $p$ is true, $q$ is false, so $p \\land q$ is false and the branch is skipped — an `if` condition is just a proposition evaluated at runtime."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s03",
+      "concepts": ["propositions-and-connectives"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $p$ be true, $q$ be false, and $r$ be true. Evaluate $(p \\lor q) \\land \\lnot r$ inside-out.",
+      "steps": [
+        { "instruction": "Evaluate the parenthesis $p \\lor q$ first. Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "$p$ alone is enough for an OR." },
+        { "instruction": "Evaluate $\\lnot r$.", "answer": "false", "accept": [], "hint": "$r$ is true; NOT flips it." },
+        { "instruction": "Combine: $(p \\lor q) \\land \\lnot r$ is true AND false. Final value?", "answer": "false", "accept": [], "hint": "AND with a false operand is false." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "$p \\lor q = T$, $\\lnot r = F$, and $T \\land F = F$. Evaluate compound statements inside-out, exactly like arithmetic with parentheses."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s04",
+      "concepts": ["propositions-and-connectives"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A program runs `if (a != 0 && b / a > 2)` with $a = 0$ and $b = 10$. Like most languages, this one short-circuits: in $p \\land q$, if $p$ is false it never evaluates $q$ at all.",
+      "steps": [
+        { "instruction": "Evaluate the first operand $p$: is $a \\ne 0$ true or false?", "answer": "false", "accept": [], "hint": "$a$ is exactly $0$." },
+        { "instruction": "Given short-circuiting, does the program evaluate the second operand $b / a > 2$ at all? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "False AND anything is already false, so evaluation stops." },
+        { "instruction": "What is the value of the whole condition? Type 'true' or 'false'.", "answer": "false", "accept": [], "hint": "$F \\land q$ is false for every $q$." },
+        { "instruction": "If the language evaluated BOTH operands eagerly instead, would this line divide by zero? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$b / a$ with $a = 0$." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "$a \\ne 0$ is false, so short-circuit AND stops immediately: the condition is false and $b/a$ is never computed. The operand order is load-bearing — the logic ($F \\land q \\equiv F$) is exactly what makes the guard safe."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s05",
+      "concepts": ["truth-tables"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A truth table needs one row per combination of truth values, and each of the $n$ variables independently takes 2 values — so there are $2^n$ rows.",
+      "steps": [
+        { "instruction": "How many rows does a truth table with 3 variables have? (Give a number.)", "answer": "8", "accept": [], "hint": "$2^3$." },
+        { "instruction": "How many rows for 5 variables?", "answer": "32", "accept": [], "hint": "$2^5 = 32$." },
+        { "instruction": "How many rows for 10 variables?", "answer": "1024", "accept": [], "hint": "$2^{10}$ — the famous 'about a thousand'." }
+      ],
+      "finalAnswer": { "value": "1024", "unit": "" },
+      "solutionNarrative": "Rows double with each extra variable: $2^3 = 8$, $2^5 = 32$, $2^{10} = 1024$. Exponential growth is why brute-force table checking works for small $n$ and needs SAT solvers for large $n$."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s06",
+      "concepts": ["truth-tables"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Build truth-table columns for $p \\land q$ and $p \\lor q$, with rows in the standard order $(p, q) = $ TT, TF, FT, FF.",
+      "steps": [
+        { "instruction": "Give the column for $p \\land q$. Use 1 for true, 0 for false, as an ordered comma list, e.g. 1,0,1,1.", "answer": "1,0,0,0", "accept": [], "hint": "AND is true only in the row where both inputs are true." },
+        { "instruction": "Give the column for $p \\lor q$ in the same format.", "answer": "1,1,1,0", "accept": [], "hint": "OR fails only when both inputs are false." },
+        { "instruction": "In how many of the 4 rows do the two columns disagree? (Give a number.)", "answer": "2", "accept": [], "hint": "They differ exactly where the inputs differ: TF and FT." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$p \\land q$: 1,0,0,0 and $p \\lor q$: 1,1,1,0 — they disagree in the two mixed rows TF and FT, where OR holds but AND fails."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s07",
+      "concepts": ["truth-tables"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Build the full truth table for $(p \\lor q) \\land \\lnot(p \\land q)$ — 'one or the other but not both' — with rows in the order $(p, q) = $ TT, TF, FT, FF, and classify the formula.",
+      "steps": [
+        { "instruction": "Row TT: $p \\lor q$ is true and $p \\land q$ is true, so $\\lnot(p \\land q)$ is false. What is the formula's value in this row? Use 1 for true, 0 for false.", "answer": "0", "accept": [], "hint": "$T \\land F = F$, so write 0." },
+        { "instruction": "Give the formula's full column for rows TT, TF, FT, FF. Use 1 for true, 0 for false, as an ordered comma list, e.g. 1,1,0,0.", "answer": "0,1,1,0", "accept": [], "hint": "In the mixed rows, $p \\lor q$ is true and $p \\land q$ is false; in FF both fail." },
+        { "instruction": "Classify: is this formula a tautology, a contradiction, or neither? Type exactly one word: 'tautology', 'contradiction', or 'neither'.", "answer": "neither", "accept": [], "hint": "The column contains both 1s and 0s." }
+      ],
+      "finalAnswer": { "value": "neither", "unit": "" },
+      "solutionNarrative": "The column is 0,1,1,0 — true exactly when the inputs differ (this formula is exclusive or). Since it is sometimes true and sometimes false, it is contingent: neither a tautology nor a contradiction."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s08",
+      "concepts": ["truth-tables"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $p \\lor \\lnot p$ ('$p$ or not $p$') in both possible rows and classify it.",
+      "steps": [
+        { "instruction": "When $p$ is true: $p \\lor \\lnot p$ is true or false? Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "The left disjunct already holds." },
+        { "instruction": "When $p$ is false: true or false?", "answer": "true", "accept": [], "hint": "Now $\\lnot p$ holds instead." },
+        { "instruction": "True in every row — what is such a formula called? Type one word: 'tautology' or 'contradiction'.", "answer": "tautology", "accept": [], "hint": "A contradiction would be false in every row." }
+      ],
+      "finalAnswer": { "value": "tautology", "unit": "" },
+      "solutionNarrative": "$p \\lor \\lnot p$ is true whichever value $p$ takes — the law of the excluded middle, the simplest tautology. Its mirror image $p \\land \\lnot p$ is the simplest contradiction."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s09",
+      "concepts": ["implication-and-contrapositive"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The implication $p \\to q$ is false in exactly one case: $p$ true and $q$ false. Evaluate it for each pair of values. (Type 'true' or 'false' for each step.)",
+      "steps": [
+        { "instruction": "$p$ true, $q$ false: what is $p \\to q$?", "answer": "false", "accept": [], "hint": "This is the one broken-promise row." },
+        { "instruction": "$p$ false, $q$ true: what is $p \\to q$?", "answer": "true", "accept": [], "hint": "The condition never fired, so the promise stands — vacuously true." },
+        { "instruction": "$p$ false, $q$ false: what is $p \\to q$?", "answer": "true", "accept": [], "hint": "Again vacuous: false $p$ makes the implication true automatically." }
+      ],
+      "finalAnswer": { "value": "true", "unit": "" },
+      "solutionNarrative": "Only $T \\to F$ is false; both false-$p$ rows are vacuously true. The full column in TT, TF, FT, FF order is T, F, T, T."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s10",
+      "concepts": ["implication-and-contrapositive"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A coach promises: 'If it rains ($p$), the game is cancelled ($q$).' Saturday it does NOT rain, but the coach cancels the game anyway.",
+      "steps": [
+        { "instruction": "Here $p$ is false and $q$ is true. Is the promise $p \\to q$ true or false in this scenario? Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "The promise only constrains what happens WHEN it rains." },
+        { "instruction": "The promise is broken in exactly one scenario. In that scenario, is $p$ true or false?", "answer": "true", "accept": [], "hint": "It must actually rain for the promise to be tested." },
+        { "instruction": "And in that broken-promise scenario, is $q$ true or false?", "answer": "false", "accept": [], "hint": "Rain, yet the game goes ahead." }
+      ],
+      "finalAnswer": { "value": "true", "unit": "" },
+      "solutionNarrative": "With no rain, the promise is vacuously true regardless of the cancellation: $F \\to T = T$. The only falsifying scenario is rain and no cancellation — $p$ true, $q$ false."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s11",
+      "concepts": ["implication-and-contrapositive"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Prove by truth table that $p \\to q$ and $\\lnot q \\to \\lnot p$ are logically equivalent. Use rows in the order $(p, q) = $ TT, TF, FT, FF.",
+      "steps": [
+        { "instruction": "Give the column for $p \\to q$. Use 1 for true, 0 for false, as an ordered comma list, e.g. 0,1,0,1.", "answer": "1,0,1,1", "accept": [], "hint": "False only in the row TF, where $p$ is true and $q$ is false." },
+        { "instruction": "Now the column for $\\lnot q \\to \\lnot p$, same format. (In row TF: $\\lnot q$ is true, $\\lnot p$ is false.)", "answer": "1,0,1,1", "accept": [], "hint": "It fails exactly when $\\lnot q$ is true and $\\lnot p$ is false — i.e. $p$ true, $q$ false." },
+        { "instruction": "$\\lnot q \\to \\lnot p$ is called the ___ of $p \\to q$. Type one word: 'converse', 'inverse', or 'contrapositive'.", "answer": "contrapositive", "accept": [], "hint": "Swap AND negate both sides." },
+        { "instruction": "The two columns match in every row. Are the formulas logically equivalent? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Matching columns on all $2^n$ rows is the definition of equivalence." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Both columns are 1,0,1,1 — each formula fails only in the row $p = T$, $q = F$ — so $p \\to q \\equiv \\lnot q \\to \\lnot p$. This is why proving the contrapositive proves the original statement."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s12",
+      "concepts": ["implication-and-contrapositive"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Start from the statement: 'If $n$ is even, then $n^2$ is even' — an implication $p \\to q$.",
+      "steps": [
+        { "instruction": "'If $n^2$ is even, then $n$ is even' ($q \\to p$) is the ___ of the original. Type one word: 'converse' or 'contrapositive'.", "answer": "converse", "accept": [], "hint": "The two sides are swapped but nothing is negated." },
+        { "instruction": "'If $n^2$ is odd, then $n$ is odd' ($\\lnot q \\to \\lnot p$) is the ___. Type 'converse' or 'contrapositive'.", "answer": "contrapositive", "accept": [], "hint": "Swapped AND both sides negated ('odd' = 'not even')." },
+        { "instruction": "Which of the two is guaranteed logically equivalent to the original? Type 'converse' or 'contrapositive'.", "answer": "contrapositive", "accept": [], "hint": "$p \\to q \\equiv \\lnot q \\to \\lnot p$; the converse is independent." }
+      ],
+      "finalAnswer": { "value": "contrapositive", "unit": "" },
+      "solutionNarrative": "Swapping alone gives the converse; swapping and negating gives the contrapositive, the only relative guaranteed equivalent to $p \\to q$. (Here the converse happens to be true too — but that needs its own proof.)"
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s13",
+      "concepts": ["demorgan-and-equivalence"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "De Morgan's law says $\\lnot(p \\lor q)$ equals $\\lnot p$ combined with $\\lnot q$ — but negation flips the connective on the way in.",
+      "steps": [
+        { "instruction": "Which connective joins $\\lnot p$ and $\\lnot q$ in the equivalent form of $\\lnot(p \\lor q)$? Type one word: 'and' or 'or'.", "answer": "and", "accept": [], "hint": "'Neither p nor q' means both fail: NOT flips OR to AND." },
+        { "instruction": "Evaluate $\\lnot(p \\lor q)$ at $p$ true, $q$ false. Type 'true' or 'false'.", "answer": "false", "accept": [], "hint": "$p \\lor q$ is true, then negate." },
+        { "instruction": "Now evaluate $\\lnot p \\land \\lnot q$ at the same values. Type 'true' or 'false'.", "answer": "false", "accept": [], "hint": "$\\lnot p$ is already false, so the AND fails — same verdict, as the law promises." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "$\\lnot(p \\lor q) \\equiv \\lnot p \\land \\lnot q$: negation turns OR into AND. At $p = T$, $q = F$ both forms evaluate to false, as equivalence demands."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s14",
+      "concepts": ["demorgan-and-equivalence"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A code review flags the condition `!(x > 0 && y > 0)`. Test it with $x = 3$, $y = -2$, then rewrite it with De Morgan.",
+      "steps": [
+        { "instruction": "Evaluate the inner conjunction $x > 0 \\land y > 0$ at $x = 3$, $y = -2$. Type 'true' or 'false'.", "answer": "false", "accept": [], "hint": "$y > 0$ fails." },
+        { "instruction": "So what does the whole negated condition evaluate to? Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "NOT of false." },
+        { "instruction": "De Morgan rewrites `!(a && b)` as `!a` ? `!b`. Which connective? Type one word: 'and' or 'or'.", "answer": "or", "accept": [], "hint": "Negation flips AND to OR." },
+        { "instruction": "Check the rewrite: evaluate $\\lnot(x > 0) \\lor \\lnot(y > 0)$ at the same values. Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "$\\lnot(y > 0)$ is true, and one true disjunct suffices." }
+      ],
+      "finalAnswer": { "value": "true", "unit": "" },
+      "solutionNarrative": "The inner AND is false, so its negation is true. De Morgan gives the readable equivalent `!(x > 0) || !(y > 0)`, i.e. `x <= 0 || y <= 0`, which evaluates to the same value — true — at $(3, -2)$."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s15",
+      "concepts": ["demorgan-and-equivalence"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Verify De Morgan's first law, $\\lnot(p \\land q) \\equiv \\lnot p \\lor \\lnot q$, by full truth table — and expose the classic wrong answer. Rows in the order $(p, q) = $ TT, TF, FT, FF.",
+      "steps": [
+        { "instruction": "Give the column for $\\lnot(p \\land q)$. Use 1 for true, 0 for false, as an ordered comma list, e.g. 1,0,1,0.", "answer": "0,1,1,1", "accept": [], "hint": "$p \\land q$ is 1,0,0,0 — now negate every entry." },
+        { "instruction": "Give the column for $\\lnot p \\lor \\lnot q$, same format.", "answer": "0,1,1,1", "accept": [], "hint": "It fails only when both negations fail — the row TT." },
+        { "instruction": "Do the columns match in every row — are the formulas equivalent? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare entry by entry." },
+        { "instruction": "The classic mistake keeps the connective: $\\lnot p \\land \\lnot q$ has column 0,0,0,1. Does IT match $\\lnot(p \\land q)$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "They already disagree in row TF." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Both $\\lnot(p \\land q)$ and $\\lnot p \\lor \\lnot q$ have column 0,1,1,1, so they are equivalent. The tempting $\\lnot p \\land \\lnot q$ has column 0,0,0,1 — that is $\\lnot(p \\lor q)$, the *other* De Morgan law."
+    },
+    {
+      "id": "discrete-math.logic-and-propositions.s16",
+      "concepts": ["demorgan-and-equivalence"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An access check reads `if (!(p && (q || r)))` where $p$: 'user is an admin', $q$: 'file is public', $r$: 'user owns the file'. De Morgan (applied twice) rewrites it as $\\lnot p \\lor (\\lnot q \\land \\lnot r)$. Evaluate both forms for an admin looking at a private file they don't own: $p$ true, $q$ false, $r$ false.",
+      "steps": [
+        { "instruction": "Evaluate the inner disjunction $q \\lor r$ at $q$ false, $r$ false. Type 'true' or 'false'.", "answer": "false", "accept": [], "hint": "Both disjuncts fail." },
+        { "instruction": "Evaluate $p \\land (q \\lor r)$. Type 'true' or 'false'.", "answer": "false", "accept": [], "hint": "True AND false." },
+        { "instruction": "So the original condition $\\lnot(p \\land (q \\lor r))$ is...? Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "Negate your last answer." },
+        { "instruction": "Check the De Morgan rewrite: evaluate $\\lnot p \\lor (\\lnot q \\land \\lnot r)$ at the same values. Type 'true' or 'false'.", "answer": "true", "accept": [], "hint": "$\\lnot p$ is false, but $\\lnot q \\land \\lnot r$ is $T \\land T$." }
+      ],
+      "finalAnswer": { "value": "true", "unit": "" },
+      "solutionNarrative": "$q \\lor r = F$, so $p \\land (q \\lor r) = F$ and its negation is true. The rewritten form gives $F \\lor (T \\land T) = T$ — the same verdict, because pushing $\\lnot$ through flips $\\land$ to $\\lor$ and $\\lor$ to $\\land$ at each level."
+    }
+  ]
+}

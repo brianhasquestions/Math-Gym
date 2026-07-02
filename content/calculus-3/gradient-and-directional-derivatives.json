@@ -1,0 +1,257 @@
+{
+  "id": "calculus-3.gradient-and-directional-derivatives",
+  "subject": "calculus-3",
+  "title": "The Gradient and Directional Derivatives",
+  "prerequisites": ["calculus-3.partial-derivatives"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "gradient-vector",
+      "label": "The gradient vector",
+      "microLesson": "The **gradient** of $f(x,y)$ is the vector of its partial derivatives, $\\nabla f = \\langle f_x,\\, f_y \\rangle$. It packages \"how steeply does the surface rise as I step east\" and \"as I step north\" into one arrow. It is a *function* of position, so you usually **evaluate it at a point** to get a numeric vector. For $f = x^2 + y^2$, $\\nabla f = \\langle 2x,\\, 2y \\rangle$, and at $(1,2)$ it is $\\langle 2,\\, 4 \\rangle$."
+    },
+    {
+      "id": "directional-derivative",
+      "label": "The directional derivative",
+      "microLesson": "The partials tell you the slope due east and due north, but you can walk in *any* direction. The **directional derivative** $D_{\\vec u} f = \\nabla f \\cdot \\vec u$ is the rate of change as you step in the direction of a **unit vector** $\\vec u$. The direction must be unit length first: if $\\vec u = \\langle 3, 4 \\rangle$, normalize to $\\langle 3/5,\\, 4/5 \\rangle$ before dotting. With $\\nabla f = \\langle 2, 4 \\rangle$, $D_{\\vec u} f = 2\\cdot\\tfrac35 + 4\\cdot\\tfrac45 = 4.4$."
+    },
+    {
+      "id": "max-rate-and-direction",
+      "label": "Maximum rate and its direction",
+      "microLesson": "Because $D_{\\vec u} f = |\\nabla f|\\cos\\theta$, the rate is largest when you walk **straight along the gradient** ($\\theta = 0$). So the **maximum rate of increase equals $|\\nabla f|$** (a number), and it occurs in the **direction $\\nabla f / |\\nabla f|$** (a unit vector). If $\\nabla f = \\langle 3, 4 \\rangle$, the steepest rate is $|\\langle 3,4\\rangle| = 5$, achieved heading $\\langle 3/5,\\, 4/5 \\rangle$. The steepest *decrease* is $-|\\nabla f|$, in the opposite direction."
+    },
+    {
+      "id": "gradient-applied",
+      "label": "Steepest ascent, descent, and heat flow",
+      "microLesson": "On a height map $h(x,y)$, $\\nabla h$ points **straight uphill** and its magnitude is the steepest grade there. In a temperature field $T(x,y)$, $\\nabla T$ points toward fastest warming; **heat flows down the gradient**, i.e. in the direction $-\\nabla T / |\\nabla T|$. Optimization \"hill-climbing\" steps along $+\\nabla f$ to increase a quantity and along $-\\nabla f$ to decrease it. Evaluate the gradient at your location to get the numeric direction and rate."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Standing on a hillside, which way is up?\n\nImagine you're standing on a hilly terrain whose height is $h(x,y)$. A partial derivative answers a narrow question: $h_x$ is the slope if you walk **due east**, $h_y$ the slope if you walk **due north**. But you can step in *any* direction. Which way is steepest? How steep is it? And which way would water run off? Every one of those questions is answered by a single object: the **gradient**.\n\n## The gradient: all the slopes in one vector\n\nThe **gradient** of $f(x,y)$ bundles the partials into a vector:\n\n$$\\nabla f = \\langle f_x,\\; f_y \\rangle.$$\n\nFor three variables it's $\\nabla f = \\langle f_x, f_y, f_z \\rangle$. The gradient is itself a *function of position* — it generally points in a different direction and has a different length at every point — so in practice you **evaluate it at a specific point** to get a concrete numeric vector.\n\n**Example.** For $f(x,y) = x^2 + y^2$, the partials are $f_x = 2x$ and $f_y = 2y$, so $\\nabla f = \\langle 2x, 2y \\rangle$. At the point $(1, 2)$ this is the numeric vector $\\langle 2, 4 \\rangle$.\n\n## The directional derivative: slope in any direction\n\nTo measure the rate of change as you step in some chosen direction, give that direction as a **unit vector** $\\vec u$ (length 1). The **directional derivative** is just a dot product:\n\n$$D_{\\vec u} f = \\nabla f \\cdot \\vec u.$$\n\nThe one trap: $\\vec u$ **must be a unit vector first**. If someone hands you a direction like $\\langle 3, 4 \\rangle$, normalize it by dividing by its length $|\\langle 3,4\\rangle| = 5$, giving $\\vec u = \\langle 3/5, 4/5 \\rangle$. Then, with $\\nabla f = \\langle 2, 4 \\rangle$,\n\n$$D_{\\vec u} f = \\langle 2, 4 \\rangle \\cdot \\langle \\tfrac35, \\tfrac45 \\rangle = 2\\cdot\\tfrac35 + 4\\cdot\\tfrac45 = \\tfrac{6}{5} + \\tfrac{16}{5} = 4.4.$$\n\n## The steepest direction, for free\n\nHere is the payoff. Because $\\vec u$ is a unit vector,\n\n$$D_{\\vec u} f = \\nabla f \\cdot \\vec u = |\\nabla f|\\,\\cos\\theta,$$\n\nwhere $\\theta$ is the angle between your heading and the gradient. This is biggest when $\\cos\\theta = 1$, i.e. when you walk **straight along the gradient**. Three facts drop out immediately:\n\n- The **maximum rate of increase** is $|\\nabla f|$ — a single number.\n- It occurs in the **direction** $\\dfrac{\\nabla f}{|\\nabla f|}$ — a unit vector.\n- The **steepest decrease** is $-|\\nabla f|$, in the opposite direction $-\\dfrac{\\nabla f}{|\\nabla f|}$.\n\nAnd perpendicular to the gradient ($\\theta = 90^\\circ$) the rate is **zero** — that's the level direction, where height (or temperature) doesn't change.\n\n**Example.** If $\\nabla h = \\langle 3, 4 \\rangle$ at your feet, the steepest grade is $|\\langle 3, 4 \\rangle| = \\sqrt{9+16} = 5$, achieved by heading in the direction $\\langle 3/5, 4/5 \\rangle$. To descend fastest, head $\\langle -3/5, -4/5 \\rangle$.\n\n## Reading it off the world\n\nThe gradient is not an abstraction — it's the arrow nature already follows. On a terrain, $\\nabla h$ points straight uphill and water runs **down the gradient**. In a temperature field $T(x,y)$, $\\nabla T$ points toward the fastest warming, and **heat flows the opposite way**, down the gradient, from hot to cold. The whole topic is three moves: *take the gradient, evaluate it at the point, then dot it (for a chosen direction) or take its magnitude (for the steepest rate).*"
+  },
+  "application": {
+    "summary": "The gradient is the single arrow that answers 'which way is steepest and how steep is it?' — it drives steepest-ascent route-finding on terrain, tells you the direction of fastest temperature increase (and, reversed, which way heat flows), and is the engine of every hill-climbing optimizer that nudges parameters to improve a result.",
+    "domains": ["geography & hiking", "physics & heat transfer", "machine learning", "engineering"],
+    "workedExample": "**Which way is steepest, and how steep?**\n\nA hill's elevation (meters) is modeled by $h(x,y) = 100 - x^2 - 2y^2$, with $x$ east and $y$ north in kilometers. A hiker stands at $(3, 2)$. Which way should they face to climb fastest, and what grade will they feel?\n\nTake the gradient: $h_x = -2x$, $h_y = -4y$, so $\\nabla h = \\langle -2x, -4y \\rangle$. At $(3, 2)$ this is $\\langle -6, -8 \\rangle$.\n\nThe **steepest climb** is along this vector. Its magnitude — the maximum rate of increase — is $|\\langle -6, -8 \\rangle| = \\sqrt{36 + 64} = 10$ meters per km. The **direction** to face is the unit vector $\\langle -6, -8 \\rangle / 10 = \\langle -0.6, -0.8 \\rangle$ — i.e. southwest. To run **downhill** fastest (the way a dropped ball rolls), head the opposite way, $\\langle 0.6, 0.8 \\rangle$. The identical calculation, with $T$ instead of $h$, tells an engineer which way heat is escaping.",
+    "domainNotes": [
+      "**Geography/hiking:** $\\nabla h$ points straight uphill; its magnitude is the steepest local grade, and water/avalanches run down $-\\nabla h$.",
+      "**Heat transfer:** $\\nabla T$ points toward fastest warming; Fourier's law says heat flows down the gradient, $\\vec q = -k\\,\\nabla T$.",
+      "**Machine learning:** gradient *descent* steps along $-\\nabla L$ to shrink a loss function — the workhorse of model training.",
+      "**Engineering/physics:** force is the negative gradient of potential energy, so objects accelerate 'downhill' in the potential, $\\vec F = -\\nabla U$."
+    ]
+  },
+  "generators": ["gradient-v1", "directional-v1", "max-rate-v1"],
+  "problems": [
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s01",
+      "concepts": ["gradient-vector"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x,y) = x^2 + y^2$, compute the gradient and evaluate it at the point $(1, 2)$.",
+      "steps": [
+        { "instruction": "Write the gradient $\\nabla f = \\langle f_x, f_y \\rangle$ in terms of $x$ and $y$.", "answer": "<2x, 2y>", "accept": [], "hint": "Differentiate $x^2 + y^2$ with respect to $x$, then $y$." },
+        { "instruction": "Evaluate the gradient at $(1, 2)$. Give it as a numeric vector.", "answer": "<2, 4>", "accept": ["(2, 4)"], "hint": "Substitute $x = 1$, $y = 2$ into $\\langle 2x, 2y \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<2, 4>", "unit": "" },
+      "solutionNarrative": "$\\nabla f = \\langle 2x, 2y \\rangle$; at $(1,2)$ this is $\\langle 2, 4 \\rangle$."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s02",
+      "concepts": ["gradient-vector"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x,y) = x^2 y + 3y$, find $\\nabla f$ and evaluate it at $(2, 1)$.",
+      "steps": [
+        { "instruction": "Compute $f_x$ (treat $y$ as constant).", "answer": "2xy", "accept": ["2yx"], "hint": "The derivative of $x^2 y$ with respect to $x$ is $2xy$; $3y$ has no $x$." },
+        { "instruction": "Compute $f_y$ (treat $x$ as constant).", "answer": "x^2 + 3", "accept": ["x^2+3", "3 + x^2"], "hint": "The derivative of $x^2 y$ with respect to $y$ is $x^2$; the derivative of $3y$ is $3$." },
+        { "instruction": "Evaluate $\\nabla f = \\langle 2xy, x^2 + 3 \\rangle$ at $(2, 1)$ as a numeric vector.", "answer": "<4, 7>", "accept": ["(4, 7)"], "hint": "$2(2)(1) = 4$ and $2^2 + 3 = 7$." }
+      ],
+      "finalAnswer": { "value": "<4, 7>", "unit": "" },
+      "solutionNarrative": "$\\nabla f = \\langle 2xy, x^2 + 3 \\rangle$; at $(2,1)$ this is $\\langle 4, 7 \\rangle$."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s03",
+      "concepts": ["gradient-vector"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x,y) = e^{x} \\sin y$, find $\\nabla f$ and evaluate it at the point $(0, 0)$.",
+      "steps": [
+        { "instruction": "Compute $f_x$ (treat $y$ as constant).", "answer": "e^x sin y", "accept": ["e^x*sin y", "sin(y) e^x", "e^x sin(y)"], "hint": "The derivative of $e^x$ is $e^x$; $\\sin y$ is a constant factor." },
+        { "instruction": "Compute $f_y$ (treat $x$ as constant).", "answer": "e^x cos y", "accept": ["e^x*cos y", "cos(y) e^x", "e^x cos(y)"], "hint": "The derivative of $\\sin y$ is $\\cos y$; $e^x$ is a constant factor." },
+        { "instruction": "Evaluate $\\nabla f = \\langle e^x \\sin y, e^x \\cos y \\rangle$ at $(0, 0)$. Recall $e^0 = 1$, $\\sin 0 = 0$, $\\cos 0 = 1$.", "answer": "<0, 1>", "accept": ["(0, 1)"], "hint": "$e^0 \\sin 0 = 0$ and $e^0 \\cos 0 = 1$." }
+      ],
+      "finalAnswer": { "value": "<0, 1>", "unit": "" },
+      "solutionNarrative": "$\\nabla f = \\langle e^x \\sin y, e^x \\cos y \\rangle$; at $(0,0)$ this is $\\langle 0, 1 \\rangle$."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s04",
+      "concepts": ["directional-derivative"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The gradient of $f$ at a point is $\\nabla f = \\langle 3, 4 \\rangle$. Find the directional derivative there in the direction of the unit vector $\\vec u = \\langle 1, 0 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute $D_{\\vec u} f = \\nabla f \\cdot \\vec u$.", "answer": "3", "accept": [], "hint": "Dot product: $3\\cdot 1 + 4\\cdot 0$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$D_{\\vec u} f = \\langle 3,4 \\rangle \\cdot \\langle 1,0 \\rangle = 3$. (This is just $f_x$, since $\\langle 1,0\\rangle$ is the east direction.)"
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s05",
+      "concepts": ["directional-derivative"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "At a point, $\\nabla f = \\langle 2, 4 \\rangle$. Find the directional derivative in the direction of the vector $\\vec v = \\langle 3, 4 \\rangle$. (Note: $\\vec v$ is not yet a unit vector.)",
+      "steps": [
+        { "instruction": "Find $|\\vec v|$ to normalize. Give the magnitude of $\\langle 3, 4 \\rangle$.", "answer": "5", "accept": [], "hint": "$|\\langle 3,4\\rangle| = \\sqrt{3^2 + 4^2} = \\sqrt{25}$." },
+        { "instruction": "Write the unit vector $\\vec u = \\vec v / |\\vec v|$ as a numeric vector.", "answer": "<3/5, 4/5>", "accept": ["<0.6, 0.8>", "(3/5, 4/5)", "(0.6, 0.8)"], "hint": "Divide each component by 5." },
+        { "instruction": "Compute $D_{\\vec u} f = \\nabla f \\cdot \\vec u = \\langle 2, 4 \\rangle \\cdot \\langle 3/5, 4/5 \\rangle$.", "answer": "4.4", "accept": ["22/5"], "hint": "$2\\cdot\\tfrac35 + 4\\cdot\\tfrac45 = \\tfrac{6}{5} + \\tfrac{16}{5} = \\tfrac{22}{5}$." }
+      ],
+      "finalAnswer": { "value": "4.4", "unit": "" },
+      "solutionNarrative": "Normalize $\\langle 3,4\\rangle$ to $\\langle 3/5, 4/5\\rangle$, then $\\langle 2,4\\rangle\\cdot\\langle 3/5,4/5\\rangle = 6/5 + 16/5 = 22/5 = 4.4$."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s06",
+      "concepts": ["directional-derivative", "gradient-vector"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x,y) = x^2 + xy$, find the directional derivative at $(1, 2)$ in the direction of $\\vec v = \\langle -3, 4 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute $\\nabla f = \\langle 2x + y, x \\rangle$ at $(1, 2)$ as a numeric vector.", "answer": "<4, 1>", "accept": ["(4, 1)"], "hint": "$f_x = 2x + y = 2(1)+2 = 4$; $f_y = x = 1$." },
+        { "instruction": "Normalize $\\vec v = \\langle -3, 4 \\rangle$. Its magnitude is 5; write the unit vector.", "answer": "<-3/5, 4/5>", "accept": ["<-0.6, 0.8>", "(-3/5, 4/5)", "(-0.6, 0.8)"], "hint": "$|\\langle -3,4\\rangle| = 5$; divide each component by 5." },
+        { "instruction": "Compute $D_{\\vec u} f = \\langle 4, 1 \\rangle \\cdot \\langle -3/5, 4/5 \\rangle$.", "answer": "-8/5", "accept": ["-1.6"], "hint": "$4\\cdot(-\\tfrac35) + 1\\cdot\\tfrac45 = -\\tfrac{12}{5} + \\tfrac{4}{5} = -\\tfrac{8}{5}$." }
+      ],
+      "finalAnswer": { "value": "-1.6", "unit": "" },
+      "solutionNarrative": "$\\nabla f(1,2) = \\langle 4, 1 \\rangle$; with $\\vec u = \\langle -3/5, 4/5\\rangle$, $D_{\\vec u} f = -12/5 + 4/5 = -8/5 = -1.6$ (the function decreases in that direction)."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s07",
+      "concepts": ["max-rate-and-direction"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "At a point the gradient is $\\nabla f = \\langle 3, 4 \\rangle$. What is the maximum rate of increase of $f$ at that point?",
+      "steps": [
+        { "instruction": "The maximum rate of increase equals $|\\nabla f|$. Compute it.", "answer": "5", "accept": [], "hint": "$|\\langle 3,4\\rangle| = \\sqrt{3^2 + 4^2} = \\sqrt{25}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "The maximum rate of increase is $|\\nabla f| = |\\langle 3,4\\rangle| = \\sqrt{25} = 5$."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s08",
+      "concepts": ["max-rate-and-direction"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "At a point the gradient is $\\nabla f = \\langle 6, 8 \\rangle$. In which direction (unit vector) does $f$ increase fastest?",
+      "steps": [
+        { "instruction": "Find $|\\nabla f|$.", "answer": "10", "accept": [], "hint": "$\\sqrt{6^2 + 8^2} = \\sqrt{100}$." },
+        { "instruction": "The direction of steepest increase is $\\nabla f / |\\nabla f|$. Give it as a numeric unit vector.", "answer": "<3/5, 4/5>", "accept": ["<0.6, 0.8>", "(3/5, 4/5)", "(0.6, 0.8)"], "hint": "Divide $\\langle 6, 8\\rangle$ by 10." }
+      ],
+      "finalAnswer": { "value": "<3/5, 4/5>", "unit": "" },
+      "solutionNarrative": "$|\\nabla f| = 10$, so the steepest-increase direction is $\\langle 6,8\\rangle/10 = \\langle 3/5, 4/5\\rangle$."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s09",
+      "concepts": ["max-rate-and-direction", "gradient-vector"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x,y) = x^2 + y^2$, find both the maximum rate of increase and the direction of steepest increase at the point $(3, 4)$.",
+      "steps": [
+        { "instruction": "Evaluate $\\nabla f = \\langle 2x, 2y \\rangle$ at $(3, 4)$ as a numeric vector.", "answer": "<6, 8>", "accept": ["(6, 8)"], "hint": "$2(3) = 6$ and $2(4) = 8$." },
+        { "instruction": "The maximum rate of increase is $|\\nabla f|$. Compute it.", "answer": "10", "accept": [], "hint": "$\\sqrt{6^2 + 8^2} = \\sqrt{100}$." },
+        { "instruction": "Give the direction of steepest increase, $\\nabla f / |\\nabla f|$, as a numeric unit vector.", "answer": "<3/5, 4/5>", "accept": ["<0.6, 0.8>", "(3/5, 4/5)", "(0.6, 0.8)"], "hint": "Divide $\\langle 6, 8\\rangle$ by 10." }
+      ],
+      "finalAnswer": { "value": "<3/5, 4/5>", "unit": "" },
+      "solutionNarrative": "$\\nabla f(3,4) = \\langle 6, 8\\rangle$; max rate $= |\\langle 6,8\\rangle| = 10$, in the direction $\\langle 3/5, 4/5\\rangle$."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s10",
+      "concepts": ["gradient-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A hill's elevation (meters) is $h(x,y) = 100 - x^2 - 2y^2$, with $x$ east and $y$ north (km). A hiker stands at $(3, 2)$. Find the gradient $\\nabla h$ there — the arrow pointing straight uphill — as a numeric vector.",
+      "steps": [
+        { "instruction": "Write $\\nabla h = \\langle h_x, h_y \\rangle$ in terms of $x$ and $y$.", "answer": "<-2x, -4y>", "accept": [], "hint": "$h_x = -2x$ and $h_y = -4y$." },
+        { "instruction": "Evaluate at $(3, 2)$ as a numeric vector.", "answer": "<-6, -8>", "accept": ["(-6, -8)"], "hint": "$-2(3) = -6$ and $-4(2) = -8$." }
+      ],
+      "finalAnswer": { "value": "<-6, -8>", "unit": "" },
+      "solutionNarrative": "$\\nabla h = \\langle -2x, -4y\\rangle$; at $(3,2)$ this is $\\langle -6, -8\\rangle$ — uphill is toward the southwest."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s11",
+      "concepts": ["gradient-applied", "max-rate-and-direction"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Continuing the hill $h(x,y) = 100 - x^2 - 2y^2$ at $(3, 2)$ where $\\nabla h = \\langle -6, -8 \\rangle$: what is the steepest grade (maximum rate of elevation increase, in meters per km) the hiker can climb?",
+      "steps": [
+        { "instruction": "The steepest rate of increase is $|\\nabla h|$. Compute it.", "answer": "10", "accept": [], "hint": "$|\\langle -6,-8\\rangle| = \\sqrt{36 + 64} = \\sqrt{100}$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "meters per km" },
+      "solutionNarrative": "The steepest grade is $|\\nabla h| = \\sqrt{(-6)^2 + (-8)^2} = \\sqrt{100} = 10$ meters per km."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s12",
+      "concepts": ["gradient-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "On the same hill $h(x,y) = 100 - x^2 - 2y^2$ at $(3, 2)$, with $\\nabla h = \\langle -6, -8 \\rangle$, a dropped ball rolls in the direction of steepest descent. Give that direction as a numeric unit vector.",
+      "steps": [
+        { "instruction": "Find $|\\nabla h|$.", "answer": "10", "accept": [], "hint": "$\\sqrt{36 + 64} = \\sqrt{100}$." },
+        { "instruction": "Steepest descent is $-\\nabla h / |\\nabla h|$. Give it as a numeric unit vector.", "answer": "<3/5, 4/5>", "accept": ["<0.6, 0.8>", "(3/5, 4/5)", "(0.6, 0.8)"], "hint": "Negate $\\langle -6,-8\\rangle$ to get $\\langle 6,8\\rangle$, then divide by 10." }
+      ],
+      "finalAnswer": { "value": "<3/5, 4/5>", "unit": "" },
+      "solutionNarrative": "Steepest descent is $-\\nabla h/|\\nabla h| = \\langle 6,8\\rangle/10 = \\langle 3/5, 4/5\\rangle$ — the ball rolls toward the northeast."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s13",
+      "concepts": ["gradient-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "The temperature on a metal plate (\\u00b0C) is $T(x,y) = 50 - x^2 - y^2$. Find the gradient $\\nabla T$ at the point $(2, 1)$ — the direction of fastest warming — as a numeric vector.",
+      "steps": [
+        { "instruction": "Write $\\nabla T = \\langle T_x, T_y \\rangle$ in terms of $x$ and $y$.", "answer": "<-2x, -2y>", "accept": [], "hint": "$T_x = -2x$ and $T_y = -2y$." },
+        { "instruction": "Evaluate at $(2, 1)$ as a numeric vector.", "answer": "<-4, -2>", "accept": ["(-4, -2)"], "hint": "$-2(2) = -4$ and $-2(1) = -2$." }
+      ],
+      "finalAnswer": { "value": "<-4, -2>", "unit": "" },
+      "solutionNarrative": "$\\nabla T = \\langle -2x, -2y\\rangle$; at $(2,1)$ this is $\\langle -4, -2\\rangle$, the direction of fastest temperature increase."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s14",
+      "concepts": ["gradient-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Heat flows down the temperature gradient (from hot to cold). On the plate $T(x,y) = 50 - x^2 - y^2$ at the point $(3, 4)$, find the unit vector in the direction of heat flow.",
+      "steps": [
+        { "instruction": "Evaluate $\\nabla T = \\langle -2x, -2y \\rangle$ at $(3, 4)$ as a numeric vector.", "answer": "<-6, -8>", "accept": ["(-6, -8)"], "hint": "$-2(3) = -6$ and $-2(4) = -8$." },
+        { "instruction": "Heat flows along $-\\nabla T$. Write that vector.", "answer": "<6, 8>", "accept": ["(6, 8)"], "hint": "Negate each component of $\\langle -6,-8\\rangle$." },
+        { "instruction": "Normalize $\\langle 6, 8 \\rangle$ (magnitude 10) to a unit vector.", "answer": "<3/5, 4/5>", "accept": ["<0.6, 0.8>", "(3/5, 4/5)", "(0.6, 0.8)"], "hint": "Divide each component by 10." }
+      ],
+      "finalAnswer": { "value": "<3/5, 4/5>", "unit": "" },
+      "solutionNarrative": "$\\nabla T(3,4) = \\langle -6,-8\\rangle$; heat flows along $-\\nabla T = \\langle 6,8\\rangle$, which normalizes to $\\langle 3/5, 4/5\\rangle$."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s15",
+      "concepts": ["gradient-applied", "directional-derivative"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A hiker on terrain $h(x,y) = 100 - x^2 - 2y^2$ stands at $(3, 2)$ (where $\\nabla h = \\langle -6, -8 \\rangle$) but is forced to walk along the marked trail heading due east, $\\vec u = \\langle 1, 0 \\rangle$. What is their rate of elevation change (m per km) along the trail?",
+      "steps": [
+        { "instruction": "Compute the directional derivative $D_{\\vec u} h = \\nabla h \\cdot \\vec u$.", "answer": "-6", "accept": [], "hint": "$\\langle -6,-8\\rangle \\cdot \\langle 1,0\\rangle = -6\\cdot 1 + (-8)\\cdot 0$." }
+      ],
+      "finalAnswer": { "value": "-6", "unit": "meters per km" },
+      "solutionNarrative": "$D_{\\vec u} h = \\langle -6,-8\\rangle\\cdot\\langle 1,0\\rangle = -6$ — walking east, the hiker descends at 6 meters per km."
+    },
+    {
+      "id": "calculus-3.gradient-and-directional-derivatives.s16",
+      "concepts": ["gradient-applied", "max-rate-and-direction"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "In gradient descent, a model takes a step in the direction $-\\nabla L / |\\nabla L|$ to reduce its loss $L$. At the current parameters $\\nabla L = \\langle 8, 6 \\rangle$. Give the unit step direction.",
+      "steps": [
+        { "instruction": "Find $|\\nabla L|$.", "answer": "10", "accept": [], "hint": "$\\sqrt{8^2 + 6^2} = \\sqrt{100}$." },
+        { "instruction": "Compute $-\\nabla L / |\\nabla L|$ as a numeric unit vector.", "answer": "<-4/5, -3/5>", "accept": ["<-0.8, -0.6>", "(-4/5, -3/5)", "(-0.8, -0.6)"], "hint": "Negate $\\langle 8,6\\rangle$ to $\\langle -8,-6\\rangle$, then divide by 10." }
+      ],
+      "finalAnswer": { "value": "<-4/5, -3/5>", "unit": "" },
+      "solutionNarrative": "$|\\nabla L| = 10$, so the descent step is $-\\langle 8,6\\rangle/10 = \\langle -4/5, -3/5\\rangle$ — opposite the gradient, where loss falls fastest."
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "id": "geometry.intro-to-proof",
+  "subject": "geometry",
+  "title": "Introduction to Proof and Logical Reasoning",
+  "prerequisites": ["geometry.angles-and-lines", "geometry.triangles"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "conditionals-and-counterexamples",
+      "label": "Conditionals and counterexamples",
+      "microLesson": "Most mathematical claims are **conditionals**: *if $P$, then $Q$*. The 'if' part is the **hypothesis**, the 'then' part is the **conclusion**. Rearranging gives three relatives: the **converse** swaps the parts (if $Q$ then $P$), the **inverse** negates both (if not $P$ then not $Q$), and the **contrapositive** swaps AND negates (if not $Q$ then not $P$). Only the contrapositive always shares the original's truth value. To disprove a claim you need exactly one **counterexample** — a case where the hypothesis holds but the conclusion fails. One counterexample kills a claim; a million confirming examples prove nothing."
+    },
+    {
+      "id": "algebraic-proof",
+      "label": "Algebraic proof",
+      "microLesson": "Solving an equation *is* a proof — every line must be justified by a **property of equality**. Subtract 12 from both sides: **subtraction property**. Divide both sides by 3: **division property**. Clear parentheses: **distributive property**. Three more govern how equality itself behaves: **reflexive** ($a = a$), **symmetric** (if $a = b$ then $b = a$), **transitive** (if $a = b$ and $b = c$ then $a = c$), plus **substitution** (equals may replace equals anywhere). A two-column algebraic proof lists each *statement* on the left and the property that justifies it on the right."
+    },
+    {
+      "id": "angle-proofs",
+      "label": "Angle proofs",
+      "microLesson": "Angle chasing becomes proof when every number carries a reason. The core justifications: **vertical angles** are congruent; a **linear pair** sums to $180^\\circ$; the **angle addition postulate** says a whole angle equals the sum of its parts ($m\\angle ABD + m\\angle DBC = m\\angle ABC$); and at parallel lines cut by a transversal, **corresponding angles** and **alternate interior angles** are congruent. A two-column angle proof alternates statements (an equation or a measure) with the postulate or theorem that licenses each one."
+    },
+    {
+      "id": "congruence-proofs",
+      "label": "Triangle congruence proofs",
+      "microLesson": "You never need all six parts to prove two triangles congruent — a criterion certifies the match from three: **SSS** (three side pairs), **SAS** (two sides and the *included* angle), **ASA** (two angles and the *included* side), or **AAS** (two angles and a *non-included* side). Given facts are justified 'given'; a side the triangles share is congruent to itself by the **reflexive property**; crossing segments produce congruent **vertical angles**. Once the triangles are congruent, **CPCTC** — corresponding parts of congruent triangles are congruent — unlocks every remaining side and angle."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## How do you KNOW the bridge holds?\n\nAn engineer can't sign off on a bridge because it 'looks strong.' A lawyer can't win with 'trust me.' A programmer who says 'it passed the tests I tried' has not shown the code is correct — only that it hasn't failed *yet*. All three professions run on the same currency: an **airtight argument**, where every claim is backed by a stated reason and the chain has no gaps. In mathematics that argument is called a **proof**, and geometry is where you learn to build one.\n\n## Conditionals: the shape of a claim\n\nAlmost every mathematical statement is a **conditional**: *if $P$, then $Q$*. The 'if' part ($P$) is the **hypothesis**; the 'then' part ($Q$) is the **conclusion**. From one conditional you can build three relatives:\n\n- **Converse** — swap: *if $Q$, then $P$.*\n- **Inverse** — negate both: *if not $P$, then not $Q$.*\n- **Contrapositive** — swap and negate: *if not $Q$, then not $P$.*\n\nOnly the contrapositive is logically equivalent to the original. 'If it's a square, it has four equal sides' is true; its converse ('if it has four equal sides, it's a square') is false — a rhombus says hello.\n\n## One counterexample beats a million examples\n\nHere is the asymmetry at the heart of proof. To show a claim is **false**, you need exactly one **counterexample** — one case where the hypothesis holds and the conclusion fails. Done. But no pile of confirming examples can show a claim is **true**: $n^2 + n + 11$ is prime for $n = 1, 2, 3, \\ldots, 9$ — and then $n = 11$ gives $143 = 11 \\times 13$. Testing builds confidence; only deduction builds certainty. That is exactly why software teams distinguish *testing* from *formal verification*, and why 'it worked every time we tried it' never appears in an engineering sign-off.\n\n## The two-column proof: statements and reasons\n\nGeometry's classic format makes the argument's skeleton visible. The left column holds **statements** — facts, equations, measures. The right column holds **reasons** — the justification for each line: a given fact, a definition, a postulate, or a theorem. The rules of the game:\n\n1. Every statement must have a reason.\n2. Each line may use only earlier lines, givens, and established results.\n3. The last line is the thing you set out to prove.\n\nA **postulate** (like the angle addition postulate) is accepted without proof — it's part of the rulebook. A **theorem** (like 'vertical angles are congruent') is proved *from* the rulebook. The distinction matters: postulates are the axioms you agree to; theorems are the wealth you earn from them.\n\nEven solving $3x + 12 = 45$ is secretly a two-column proof: $3x = 33$ *(subtraction property of equality)*, $x = 11$ *(division property of equality)*. Algebra class trained you to make the moves; proof class asks you to name them.\n\n## Where it pays off\n\nAngle proofs chain postulates — vertical angles, linear pairs, angle addition, parallel-line angle pairs — into measures nobody handed you. Triangle congruence proofs are the capstone: from just three matched parts (SSS, SAS, ASA, AAS) you certify that *all six* match, then harvest the rest with **CPCTC**. That leap — verify a little, guarantee a lot — is the entire value proposition of proof, on the page and on the bridge."
+  },
+  "application": {
+    "summary": "Proof is the skill of building arguments with no gaps: every claim justified, every step checkable by a stranger. It is the logic behind engineering sign-offs, software verification, legal briefs, and scientific claims — and the reason a designer can certify that two halves of a truss are identical without measuring all six parts of each triangle.",
+    "domains": ["engineering", "software", "law", "science"],
+    "workedExample": "**Certifying an A-frame truss.**\n\nAn A-frame roof truss is built as triangle $ABC$ and triangle $DBC$ leaning against a shared central post $BC$. The build spec guarantees two facts: $AB \\cong DB$ (the two rafters are cut to the same length) and $AC \\cong DC$ (the two ties are cut to the same length). The engineer must certify the two triangular halves are *identical* — same angles, same load geometry — without measuring anything else.\n\n| Statement | Reason |\n|---|---|\n| 1. $AB \\cong DB$ | Given (rafters cut to spec) |\n| 2. $AC \\cong DC$ | Given (ties cut to spec) |\n| 3. $BC \\cong BC$ | Reflexive property |\n| 4. $\\triangle ABC \\cong \\triangle DBC$ | SSS |\n| 5. $\\angle A \\cong \\angle D$ | CPCTC |\n\nThree side pairs — two given, one shared — trigger SSS, and congruence of *every* corresponding part follows by CPCTC. The engineer verified two cut lengths and got a guarantee about all six parts of each triangle. That is proof doing real work: finite checks, total certainty, and a paper trail any inspector can audit line by line.",
+    "domainNotes": [
+      "**Engineering:** a sign-off is a proof obligation — each load figure must trace back to code provisions and measured inputs, exactly like statements tracing back to givens.",
+      "**Software:** testing finds counterexamples; formal verification is a proof that no counterexample exists. The two-column habit (claim, justification) is a code review habit.",
+      "**Law:** a brief is a conditional argument — facts (givens) plus statutes and precedents (postulates and theorems) chained to a conclusion, with every step citable.",
+      "**Science:** a single reproducible counterexample overturns a hypothesis, no matter how many experiments confirmed it — the same asymmetry that drives mathematical disproof."
+    ]
+  },
+  "generators": [
+    "gpr-conditional-parts-d1",
+    "gpr-counterexample-d2",
+    "gpr-conditional-truth-d3",
+    "gpr-algproof-onestep-d1",
+    "gpr-algproof-twostep-d2",
+    "gpr-algproof-distribute-d3",
+    "gpr-angle-vertical-d1",
+    "gpr-angle-addition-d2",
+    "gpr-angle-solve-d3",
+    "gpr-cong-shared-side-d1",
+    "gpr-cong-criterion-d2",
+    "gpr-cong-proof-d3"
+  ],
+  "problems": [
+    {
+      "id": "geometry.intro-to-proof.s01",
+      "concepts": ["conditionals-and-counterexamples"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the conditional statement: \"If a shape is a square, then it has four equal sides.\"",
+      "steps": [
+        { "instruction": "The 'if' part of a conditional — here, 'a shape is a square' — is called the what? (Answer with one of: hypothesis, conclusion)", "answer": "hypothesis", "accept": ["the hypothesis", "hypotheses"], "hint": "If = hypothesis, then = conclusion." },
+        { "instruction": "Swapping the hypothesis and conclusion gives 'If a shape has four equal sides, then it is a square.' What is this new statement called? (Answer with one of: converse, inverse, contrapositive)", "answer": "converse", "accept": ["the converse"], "hint": "Swap only = converse. Negate only = inverse. Both = contrapositive." },
+        { "instruction": "A rhombus with $60^\\circ$ and $120^\\circ$ angles has four equal sides but is not a square. Does this single counterexample prove the converse false? (yes/no)", "answer": "yes", "accept": ["yes it does", "true"], "hint": "One case where the hypothesis holds but the conclusion fails is all it takes." }
+      ],
+      "finalAnswer": { "value": "converse; falsified by counterexample", "unit": "" },
+      "solutionNarrative": "The 'if' part is the hypothesis. Swapping parts forms the converse. A non-square rhombus satisfies the converse's hypothesis (four equal sides) but not its conclusion, so one counterexample proves the converse false."
+    },
+    {
+      "id": "geometry.intro-to-proof.s02",
+      "concepts": ["conditionals-and-counterexamples"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A student claims: \"Every multiple of 5 ends in the digit 5.\" Test the claim with the multiple 10.",
+      "steps": [
+        { "instruction": "10 is a multiple of 5. What digit does 10 end in? (Give a number.)", "answer": "0", "accept": ["zero"], "hint": "Look at the last digit of 10." },
+        { "instruction": "10 satisfies the hypothesis (multiple of 5) but breaks the conclusion (ends in 5). Is the claim true or false? (Answer: true or false)", "answer": "false", "accept": ["its false", "the claim is false"], "hint": "A single counterexample settles it." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "10 is a multiple of 5 but ends in 0, not 5. One counterexample is enough: the claim is false."
+    },
+    {
+      "id": "geometry.intro-to-proof.s03",
+      "concepts": ["conditionals-and-counterexamples"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Consider the (true) statement: \"If a number is divisible by 6, then it is divisible by 3.\"",
+      "steps": [
+        { "instruction": "Negating both the hypothesis and the conclusion — 'If a number is not divisible by 6, then it is not divisible by 3' — produces which statement form? (Answer with one of: converse, inverse, contrapositive)", "answer": "inverse", "accept": ["the inverse"], "hint": "Negate only, no swap." },
+        { "instruction": "Swapping AND negating both parts — 'If a number is not divisible by 3, then it is not divisible by 6' — produces which form? (Answer with one of: converse, inverse, contrapositive)", "answer": "contrapositive", "accept": ["the contrapositive"], "hint": "Swap + negate = contrapositive, the only relative guaranteed to match the original's truth." },
+        { "instruction": "Now test the converse ('If a number is divisible by 3, then it is divisible by 6') with the number 9. Is 9 divisible by 6? (yes/no)", "answer": "no", "accept": ["it is not", "not divisible"], "hint": "$9 \\div 6$ is not a whole number." },
+        { "instruction": "9 is divisible by 3 but not by 6, so 9 is a counterexample. Is the converse true or false? (Answer: true or false)", "answer": "false", "accept": ["the converse is false"], "hint": "One counterexample kills a claim." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "Negating both parts gives the inverse; swapping and negating gives the contrapositive. Testing the converse with 9: it is divisible by 3 but not by 6, so the converse is false."
+    },
+    {
+      "id": "geometry.intro-to-proof.s04",
+      "concepts": ["conditionals-and-counterexamples"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A classmate claims: \"For every whole number $n$, the value $n^2 + n + 11$ is prime.\" It checks out for $n = 1$ through $9$ — but does a pile of examples prove it?",
+      "steps": [
+        { "instruction": "Evaluate $n^2 + n + 11$ at $n = 1$. (Give a number.)", "answer": "13", "accept": [], "hint": "$1 + 1 + 11$." },
+        { "instruction": "Is 13 prime? (yes/no)", "answer": "yes", "accept": ["prime", "it is prime"], "hint": "13 has no divisors other than 1 and itself." },
+        { "instruction": "Now evaluate $n^2 + n + 11$ at $n = 11$. (Give a number.)", "answer": "143", "accept": [], "hint": "$121 + 11 + 11$." },
+        { "instruction": "143 factors as $11 \\times k$. Find $k$. (Give a number.)", "answer": "13", "accept": [], "hint": "$143 \\div 11$." },
+        { "instruction": "So 143 is not prime, and $n = 11$ is a counterexample. Is the claim true or false? (Answer: true or false)", "answer": "false", "accept": ["the claim is false"], "hint": "Nine confirming examples prove nothing; one counterexample disproves." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "At $n = 1$ the value is 13, prime. But at $n = 11$ it is $143 = 11 \\times 13$, composite. The single counterexample $n = 11$ makes the claim false — no number of confirming examples could have proved it true."
+    },
+    {
+      "id": "geometry.intro-to-proof.s05",
+      "concepts": ["algebraic-proof"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Complete the two-column proof that if $3x + 12 = 45$, then $x = 11$. Each statement needs a property of equality as its reason.",
+      "steps": [
+        { "instruction": "Statement 2: undo the $+12$. What equation results?", "answer": "3x = 33", "accept": ["3x=33"], "hint": "Subtract 12 from both sides." },
+        { "instruction": "Reason 2: which property justifies subtracting 12 from both sides? (Answer with one of: addition property, subtraction property, multiplication property, division property)", "answer": "subtraction property", "accept": ["subtraction property of equality", "subtraction", "spoe"], "hint": "You subtracted the same number from both sides." },
+        { "instruction": "Statement 3: solve for $x$.", "answer": "x = 11", "accept": ["x=11", "11"], "hint": "Divide both sides by 3." },
+        { "instruction": "Reason 3: which property justifies dividing both sides by 3? (Answer with one of: addition property, subtraction property, multiplication property, division property)", "answer": "division property", "accept": ["division property of equality", "division", "dpoe"], "hint": "You divided both sides by the same nonzero number." }
+      ],
+      "finalAnswer": { "value": "x = 11", "unit": "" },
+      "solutionNarrative": "From $3x + 12 = 45$: subtract 12 (subtraction property of equality) to get $3x = 33$, then divide by 3 (division property of equality) to get $x = 11$."
+    },
+    {
+      "id": "geometry.intro-to-proof.s06",
+      "concepts": ["algebraic-proof"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Prove that if $2(x + 7) = 40$, then $x = 13$, justifying every step.",
+      "steps": [
+        { "instruction": "Statement 2: clear the parentheses. What equation results?", "answer": "2x + 14 = 40", "accept": ["2x+14=40", "14+2x=40"], "hint": "$2(x + 7) = 2x + 14$." },
+        { "instruction": "Reason 2: which property lets you rewrite $2(x+7)$ as $2x + 14$? (Answer with one of: distributive property, substitution, addition property, subtraction property)", "answer": "distributive property", "accept": ["distributive", "distribution", "distributive property of equality"], "hint": "$a(b + c) = ab + ac$." },
+        { "instruction": "Statement 3: undo the constant. What equation results?", "answer": "2x = 26", "accept": ["2x=26"], "hint": "Subtract 14 from both sides." },
+        { "instruction": "Reason 3: which property? (Answer with one of: addition property, subtraction property, multiplication property, division property)", "answer": "subtraction property", "accept": ["subtraction property of equality", "subtraction", "spoe"], "hint": "Same number subtracted from both sides." },
+        { "instruction": "Statement 4: solve for $x$.", "answer": "x = 13", "accept": ["x=13", "13"], "hint": "Divide both sides by 2." },
+        { "instruction": "Reason 4: which property? (Answer with one of: addition property, subtraction property, multiplication property, division property)", "answer": "division property", "accept": ["division property of equality", "division", "dpoe"], "hint": "Both sides divided by 2." }
+      ],
+      "finalAnswer": { "value": "x = 13", "unit": "" },
+      "solutionNarrative": "Distribute (distributive property): $2x + 14 = 40$. Subtract 14 (subtraction property): $2x = 26$. Divide by 2 (division property): $x = 13$."
+    },
+    {
+      "id": "geometry.intro-to-proof.s07",
+      "concepts": ["algebraic-proof"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Name the property of equality that justifies each statement. Answer each with one of: reflexive property, symmetric property, transitive property, substitution.",
+      "steps": [
+        { "instruction": "Statement: 'If $AB = CD$ and $CD = EF$, then $AB = EF$.' Which property?", "answer": "transitive property", "accept": ["transitive", "transitive property of equality", "transitive property of congruence"], "hint": "Equality chains through a middle term." },
+        { "instruction": "Statement: 'If $x = 7$, then $7 = x$.' Which property?", "answer": "symmetric property", "accept": ["symmetric", "symmetric property of equality"], "hint": "An equation can be read in either direction." },
+        { "instruction": "Statement: '$XY = XY$.' Which property?", "answer": "reflexive property", "accept": ["reflexive", "reflexive property of equality", "reflexive property of congruence"], "hint": "Anything equals itself." },
+        { "instruction": "Statement: 'If $y = 4$, then $3y + 1$ may be rewritten as $3(4) + 1$.' Which property?", "answer": "substitution", "accept": ["substitution property", "substitution property of equality", "sub"], "hint": "Equals may replace equals anywhere in an expression." }
+      ],
+      "finalAnswer": { "value": "transitive, symmetric, reflexive, substitution", "unit": "" },
+      "solutionNarrative": "Chaining through $CD$ is the transitive property; reversing an equation is the symmetric property; $XY = XY$ is the reflexive property; replacing $y$ with 4 is substitution."
+    },
+    {
+      "id": "geometry.intro-to-proof.s08",
+      "concepts": ["algebraic-proof"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A fencing plan requires $5(x - 2) + 3x = 70$, where $x$ is a panel length in feet. Prove $x = 10$, naming the property or move that justifies each line. (Reasons menu for this proof: distributive property, combine like terms, addition property, subtraction property, multiplication property, division property.)",
+      "steps": [
+        { "instruction": "Statement 2: clear the parentheses. What equation results?", "answer": "5x - 10 + 3x = 70", "accept": ["5x-10+3x=70", "8x - 10 = 70"], "hint": "$5(x - 2) = 5x - 10$; leave the $+3x$ as is (or combine — the grader accepts both)." },
+        { "instruction": "Reason 2: which move justifies rewriting $5(x-2)$ as $5x - 10$?", "answer": "distributive property", "accept": ["distributive", "distribution", "distributive property of equality"], "hint": "$a(b - c) = ab - ac$." },
+        { "instruction": "Statement 3: combine the $x$ terms. What equation results?", "answer": "8x - 10 = 70", "accept": ["8x-10=70", "-10+8x=70"], "hint": "$5x + 3x = 8x$." },
+        { "instruction": "Reason 3: which move justifies $5x + 3x = 8x$?", "answer": "combine like terms", "accept": ["combining like terms", "combine", "collect like terms", "simplify", "simplification"], "hint": "Terms with the same variable part merge." },
+        { "instruction": "Statement 4: undo the $-10$. What equation results?", "answer": "8x = 80", "accept": ["8x=80"], "hint": "Add 10 to both sides." },
+        { "instruction": "Reason 4: which property?", "answer": "addition property", "accept": ["addition property of equality", "addition", "apoe"], "hint": "The same number added to both sides." },
+        { "instruction": "Statement 5: solve for $x$.", "answer": "x = 10", "accept": ["x=10", "10"], "hint": "Divide both sides by 8." },
+        { "instruction": "Reason 5: which property?", "answer": "division property", "accept": ["division property of equality", "division", "dpoe"], "hint": "Both sides divided by 8." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "feet" },
+      "solutionNarrative": "Distribute: $5x - 10 + 3x = 70$. Combine like terms: $8x - 10 = 70$. Add 10 (addition property): $8x = 80$. Divide by 8 (division property): $x = 10$ feet."
+    },
+    {
+      "id": "geometry.intro-to-proof.s09",
+      "concepts": ["angle-proofs"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two straight roads cross. One corner angle of the intersection measures $115^\\circ$. Fill in the proof of the other angles' measures. (Reasons menu: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)",
+      "steps": [
+        { "instruction": "Statement: the angle directly opposite measures how many degrees?", "answer": "115", "accept": [], "hint": "Opposite angles at a crossing are equal." },
+        { "instruction": "Reason: which fact justifies that? (Answer with one of: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)", "answer": "vertical angles", "accept": ["vertical angle theorem", "vertical angles theorem", "vert angles", "vertical angles are congruent"], "hint": "Opposite angles formed by two crossing lines." },
+        { "instruction": "Statement: the angle adjacent to the $115^\\circ$ corner measures how many degrees?", "answer": "65", "accept": [], "hint": "$180 - 115$." },
+        { "instruction": "Reason: which fact justifies that? (Answer with one of: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)", "answer": "linear pair", "accept": ["linear pair postulate", "linear pairs", "supplementary", "supplementary angles", "angles on a straight line"], "hint": "Two angles along a straight road sum to $180^\\circ$." }
+      ],
+      "finalAnswer": { "value": "115 and 65", "unit": "degrees" },
+      "solutionNarrative": "The opposite angle is $115^\\circ$ by the vertical angles theorem; the adjacent angle is $180 - 115 = 65^\\circ$ because a linear pair is supplementary."
+    },
+    {
+      "id": "geometry.intro-to-proof.s10",
+      "concepts": ["angle-proofs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Ray $BD$ lies inside $\\angle ABC$, with $m\\angle ABD = 42^\\circ$ and $m\\angle DBC = 33^\\circ$. Ray $BE$ extends ray $BA$ through $B$, so $\\angle ABC$ and $\\angle CBE$ form a linear pair. (Reasons menu: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)",
+      "steps": [
+        { "instruction": "Statement: find $m\\angle ABC$ in degrees.", "answer": "75", "accept": [], "hint": "The whole equals the sum of its parts: $42 + 33$." },
+        { "instruction": "Reason: which postulate justifies $m\\angle ABD + m\\angle DBC = m\\angle ABC$? (Answer with one of: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)", "answer": "angle addition", "accept": ["angle addition postulate", "addition of angles", "angle addition property"], "hint": "A whole angle is the sum of its adjacent parts." },
+        { "instruction": "Statement: find $m\\angle CBE$ in degrees.", "answer": "105", "accept": [], "hint": "$180 - 75$." },
+        { "instruction": "Reason: which fact justifies that? (Answer with one of: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)", "answer": "linear pair", "accept": ["linear pair postulate", "linear pairs", "supplementary", "supplementary angles", "angles on a straight line"], "hint": "$\\angle ABC$ and $\\angle CBE$ sit on a straight line." }
+      ],
+      "finalAnswer": { "value": "105", "unit": "degrees" },
+      "solutionNarrative": "By the angle addition postulate, $m\\angle ABC = 42 + 33 = 75^\\circ$. Then $\\angle CBE$ completes a linear pair: $180 - 75 = 105^\\circ$."
+    },
+    {
+      "id": "geometry.intro-to-proof.s11",
+      "concepts": ["angle-proofs"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A straight access road (a transversal) crosses two parallel railway tracks, making a $68^\\circ$ angle at the upper track. Justify each measure at the lower track. (Reasons menu: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)",
+      "steps": [
+        { "instruction": "Statement: the angle in the SAME position at the lower crossing measures how many degrees?", "answer": "68", "accept": [], "hint": "Same-position angles at parallel lines are equal." },
+        { "instruction": "Reason: which fact justifies that? (Answer with one of: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)", "answer": "corresponding angles", "accept": ["corresponding angles postulate", "corresponding", "corresponding angle"], "hint": "Same position at each crossing = corresponding." },
+        { "instruction": "Statement: the angle BETWEEN the tracks on the OPPOSITE side of the road measures how many degrees?", "answer": "68", "accept": [], "hint": "Between the parallels, opposite sides of the transversal — equal." },
+        { "instruction": "Reason: which fact justifies that? (Answer with one of: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)", "answer": "alternate interior angles", "accept": ["alternate interior", "alternate interior angle theorem", "alternate interior angles theorem", "alt interior angles", "alt int angles"], "hint": "Interior (between the parallels), alternate sides." }
+      ],
+      "finalAnswer": { "value": "68", "unit": "degrees" },
+      "solutionNarrative": "Corresponding angles at parallel lines are congruent ($68^\\circ$), and alternate interior angles are congruent as well ($68^\\circ$). Each statement carries its own theorem as the reason."
+    },
+    {
+      "id": "geometry.intro-to-proof.s12",
+      "concepts": ["angle-proofs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two lines cross. One angle measures $(3x + 20)^\\circ$ and the angle directly opposite it measures $(5x - 40)^\\circ$. Prove the measures, justifying each step. (Reasons menu: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)",
+      "steps": [
+        { "instruction": "Statement 1: write the equation relating the two expressions.", "answer": "3x + 20 = 5x - 40", "accept": ["3x+20=5x-40", "5x-40=3x+20"], "hint": "Opposite angles at a crossing are equal." },
+        { "instruction": "Reason 1: which fact justifies setting them equal? (Answer with one of: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)", "answer": "vertical angles", "accept": ["vertical angle theorem", "vertical angles theorem", "vert angles", "vertical angles are congruent"], "hint": "They are opposite angles formed by two crossing lines." },
+        { "instruction": "Statement 2: solve for $x$.", "answer": "x = 30", "accept": ["x=30", "30"], "hint": "Subtract $3x$, add 40: $60 = 2x$." },
+        { "instruction": "Statement 3: find the measure of the $(3x + 20)^\\circ$ angle, in degrees.", "answer": "110", "accept": [], "hint": "$3(30) + 20$; check $5(30) - 40 = 110$ too." },
+        { "instruction": "Statement 4: find the measure of an angle adjacent to it, in degrees.", "answer": "70", "accept": [], "hint": "$180 - 110$." },
+        { "instruction": "Reason 4: which fact justifies statement 4? (Answer with one of: vertical angles, linear pair, angle addition, corresponding angles, alternate interior angles)", "answer": "linear pair", "accept": ["linear pair postulate", "linear pairs", "supplementary", "supplementary angles", "angles on a straight line"], "hint": "Adjacent angles at the crossing lie on a straight line." }
+      ],
+      "finalAnswer": { "value": "110", "unit": "degrees" },
+      "solutionNarrative": "Vertical angles are congruent, so $3x + 20 = 5x - 40$, giving $x = 30$ and a measure of $110^\\circ$. The adjacent angle is its linear-pair partner: $180 - 110 = 70^\\circ$."
+    },
+    {
+      "id": "geometry.intro-to-proof.s13",
+      "concepts": ["congruence-proofs"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "An A-frame sign is built as $\\triangle ABC$ and $\\triangle DBC$ sharing the central post $BC$. The spec gives $AB \\cong DB$ and $AC \\cong DC$. Complete the congruence proof.",
+      "steps": [
+        { "instruction": "Not counting the shared post, how many pairs of sides are given congruent? (Give a number.)", "answer": "2", "accept": ["two"], "hint": "Count the given congruences: $AB \\cong DB$ and $AC \\cong DC$." },
+        { "instruction": "Statement: $BC \\cong BC$. Reason: which property justifies a side being congruent to itself? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "reflexive property", "accept": ["reflexive", "reflexive property of congruence", "reflexive property of equality"], "hint": "Anything is congruent to itself." },
+        { "instruction": "Three pairs of sides now match. Which congruence criterion applies? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "sss", "accept": ["side side side", "sss postulate", "sss congruence"], "hint": "Three side pairs, no angles needed." }
+      ],
+      "finalAnswer": { "value": "SSS", "unit": "" },
+      "solutionNarrative": "Two side pairs are given; the shared post gives the third by the reflexive property. Three side pairs trigger SSS, so $\\triangle ABC \\cong \\triangle DBC$."
+    },
+    {
+      "id": "geometry.intro-to-proof.s14",
+      "concepts": ["congruence-proofs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "In $\\triangle PQR$ and $\\triangle XYZ$: $\\angle P \\cong \\angle X$, $\\angle Q \\cong \\angle Y$, and the sides between those angles satisfy $PQ \\cong XY$. Also, $m\\angle P = 40^\\circ$ and $m\\angle Q = 65^\\circ$.",
+      "steps": [
+        { "instruction": "The congruent side pair $PQ \\cong XY$ lies BETWEEN the two congruent angle pairs. Which criterion proves the triangles congruent? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "asa", "accept": ["angle side angle", "asa postulate", "asa congruence"], "hint": "Angle, included side, angle." },
+        { "instruction": "Find $m\\angle R$ in degrees.", "answer": "75", "accept": [], "hint": "Triangle angles sum to 180: $180 - 40 - 65$." },
+        { "instruction": "After the triangles are proved congruent, which reason lets you conclude $QR \\cong YZ$? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "cpctc", "accept": ["corresponding parts of congruent triangles are congruent", "cpct"], "hint": "Corresponding Parts of Congruent Triangles are Congruent." }
+      ],
+      "finalAnswer": { "value": "ASA", "unit": "" },
+      "solutionNarrative": "Two angle pairs with the included side pair is ASA. The third angle is $180 - 40 - 65 = 75^\\circ$. Once congruence is established, CPCTC delivers every remaining pair, including $QR \\cong YZ$."
+    },
+    {
+      "id": "geometry.intro-to-proof.s15",
+      "concepts": ["congruence-proofs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Segments $\\overline{AC}$ and $\\overline{BD}$ bisect each other at point $X$, so $AX \\cong CX$ and $BX \\cong DX$. Prove $\\triangle AXB \\cong \\triangle CXD$ and then $AB \\cong CD$. Given $m\\angle AXB = 52^\\circ$.",
+      "steps": [
+        { "instruction": "Statement: $\\angle AXB \\cong \\angle CXD$. Reason: which fact justifies it? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "vertical angles", "accept": ["vertical angle theorem", "vertical angles theorem", "vert angles", "vertical angles are congruent"], "hint": "The two segments cross at $X$, forming opposite angles." },
+        { "instruction": "Statement: find $m\\angle CXD$ in degrees.", "answer": "52", "accept": [], "hint": "Vertical angles are equal." },
+        { "instruction": "Two side pairs with the INCLUDED angle pair match. Which criterion proves $\\triangle AXB \\cong \\triangle CXD$? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "sas", "accept": ["side angle side", "sas postulate", "sas congruence"], "hint": "Side, included angle, side — the angle at $X$ sits between the two given sides." },
+        { "instruction": "Which reason then justifies the final statement $AB \\cong CD$? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "cpctc", "accept": ["corresponding parts of congruent triangles are congruent", "cpct"], "hint": "After congruence, corresponding parts follow." }
+      ],
+      "finalAnswer": { "value": "SAS, then CPCTC", "unit": "" },
+      "solutionNarrative": "The crossing at $X$ gives $\\angle AXB \\cong \\angle CXD$ (vertical angles, both $52^\\circ$). With $AX \\cong CX$ and $BX \\cong DX$, that included angle completes SAS. CPCTC then yields $AB \\cong CD$."
+    },
+    {
+      "id": "geometry.intro-to-proof.s16",
+      "concepts": ["congruence-proofs"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two roof panels are modeled as $\\triangle ABC$ and $\\triangle DEF$ with $\\angle A \\cong \\angle D$ (given: pitch), $\\angle B \\cong \\angle E$ (given: eave angle), and $BC \\cong EF$ (given: matching edge length). Note that side $BC$ touches $\\angle B$ but NOT $\\angle A$.",
+      "steps": [
+        { "instruction": "Is the given side pair located between the two given angle pairs? (yes/no)", "answer": "no", "accept": ["not included", "non included"], "hint": "$BC$ is opposite $\\angle A$ — it only touches one of the two angles." },
+        { "instruction": "Which congruence criterion applies? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "aas", "accept": ["angle angle side", "aas theorem", "aas congruence", "saa"], "hint": "Two angles and a NON-included side." },
+        { "instruction": "In the two-column proof, what is the reason for the first three statements ($\\angle A \\cong \\angle D$, $\\angle B \\cong \\angle E$, $BC \\cong EF$)? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "given", "accept": ["givens", "it is given"], "hint": "They come straight from the problem's spec." },
+        { "instruction": "After congruence is proved, which reason justifies concluding $AB \\cong DE$? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "cpctc", "accept": ["corresponding parts of congruent triangles are congruent", "cpct"], "hint": "Corresponding parts of congruent triangles are congruent." }
+      ],
+      "finalAnswer": { "value": "AAS", "unit": "" },
+      "solutionNarrative": "The side pair is non-included (it misses $\\angle A$), so the criterion is AAS. The three starting statements are justified 'given', and once $\\triangle ABC \\cong \\triangle DEF$, CPCTC certifies $AB \\cong DE$."
+    }
+  ]
+}

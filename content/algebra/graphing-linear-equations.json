@@ -1,0 +1,377 @@
+{
+  "id": "algebra.graphing-linear-equations",
+  "subject": "algebra",
+  "title": "Graphing Linear Equations",
+  "prerequisites": ["algebra.linear-equations"],
+  "estimatedMinutes": 35,
+  "keyConcepts": [
+    {
+      "id": "plot-points",
+      "label": "The coordinate plane and plotting points",
+      "microLesson": "Every point in the plane gets an address: an ordered pair $(x, y)$ where $x$ says how far right (positive) or left (negative) of the origin, and $y$ says how far up or down. Order matters — $(3, 5)$ and $(5, 3)$ are different places. The axes split the plane into four quadrants, numbered I–IV counterclockwise from the upper right: quadrant I is $(+,+)$, II is $(-,+)$, III is $(-,-)$, IV is $(+,-)$. A point with $x = 0$ sits on the y-axis; a point with $y = 0$ sits on the x-axis."
+    },
+    {
+      "id": "slope-from-points",
+      "label": "Slope as a rate of change",
+      "microLesson": "Slope measures how fast $y$ changes per unit of $x$: $m = \\dfrac{y_2 - y_1}{x_2 - x_1}$ — 'rise over run'. It's the speed on a distance-time graph, the cost per unit on a price graph, the grade of a ramp. Slopes can be fractions: through $(0,0)$ and $(4,3)$ the slope is $3/4$. Two special cases: a horizontal line has slope $0$ (nothing rises), and a vertical line has an **undefined** slope (the run is $0$, and you can't divide by zero)."
+    },
+    {
+      "id": "slope-intercept-form",
+      "label": "Slope-intercept form y = mx + b",
+      "microLesson": "In $y = mx + b$, the two constants tell the whole story: $m$ is the rate of change (slope) and $b$ is the starting value — the $y$-value when $x = 0$, where the line crosses the y-axis. From $y = 45x + 60$: rate \\$45 per unit, starting charge \\$60. To write the equation yourself: get $m$ (given, or from two points), then plug a known point into $y = mx + b$ and solve for $b$."
+    },
+    {
+      "id": "intercepts-and-graphing",
+      "label": "Intercepts: finding, using, interpreting",
+      "microLesson": "The y-intercept is where the line crosses the y-axis — set $x = 0$ and solve. The x-intercept is where it crosses the x-axis — set $y = 0$ and solve. Two points determine a line, and the intercepts are usually the two easiest to find, so they're a fast way to graph. In applications they carry meaning: the y-intercept is the starting value (initial cost, starting volume), and the x-intercept is where the quantity hits zero (break-even point, the moment a tank runs empty)."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Every straight line is a rate you can see\n\nA huge share of real-world quantities change at a *constant rate*: a plumber charges \\$60 to show up plus \\$45 per hour. A tank drains 30 gallons every minute. Your savings grow \\$50 every month. A wheelchair ramp rises 1 foot for every 12 feet of run. Graph any of these and you get a perfectly straight line — that's what 'linear' means. This topic is about moving fluently between three views of the same relationship: a **table of points**, a **picture** (the line), and an **equation** ($y = mx + b$). Each view answers a different question fastest.\n\n## The coordinate plane: every point gets an address\n\nTwo perpendicular number lines — the x-axis (horizontal) and y-axis (vertical) — cross at the **origin** $(0, 0)$. Any point is located by an **ordered pair** $(x, y)$: go $x$ units right (or left if negative), then $y$ units up (or down). Order matters: $(2, 5)$ is not $(5, 2)$. The axes cut the plane into four **quadrants**, numbered I–IV counterclockwise from the upper right. On a delivery map, 'three blocks east, four blocks north of the depot' is just the point $(3, 4)$.\n\n## Slope: the number that measures 'how fast'\n\nPick any two points on a line, $(x_1, y_1)$ and $(x_2, y_2)$. The **slope** is\n\n$$m = \\frac{y_2 - y_1}{x_2 - x_1} = \\frac{\\text{rise}}{\\text{run}}$$\n\n— the change in $y$ per one unit of $x$. If a cyclist is at mile 12 after 1 hour and mile 36 after 3 hours, the slope is $\\frac{36 - 12}{3 - 1} = 12$ miles per hour. Slope *is* speed there; on a cost graph it's price per unit; on a ramp it's the grade.\n\nSigns and special cases matter:\n\n- **Positive slope**: the line climbs left-to-right (savings growing).\n- **Negative slope**: it falls (a tank draining, a battery dying).\n- **Slope 0**: a horizontal line — $y$ never changes.\n- **Undefined slope**: a vertical line — the run is $0$, and division by zero is meaningless.\n\nSlopes are often fractions: rising 3 for every 4 across gives $m = 3/4$. Don't rush to decimals; the fraction *is* the rise and run.\n\n## Slope-intercept form: $y = mx + b$\n\nSolve any linear equation for $y$ and you get $y = mx + b$, the most information-dense way to write a line:\n\n- $m$ is the **slope** — the rate.\n- $b$ is the **y-intercept** — the value of $y$ when $x = 0$, the *starting value*.\n\nThe plumber's bill is $y = 45x + 60$: start at \\$60 before any work happens, then climb \\$45 per hour. To graph it, plot $(0, b)$, then use the slope to step over and up to a second point — two points make the line.\n\nHere is $y = 2x + 1$ drawn that way: start at the y-intercept $(0, 1)$, then the slope $2$ says 'run 1, rise 2' to reach the next point.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-3, 5], \"yRange\": [-3, 9], \"grid\": true, \"curves\": [ { \"fn\": \"2*x+1\", \"label\": \"y=2x+1\", \"color\": \"accent\", \"labelAt\": 2.5 } ], \"points\": [ { \"x\": 0, \"y\": 1, \"label\": \"(0,1)\", \"color\": \"warn\" } ], \"segments\": [ { \"from\": [1, 3], \"to\": [2, 3], \"dashed\": true, \"label\": \"run 1\", \"color\": \"dim\" }, { \"from\": [2, 3], \"to\": [2, 5], \"dashed\": true, \"label\": \"rise 2\", \"color\": \"dim\" } ], \"caption\": \"y = 2x + 1: y-intercept (0,1), slope 2 = rise 2 over run 1\" }\n```\n\nWriting the equation is just as mechanical: given the slope and one point, plug both into $y = mx + b$ and solve for $b$. Given two points, compute $m$ first, then do the same.\n\n## Intercepts: where the story starts and where it ends\n\nSet $x = 0$ to find the **y-intercept**; set $y = 0$ to find the **x-intercept**. For $2x + 3y = 12$ that gives $(0, 4)$ and $(6, 0)$ — two easy points, and the graph is done.\n\nSee it drawn: mark where the line meets each axis, connect them, and the whole line is determined.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-2, 8], \"yRange\": [-2, 6], \"grid\": true, \"curves\": [ { \"fn\": \"(12-2*x)/3\", \"label\": \"2x+3y=12\", \"color\": \"accent\", \"labelAt\": 3 } ], \"points\": [ { \"x\": 0, \"y\": 4, \"label\": \"(0,4)\", \"color\": \"warn\" }, { \"x\": 6, \"y\": 0, \"label\": \"(6,0)\", \"color\": \"warn\" } ], \"caption\": \"2x + 3y = 12: y-intercept (0,4), x-intercept (6,0) — two points, one line\" }\n```\n\nIn applications the intercepts are the headline numbers. If a food truck's profit is $P = 8x - 240$, the y-intercept $-240$ is the fixed cost you're down before selling anything, and the x-intercept $x = 30$ is the **break-even point** — the 31st sale is where profit begins. If a tank holds $V = 240 - 30t$ gallons, the intercepts say 'starts at 240 gallons, empty at $t = 8$ minutes.'\n\n## Why this topic is the bridge to calculus\n\nCalculus 1 opens with one question: *what is the slope of a curve at a single point?* The answer — the **slope of the tangent line** — is the derivative, and every derivative you will ever compute is this topic's $\\frac{\\text{rise}}{\\text{run}}$ pushed to its limit. Get fluent with slope, intercepts, and $y = mx + b$ now, and the central idea of calculus will feel like an old friend rather than a new subject."
+  },
+  "application": {
+    "summary": "Graphs of linear equations turn constant-rate situations — cost per unit, speed, ramp grade, draining tanks, growing savings — into pictures where the slope is the rate, the y-intercept is the starting value, and the x-intercept is the break-even or run-out point.",
+    "domains": ["business", "personal finance", "engineering", "science"],
+    "workedExample": "**Break-even: reading a food truck's whole future off one line.**\n\nA food truck pays \\$240 a day in fixed costs (permit, fuel, staff) and clears \\$8 of margin per meal sold. Daily profit after $x$ meals:\n\n$$P = 8x - 240$$\n\nThree numbers on the graph tell the owner everything:\n\n- **Slope $m = 8$**: each meal moves profit up \\$8. Want a steeper line? Raise the margin.\n- **y-intercept $(0, -240)$**: at zero sales the day starts \\$240 in the hole. That's the fixed cost, drawn as the point where the line crosses the vertical axis.\n- **x-intercept**: set $P = 0$: $8x - 240 = 0$ gives $x = 30$. The line crosses the horizontal axis at $(30, 0)$ — the **break-even point**. Meal 31 is the first profitable one.\n\nSame picture, endless reuse: a gym membership that pays for itself, a solar panel recouping its install cost, a battery draining to zero. One straight line, and the slope and intercepts answer 'how fast?', 'where do I start?', and 'when does it flip?'",
+    "domainNotes": [
+      "**Business:** break-even charts are literally x-intercepts; profit margins are slopes; fixed costs are y-intercepts.",
+      "**Personal finance:** savings balance vs. time is a line whose slope is your monthly deposit and whose intercept is what you started with.",
+      "**Engineering:** ramp grades, road gradients, and pipe slopes are all rise-over-run specs (ADA ramps must not exceed slope $1/12$).",
+      "**Science:** temperature trends, sensor calibration lines, and unit conversions ($F = \\frac{9}{5}C + 32$) are read exactly like $y = mx + b$."
+    ]
+  },
+  "generators": [
+    "agr-plot-points-d1",
+    "agr-plot-points-d2",
+    "agr-plot-points-d3",
+    "agr-slope-two-points-d1",
+    "agr-slope-two-points-d2",
+    "agr-slope-two-points-d3",
+    "agr-slope-intercept-d1",
+    "agr-slope-intercept-d2",
+    "agr-slope-intercept-d3",
+    "agr-intercepts-d1",
+    "agr-intercepts-d2",
+    "agr-intercepts-d3"
+  ],
+  "problems": [
+    {
+      "id": "algebra.graphing-linear-equations.s01",
+      "concepts": ["plot-points"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "On a city delivery map, the depot sits at the origin $(0, 0)$. A café is 3 blocks east and 4 blocks north of the depot. (East is the positive $x$ direction, north is positive $y$.)",
+      "steps": [
+        { "instruction": "Write the café's location as an ordered pair $(x, y)$.", "answer": "(3, 4)", "accept": ["(3,4)"], "hint": "East is the x-coordinate, north is the y-coordinate: (east, north)." },
+        { "instruction": "Which quadrant of the coordinate plane is the café in? (Give the quadrant number, 1–4.)", "answer": "1", "accept": ["I", "one", "first", "quadrant 1"], "hint": "Both coordinates are positive — that's the upper-right quadrant." }
+      ],
+      "finalAnswer": { "value": "(3, 4)", "unit": "" },
+      "solutionNarrative": "East gives the x-coordinate and north gives the y-coordinate, so the café is at $(3, 4)$. Both coordinates are positive, so it lies in quadrant I."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s02",
+      "concepts": ["plot-points"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the point $A = (-2, 5)$.",
+      "steps": [
+        { "instruction": "What is the x-coordinate of $A$?", "answer": "-2", "accept": [], "hint": "The first number in the ordered pair." },
+        { "instruction": "What is the y-coordinate of $A$?", "answer": "5", "accept": [], "hint": "The second number in the ordered pair." },
+        { "instruction": "Which quadrant is $A$ in? (Give the quadrant number.)", "answer": "2", "accept": ["II", "two", "second", "quadrant 2"], "hint": "Negative x, positive y is the upper-left quadrant." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "quadrant" },
+      "solutionNarrative": "$A = (-2, 5)$ has x-coordinate $-2$ (left of the y-axis) and y-coordinate $5$ (above the x-axis), which places it in quadrant II."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s03",
+      "concepts": ["plot-points"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A weather station logs temperature as points $(t, T)$: $t$ is hours after noon (negative = before noon) and $T$ is degrees Celsius (negative = below zero).",
+      "steps": [
+        { "instruction": "Write the point for '3 hours after noon, 5 degrees below zero' as an ordered pair.", "answer": "(3, -5)", "accept": ["(3,-5)"], "hint": "After noon means positive $t$; below zero means negative $T$." },
+        { "instruction": "Which quadrant is that point in? (Give the quadrant number.)", "answer": "4", "accept": ["IV", "four", "fourth", "quadrant 4"], "hint": "Positive x, negative y is the lower-right quadrant." },
+        { "instruction": "The reading $(0, 7)$ was taken exactly at noon. Which axis does that point lie on? Type 'x' or 'y'.", "answer": "y", "accept": ["y-axis", "y axis"], "hint": "A point with $x = 0$ hasn't moved left or right at all." }
+      ],
+      "finalAnswer": { "value": "(3, -5)", "unit": "" },
+      "solutionNarrative": "'3 hours after noon, 5 below zero' is $(3, -5)$ — positive $t$, negative $T$, so quadrant IV. The noon reading $(0, 7)$ has $x = 0$, putting it on the y-axis."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s04",
+      "concepts": ["slope-from-points"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the slope of the line through $(1, 2)$ and $(4, 11)$.",
+      "steps": [
+        { "instruction": "Compute the rise, $y_2 - y_1$.", "answer": "9", "accept": [], "hint": "$11 - 2$." },
+        { "instruction": "Compute the run, $x_2 - x_1$.", "answer": "3", "accept": [], "hint": "$4 - 1$." },
+        { "instruction": "Divide rise by run to get the slope $m$.", "answer": "3", "accept": ["9/3", "m=3"], "hint": "$m = 9/3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Rise $= 11 - 2 = 9$, run $= 4 - 1 = 3$, so $m = 9/3 = 3$."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s05",
+      "concepts": ["slope-from-points"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A wheelchair ramp rises 2 feet over a horizontal run of 24 feet. Building code (ADA) requires the slope to be at most $1/12$.",
+      "steps": [
+        { "instruction": "What is the rise of the ramp, in feet?", "answer": "2", "accept": [], "hint": "The vertical change." },
+        { "instruction": "What is the run of the ramp, in feet?", "answer": "24", "accept": [], "hint": "The horizontal change." },
+        { "instruction": "Compute the slope as a fraction in lowest terms.", "answer": "1/12", "accept": ["2/24"], "hint": "Slope = rise/run = 2/24; reduce it." },
+        { "instruction": "Does the ramp meet the code's maximum slope of $1/12$? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Compare your slope to 1/12." }
+      ],
+      "finalAnswer": { "value": "1/12", "unit": "" },
+      "solutionNarrative": "Slope $= \\dfrac{\\text{rise}}{\\text{run}} = \\dfrac{2}{24} = \\dfrac{1}{12}$, exactly at the ADA limit, so the ramp passes."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s06",
+      "concepts": ["slope-from-points"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the slope of the line through $(-3, 4)$ and $(5, -2)$.",
+      "steps": [
+        { "instruction": "Compute the rise, $y_2 - y_1$.", "answer": "-6", "accept": [], "hint": "$-2 - 4$." },
+        { "instruction": "Compute the run, $x_2 - x_1$. Watch the double negative.", "answer": "8", "accept": [], "hint": "$5 - (-3) = 5 + 3$." },
+        { "instruction": "Write the slope as a fraction in lowest terms.", "answer": "-3/4", "accept": ["-6/8", "-0.75"], "hint": "$m = -6/8$; reduce." }
+      ],
+      "finalAnswer": { "value": "-3/4", "unit": "" },
+      "solutionNarrative": "Rise $= -2 - 4 = -6$; run $= 5 - (-3) = 8$; slope $= -6/8 = -3/4$. The line falls 3 for every 4 it moves right."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s07",
+      "concepts": ["slope-from-points"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Consider line $AB$ through $A = (4, 7)$ and $B = (4, -2)$, and line $CD$ through $C = (3, 5)$ and $D = (8, 5)$.",
+      "steps": [
+        { "instruction": "For line $AB$, compute the run, $x_2 - x_1$.", "answer": "0", "accept": [], "hint": "$4 - 4$." },
+        { "instruction": "Is line $AB$ horizontal, vertical, or slanted?", "answer": "vertical", "accept": [], "hint": "Both points have the same x-coordinate, so the line runs straight up and down." },
+        { "instruction": "What is the slope of $AB$? (Give a number, or type 'undefined'.)", "answer": "undefined", "accept": ["no slope", "dne", "none"], "hint": "The slope formula would divide by the run, which is 0." },
+        { "instruction": "Now line $CD$: what is its slope?", "answer": "0", "accept": ["zero"], "hint": "Both points have the same y-coordinate — the rise is 0, and $0/5$ is a perfectly good number." }
+      ],
+      "finalAnswer": { "value": "undefined", "unit": "" },
+      "solutionNarrative": "$AB$ has run $4 - 4 = 0$, so it is vertical and its slope is undefined (division by zero). $CD$ has rise $5 - 5 = 0$ over run $5$, so it is horizontal with slope $0$. 'Zero slope' and 'no slope' are very different things."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s08",
+      "concepts": ["slope-intercept-form"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the line $y = 4x - 7$.",
+      "steps": [
+        { "instruction": "What is the slope of the line?", "answer": "4", "accept": ["m=4"], "hint": "In $y = mx + b$, the slope is the coefficient of $x$." },
+        { "instruction": "What is the y-intercept (as a number)?", "answer": "-7", "accept": ["b=-7"], "hint": "It's the constant term $b$ — mind the sign." },
+        { "instruction": "Write the point where the line crosses the y-axis as an ordered pair.", "answer": "(0, -7)", "accept": ["(0,-7)"], "hint": "The line crosses the y-axis where $x = 0$." }
+      ],
+      "finalAnswer": { "value": "slope 4, y-intercept -7", "unit": "" },
+      "solutionNarrative": "Matching $y = 4x - 7$ against $y = mx + b$: slope $m = 4$, y-intercept $b = -7$, so the line crosses the y-axis at $(0, -7)$."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s09",
+      "concepts": ["slope-intercept-form"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A plumber charges a \\$60 service-call fee plus \\$45 per hour of work. Let $y$ be the total bill for $x$ hours.",
+      "steps": [
+        { "instruction": "What is the slope of this cost line (the rate per hour)?", "answer": "45", "accept": ["m=45"], "hint": "The slope is the amount the bill grows per hour." },
+        { "instruction": "What is the y-intercept (the bill before any work happens)?", "answer": "60", "accept": ["b=60"], "hint": "The cost at $x = 0$ hours." },
+        { "instruction": "Write the equation of the line in slope-intercept form.", "answer": "y = 45x + 60", "accept": ["y=45x+60", "y=60+45x"], "hint": "$y = mx + b$ with your rate and starting fee." },
+        { "instruction": "Use the equation to find the bill for a 3-hour job, in dollars.", "answer": "195", "accept": ["$195", "y=195"], "hint": "Substitute $x = 3$: $45(3) + 60$." }
+      ],
+      "finalAnswer": { "value": "y = 45x + 60", "unit": "" },
+      "solutionNarrative": "The hourly rate is the slope ($m = 45$) and the show-up fee is the starting value ($b = 60$), giving $y = 45x + 60$. At $x = 3$: $45(3) + 60 = 195$ dollars."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s10",
+      "concepts": ["slope-intercept-form"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Write the equation of the line with slope $3$ that passes through the point $(2, 5)$.",
+      "steps": [
+        { "instruction": "Substitute the slope and the point into $y = mx + b$ and solve for $b$.", "answer": "-1", "accept": ["b=-1"], "hint": "$5 = 3(2) + b$, so $b = 5 - 6$." },
+        { "instruction": "Write the equation of the line.", "answer": "y = 3x - 1", "accept": ["y=3x-1", "y=-1+3x"], "hint": "$y = mx + b$ with $m = 3$ and your $b$." }
+      ],
+      "finalAnswer": { "value": "y = 3x - 1", "unit": "" },
+      "solutionNarrative": "Plug $(2, 5)$ into $y = 3x + b$: $5 = 6 + b$, so $b = -1$. The line is $y = 3x - 1$."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s11",
+      "concepts": ["slope-intercept-form"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You've been saving at a steady rate. After 2 months your account holds \\$260; after 5 months it holds \\$410. Model the balance $y$ after $x$ months with a line.",
+      "steps": [
+        { "instruction": "Find the slope — your monthly saving rate — from the points $(2, 260)$ and $(5, 410)$.", "answer": "50", "accept": ["150/3", "m=50"], "hint": "$m = (410 - 260)/(5 - 2)$." },
+        { "instruction": "Use one point to solve for $b$ in $y = mx + b$.", "answer": "160", "accept": ["b=160"], "hint": "$260 = 50(2) + b$." },
+        { "instruction": "Write the equation of the line.", "answer": "y = 50x + 160", "accept": ["y=50x+160", "y=160+50x"], "hint": "$y = mx + b$ with your slope and intercept." },
+        { "instruction": "What does the y-intercept tell you: how many dollars were in the account at the start (month 0)?", "answer": "160", "accept": ["$160"], "hint": "The y-intercept is the value at $x = 0$." }
+      ],
+      "finalAnswer": { "value": "y = 50x + 160", "unit": "" },
+      "solutionNarrative": "Slope $= (410 - 260)/(5 - 2) = 150/3 = 50$ dollars per month. Then $260 = 50(2) + b$ gives $b = 160$, so $y = 50x + 160$: you opened the account with \\$160 and save \\$50 a month."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s12",
+      "concepts": ["intercepts-and-graphing"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find both intercepts of the line $2x + 3y = 12$.",
+      "steps": [
+        { "instruction": "Set $x = 0$ and solve for $y$.", "answer": "4", "accept": ["y=4"], "hint": "$3y = 12$." },
+        { "instruction": "Write the y-intercept as an ordered pair.", "answer": "(0, 4)", "accept": ["(0,4)"], "hint": "It's on the y-axis, so $x = 0$." },
+        { "instruction": "Set $y = 0$ and solve for $x$.", "answer": "6", "accept": ["x=6"], "hint": "$2x = 12$." },
+        { "instruction": "Write the x-intercept as an ordered pair.", "answer": "(6, 0)", "accept": ["(6,0)"], "hint": "It's on the x-axis, so $y = 0$." }
+      ],
+      "finalAnswer": { "value": "(6, 0) and (0, 4)", "unit": "" },
+      "solutionNarrative": "With $x = 0$: $3y = 12$, so the y-intercept is $(0, 4)$. With $y = 0$: $2x = 12$, so the x-intercept is $(6, 0)$. Plot those two points and the graph is done."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s13",
+      "concepts": ["intercepts-and-graphing"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A food truck's daily profit after selling $x$ meals is $P = 20x - 300$ (in dollars).",
+      "steps": [
+        { "instruction": "What is $P$ when $x = 0$ (the y-intercept)?", "answer": "-300", "accept": ["P=-300"], "hint": "Substitute $x = 0$." },
+        { "instruction": "That intercept is the fixed cost. Now set $P = 0$ and solve for the break-even number of meals.", "answer": "15", "accept": ["x=15"], "hint": "$20x - 300 = 0$, so $20x = 300$." },
+        { "instruction": "Write the break-even point as an ordered pair $(x, P)$.", "answer": "(15, 0)", "accept": ["(15,0)"], "hint": "Break-even is where the line crosses the x-axis." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "meals" },
+      "solutionNarrative": "At $x = 0$ the truck is \\$300 in the hole (the y-intercept, its fixed cost). Setting $P = 0$: $20x = 300$, so $x = 15$ — the line crosses the x-axis at $(15, 0)$, the break-even point."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s14",
+      "concepts": ["intercepts-and-graphing"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A water tank is draining. Its volume after $t$ minutes is $V = 240 - 30t$ (gallons).",
+      "steps": [
+        { "instruction": "How many gallons are in the tank at $t = 0$?", "answer": "240", "accept": ["V=240"], "hint": "That's the V-intercept — the starting volume." },
+        { "instruction": "Set $V = 0$ and solve for $t$: when is the tank empty?", "answer": "8", "accept": ["t=8"], "hint": "$240 - 30t = 0$, so $30t = 240$." },
+        { "instruction": "Write the t-intercept as an ordered pair $(t, V)$.", "answer": "(8, 0)", "accept": ["(8,0)"], "hint": "The moment the volume hits zero." },
+        { "instruction": "What is the slope of this line, including its sign?", "answer": "-30", "accept": ["m=-30"], "hint": "The volume changes by how much per minute? Draining means negative." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "minutes" },
+      "solutionNarrative": "The intercepts tell the whole story: the tank starts at $(0, 240)$ — 240 gallons — and hits empty at $(8, 0)$, since $240 - 30t = 0$ gives $t = 8$. The slope $-30$ is the drain rate: 30 gallons lost per minute."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s15",
+      "concepts": ["intercepts-and-graphing"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the intercepts of the line $y = -2x + 8$ and use them to describe its graph.",
+      "steps": [
+        { "instruction": "Write the y-intercept as an ordered pair.", "answer": "(0, 8)", "accept": ["(0,8)"], "hint": "Read $b$ straight off $y = mx + b$; the point is $(0, b)$." },
+        { "instruction": "Set $y = 0$ and solve for $x$.", "answer": "4", "accept": ["x=4"], "hint": "$0 = -2x + 8$, so $2x = 8$." },
+        { "instruction": "Write the x-intercept as an ordered pair.", "answer": "(4, 0)", "accept": ["(4,0)"], "hint": "It's where the line meets the x-axis." },
+        { "instruction": "Between those two points, does the line rise or fall as $x$ increases? Type 'rise' or 'fall'.", "answer": "fall", "accept": ["falls", "falling", "fall"], "hint": "The slope is $-2$ — negative." }
+      ],
+      "finalAnswer": { "value": "(4, 0)", "unit": "" },
+      "solutionNarrative": "The y-intercept is $(0, 8)$. Setting $y = 0$: $2x = 8$, so the x-intercept is $(4, 0)$. Joining the points, the line falls left-to-right, matching its slope of $-2$."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s16",
+      "concepts": ["slope-from-points", "slope-intercept-form"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Write the equation of the line through $(-2, 7)$ and $(4, -5)$ in slope-intercept form.",
+      "steps": [
+        { "instruction": "Compute the slope.", "answer": "-2", "accept": ["-12/6", "m=-2"], "hint": "$m = (-5 - 7)/(4 - (-2))$." },
+        { "instruction": "Substitute one point into $y = mx + b$ and solve for $b$.", "answer": "3", "accept": ["b=3"], "hint": "Using $(-2, 7)$: $7 = -2(-2) + b = 4 + b$." },
+        { "instruction": "Write the equation of the line.", "answer": "y = -2x + 3", "accept": ["y=-2x+3", "y=3-2x"], "hint": "$y = mx + b$ with your values." }
+      ],
+      "finalAnswer": { "value": "y = -2x + 3", "unit": "" },
+      "solutionNarrative": "Slope $= (-5 - 7)/(4 + 2) = -12/6 = -2$. Then $7 = -2(-2) + b$ gives $b = 3$, so the line is $y = -2x + 3$. Check with the other point: $-2(4) + 3 = -5$. ✓"
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s17",
+      "concepts": ["plot-points"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Three corners of a rectangle (sides parallel to the axes) are plotted at $(1, 2)$, $(6, 2)$, and $(6, 5)$.",
+      "steps": [
+        { "instruction": "Write the fourth corner as an ordered pair.", "answer": "(1, 5)", "accept": ["(1,5)"], "hint": "It shares its x-coordinate with $(1, 2)$ and its y-coordinate with $(6, 5)$." },
+        { "instruction": "How wide is the rectangle (the horizontal side length)?", "answer": "5", "accept": [], "hint": "Subtract the two distinct x-coordinates: $6 - 1$." },
+        { "instruction": "How tall is the rectangle (the vertical side length)?", "answer": "3", "accept": [], "hint": "Subtract the two distinct y-coordinates: $5 - 2$." }
+      ],
+      "finalAnswer": { "value": "(1, 5)", "unit": "" },
+      "solutionNarrative": "The missing corner must line up vertically with $(1, 2)$ and horizontally with $(6, 5)$: it is $(1, 5)$. The rectangle is $6 - 1 = 5$ wide and $5 - 2 = 3$ tall."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s18",
+      "concepts": ["slope-from-points"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A cyclist's ride is logged as points $(\\text{hours}, \\text{miles})$: she is at mile 12 after 1 hour and mile 36 after 3 hours, riding at a steady pace.",
+      "steps": [
+        { "instruction": "How many miles did she cover between the two log points?", "answer": "24", "accept": [], "hint": "$36 - 12$." },
+        { "instruction": "How many hours did that take?", "answer": "2", "accept": [], "hint": "$3 - 1$." },
+        { "instruction": "The slope of her distance-time line is her speed. What is it, in miles per hour?", "answer": "12", "accept": ["24/2", "m=12"], "hint": "Slope = rise/run = miles/hours." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "miles per hour" },
+      "solutionNarrative": "Rise $= 36 - 12 = 24$ miles; run $= 3 - 1 = 2$ hours; slope $= 24/2 = 12$ mph. On a distance-time graph, slope literally is speed."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s19",
+      "concepts": ["slope-intercept-form"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Read the graphed line to answer the questions. (Each gridline is one unit.)",
+      "plot": { "type": "cartesian", "xRange": [-2, 6], "yRange": [-3, 7], "grid": true, "curves": [ { "fn": "x-2", "label": "y=?", "color": "accent", "labelAt": 4 } ], "points": [ { "x": 0, "y": -2, "label": "(0,-2)", "color": "warn" }, { "x": 4, "y": 2, "label": "(4,2)", "color": "warn" } ], "caption": "Read the slope and y-intercept off the line" },
+      "steps": [
+        { "instruction": "Read the y-intercept (as a number) — where the line crosses the y-axis.", "answer": "-2", "accept": ["b=-2"], "hint": "Find the point where the line meets the vertical axis; it is marked $(0, -2)$." },
+        { "instruction": "Using the two marked points $(0,-2)$ and $(4,2)$, compute the slope.", "answer": "1", "accept": ["4/4", "m=1"], "hint": "Slope $= \\dfrac{2 - (-2)}{4 - 0} = \\dfrac{4}{4}$." },
+        { "instruction": "Write the equation of the line in slope-intercept form.", "answer": "y = x - 2", "accept": ["y=x-2", "y = 1x - 2", "y=1x-2"], "hint": "$y = mx + b$ with your slope and intercept." }
+      ],
+      "finalAnswer": { "value": "y = x - 2", "unit": "" },
+      "solutionNarrative": "The line crosses the y-axis at $(0, -2)$, so $b = -2$. From $(0,-2)$ to $(4,2)$ the rise is $4$ and the run is $4$, so $m = 1$. The line is $y = x - 2$."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s20",
+      "concepts": ["slope-intercept-form", "intercepts-and-graphing"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Read the graphed line. (Each gridline is one unit.)",
+      "plot": { "type": "cartesian", "xRange": [-4, 4], "yRange": [-2, 8], "grid": true, "curves": [ { "fn": "-2*x+3", "label": "line", "color": "accent", "labelAt": -1.5 } ], "points": [ { "x": 0, "y": 3, "label": "(0,3)", "color": "warn" } ], "caption": "A line crossing the y-axis at (0,3)" },
+      "steps": [
+        { "instruction": "Write the y-intercept as an ordered pair.", "answer": "(0, 3)", "accept": ["(0,3)"], "hint": "The marked point where the line meets the y-axis." },
+        { "instruction": "The line falls 2 units for every 1 unit to the right. What is its slope?", "answer": "-2", "accept": ["m=-2"], "hint": "Falling means a negative slope: rise $-2$ over run $1$." },
+        { "instruction": "Write the equation of the line in slope-intercept form.", "answer": "y = -2x + 3", "accept": ["y=-2x+3", "y=3-2x"], "hint": "$y = mx + b$ with $m = -2$ and $b = 3$." }
+      ],
+      "finalAnswer": { "value": "y = -2x + 3", "unit": "" },
+      "solutionNarrative": "The line crosses the y-axis at $(0, 3)$, so $b = 3$. It falls $2$ for each step right, so $m = -2$. The equation is $y = -2x + 3$."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s21",
+      "concepts": ["plot-points", "slope-from-points"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Two lattice points $P$ and $Q$ are marked on the graphed line. (Each gridline is one unit.)",
+      "plot": { "type": "cartesian", "xRange": [-3, 6], "yRange": [-4, 5], "grid": true, "curves": [ { "fn": "(1/3)*x-1", "label": "line", "color": "accent", "labelAt": 4.5 } ], "points": [ { "x": 0, "y": -1, "label": "P", "color": "warn" }, { "x": 3, "y": 0, "label": "Q", "color": "warn" } ], "caption": "Read the coordinates of P and Q" },
+      "steps": [
+        { "instruction": "Write the coordinates of point $P$ (on the y-axis) as an ordered pair.", "answer": "(0, -1)", "accept": ["(0,-1)"], "hint": "$P$ sits on the y-axis one unit below the origin." },
+        { "instruction": "Write the coordinates of point $Q$ (on the x-axis) as an ordered pair.", "answer": "(3, 0)", "accept": ["(3,0)"], "hint": "$Q$ sits on the x-axis three units right of the origin." },
+        { "instruction": "Using $P$ and $Q$, compute the slope of the line as a fraction in lowest terms.", "answer": "1/3", "accept": ["m=1/3"], "hint": "Slope $= \\dfrac{0 - (-1)}{3 - 0} = \\dfrac{1}{3}$." }
+      ],
+      "finalAnswer": { "value": "1/3", "unit": "" },
+      "solutionNarrative": "$P = (0, -1)$ and $Q = (3, 0)$. The rise is $0 - (-1) = 1$ and the run is $3 - 0 = 3$, so the slope is $\\dfrac{1}{3}$."
+    },
+    {
+      "id": "algebra.graphing-linear-equations.s22",
+      "concepts": ["intercepts-and-graphing"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Read both intercepts off the graphed line. (Each gridline is one unit.)",
+      "plot": { "type": "cartesian", "xRange": [-2, 6], "yRange": [-3, 7], "grid": true, "curves": [ { "fn": "-1.5*x+6", "label": "line", "color": "accent", "labelAt": 3.2 } ], "points": [ { "x": 0, "y": 6, "label": "(0,6)", "color": "warn" }, { "x": 4, "y": 0, "label": "(4,0)", "color": "warn" } ], "caption": "Where does the line cross each axis?" },
+      "steps": [
+        { "instruction": "Write the y-intercept as an ordered pair.", "answer": "(0, 6)", "accept": ["(0,6)"], "hint": "The marked point on the y-axis." },
+        { "instruction": "Write the x-intercept as an ordered pair.", "answer": "(4, 0)", "accept": ["(4,0)"], "hint": "The marked point on the x-axis." },
+        { "instruction": "As $x$ increases, does the line rise or fall? Type 'rise' or 'fall'.", "answer": "fall", "accept": ["falls", "falling"], "hint": "The line goes down from left to right." }
+      ],
+      "finalAnswer": { "value": "(0, 6) and (4, 0)", "unit": "" },
+      "solutionNarrative": "The line crosses the y-axis at $(0, 6)$ and the x-axis at $(4, 0)$. It drops from left to right, so it falls."
+    }
+  ]
+}

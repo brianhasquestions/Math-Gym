@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>try { document.documentElement.setAttribute("data-theme", localStorage.getItem("mathgym.theme") || "terminal"); } catch (e) {}</script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <title>MathGym — Learning Map</title>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+  <script type="module">
+    import { applyTheme } from "./js/theme.js";
+    import { buildShell } from "./js/shell.js";
+    import { subjectMap } from "./js/insights.js";
+    import { setMeter } from "./js/animations.js";
+    import { el, qs, showError } from "./js/app.js";
+    applyTheme();
+
+    const id = qs("id");
+    const { main } = await buildShell({ crumbs: '<a href="index.html">All subjects</a>' });
+
+    if (!id) { showError(main, "No subject specified."); }
+    else try {
+      const map = await subjectMap(id);
+      document.title = `MathGym — ${map.subject.title} Learning Map`;
+      render(map);
+    } catch (e) {
+      showError(main, `Could not build learning map: ${e.message}`);
+    }
+
+    function statusBadge(status) {
+      if (status.mastered) return el("span", { class: "badge mastered" }, "Mastered");
+      if (status.state === "in-progress")
+        return el("span", { class: "badge in-progress" }, `${Math.round(status.progress * 100)}%`);
+      return el("span", { class: "badge" }, "Not started");
+    }
+
+    function render(map) {
+      const { subject, topics, recommendedId, weakConcepts, summary } = map;
+
+      main.appendChild(el("h1", {}, `${subject.title} — Learning Map`));
+      if (subject.blurb) main.appendChild(el("p", { class: "lede" }, subject.blurb));
+
+      // Progress-at-a-glance strip.
+      main.appendChild(el("p", { class: "blurb", style: "color: var(--text-dim)" },
+        `${summary.mastered} mastered · ${summary.inProgress} in progress · ${summary.notStarted} not started — ${summary.total} topics total. ` +
+        `Topics are ordered so each builds on the ones above it.`));
+
+      // Recommended next-step callout.
+      const rec = topics.find((t) => t.id === recommendedId);
+      if (rec) {
+        const reason = rec.status.started
+          ? "You've started this and its prerequisites are solid — pick up here."
+          : rec.prereqs.length
+            ? "Its prerequisites are mastered, so you're ready for it."
+            : "A natural place to begin this subject.";
+        main.appendChild(el("div", { class: "insight-banner recommend" }, [
+          el("div", { class: "insight-body" }, [
+            el("strong", {}, rec.status.started ? "Pick up here: " : "Start here: "),
+            el("span", {}, `${rec.title} — ${reason}`),
+          ]),
+          el("a", { class: "btn", href: `topic.html?id=${encodeURIComponent(rec.id)}` }, "Go to topic"),
+        ]));
+      } else {
+        main.appendChild(el("div", { class: "insight-banner ready" }, [
+          el("div", { class: "insight-body" }, [
+            el("strong", {}, "Subject mastered. "),
+            el("span", {}, "You've cleared every topic here. Revisit any to keep it sharp."),
+          ]),
+        ]));
+      }
+
+      // Weakest concepts across the subject (only if the learner has data).
+      if (weakConcepts.length) {
+        const list = el("ul", { class: "weak-list" }, weakConcepts.map((w) => {
+          const meter = el("div", { class: "meter", style: "width:120px" });
+          meter.appendChild(el("div", { class: "fill" }));
+          setMeter(meter.firstChild, w.proficiency);
+          return el("li", {}, [
+            el("div", {}, [
+              el("a", { href: `train.html?id=${encodeURIComponent(w.topicId)}` }, w.label),
+              el("span", { class: "weak-topic" }, ` · ${w.topicTitle}`),
+            ]),
+            meter,
+          ]);
+        }));
+        main.appendChild(el("div", { class: "card" }, [
+          el("h3", { style: "margin-top:0" }, "Your weakest skills here"),
+          el("p", { class: "blurb", style: "color: var(--text-dim)" },
+            "Skills you've attempted but not yet mastered, weakest first. These are where drilling pays off most."),
+          list,
+        ]));
+      }
+
+      // The path: one row per topic, in dependency order.
+      const path = el("div", { class: "path" });
+      for (const t of topics) {
+        const row = el("div", {
+          class: "path-node"
+            + (t.status.mastered ? " is-mastered" : "")
+            + (t.recommended ? " is-recommended" : "")
+            + (t.status.state === "in-progress" ? " is-active" : ""),
+        });
+
+        const head = el("div", { class: "path-head" }, [
+          el("a", { class: "path-title", href: `topic.html?id=${encodeURIComponent(t.id)}` }, t.title),
+          statusBadge(t.status),
+          t.recommended ? el("span", { class: "badge recommend-badge" }, "Recommended") : null,
+        ]);
+        row.appendChild(head);
+
+        // "Builds on" line, flagging unmastered prerequisites.
+        if (t.prereqs.length) {
+          const parts = t.prereqs.map((p) =>
+            el("a", {
+              href: `topic.html?id=${encodeURIComponent(p.id)}`,
+              class: "prereq-link" + (p.mastered ? " met" : " unmet"),
+              title: p.mastered ? "Mastered" : "Not yet mastered",
+            }, (p.mastered ? "✓ " : "• ") + p.title));
+          const line = el("div", { class: "path-sub" }, [el("span", { class: "sub-label" }, "Builds on: ")]);
+          parts.forEach((p, i) => {
+            line.appendChild(p);
+            if (i < parts.length - 1) line.appendChild(document.createTextNode("  "));
+          });
+          row.appendChild(line);
+          if (t.unmet.length && !t.status.mastered) {
+            row.appendChild(el("div", { class: "path-warn" },
+              `Shore up ${t.unmet.map((u) => u.title).join(", ")} first for a smoother run.`));
+          }
+        }
+        path.appendChild(row);
+      }
+      main.appendChild(el("h2", { style: "margin-top: var(--space-5)" }, "Recommended path"));
+      main.appendChild(path);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+{
+  "id": "calculus-2.applications-of-integration",
+  "subject": "calculus-2",
+  "title": "Applications of Integration",
+  "prerequisites": ["calculus-2.definite-integrals"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "area-between-curves",
+      "label": "Area between curves",
+      "microLesson": "The area trapped between two curves on $[a,b]$ is $\\int_a^b (\\text{top} - \\text{bottom})\\,dx$. Figure out which function is on top over the interval, subtract, and integrate. For polynomials this is exact. Example: between $y = x + 4$ (top) and $y = x^2$ on $[0,2]$ you integrate $(x + 4) - x^2$. Getting the order right matters — swapping top and bottom flips the sign."
+    },
+    {
+      "id": "volume-of-revolution",
+      "label": "Volume of revolution",
+      "microLesson": "Spin a region around an axis and you sweep out a solid. Slice it into thin disks (or washers) perpendicular to the axis; each has area $\\pi r^2$. The volume is $V = \\pi \\int_a^b [R(x)]^2\\,dx$ for a disk, or $\\pi \\int_a^b ([R]^2 - [r]^2)\\,dx$ for a washer with a hole. This is how a lathe-turned part's volume is computed. We use $\\pi \\approx 3.14$ and round the final number."
+    },
+    {
+      "id": "average-value",
+      "label": "Average value of a function",
+      "microLesson": "The average value of $f$ over $[a,b]$ is $\\bar f = \\dfrac{1}{b - a}\\int_a^b f(x)\\,dx$ — total accumulation divided by the width of the interval. It answers 'what single constant value would give the same total?' It's the mean temperature over a day, the average speed over a trip, the typical concentration over time. Integrate, then divide by the interval length."
+    },
+    {
+      "id": "accumulation-and-work",
+      "label": "Accumulation and work",
+      "microLesson": "A definite integral of a rate gives the total accumulated amount: $\\int_a^b r(t)\\,dt$ is the total quantity that flowed, was produced, or was earned. The same idea gives **work**: a variable force $F(x)$ over a distance does work $W = \\int_a^b F(x)\\,dx$. Total revenue from a marginal-revenue curve, water pumped from a tank, and energy spent stretching a spring are all this one integral."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Integration is how you total up a varying quantity\n\nA definite integral is not an abstract ritual — it is the answer to *\"how much accumulates when the rate keeps changing?\"* If a quantity changed at a constant rate you'd just multiply. The moment the rate varies — speed that rises and falls, a force that grows as you stretch, revenue that shifts with each extra unit sold — you integrate. Every application in this topic is the same move: slice the thing into pieces small enough that the rate is nearly constant across each, add the pieces, and let the slices shrink. That sum-in-the-limit is $\\int_a^b f(x)\\,dx$.\n\n## Area between two curves\n\nThe area trapped between an upper curve and a lower curve over $[a,b]$ is\n\n$$A = \\int_a^b \\big(\\text{top}(x) - \\text{bottom}(x)\\big)\\,dx.$$\n\nThe logic is the slicing logic: a thin vertical strip at position $x$ has height $\\text{top} - \\text{bottom}$ and width $dx$, so its area is $(\\text{top} - \\text{bottom})\\,dx$. Add the strips. The only judgement call is deciding **which curve is on top** over the interval — sketch or test a point. This is exactly how you find the cross-sectional area of a machined channel or the metal left between two profiles.\n\nHere is that channel from the key concepts — the line $y = x + 4$ riding above the parabola $y = x^2$, with the dashed edges marking the strip from $x = 0$ to $x = 2$:\n\n```plot\n{ \"xRange\": [-1, 2.8], \"yRange\": [-1, 8], \"curves\": [ { \"fn\": \"x + 4\", \"label\": \"y = x + 4\", \"labelAt\": 2.3, \"color\": \"accent\" }, { \"fn\": \"x^2\", \"label\": \"y = x²\", \"labelAt\": 1.4, \"color\": \"warn\" } ], \"segments\": [ { \"from\": [0, 0], \"to\": [0, 4], \"dashed\": true, \"color\": \"dim\" }, { \"from\": [2, 4], \"to\": [2, 6], \"dashed\": true, \"color\": \"dim\" } ], \"caption\": \"The strip between the curves on [0, 2] has area ∫₀² (x + 4 - x²) dx = 26/3 ≈ 8.67.\" }\n```\n\n## Volume of a solid of revolution\n\nTake a region and spin it around an axis: it sweeps out a solid. Slice perpendicular to the axis into thin **disks**. A disk at position $x$ has radius $R(x)$ — the distance from the axis to the curve — so its face area is $\\pi R(x)^2$ and its volume is $\\pi R(x)^2\\,dx$. Summing:\n\n$$V = \\pi \\int_a^b [R(x)]^2\\,dx.$$\n\nIf the region doesn't touch the axis there's a hole, and each slice is a **washer** with outer radius $R$ and inner radius $r$:\n\n$$V = \\pi \\int_a^b \\big([R(x)]^2 - [r(x)]^2\\big)\\,dx.$$\n\nThis is the literal math a CNC lathe encodes: the volume of any turned part — a table leg, a piston, a bottle — is one of these integrals. Throughout we'll use $\\pi \\approx 3.14$ and **round the final number**, since $\\pi$ is irrational and the grader checks numbers.\n\n## Average value\n\nThe **average value** of $f$ over $[a,b]$ is the total accumulation spread evenly across the interval:\n\n$$\\bar f = \\frac{1}{b - a}\\int_a^b f(x)\\,dx.$$\n\nIt answers *\"what single constant value would produce the same total?\"* — the mean temperature across a day, your average speed over a trip even though the speedometer never held still, the typical pollutant concentration over an hour. Integrate to get the total, then divide by the width $b - a$.\n\nPicture a car whose speed climbs like $v(t) = t^2$ over six seconds. Its average speed, 12 m/s, is the constant height that sweeps out exactly the same area:\n\n```plot\n{ \"xRange\": [0, 6.2], \"yRange\": [0, 40], \"curves\": [ { \"fn\": \"x^2\", \"label\": \"v(t) = t²\", \"labelAt\": 5.5, \"color\": \"accent\", \"fillRange\": [0, 6] }, { \"fn\": \"12\", \"label\": \"average = 12\", \"labelAt\": 1.5, \"color\": \"warn\" } ], \"caption\": \"∫₀⁶ t² dt = 72 total meters, and 72/6 = 12 — the constant 12 encloses the same area over [0, 6].\" }\n```\n\n## Accumulation and work\n\nIf you know the **rate** at which something changes, integrating the rate gives the **total amount**:\n\n$$\\text{total} = \\int_a^b r(t)\\,dt.$$\n\nWater flowing at $r(t)$ liters per minute, a factory producing at $r(t)$ units per hour, sales at a marginal-revenue rate $R'(q)$ — the integral totals them up. The identical idea defines **work** in physics. When a force $F(x)$ varies with position (a stretching spring, the shrinking weight of water as a tank empties), the work done over $[a,b]$ is\n\n$$W = \\int_a^b F(x)\\,dx.$$\n\nConstant force is just $F \\times d$; the integral is what you reach for the instant the force stops being constant.\n\n## The one habit that matters\n\nEvery problem here reduces to: **identify the rate or the slice, write the integrand, integrate, evaluate.** Keep the integrands polynomial and the arithmetic stays exact — and always sanity-check that a length, area, volume, or amount of work came out positive."
+  },
+  "application": {
+    "summary": "Integration totals up any varying quantity: the cross-sectional area between two profiles, the volume of a lathe-turned part, the average temperature or speed over an interval, the water pumped from a tank, and the revenue swept out by a marginal-revenue curve. Each is the same move — write the integrand, integrate, evaluate.",
+    "domains": ["manufacturing", "physics", "business", "environmental science"],
+    "workedExample": "**Volume of a turned bushing**\n\nA part is made by revolving the region under $y = x + 1$ (in cm) from $x = 0$ to $x = 3$ around the $x$-axis. What's its volume?\n\nEach slice is a disk of radius $R(x) = x + 1$, so\n\n$$V = \\pi \\int_0^3 (x + 1)^2\\,dx = \\pi \\int_0^3 (x^2 + 2x + 1)\\,dx.$$\n\nIntegrate: $\\left[\\tfrac{x^3}{3} + x^2 + x\\right]_0^3 = (9 + 9 + 3) - 0 = 21$. So $V = 21\\pi$. Using $\\pi \\approx 3.14$, $V \\approx 21 \\times 3.14 = 65.94 \\approx 65.94\\ \\text{cm}^3$.\n\nThe same disk integral gives the volume of any turned part on a lathe; swap in two radii and it handles a drilled-out washer. Change the integrand to a rate and the very same machinery totals revenue, pumped water, or distance traveled.",
+    "domainNotes": [
+      "**Manufacturing:** the volume of a turned or bored part is a disk/washer integral — exactly what a CNC lathe program encodes.",
+      "**Physics:** work done by a variable force (a stretching spring, lifting water from a draining tank) is $\\int F\\,dx$.",
+      "**Business:** total revenue is the integral of the marginal-revenue curve; total cost is the integral of marginal cost.",
+      "**Environmental science:** average concentration, mean temperature, or total flow over a time interval each come from one integral."
+    ]
+  },
+  "generators": ["area-between-v1", "volume-rev-v1", "avg-value-v1"],
+  "problems": [
+    {
+      "id": "calculus-2.applications-of-integration.s01",
+      "concepts": ["area-between-curves"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A flat metal plate fills the region between the line $y = 6$ (top) and the line $y = 2$ (bottom) from $x = 0$ to $x = 5$ (units in cm). What is its cross-sectional area?",
+      "steps": [
+        { "instruction": "Write the integrand top minus bottom.", "answer": "4", "accept": ["6-2"], "hint": "Subtract the lower constant from the upper: $6 - 2$." },
+        { "instruction": "Evaluate $\\int_0^5 4\\,dx$.", "answer": "20", "accept": [], "hint": "Integral of a constant 4 over a width-5 interval is $4 \\times 5$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "cm^2" },
+      "solutionNarrative": "Top minus bottom is $6 - 2 = 4$. $\\int_0^5 4\\,dx = 4 \\times 5 = 20\\ \\text{cm}^2$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s02",
+      "concepts": ["area-between-curves"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An engineer needs the cross-sectional area of a channel bounded above by $y = x + 4$ and below by $y = x^2$ from $x = 0$ to $x = 2$ (cm), shown in the figure. Find the area.",
+      "plot": { "xRange": [-1, 2.8], "yRange": [-1, 8], "curves": [ { "fn": "x + 4", "label": "y = x + 4", "labelAt": 2.3, "color": "accent" }, { "fn": "x^2", "label": "y = x²", "labelAt": 1.4, "color": "warn" } ], "segments": [ { "from": [0, 0], "to": [0, 4], "dashed": true, "color": "dim" }, { "from": [2, 4], "to": [2, 6], "dashed": true, "color": "dim" } ], "caption": "The channel: y = x + 4 above, y = x² below, from x = 0 to x = 2." },
+      "steps": [
+        { "instruction": "Write the integrand as top minus bottom, simplified.", "answer": "x + 4 - x^2", "accept": ["-x^2+x+4", "x+4-x^2"], "hint": "Upper curve $x + 4$ minus lower curve $x^2$." },
+        { "instruction": "Find the antiderivative of $x + 4 - x^2$ evaluated from 0 to 2, i.e. compute the area.", "answer": "8.67", "accept": ["26/3", "8.666666666666666"], "hint": "Antiderivative is $\\tfrac{x^2}{2} + 4x - \\tfrac{x^3}{3}$; at $x=2$ it is $2 + 8 - \\tfrac{8}{3} = \\tfrac{26}{3}$." }
+      ],
+      "finalAnswer": { "value": "8.67", "unit": "cm^2" },
+      "solutionNarrative": "$\\int_0^2 (x + 4 - x^2)\\,dx = \\left[\\tfrac{x^2}{2} + 4x - \\tfrac{x^3}{3}\\right]_0^2 = 2 + 8 - \\tfrac{8}{3} = \\tfrac{26}{3} \\approx 8.67\\ \\text{cm}^2$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s03",
+      "concepts": ["area-between-curves"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A gasket profile is the region enclosed between $y = 2x^2$ (lower) and $y = x^2 + 4$ (upper), shown in the figure. The curves cross at $x = -2$ and $x = 2$. Find the enclosed area (cm²).",
+      "plot": { "xRange": [-2.6, 2.6], "yRange": [0, 15], "curves": [ { "fn": "x^2 + 4", "label": "y = x² + 4", "labelAt": 0.9, "color": "accent" }, { "fn": "2*x^2", "label": "y = 2x²", "labelAt": -2.2, "color": "warn" } ], "points": [ { "x": -2, "y": 8, "label": "(-2, 8)", "color": "text" }, { "x": 2, "y": 8, "label": "(2, 8)", "color": "text" } ], "caption": "The gasket: the region enclosed between the two parabolas, which cross at (-2, 8) and (2, 8)." },
+      "steps": [
+        { "instruction": "Write the integrand top minus bottom, simplified.", "answer": "4 - x^2", "accept": ["-x^2+4", "4-x^2"], "hint": "$(x^2 + 4) - 2x^2 = 4 - x^2$." },
+        { "instruction": "State the limits of integration as the two crossing $x$-values (lower, upper).", "answer": "-2 to 2", "accept": ["-2, 2", "-2,2", "from -2 to 2"], "hint": "The region runs between where the curves intersect." },
+        { "instruction": "Evaluate $\\int_{-2}^{2} (4 - x^2)\\,dx$.", "answer": "10.67", "accept": ["32/3", "10.666666666666666"], "hint": "Antiderivative $4x - \\tfrac{x^3}{3}$; at $2$ it is $8 - \\tfrac{8}{3}$, at $-2$ it is $-8 + \\tfrac{8}{3}$; subtract." }
+      ],
+      "finalAnswer": { "value": "10.67", "unit": "cm^2" },
+      "solutionNarrative": "Top minus bottom is $4 - x^2$. $\\int_{-2}^{2}(4 - x^2)\\,dx = \\left[4x - \\tfrac{x^3}{3}\\right]_{-2}^{2} = (8 - \\tfrac{8}{3}) - (-8 + \\tfrac{8}{3}) = \\tfrac{32}{3} \\approx 10.67\\ \\text{cm}^2$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s04",
+      "concepts": ["volume-of-revolution"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A solid cylinder is made by revolving the region under $y = 2$ from $x = 0$ to $x = 5$ (cm) around the $x$-axis. Use $\\pi \\approx 3.14$. Find its volume, rounded to two decimals.",
+      "steps": [
+        { "instruction": "Each disk has radius 2. Evaluate $\\int_0^5 2^2\\,dx$ (the integral part, without $\\pi$).", "answer": "20", "accept": [], "hint": "$2^2 = 4$, and $\\int_0^5 4\\,dx = 4 \\times 5$." },
+        { "instruction": "Multiply by $\\pi \\approx 3.14$ to get the volume.", "answer": "62.8", "accept": ["62.80"], "hint": "$20 \\times 3.14$." }
+      ],
+      "finalAnswer": { "value": "62.8", "unit": "cm^3" },
+      "solutionNarrative": "$V = \\pi \\int_0^5 2^2\\,dx = \\pi \\times 20 \\approx 3.14 \\times 20 = 62.8\\ \\text{cm}^3$ (a cylinder of radius 2, length 5)."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s05",
+      "concepts": ["volume-of-revolution"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A tapered part is made by revolving the region under $y = x + 1$ from $x = 0$ to $x = 3$ (cm) around the $x$-axis. Use $\\pi \\approx 3.14$. Find its volume, rounded to two decimals.",
+      "steps": [
+        { "instruction": "Expand the integrand $(x + 1)^2$.", "answer": "x^2 + 2x + 1", "accept": ["x^2+2x+1"], "hint": "$(x+1)^2 = x^2 + 2x + 1$." },
+        { "instruction": "Evaluate $\\int_0^3 (x^2 + 2x + 1)\\,dx$ (without $\\pi$).", "answer": "21", "accept": [], "hint": "Antiderivative $\\tfrac{x^3}{3} + x^2 + x$; at $x=3$: $9 + 9 + 3$." },
+        { "instruction": "Multiply by $\\pi \\approx 3.14$ to get the volume.", "answer": "65.94", "accept": [], "hint": "$21 \\times 3.14$." }
+      ],
+      "finalAnswer": { "value": "65.94", "unit": "cm^3" },
+      "solutionNarrative": "$V = \\pi \\int_0^3 (x+1)^2\\,dx = \\pi \\int_0^3 (x^2 + 2x + 1)\\,dx = \\pi(9 + 9 + 3) = 21\\pi \\approx 65.94\\ \\text{cm}^3$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s06",
+      "concepts": ["volume-of-revolution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A drilled bushing is made by revolving the region between outer curve $y = x + 2$ and inner curve $y = x$ from $x = 0$ to $x = 2$ (cm) around the $x$-axis (a washer at each slice). Use $\\pi \\approx 3.14$. Find its volume, rounded to two decimals.",
+      "steps": [
+        { "instruction": "Write the washer integrand $R^2 - r^2$ where $R = x+2$ and $r = x$, simplified.", "answer": "4x + 4", "accept": ["4x+4"], "hint": "$(x+2)^2 - x^2 = (x^2 + 4x + 4) - x^2 = 4x + 4$." },
+        { "instruction": "Evaluate $\\int_0^2 (4x + 4)\\,dx$ (without $\\pi$).", "answer": "16", "accept": [], "hint": "Antiderivative $2x^2 + 4x$; at $x=2$: $8 + 8$." },
+        { "instruction": "Multiply by $\\pi \\approx 3.14$ to get the volume.", "answer": "50.24", "accept": [], "hint": "$16 \\times 3.14$." }
+      ],
+      "finalAnswer": { "value": "50.24", "unit": "cm^3" },
+      "solutionNarrative": "$V = \\pi \\int_0^2 ((x+2)^2 - x^2)\\,dx = \\pi \\int_0^2 (4x + 4)\\,dx = \\pi[2x^2 + 4x]_0^2 = 16\\pi \\approx 50.24\\ \\text{cm}^3$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s07",
+      "concepts": ["average-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Over a 4-hour window the temperature in a greenhouse (°C) is modeled by $T(t) = 3t + 10$ for $t$ in hours, $0 \\le t \\le 4$. What is the average temperature over the 4 hours?",
+      "steps": [
+        { "instruction": "Evaluate the total $\\int_0^4 (3t + 10)\\,dt$.", "answer": "64", "accept": [], "hint": "Antiderivative $\\tfrac{3t^2}{2} + 10t$; at $t=4$: $24 + 40$." },
+        { "instruction": "Divide by the interval width $4 - 0$ to get the average.", "answer": "16", "accept": [], "hint": "Average value is total divided by 4." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "degrees C" },
+      "solutionNarrative": "$\\int_0^4 (3t + 10)\\,dt = [\\tfrac{3t^2}{2} + 10t]_0^4 = 24 + 40 = 64$. Average $= \\tfrac{64}{4} = 16\\ ^\\circ\\text{C}$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s08",
+      "concepts": ["average-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A car's speed (m/s) over a 6-second stretch is $v(t) = t^2$. What is its average speed over those 6 seconds?",
+      "steps": [
+        { "instruction": "Evaluate the total $\\int_0^6 t^2\\,dt$.", "answer": "72", "accept": [], "hint": "Antiderivative $\\tfrac{t^3}{3}$; at $t=6$: $\\tfrac{216}{3}$." },
+        { "instruction": "Divide by the interval width $6 - 0$ to get the average speed.", "answer": "12", "accept": [], "hint": "$72 \\div 6$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "m/s" },
+      "solutionNarrative": "$\\int_0^6 t^2\\,dt = \\tfrac{6^3}{3} = \\tfrac{216}{3} = 72$. Average speed $= \\tfrac{72}{6} = 12\\ \\text{m/s}$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s09",
+      "concepts": ["average-value"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The concentration of a chemical in a tank (mg/L) over a 3-hour reaction is $C(t) = 12 - t^2$ for $0 \\le t \\le 3$. Find the average concentration over the 3 hours.",
+      "steps": [
+        { "instruction": "Write the antiderivative of $12 - t^2$.", "answer": "12t - t^3/3", "accept": ["12t-t^3/3", "12t - (t^3)/3"], "hint": "Integrate term by term: $12t - \\tfrac{t^3}{3}$." },
+        { "instruction": "Evaluate the total $\\int_0^3 (12 - t^2)\\,dt$.", "answer": "27", "accept": [], "hint": "At $t=3$: $36 - \\tfrac{27}{3} = 36 - 9$." },
+        { "instruction": "Divide by the interval width $3$ to get the average concentration.", "answer": "9", "accept": [], "hint": "$27 \\div 3$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "mg/L" },
+      "solutionNarrative": "$\\int_0^3 (12 - t^2)\\,dt = [12t - \\tfrac{t^3}{3}]_0^3 = 36 - 9 = 27$. Average $= \\tfrac{27}{3} = 9\\ \\text{mg/L}$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s10",
+      "concepts": ["accumulation-and-work"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Water flows into a tank at a rate of $r(t) = 5$ liters per minute. How many liters enter during the first 8 minutes?",
+      "steps": [
+        { "instruction": "Evaluate $\\int_0^8 5\\,dt$ for the total liters.", "answer": "40", "accept": [], "hint": "Constant rate 5 over 8 minutes: $5 \\times 8$." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "liters" },
+      "solutionNarrative": "Total $= \\int_0^8 5\\,dt = 5 \\times 8 = 40$ liters."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s11",
+      "concepts": ["accumulation-and-work"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Stretching a spring requires a force $F(x) = 6x$ newtons at displacement $x$ meters. How much work is done stretching it from $x = 0$ to $x = 4$ m?",
+      "steps": [
+        { "instruction": "Write the antiderivative of $6x$.", "answer": "3x^2", "accept": ["3x^2"], "hint": "Integrate: $\\tfrac{6x^2}{2} = 3x^2$." },
+        { "instruction": "Evaluate $\\int_0^4 6x\\,dx$ for the work.", "answer": "48", "accept": [], "hint": "$3(4)^2 = 3 \\times 16$." }
+      ],
+      "finalAnswer": { "value": "48", "unit": "joules" },
+      "solutionNarrative": "$W = \\int_0^4 6x\\,dx = [3x^2]_0^4 = 48$ joules."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s12",
+      "concepts": ["accumulation-and-work"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A firm's marginal revenue is $R'(q) = 50 - 2q$ dollars per unit, for the first $q$ units sold. What is the total revenue from selling the first 10 units?",
+      "steps": [
+        { "instruction": "Write the antiderivative of $50 - 2q$.", "answer": "50q - q^2", "accept": ["50q-q^2"], "hint": "Integrate term by term: $50q - q^2$." },
+        { "instruction": "Evaluate $\\int_0^{10} (50 - 2q)\\,dq$ for total revenue.", "answer": "400", "accept": [], "hint": "$50(10) - (10)^2 = 500 - 100$." }
+      ],
+      "finalAnswer": { "value": "400", "unit": "dollars" },
+      "solutionNarrative": "$\\int_0^{10}(50 - 2q)\\,dq = [50q - q^2]_0^{10} = 500 - 100 = \\$400$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s13",
+      "concepts": ["accumulation-and-work"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A pump lifts material against a variable force $F(x) = 3x^2 + 4x$ newtons over a distance from $x = 0$ to $x = 3$ m. How much work is done?",
+      "steps": [
+        { "instruction": "Write the antiderivative of $3x^2 + 4x$.", "answer": "x^3 + 2x^2", "accept": ["x^3+2x^2"], "hint": "Integrate: $x^3 + 2x^2$." },
+        { "instruction": "Evaluate at the upper limit $x = 3$: compute $x^3 + 2x^2$ there.", "answer": "45", "accept": [], "hint": "$27 + 2(9) = 27 + 18$." },
+        { "instruction": "State the work done over $[0,3]$ (the lower limit contributes 0).", "answer": "45", "accept": [], "hint": "At $x=0$ the antiderivative is 0, so the work equals the value at $x=3$." }
+      ],
+      "finalAnswer": { "value": "45", "unit": "joules" },
+      "solutionNarrative": "$W = \\int_0^3 (3x^2 + 4x)\\,dx = [x^3 + 2x^2]_0^3 = 27 + 18 = 45$ joules."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s14",
+      "concepts": ["area-between-curves", "average-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Over an 8-hour shift the power draw of a machine (kW) is $P(t) = t + 2$. The total energy (kWh) is $\\int_0^8 (t + 2)\\,dt$. Find the total energy used, then the average power.",
+      "steps": [
+        { "instruction": "Evaluate the total energy $\\int_0^8 (t + 2)\\,dt$.", "answer": "48", "accept": [], "hint": "Antiderivative $\\tfrac{t^2}{2} + 2t$; at $t=8$: $32 + 16$." },
+        { "instruction": "Divide by the 8-hour width to get the average power.", "answer": "6", "accept": [], "hint": "$48 \\div 8$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "kW" },
+      "solutionNarrative": "$\\int_0^8 (t + 2)\\,dt = [\\tfrac{t^2}{2} + 2t]_0^8 = 32 + 16 = 48$ kWh. Average power $= \\tfrac{48}{8} = 6$ kW."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s15",
+      "concepts": ["volume-of-revolution"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A disk-shaped spacer is made by revolving the region under $y = 3$ from $x = 0$ to $x = 2$ (cm) around the $x$-axis. Use $\\pi \\approx 3.14$. Find its volume, rounded to two decimals.",
+      "steps": [
+        { "instruction": "Each disk has radius 3. Evaluate $\\int_0^2 3^2\\,dx$ (without $\\pi$).", "answer": "18", "accept": [], "hint": "$3^2 = 9$, and $\\int_0^2 9\\,dx = 9 \\times 2$." },
+        { "instruction": "Multiply by $\\pi \\approx 3.14$.", "answer": "56.52", "accept": [], "hint": "$18 \\times 3.14$." }
+      ],
+      "finalAnswer": { "value": "56.52", "unit": "cm^3" },
+      "solutionNarrative": "$V = \\pi \\int_0^2 3^2\\,dx = \\pi \\times 18 \\approx 3.14 \\times 18 = 56.52\\ \\text{cm}^3$."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s16",
+      "concepts": ["accumulation-and-work", "average-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A factory produces widgets at a rate of $r(t) = 4t$ units per hour. How many widgets are produced during the first 5 hours?",
+      "steps": [
+        { "instruction": "Write the antiderivative of $4t$.", "answer": "2t^2", "accept": ["2t^2"], "hint": "Integrate: $\\tfrac{4t^2}{2} = 2t^2$." },
+        { "instruction": "Evaluate $\\int_0^5 4t\\,dt$ for the total produced.", "answer": "50", "accept": [], "hint": "$2(5)^2 = 2 \\times 25$." }
+      ],
+      "finalAnswer": { "value": "50", "unit": "widgets" },
+      "solutionNarrative": "$\\int_0^5 4t\\,dt = [2t^2]_0^5 = 2 \\times 25 = 50$ widgets."
+    },
+    {
+      "id": "calculus-2.applications-of-integration.s17",
+      "concepts": ["area-between-curves"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A trapezoidal cross-section is bounded above by $y = x + 3$ and below by $y = 0$ from $x = 0$ to $x = 4$ (cm). Find its area.",
+      "steps": [
+        { "instruction": "Write the antiderivative of $x + 3$.", "answer": "x^2/2 + 3x", "accept": ["x^2/2+3x", "(x^2)/2 + 3x"], "hint": "Integrate term by term: $\\tfrac{x^2}{2} + 3x$." },
+        { "instruction": "Evaluate $\\int_0^4 (x + 3)\\,dx$.", "answer": "20", "accept": [], "hint": "At $x=4$: $\\tfrac{16}{2} + 12 = 8 + 12$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "cm^2" },
+      "solutionNarrative": "$\\int_0^4 (x + 3)\\,dx = [\\tfrac{x^2}{2} + 3x]_0^4 = 8 + 12 = 20\\ \\text{cm}^2$."
+    }
+  ]
+}

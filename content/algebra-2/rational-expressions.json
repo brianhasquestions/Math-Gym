@@ -1,0 +1,262 @@
+{
+  "id": "algebra-2.rational-expressions",
+  "subject": "algebra-2",
+  "title": "Rational Expressions and Equations",
+  "prerequisites": ["algebra.factoring"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "excluded-values",
+      "label": "Excluded values and domain",
+      "microLesson": "A fraction is undefined when its denominator is zero — you can't divide by nothing. So for any rational expression, the **excluded values** are exactly the numbers that make the denominator zero. To find them, set the denominator equal to zero and solve. For $\\\\frac{x+1}{x-3}$, the denominator $x-3=0$ at $x=3$, so $x=3$ is excluded and the domain is 'all real numbers except 3.' Factor the denominator first when it has more than one piece."
+    },
+    {
+      "id": "simplify-rational",
+      "label": "Simplifying by factoring",
+      "microLesson": "Simplify a rational expression the same way you simplify a number fraction: factor the top and bottom, then cancel any factor they share. $\\\\frac{x^2-9}{x^2-3x}=\\\\frac{(x-3)(x+3)}{x(x-3)}=\\\\frac{x+3}{x}$. **Only whole factors cancel**, never single terms across a $+$ or $-$. The excluded values come from the *original* denominator (here $x=0$ and $x=3$), even ones that cancel away — the simplified form must agree with the original everywhere it was defined."
+    },
+    {
+      "id": "evaluate-rational",
+      "label": "Evaluating at a value",
+      "microLesson": "To evaluate a rational expression at a number, substitute that number for the variable everywhere, then simplify the top and bottom separately and divide. For $\\\\frac{2x+1}{x-4}$ at $x=6$: top $=2(6)+1=13$, bottom $=6-4=2$, so the value is $\\\\frac{13}{2}$. Always check the value you plug in isn't an excluded value — if it makes the bottom zero, the expression is undefined there."
+    },
+    {
+      "id": "solve-rational-equations",
+      "label": "Solving rational equations",
+      "microLesson": "To solve an equation with fractions, **clear the denominators**: multiply every term by the least common denominator (LCD), which cancels the fractions and leaves an ordinary equation to solve. $\\\\frac{3}{x}=\\\\frac{1}{4}$ becomes $12=x$ after multiplying by $4x$. Crucially, **check for extraneous roots**: if a solution equals an excluded value (makes an original denominator zero), it must be thrown out. If every candidate is extraneous, the answer is 'no solution.'"
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Fractions, but with a variable in them\n\nA **rational expression** is just a fraction whose top and bottom are polynomials — like $\\\\frac{x+1}{x-3}$ or $\\\\frac{2}{x}$. They show up the instant a real quantity is a *ratio that changes*: cost split among a varying number of people, a concentration as you add water, a speed measured as distance over time, or how long a job takes when workers combine their rates. Wherever you'd naturally say 'per' or 'split between,' a rational expression is hiding.\n\nEverything you already know about ordinary fractions carries over — with one new rule that dominates the whole topic.\n\n## The one rule that changes everything: you can't divide by zero\n\nA fraction is **undefined** whenever its denominator equals zero. With a variable down there, that means certain inputs are forbidden. The numbers that make the denominator zero are the **excluded values**, and the set of all *allowed* inputs is the **domain**.\n\nTo find them, set the denominator equal to zero and solve:\n\n$$\\\\frac{x+1}{x-3}: \\\\quad x - 3 = 0 \\\\;\\\\Rightarrow\\\\; x = 3 \\\\text{ is excluded.}$$\n\nIf the denominator factors, every factor gives an excluded value: $\\\\frac{5}{x^2-x-6}=\\\\frac{5}{(x-3)(x+2)}$ is undefined at $x = 3$ **and** $x = -2$. This isn't a technicality — in an applied model, an excluded value is often a genuinely impossible scenario (splitting a bill among zero people, a trip with zero time elapsed).\n\n## Simplifying: factor, then cancel\n\nYou simplify a rational expression exactly like a number fraction — factor top and bottom and cancel **shared factors**:\n\n$$\\\\frac{x^2-9}{x^2-3x} = \\\\frac{(x-3)(x+3)}{x(x-3)} = \\\\frac{x+3}{x}.$$\n\nTwo cautions. First, **only whole factors cancel** — never reach across a $+$ or $-$ to cancel a single term ($\\\\frac{x+3}{x}$ is already fully reduced; the $x$'s do *not* cancel). Second, the excluded values are read off the **original** denominator. Here that's $x = 0$ and $x = 3$ — the $x=3$ restriction survives even though the $(x-3)$ cancelled, because the original expression was never defined there.\n\n## Evaluating at a number\n\nTo evaluate, substitute and simplify top and bottom separately:\n\n$$\\\\frac{2x+1}{x-4} \\\\text{ at } x = 6: \\\\quad \\\\frac{2(6)+1}{6-4} = \\\\frac{13}{2}.$$\n\nJust confirm the input isn't an excluded value first — plugging in $x = 4$ above would be dividing by zero.\n\n## Solving rational equations: clear the denominators\n\nThe payoff. To solve an equation containing fractions, **multiply every term by the least common denominator (LCD)**. The denominators cancel and you're left with a clean linear or quadratic equation:\n\n$$\\\\frac{3}{x} = \\\\frac{1}{4} \\\\;\\\\Rightarrow\\\\; \\\\text{(multiply by } 4x) \\\\;\\\\Rightarrow\\\\; 12 = x.$$\n\n### The extraneous-root trap\n\nClearing denominators can manufacture fake solutions. **Always check each answer against the original excluded values.** If a candidate makes an original denominator zero, it's **extraneous** — discard it. For example, $\\\\frac{x}{x-2} = \\\\frac{2}{x-2}$ leads to $x = 2$, but $x = 2$ is excluded, so the equation has **no solution.** Skipping the check is the single most common mistake in this topic."
+  },
+  "application": {
+    "summary": "Rational expressions model any 'rate,' 'ratio,' or 'per' quantity that varies: how long a job takes when workers combine their speeds (work-rate), the average speed of a round trip, a concentration as you dilute or strengthen a mixture, and the cost per person when a fixed bill is split among a changing number of people.",
+    "domains": ["personal finance", "physics", "chemistry", "project planning"],
+    "workedExample": "**Two pumps draining a pool (work-rate).**\n\nA big pump empties a pool in 6 hours; a small pump empties the same pool in 12 hours. Running together, how long do they take?\n\nThe trick with work-rate problems is to add **rates**, not times. In one hour the big pump does $\\\\frac{1}{6}$ of the job and the small one does $\\\\frac{1}{12}$. If together they finish in $t$ hours, their combined rate is $\\\\frac{1}{t}$:\n\n$$\\\\frac{1}{6} + \\\\frac{1}{12} = \\\\frac{1}{t}.$$\n\nMultiply every term by the LCD $12t$: $2t + t = 12$, so $3t = 12$ and $t = 4$ hours. Notice the answer is **less** than either pump alone — that's the sanity check for work-rate problems. The identical setup answers 'two people painting a fence,' 'two drains in a sink,' or 'two crews on a build.'",
+    "domainNotes": [
+      "**Work-rate:** add the per-hour rates ($\\\\frac{1}{a} + \\\\frac{1}{b} = \\\\frac{1}{t}$); the combined time is always shorter than the fastest worker alone.",
+      "**Travel:** average speed of a round trip is total distance over total time, $\\\\frac{2d}{\\\\,d/r_1 + d/r_2\\\\,}$ — not the average of the two speeds.",
+      "**Chemistry/cooking:** concentration is (amount of solute) / (total mixture); adding water grows only the denominator.",
+      "**Finance:** cost per person is (fixed bill) / (number of people) — undefined for zero people, and it drops as the group grows."
+    ]
+  },
+  "generators": ["excluded-value-v1", "simplify-rational-v1", "eval-rational-v1", "solve-rational-eq-v1"],
+  "problems": [
+    {
+      "id": "algebra-2.rational-expressions.s01",
+      "concepts": ["excluded-values"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For what value of $x$ is the expression $\\\\frac{5}{x-7}$ undefined?",
+      "steps": [
+        { "instruction": "Set the denominator equal to zero.", "answer": "x - 7 = 0", "accept": ["x-7=0"], "hint": "A fraction is undefined when its bottom is zero." },
+        { "instruction": "Solve for the excluded value $x$.", "answer": "x = 7", "accept": ["x=7", "7"], "hint": "Add 7 to both sides." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "The denominator $x - 7$ is zero when $x = 7$, so the expression is undefined there; $x = 7$ is the excluded value."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s02",
+      "concepts": ["excluded-values"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A group splits a flat \\$240 rental fee evenly, so each person pays $\\\\frac{240}{n}$ dollars, where $n$ is the number of people. For what value of $n$ is this cost-per-person expression undefined?",
+      "steps": [
+        { "instruction": "Set the denominator equal to zero.", "answer": "n = 0", "accept": ["n=0", "0"], "hint": "The denominator here is just $n$." },
+        { "instruction": "Explain in one word what splitting a bill among that many people would mean. Type the number that is excluded.", "answer": "0", "accept": ["zero", "n=0"], "hint": "You can't split a bill among zero people." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "people" },
+      "solutionNarrative": "The expression $\\\\frac{240}{n}$ is undefined when $n = 0$ — splitting a bill among zero people is meaningless, which is exactly why the math forbids it."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s03",
+      "concepts": ["excluded-values"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find ALL excluded values of $\\\\frac{x+4}{x^2 - x - 12}$.",
+      "steps": [
+        { "instruction": "Factor the denominator $x^2 - x - 12$.", "form": "factored", "answer": "(x - 4)(x + 3)", "accept": ["(x+3)(x-4)"], "hint": "Two numbers multiplying to -12 and adding to -1." },
+        { "instruction": "Set each factor to zero and give both excluded values. Separate with a comma.", "answer": "x = 4, x = -3", "accept": ["4, -3", "-3, 4", "x=4, x=-3"], "hint": "$x - 4 = 0$ and $x + 3 = 0$." }
+      ],
+      "finalAnswer": { "value": "x = 4, x = -3", "unit": "" },
+      "solutionNarrative": "$x^2 - x - 12 = (x-4)(x+3)$, which is zero at $x = 4$ and $x = -3$; both are excluded."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s04",
+      "concepts": ["simplify-rational"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Simplify $\\\\frac{6x}{9x^2}$ and state the excluded value.",
+      "steps": [
+        { "instruction": "Cancel the common factors to simplify. Write your answer in the exact form (2)/(3x).", "answer": "(2)/(3x)", "accept": ["2/(3x)"], "hint": "$\\\\frac{6x}{9x^2}$: cancel a 3 and an $x$, leaving $\\\\frac{2}{3x}$." },
+        { "instruction": "What value of $x$ is excluded (makes the original denominator zero)?", "answer": "x = 0", "accept": ["x=0", "0"], "hint": "$9x^2 = 0$ when $x = 0$." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "$\\\\frac{6x}{9x^2} = \\\\frac{2}{3x}$ after cancelling $3x$. The original denominator $9x^2$ is zero at $x = 0$, so $x = 0$ is excluded."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s05",
+      "concepts": ["simplify-rational"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Simplify $\\\\frac{x^2 - 9}{x^2 - 3x}$ by factoring and cancelling, then state the excluded values.",
+      "steps": [
+        { "instruction": "Factor the numerator and denominator.", "answer": "((x-3)(x+3))/(x(x-3))", "accept": ["(x-3)(x+3)/(x(x-3))"], "hint": "$x^2-9$ is a difference of squares; $x^2-3x = x(x-3)$." },
+        { "instruction": "Cancel the common factor. Write the simplified result in the exact form (x+3)/(x).", "answer": "(x+3)/(x)", "accept": ["(x+3)/x"], "hint": "Cancel $(x-3)$ from top and bottom." },
+        { "instruction": "List both excluded values from the original denominator. Separate with a comma.", "answer": "x = 0, x = 3", "accept": ["0, 3", "3, 0", "x=0, x=3"], "hint": "$x(x-3) = 0$ at $x = 0$ and $x = 3$." }
+      ],
+      "finalAnswer": { "value": "(x+3)/(x)", "unit": "" },
+      "solutionNarrative": "$\\\\frac{(x-3)(x+3)}{x(x-3)} = \\\\frac{x+3}{x}$ after cancelling $(x-3)$. The original denominator $x(x-3)$ forces $x \\\\ne 0$ and $x \\\\ne 3$, so both are excluded even though $(x-3)$ cancelled."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s06",
+      "concepts": ["simplify-rational"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Simplify $\\\\frac{x^2 - 5x + 6}{x^2 - 4}$, then evaluate the simplified expression at $x = 5$.",
+      "steps": [
+        { "instruction": "Factor the numerator and the denominator.", "answer": "((x-2)(x-3))/((x-2)(x+2))", "accept": ["(x-2)(x-3)/((x-2)(x+2))"], "hint": "$x^2-5x+6=(x-2)(x-3)$; $x^2-4=(x-2)(x+2)$." },
+        { "instruction": "Cancel the common factor and write the simplified form exactly as (x-3)/(x+2).", "answer": "(x-3)/(x+2)", "accept": [], "hint": "Cancel $(x-2)$." },
+        { "instruction": "Evaluate the simplified expression at $x = 5$. Give the fraction.", "answer": "2/7", "accept": ["2/7"], "hint": "$\\\\frac{5-3}{5+2} = \\\\frac{2}{7}$." }
+      ],
+      "finalAnswer": { "value": "2/7", "unit": "" },
+      "solutionNarrative": "$\\\\frac{(x-2)(x-3)}{(x-2)(x+2)} = \\\\frac{x-3}{x+2}$. At $x = 5$ this is $\\\\frac{2}{7}$."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s07",
+      "concepts": ["evaluate-rational"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\\\frac{2x + 1}{x - 4}$ at $x = 6$.",
+      "steps": [
+        { "instruction": "Substitute $x = 6$ and compute the numerator.", "answer": "13", "accept": [], "hint": "$2(6) + 1 = 13$." },
+        { "instruction": "Compute the denominator at $x = 6$.", "answer": "2", "accept": [], "hint": "$6 - 4 = 2$." },
+        { "instruction": "Divide to give the value as a fraction.", "answer": "13/2", "accept": ["6.5"], "hint": "$\\\\frac{13}{2} = 6.5$." }
+      ],
+      "finalAnswer": { "value": "13/2", "unit": "" },
+      "solutionNarrative": "At $x = 6$: numerator $2(6)+1 = 13$, denominator $6-4 = 2$, so the value is $\\\\frac{13}{2}$."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s08",
+      "concepts": ["evaluate-rational"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "When a saltwater tank holds $x$ liters of water with 3 liters of salt mixed in, the salt concentration is $\\\\frac{3}{x + 3}$ (salt over total volume). What is the concentration when $x = 9$ liters of water? Give a fraction.",
+      "steps": [
+        { "instruction": "Compute the total volume (denominator) at $x = 9$.", "answer": "12", "accept": [], "hint": "$9 + 3 = 12$ liters total." },
+        { "instruction": "Write the concentration as a simplified fraction.", "answer": "1/4", "accept": ["0.25"], "hint": "$\\\\frac{3}{12} = \\\\frac{1}{4}$." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "Total volume is $9 + 3 = 12$ L, so concentration $= \\\\frac{3}{12} = \\\\frac{1}{4}$ (one part salt per four parts mixture)."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s09",
+      "concepts": ["evaluate-rational"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A club rents a hall for a flat \\$300 and also pays \\$5 per attendee, so the cost per attendee is $\\\\frac{300 + 5n}{n}$ dollars. What is the cost per attendee when $n = 25$ people attend?",
+      "steps": [
+        { "instruction": "Compute the numerator (total cost) at $n = 25$.", "answer": "425", "accept": [], "hint": "$300 + 5(25) = 300 + 125 = 425$." },
+        { "instruction": "Divide by $n = 25$ to get the cost per attendee in dollars.", "answer": "17", "accept": ["$17", "17 dollars"], "hint": "$\\\\frac{425}{25} = 17$." }
+      ],
+      "finalAnswer": { "value": "17", "unit": "dollars" },
+      "solutionNarrative": "Total cost is $300 + 5(25) = 425$, split among 25 people: $\\\\frac{425}{25} = \\\\$17$ per attendee."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s10",
+      "concepts": ["solve-rational-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\\\frac{3}{x} = \\\\frac{1}{4}$.",
+      "steps": [
+        { "instruction": "Cross-multiply (or multiply both sides by $4x$) to clear the fractions.", "answer": "12 = x", "accept": ["x=12", "12", "x = 12"], "hint": "$3 \\\\cdot 4 = 1 \\\\cdot x$." },
+        { "instruction": "Is $x = 12$ allowed (it must not make a denominator zero)? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Does $x = 12$ make the original denominator $x$ zero?" }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "Multiplying by $4x$ gives $12 = x$. Since $x = 12$ doesn't make the denominator zero, it is a valid solution."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s11",
+      "concepts": ["solve-rational-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\\\frac{x}{5} = \\\\frac{6}{10}$.",
+      "steps": [
+        { "instruction": "Cross-multiply to clear the fractions.", "answer": "10x = 30", "accept": ["10x=30"], "hint": "$x \\\\cdot 10 = 6 \\\\cdot 5$." },
+        { "instruction": "Solve for $x$.", "answer": "x = 3", "accept": ["x=3", "3"], "hint": "Divide both sides by 10." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Cross-multiplying gives $10x = 30$, so $x = 3$."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s12",
+      "concepts": ["solve-rational-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\\\frac{1}{x} + \\\\frac{1}{6} = \\\\frac{1}{2}$.",
+      "steps": [
+        { "instruction": "Multiply every term by the LCD $6x$ to clear the fractions.", "answer": "6 + x = 3x", "accept": ["6+x=3x"], "hint": "$\\\\frac{1}{x}\\\\cdot 6x = 6$, $\\\\frac{1}{6}\\\\cdot 6x = x$, $\\\\frac{1}{2}\\\\cdot 6x = 3x$." },
+        { "instruction": "Gather terms: subtract $x$ from both sides.", "answer": "6 = 2x", "accept": ["6=2x", "2x=6"], "hint": "$3x - x = 2x$." },
+        { "instruction": "Solve for $x$.", "answer": "x = 3", "accept": ["x=3", "3"], "hint": "Divide both sides by 2." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Multiplying by $6x$ gives $6 + x = 3x$, so $6 = 2x$ and $x = 3$ (not an excluded value, so it's valid)."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s13",
+      "concepts": ["solve-rational-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\\\frac{x}{x - 2} = \\\\frac{2}{x - 2}$. Watch for an extraneous root.",
+      "steps": [
+        { "instruction": "Multiply both sides by $(x - 2)$ to clear the denominators. What equation remains?", "answer": "x = 2", "accept": ["x=2", "2"], "hint": "Both denominators are $(x-2)$; after cancelling, the numerators must be equal." },
+        { "instruction": "Check: is $x = 2$ an excluded value of the original equation? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Does $x = 2$ make $x - 2$ zero?" },
+        { "instruction": "So how many solutions does the equation have? Type a number or 'none'.", "answer": "none", "accept": ["no solution", "0", "zero"], "hint": "The only candidate is excluded, so it's extraneous." }
+      ],
+      "finalAnswer": { "value": "none", "unit": "" },
+      "solutionNarrative": "Clearing $(x-2)$ gives $x = 2$, but $x = 2$ makes the original denominator zero — it's extraneous. With no valid candidate, the equation has no solution."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s14",
+      "concepts": ["solve-rational-equations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A big pump empties a pool in 6 hours; a small pump empties it in 12 hours. Working together, how many hours do they take? (Their rates add: $\\\\frac{1}{6} + \\\\frac{1}{12} = \\\\frac{1}{t}$.)",
+      "steps": [
+        { "instruction": "Multiply every term by the LCD $12t$ to clear the fractions.", "answer": "2t + t = 12", "accept": ["2t+t=12", "3t=12"], "hint": "$\\\\frac{1}{6}\\\\cdot 12t = 2t$, $\\\\frac{1}{12}\\\\cdot 12t = t$, $\\\\frac{1}{t}\\\\cdot 12t = 12$." },
+        { "instruction": "Combine like terms on the left.", "answer": "3t = 12", "accept": ["3t=12"], "hint": "$2t + t = 3t$." },
+        { "instruction": "Solve for $t$ (hours).", "answer": "t = 4", "accept": ["t=4", "4"], "hint": "Divide both sides by 3." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "hours" },
+      "solutionNarrative": "Multiplying $\\\\frac{1}{6} + \\\\frac{1}{12} = \\\\frac{1}{t}$ by $12t$ gives $2t + t = 12$, so $3t = 12$ and $t = 4$ hours — faster than either pump alone, as expected."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s15",
+      "concepts": ["solve-rational-equations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two painters work together. Alone, Ana paints a room in 3 hours and Ben paints it in 6 hours. How long do they take together? ($\\\\frac{1}{3} + \\\\frac{1}{6} = \\\\frac{1}{t}$.)",
+      "steps": [
+        { "instruction": "Multiply every term by the LCD $6t$ to clear the fractions.", "answer": "2t + t = 6", "accept": ["2t+t=6", "3t=6"], "hint": "$\\\\frac{1}{3}\\\\cdot 6t = 2t$, $\\\\frac{1}{6}\\\\cdot 6t = t$, $\\\\frac{1}{t}\\\\cdot 6t = 6$." },
+        { "instruction": "Combine like terms and solve for $t$ (hours).", "answer": "t = 2", "accept": ["t=2", "2"], "hint": "$3t = 6$, so divide by 3." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "hours" },
+      "solutionNarrative": "Multiplying by $6t$ gives $2t + t = 6$, so $3t = 6$ and $t = 2$ hours together — shorter than Ana's solo 3 hours, as it should be."
+    },
+    {
+      "id": "algebra-2.rational-expressions.s16",
+      "concepts": ["solve-rational-equations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A cyclist rides 30 miles to a lake at speed $x$ mph and rides the same 30 miles home at $x + 5$ mph. The whole round trip takes 3.5 hours, modeled by $\\\\frac{30}{x} + \\\\frac{30}{x + 5} = 3.5$. Solving gives one sensible positive speed. Verify that $x = 15$ is that speed by substituting it in.",
+      "steps": [
+        { "instruction": "Compute the time going to the lake: $\\\\frac{30}{15}$ hours.", "answer": "2", "accept": ["2 hours"], "hint": "$30 \\\\div 15 = 2$." },
+        { "instruction": "Compute the time riding home: $\\\\frac{30}{20}$ hours.", "answer": "3/2", "accept": ["1.5", "1.5 hours"], "hint": "$x + 5 = 20$, and $30 \\\\div 20 = 1.5$." },
+        { "instruction": "Add the two times. Does the total equal the stated 3.5 hours? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "$2 + 1.5 = 3.5$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "mph" },
+      "solutionNarrative": "At $x = 15$: the outbound time is $\\\\frac{30}{15} = 2$ h and the return time is $\\\\frac{30}{20} = 1.5$ h, totaling $3.5$ h — exactly the stated total. So $x = 15$ mph satisfies the equation, confirming the solution by substitution."
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "id": "linear-algebra.vectors-and-span",
+  "subject": "linear-algebra",
+  "title": "Vectors, Linear Combinations, and Span",
+  "prerequisites": [],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "linear-combinations",
+      "label": "Linear combinations",
+      "microLesson": "A **linear combination** scales each vector by a number and adds the results: $c_1\\vec{v}_1 + c_2\\vec{v}_2 + \\dots$. You stretch or shrink each vector, then place them tip-to-tail. For example, $2\\langle 1, 0\\rangle + 3\\langle 0, 1\\rangle = \\langle 2, 3\\rangle$. Every recipe, mix, or net force is a linear combination of building-block vectors."
+    },
+    {
+      "id": "span-membership",
+      "label": "Span membership",
+      "microLesson": "A vector $\\vec{b}$ is **in the span** of $\\vec{v}_1, \\vec{v}_2, \\dots$ if you can hit it with *some* linear combination — if there exist weights $c_1, c_2, \\dots$ with $c_1\\vec{v}_1 + \\dots = \\vec{b}$. That's the same as asking whether the system $[\\,\\vec{v}_1\\ \\vec{v}_2\\ \\dots \\mid \\vec{b}\\,]$ is consistent. If a solution exists, $\\vec{b}$ is reachable; the weights $c_i$ are the recipe."
+    },
+    {
+      "id": "spanning-sets",
+      "label": "Spanning sets",
+      "microLesson": "A set of vectors **spans** $\\mathbb{R}^n$ if every vector in $\\mathbb{R}^n$ is reachable as a linear combination of them. The test: row-reduce the matrix whose columns are the vectors and count the **pivots**. You need a pivot in every one of the $n$ rows. Spanning $\\mathbb{R}^2$ needs 2 pivots; spanning $\\mathbb{R}^3$ needs 3. Too few vectors, or vectors lying on the same line/plane, fall short."
+    },
+    {
+      "id": "span-applied",
+      "label": "Span in the real world",
+      "microLesson": "Mixing problems *are* span problems. Hitting a target paint color from base colors, blending foods to meet nutrition targets, or finding the net force from component pushes all ask: *which combination of these building-block vectors lands on my target?* The weights are amounts — cups, liters, newtons — and 'is the target reachable?' is exactly 'is it in the span?'"
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Building anything out of a few ingredients\n\nMost real systems are built by **mixing fixed building blocks in adjustable amounts**. A paint shop makes thousands of colors from a handful of base pigments. A nutritionist hits a calorie-and-protein target by combining a few staple foods. An engineer finds the total pull on a bracket by adding up several component forces. Every one of these is the same mathematical move: take some fixed vectors and combine them with chosen weights.\n\nThat move is the **linear combination**, and it is the heart of linear algebra.\n\n## Vectors and linear combinations\n\nA **vector** is just an ordered list of numbers — $\\vec{v} = \\langle 2, 3 \\rangle$ in $\\mathbb{R}^2$, or $\\langle 1, 0, 4 \\rangle$ in $\\mathbb{R}^3$. You can **scale** a vector (multiply every entry by a number) and **add** two vectors (add entry by entry).\n\nA **linear combination** of vectors $\\vec{v}_1, \\dots, \\vec{v}_k$ is any expression\n\n$$c_1 \\vec{v}_1 + c_2 \\vec{v}_2 + \\dots + c_k \\vec{v}_k,$$\n\nwhere the **weights** $c_1, \\dots, c_k$ are real numbers. Geometrically you stretch each vector by its weight and lay them tip-to-tail; the result is where you land. For example,\n\n$$2\\langle 1, 0 \\rangle + 3\\langle 0, 1 \\rangle = \\langle 2, 0 \\rangle + \\langle 0, 3 \\rangle = \\langle 2, 3 \\rangle.$$\n\nHere is that combination drawn: stretch $\\langle 1, 0 \\rangle$ by 2, stretch $\\langle 0, 1 \\rangle$ by 3, and lay them tip-to-tail to land at $\\langle 2, 3 \\rangle$.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-1,4],\"yRange\":[-1,4],\"grid\":true,\"segments\":[{\"from\":[0,0],\"to\":[2,0],\"arrow\":true,\"label\":\"2<1,0>\",\"color\":\"accent\"},{\"from\":[0,0],\"to\":[0,3],\"arrow\":true,\"label\":\"3<0,1>\",\"color\":\"warn\"},{\"from\":[2,0],\"to\":[2,3],\"dashed\":true,\"arrow\":true,\"color\":\"warn\"},{\"from\":[0,0],\"to\":[2,3],\"arrow\":true,\"label\":\"<2,3>\",\"color\":\"success\"}],\"points\":[{\"x\":2,\"y\":3,\"color\":\"success\"}],\"caption\":\"2<1,0> + 3<0,1>: scale each building block, add tip-to-tail, land at (2, 3)\"}\n```\n\n## Span: everything you can reach\n\nThe **span** of a set of vectors is the collection of *all* linear combinations of them — every target you could possibly hit by choosing weights. Two key questions follow:\n\n1. **Membership:** is a *specific* target $\\vec{b}$ in the span?\n2. **Coverage:** does the set span *all* of $\\mathbb{R}^n$?\n\nBoth reduce to solving a linear system. To ask whether $\\vec{b}$ is in the span of $\\vec{v}_1, \\dots, \\vec{v}_k$, set up\n\n$$c_1 \\vec{v}_1 + \\dots + c_k \\vec{v}_k = \\vec{b}$$\n\nand solve for the weights. Stack the vectors as **columns** of a matrix $A$ and solve $A\\vec{c} = \\vec{b}$. If the system is **consistent** (has at least one solution), $\\vec{b}$ is in the span, and the solution is the recipe. If it's inconsistent, $\\vec{b}$ is out of reach.\n\n### Worked example: is $\\langle 7, 4 \\rangle$ reachable?\n\nUsing $\\vec{v}_1 = \\langle 1, 1 \\rangle$ and $\\vec{v}_2 = \\langle 1, -1 \\rangle$, solve $c_1\\langle 1, 1 \\rangle + c_2 \\langle 1, -1 \\rangle = \\langle 7, 4 \\rangle$. That's $c_1 + c_2 = 7$ and $c_1 - c_2 = 4$. Adding the equations: $2c_1 = 11$, so $c_1 = 5.5$ and $c_2 = 1.5$. A solution exists, so **yes**, $\\langle 7, 4 \\rangle$ is in the span.\n\nThe weights are a walking route: stretch $\\vec{v}_1$ by 5.5, then add 1.5 copies of $\\vec{v}_2$ tip-to-tail, and you arrive exactly at the target.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-1,8],\"yRange\":[-2,6],\"grid\":true,\"segments\":[{\"from\":[0,0],\"to\":[5.5,5.5],\"dashed\":true,\"label\":\"5.5 v1\",\"color\":\"accent\"},{\"from\":[5.5,5.5],\"to\":[7,4],\"dashed\":true,\"arrow\":true,\"label\":\"1.5 v2\",\"color\":\"warn\"},{\"from\":[0,0],\"to\":[7,4],\"arrow\":true,\"color\":\"success\"},{\"from\":[0,0],\"to\":[1,1],\"arrow\":true,\"label\":\"v1\",\"color\":\"accent\"},{\"from\":[0,0],\"to\":[1,-1],\"arrow\":true,\"label\":\"v2\",\"color\":\"warn\"}],\"points\":[{\"x\":7,\"y\":4,\"label\":\"<7,4>\",\"color\":\"success\"}],\"caption\":\"5.5 v1 + 1.5 v2 = <7,4>: stretch v1 = <1,1>, then add 1.5 copies of v2 = <1,-1> tip-to-tail\"}\n```\n\n## Does the set span all of $\\mathbb{R}^n$?\n\nTo span **every** vector in $\\mathbb{R}^n$, the columns must reach in every independent direction. Row-reduce the matrix and **count the pivots** (leading entries):\n\n- A pivot in **every one of the $n$ rows** $\\Rightarrow$ the set spans $\\mathbb{R}^n$.\n- A missing pivot row $\\Rightarrow$ some direction is unreachable, so it does **not** span.\n\nConsequences worth memorizing: you need **at least $n$** vectors to span $\\mathbb{R}^n$ (two vectors can never span $\\mathbb{R}^3$), and even with enough vectors, ones lying on the same line or plane waste capacity and fall short.\n\n## Why this matters\n\nEvery mixing, blending, and force-balancing question is secretly a span question. *Can I make this color from my pigments?* *Can I hit this nutrition target with these foods?* *Do these thrusters let me push in any direction?* Each one asks whether a target is in a span — and the weights, when they exist, are the answer you actually use."
+  },
+  "application": {
+    "summary": "Linear combinations and span answer 'can I build my target from these ingredients, and in what amounts?' — the question behind mixing paint to a color, blending foods to a nutrition target, balancing forces, and allocating a budget across fixed bundles.",
+    "domains": ["graphics", "nutrition", "physics", "engineering"],
+    "workedExample": "**Mixing paint to a target color**\n\nYour mixer has two base paints described by their (Red, Green) intensities: paint A is $\\langle 2, 1 \\rangle$ per liter and paint B is $\\langle 1, 3 \\rangle$ per liter. You want a batch with profile $\\langle 5, 5 \\rangle$. How many liters of each?\n\nThis is a span-membership question: find weights $c_1, c_2$ with $c_1\\langle 2, 1 \\rangle + c_2 \\langle 1, 3 \\rangle = \\langle 5, 5 \\rangle$. That gives the system $2c_1 + c_2 = 5$ and $c_1 + 3c_2 = 5$.\n\nFrom the first equation $c_2 = 5 - 2c_1$; substitute: $c_1 + 3(5 - 2c_1) = 5 \\Rightarrow c_1 + 15 - 6c_1 = 5 \\Rightarrow -5c_1 = -10 \\Rightarrow c_1 = 2$, then $c_2 = 1$.\n\n**Use 2 liters of A and 1 liter of B.** Check: $2\\langle 2, 1 \\rangle + 1\\langle 1, 3 \\rangle = \\langle 5, 5 \\rangle$. ✓ The same setup decides whether a color is even *achievable* (is the target in the span?) and the exact recipe when it is.",
+    "domainNotes": [
+      "**Graphics:** mixing base colors (RGB) to hit a target color; the weights are the amounts of each pigment, and an unreachable color is one outside the span.",
+      "**Nutrition:** combining staple foods so that calories, protein, and carbs all land on target — a span question in $\\mathbb{R}^3$.",
+      "**Physics:** finding the net force from component forces, or asking whether a set of thrusters can produce a push in any direction (do they span $\\mathbb{R}^2$ or $\\mathbb{R}^3$?).",
+      "**Engineering/finance:** allocating a budget across fixed resource bundles to meet several requirements at once."
+    ]
+  },
+  "generators": ["lin-comb-v1", "span-membership-v1", "laf-linear-combinations-d2", "laf-linear-combinations-d3", "laf-span-membership-d2", "laf-span-membership-d3", "laf-spanning-sets-d1", "laf-spanning-sets-d2", "laf-spanning-sets-d3", "laf-span-applied-d1", "laf-span-applied-d2", "laf-span-applied-d3"],
+  "problems": [
+    {
+      "id": "linear-algebra.vectors-and-span.s01",
+      "concepts": ["linear-combinations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the linear combination $2\\langle 1, 3 \\rangle + 4\\langle 2, -1 \\rangle$.",
+      "steps": [
+        { "instruction": "Scale each vector by its weight.", "answer": "<2, 6> and <8, -4>", "accept": ["(2, 6) and (8, -4)", "<2,6> and <8,-4>"], "hint": "Multiply every entry: $2\\langle 1,3\\rangle = \\langle 2,6\\rangle$ and $4\\langle 2,-1\\rangle = \\langle 8,-4\\rangle$." },
+        { "instruction": "Add the two scaled vectors entry by entry.", "answer": "<10, 2>", "accept": ["(10, 2)", "<10,2>"], "hint": "$\\langle 2,6\\rangle + \\langle 8,-4\\rangle = \\langle 2+8, 6-4\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<10, 2>", "unit": "" },
+      "solutionNarrative": "Scale: $2\\langle 1,3\\rangle = \\langle 2,6\\rangle$, $4\\langle 2,-1\\rangle = \\langle 8,-4\\rangle$. Add: $\\langle 10, 2\\rangle$."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s02",
+      "concepts": ["linear-combinations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $3\\langle 1, 0, 2 \\rangle + \\langle 0, 5, -1 \\rangle$ in $\\mathbb{R}^3$.",
+      "steps": [
+        { "instruction": "Scale the first vector by 3.", "answer": "<3, 0, 6>", "accept": ["(3, 0, 6)", "<3,0,6>"], "hint": "Multiply every entry of $\\langle 1,0,2\\rangle$ by 3." },
+        { "instruction": "Add the second vector entry by entry.", "answer": "<3, 5, 5>", "accept": ["(3, 5, 5)", "<3,5,5>"], "hint": "$\\langle 3,0,6\\rangle + \\langle 0,5,-1\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<3, 5, 5>", "unit": "" },
+      "solutionNarrative": "$3\\langle 1,0,2\\rangle = \\langle 3,0,6\\rangle$; adding $\\langle 0,5,-1\\rangle$ gives $\\langle 3,5,5\\rangle$."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s03",
+      "concepts": ["linear-combinations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute the linear combination $2\\langle 1, -1, 0 \\rangle - 3\\langle 0, 2, 1 \\rangle + \\langle 4, 0, 5 \\rangle$.",
+      "steps": [
+        { "instruction": "Scale the first two vectors by their weights.", "answer": "<2, -2, 0> and <0, -6, -3>", "accept": ["(2, -2, 0) and (0, -6, -3)"], "hint": "$2\\langle 1,-1,0\\rangle = \\langle 2,-2,0\\rangle$ and $-3\\langle 0,2,1\\rangle = \\langle 0,-6,-3\\rangle$." },
+        { "instruction": "Add all three vectors entry by entry.", "answer": "<6, -8, 2>", "accept": ["(6, -8, 2)", "<6,-8,2>"], "hint": "Sum each coordinate: $2+0+4$, $-2-6+0$, $0-3+5$." }
+      ],
+      "finalAnswer": { "value": "<6, -8, 2>", "unit": "" },
+      "solutionNarrative": "Scaled vectors are $\\langle 2,-2,0\\rangle$, $\\langle 0,-6,-3\\rangle$, $\\langle 4,0,5\\rangle$. Summing coordinates gives $\\langle 6,-8,2\\rangle$."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s04",
+      "concepts": ["linear-combinations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find weights $c_1$ and $c_2$ so that $c_1\\langle 1, 2 \\rangle + c_2\\langle 3, 1 \\rangle = \\langle 5, 5 \\rangle$, then state the resulting combination's value.",
+      "steps": [
+        { "instruction": "Write the two scalar equations from matching entries.", "answer": "c1 + 3c2 = 5 and 2c1 + c2 = 5", "accept": ["c_1 + 3c_2 = 5 and 2c_1 + c_2 = 5"], "hint": "First entries: $c_1 + 3c_2 = 5$. Second entries: $2c_1 + c_2 = 5$." },
+        { "instruction": "Solve the system for $c_1$ and $c_2$.", "answer": "c1 = 2, c2 = 1", "accept": ["c_1 = 2, c_2 = 1", "2, 1"], "hint": "From the first, $c_1 = 5 - 3c_2$; substitute into the second." },
+        { "instruction": "State the value of the combination (it should equal the target).", "answer": "<5, 5>", "accept": ["(5, 5)", "<5,5>"], "hint": "Plug the weights back in: $2\\langle 1,2\\rangle + 1\\langle 3,1\\rangle$." }
+      ],
+      "finalAnswer": { "value": "c1 = 2, c2 = 1", "unit": "" },
+      "solutionNarrative": "Matching entries gives $c_1 + 3c_2 = 5$ and $2c_1 + c_2 = 5$. Solving: $c_1 = 2$, $c_2 = 1$, and $2\\langle 1,2\\rangle + \\langle 3,1\\rangle = \\langle 5,5\\rangle$."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s05",
+      "concepts": ["span-membership"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is $\\vec{b} = \\langle 6, 0 \\rangle$ in the span of $\\langle 3, 0 \\rangle$? Answer yes or no.",
+      "steps": [
+        { "instruction": "Find a single weight $c$ with $c\\langle 3, 0 \\rangle = \\langle 6, 0 \\rangle$.", "answer": "2", "accept": ["c = 2"], "hint": "What number times 3 gives 6?" },
+        { "instruction": "Is $\\vec{b}$ in the span? Answer yes or no.", "answer": "yes", "accept": ["y"], "hint": "A weight exists, so the vector is reachable." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$2\\langle 3,0\\rangle = \\langle 6,0\\rangle$, so a weight exists and $\\vec{b}$ is in the span: yes."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s06",
+      "concepts": ["span-membership"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Is $\\vec{b} = \\langle 7, 4 \\rangle$ in the span of $\\langle 1, 1 \\rangle$ and $\\langle 1, -1 \\rangle$? If so, give the weights.",
+      "steps": [
+        { "instruction": "Write the system from $c_1\\langle 1,1\\rangle + c_2\\langle 1,-1\\rangle = \\langle 7,4\\rangle$.", "answer": "c1 + c2 = 7 and c1 - c2 = 4", "accept": ["c_1 + c_2 = 7 and c_1 - c_2 = 4"], "hint": "First entries: $c_1 + c_2 = 7$. Second entries: $c_1 - c_2 = 4$." },
+        { "instruction": "Solve for $c_1$ and $c_2$.", "answer": "c1 = 5.5, c2 = 1.5", "accept": ["c_1 = 5.5, c_2 = 1.5", "5.5, 1.5", "11/2, 3/2"], "hint": "Add the equations: $2c_1 = 11$." },
+        { "instruction": "Is $\\vec{b}$ in the span? Answer yes or no.", "answer": "yes", "accept": ["y"], "hint": "A solution exists." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The system $c_1 + c_2 = 7$, $c_1 - c_2 = 4$ gives $c_1 = 5.5$, $c_2 = 1.5$. A solution exists, so yes."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s07",
+      "concepts": ["span-membership"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Is $\\vec{b} = \\langle 1, 2, 3 \\rangle$ in the span of $\\langle 1, 0, 0 \\rangle$ and $\\langle 0, 1, 0 \\rangle$? Answer yes or no.",
+      "steps": [
+        { "instruction": "Write the combination $c_1\\langle 1,0,0\\rangle + c_2\\langle 0,1,0\\rangle$ in coordinate form.", "answer": "<c1, c2, 0>", "accept": ["(c1, c2, 0)", "<c_1, c_2, 0>"], "hint": "The third entry is always 0 no matter what weights you pick." },
+        { "instruction": "Can the third entry equal 3? Answer yes or no.", "answer": "no", "accept": ["n"], "hint": "The third coordinate of any combination is 0, but the target needs 3." },
+        { "instruction": "Is $\\vec{b}$ in the span? Answer yes or no.", "answer": "no", "accept": ["n"], "hint": "Since the third entry can never be 3, the target is unreachable." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Any combination has the form $\\langle c_1, c_2, 0\\rangle$, so the third entry is always 0 and can never be 3. The system is inconsistent: no."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s08",
+      "concepts": ["spanning-sets"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Do the vectors $\\langle 1, 0 \\rangle$ and $\\langle 0, 1 \\rangle$ span $\\mathbb{R}^2$? Answer yes or no.",
+      "steps": [
+        { "instruction": "How many pivots does the matrix with these columns have?", "answer": "2", "accept": ["two"], "hint": "The matrix is already the identity; each row has a leading 1." },
+        { "instruction": "Do they span $\\mathbb{R}^2$? Answer yes or no.", "answer": "yes", "accept": ["y"], "hint": "Spanning $\\mathbb{R}^2$ needs a pivot in all 2 rows." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The columns form the identity matrix with 2 pivots, one per row, so they span $\\mathbb{R}^2$: yes."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s09",
+      "concepts": ["spanning-sets"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Do the vectors $\\langle 2, 4 \\rangle$ and $\\langle 1, 2 \\rangle$ span $\\mathbb{R}^2$? Answer yes or no.",
+      "steps": [
+        { "instruction": "Notice the relationship between the two vectors. Is one a scalar multiple of the other? Answer yes or no.", "answer": "yes", "accept": ["y"], "hint": "$\\langle 2,4\\rangle = 2\\langle 1,2\\rangle$." },
+        { "instruction": "How many pivots does the matrix have after row reduction?", "answer": "1", "accept": ["one"], "hint": "Both columns point in the same direction, so the second is eliminated." },
+        { "instruction": "Do they span $\\mathbb{R}^2$? Answer yes or no.", "answer": "no", "accept": ["n"], "hint": "You need 2 pivots to span $\\mathbb{R}^2$, but there is only 1." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Since $\\langle 2,4\\rangle = 2\\langle 1,2\\rangle$, the vectors lie on one line. Row reduction leaves only 1 pivot, short of the 2 needed: no."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s10",
+      "concepts": ["spanning-sets"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Do the vectors $\\langle 1, 0, 0 \\rangle$, $\\langle 0, 1, 0 \\rangle$, and $\\langle 1, 1, 0 \\rangle$ span $\\mathbb{R}^3$? Answer yes or no.",
+      "steps": [
+        { "instruction": "Look at the third entry of every vector. What value does it always take?", "answer": "0", "accept": ["zero"], "hint": "All three vectors have a third coordinate of 0." },
+        { "instruction": "How many pivots does the matrix have after row reduction?", "answer": "2", "accept": ["two"], "hint": "The third vector equals the sum of the first two, so it adds no new direction." },
+        { "instruction": "Do they span $\\mathbb{R}^3$? Answer yes or no.", "answer": "no", "accept": ["n"], "hint": "Spanning $\\mathbb{R}^3$ needs 3 pivots, but the third row never gets one." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Every vector has third entry 0, so they all lie in a plane. There are only 2 pivots (the third vector is the sum of the first two), short of the 3 needed: no."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s11",
+      "concepts": ["spanning-sets"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Do the vectors $\\langle 1, 0, 0 \\rangle$, $\\langle 0, 1, 0 \\rangle$, and $\\langle 0, 0, 1 \\rangle$ span $\\mathbb{R}^3$? Answer yes or no.",
+      "steps": [
+        { "instruction": "How many pivots does the matrix with these columns have?", "answer": "3", "accept": ["three"], "hint": "The columns form the 3x3 identity; each row has a leading 1." },
+        { "instruction": "Do they span $\\mathbb{R}^3$? Answer yes or no.", "answer": "yes", "accept": ["y"], "hint": "Spanning $\\mathbb{R}^3$ needs a pivot in all 3 rows." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The standard basis vectors form the identity matrix with 3 pivots, one per row, so they span $\\mathbb{R}^3$: yes."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s12",
+      "concepts": ["span-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two forces act on a bracket: $\\vec{F}_1 = \\langle 3, 2 \\rangle$ newtons and $\\vec{F}_2 = \\langle 1, 5 \\rangle$ newtons. What is the net force (their sum)?",
+      "steps": [
+        { "instruction": "Add the two force vectors entry by entry.", "answer": "<4, 7>", "accept": ["(4, 7)", "<4,7>"], "hint": "$\\langle 3,2\\rangle + \\langle 1,5\\rangle = \\langle 3+1, 2+5\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<4, 7>", "unit": "newtons" },
+      "solutionNarrative": "The net force is $\\langle 3,2\\rangle + \\langle 1,5\\rangle = \\langle 4,7\\rangle$ newtons."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s13",
+      "concepts": ["span-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two base paints are described by (Red, Green) intensity per liter: paint A is $\\langle 2, 1 \\rangle$ and paint B is $\\langle 1, 3 \\rangle$. You want a batch with profile $\\langle 5, 5 \\rangle$. How many liters of each (find $c_1$ liters of A and $c_2$ liters of B)?",
+      "plot": {"type":"cartesian","xRange":[-1,6],"yRange":[-1,6],"grid":true,"segments":[{"from":[0,0],"to":[2,1],"arrow":true,"label":"A = <2,1>","color":"accent"},{"from":[0,0],"to":[1,3],"arrow":true,"label":"B = <1,3>","color":"warn"}],"points":[{"x":5,"y":5,"label":"<5,5>","color":"success"}],"caption":"Base paints A and B as vectors; the mix must land on the target (5, 5)"},
+      "steps": [
+        { "instruction": "Write the system from $c_1\\langle 2,1\\rangle + c_2\\langle 1,3\\rangle = \\langle 5,5\\rangle$.", "answer": "2c1 + c2 = 5 and c1 + 3c2 = 5", "accept": ["2c_1 + c_2 = 5 and c_1 + 3c_2 = 5"], "hint": "Red entries: $2c_1 + c_2 = 5$. Green entries: $c_1 + 3c_2 = 5$." },
+        { "instruction": "Solve for $c_1$ and $c_2$.", "answer": "c1 = 2, c2 = 1", "accept": ["c_1 = 2, c_2 = 1", "2, 1"], "hint": "From the first, $c_2 = 5 - 2c_1$; substitute into the second." }
+      ],
+      "finalAnswer": { "value": "c1 = 2, c2 = 1", "unit": "liters" },
+      "solutionNarrative": "The system $2c_1 + c_2 = 5$, $c_1 + 3c_2 = 5$ gives $c_1 = 2$, $c_2 = 1$: use 2 liters of A and 1 liter of B. Check: $2\\langle 2,1\\rangle + \\langle 1,3\\rangle = \\langle 5,5\\rangle$."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s14",
+      "concepts": ["span-applied", "linear-combinations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A snack is built from servings of two foods, each given as (calories, grams of protein): oats are $\\langle 150, 5 \\rangle$ and yogurt is $\\langle 100, 10 \\rangle$. If you use 2 servings of oats and 3 servings of yogurt, what is the total (calories, protein) vector?",
+      "steps": [
+        { "instruction": "Scale each food vector by its number of servings.", "answer": "<300, 10> and <300, 30>", "accept": ["(300, 10) and (300, 30)"], "hint": "$2\\langle 150,5\\rangle = \\langle 300,10\\rangle$ and $3\\langle 100,10\\rangle = \\langle 300,30\\rangle$." },
+        { "instruction": "Add the two scaled vectors.", "answer": "<600, 40>", "accept": ["(600, 40)", "<600,40>"], "hint": "$\\langle 300,10\\rangle + \\langle 300,30\\rangle$." }
+      ],
+      "finalAnswer": { "value": "<600, 40>", "unit": "(calories, grams protein)" },
+      "solutionNarrative": "$2\\langle 150,5\\rangle + 3\\langle 100,10\\rangle = \\langle 300,10\\rangle + \\langle 300,30\\rangle = \\langle 600,40\\rangle$: 600 calories and 40 g protein."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s15",
+      "concepts": ["span-applied", "span-membership"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A mixer has three base pigments given as (Red, Green, Blue): $\\langle 1, 0, 0 \\rangle$, $\\langle 0, 1, 0 \\rangle$, and $\\langle 0, 0, 1 \\rangle$ per unit. You want the target color $\\langle 4, 2, 7 \\rangle$. How many units of each pigment, and is the target reachable?",
+      "steps": [
+        { "instruction": "Find the weights $c_1, c_2, c_3$ for the three pigments.", "answer": "c1 = 4, c2 = 2, c3 = 7", "accept": ["c_1 = 4, c_2 = 2, c_3 = 7", "4, 2, 7"], "hint": "With the standard basis, each weight is just the matching entry of the target." },
+        { "instruction": "Is the target color in the span of the pigments? Answer yes or no.", "answer": "yes", "accept": ["y"], "hint": "The three pigments span all of $\\mathbb{R}^3$, so every color is reachable." }
+      ],
+      "finalAnswer": { "value": "c1 = 4, c2 = 2, c3 = 7", "unit": "units" },
+      "solutionNarrative": "The pigments are the standard basis of $\\mathbb{R}^3$, so the weights are the target's entries: 4, 2, 7 units. They span $\\mathbb{R}^3$, so yes, any color is reachable."
+    },
+    {
+      "id": "linear-algebra.vectors-and-span.s16",
+      "concepts": ["span-applied", "spanning-sets"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 2D robot has two thrusters that push along $\\langle 1, 1 \\rangle$ and $\\langle 2, 2 \\rangle$. Can the robot produce a net push in any direction in $\\mathbb{R}^2$? Answer yes or no.",
+      "plot": {"type":"cartesian","xRange":[-1,4],"yRange":[-1,4],"grid":true,"segments":[{"from":[0,0],"to":[2,2],"arrow":true,"label":"<2,2>","color":"warn"},{"from":[0,0],"to":[1,1],"arrow":true,"label":"<1,1>","color":"accent"}],"caption":"The two thruster push vectors, drawn from the origin"},
+      "steps": [
+        { "instruction": "Is one thruster vector a scalar multiple of the other? Answer yes or no.", "answer": "yes", "accept": ["y"], "hint": "$\\langle 2,2\\rangle = 2\\langle 1,1\\rangle$." },
+        { "instruction": "How many pivots does the thruster matrix have after row reduction?", "answer": "1", "accept": ["one"], "hint": "Both thrusters push along the same line, so only one independent direction remains." },
+        { "instruction": "Can the robot push in any direction (do the thrusters span $\\mathbb{R}^2$)? Answer yes or no.", "answer": "no", "accept": ["n"], "hint": "With only 1 pivot, the robot can only push along the line $y = x$." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Since $\\langle 2,2\\rangle = 2\\langle 1,1\\rangle$, both thrusters point along $y = x$. Row reduction leaves only 1 pivot, so they do not span $\\mathbb{R}^2$: the robot can only push along that one line. No."
+    }
+  ]
+}

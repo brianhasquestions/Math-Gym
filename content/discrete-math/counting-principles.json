@@ -1,0 +1,264 @@
+{
+  "id": "discrete-math.counting-principles",
+  "subject": "discrete-math",
+  "title": "Counting: Permutations and Combinations",
+  "prerequisites": ["discrete-math.sets-and-set-operations", "algebra.exponents"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "product-and-sum-rules",
+      "label": "Product and sum rules",
+      "microLesson": "When a task happens in independent stages, multiply the choices at each stage (product rule); when it splits into mutually exclusive cases, count each case and add (sum rule). A license plate with 3 letters then 3 digits has $26 \\cdot 26 \\cdot 26 \\cdot 10 \\cdot 10 \\cdot 10 = 17{,}576{,}000$ possibilities — six small decisions compound into millions. If codes are EITHER two letters OR two digits, the counts add instead: $26^2 + 10^2 = 776$. Deciding 'stages or cases?' is the whole game: sequential choices multiply, exclusive alternatives add."
+    },
+    {
+      "id": "permutations",
+      "label": "Permutations: order matters",
+      "microLesson": "An arrangement where order matters is a permutation: $n$ distinct objects can be lined up in $n! = n \\cdot (n-1) \\cdots 2 \\cdot 1$ ways, and picking an ordered sequence of $k$ of them gives $P(n,k) = \\frac{n!}{(n-k)!}$ — the product rule with shrinking choices. Awarding gold, silver, and bronze among 8 runners is $P(8,3) = 8 \\cdot 7 \\cdot 6 = 336$ because gold-Ana/silver-Ben differs from gold-Ben/silver-Ana. The test: swap two of your selections — if the outcome changes, order matters and you are permuting."
+    },
+    {
+      "id": "combinations",
+      "label": "Combinations: order doesn't matter",
+      "microLesson": "When you only choose a set — a committee, a hand of cards, lottery numbers — order is irrelevant, so divide the ordered count by the $k!$ ways to shuffle each selection: $\\binom{n}{k} = \\frac{n!}{k!(n-k)!}$. Choosing 3 people from 10 gives $\\binom{10}{3} = \\frac{10 \\cdot 9 \\cdot 8}{3!} = \\frac{720}{6} = 120$. Symmetry saves work: choosing $k$ to include is the same as choosing $n-k$ to exclude, so $\\binom{n}{k} = \\binom{n}{n-k}$ — compute $\\binom{20}{17}$ as the far easier $\\binom{20}{3}$."
+    },
+    {
+      "id": "pigeonhole-principle",
+      "label": "Pigeonhole principle",
+      "microLesson": "If $n$ items land in $m < n$ boxes, some box holds at least 2 — and in general some box holds at least $\\lceil n/m \\rceil$. It sounds obvious, yet it manufactures iron-clad guarantees from nothing: among any 13 people, two share a birth month, because 13 people into 12 months forces a doubling. Flip it around for the worst case: to GUARANTEE $k$ items in one of $m$ boxes you need $(k-1) \\cdot m + 1$ items, since the adversary can stall at $k-1$ per box. This is exactly why hash collisions are inevitable: more inputs than outputs means two inputs must share a hash."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The number that guards your accounts\n\nA thief with your phone gets a 4-digit PIN screen: $10^4 = 10{,}000$ possibilities, exhausted by software in a blink. Your good password — 8 characters drawn from 62 letters and digits — lives in a space of $62^8 = 218{,}340{,}105{,}584{,}896$ possibilities, about 22 billion times larger. Nobody 'measured' those numbers; they were *counted*, without listing a single password. That is combinatorics: computing the size of enormous sets from their structure. It sets the price of brute-forcing a key, the odds of a lottery, the number of arms in an A/B test, and the inevitability of hash collisions. Four principles do almost all of the work.\n\n## The product rule: stages multiply\n\nIf a procedure happens in stages — first this choice, then that one — and the *number* of options at each stage doesn't depend on earlier picks, the totals multiply:\n\n$$N = n_1 \\cdot n_2 \\cdots n_t.$$\n\nA menu with 4 starters, 6 mains, and 3 desserts offers $4 \\cdot 6 \\cdot 3 = 72$ dinners. A license plate of 3 letters then 3 digits: $26^3 \\cdot 10^3 = 17{,}576{,}000$. The password count above is nothing but the product rule applied 8 times, and it explains the exponential payoff of length: every extra character multiplies the keyspace by 62. Attackers and defenders are literally arguing about a product.\n\n## The sum rule: cases add\n\nWhen the possibilities split into **mutually exclusive** cases, count each case and add. If a system accepts codes that are either two letters followed by a digit *or* one letter followed by two digits, no code is both, so the total is $26 \\cdot 26 \\cdot 10 + 26 \\cdot 10 \\cdot 10 = 6760 + 2600 = 9360$. The discipline is in the word *exclusive*: overlapping cases double-count, which is why careful case-splitting (and its cousin, complement counting — count everything, subtract what you don't want) is the first skill of the trade.\n\n## Permutations: when order matters\n\nHow many ways can $n$ distinct things be arranged in a row? The product rule with shrinking supply: $n$ choices for the first slot, $n-1$ for the second, down to 1. That product is the **factorial**, $n! = n(n-1)(n-2)\\cdots 1$, and it grows savagely — $7! = 5040$, while $52!$ (the orderings of a deck of cards) has 68 digits.\n\nOften you arrange only $k$ of the $n$: the podium among 8 runners is $8 \\cdot 7 \\cdot 6 = 336$. In general,\n\n$$P(n,k) = \\frac{n!}{(n-k)!},$$\n\nthe first $k$ factors of $n!$. The litmus test for 'is this a permutation?': swap two of your picks. Gold-Ana, silver-Ben is a different outcome from gold-Ben, silver-Ana — order matters, so you multiply shrinking choices.\n\n## Combinations: when order doesn't\n\nNow pick a 3-person committee from 10 people. The ordered count $10 \\cdot 9 \\cdot 8 = 720$ overcounts: each committee got tallied once per ordering of its members, and 3 people can be ordered $3! = 6$ ways. So divide:\n\n$$\\binom{10}{3} = \\frac{10 \\cdot 9 \\cdot 8}{3!} = \\frac{720}{6} = 120.$$\n\nThat is the pattern behind the general formula\n\n$$\\binom{n}{k} = \\frac{n!}{k!(n-k)!},$$\n\nread '$n$ choose $k$': count ordered selections, then divide out the $k!$ shufflings you don't care about. Choosing which $k$ to *include* fixes which $n-k$ to *exclude*, so $\\binom{n}{k} = \\binom{n}{n-k}$ — a symmetry that turns the ugly $\\binom{20}{17}$ into the friendly $\\binom{20}{3} = 1140$. Lotteries live here: 6 balls from 49, order irrelevant, gives $\\binom{49}{6} = 13{,}983{,}816$ tickets — and exactly one wins.\n\n## The pigeonhole principle: guarantees for free\n\nPut $n$ items into $m$ boxes with $n > m$, and some box receives at least 2. More precisely, some box receives at least $\\lceil n/m \\rceil$. No probability, no luck — a certainty. Among any 13 people, two share a birth month. Sort 100 emails into 12 folders and some folder holds at least $\\lceil 100/12 \\rceil = 9$.\n\nFor 'how many items until I'm *guaranteed* $k$ in one box?', think like an adversary who stalls at $k-1$ per box: they survive $(k-1) \\cdot m$ items, so $(k-1) \\cdot m + 1$ forces the guarantee. Two colors of socks in a dark drawer? Three pulls guarantee a pair.\n\nThe pigeonhole is why **hash collisions must exist**: a function from many inputs to $2^{256}$ outputs, fed more than $2^{256}$ inputs, must repeat. Cryptographers don't pretend collisions away — they count how hard collisions are to *find*, and counting arguments (the 'birthday' effect, built from these same rules) show collisions appear around $2^{128}$ tries, not $2^{256}$.\n\n## Why cryptographers count\n\nEvery security claim in this gym's cryptography section is secretly a counting claim: a keyspace is a product, an attack cost is a fraction of it, a collision bound is a pigeonhole argument. Master these four moves — multiply stages, add cases, divide out order, and box the pigeons — and those claims stop being slogans and become arithmetic you can check."
+  },
+  "application": {
+    "summary": "Counting principles put exact sizes on password keyspaces, lottery odds, experiment designs, and hash-collision guarantees: the product rule prices a brute-force attack, combinations price a lottery ticket, and the pigeonhole principle proves collisions are unavoidable.",
+    "domains": ["password and keyspace security", "lottery and gambling odds", "A/B testing and experiment design", "hashing and collision analysis", "scheduling and resource allocation"],
+    "workedExample": "**How much safer is a password than a PIN — and what does a lottery ticket really buy?**\n\n*The PIN.* A 4-digit PIN is four sequential choices of a digit 0–9. By the product rule the keyspace is $10 \\cdot 10 \\cdot 10 \\cdot 10 = 10^4 = 10{,}000$. An attacker trying 100 PINs per second exhausts it in 100 seconds.\n\n*The password.* An 8-character password over the 62 alphanumerics (26 lowercase, 26 uppercase, 10 digits) is eight sequential choices from 62 symbols: $62^8$. Build it by repeated squaring: $62^2 = 3844$, $62^4 = 3844^2 = 14{,}776{,}336$, and $62^8 = 14{,}776{,}336^2 = 218{,}340{,}105{,}584{,}896$ — about $2.2 \\times 10^{14}$. That is $\\frac{62^8}{10^4} \\approx 2.2 \\times 10^{10}$ times the PIN's keyspace: the same attacker now needs roughly 69,000 years. Length beats cleverness because every added character *multiplies* the space by 62.\n\n*The lottery.* A 6-from-49 lottery draws 6 distinct balls and order doesn't matter, so tickets are combinations. Count ordered draws first: $49 \\cdot 48 \\cdot 47 \\cdot 46 \\cdot 45 \\cdot 44 = 10{,}068{,}347{,}520$. Each set of 6 balls was counted once per ordering, and $6! = 720$, so\n\n$$\\binom{49}{6} = \\frac{10{,}068{,}347{,}520}{720} = 13{,}983{,}816.$$\n\nOne ticket wins with probability $\\frac{1}{13{,}983{,}816}$ — you are about 22 times more likely to guess a stranger's PIN on the first try than to win. Notice the punchline: the lottery's 'huge' number is *smaller* than the password's keyspace by a factor of 15 million. Combinatorics is the honest scale for both.",
+    "domainNotes": [
+      "**Security:** keyspace = (alphabet size)^(length) by the product rule; adding one character to a 62-symbol password multiplies brute-force cost by 62, which is why password policies push length over complexity.",
+      "**Lotteries:** 6-from-49 odds are $1/\\binom{49}{6} = 1/13{,}983{,}816$; casinos and lotteries publish payouts, but the denominator is always a combination you can verify yourself.",
+      "**A/B testing:** 2 headlines × 3 button colors × 2 layouts is $2 \\cdot 3 \\cdot 2 = 12$ variants by the product rule, and choosing which 4 of 10 pilot users see variant B is $\\binom{10}{4} = 210$ — experiment design is counting before it is statistics.",
+      "**Hashing:** a hash with $2^{256}$ outputs fed $2^{256} + 1$ inputs must collide (pigeonhole); the birthday refinement says random collisions show up around $2^{128}$ tries, which is why '256-bit hash' means '128-bit collision resistance'.",
+      "**Scheduling:** assign 25 courses to 6 time slots and some slot carries at least $\\lceil 25/6 \\rceil = 5$ courses — pigeonhole bounds tell planners what no clever timetable can avoid."
+    ]
+  },
+  "generators": [],
+  "problems": [
+    {
+      "id": "discrete-math.counting-principles.s01",
+      "concepts": ["product-and-sum-rules"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A phone unlocks with a 4-digit PIN, each digit chosen from 0–9. How many different PINs are possible?",
+      "steps": [
+        { "instruction": "How many choices are there for a single digit? (Give a number.)", "answer": "10", "accept": [], "hint": "The digits are 0 through 9." },
+        { "instruction": "The 4 digits are chosen independently, so the product rule applies: compute $10 \\cdot 10 \\cdot 10 \\cdot 10$. (Give a number.)", "answer": "10000", "accept": ["10^4"], "hint": "That is $10^4$." }
+      ],
+      "finalAnswer": { "value": "10000", "unit": "" },
+      "solutionNarrative": "Each of the 4 positions has 10 independent choices, so the product rule gives $10^4 = 10{,}000$ PINs — a keyspace small enough to brute-force in minutes."
+    },
+    {
+      "id": "discrete-math.counting-principles.s02",
+      "concepts": ["product-and-sum-rules"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A license plate consists of 3 letters (A–Z) followed by 3 digits (0–9), with repeats allowed. How many plates are possible?",
+      "steps": [
+        { "instruction": "Count the letter block: compute $26^3$. (Give a number.)", "answer": "17576", "accept": [], "hint": "$26 \\cdot 26 = 676$, then $676 \\cdot 26$." },
+        { "instruction": "Count the digit block: compute $10^3$. (Give a number.)", "answer": "1000", "accept": [], "hint": "Three independent digits." },
+        { "instruction": "The blocks are sequential stages — multiply them. (Give a number.)", "answer": "17576000", "accept": [], "hint": "$17576 \\cdot 1000$: just append three zeros." }
+      ],
+      "finalAnswer": { "value": "17576000", "unit": "" },
+      "solutionNarrative": "The product rule chains all six positions: $26^3 \\cdot 10^3 = 17{,}576 \\cdot 1000 = 17{,}576{,}000$ plates. Six small choices compound into seventeen million."
+    },
+    {
+      "id": "discrete-math.counting-principles.s03",
+      "concepts": ["product-and-sum-rules"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A legacy system accepts access codes of two formats: EITHER two letters followed by one digit, OR one letter followed by two digits (letters A–Z, digits 0–9, repeats allowed). No code fits both formats. How many valid codes are there in total?",
+      "steps": [
+        { "instruction": "Count format 1 (letter, letter, digit) with the product rule: $26 \\cdot 26 \\cdot 10$. (Give a number.)", "answer": "6760", "accept": [], "hint": "$676 \\cdot 10$." },
+        { "instruction": "Count format 2 (letter, digit, digit): $26 \\cdot 10 \\cdot 10$. (Give a number.)", "answer": "2600", "accept": [], "hint": "$26 \\cdot 100$." },
+        { "instruction": "The formats are mutually exclusive, so the sum rule applies: add the two counts. (Give a number.)", "answer": "9360", "accept": [], "hint": "$6760 + 2600$." }
+      ],
+      "finalAnswer": { "value": "9360", "unit": "" },
+      "solutionNarrative": "Within each format the stages multiply ($6760$ and $2600$); across the exclusive formats the counts add: $6760 + 2600 = 9360$ codes. Product rule inside cases, sum rule across them — the standard one-two punch."
+    },
+    {
+      "id": "discrete-math.counting-principles.s04",
+      "concepts": ["product-and-sum-rules"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A marketing team runs a multivariate test: 2 headline variants, 3 button colors, and 2 page layouts, with every combination tested. They want 50 users assigned to each variant. How many users do they need in total?",
+      "steps": [
+        { "instruction": "How many distinct variants are there? Compute $2 \\cdot 3 \\cdot 2$. (Give a number.)", "answer": "12", "accept": [], "hint": "Each factor is an independent design choice — multiply." },
+        { "instruction": "At 50 users per variant, how many users are needed? (Give a number.)", "answer": "600", "accept": [], "hint": "$12 \\cdot 50$." }
+      ],
+      "finalAnswer": { "value": "600", "unit": "users" },
+      "solutionNarrative": "The product rule counts the variants: $2 \\cdot 3 \\cdot 2 = 12$. Sample-size needs scale with that product — $12 \\cdot 50 = 600$ users — which is why adding 'just one more' test dimension quietly doubles or triples an experiment's cost."
+    },
+    {
+      "id": "discrete-math.counting-principles.s05",
+      "concepts": ["permutations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "How many ways can 4 distinct books be arranged in a row on a shelf?",
+      "steps": [
+        { "instruction": "How many choices are there for which book goes in the first position? (Give a number.)", "answer": "4", "accept": [], "hint": "Any of the 4 books can go first." },
+        { "instruction": "The choices shrink by one each slot. Compute $4 \\cdot 3 \\cdot 2 \\cdot 1$. (Give a number.)", "answer": "24", "accept": [], "hint": "This is $4!$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "Order matters, so this is a permutation of all 4 books: $4! = 4 \\cdot 3 \\cdot 2 \\cdot 1 = 24$ arrangements — the product rule with a shrinking supply."
+    },
+    {
+      "id": "discrete-math.counting-principles.s06",
+      "concepts": ["permutations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Eight runners compete in a final. How many different gold–silver–bronze podiums are possible? (Swapping gold and silver gives a different podium — order matters.)",
+      "steps": [
+        { "instruction": "How many choices for the gold medalist? (Give a number.)", "answer": "8", "accept": [], "hint": "Any runner can win." },
+        { "instruction": "With gold decided, how many choices remain for silver? (Give a number.)", "answer": "7", "accept": [], "hint": "One runner is already used." },
+        { "instruction": "Bronze has 6 choices left. Compute the product $8 \\cdot 7 \\cdot 6$. (Give a number.)", "answer": "336", "accept": [], "hint": "$56 \\cdot 6$." }
+      ],
+      "finalAnswer": { "value": "336", "unit": "" },
+      "solutionNarrative": "An ordered selection of 3 from 8 is $P(8,3) = \\frac{8!}{5!} = 8 \\cdot 7 \\cdot 6 = 336$ podiums. The swap test confirms it: exchanging gold and silver changes the outcome, so order matters."
+    },
+    {
+      "id": "discrete-math.counting-principles.s07",
+      "concepts": ["permutations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A bank issues 4-digit PINs in which all four digits must be distinct AND the first digit cannot be 0. How many such PINs exist?",
+      "steps": [
+        { "instruction": "How many choices for the first digit (1–9, since 0 is banned there)? (Give a number.)", "answer": "9", "accept": [], "hint": "Ten digits minus the forbidden 0." },
+        { "instruction": "How many choices for the second digit? (0 is allowed now, but one digit is already used.) (Give a number.)", "answer": "9", "accept": [], "hint": "All 10 digits, minus the 1 already placed." },
+        { "instruction": "The third and fourth digits have 8 and 7 choices. Compute $9 \\cdot 9 \\cdot 8 \\cdot 7$. (Give a number.)", "answer": "4536", "accept": [], "hint": "$81 \\cdot 56$." }
+      ],
+      "finalAnswer": { "value": "4536", "unit": "" },
+      "solutionNarrative": "Handle the restricted slot first: 9 choices for a nonzero lead digit, then 9, 8, 7 for the rest as the distinctness constraint bites. Total $9 \\cdot 9 \\cdot 8 \\cdot 7 = 4536$ — under half of the naive $10^4$, showing how fast constraints shrink a keyspace."
+    },
+    {
+      "id": "discrete-math.counting-principles.s08",
+      "concepts": ["permutations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $7!$, the number of ways to arrange 7 distinct objects in a row.",
+      "steps": [
+        { "instruction": "First compute $6! = 6 \\cdot 5 \\cdot 4 \\cdot 3 \\cdot 2 \\cdot 1$. (Give a number.)", "answer": "720", "accept": [], "hint": "$6 \\cdot 120$." },
+        { "instruction": "Now use $7! = 7 \\cdot 6!$. (Give a number.)", "answer": "5040", "accept": [], "hint": "$7 \\cdot 720$." }
+      ],
+      "finalAnswer": { "value": "5040", "unit": "" },
+      "solutionNarrative": "Factorials build recursively: $7! = 7 \\cdot 6! = 7 \\cdot 720 = 5040$. That recursive step is why factorial growth outruns any exponential — each new object multiplies by an ever-bigger factor."
+    },
+    {
+      "id": "discrete-math.counting-principles.s09",
+      "concepts": ["combinations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\binom{10}{3}$, the number of ways to choose 3 objects from 10 when order does not matter.",
+      "steps": [
+        { "instruction": "Count the ordered selections first: $10 \\cdot 9 \\cdot 8$. (Give a number.)", "answer": "720", "accept": [], "hint": "$90 \\cdot 8$." },
+        { "instruction": "Each unordered choice was counted $3! = 6$ times. Divide: $720 / 6$. (Give a number.)", "answer": "120", "accept": [], "hint": "Divide out the orderings you don't care about." }
+      ],
+      "finalAnswer": { "value": "120", "unit": "" },
+      "solutionNarrative": "$\\binom{10}{3} = \\frac{10 \\cdot 9 \\cdot 8}{3!} = \\frac{720}{6} = 120$: count ordered picks, then divide by the $3!$ shufflings of each set."
+    },
+    {
+      "id": "discrete-math.counting-principles.s10",
+      "concepts": ["combinations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A pizzeria offers 8 toppings and you pick exactly 3 for your pizza. How many different topping sets are possible?",
+      "steps": [
+        { "instruction": "Does the order in which you name the toppings change the pizza? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Mushroom-olive-onion is the same pizza as onion-olive-mushroom." },
+        { "instruction": "Count ordered picks: $8 \\cdot 7 \\cdot 6$. (Give a number.)", "answer": "336", "accept": [], "hint": "Same product as a podium of 3 from 8." },
+        { "instruction": "Divide by $3! = 6$ to remove the ordering. (Give a number.)", "answer": "56", "accept": [], "hint": "$336 / 6$." }
+      ],
+      "finalAnswer": { "value": "56", "unit": "" },
+      "solutionNarrative": "Order is irrelevant, so this is $\\binom{8}{3} = \\frac{8 \\cdot 7 \\cdot 6}{6} = 56$ topping sets. Same numerator as the runners' podium, but dividing by $3!$ collapses each set's 6 orderings into one pizza."
+    },
+    {
+      "id": "discrete-math.counting-principles.s11",
+      "concepts": ["combinations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $\\binom{20}{17}$ — the number of ways to choose 17 objects from 20 — using the symmetry of binomial coefficients instead of brute force.",
+      "steps": [
+        { "instruction": "Symmetry says $\\binom{20}{17} = \\binom{20}{k}$ for a much smaller $k$. What is $k$? (Give a number.)", "answer": "3", "accept": [], "hint": "Choosing 17 to include is the same as choosing $20 - 17$ to exclude." },
+        { "instruction": "Compute the numerator of $\\binom{20}{3}$: $20 \\cdot 19 \\cdot 18$. (Give a number.)", "answer": "6840", "accept": [], "hint": "$380 \\cdot 18$." },
+        { "instruction": "Divide by $3! = 6$. (Give a number.)", "answer": "1140", "accept": [], "hint": "$6840 / 6$." }
+      ],
+      "finalAnswer": { "value": "1140", "unit": "" },
+      "solutionNarrative": "Picking 17 to keep is exactly picking 3 to leave out, so $\\binom{20}{17} = \\binom{20}{3} = \\frac{20 \\cdot 19 \\cdot 18}{6} = 1140$. The symmetry $\\binom{n}{k} = \\binom{n}{n-k}$ turns a 17-factor monster into three easy factors."
+    },
+    {
+      "id": "discrete-math.counting-principles.s12",
+      "concepts": ["combinations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "For a pilot A/B test you must choose which 4 of your 10 beta users see the new feature. How many different test groups are possible?",
+      "steps": [
+        { "instruction": "Count ordered selections of 4 from 10: $10 \\cdot 9 \\cdot 8 \\cdot 7$. (Give a number.)", "answer": "5040", "accept": [], "hint": "$720 \\cdot 7$." },
+        { "instruction": "Compute $4!$, the number of orderings of each group. (Give a number.)", "answer": "24", "accept": [], "hint": "$4 \\cdot 3 \\cdot 2 \\cdot 1$." },
+        { "instruction": "Divide to get the number of groups: $5040 / 24$. (Give a number.)", "answer": "210", "accept": [], "hint": "A group is a set — order inside it is irrelevant." }
+      ],
+      "finalAnswer": { "value": "210", "unit": "" },
+      "solutionNarrative": "A test group is an unordered set, so $\\binom{10}{4} = \\frac{10 \\cdot 9 \\cdot 8 \\cdot 7}{4!} = \\frac{5040}{24} = 210$ possible assignments. Randomized experiments sample uniformly from exactly this collection."
+    },
+    {
+      "id": "discrete-math.counting-principles.s13",
+      "concepts": ["pigeonhole-principle"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A drawer holds many black socks and many white socks, hopelessly mixed. You pull socks out in the dark. How many must you pull to GUARANTEE a matching pair?",
+      "steps": [
+        { "instruction": "How many 'boxes' (colors) are there? (Give a number.)", "answer": "2", "accept": [], "hint": "Black and white." },
+        { "instruction": "With 2 boxes, how many socks guarantee that some box holds 2? (Give a number.)", "answer": "3", "accept": [], "hint": "Two pulls could be one of each; one more pull must repeat a color." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "socks" },
+      "solutionNarrative": "Worst case, your first 2 socks are one of each color. The 3rd sock must match one of them: 3 items into 2 boxes forces a box with 2. Pigeonhole gives certainty, not probability."
+    },
+    {
+      "id": "discrete-math.counting-principles.s14",
+      "concepts": ["pigeonhole-principle"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An inbox rule sorts 100 incoming emails into 12 folders. Using the general pigeonhole principle, what is the largest number $k$ such that some folder is GUARANTEED to hold at least $k$ emails?",
+      "steps": [
+        { "instruction": "Divide items by boxes: what is the integer quotient of $100 / 12$ (ignore the remainder)? (Give a number.)", "answer": "8", "accept": [], "hint": "$12 \\cdot 8 = 96 \\le 100$." },
+        { "instruction": "The remainder is nonzero, so round UP: what is $\\lceil 100/12 \\rceil$? (Give a number.)", "answer": "9", "accept": [], "hint": "If every folder held only 8, that accounts for just 96 emails." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "emails" },
+      "solutionNarrative": "If every folder held at most 8 emails, the total would be at most $12 \\cdot 8 = 96 < 100$ — impossible. So some folder holds at least $\\lceil 100/12 \\rceil = 9$. The ceiling turns 'on average 8.33' into a hard guarantee."
+    },
+    {
+      "id": "discrete-math.counting-principles.s15",
+      "concepts": ["pigeonhole-principle"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A build server distributes jobs across 6 worker machines. How many jobs must arrive to GUARANTEE that some worker has been assigned at least 5 jobs, no matter how the scheduler spreads them?",
+      "steps": [
+        { "instruction": "An adversarial scheduler avoids the guarantee as long as possible. What is the most jobs any single worker can have WITHOUT reaching 5? (Give a number.)", "answer": "4", "accept": [], "hint": "One less than the target." },
+        { "instruction": "What is the worst-case total with every worker stalled at that maximum? Compute $4 \\cdot 6$. (Give a number.)", "answer": "24", "accept": [], "hint": "All 6 workers loaded to 4 each." },
+        { "instruction": "One more job breaks the stall. How many jobs guarantee a worker with 5? (Give a number.)", "answer": "25", "accept": [], "hint": "$(5-1) \\cdot 6 + 1$." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "jobs" },
+      "solutionNarrative": "The adversary can hold every worker at 4 jobs through $4 \\cdot 6 = 24$ assignments, but job 25 must push someone to 5. The general form: $(k-1) \\cdot m + 1$ items force $k$ in one of $m$ boxes."
+    },
+    {
+      "id": "discrete-math.counting-principles.s16",
+      "concepts": ["pigeonhole-principle"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A toy hash function outputs an 8-bit value. How many distinct inputs GUARANTEE that at least two of them collide (produce the same hash)?",
+      "steps": [
+        { "instruction": "How many possible 8-bit outputs are there? Compute $2^8$. (Give a number.)", "answer": "256", "accept": [], "hint": "Each of 8 bits doubles the count — the product rule again." },
+        { "instruction": "The outputs are the pigeonholes. How many inputs force two into the same hole? (Give a number.)", "answer": "257", "accept": [], "hint": "One more input than there are outputs." }
+      ],
+      "finalAnswer": { "value": "257", "unit": "inputs" },
+      "solutionNarrative": "There are only $2^8 = 256$ possible outputs, so 257 distinct inputs cannot all hash differently — two must collide. This pigeonhole certainty is why hash security is about collisions being hard to FIND, never impossible; the birthday effect finds them in roughly $2^{n/2}$ tries."
+    }
+  ]
+}

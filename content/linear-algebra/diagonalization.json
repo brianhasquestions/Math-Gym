@@ -1,0 +1,272 @@
+{
+  "id": "linear-algebra.diagonalization",
+  "subject": "linear-algebra",
+  "title": "Diagonalization and Matrix Powers",
+  "prerequisites": ["linear-algebra.eigenvalues-and-eigenvectors", "matrix-algebra.matrix-inverses"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "eigen-recap-and-multiplicity",
+      "label": "Eigen-recap and diagonalizability",
+      "microLesson": "From the previous topic: the eigenvalues of a $2\\times 2$ matrix are the roots of $\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$, and each eigenvalue gets an eigenvector from $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. A matrix is **diagonalizable** when it has a full set of independent eigenvectors — for a $2\\times 2$, two of them. **Two distinct eigenvalues guarantee it.** A repeated eigenvalue is the danger case: $\\begin{bmatrix} 3 & 1 \\\\ 0 & 3 \\end{bmatrix}$ has $\\lambda = 3$ twice but only one eigenvector direction, so it cannot be diagonalized."
+    },
+    {
+      "id": "build-p-and-d",
+      "label": "Building P and D",
+      "microLesson": "Pack the eigenvectors as the **columns of $P$** and the eigenvalues along the **diagonal of $D$** — in matching order: column $k$ of $P$ must carry the eigenvector for the eigenvalue in slot $k$ of $D$. Then $A = PDP^{-1}$. We list eigenvalues in **increasing order** along the diagonal and scale each eigenvector as pinned in the problem (usually first entry 1 or smallest positive integers). Scramble the order and the factorization breaks."
+    },
+    {
+      "id": "matrix-powers",
+      "label": "Matrix powers via diagonalization",
+      "microLesson": "Because interior $P^{-1}P$ pairs cancel, $A^k = P D^k P^{-1}$, and $D^k$ is just each diagonal entry raised to the $k$th power. Even faster for a single vector: expand $\\mathbf{v} = c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2$ in eigenvectors; then $A^k\\mathbf{v} = c_1\\lambda_1^k\\mathbf{v}_1 + c_2\\lambda_2^k\\mathbf{v}_2$ — the system is decoupled and no matrix multiplication is needed at all."
+    },
+    {
+      "id": "dynamics-applications",
+      "label": "Long-run dynamics",
+      "microLesson": "In $\\mathbf{x}_{k+1} = A\\mathbf{x}_k$, the long run belongs to the **dominant eigenvalue** (largest $|\\lambda|$) — everything else fades. A Markov matrix (columns sum to 1) always has $\\lambda = 1$; its eigenvector, scaled to smallest positive integers or to sum 1, is the **steady state**, and the second eigenvalue's size sets how fast transients die. In population models the dominant $\\lambda$ is the long-run growth factor per time step and its eigenvector the stable population structure."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Cashing in the eigenvalue promise\n\nThe last topic ended with a teaser: along an eigenvector, applying $A$ a thousand times just multiplies by $\\lambda^{1000}$. This topic is where that single fact pays for all the characteristic-equation work. The tool is **diagonalization**: rewriting a matrix as\n\n$$A = P D P^{-1},$$\n\nwhere $D$ is a **diagonal** matrix holding the eigenvalues and $P$ holds the matching eigenvectors as columns. Once a matrix is in this form, repeated processes — a population migrating year after year, subscribers churning month after month, a webpage's rank flowing link by link — stop being brute-force computations and become single-step arithmetic.\n\n## Why diagonal is the dream\n\nDiagonal matrices are the easiest matrices alive: they scale each axis independently, and their powers are just $D^k = \\begin{bmatrix} \\lambda_1^k & 0 \\\\ 0 & \\lambda_2^k \\end{bmatrix}$. Diagonalization says: **most matrices are secretly diagonal — in eigenvector coordinates.** Read $PDP^{-1}$ right to left: $P^{-1}$ translates a vector into eigenvector coordinates, $D$ scales each coordinate by its eigenvalue, and $P$ translates back. The matrix was never twisting space arbitrarily; it was stretching along its own private axes all along.\n\n## Building P and D\n\nTake $A = \\begin{bmatrix} 0 & 1 \\\\ -2 & 3 \\end{bmatrix}$: trace $3$, determinant $2$, so $\\lambda^2 - 3\\lambda + 2 = 0$ gives $\\lambda = 1$ and $\\lambda = 2$, with eigenvectors $\\langle 1, 1 \\rangle$ and $\\langle 1, 2 \\rangle$. Listing eigenvalues in increasing order:\n\n$$D = \\begin{bmatrix} 1 & 0 \\\\ 0 & 2 \\end{bmatrix}, \\qquad P = \\begin{bmatrix} 1 & 1 \\\\ 1 & 2 \\end{bmatrix}, \\qquad P^{-1} = \\begin{bmatrix} 2 & -1 \\\\ -1 & 1 \\end{bmatrix}.$$\n\nThe one rule that matters: **column $k$ of $P$ must be the eigenvector for the eigenvalue in slot $k$ of $D$.**\n\nWhen does this work? You need two independent eigenvectors. **Distinct eigenvalues guarantee it.** A repeated eigenvalue is the warning case: $\\begin{bmatrix} 3 & 1 \\\\ 0 & 3 \\end{bmatrix}$ has $\\lambda = 3$ twice but only the single direction $\\langle 1, 0 \\rangle$ — a shear cannot be diagonalized.\n\n## Matrix powers for free\n\nWatch what happens to $A^3$:\n\n$$A^3 = (PDP^{-1})(PDP^{-1})(PDP^{-1}) = P D^3 P^{-1},$$\n\nbecause every interior $P^{-1}P$ cancels. So $A^3 = P \\begin{bmatrix} 1 & 0 \\\\ 0 & 8 \\end{bmatrix} P^{-1} = \\begin{bmatrix} -6 & 7 \\\\ -14 & 15 \\end{bmatrix}$: a chain of matrix multiplications collapses to raising two numbers to a power. For $A^{50}$ the savings are absurd — this is how fast Fibonacci formulas and graph walk counts work.\n\nEven faster for a single starting vector: write $\\mathbf{v} = c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2$ in eigenvector pieces. Then\n\n$$A^k\\mathbf{v} = c_1\\lambda_1^k\\mathbf{v}_1 + c_2\\lambda_2^k\\mathbf{v}_2.$$\n\nThe system is **decoupled**: each eigen-direction evolves on its own, by plain number powers.\n\n## The long run belongs to the dominant eigenvalue\n\nLook at that formula as $k$ grows. Whichever $|\\lambda|$ is largest takes over, and everything else fades. That one observation answers \"where does this end up?\" across fields:\n\n- **Markov chains** (columns sum to 1): $\\lambda = 1$ is always an eigenvalue, so the state doesn't blow up — it settles onto the $\\lambda = 1$ eigenvector, the **steady state**. The second eigenvalue's size sets how fast history is forgotten. PageRank is exactly this on the graph of the web.\n- **Population models**: the dominant eigenvalue is the long-run **growth factor** per time step, and its eigenvector is the stable population structure.\n- **Vibrations and differential equations**: diagonalizing decouples tangled equations into independent modes you solve one at a time.\n\nEigenvalues were the skeleton; diagonalization is the working machine built on it."
+  },
+  "application": {
+    "summary": "Diagonalization A = PDP⁻¹ is what eigenvalues are for: it decouples a repeated process into independent scalings, makes A^k as cheap as raising numbers to powers, and hands you long-run behavior — steady states of Markov chains, growth rates of populations, mixing speeds — straight from the dominant eigenvalue and its eigenvector.",
+    "domains": ["data science", "business", "ecology", "engineering"],
+    "workedExample": "**Will the subscriber base stabilize?**\n\nA streaming service tracks two groups month to month: subscribers and non-subscribers. Each month 90% of subscribers stay (10% cancel), and 20% of non-subscribers sign up. The transition matrix is\n\n$$A = \\begin{bmatrix} 0.9 & 0.2 \\\\ 0.1 & 0.8 \\end{bmatrix}.$$\n\nMarketing wants the 24-month projection. Nobody should multiply a matrix 24 times — diagonalize instead. A $2\\times 2$ Markov matrix has eigenvalues $\\lambda = 1$ and $\\lambda = \\text{trace} - 1 = 0.7$. For $\\lambda = 1$, $(A - I)\\mathbf{v} = \\mathbf{0}$ gives $-0.1v_1 + 0.2v_2 = 0$, so $\\mathbf{v}_1 = \\langle 2, 1 \\rangle$; for $\\lambda = 0.7$ the eigenvector is $\\langle 1, -1 \\rangle$. Any starting split expands as $\\mathbf{x}_0 = c_1\\langle 2, 1 \\rangle + c_2\\langle 1, -1 \\rangle$, so\n\n$$A^{24}\\mathbf{x}_0 = c_1(1)^{24}\\langle 2, 1 \\rangle + c_2(0.7)^{24}\\langle 1, -1 \\rangle \\approx c_1\\langle 2, 1 \\rangle,$$\n\nsince $(0.7)^{24} \\approx 0.0002$. **The market settles at 2/3 subscribed, 1/3 not — no matter where it started.** And the $0.7$ answers a second question for free: the gap to steady state shrinks 30% every month, so the transition is effectively complete within two years. One factorization delivered the projection, the endpoint, and the speed of convergence.",
+    "domainNotes": [
+      "**Tech/business:** Markov chains model churn, brand switching, and PageRank — the λ = 1 eigenvector is the steady state, and the second eigenvalue is the mixing speed.",
+      "**Ecology/demography:** Leslie matrices project populations; the dominant eigenvalue is the yearly growth factor and its eigenvector the stable age distribution.",
+      "**Computing:** $A^k = PD^kP^{-1}$ turns thousand-step simulations into three multiplications — the trick behind closed-form Fibonacci and counting walks in graphs.",
+      "**Engineering:** diagonalizing decouples systems of differential equations into independent vibration modes, each solved as a one-variable problem."
+    ]
+  },
+  "generators": ["laf2-eigen-recap-d1", "laf2-eigen-recap-d2", "laf2-eigen-recap-d3", "laf2-build-pd-d1", "laf2-build-pd-d2", "laf2-build-pd-d3", "laf2-matrix-powers-d1", "laf2-matrix-powers-d2", "laf2-matrix-powers-d3", "laf2-dynamics-d1", "laf2-dynamics-d2", "laf2-dynamics-d3"],
+  "problems": [
+    {
+      "id": "linear-algebra.diagonalization.s01",
+      "concepts": ["eigen-recap-and-multiplicity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Warm-up from the previous topic: find the eigenvalues of $A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}$, then decide whether $A$ is diagonalizable.",
+      "steps": [
+        { "instruction": "Write the characteristic equation (trace 7, determinant 10).", "answer": "lambda^2 - 7lambda + 10 = 0", "accept": ["lambda^2-7lambda+10=0"], "hint": "$\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$." },
+        { "instruction": "Solve for both eigenvalues.", "form": "solutions", "answer": "lambda = 2 or lambda = 5", "accept": ["2, 5", "5, 2"], "hint": "Factor: $(\\lambda - 2)(\\lambda - 5) = 0$." },
+        { "instruction": "The eigenvalues are distinct. Is $A$ diagonalizable? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y", "diagonalizable"], "hint": "Distinct eigenvalues always come with independent eigenvectors — a full set for a $2\\times 2$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\lambda^2 - 7\\lambda + 10 = (\\lambda-2)(\\lambda-5) = 0$ gives $\\lambda = 2, 5$. Two distinct eigenvalues means two independent eigenvectors, so $A$ is diagonalizable."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s02",
+      "concepts": ["eigen-recap-and-multiplicity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the eigenvalues of $A = \\begin{bmatrix} 3 & 0 \\\\ 0 & -1 \\end{bmatrix}$ and state whether it is diagonalizable.",
+      "steps": [
+        { "instruction": "A diagonal matrix shows its eigenvalues on the diagonal. State both.", "form": "solutions", "answer": "lambda = 3 or lambda = -1", "accept": ["3, -1", "-1, 3"], "hint": "Read the diagonal entries." },
+        { "instruction": "Is $A$ diagonalizable? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y", "diagonalizable"], "hint": "It is literally already diagonal — take $P = I$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The eigenvalues $3$ and $-1$ sit on the diagonal, and $A$ is already diagonal — trivially diagonalizable with $P = I$."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s03",
+      "concepts": ["eigen-recap-and-multiplicity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the symmetric matrix $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 2 \\end{bmatrix}$, find the eigenvalues and decide diagonalizability.",
+      "steps": [
+        { "instruction": "Write the characteristic equation (trace 4, determinant 3).", "answer": "lambda^2 - 4lambda + 3 = 0", "accept": ["lambda^2-4lambda+3=0"], "hint": "$\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$." },
+        { "instruction": "Solve for both eigenvalues.", "form": "solutions", "answer": "lambda = 1 or lambda = 3", "accept": ["1, 3", "3, 1"], "hint": "$(\\lambda - 1)(\\lambda - 3) = 0$." },
+        { "instruction": "Is $A$ diagonalizable? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y", "diagonalizable"], "hint": "Distinct eigenvalues guarantee it (symmetric matrices always are, in fact)." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\lambda^2 - 4\\lambda + 3 = (\\lambda-1)(\\lambda-3) = 0$ gives distinct eigenvalues $1$ and $3$, so $A$ is diagonalizable."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s04",
+      "concepts": ["eigen-recap-and-multiplicity"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The shear matrix $A = \\begin{bmatrix} 3 & 1 \\\\ 0 & 3 \\end{bmatrix}$ is the classic trap. Find its eigenvalue(s), count the independent eigenvector directions, and decide diagonalizability.",
+      "steps": [
+        { "instruction": "This triangular matrix wears its eigenvalues on the diagonal — both slots hold the same number. What is the repeated eigenvalue?", "answer": "3", "accept": ["lambda = 3", "3, 3"], "hint": "Both diagonal entries are 3, so $\\lambda = 3$ with multiplicity 2." },
+        { "instruction": "Solve $(A - 3I)\\mathbf{v} = \\mathbf{0}$ and give the eigenvector with smallest positive integer entries as $\\langle v_1, v_2 \\rangle$.", "answer": "<1, 0>", "accept": ["(1, 0)", "1, 0"], "hint": "$A - 3I = \\begin{bmatrix} 0 & 1 \\\\ 0 & 0 \\end{bmatrix}$ forces $v_2 = 0$ and leaves $v_1$ free." },
+        { "instruction": "How many independent eigenvector directions does $A$ have in total? Type a number.", "answer": "1", "accept": ["one"], "hint": "Every eigenvector is a multiple of $\\langle 1, 0 \\rangle$ — one direction only." },
+        { "instruction": "A $2\\times 2$ matrix needs 2 independent eigenvectors to diagonalize. Is $A$ diagonalizable? Type 'yes' or 'no'.", "answer": "no", "accept": ["n", "not diagonalizable"], "hint": "One direction is not enough to build an invertible $P$." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$\\lambda = 3$ is repeated, but $(A - 3I)\\mathbf{v} = \\mathbf{0}$ only yields the single direction $\\langle 1, 0 \\rangle$. With just one independent eigenvector, no invertible $P$ exists: the shear is not diagonalizable."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s05",
+      "concepts": ["build-p-and-d"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The matrix $A = \\begin{bmatrix} 0 & 1 \\\\ -2 & 3 \\end{bmatrix}$ has eigenvalue $\\lambda = 1$ with eigenvector $\\langle 1, 1 \\rangle$ and $\\lambda = 2$ with eigenvector $\\langle 1, 2 \\rangle$. Build $D$ and $P$ with the eigenvalues in increasing order along the diagonal.",
+      "steps": [
+        { "instruction": "Write $D$ with the eigenvalues in increasing order along the diagonal, as $[[a, b], [c, d]]$.", "answer": "[[1, 0], [0, 2]]", "accept": [], "hint": "Diagonal entries $1$ then $2$; zeros elsewhere." },
+        { "instruction": "Write $P$ whose columns are the corresponding eigenvectors in the same order.", "answer": "[[1, 1], [1, 2]]", "accept": [], "hint": "Column 1 is $\\langle 1, 1 \\rangle$ (for $\\lambda = 1$), column 2 is $\\langle 1, 2 \\rangle$ (for $\\lambda = 2$)." }
+      ],
+      "finalAnswer": { "value": "[[1, 1], [1, 2]]", "unit": "" },
+      "solutionNarrative": "$D = \\begin{bmatrix} 1 & 0 \\\\ 0 & 2 \\end{bmatrix}$ and $P = \\begin{bmatrix} 1 & 1 \\\\ 1 & 2 \\end{bmatrix}$ — column $k$ of $P$ carries the eigenvector for the eigenvalue in slot $k$ of $D$, giving $A = PDP^{-1}$."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s06",
+      "concepts": ["build-p-and-d"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Diagonalize $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 2 \\end{bmatrix}$, whose eigenvalues are $1$ and $3$. Use eigenvalues in increasing order along the diagonal and eigenvectors with first entry 1.",
+      "steps": [
+        { "instruction": "For $\\lambda = 1$, solve $(A - I)\\mathbf{v} = \\mathbf{0}$ and give the eigenvector with first entry 1 as $\\langle 1, t \\rangle$.", "answer": "<1, -1>", "accept": ["(1, -1)", "1, -1"], "hint": "$A - I = \\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix}$ gives $v_1 + v_2 = 0$." },
+        { "instruction": "For $\\lambda = 3$, give the eigenvector with first entry 1.", "answer": "<1, 1>", "accept": ["(1, 1)", "1, 1"], "hint": "$A - 3I = \\begin{bmatrix} -1 & 1 \\\\ 1 & -1 \\end{bmatrix}$ gives $v_2 = v_1$." },
+        { "instruction": "Write $D$ with the eigenvalues in increasing order.", "answer": "[[1, 0], [0, 3]]", "accept": [], "hint": "$1$ first, then $3$." },
+        { "instruction": "Write $P$ with the corresponding eigenvector columns in the same order.", "answer": "[[1, 1], [-1, 1]]", "accept": [], "hint": "Column 1 is $\\langle 1, -1 \\rangle$, column 2 is $\\langle 1, 1 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "[[1, 1], [-1, 1]]", "unit": "" },
+      "solutionNarrative": "Eigenvectors $\\langle 1, -1 \\rangle$ (for $\\lambda = 1$) and $\\langle 1, 1 \\rangle$ (for $\\lambda = 3$) become the columns of $P = \\begin{bmatrix} 1 & 1 \\\\ -1 & 1 \\end{bmatrix}$, with $D = \\begin{bmatrix} 1 & 0 \\\\ 0 & 3 \\end{bmatrix}$."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s07",
+      "concepts": ["build-p-and-d"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Run the full pipeline on $A = \\begin{bmatrix} 0 & 1 \\\\ -6 & 5 \\end{bmatrix}$: eigenvalues, eigenvectors (first entry 1), then $D$, $P$, and $P^{-1}$. Use eigenvalues in increasing order along the diagonal.",
+      "steps": [
+        { "instruction": "Find both eigenvalues (trace 5, determinant 6).", "form": "solutions", "answer": "lambda = 2 or lambda = 3", "accept": ["2, 3", "3, 2"], "hint": "$\\lambda^2 - 5\\lambda + 6 = (\\lambda - 2)(\\lambda - 3) = 0$." },
+        { "instruction": "For $\\lambda = 2$, give the eigenvector with first entry 1.", "answer": "<1, 2>", "accept": ["(1, 2)", "1, 2"], "hint": "$A - 2I = \\begin{bmatrix} -2 & 1 \\\\ -6 & 3 \\end{bmatrix}$; the top row gives $-2v_1 + v_2 = 0$." },
+        { "instruction": "For $\\lambda = 3$, give the eigenvector with first entry 1.", "answer": "<1, 3>", "accept": ["(1, 3)", "1, 3"], "hint": "$A - 3I = \\begin{bmatrix} -3 & 1 \\\\ -6 & 2 \\end{bmatrix}$; the top row gives $v_2 = 3v_1$." },
+        { "instruction": "Write $D$ with the eigenvalues in increasing order.", "answer": "[[2, 0], [0, 3]]", "accept": [], "hint": "$2$ first, then $3$." },
+        { "instruction": "Write $P$ with the matching eigenvector columns.", "answer": "[[1, 1], [2, 3]]", "accept": [], "hint": "Columns $\\langle 1, 2 \\rangle$ then $\\langle 1, 3 \\rangle$." },
+        { "instruction": "Compute $P^{-1}$ (note $\\det P = 1$).", "answer": "[[3, -1], [-2, 1]]", "accept": [], "hint": "For a $2\\times 2$ with determinant 1: swap the diagonal, negate the off-diagonal." }
+      ],
+      "finalAnswer": { "value": "[[3, -1], [-2, 1]]", "unit": "" },
+      "solutionNarrative": "Eigenvalues $2, 3$ with eigenvectors $\\langle 1, 2 \\rangle$ and $\\langle 1, 3 \\rangle$ give $D = \\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$, $P = \\begin{bmatrix} 1 & 1 \\\\ 2 & 3 \\end{bmatrix}$, and since $\\det P = 1$, $P^{-1} = \\begin{bmatrix} 3 & -1 \\\\ -2 & 1 \\end{bmatrix}$."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s08",
+      "concepts": ["build-p-and-d"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The covariance-style matrix $A = \\begin{bmatrix} 5 & 2 \\\\ 2 & 5 \\end{bmatrix}$ appears throughout PCA. Diagonalize it: eigenvalues in increasing order along the diagonal, eigenvectors with first entry 1.",
+      "steps": [
+        { "instruction": "Find both eigenvalues (trace 10, determinant 21).", "form": "solutions", "answer": "lambda = 3 or lambda = 7", "accept": ["3, 7", "7, 3"], "hint": "$\\lambda^2 - 10\\lambda + 21 = (\\lambda - 3)(\\lambda - 7) = 0$." },
+        { "instruction": "For $\\lambda = 3$, give the eigenvector with first entry 1.", "answer": "<1, -1>", "accept": ["(1, -1)", "1, -1"], "hint": "$A - 3I = \\begin{bmatrix} 2 & 2 \\\\ 2 & 2 \\end{bmatrix}$ gives $v_1 + v_2 = 0$." },
+        { "instruction": "For $\\lambda = 7$, give the eigenvector with first entry 1.", "answer": "<1, 1>", "accept": ["(1, 1)", "1, 1"], "hint": "$A - 7I = \\begin{bmatrix} -2 & 2 \\\\ 2 & -2 \\end{bmatrix}$ gives $v_2 = v_1$." },
+        { "instruction": "Write $D$, then $P$ to match: first $D$ with eigenvalues in increasing order.", "answer": "[[3, 0], [0, 7]]", "accept": [], "hint": "$3$ first, then $7$." },
+        { "instruction": "Write $P$ with the matching eigenvector columns.", "answer": "[[1, 1], [-1, 1]]", "accept": [], "hint": "Columns $\\langle 1, -1 \\rangle$ then $\\langle 1, 1 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "[[1, 1], [-1, 1]]", "unit": "" },
+      "solutionNarrative": "Eigenvalues $3, 7$ with eigenvectors $\\langle 1, -1 \\rangle$ and $\\langle 1, 1 \\rangle$: $D = \\begin{bmatrix} 3 & 0 \\\\ 0 & 7 \\end{bmatrix}$, $P = \\begin{bmatrix} 1 & 1 \\\\ -1 & 1 \\end{bmatrix}$."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s09",
+      "concepts": ["matrix-powers"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $D^3$ for the diagonal matrix $D = \\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$ — the easy step at the heart of every fast matrix power.",
+      "steps": [
+        { "instruction": "Raise the first diagonal entry to the 3rd power: $2^3 = ?$", "answer": "8", "accept": [], "hint": "$2 \\cdot 2 \\cdot 2$." },
+        { "instruction": "Write the full matrix $D^3$ as $[[a, b], [c, d]]$.", "answer": "[[8, 0], [0, 27]]", "accept": [], "hint": "Each diagonal entry is raised to the power independently; zeros stay zero." }
+      ],
+      "finalAnswer": { "value": "[[8, 0], [0, 27]]", "unit": "" },
+      "solutionNarrative": "Powers of a diagonal matrix are entry-wise: $D^3 = \\begin{bmatrix} 2^3 & 0 \\\\ 0 & 3^3 \\end{bmatrix} = \\begin{bmatrix} 8 & 0 \\\\ 0 & 27 \\end{bmatrix}$."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s10",
+      "concepts": ["matrix-powers"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The matrix $A = \\begin{bmatrix} 0 & 1 \\\\ -2 & 3 \\end{bmatrix}$ has eigenpairs $\\lambda = 1$ with $\\mathbf{v}_1 = \\langle 1, 1 \\rangle$ and $\\lambda = 2$ with $\\mathbf{v}_2 = \\langle 1, 2 \\rangle$. Compute $A^4\\mathbf{v}$ for $\\mathbf{v} = \\langle 3, 4 \\rangle$ without ever multiplying matrices.",
+      "steps": [
+        { "instruction": "Expand $\\mathbf{v} = c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2$: solve $c_1 + c_2 = 3$ and $c_1 + 2c_2 = 4$ for $(c_1, c_2)$.", "answer": "c1 = 2, c2 = 1", "accept": ["(2, 1)", "2, 1"], "hint": "Subtract the first equation from the second to get $c_2 = 1$." },
+        { "instruction": "Now $A^4\\mathbf{v} = c_1(1)^4\\mathbf{v}_1 + c_2(2)^4\\mathbf{v}_2$. Compute it as $\\langle x, y \\rangle$.", "answer": "<18, 34>", "accept": ["(18, 34)", "18, 34"], "hint": "$2\\langle 1, 1 \\rangle + 16\\langle 1, 2 \\rangle = \\langle 2 + 16, 2 + 32 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<18, 34>", "unit": "" },
+      "solutionNarrative": "$\\mathbf{v} = 2\\mathbf{v}_1 + 1\\mathbf{v}_2$, so $A^4\\mathbf{v} = 2(1)^4\\langle 1, 1 \\rangle + 1(2)^4\\langle 1, 2 \\rangle = \\langle 18, 34 \\rangle$ — four matrix multiplications replaced by one power of 2."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s11",
+      "concepts": ["matrix-powers"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $A^3$ for $A = \\begin{bmatrix} 0 & 1 \\\\ -2 & 3 \\end{bmatrix}$ using its diagonalization $A = PDP^{-1}$ with $P = \\begin{bmatrix} 1 & 1 \\\\ 1 & 2 \\end{bmatrix}$, $D = \\begin{bmatrix} 1 & 0 \\\\ 0 & 2 \\end{bmatrix}$, $P^{-1} = \\begin{bmatrix} 2 & -1 \\\\ -1 & 1 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Compute $D^3$.", "answer": "[[1, 0], [0, 8]]", "accept": [], "hint": "Raise each diagonal entry to the 3rd power." },
+        { "instruction": "Compute the partial product $PD^3$.", "answer": "[[1, 8], [1, 16]]", "accept": [], "hint": "Multiplying by a diagonal matrix on the right scales the columns of $P$ by $1$ and $8$." },
+        { "instruction": "Finish: $A^3 = (PD^3)P^{-1}$.", "answer": "[[-6, 7], [-14, 15]]", "accept": [], "hint": "Row of $PD^3$ dot column of $P^{-1}$: e.g. top-left is $1(2) + 8(-1) = -6$." }
+      ],
+      "finalAnswer": { "value": "[[-6, 7], [-14, 15]]", "unit": "" },
+      "solutionNarrative": "$A^3 = PD^3P^{-1}$: $D^3 = \\begin{bmatrix} 1 & 0 \\\\ 0 & 8 \\end{bmatrix}$, $PD^3 = \\begin{bmatrix} 1 & 8 \\\\ 1 & 16 \\end{bmatrix}$, and multiplying by $P^{-1}$ gives $\\begin{bmatrix} -6 & 7 \\\\ -14 & 15 \\end{bmatrix}$. Check: trace $9 = 1 + 8$, determinant $8 = 1^3 \\cdot 2^3$."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s12",
+      "concepts": ["matrix-powers"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The symmetric matrix $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 2 \\end{bmatrix}$ has eigenpairs $\\lambda = 1$ with $\\mathbf{v}_1 = \\langle 1, -1 \\rangle$ and $\\lambda = 3$ with $\\mathbf{v}_2 = \\langle 1, 1 \\rangle$. Compute $A^3\\mathbf{v}$ for $\\mathbf{v} = \\langle 3, 1 \\rangle$ by decoupling.",
+      "steps": [
+        { "instruction": "Expand $\\mathbf{v} = c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2$: solve $c_1 + c_2 = 3$ and $-c_1 + c_2 = 1$ for $(c_1, c_2)$.", "answer": "c1 = 1, c2 = 2", "accept": ["(1, 2)", "1, 2"], "hint": "Add the two equations to get $2c_2 = 4$." },
+        { "instruction": "Compute $A^3\\mathbf{v} = c_1(1)^3\\mathbf{v}_1 + c_2(3)^3\\mathbf{v}_2$ as $\\langle x, y \\rangle$.", "answer": "<55, 53>", "accept": ["(55, 53)", "55, 53"], "hint": "$1\\langle 1, -1 \\rangle + 54\\langle 1, 1 \\rangle = \\langle 1 + 54, -1 + 54 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<55, 53>", "unit": "" },
+      "solutionNarrative": "$\\mathbf{v} = 1\\mathbf{v}_1 + 2\\mathbf{v}_2$, so $A^3\\mathbf{v} = 1(1)^3\\langle 1, -1 \\rangle + 2(3)^3\\langle 1, 1 \\rangle = \\langle 55, 53 \\rangle$. Each eigen-direction evolved independently."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s13",
+      "concepts": ["dynamics-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A rideshare market has two apps. Each month 60% of App X's riders stay (40% switch to Y), while 80% of App Y's riders stay (20% switch to X). The Markov matrix is $A = \\begin{bmatrix} 0.6 & 0.2 \\\\ 0.4 & 0.8 \\end{bmatrix}$. Find the long-run market split.",
+      "steps": [
+        { "instruction": "Every Markov matrix (columns sum to 1) has the same dominant eigenvalue. What is it?", "answer": "1", "accept": ["lambda = 1"], "hint": "The steady state neither grows nor shrinks — it is scaled by exactly 1." },
+        { "instruction": "Solve $(A - I)\\mathbf{v} = \\mathbf{0}$ and give the steady-state eigenvector with smallest positive integer entries as $\\langle v_1, v_2 \\rangle$.", "answer": "<1, 2>", "accept": ["(1, 2)", "1, 2"], "hint": "The top row of $A - I$ gives $-0.4v_1 + 0.2v_2 = 0$, i.e. $v_2 = 2v_1$." }
+      ],
+      "finalAnswer": { "value": "<1, 2>", "unit": "" },
+      "solutionNarrative": "The dominant eigenvalue of any Markov matrix is $1$; its eigenvector here satisfies $v_2 = 2v_1$, so the market settles at $\\langle 1, 2 \\rangle$ — 1/3 of riders on App X, 2/3 on App Y, no matter how it started."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s14",
+      "concepts": ["dynamics-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two coffee chains split a city. Each month 80% of chain 1's customers stay (20% defect), and 70% of chain 2's stay (30% defect): $A = \\begin{bmatrix} 0.8 & 0.3 \\\\ 0.2 & 0.7 \\end{bmatrix}$. Find the steady state, the second eigenvalue, and chain 1's long-run market share.",
+      "steps": [
+        { "instruction": "Solve $(A - I)\\mathbf{v} = \\mathbf{0}$ and give the steady-state eigenvector with smallest positive integer entries.", "answer": "<3, 2>", "accept": ["(3, 2)", "3, 2"], "hint": "Top row of $A - I$: $-0.2v_1 + 0.3v_2 = 0$, i.e. $2v_1 = 3v_2$." },
+        { "instruction": "For a $2\\times 2$ Markov matrix the eigenvalues are $1$ and $\\text{trace} - 1$. Find the second eigenvalue.", "answer": "0.5", "accept": ["1/2"], "hint": "Trace $= 0.8 + 0.7 = 1.5$." },
+        { "instruction": "Normalize the steady state: what fraction of customers ends up with chain 1?", "answer": "3/5", "accept": ["0.6"], "hint": "$3$ out of every $3 + 2 = 5$." }
+      ],
+      "finalAnswer": { "value": "3/5", "unit": "" },
+      "solutionNarrative": "Steady state $\\langle 3, 2 \\rangle$, so chain 1 keeps $3/5$ of the market. The second eigenvalue $0.5$ means the gap to that split halves every month — convergence is fast."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s15",
+      "concepts": ["dynamics-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A two-stage insect population (juveniles, adults) updates yearly by $A = \\begin{bmatrix} 1 & 2 \\\\ 3 & 0 \\end{bmatrix}$: each adult produces 2 juveniles, juveniles mature at rate 3, and adults survive at rate 1. Find the eigenvalues, the long-run growth factor, and the stable population structure.",
+      "steps": [
+        { "instruction": "Write the characteristic equation (trace 1, determinant $-6$).", "answer": "lambda^2 - lambda - 6 = 0", "accept": ["lambda^2-lambda-6=0"], "hint": "$\\det = 1 \\cdot 0 - 2 \\cdot 3 = -6$." },
+        { "instruction": "Solve for both eigenvalues.", "form": "solutions", "answer": "lambda = 3 or lambda = -2", "accept": ["3, -2", "-2, 3"], "hint": "$(\\lambda - 3)(\\lambda + 2) = 0$." },
+        { "instruction": "The dominant eigenvalue (largest $|\\lambda|$) is the long-run yearly growth factor. What is it?", "answer": "3", "accept": [], "hint": "Compare $|3|$ and $|-2|$." },
+        { "instruction": "Find the eigenvector for $\\lambda = 3$ with smallest positive integer entries — the stable juvenile:adult structure.", "answer": "<1, 1>", "accept": ["(1, 1)", "1, 1"], "hint": "$A - 3I = \\begin{bmatrix} -2 & 2 \\\\ 3 & -3 \\end{bmatrix}$ gives $v_1 = v_2$." }
+      ],
+      "finalAnswer": { "value": "<1, 1>", "unit": "" },
+      "solutionNarrative": "Eigenvalues $3$ and $-2$; the dominant $\\lambda = 3$ means the population eventually triples each year, settling into the stable structure $\\langle 1, 1 \\rangle$ — equal numbers of juveniles and adults. The $-2$ mode causes early oscillations that the dominant mode outgrows."
+    },
+    {
+      "id": "linear-algebra.diagonalization.s16",
+      "concepts": ["dynamics-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A Markov model of voter preference has eigenvalues $\\lambda = 1$ and $\\lambda = 0.6$. Which eigenvalue controls the long run, and by what factor does the transient (the difference from the steady state) shrink each election cycle?",
+      "steps": [
+        { "instruction": "Which eigenvalue dominates the long-run behavior?", "answer": "1", "accept": ["lambda = 1"], "hint": "The largest $|\\lambda|$ wins as $k$ grows." },
+        { "instruction": "The other mode is multiplied by its eigenvalue each cycle. By what factor does the transient shrink per cycle?", "answer": "0.6", "accept": ["3/5"], "hint": "Each cycle multiplies the $\\lambda = 0.6$ component by $0.6$." }
+      ],
+      "finalAnswer": { "value": "0.6", "unit": "" },
+      "solutionNarrative": "The $\\lambda = 1$ eigenvector is the steady state; the $\\lambda = 0.6$ component shrinks to 60% of itself each cycle, so memory of the starting split decays geometrically."
+    }
+  ]
+}

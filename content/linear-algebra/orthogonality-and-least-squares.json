@@ -1,0 +1,253 @@
+{
+  "id": "linear-algebra.orthogonality-and-least-squares",
+  "subject": "linear-algebra",
+  "title": "Orthogonality and Least Squares",
+  "prerequisites": ["linear-algebra.vectors-and-span"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "orthogonality-test",
+      "label": "Testing orthogonality with the dot product",
+      "microLesson": "Two vectors are **orthogonal** (perpendicular) exactly when their dot product is zero. The dot product of $\\vec{a} = \\langle a_1, a_2 \\rangle$ and $\\vec{b} = \\langle b_1, b_2 \\rangle$ is $\\vec{a} \\cdot \\vec{b} = a_1 b_1 + a_2 b_2$. So $\\langle 3, 2 \\rangle \\cdot \\langle -2, 3 \\rangle = -6 + 6 = 0$ — they're orthogonal, written $\\vec{a} \\perp \\vec{b}$. A nonzero dot product means they lean toward (positive) or away from (negative) each other."
+    },
+    {
+      "id": "projections",
+      "label": "Projecting one vector onto another",
+      "microLesson": "The **projection** of $\\vec{a}$ onto $\\vec{b}$ is the shadow $\\vec{a}$ casts along $\\vec{b}$'s direction: $\\text{proj}_{\\vec{b}}\\,\\vec{a} = \\dfrac{\\vec{a} \\cdot \\vec{b}}{\\vec{b} \\cdot \\vec{b}}\\,\\vec{b}$. The scalar in front, $\\dfrac{\\vec{a} \\cdot \\vec{b}}{\\vec{b} \\cdot \\vec{b}}$, scales $\\vec{b}$; the **scalar component** of $\\vec{a}$ along $\\vec{b}$ is $\\dfrac{\\vec{a} \\cdot \\vec{b}}{\\lVert \\vec{b} \\rVert}$. Projection is how you split a force into a useful part and a wasted part, or pull the trend out of data."
+    },
+    {
+      "id": "orthonormal-and-normalize",
+      "label": "Normalizing and orthonormal sets",
+      "microLesson": "To **normalize** a vector is to shrink it to length 1 while keeping its direction: divide by its length, $\\hat{u} = \\dfrac{\\vec{v}}{\\lVert \\vec{v} \\rVert}$. For $\\vec{v} = \\langle 3, 4 \\rangle$, $\\lVert \\vec{v} \\rVert = \\sqrt{9 + 16} = 5$, so $\\hat{u} = \\langle 3/5, 4/5 \\rangle$. A set is **orthonormal** when every vector is a unit vector *and* each pair is orthogonal — the cleanest possible coordinate axes to work in."
+    },
+    {
+      "id": "least-squares-applied",
+      "label": "Least-squares best-fit lines",
+      "microLesson": "Real data never sits exactly on a line, so we find the line that misses by the least *total squared* vertical error. For points $(x_i, y_i)$, the best-fit slope is $m = \\dfrac{n\\sum xy - \\sum x \\sum y}{n\\sum x^2 - (\\sum x)^2}$ and the intercept is $b = \\dfrac{\\sum y - m \\sum x}{n}$. Once you have $y = mx + b$, you predict by plugging in a new $x$. This is the engine behind trend lines, forecasts, and calibration."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The geometry hiding in one multiplication\n\nMost of applied linear algebra comes down to one question: *how much does one direction agree with another?* A solar panel agrees with the sun by some amount; this month's data agrees with a straight-line trend by some amount; a force on a ramp agrees with the slope by some amount. The **dot product** measures exactly that agreement, and everything in this topic is built on it.\n\nFor $\\vec{a} = \\langle a_1, a_2 \\rangle$ and $\\vec{b} = \\langle b_1, b_2 \\rangle$:\n\n$$\\vec{a} \\cdot \\vec{b} = a_1 b_1 + a_2 b_2.$$\n\nIts sign tells the story: **positive** means the vectors lean the same way, **negative** means opposite, and **zero** means they're at a right angle.\n\n## Orthogonality: the zero that means \"perpendicular\"\n\nTwo vectors are **orthogonal** — written $\\vec{a} \\perp \\vec{b}$ — precisely when\n\n$$\\vec{a} \\cdot \\vec{b} = 0.$$\n\nThat's the whole test. $\\langle 3, 2 \\rangle \\cdot \\langle -2, 3 \\rangle = -6 + 6 = 0$, so those two are perpendicular. Orthogonality matters because perpendicular directions don't interfere: motion along one doesn't change the other. That independence is why we love right-angle coordinate systems.\n\n## Length, and shrinking to length 1\n\nThe **length** (or norm) of $\\vec{v} = \\langle v_1, v_2 \\rangle$ comes straight from the Pythagorean theorem:\n\n$$\\lVert \\vec{v} \\rVert = \\sqrt{v_1^2 + v_2^2}.$$\n\nTo **normalize** is to keep a vector's direction but set its length to 1, by dividing by that length:\n\n$$\\hat{u} = \\frac{\\vec{v}}{\\lVert \\vec{v} \\rVert}.$$\n\nFor $\\vec{v} = \\langle 3, 4 \\rangle$, the length is $\\sqrt{9 + 16} = 5$, so $\\hat{u} = \\langle 3/5, 4/5 \\rangle$ — a pure direction. A set of vectors that are all unit length *and* mutually orthogonal is called **orthonormal**: the ideal axes to measure against.\n\n## Projection: splitting a vector into useful and wasted parts\n\nThe **projection** of $\\vec{a}$ onto $\\vec{b}$ is the part of $\\vec{a}$ that points along $\\vec{b}$ — its shadow:\n\n$$\\text{proj}_{\\vec{b}}\\,\\vec{a} = \\frac{\\vec{a} \\cdot \\vec{b}}{\\vec{b} \\cdot \\vec{b}}\\,\\vec{b}.$$\n\nWhatever is left over, $\\vec{a} - \\text{proj}_{\\vec{b}}\\,\\vec{a}$, is exactly perpendicular to $\\vec{b}$. That decomposition is everywhere: a force on a ramp splits into a part along the surface (does work) and a part pressing into it (wasted); a data vector splits into a part explained by a trend and a leftover residual.\n\n## Least squares: the best line through messy data\n\nReal measurements scatter. The **least-squares** line is the one whose total *squared* vertical error is as small as possible — and it turns out to be a projection in disguise (the data's shadow onto the space of straight lines). For $n$ points $(x_i, y_i)$:\n\n$$m = \\frac{n\\sum xy - \\sum x \\sum y}{n\\sum x^2 - (\\sum x)^2}, \\qquad b = \\frac{\\sum y - m \\sum x}{n}.$$\n\nThat line, $y = mx + b$, is the trend; plug in a new $x$ to **predict**. Sales forecasts, sensor calibration, and \"the line of best fit\" on every scientific plot are all this one computation."
+  },
+  "application": {
+    "summary": "Orthogonality and projection answer 'how much does one direction agree with another?' — which powers force decomposition on ramps, distance from a point to a line, removing correlation between signals, and fitting the best-fit trend line that turns scattered data into a forecast.",
+    "domains": ["physics", "engineering", "data science", "navigation"],
+    "workedExample": "**Pulling a sled at an angle**\n\nYou pull a sled with a force $\\vec{F} = \\langle 6, 8 \\rangle$ (in newtons), but the sled can only move horizontally, along $\\vec{d} = \\langle 1, 0 \\rangle$. How much of your pull actually drives it forward, and how much is wasted lifting?\n\nProject $\\vec{F}$ onto $\\vec{d}$:\n\n$$\\text{proj}_{\\vec{d}}\\,\\vec{F} = \\frac{\\vec{F} \\cdot \\vec{d}}{\\vec{d} \\cdot \\vec{d}}\\,\\vec{d} = \\frac{6}{1}\\langle 1, 0 \\rangle = \\langle 6, 0 \\rangle.$$\n\nSo **6 N drives the sled forward** and the leftover $\\vec{F} - \\langle 6, 0 \\rangle = \\langle 0, 8 \\rangle$ — a full 8 N — just pulls up, doing no useful work. The forward part and the leftover are orthogonal ($\\langle 6,0\\rangle \\cdot \\langle 0,8\\rangle = 0$), which is the whole point: projection cleanly separates the part that matters from the part that doesn't. The same split tells a satellite how much of gravity acts along its path versus across it.",
+    "domainNotes": [
+      "**Physics:** decomposing a force into components along and perpendicular to a surface, ramp, or path.",
+      "**Data science:** least-squares regression lines, and orthogonalizing signals to remove correlation between features.",
+      "**Engineering:** distance from a point to a line (clearance, error) via the perpendicular component.",
+      "**Navigation/graphics:** projecting onto unit direction vectors to find headings, shadows, and how far off-course you are."
+    ]
+  },
+  "generators": ["orthogonality-test-v1", "normalize-v1", "projection-scalar-v1", "laf-orthogonality-test-d2", "laf-orthogonality-test-d3", "laf-projections-d1", "laf-projections-d3", "laf-orthonormal-and-normalize-d1", "laf-orthonormal-and-normalize-d3", "laf-least-squares-applied-d1", "laf-least-squares-applied-d2", "laf-least-squares-applied-d3"],
+  "problems": [
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s01",
+      "concepts": ["orthogonality-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the dot product $\\vec{a} \\cdot \\vec{b}$ for $\\vec{a} = \\langle 3, 4 \\rangle$ and $\\vec{b} = \\langle 2, 5 \\rangle$.",
+      "steps": [
+        { "instruction": "Multiply matching components and add: $a_1 b_1 + a_2 b_2$.", "answer": "26", "accept": [], "hint": "$(3)(2) + (4)(5) = 6 + 20$." }
+      ],
+      "finalAnswer": { "value": "26", "unit": "" },
+      "solutionNarrative": "$\\vec{a} \\cdot \\vec{b} = (3)(2) + (4)(5) = 6 + 20 = 26$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s02",
+      "concepts": ["orthogonality-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Are $\\vec{a} = \\langle 3, 2 \\rangle$ and $\\vec{b} = \\langle -2, 3 \\rangle$ orthogonal? Answer 'yes' or 'no'.",
+      "steps": [
+        { "instruction": "Compute the dot product $\\vec{a} \\cdot \\vec{b}$.", "answer": "0", "accept": [], "hint": "$(3)(-2) + (2)(3) = -6 + 6$." },
+        { "instruction": "A dot product of zero means orthogonal. Are they orthogonal? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Zero dot product means perpendicular." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\vec{a} \\cdot \\vec{b} = -6 + 6 = 0$, so they are orthogonal — answer yes."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s03",
+      "concepts": ["orthogonality-test"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A robot's wheel pushes along $\\vec{w} = \\langle 4, -6 \\rangle$ while a guide rail runs along $\\vec{r} = \\langle 3, 2 \\rangle$. If the push is orthogonal to the rail, the rail bears no load. Are they orthogonal? Answer 'yes' or 'no'.",
+      "steps": [
+        { "instruction": "Compute $\\vec{w} \\cdot \\vec{r}$.", "answer": "0", "accept": [], "hint": "$(4)(3) + (-6)(2) = 12 - 12$." },
+        { "instruction": "Is the push orthogonal to the rail? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Zero dot product means perpendicular." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\vec{w} \\cdot \\vec{r} = 12 - 12 = 0$, so the push is perpendicular to the rail and the rail bears no load — yes."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s04",
+      "concepts": ["orthogonality-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An engineer needs a strut $\\vec{s} = \\langle 5, k \\rangle$ to be perpendicular to the beam $\\vec{b} = \\langle 2, 4 \\rangle$ so it carries no axial load. Find the value of $k$ that makes them orthogonal.",
+      "steps": [
+        { "instruction": "Write the dot product $\\vec{s} \\cdot \\vec{b}$ in terms of $k$, then set it equal to 0. Enter the value of the dot product expression at $k$ (just compute the constant part plus the $k$ part as a number once solved). First, what is $\\vec{s} \\cdot \\vec{b}$ with the $k$ term? Enter it as an expression like '10 + 4k'.", "answer": "10 + 4k", "accept": ["10+4k", "4k + 10", "4k+10"], "hint": "$(5)(2) + (k)(4) = 10 + 4k$." },
+        { "instruction": "Set $10 + 4k = 0$ and solve for $k$.", "answer": "-5/2", "accept": ["-2.5"], "hint": "$4k = -10$, so $k = -10/4$." }
+      ],
+      "finalAnswer": { "value": "-5/2", "unit": "" },
+      "solutionNarrative": "$\\vec{s} \\cdot \\vec{b} = 10 + 4k$. Setting it to 0 gives $4k = -10$, so $k = -5/2$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s05",
+      "concepts": ["projections"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the scalar $\\dfrac{\\vec{a} \\cdot \\vec{b}}{\\vec{b} \\cdot \\vec{b}}$ for $\\vec{a} = \\langle 4, 2 \\rangle$ and $\\vec{b} = \\langle 1, 0 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute $\\vec{a} \\cdot \\vec{b}$ and $\\vec{b} \\cdot \\vec{b}$, then divide.", "answer": "4", "accept": [], "hint": "$\\vec{a} \\cdot \\vec{b} = 4$, $\\vec{b} \\cdot \\vec{b} = 1$, so $4/1$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\vec{a} \\cdot \\vec{b} = 4$ and $\\vec{b} \\cdot \\vec{b} = 1$, so the scalar is $4/1 = 4$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s06",
+      "concepts": ["projections"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the projection $\\text{proj}_{\\vec{b}}\\,\\vec{a}$ of $\\vec{a} = \\langle 3, 4 \\rangle$ onto $\\vec{b} = \\langle 4, 0 \\rangle$. Give the answer as a vector $\\langle x, y \\rangle$.",
+      "steps": [
+        { "instruction": "Compute the scalar $\\dfrac{\\vec{a} \\cdot \\vec{b}}{\\vec{b} \\cdot \\vec{b}}$.", "answer": "3/4", "accept": ["0.75"], "hint": "$\\vec{a} \\cdot \\vec{b} = 12$, $\\vec{b} \\cdot \\vec{b} = 16$, so $12/16$." },
+        { "instruction": "Multiply that scalar by $\\vec{b} = \\langle 4, 0 \\rangle$ to get the projection vector.", "answer": "<3, 0>", "accept": ["<3,0>"], "hint": "$\\tfrac{3}{4}\\langle 4, 0 \\rangle = \\langle 3, 0 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<3, 0>", "unit": "" },
+      "solutionNarrative": "$\\dfrac{\\vec{a} \\cdot \\vec{b}}{\\vec{b} \\cdot \\vec{b}} = \\dfrac{12}{16} = \\dfrac{3}{4}$, and $\\tfrac{3}{4}\\langle 4, 0 \\rangle = \\langle 3, 0 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s07",
+      "concepts": ["projections"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You pull a wagon with force $\\vec{F} = \\langle 6, 8 \\rangle$ N, but it only rolls horizontally along $\\vec{d} = \\langle 1, 0 \\rangle$. Find the projection of $\\vec{F}$ onto $\\vec{d}$ — the part of the force that actually moves the wagon. Give it as a vector $\\langle x, y \\rangle$.",
+      "steps": [
+        { "instruction": "Compute the scalar $\\dfrac{\\vec{F} \\cdot \\vec{d}}{\\vec{d} \\cdot \\vec{d}}$.", "answer": "6", "accept": [], "hint": "$\\vec{F} \\cdot \\vec{d} = 6$, $\\vec{d} \\cdot \\vec{d} = 1$." },
+        { "instruction": "Multiply by $\\vec{d} = \\langle 1, 0 \\rangle$ to get the projection vector.", "answer": "<6, 0>", "accept": ["<6,0>"], "hint": "$6\\langle 1, 0 \\rangle = \\langle 6, 0 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<6, 0>", "unit": "newtons" },
+      "solutionNarrative": "$\\dfrac{\\vec{F} \\cdot \\vec{d}}{\\vec{d} \\cdot \\vec{d}} = \\dfrac{6}{1} = 6$, so $\\text{proj}_{\\vec{d}}\\,\\vec{F} = \\langle 6, 0 \\rangle$ — 6 N drives the wagon forward."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s08",
+      "concepts": ["projections"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A box on a ramp feels gravity $\\vec{g} = \\langle 0, -10 \\rangle$. The ramp surface points along $\\vec{u} = \\langle 3, 4 \\rangle$. Find $\\text{proj}_{\\vec{u}}\\,\\vec{g}$, the component of gravity that pulls the box down the ramp. Give it as a vector $\\langle x, y \\rangle$.",
+      "steps": [
+        { "instruction": "Compute $\\vec{g} \\cdot \\vec{u}$.", "answer": "-40", "accept": [], "hint": "$(0)(3) + (-10)(4) = -40$." },
+        { "instruction": "Compute $\\vec{u} \\cdot \\vec{u}$.", "answer": "25", "accept": [], "hint": "$3^2 + 4^2 = 9 + 16$." },
+        { "instruction": "Multiply the scalar $\\dfrac{-40}{25}$ by $\\vec{u} = \\langle 3, 4 \\rangle$ to get the projection vector.", "answer": "<-24/5, -32/5>", "accept": ["<-4.8, -6.4>", "<-4.8,-6.4>"], "hint": "$\\tfrac{-40}{25} = -\\tfrac{8}{5}$; multiply each component: $-\\tfrac{8}{5}(3) = -\\tfrac{24}{5}$, $-\\tfrac{8}{5}(4) = -\\tfrac{32}{5}$." }
+      ],
+      "finalAnswer": { "value": "<-24/5, -32/5>", "unit": "" },
+      "solutionNarrative": "$\\vec{g} \\cdot \\vec{u} = -40$, $\\vec{u} \\cdot \\vec{u} = 25$, scalar $= -\\tfrac{8}{5}$. So $\\text{proj}_{\\vec{u}}\\,\\vec{g} = -\\tfrac{8}{5}\\langle 3, 4 \\rangle = \\langle -\\tfrac{24}{5}, -\\tfrac{32}{5} \\rangle$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s09",
+      "concepts": ["orthonormal-and-normalize"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the length of $\\vec{v} = \\langle 3, 4 \\rangle$.",
+      "steps": [
+        { "instruction": "Use $\\lVert \\vec{v} \\rVert = \\sqrt{v_1^2 + v_2^2}$.", "answer": "5", "accept": [], "hint": "$\\sqrt{9 + 16} = \\sqrt{25}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$\\lVert \\vec{v} \\rVert = \\sqrt{3^2 + 4^2} = \\sqrt{25} = 5$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s10",
+      "concepts": ["orthonormal-and-normalize"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Normalize $\\vec{v} = \\langle 3, 4 \\rangle$ to a unit vector. Give the answer as a vector $\\langle x, y \\rangle$ using exact fractions.",
+      "steps": [
+        { "instruction": "Find the length $\\lVert \\vec{v} \\rVert$.", "answer": "5", "accept": [], "hint": "$\\sqrt{9 + 16} = 5$." },
+        { "instruction": "Divide each component by the length to get the unit vector.", "answer": "<3/5, 4/5>", "accept": ["<0.6, 0.8>", "<0.6,0.8>"], "hint": "$\\hat{u} = \\langle 3/5, 4/5 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<3/5, 4/5>", "unit": "" },
+      "solutionNarrative": "$\\lVert \\vec{v} \\rVert = 5$, so $\\hat{u} = \\tfrac{1}{5}\\langle 3, 4 \\rangle = \\langle 3/5, 4/5 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s11",
+      "concepts": ["orthonormal-and-normalize"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A drone's velocity is $\\vec{v} = \\langle 5, 12 \\rangle$ m/s. The autopilot needs the pure heading — a unit vector in the same direction. Normalize $\\vec{v}$. Give the answer as a vector $\\langle x, y \\rangle$ using exact fractions.",
+      "steps": [
+        { "instruction": "Find the speed $\\lVert \\vec{v} \\rVert$.", "answer": "13", "accept": [], "hint": "$\\sqrt{25 + 144} = \\sqrt{169}$." },
+        { "instruction": "Divide each component by the length to get the heading unit vector.", "answer": "<5/13, 12/13>", "accept": [], "hint": "$\\hat{u} = \\langle 5/13, 12/13 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<5/13, 12/13>", "unit": "" },
+      "solutionNarrative": "$\\lVert \\vec{v} \\rVert = \\sqrt{169} = 13$, so the heading is $\\hat{u} = \\langle 5/13, 12/13 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s12",
+      "concepts": ["orthonormal-and-normalize"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Is the set $\\{\\langle 3/5, 4/5 \\rangle, \\langle -4/5, 3/5 \\rangle\\}$ orthonormal? Answer 'yes' or 'no'.",
+      "steps": [
+        { "instruction": "Compute the dot product of the two vectors.", "answer": "0", "accept": [], "hint": "$\\tfrac{3}{5}\\cdot(-\\tfrac{4}{5}) + \\tfrac{4}{5}\\cdot\\tfrac{3}{5} = -\\tfrac{12}{25} + \\tfrac{12}{25}$." },
+        { "instruction": "Find the length of the first vector $\\langle 3/5, 4/5 \\rangle$.", "answer": "1", "accept": [], "hint": "$\\sqrt{(3/5)^2 + (4/5)^2} = \\sqrt{9/25 + 16/25} = \\sqrt{1}$." },
+        { "instruction": "Both are unit length and orthogonal. Is the set orthonormal? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Orthonormal = mutually orthogonal AND all unit length." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The dot product is 0 (orthogonal) and each vector has length 1, so the set is orthonormal — yes."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s13",
+      "concepts": ["least-squares-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Three data points lie exactly on a line: $(0, 1)$, $(1, 3)$, $(2, 5)$. The best-fit line passes through all of them. What is its slope?",
+      "steps": [
+        { "instruction": "Find the slope from any two points, e.g. $(0,1)$ and $(2,5)$: $\\dfrac{\\Delta y}{\\Delta x}$.", "answer": "2", "accept": [], "hint": "$\\dfrac{5 - 1}{2 - 0} = \\dfrac{4}{2}$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "The points are collinear; slope $= \\dfrac{5-1}{2-0} = 2$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s14",
+      "concepts": ["least-squares-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A shop records weekly sales (in \\$1000s) over 4 weeks: $(1, 2)$, $(2, 4)$, $(3, 5)$, $(4, 9)$ where $x$ is the week. Find the slope $m$ of the least-squares best-fit line. (Round to 1 decimal place.)",
+      "steps": [
+        { "instruction": "Compute the sums for $n = 4$ points: $\\sum x$, $\\sum y$, $\\sum xy$, $\\sum x^2$. What is $\\sum xy$?", "answer": "61", "accept": [], "hint": "$(1)(2) + (2)(4) + (3)(5) + (4)(9) = 2 + 8 + 15 + 36$." },
+        { "instruction": "Use $m = \\dfrac{n\\sum xy - \\sum x \\sum y}{n\\sum x^2 - (\\sum x)^2}$ with $\\sum x = 10$, $\\sum y = 20$, $\\sum xy = 61$, $\\sum x^2 = 30$. Round to 1 decimal place.", "answer": "2.2", "accept": [], "hint": "$\\dfrac{4(61) - (10)(20)}{4(30) - 10^2} = \\dfrac{244 - 200}{120 - 100} = \\dfrac{44}{20}$." }
+      ],
+      "finalAnswer": { "value": "2.2", "unit": "" },
+      "solutionNarrative": "$\\sum xy = 61$, so $m = \\dfrac{4(61) - (10)(20)}{4(30) - 100} = \\dfrac{244 - 200}{120 - 100} = \\dfrac{44}{20} = 2.2$."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s15",
+      "concepts": ["least-squares-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A lab measures temperature rise $y$ (°C) versus time $x$ (min) at points $(1, 3)$, $(2, 5)$, $(3, 6)$, $(4, 8)$. Find the least-squares slope and intercept, then predict the temperature rise at $x = 5$ min.",
+      "steps": [
+        { "instruction": "With $\\sum x = 10$, $\\sum y = 22$, $\\sum xy = 63$, $\\sum x^2 = 30$, $n = 4$, compute the slope $m = \\dfrac{n\\sum xy - \\sum x\\sum y}{n\\sum x^2 - (\\sum x)^2}$. Round to 1 decimal place.", "answer": "1.6", "accept": [], "hint": "$\\dfrac{4(63) - (10)(22)}{4(30) - 100} = \\dfrac{252 - 220}{20} = \\dfrac{32}{20}$." },
+        { "instruction": "Compute the intercept $b = \\dfrac{\\sum y - m\\sum x}{n}$ using $m = 1.6$. Round to 1 decimal place.", "answer": "1.5", "accept": [], "hint": "$\\dfrac{22 - 1.6(10)}{4} = \\dfrac{22 - 16}{4} = \\dfrac{6}{4}$." },
+        { "instruction": "Predict $y$ at $x = 5$ using $y = 1.6x + 1.5$.", "answer": "9.5", "accept": [], "hint": "$1.6(5) + 1.5 = 8 + 1.5$." }
+      ],
+      "finalAnswer": { "value": "9.5", "unit": "°C" },
+      "solutionNarrative": "$\\sum xy = 63$, so $m = \\dfrac{4(63) - (10)(22)}{4(30) - 100} = \\dfrac{32}{20} = 1.6$. Then $b = \\dfrac{22 - 16}{4} = 1.5$, giving $y = 1.6x + 1.5$, so $y(5) = 8 + 1.5 = 9.5$°C."
+    },
+    {
+      "id": "linear-algebra.orthogonality-and-least-squares.s16",
+      "concepts": ["least-squares-applied", "projections"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A best-fit line for sensor calibration came out to $y = 0.5x + 2$. Predict the reading $y$ when the input is $x = 10$.",
+      "steps": [
+        { "instruction": "Substitute $x = 10$ into $y = 0.5x + 2$.", "answer": "7", "accept": [], "hint": "$0.5(10) + 2 = 5 + 2$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "$y = 0.5(10) + 2 = 7$."
+    }
+  ]
+}

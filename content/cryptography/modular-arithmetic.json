@@ -1,0 +1,291 @@
+{
+  "id": "cryptography.modular-arithmetic",
+  "subject": "cryptography",
+  "title": "Modular Arithmetic: The Clock Behind Ciphers",
+  "prerequisites": ["algebra.real-numbers"],
+  "estimatedMinutes": 35,
+  "keyConcepts": [
+    {
+      "id": "compute-mod",
+      "label": "Computing a mod n",
+      "microLesson": "$a \\bmod n$ is the remainder when $a$ is divided by $n$ — always a number from $0$ to $n-1$. So $38 \\bmod 7 = 3$, because $38 = 5 \\cdot 7 + 3$. For negatives, keep adding $n$ until you land in range: $-5 \\bmod 9 = 4$, because $-5 + 9 = 4$. Two numbers are **congruent**, written $a \\equiv b \\pmod{n}$, exactly when they leave the same remainder — $52 \\equiv 24 \\pmod 7$ since both reduce to $3$."
+    },
+    {
+      "id": "modular-add-mult",
+      "label": "Adding and multiplying mod n",
+      "microLesson": "You can reduce before OR after you add and multiply — the answer mod $n$ comes out the same: $(14 \\cdot 23) \\bmod 5 = (4 \\cdot 3) \\bmod 5 = 2$. Reducing as you go keeps every number small, which is exactly how computers handle 2048-bit crypto. Ciphers use this on letters: with $A=0, \\dots, Z=25$, a Caesar shift is $E(x) = (x+k) \\bmod 26$ and an affine cipher is $E(x) = (ax+b) \\bmod 26$."
+    },
+    {
+      "id": "modular-inverse",
+      "label": "Modular inverses",
+      "microLesson": "The inverse of $a$ mod $n$ is the number $x$ with $a \\cdot x \\equiv 1 \\pmod n$ — it plays the role of $\\frac{1}{a}$, letting you UNDO multiplication by $a$. Example: $5^{-1} \\bmod 7 = 3$ because $5 \\cdot 3 = 15 \\equiv 1 \\pmod 7$. For small $n$ you find it by testing $x = 1, 2, 3, \\dots$ An inverse exists exactly when $\\gcd(a, n) = 1$; $6$ has NO inverse mod $9$ because they share the factor $3$."
+    },
+    {
+      "id": "mod-in-the-wild",
+      "label": "Mod in the wild: check digits, hashing, wrap-around",
+      "microLesson": "Anything that wraps around or needs a quick integrity check runs on mod. Days of the week cycle mod 7: 45 days after Tuesday is $45 \\bmod 7 = 3$ days later — Friday. A hash table with 8 buckets stores a key at index $h \\bmod 8$. Barcodes carry a **check digit** chosen so a weighted sum of all digits is $\\equiv 0$ mod 11 (ISBN-10) or mod 10 (UPC), so a single mistyped digit is caught instantly."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Every padlock icon is doing clock math\n\nWhen your browser shows the padlock on an HTTPS site, the two machines are running arithmetic where numbers **wrap around** — the same arithmetic a wall clock does. Five hours after 9 o'clock is 2 o'clock: you compute $9 + 5 = 14$, then wrap past 12 to get 2. A car odometer rolls from 99999 back to 00000. This wrap-around arithmetic is called **modular arithmetic**, and it is the number system inside RSA, AES, Diffie–Hellman, and elliptic curves. Master the clock, and you've met the engine room of the internet.\n\n## The remainder operation\n\n$$a \\bmod n = \\text{the remainder when } a \\text{ is divided by } n$$\n\nThe result always lands in $\\{0, 1, \\dots, n-1\\}$. To compute $38 \\bmod 7$: the largest multiple of 7 that fits is $35$, and $38 - 35 = 3$, so $38 \\bmod 7 = 3$.\n\n**Negative numbers wrap backwards.** $-5 \\bmod 9$ is *not* $-5$: add 9 until you land in range, so $-5 \\bmod 9 = 4$. (Decryption constantly produces negatives — subtracting a shift — so this case matters.)\n\nWe say $a$ is **congruent** to $b$ mod $n$, written\n\n$$a \\equiv b \\pmod{n},$$\n\nwhen they leave the same remainder — equivalently, when $n$ divides $a - b$. On the mod-12 clock, 14 o'clock *is* 2 o'clock: $14 \\equiv 2 \\pmod{12}$.\n\n## Arithmetic that stays small\n\nThe superpower of mod: you may **reduce at any point** and the final answer doesn't change:\n\n$$(a + b) \\bmod n = \\big((a \\bmod n) + (b \\bmod n)\\big) \\bmod n$$\n\nand the same for multiplication. So $(14 \\cdot 23) \\bmod 5$ doesn't need $322$: reduce first to $4 \\cdot 3 = 12$, then $12 \\bmod 5 = 2$. This *reduce-as-you-go* trick is why a computer can raise a 617-digit number to a 617-digit power without ever storing anything bigger than about 1234 digits.\n\n**Ciphers are mod-26 arithmetic on letters.** Number the alphabet $A=0, B=1, \\dots, Z=25$. A Caesar cipher shifts: $E(x) = (x + k) \\bmod 26$. An affine cipher scales and shifts: $E(x) = (ax + b) \\bmod 26$. Encrypting is just plugging in; the mod handles the wrap past Z.\n\n## Division needs an inverse\n\nTo *decrypt* $E(x) = (ax+b) \\bmod 26$ you must undo multiplication by $a$ — but there are no fractions on the clock. Instead we hunt for a **modular inverse**: a number $a^{-1}$ with\n\n$$a \\cdot a^{-1} \\equiv 1 \\pmod{n}.$$\n\nThen \"dividing by $a$\" means multiplying by $a^{-1}$. Example: $5^{-1} \\bmod 7 = 3$, since $5 \\cdot 3 = 15 \\equiv 1$. For small moduli, just test $x = 1, 2, 3, \\dots$\n\nBut inverses don't always exist: $a^{-1} \\bmod n$ exists **exactly when $\\gcd(a,n) = 1$**. That single fact decides which affine keys are legal ($a$ must be coprime to 26) and sits at the heart of RSA key generation — the next topic builds the tool (the Euclidean algorithm) that finds these inverses fast.\n\n## Honest scaling\n\nEverything here uses toy numbers you can hand-compute — mod 7, mod 26. Real RSA does the *identical* operations mod a 2048-bit number (617 decimal digits). Nothing new is added at scale except bigger numbers and faster algorithms; the math you're practicing is literally what runs on every TLS handshake, and also in humbler places: barcode check digits, hash-table indexing, and every calendar calculation your phone makes."
+  },
+  "application": {
+    "summary": "Modular arithmetic is the number system of deployed cryptography (RSA, AES's field arithmetic, Diffie–Hellman) and of everyday wrap-around computing: check digits on barcodes, hash-bucket indexing, and calendar math.",
+    "domains": ["cryptography", "computer science", "commerce", "everyday life"],
+    "workedExample": "**Affine cipher round trip — encrypt, then decrypt.**\n\nKey: $a = 5$, $b = 8$, alphabet $A=0,\\dots,Z=25$. Encryption rule: $E(x) = (5x + 8) \\bmod 26$.\n\n*Encrypt the letter H.* H is position $7$. Compute $5 \\cdot 7 + 8 = 43$, and $43 \\bmod 26 = 17$, which is the letter **R**.\n\n*Decrypt R back.* We must undo multiplication by 5, so we need $5^{-1} \\bmod 26$. Testing: $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$, so $5^{-1} = 21$. The decryption rule is $D(y) = 21\\,(y - 8) \\bmod 26$. Plug in $y = 17$: $21 \\cdot (17-8) = 21 \\cdot 9 = 189$, and $189 \\bmod 26 = 189 - 182 = 7$ — position 7 is **H**. Round trip complete.\n\nThis toy is structurally identical to RSA: encryption is a modular operation with a public key, decryption applies a modular inverse computed from the key — just with a 2048-bit modulus instead of 26.",
+    "domainNotes": [
+      "**TLS/HTTPS:** every secure web connection performs modular exponentiation (RSA or Diffie–Hellman) during the handshake — millions of $a^k \\bmod n$ reductions per second on a busy server.",
+      "**Hashing:** hash tables and load balancers place items in bucket $h \\bmod n$; password-cracking resistance calculations also count work in modular operations.",
+      "**Barcodes and IDs:** ISBN-10 (mod 11), UPC/EAN (mod 10), credit-card Luhn checks — a check digit chosen so the weighted digit sum wraps to 0 catches nearly all single-digit typos.",
+      "**Calendars and scheduling:** day-of-week arithmetic is mod 7; cron jobs, round-robin schedulers, and circular buffers all index mod the cycle length."
+    ]
+  },
+  "generators": [
+    "cr1-mod-d1", "cr1-mod-d2", "cr1-mod-d3",
+    "cr1-modops-d1", "cr1-modops-d2", "cr1-modops-d3",
+    "cr1-modinv-d1", "cr1-modinv-d2", "cr1-modinv-d3",
+    "cr1-modwild-d1", "cr1-modwild-d2", "cr1-modwild-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.modular-arithmetic.s01",
+      "concepts": ["compute-mod"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 12-hour clock reads 9 o'clock. A flight takes 30 hours. What does the clock read when you land?",
+      "steps": [
+        { "instruction": "Add the elapsed hours to the current reading.", "answer": "39", "accept": ["9+30"], "hint": "$9 + 30$." },
+        { "instruction": "Reduce mod 12: what is $39 \\bmod 12$?", "answer": "3", "accept": [], "hint": "The largest multiple of 12 that fits in 39 is 36; take the remainder." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "o'clock" },
+      "solutionNarrative": "$9 + 30 = 39$ and $39 \\bmod 12 = 3$ (since $39 = 3 \\cdot 12 + 3$). The clock reads 3 o'clock."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s02",
+      "concepts": ["compute-mod"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $38 \\bmod 7$.",
+      "steps": [
+        { "instruction": "What is the largest multiple of 7 that is at most 38?", "answer": "35", "accept": ["5*7"], "hint": "$7 \\cdot 5 = 35$, while $7 \\cdot 6 = 42$ is too big." },
+        { "instruction": "Subtract to get the remainder: $38 \\bmod 7 = $ ?", "answer": "3", "accept": [], "hint": "$38 - 35$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$38 = 5 \\cdot 7 + 3$, so $38 \\bmod 7 = 3$."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s03",
+      "concepts": ["compute-mod"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $-5 \\bmod 9$. (The answer must land in the range $0$ to $8$.)",
+      "steps": [
+        { "instruction": "Add 9 to $-5$ once. What do you get?", "answer": "4", "accept": ["-5+9"], "hint": "Adding the modulus doesn't change the residue: $-5 + 9$." },
+        { "instruction": "Is 4 in the valid range $0..8$? So what is $-5 \\bmod 9$?", "answer": "4", "accept": [], "hint": "Once you land between 0 and $n-1$, you're done." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Add the modulus until you land in range: $-5 + 9 = 4$, and $0 \\le 4 < 9$, so $-5 \\bmod 9 = 4$."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s04",
+      "concepts": ["compute-mod"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Is $52 \\equiv 24 \\pmod 7$? Check by reducing both sides.",
+      "steps": [
+        { "instruction": "Compute $52 \\bmod 7$.", "answer": "3", "accept": [], "hint": "$49 = 7 \\cdot 7$ is the largest multiple of 7 in 52." },
+        { "instruction": "Compute $24 \\bmod 7$.", "answer": "3", "accept": [], "hint": "$21 = 3 \\cdot 7$ is the largest multiple of 7 in 24." },
+        { "instruction": "Do they leave the same remainder — is $52 \\equiv 24 \\pmod 7$? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Congruent means equal remainders." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$52 \\bmod 7 = 3$ and $24 \\bmod 7 = 3$. Same remainder, so yes: $52 \\equiv 24 \\pmod 7$. (Equivalently, $7$ divides $52-24=28$.)"
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s05",
+      "concepts": ["compute-mod"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $-29 \\bmod 12$, then decide: is $-29 \\equiv 19 \\pmod{12}$?",
+      "steps": [
+        { "instruction": "Compute $-29 \\bmod 12$ (add 12s until you land in $0..11$).", "answer": "7", "accept": [], "hint": "$-29 + 12 = -17$, $-17 + 12 = -5$, $-5 + 12 = 7$." },
+        { "instruction": "Compute $19 \\bmod 12$.", "answer": "7", "accept": [], "hint": "$19 - 12 = 7$." },
+        { "instruction": "Is $-29 \\equiv 19 \\pmod{12}$? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Same residue means congruent." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$-29 + 36 = 7$, so $-29 \\bmod 12 = 7$; and $19 \\bmod 12 = 7$. Equal residues, so yes. (Check: $19 - (-29) = 48 = 4 \\cdot 12$.)"
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s06",
+      "concepts": ["modular-add-mult"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $(17 + 28) \\bmod 6$ by reducing each number first.",
+      "steps": [
+        { "instruction": "Compute $17 \\bmod 6$.", "answer": "5", "accept": [], "hint": "$12$ is the largest multiple of 6 in 17." },
+        { "instruction": "Compute $28 \\bmod 6$.", "answer": "4", "accept": [], "hint": "$24$ is the largest multiple of 6 in 28." },
+        { "instruction": "Add the residues and reduce: $(5 + 4) \\bmod 6 = $ ?", "answer": "3", "accept": [], "hint": "$5+4 = 9$, then $9 \\bmod 6$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Reduce first: $17 \\equiv 5$, $28 \\equiv 4 \\pmod 6$. Then $5+4=9 \\equiv 3 \\pmod 6$. (Sanity check the long way: $45 \\bmod 6 = 3$.)"
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s07",
+      "concepts": ["modular-add-mult"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A Caesar cipher shifts every letter forward by 3 (with $A=0, \\dots, Z=25$): $E(x) = (x+3) \\bmod 26$. Encrypt the letter X.",
+      "steps": [
+        { "instruction": "What is the numeric position of X? ($A=0$)", "answer": "23", "accept": [], "hint": "X is the 24th letter, so its position (starting from 0) is 23." },
+        { "instruction": "Compute $(23 + 3) \\bmod 26$.", "answer": "0", "accept": [], "hint": "$26 \\bmod 26$ wraps all the way to 0." },
+        { "instruction": "Which letter has position 0? Type the letter.", "answer": "A", "accept": [], "hint": "$A = 0$." }
+      ],
+      "finalAnswer": { "value": "A", "unit": "" },
+      "solutionNarrative": "X is 23; $23+3 = 26 \\equiv 0 \\pmod{26}$, and position 0 is A. The shift wraps past Z — exactly what the mod is for."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s08",
+      "concepts": ["modular-add-mult"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $(14 \\cdot 23) \\bmod 5$ using reduce-as-you-go — never multiply the big numbers.",
+      "steps": [
+        { "instruction": "Compute $14 \\bmod 5$.", "answer": "4", "accept": [], "hint": "$10$ is the largest multiple of 5 in 14." },
+        { "instruction": "Compute $23 \\bmod 5$.", "answer": "3", "accept": [], "hint": "$20$ is the largest multiple of 5 in 23." },
+        { "instruction": "Multiply the residues: $4 \\cdot 3 = $ ?", "answer": "12", "accept": [], "hint": "Small numbers now." },
+        { "instruction": "Reduce: $12 \\bmod 5 = $ ?", "answer": "2", "accept": [], "hint": "$10$ fits; remainder 2." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$14 \\equiv 4$ and $23 \\equiv 3 \\pmod 5$; $4 \\cdot 3 = 12 \\equiv 2 \\pmod 5$. Reducing first avoids ever computing $322$ — the same trick that makes 2048-bit RSA feasible."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s09",
+      "concepts": ["modular-add-mult"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An affine cipher uses $E(x) = (5x + 8) \\bmod 26$ with $A=0,\\dots,Z=25$. Encrypt the letter H (position 7).",
+      "steps": [
+        { "instruction": "Compute $5 \\cdot 7 + 8$.", "answer": "43", "accept": [], "hint": "$35 + 8$." },
+        { "instruction": "Reduce: $43 \\bmod 26 = $ ?", "answer": "17", "accept": [], "hint": "$43 - 26 = 17$." },
+        { "instruction": "Which letter has position 17? Type the letter.", "answer": "R", "accept": [], "hint": "Count: $A=0, B=1, \\dots$ — position 17 is the 18th letter." }
+      ],
+      "finalAnswer": { "value": "R", "unit": "" },
+      "solutionNarrative": "$5 \\cdot 7 + 8 = 43$, and $43 \\bmod 26 = 17$, which is the letter R. So H encrypts to R."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s10",
+      "concepts": ["modular-add-mult"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An affine cipher uses $E(x) = (3x + 4) \\bmod 26$. You intercept the ciphertext letter S (position 18). Decrypt it using $D(y) = 3^{-1}(y - 4) \\bmod 26$, given that $3^{-1} \\bmod 26 = 9$.",
+      "steps": [
+        { "instruction": "First verify the inverse: what is $(3 \\cdot 9) \\bmod 26$?", "answer": "1", "accept": [], "hint": "$27 - 26 = 1$ — that's what makes 9 the inverse of 3." },
+        { "instruction": "Compute $y - 4$ for $y = 18$.", "answer": "14", "accept": [], "hint": "Undo the $+4$ first." },
+        { "instruction": "Multiply by the inverse: $9 \\cdot 14 = $ ?", "answer": "126", "accept": [], "hint": "$9 \\cdot 14 = 126$." },
+        { "instruction": "Reduce: $126 \\bmod 26 = $ ?", "answer": "22", "accept": [], "hint": "$4 \\cdot 26 = 104$; $126 - 104 = 22$." },
+        { "instruction": "Which letter has position 22? Type the letter.", "answer": "W", "accept": [], "hint": "Position 22 is the 23rd letter." }
+      ],
+      "finalAnswer": { "value": "W", "unit": "" },
+      "solutionNarrative": "$3 \\cdot 9 = 27 \\equiv 1 \\pmod{26}$ confirms $3^{-1} = 9$. Then $D(18) = 9(18-4) = 126 \\equiv 22 \\pmod{26}$, the letter W. (Check: $E(22) = 3 \\cdot 22 + 4 = 70 \\equiv 18$ ✓.)"
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s11",
+      "concepts": ["modular-inverse"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is 7 the inverse of 3 mod 10? (That is: does $3 \\cdot 7 \\equiv 1 \\pmod{10}$?)",
+      "steps": [
+        { "instruction": "Compute $3 \\cdot 7$.", "answer": "21", "accept": [], "hint": "Just multiply." },
+        { "instruction": "Reduce: $21 \\bmod 10 = $ ?", "answer": "1", "accept": [], "hint": "$21 - 20$." },
+        { "instruction": "Did the product reduce to 1 — is 7 the inverse of 3 mod 10? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "An inverse is exactly a number whose product with $a$ is $\\equiv 1$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$3 \\cdot 7 = 21 \\equiv 1 \\pmod{10}$, so yes — 7 undoes multiplication by 3 in mod-10 arithmetic."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s12",
+      "concepts": ["modular-inverse"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $5^{-1} \\bmod 7$ — the number $x$ in $1..6$ with $5x \\equiv 1 \\pmod 7$ — by testing candidates.",
+      "steps": [
+        { "instruction": "For $x$ to be the inverse, $5x \\bmod 7$ must equal what?", "answer": "1", "accept": [], "hint": "That's the definition of a modular inverse." },
+        { "instruction": "Test $x = 1, 2, 3, \\dots$: which $x$ works?", "answer": "3", "accept": ["x=3"], "hint": "$5 \\cdot 1 = 5$, $5 \\cdot 2 = 10 \\equiv 3$, $5 \\cdot 3 = 15 \\equiv ?$" },
+        { "instruction": "Verify: $5 \\cdot 3 \\bmod 7 = $ ?", "answer": "1", "accept": [], "hint": "$15 - 14 = 1$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Testing: $5 \\cdot 3 = 15 = 2 \\cdot 7 + 1 \\equiv 1 \\pmod 7$. So $5^{-1} \\bmod 7 = 3$."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s13",
+      "concepts": ["modular-inverse"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Does 6 have an inverse mod 9? Decide, and give the inverse or type 'none'.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(6, 9)$.", "answer": "3", "accept": [], "hint": "What is the largest number dividing both 6 and 9?" },
+        { "instruction": "An inverse exists only when the gcd is 1. Does $6^{-1} \\bmod 9$ exist? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "$\\gcd = 3 \\ne 1$." },
+        { "instruction": "So what is $6^{-1} \\bmod 9$? Type 'none'.", "answer": "none", "accept": ["no inverse", "does not exist", "dne"], "hint": "Every multiple $6x$ is divisible by 3, so $6x \\bmod 9$ can only be 0, 3, or 6 — never 1." }
+      ],
+      "finalAnswer": { "value": "none", "unit": "" },
+      "solutionNarrative": "$\\gcd(6,9) = 3 \\ne 1$, so no inverse exists: $6x \\bmod 9 \\in \\{0, 3, 6\\}$ for every $x$, and 1 is unreachable. This is exactly why affine keys must have $a$ coprime to 26."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s14",
+      "concepts": ["mod-in-the-wild"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Today is Tuesday. A certificate expires in 45 days. What day of the week does it expire?",
+      "steps": [
+        { "instruction": "Days of the week cycle mod 7. Compute $45 \\bmod 7$.", "answer": "3", "accept": [], "hint": "$42 = 6 \\cdot 7$ is the largest multiple of 7 in 45." },
+        { "instruction": "Count 3 days forward from Tuesday. What day is it? Type the day name.", "answer": "Friday", "accept": ["fri"], "hint": "Wednesday, Thursday, ..." }
+      ],
+      "finalAnswer": { "value": "Friday", "unit": "" },
+      "solutionNarrative": "$45 \\bmod 7 = 3$, so the expiry lands 3 weekdays after Tuesday: Friday. The 6 full weeks ($42$ days) wrap away."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s15",
+      "concepts": ["mod-in-the-wild"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A hash table has 8 buckets. A username hashes to the value 1000003. Which bucket index ($0..7$) stores it? (Index $=$ hash $\\bmod$ 8.)",
+      "steps": [
+        { "instruction": "What is the largest multiple of 8 that is at most 1000003?", "answer": "1000000", "accept": ["125000*8"], "hint": "$8 \\cdot 125000 = 1000000$." },
+        { "instruction": "So the bucket index is $1000003 \\bmod 8 = $ ?", "answer": "3", "accept": [], "hint": "$1000003 - 1000000$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$1000003 = 125000 \\cdot 8 + 3$, so the entry lands in bucket 3. Every hash table, load balancer, and shard router does this reduction on every lookup."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s16",
+      "concepts": ["mod-in-the-wild"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "ISBN-10 check digit. The first nine digits of a book's ISBN are 0-3-0-6-4-0-6-1-5. Multiply them by the weights $10, 9, 8, 7, 6, 5, 4, 3, 2$ (in order) and sum: the check digit $d$ is chosen so the total plus $d$ is divisible by 11.",
+      "steps": [
+        { "instruction": "Compute the weighted sum: $0{\\cdot}10 + 3{\\cdot}9 + 0{\\cdot}8 + 6{\\cdot}7 + 4{\\cdot}6 + 0{\\cdot}5 + 6{\\cdot}4 + 1{\\cdot}3 + 5{\\cdot}2$.", "answer": "130", "accept": [], "hint": "$0 + 27 + 0 + 42 + 24 + 0 + 24 + 3 + 10$." },
+        { "instruction": "Reduce: $130 \\bmod 11 = $ ?", "answer": "9", "accept": [], "hint": "$121 = 11 \\cdot 11$; remainder $130 - 121$." },
+        { "instruction": "The check digit is $(11 - 9) \\bmod 11 = $ ?", "answer": "2", "accept": [], "hint": "It must top the sum up to a multiple of 11: $130 + 2 = 132 = 12 \\cdot 11$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Weighted sum $= 130$; $130 \\bmod 11 = 9$; check digit $= (11-9) \\bmod 11 = 2$, giving total $132 = 12 \\cdot 11 \\equiv 0$. (This is the real ISBN 0-306-40615-2.) Any single mistyped digit changes the sum by a non-multiple of 11 and is caught."
+    },
+    {
+      "id": "cryptography.modular-arithmetic.s17",
+      "concepts": ["mod-in-the-wild"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "UPC barcode check digit. The first eleven digits of a soup can's UPC are 0-3-6-0-0-0-2-9-1-4-5. The rule: triple the sum of the digits in odd positions (1st, 3rd, 5th, ...), add the digits in even positions, and pick the check digit that makes the grand total divisible by 10.",
+      "steps": [
+        { "instruction": "Sum the odd-position digits: $0 + 6 + 0 + 2 + 1 + 5$.", "answer": "14", "accept": [], "hint": "Positions 1, 3, 5, 7, 9, 11 hold digits 0, 6, 0, 2, 1, 5." },
+        { "instruction": "Triple it: $3 \\cdot 14 = $ ?", "answer": "42", "accept": [], "hint": "The odd positions get weight 3." },
+        { "instruction": "Sum the even-position digits: $3 + 0 + 0 + 9 + 4$.", "answer": "16", "accept": [], "hint": "Positions 2, 4, 6, 8, 10 hold digits 3, 0, 0, 9, 4." },
+        { "instruction": "Grand total so far: $42 + 16 = $ ?", "answer": "58", "accept": [], "hint": "Add the two partial sums." },
+        { "instruction": "$58 \\bmod 10 = $ ?", "answer": "8", "accept": [], "hint": "The last digit of 58." },
+        { "instruction": "Check digit $= (10 - 8) \\bmod 10 = $ ?", "answer": "2", "accept": [], "hint": "It tops the total up to a multiple of 10: $58 + 2 = 60$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Odd sum $14$, tripled to $42$; even sum $16$; total $58 \\equiv 8 \\pmod{10}$; check digit $= 2$ so the full total $60 \\equiv 0$. (This is the real UPC 0-36000-29145-2.) Every supermarket scanner runs this mod-10 check on every beep."
+    }
+  ]
+}

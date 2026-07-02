@@ -1,0 +1,282 @@
+{
+  "id": "trigonometry.trig-identities",
+  "subject": "trigonometry",
+  "title": "Trigonometric Identities",
+  "prerequisites": ["trigonometry.radians-and-unit-circle"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "pythagorean-identity",
+      "label": "The Pythagorean identity",
+      "microLesson": "Because every unit-circle point $(\\cos\\theta, \\sin\\theta)$ sits on a circle of radius 1, $$\\sin^2\\theta + \\cos^2\\theta = 1$$ always. Practical use: know one of $\\sin$, $\\cos$ and the quadrant, get the other. If $\\sin\\theta = \\frac{3}{5}$ with $\\theta$ in QII, then $\\cos^2\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$, and QII makes cosine negative: $\\cos\\theta = -\\frac{4}{5}$. The quadrant supplies the sign the square root forgets."
+    },
+    {
+      "id": "quotient-reciprocal",
+      "label": "Quotient and reciprocal identities",
+      "microLesson": "Everything is built from sine and cosine. Quotients: $\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$ and $\\cot\\theta = \\frac{\\cos\\theta}{\\sin\\theta}$. Reciprocals: $\\sec\\theta = \\frac{1}{\\cos\\theta}$, $\\csc\\theta = \\frac{1}{\\sin\\theta}$. So from $\\sin\\theta = \\frac{5}{13}$, $\\cos\\theta = \\frac{12}{13}$ you read off $\\tan\\theta = \\frac{5}{12}$, $\\sec\\theta = \\frac{13}{12}$, $\\csc\\theta = \\frac{13}{5}$, $\\cot\\theta = \\frac{12}{5}$ — flip and divide, keeping every sign."
+    },
+    {
+      "id": "sum-difference",
+      "label": "Sum and difference formulas",
+      "microLesson": "$$\\sin(A \\pm B) = \\sin A\\cos B \\pm \\cos A\\sin B, \\qquad \\cos(A \\pm B) = \\cos A\\cos B \\mp \\sin A\\sin B$$ (note cosine's sign flip). These turn awkward angles into combinations of known ones: $75^\\circ = 45^\\circ + 30^\\circ$, so $\\sin 75^\\circ = \\sin 45\\cos 30 + \\cos 45\\sin 30 = \\frac{\\sqrt{6}}{4} + \\frac{\\sqrt{2}}{4} = \\frac{\\sqrt{6}+\\sqrt{2}}{4}$ — an exact value no calculator rounding can match."
+    },
+    {
+      "id": "double-angle",
+      "label": "Double-angle formulas",
+      "microLesson": "Set $A = B$ in the sum formulas: $$\\sin 2\\theta = 2\\sin\\theta\\cos\\theta, \\qquad \\cos 2\\theta = \\cos^2\\theta - \\sin^2\\theta = 1 - 2\\sin^2\\theta.$$ From one known ratio you get the doubled angle's exact values: if $\\sin\\theta = \\frac{3}{5}$ (QI, so $\\cos\\theta = \\frac{4}{5}$), then $\\sin 2\\theta = 2 \\cdot \\frac{3}{5} \\cdot \\frac{4}{5} = \\frac{24}{25}$ and $\\cos 2\\theta = 1 - \\frac{18}{25} = \\frac{7}{25}$. Physics leans on $\\sin 2\\theta$ constantly — projectile range is proportional to it."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Fewer measurements, more answers\n\nHere's a deal every engineer takes: measure **one** trig ratio, and algebra hands you all six — plus the ratios of doubled and combined angles you never measured at all. That deal is powered by **identities**: equations relating $\\sin$, $\\cos$, $\\tan$ that hold for *every* angle. They're not extra facts to memorize so much as consequences of one picture — the unit circle — and they're the toolkit this course and calculus reach for constantly.\n\n## The master identity: Pythagoras on the circle\n\nThe point $(\\cos\\theta, \\sin\\theta)$ lies on the unit circle, so its coordinates satisfy $x^2 + y^2 = 1$:\n\n$$\\sin^2\\theta + \\cos^2\\theta = 1.$$\n\nThat's the Pythagorean theorem wearing trig clothing. Its everyday use: convert one ratio into another. Suppose a linkage sensor reports $\\sin\\theta = \\frac{3}{5}$ and you know the arm is in QII. Then\n\n$$\\cos^2\\theta = 1 - \\tfrac{9}{25} = \\tfrac{16}{25} \\;\\Rightarrow\\; \\cos\\theta = \\pm\\tfrac{4}{5},$$\n\nand the quadrant breaks the tie: QII means cosine is **negative**, so $\\cos\\theta = -\\frac{4}{5}$. Always let the quadrant pick the sign — the square root alone can't.\n\n## Quotients and reciprocals: the other four for free\n\nThe remaining four functions are just packaging:\n\n$$\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}, \\quad \\cot\\theta = \\frac{\\cos\\theta}{\\sin\\theta}, \\quad \\sec\\theta = \\frac{1}{\\cos\\theta}, \\quad \\csc\\theta = \\frac{1}{\\sin\\theta}.$$\n\nContinuing the example: $\\tan\\theta = \\frac{3/5}{-4/5} = -\\frac{3}{4}$, $\\sec\\theta = -\\frac{5}{4}$, $\\csc\\theta = \\frac{5}{3}$. One measured ratio, one quadrant, six exact values.\n\n## Sum and difference: exact values off the menu\n\nThe special angles $30^\\circ, 45^\\circ, 60^\\circ$ are lovely, but the world hands you $75^\\circ$ and $15^\\circ$. The **sum and difference formulas** stitch new angles from old:\n\n$$\\sin(A \\pm B) = \\sin A\\cos B \\pm \\cos A\\sin B, \\qquad \\cos(A \\pm B) = \\cos A\\cos B \\mp \\sin A\\sin B.$$\n\nWatch cosine's flipped sign. Since $75^\\circ = 45^\\circ + 30^\\circ$:\n\n$$\\sin 75^\\circ = \\sin 45\\cos 30 + \\cos 45\\sin 30 = \\frac{\\sqrt{2}}{2}\\cdot\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\cdot\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}.$$\n\nExact — the kind of value optics and surveying calculations keep to avoid compounding rounding errors.\n\n## Double angles: where trig meets physics\n\nSet $B = A$ in the sum formulas and you get the **double-angle formulas**:\n\n$$\\sin 2\\theta = 2\\sin\\theta\\cos\\theta, \\qquad \\cos 2\\theta = \\cos^2\\theta - \\sin^2\\theta = 1 - 2\\sin^2\\theta = 2\\cos^2\\theta - 1.$$\n\nThese show up wherever a formula contains a doubled angle. The classic: a projectile launched at angle $\\theta$ with speed $v$ has range $R = \\frac{v^2}{g}\\sin 2\\theta$. Know $\\sin\\theta = \\frac{3}{5}$? Then $\\cos\\theta = \\frac{4}{5}$ and $\\sin 2\\theta = \\frac{24}{25}$ — the range, exactly, without ever finding $\\theta$ itself. That's the identity game in one sentence: *trade the angle you can't easily get for the ratios you already have.*"
+  },
+  "application": {
+    "summary": "Identities convert one measured trig ratio into every other one exactly — no calculator, no rounding drift. They power projectile range (sin 2θ), AC power calculations, optics and surveying exact values, and they are the algebra engine behind every trig manipulation in calculus.",
+    "domains": ["physics", "electrical engineering", "optics", "surveying"],
+    "workedExample": "**How far does the ball go?**\n\nA ball is launched at $25$ m/s at an angle $\\theta$ with $\\sin\\theta = \\frac{3}{5}$. Using $g = 10$ m/s², the range formula is $R = \\frac{v^2}{g}\\sin 2\\theta$. No protractor needed — identities finish the job.\n\nFirst, the Pythagorean identity (launch angles are acute, so QI, cosine positive):\n\n$$\\cos\\theta = \\sqrt{1 - \\tfrac{9}{25}} = \\tfrac{4}{5}.$$\n\nNext, the double-angle formula:\n\n$$\\sin 2\\theta = 2\\sin\\theta\\cos\\theta = 2 \\cdot \\tfrac{3}{5} \\cdot \\tfrac{4}{5} = \\tfrac{24}{25}.$$\n\nFinally, $\\frac{v^2}{g} = \\frac{625}{10} = 62.5$, so\n\n$$R = 62.5 \\cdot \\tfrac{24}{25} = 60 \\text{ m}.$$\n\n**Exactly 60 meters**, computed from a single ratio. The same chain — one ratio in, Pythagorean identity, double angle out — sets sprinkler throw distances, artillery tables, and the optimal 45° launch result ($\\sin 2\\theta$ peaks when $2\\theta = 90^\\circ$).",
+    "domainNotes": [
+      "**Physics:** projectile range $R = \\frac{v^2}{g}\\sin 2\\theta$; simple-harmonic energy terms use $\\sin^2 + \\cos^2 = 1$ to trade position for velocity.",
+      "**Electrical engineering:** AC power involves $\\sin\\theta\\cos\\theta$, rewritten via $\\frac{1}{2}\\sin 2\\theta$ to reveal the double-frequency ripple.",
+      "**Optics/surveying:** sum formulas give exact values at $15^\\circ$, $75^\\circ$, $105^\\circ$ for prism and triangulation work without rounding drift.",
+      "**Calculus (next course):** integrals like $\\int \\sin^2 x\\,dx$ are only doable after a double-angle rewrite — these identities are its standard toolkit."
+    ]
+  },
+  "generators": [
+    "trg-pyth-d1",
+    "trg-pyth-d2",
+    "trg-pyth-d3",
+    "trg-quot-d1",
+    "trg-quot-d2",
+    "trg-quot-d3",
+    "trg-sumdiff-d1",
+    "trg-sumdiff-d2",
+    "trg-sumdiff-d3",
+    "trg-dbl-d1",
+    "trg-dbl-d2",
+    "trg-dbl-d3"
+  ],
+  "problems": [
+    {
+      "id": "trigonometry.trig-identities.s01",
+      "concepts": ["pythagorean-identity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\sin\\theta = \\frac{3}{5}$ with $\\theta$ in Quadrant I, find $\\cos\\theta$ and $\\tan\\theta$ exactly.",
+      "steps": [
+        { "instruction": "Use $\\sin^2\\theta + \\cos^2\\theta = 1$: what is $\\cos^2\\theta$?", "answer": "16/25", "accept": ["0.64"], "hint": "$1 - \\left(\\frac{3}{5}\\right)^2 = 1 - \\frac{9}{25}$." },
+        { "instruction": "Take the square root, choosing the sign for Quadrant I. What is $\\cos\\theta$?", "answer": "4/5", "accept": ["0.8"], "hint": "Cosine is positive in QI." },
+        { "instruction": "Now find $\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$.", "answer": "3/4", "accept": ["0.75"], "hint": "$\\frac{3/5}{4/5}$ — the 5's cancel." }
+      ],
+      "finalAnswer": { "value": "cos = 4/5, tan = 3/4", "unit": "" },
+      "solutionNarrative": "$\\cos^2\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$, and QI makes cosine positive: $\\cos\\theta = \\frac{4}{5}$. Then $\\tan\\theta = \\frac{3/5}{4/5} = \\frac{3}{4}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s02",
+      "concepts": ["pythagorean-identity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $\\sin\\theta = \\frac{5}{13}$ with $\\theta$ in Quadrant II, find $\\cos\\theta$ and $\\tan\\theta$ exactly.",
+      "steps": [
+        { "instruction": "Is cosine positive or negative in Quadrant II?", "answer": "negative", "accept": ["-", "neg"], "hint": "QII is the upper-left: $x$-coordinates are negative there." },
+        { "instruction": "Apply the Pythagorean identity and the sign. What is $\\cos\\theta$?", "answer": "-12/13", "accept": [], "hint": "$1 - \\frac{25}{169} = \\frac{144}{169}$; root it and attach the QII sign." },
+        { "instruction": "Find $\\tan\\theta$.", "answer": "-5/12", "accept": [], "hint": "$\\frac{5/13}{-12/13}$." }
+      ],
+      "finalAnswer": { "value": "cos = -12/13, tan = -5/12", "unit": "" },
+      "solutionNarrative": "$\\cos^2\\theta = 1 - \\frac{25}{169} = \\frac{144}{169}$; QII forces $\\cos\\theta = -\\frac{12}{13}$, so $\\tan\\theta = \\frac{5/13}{-12/13} = -\\frac{5}{12}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s03",
+      "concepts": ["pythagorean-identity"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Given $\\cos\\theta = \\frac{1}{3}$ with $\\theta$ in Quadrant IV, find $\\sin\\theta$ and $\\tan\\theta$ exactly (simplified radicals).",
+      "steps": [
+        { "instruction": "What is $\\sin^2\\theta$?", "answer": "8/9", "accept": [], "hint": "$1 - \\left(\\frac{1}{3}\\right)^2$." },
+        { "instruction": "Root it, simplify $\\sqrt{8} = 2\\sqrt{2}$, and attach the Quadrant IV sign. What is $\\sin\\theta$?", "answer": "-2sqrt(2)/3", "accept": ["-sqrt(8)/3", "-2√2/3"], "hint": "Sine is negative in QIV; $\\sqrt{\\frac{8}{9}} = \\frac{2\\sqrt{2}}{3}$." },
+        { "instruction": "Find $\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$.", "answer": "-2sqrt(2)", "accept": ["-sqrt(8)", "-2√2"], "hint": "$\\frac{-2\\sqrt{2}/3}{1/3}$ — the 3's cancel." }
+      ],
+      "finalAnswer": { "value": "sin = -2sqrt(2)/3, tan = -2sqrt(2)", "unit": "" },
+      "solutionNarrative": "$\\sin^2\\theta = 1 - \\frac{1}{9} = \\frac{8}{9}$, so $\\sin\\theta = -\\frac{2\\sqrt{2}}{3}$ (negative in QIV). Dividing by $\\cos\\theta = \\frac{1}{3}$ gives $\\tan\\theta = -2\\sqrt{2}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s04",
+      "concepts": ["quotient-reciprocal"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\sin\\theta = \\frac{8}{17}$ and $\\cos\\theta = \\frac{15}{17}$, find $\\tan\\theta$ and $\\cot\\theta$ exactly.",
+      "steps": [
+        { "instruction": "Compute $\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$.", "answer": "8/15", "accept": [], "hint": "The 17's cancel when you divide." },
+        { "instruction": "Compute $\\cot\\theta$ (the reciprocal of tangent).", "answer": "15/8", "accept": [], "hint": "Flip $\\frac{8}{15}$." }
+      ],
+      "finalAnswer": { "value": "tan = 8/15, cot = 15/8", "unit": "" },
+      "solutionNarrative": "$\\tan\\theta = \\frac{8/17}{15/17} = \\frac{8}{15}$; $\\cot\\theta$ is its reciprocal, $\\frac{15}{8}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s05",
+      "concepts": ["quotient-reciprocal"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $\\sin\\theta = \\frac{3}{5}$ and $\\cos\\theta = -\\frac{4}{5}$ (Quadrant II), find $\\sec\\theta$ and $\\csc\\theta$ exactly.",
+      "steps": [
+        { "instruction": "Compute $\\sec\\theta = \\frac{1}{\\cos\\theta}$, keeping the sign.", "answer": "-5/4", "accept": ["-1.25"], "hint": "Flip $-\\frac{4}{5}$." },
+        { "instruction": "Compute $\\csc\\theta = \\frac{1}{\\sin\\theta}$.", "answer": "5/3", "accept": [], "hint": "Flip $\\frac{3}{5}$." }
+      ],
+      "finalAnswer": { "value": "sec = -5/4, csc = 5/3", "unit": "" },
+      "solutionNarrative": "Reciprocals keep their signs: $\\sec\\theta = -\\frac{5}{4}$ and $\\csc\\theta = \\frac{5}{3}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s06",
+      "concepts": ["quotient-reciprocal"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Given $\\tan\\theta = \\frac{3}{4}$ with $\\theta$ in Quadrant III, find $\\sin\\theta$, $\\cos\\theta$, and $\\sec\\theta$ exactly.",
+      "steps": [
+        { "instruction": "A 3-4 opposite/adjacent pair belongs to which Pythagorean hypotenuse?", "answer": "5", "accept": [], "hint": "$\\sqrt{3^2 + 4^2}$." },
+        { "instruction": "In Quadrant III both sine and cosine are negative. What is $\\sin\\theta$?", "answer": "-3/5", "accept": ["-0.6"], "hint": "Magnitude $\\frac{3}{5}$, QIII sign." },
+        { "instruction": "What is $\\cos\\theta$?", "answer": "-4/5", "accept": ["-0.8"], "hint": "Magnitude $\\frac{4}{5}$, QIII sign. (Check: $\\tan = \\frac{-3/5}{-4/5} = +\\frac{3}{4}$.)" },
+        { "instruction": "What is $\\sec\\theta$?", "answer": "-5/4", "accept": ["-1.25"], "hint": "The reciprocal of $\\cos\\theta$." }
+      ],
+      "finalAnswer": { "value": "sin = -3/5, cos = -4/5, sec = -5/4", "unit": "" },
+      "solutionNarrative": "The 3-4-5 triangle gives magnitudes; QIII makes sine and cosine both negative: $\\sin = -\\frac{3}{5}$, $\\cos = -\\frac{4}{5}$ (their ratio is the given $+\\frac{3}{4}$), and $\\sec = -\\frac{5}{4}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s07",
+      "concepts": ["sum-difference"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\sin 75^\\circ$ exactly using $75^\\circ = 45^\\circ + 30^\\circ$ and $\\sin(A+B) = \\sin A\\cos B + \\cos A\\sin B$.",
+      "steps": [
+        { "instruction": "Compute the first product, $\\sin 45^\\circ \\cos 30^\\circ$. Exact.", "answer": "sqrt(6)/4", "accept": ["√6/4", "sqrt(2)sqrt(3)/4"], "hint": "$\\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{3}}{2} = \\frac{\\sqrt{6}}{4}$." },
+        { "instruction": "Compute the second product, $\\cos 45^\\circ \\sin 30^\\circ$. Exact.", "answer": "sqrt(2)/4", "accept": ["√2/4"], "hint": "$\\frac{\\sqrt{2}}{2} \\cdot \\frac{1}{2}$." },
+        { "instruction": "Add them. What is $\\sin 75^\\circ$ exactly?", "answer": "(sqrt(6)+sqrt(2))/4", "accept": ["(sqrt(2)+sqrt(6))/4", "sqrt(6)/4+sqrt(2)/4", "(√6+√2)/4"], "hint": "Combine over the common denominator 4." }
+      ],
+      "finalAnswer": { "value": "(sqrt(6)+sqrt(2))/4", "unit": "" },
+      "solutionNarrative": "$\\sin 75^\\circ = \\sin 45\\cos 30 + \\cos 45\\sin 30 = \\frac{\\sqrt{6}}{4} + \\frac{\\sqrt{2}}{4} = \\frac{\\sqrt{6}+\\sqrt{2}}{4} \\approx 0.9659$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s08",
+      "concepts": ["sum-difference"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\cos 15^\\circ$ exactly using $15^\\circ = 45^\\circ - 30^\\circ$ and $\\cos(A-B) = \\cos A\\cos B + \\sin A\\sin B$.",
+      "steps": [
+        { "instruction": "Compute $\\cos 45^\\circ \\cos 30^\\circ$. Exact.", "answer": "sqrt(6)/4", "accept": ["√6/4"], "hint": "$\\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{3}}{2}$." },
+        { "instruction": "Compute $\\sin 45^\\circ \\sin 30^\\circ$. Exact.", "answer": "sqrt(2)/4", "accept": ["√2/4"], "hint": "$\\frac{\\sqrt{2}}{2} \\cdot \\frac{1}{2}$." },
+        { "instruction": "Mind the formula's PLUS sign for cos(A−B). What is $\\cos 15^\\circ$ exactly?", "answer": "(sqrt(6)+sqrt(2))/4", "accept": ["(sqrt(2)+sqrt(6))/4", "sqrt(6)/4+sqrt(2)/4", "(√6+√2)/4"], "hint": "Add the two products." }
+      ],
+      "finalAnswer": { "value": "(sqrt(6)+sqrt(2))/4", "unit": "" },
+      "solutionNarrative": "$\\cos 15^\\circ = \\cos 45\\cos 30 + \\sin 45\\sin 30 = \\frac{\\sqrt{6}+\\sqrt{2}}{4}$ — the same value as $\\sin 75^\\circ$, since $15^\\circ$ and $75^\\circ$ are complementary."
+    },
+    {
+      "id": "trigonometry.trig-identities.s09",
+      "concepts": ["sum-difference"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Angles $A$ and $B$ are both in Quadrant I with $\\sin A = \\frac{3}{5}$ and $\\sin B = \\frac{5}{13}$. Find $\\sin(A+B)$ exactly.",
+      "steps": [
+        { "instruction": "Find $\\cos A$ (QI, so positive).", "answer": "4/5", "accept": ["0.8"], "hint": "3-4-5 triangle." },
+        { "instruction": "Find $\\cos B$ (QI).", "answer": "12/13", "accept": [], "hint": "5-12-13 triangle." },
+        { "instruction": "Apply $\\sin(A+B) = \\sin A\\cos B + \\cos A\\sin B$ and simplify to a single fraction.", "answer": "56/65", "accept": [], "hint": "$\\frac{3}{5}\\cdot\\frac{12}{13} + \\frac{4}{5}\\cdot\\frac{5}{13} = \\frac{36 + 20}{65}$." }
+      ],
+      "finalAnswer": { "value": "56/65", "unit": "" },
+      "solutionNarrative": "Pythagorean triples give $\\cos A = \\frac{4}{5}$, $\\cos B = \\frac{12}{13}$. Then $\\sin(A+B) = \\frac{36}{65} + \\frac{20}{65} = \\frac{56}{65}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s10",
+      "concepts": ["double-angle"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\sin\\theta = \\frac{3}{5}$ with $\\theta$ in Quadrant I, find $\\sin 2\\theta$ and $\\cos 2\\theta$ exactly.",
+      "steps": [
+        { "instruction": "First find $\\cos\\theta$ (QI).", "answer": "4/5", "accept": ["0.8"], "hint": "Pythagorean identity with a positive root." },
+        { "instruction": "Apply $\\sin 2\\theta = 2\\sin\\theta\\cos\\theta$.", "answer": "24/25", "accept": ["0.96"], "hint": "$2 \\cdot \\frac{3}{5} \\cdot \\frac{4}{5}$." },
+        { "instruction": "Apply $\\cos 2\\theta = 1 - 2\\sin^2\\theta$.", "answer": "7/25", "accept": ["0.28"], "hint": "$1 - 2 \\cdot \\frac{9}{25}$." }
+      ],
+      "finalAnswer": { "value": "sin 2θ = 24/25, cos 2θ = 7/25", "unit": "" },
+      "solutionNarrative": "$\\cos\\theta = \\frac{4}{5}$, so $\\sin 2\\theta = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$ and $\\cos 2\\theta = 1 - \\frac{18}{25} = \\frac{7}{25}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s11",
+      "concepts": ["double-angle"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $\\sin\\theta = \\frac{5}{13}$ with $\\theta$ in Quadrant II, find $\\sin 2\\theta$ and $\\cos 2\\theta$ exactly.",
+      "steps": [
+        { "instruction": "Find $\\cos\\theta$, with the Quadrant II sign.", "answer": "-12/13", "accept": [], "hint": "5-12-13 triangle; cosine is negative in QII." },
+        { "instruction": "Apply $\\sin 2\\theta = 2\\sin\\theta\\cos\\theta$.", "answer": "-120/169", "accept": [], "hint": "$2 \\cdot \\frac{5}{13} \\cdot \\left(-\\frac{12}{13}\\right)$." },
+        { "instruction": "Apply $\\cos 2\\theta = 1 - 2\\sin^2\\theta$.", "answer": "119/169", "accept": [], "hint": "$1 - 2\\cdot\\frac{25}{169} = \\frac{169 - 50}{169}$." }
+      ],
+      "finalAnswer": { "value": "sin 2θ = -120/169, cos 2θ = 119/169", "unit": "" },
+      "solutionNarrative": "$\\cos\\theta = -\\frac{12}{13}$ in QII, so $\\sin 2\\theta = -\\frac{120}{169}$ and $\\cos 2\\theta = 1 - \\frac{50}{169} = \\frac{119}{169}$. Note $2\\theta$ lands in QIV: sine negative, cosine positive — consistent."
+    },
+    {
+      "id": "trigonometry.trig-identities.s12",
+      "concepts": ["double-angle"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Given $\\cos\\theta = -\\frac{3}{5}$ with $\\theta$ in Quadrant III, find $\\sin 2\\theta$, $\\cos 2\\theta$, and $\\tan 2\\theta$ exactly.",
+      "steps": [
+        { "instruction": "Find $\\sin\\theta$, with the Quadrant III sign.", "answer": "-4/5", "accept": ["-0.8"], "hint": "3-4-5 magnitudes; sine is negative in QIII." },
+        { "instruction": "Apply $\\sin 2\\theta = 2\\sin\\theta\\cos\\theta$. Watch the signs.", "answer": "24/25", "accept": ["0.96"], "hint": "$2 \\cdot \\left(-\\frac{4}{5}\\right)\\left(-\\frac{3}{5}\\right)$ — two negatives multiply to a positive." },
+        { "instruction": "Apply $\\cos 2\\theta = 2\\cos^2\\theta - 1$.", "answer": "-7/25", "accept": ["-0.28"], "hint": "$2 \\cdot \\frac{9}{25} - 1$." },
+        { "instruction": "Divide to get $\\tan 2\\theta$.", "answer": "-24/7", "accept": [], "hint": "$\\frac{24/25}{-7/25}$." }
+      ],
+      "finalAnswer": { "value": "sin 2θ = 24/25, cos 2θ = -7/25, tan 2θ = -24/7", "unit": "" },
+      "solutionNarrative": "QIII gives $\\sin\\theta = -\\frac{4}{5}$. The two negatives make $\\sin 2\\theta = +\\frac{24}{25}$, while $\\cos 2\\theta = \\frac{18}{25} - 1 = -\\frac{7}{25}$, so $\\tan 2\\theta = -\\frac{24}{7}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s13",
+      "concepts": ["pythagorean-identity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $\\sin\\theta = \\frac{20}{29}$ with $\\theta$ in Quadrant I, find $\\cos\\theta$ exactly.",
+      "steps": [
+        { "instruction": "Compute $\\cos^2\\theta = 1 - \\sin^2\\theta$.", "answer": "441/841", "accept": [], "hint": "$1 - \\frac{400}{841}$." },
+        { "instruction": "Root it with the Quadrant I sign. What is $\\cos\\theta$?", "answer": "21/29", "accept": [], "hint": "$\\sqrt{441} = 21$ and $\\sqrt{841} = 29$; QI keeps it positive." }
+      ],
+      "finalAnswer": { "value": "21/29", "unit": "" },
+      "solutionNarrative": "$\\cos^2\\theta = \\frac{441}{841}$, and QI makes cosine positive: $\\cos\\theta = \\frac{21}{29}$ (a 20-21-29 triple)."
+    },
+    {
+      "id": "trigonometry.trig-identities.s14",
+      "concepts": ["quotient-reciprocal"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $\\sin\\theta = \\frac{\\sqrt{3}}{2}$, find $\\csc\\theta$ exactly, with a rationalized denominator.",
+      "steps": [
+        { "instruction": "Write $\\csc\\theta = \\frac{1}{\\sin\\theta}$ and rationalize. Exact.", "answer": "2sqrt(3)/3", "accept": ["2/sqrt(3)", "2√3/3"], "hint": "$\\frac{2}{\\sqrt{3}} = \\frac{2\\sqrt{3}}{3}$ after multiplying top and bottom by $\\sqrt{3}$." }
+      ],
+      "finalAnswer": { "value": "2sqrt(3)/3", "unit": "" },
+      "solutionNarrative": "$\\csc\\theta = \\frac{1}{\\sqrt{3}/2} = \\frac{2}{\\sqrt{3}} = \\frac{2\\sqrt{3}}{3}$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s15",
+      "concepts": ["sum-difference"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\sin 15^\\circ$ exactly using $15^\\circ = 45^\\circ - 30^\\circ$ and $\\sin(A-B) = \\sin A\\cos B - \\cos A\\sin B$.",
+      "steps": [
+        { "instruction": "Compute $\\sin 45^\\circ \\cos 30^\\circ$. Exact.", "answer": "sqrt(6)/4", "accept": ["√6/4"], "hint": "$\\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{3}}{2}$." },
+        { "instruction": "Compute $\\cos 45^\\circ \\sin 30^\\circ$. Exact.", "answer": "sqrt(2)/4", "accept": ["√2/4"], "hint": "$\\frac{\\sqrt{2}}{2} \\cdot \\frac{1}{2}$." },
+        { "instruction": "Subtract. What is $\\sin 15^\\circ$ exactly?", "answer": "(sqrt(6)-sqrt(2))/4", "accept": ["sqrt(6)/4-sqrt(2)/4", "(√6-√2)/4"], "hint": "First product minus second product." }
+      ],
+      "finalAnswer": { "value": "(sqrt(6)-sqrt(2))/4", "unit": "" },
+      "solutionNarrative": "$\\sin 15^\\circ = \\frac{\\sqrt{6}}{4} - \\frac{\\sqrt{2}}{4} = \\frac{\\sqrt{6}-\\sqrt{2}}{4} \\approx 0.2588$."
+    },
+    {
+      "id": "trigonometry.trig-identities.s16",
+      "concepts": ["double-angle", "pythagorean-identity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ball is launched at 25 m/s at an angle $\\theta$ with $\\sin\\theta = \\frac{3}{5}$. Its range is $R = \\frac{v^2}{g}\\sin 2\\theta$ with $g = 10$ m/s². Find the range exactly.",
+      "steps": [
+        { "instruction": "Launch angles are acute (Quadrant I). Find $\\cos\\theta$.", "answer": "4/5", "accept": ["0.8"], "hint": "Pythagorean identity, positive root." },
+        { "instruction": "Find $\\sin 2\\theta = 2\\sin\\theta\\cos\\theta$.", "answer": "24/25", "accept": ["0.96"], "hint": "$2 \\cdot \\frac{3}{5} \\cdot \\frac{4}{5}$." },
+        { "instruction": "Compute $\\frac{v^2}{g} = \\frac{25^2}{10}$.", "answer": "62.5", "accept": ["125/2"], "hint": "$\\frac{625}{10}$." },
+        { "instruction": "Multiply to get the range $R$ in meters.", "answer": "60", "accept": [], "hint": "$62.5 \\cdot \\frac{24}{25}$." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "meters" },
+      "solutionNarrative": "Identities do all the work: $\\cos\\theta = \\frac{4}{5}$, $\\sin 2\\theta = \\frac{24}{25}$, and $R = 62.5 \\cdot \\frac{24}{25} = 60$ m — computed exactly from one ratio, never finding $\\theta$ itself."
+    }
+  ]
+}

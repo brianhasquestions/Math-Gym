@@ -1,0 +1,272 @@
+{
+  "id": "differential-equations.linear-first-order",
+  "subject": "differential-equations",
+  "title": "Linear First-Order Equations",
+  "prerequisites": ["differential-equations.separable-equations"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "standard-form",
+      "label": "Standard form and identifying P, Q",
+      "microLesson": "Before you can solve a first-order linear equation you must write it in **standard form**: $y' + P(x)\\,y = Q(x)$, with the $y'$ term alone (coefficient 1) and everything else arranged so $P(x)$ multiplies $y$ and $Q(x)$ stands by itself. From $2y' + 6y = 8$, divide by 2 to get $y' + 3y = 4$, so $P(x) = 3$ and $Q(x) = 4$. The right side $Q$ is the 'forcing' or input; if $Q = 0$ the equation is homogeneous."
+    },
+    {
+      "id": "integrating-factor",
+      "label": "The integrating factor",
+      "microLesson": "Once in standard form, multiply through by the **integrating factor** $\\mu(x) = e^{\\int P(x)\\,dx}$. This is engineered so the left side collapses into the derivative of a product: $\\frac{d}{dx}\\big[\\mu y\\big] = \\mu Q$. Then you just integrate both sides and divide by $\\mu$. For $y' + 3y = 6$ the factor is $e^{3x}$; the solution is $y = 2 + Ce^{-3x}$, and the constant $C$ is pinned down by an initial condition like $y(0)=5$."
+    },
+    {
+      "id": "mixing-problems",
+      "label": "Tank mixing problems",
+      "microLesson": "A tank holds liquid with a dissolved substance (salt, pollutant). Brine flows in at a known concentration and rate, and the well-stirred mixture flows out. Let $A(t)$ be the amount of substance; then $\\frac{dA}{dt} = (\\text{rate in}) - (\\text{rate out})$, where rate out $= (\\text{flow rate})\\cdot\\frac{A}{V}$. This is linear: $A' + \\frac{r_{out}}{V}A = c_{in}\\,r_{in}$. The **steady state** is where $A'=0$, and over time $A(t)$ approaches that limiting amount."
+    },
+    {
+      "id": "circuits-and-applied",
+      "label": "Circuits and other first-order models",
+      "microLesson": "Many physical systems obey a first-order linear law. An **RL circuit** gives $L\\,i' + R\\,i = V$, so the current builds toward $V/R$ with time constant $L/R$. An **RC circuit** gives $R\\,q' + q/C = V$, charging toward $CV$. Continuous drug infusion, Newton's heating/cooling, and ventilation all share the form $y' + ky = \\text{input}$, where $1/k$ is the time constant — the time to reach about 63% of the final value."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The equation behind 'fill up and level off'\n\nPour cream into hot coffee, switch on a circuit, start an IV drip, or run brine into a tank: in every case some quantity climbs (or falls) quickly at first, then eases toward a steady level. That universal 'rush then settle' shape is governed by a **first-order linear differential equation**, and one method solves all of them.\n\nA first-order linear equation, written in **standard form**, looks like:\n\n$$y' + P(x)\\,y = Q(x).$$\n\n**Linear** means $y$ and $y'$ each appear only to the first power — no $y^2$, no $\\sin y$, no $y\\,y'$. The coefficient of $y'$ must be 1; if it isn't, divide. Then $P(x)$ is whatever multiplies $y$, and $Q(x)$ is everything left on the right. $Q$ is the *input* or *forcing term* — the inflow, the applied voltage, the infusion rate.\n\n## The integrating factor: a trick that always works\n\nThe left side $y' + P y$ is *almost* the derivative of a product, but not quite. The fix is to multiply the whole equation by a cleverly chosen **integrating factor**\n\n$$\\mu(x) = e^{\\int P(x)\\,dx}.$$\n\nWhy this one? Because after multiplying, the entire left side becomes a single derivative:\n\n$$\\frac{d}{dx}\\big[\\mu(x)\\,y\\big] = \\mu(x)\\,Q(x).$$\n\nNow both sides integrate directly. Integrate, then divide by $\\mu$ to isolate $y$. The recipe is always the same four moves:\n\n1. **Standard form** — make the $y'$ coefficient 1 and read off $P$ and $Q$.\n2. **Integrating factor** — compute $\\mu = e^{\\int P\\,dx}$.\n3. **Collapse and integrate** — rewrite the left as $\\frac{d}{dx}[\\mu y]$ and integrate $\\mu Q$.\n4. **Solve for $y$** and use any initial condition to fix the constant $C$.\n\n### Worked example\n\nSolve $y' + 3y = 6$ with $y(0) = 5$.\n\n- $P = 3$, so $\\mu = e^{\\int 3\\,dx} = e^{3x}$.\n- Multiply: $\\frac{d}{dx}\\big[e^{3x}y\\big] = 6e^{3x}$.\n- Integrate: $e^{3x}y = 2e^{3x} + C$, so $y = 2 + Ce^{-3x}$.\n- Apply $y(0)=5$: $5 = 2 + C$, so $C = 3$. Thus $y = 2 + 3e^{-3x}$.\n\nAs $x \\to \\infty$ the exponential dies and $y \\to 2$: the **steady state**. The number 2 is exactly $Q/P$ — the level the system settles at when $y'$ stops changing.\n\n## Reading the answer\n\nEvery solution of $y' + ky = $ (constant input) has the same anatomy: a **steady-state part** (the long-run level) plus a **transient part** $Ce^{-kx}$ that fades. The size of $k$ sets the pace: the **time constant** $1/k$ is roughly how long until the quantity covers about 63% of the gap to its final value. Big $k$ means fast settling; small $k$ means a long, lazy approach."
+  },
+  "application": {
+    "summary": "First-order linear equations model any quantity driven toward a target by a steady input while leaking away in proportion to its current size: salt in a stirred tank, current in an RL circuit, charge on a capacitor, drug level under continuous infusion, room temperature under heating. Solving one tells you the amount at any time t and the steady-state level it approaches.",
+    "domains": ["chemical engineering", "electrical engineering", "medicine", "environmental science"],
+    "workedExample": "**Salt in a stirred tank.**\n\nA tank holds 100 L of pure water. Brine containing 2 grams of salt per liter flows in at 5 L/min, and the well-stirred mixture drains out at the same 5 L/min (so the volume stays 100 L). How much salt is in the tank over time?\n\nLet $A(t)$ be the grams of salt. Salt flows in at $2 \\times 5 = 10$ g/min. It flows out at concentration $A/100$ times 5 L/min, i.e. $\\frac{5A}{100} = \\frac{A}{20}$ g/min. So\n\n$$\\frac{dA}{dt} = 10 - \\frac{A}{20} \\quad\\Longrightarrow\\quad A' + \\frac{1}{20}A = 10.$$\n\nThe integrating factor is $e^{t/20}$, giving $A(t) = 200 + Ce^{-t/20}$. Starting from pure water, $A(0)=0$, so $C = -200$ and\n\n$$A(t) = 200\\big(1 - e^{-t/20}\\big).$$\n\nThe salt climbs toward a **steady state of 200 g** — exactly the amount that makes the tank's concentration match the incoming 2 g/L. The very same equation, with different labels, describes a charging capacitor or a patient on a constant drug drip.",
+    "domainNotes": [
+      "**Chemical engineering:** concentration in continuously-stirred tank reactors (CSTRs); pollutant levels in a lake with steady inflow and outflow.",
+      "**Electrical engineering:** RL circuits (current toward $V/R$) and RC circuits (charge toward $CV$), each with time constant $L/R$ or $RC$.",
+      "**Medicine:** plasma drug concentration under continuous IV infusion, approaching steady state at infusion-rate over clearance.",
+      "**Environmental/HVAC:** Newton's law of heating/cooling and room air quality under constant ventilation."
+    ]
+  },
+  "generators": ["de-standard-form-v1", "de-mixing-steady-v1", "de-rc-charge-v1", "def-standard-form-d2", "def-standard-form-d3", "def-integrating-factor-d1", "def-integrating-factor-d2", "def-integrating-factor-d3", "def-mixing-problems-d1", "def-mixing-problems-d3", "def-circuits-and-applied-d1", "def-circuits-and-applied-d3"],
+  "problems": [
+    {
+      "id": "differential-equations.linear-first-order.s01",
+      "concepts": ["standard-form"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Put $y' + 4y = 12$ in standard form $y' + P(x)y = Q(x)$ and identify the constant $P(x)$.",
+      "steps": [
+        { "instruction": "The equation is already in standard form. What is $P(x)$? (a number)", "answer": "4", "accept": [], "hint": "$P(x)$ is the coefficient multiplying $y$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "The coefficient of $y$ is 4, so $P(x) = 4$ (and $Q(x) = 12$)."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s02",
+      "concepts": ["standard-form"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Write $3y' + 9y = 15$ in standard form $y' + P(x)y = Q(x)$ by dividing through, then give $P(x)$ and $Q(x)$.",
+      "steps": [
+        { "instruction": "Divide every term by 3. What is the constant $P(x)$?", "answer": "3", "accept": [], "hint": "Dividing $9y$ by 3 gives the coefficient of $y$." },
+        { "instruction": "What is the constant $Q(x)$ on the right side?", "answer": "5", "accept": [], "hint": "Divide 15 by 3." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Dividing by 3 gives $y' + 3y = 5$, so $P(x) = 3$ and $Q(x) = 5$."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s03",
+      "concepts": ["standard-form"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Put $x y' + 2y = x^3$ (for $x > 0$) into standard form $y' + P(x)y = Q(x)$ by dividing through by $x$. Then evaluate $P(x)$ at $x = 4$.",
+      "steps": [
+        { "instruction": "Divide every term by $x$. Write the resulting standard-form equation.", "answer": "y' + (2/x)y = x^2", "accept": ["y'+(2/x)y=x^2", "y' + 2/x y = x^2"], "hint": "Dividing $2y$ by $x$ gives $(2/x)y$; dividing $x^3$ by $x$ gives $x^2$." },
+        { "instruction": "Here $P(x) = 2/x$. Evaluate $P(4)$ as a decimal.", "answer": "0.5", "accept": ["1/2"], "hint": "Compute $2/4$." }
+      ],
+      "finalAnswer": { "value": "0.5", "unit": "" },
+      "solutionNarrative": "Dividing by $x$ gives $y' + \\frac{2}{x}y = x^2$, so $P(x) = 2/x$ and $P(4) = 2/4 = 0.5$."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s04",
+      "concepts": ["integrating-factor"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The equation $y' + 2y = 6$ has solution $y = 3 + Ce^{-2x}$. As $x \\to \\infty$, what value does $y$ approach (the steady state)?",
+      "steps": [
+        { "instruction": "As $x \\to \\infty$, $e^{-2x} \\to 0$. What number is left?", "answer": "3", "accept": [], "hint": "The transient $Ce^{-2x}$ dies out; only the constant remains." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "The transient $Ce^{-2x}\\to 0$, so $y \\to 3$, which equals $Q/P = 6/2 = 3$."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s05",
+      "concepts": ["integrating-factor"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $y' + y = 2$ with $y(0) = 5$, then evaluate the solution at $x = 0$ to confirm. Give $y(0)$.",
+      "steps": [
+        { "instruction": "The integrating factor is $e^{x}$. After integrating, $y = 2 + Ce^{-x}$. Use $y(0)=5$ to find $C$.", "answer": "3", "accept": [], "hint": "At $x=0$: $5 = 2 + C$." },
+        { "instruction": "So $y = 2 + 3e^{-x}$. Evaluate $y(0)$.", "answer": "5", "accept": [], "hint": "$e^{0} = 1$, so $y(0) = 2 + 3$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "With $\\mu = e^x$, $y = 2 + Ce^{-x}$. From $y(0)=5$, $C=3$, so $y = 2 + 3e^{-x}$ and $y(0)=5$. ✓"
+    },
+    {
+      "id": "differential-equations.linear-first-order.s06",
+      "concepts": ["integrating-factor"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $y' + y = 2$ with $y(0) = 5$, giving $y = 2 + 3e^{-x}$. Evaluate $y(1)$ to two decimal places (use $e \\approx 2.718$).",
+      "steps": [
+        { "instruction": "Compute $e^{-1}$ to four decimals (use $e \\approx 2.718$).", "answer": "0.3679", "accept": ["0.368", "0.3679"], "hint": "$e^{-1} = 1/2.718$." },
+        { "instruction": "Now compute $y(1) = 2 + 3e^{-1}$, rounded to two decimals.", "answer": "3.10", "accept": ["3.1"], "hint": "$2 + 3(0.3679) = 2 + 1.1037$." }
+      ],
+      "finalAnswer": { "value": "3.10", "unit": "" },
+      "solutionNarrative": "$y(1) = 2 + 3e^{-1} \\approx 2 + 3(0.3679) = 2 + 1.104 \\approx 3.10$."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s07",
+      "concepts": ["mixing-problems"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 200 L tank is fed brine at 4 g/L flowing in at 3 L/min, well-stirred, draining at 3 L/min (volume constant). At steady state the concentration matches the inflow. How many grams of salt does the tank hold at steady state?",
+      "steps": [
+        { "instruction": "At steady state the concentration equals the inflow, 4 g/L. Multiply by the volume 200 L.", "answer": "800", "accept": [], "hint": "Steady-state amount = concentration × volume." }
+      ],
+      "finalAnswer": { "value": "800", "unit": "grams" },
+      "solutionNarrative": "At steady state the tank's concentration matches the inflow 4 g/L, so the amount is $4 \\times 200 = 800$ g."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s08",
+      "concepts": ["mixing-problems"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 100 L tank starts with pure water. Brine at 2 g/L flows in at 5 L/min, well-stirred, draining at 5 L/min. The salt amount satisfies $A' + \\frac{1}{20}A = 10$, giving $A(t) = 200(1 - e^{-t/20})$. Find the steady-state amount of salt (grams).",
+      "steps": [
+        { "instruction": "As $t \\to \\infty$, $e^{-t/20} \\to 0$. What does $A(t)$ approach?", "answer": "200", "accept": [], "hint": "$A(t) = 200(1 - e^{-t/20})$; the exponential vanishes." }
+      ],
+      "finalAnswer": { "value": "200", "unit": "grams" },
+      "solutionNarrative": "As $t\\to\\infty$, $A(t) = 200(1 - e^{-t/20}) \\to 200$ g, matching inflow concentration 2 g/L over 100 L."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s09",
+      "concepts": ["mixing-problems"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "For the tank above, $A(t) = 200(1 - e^{-t/20})$ grams. How much salt is in the tank after $t = 20$ minutes? Round to the nearest gram (use $e \\approx 2.718$).",
+      "steps": [
+        { "instruction": "At $t = 20$, the exponent is $-20/20 = -1$. Compute $e^{-1}$ to four decimals.", "answer": "0.3679", "accept": ["0.368"], "hint": "$e^{-1} = 1/2.718$." },
+        { "instruction": "Compute $A(20) = 200(1 - e^{-1})$, rounded to the nearest gram.", "answer": "126", "accept": [], "hint": "$200(1 - 0.3679) = 200(0.6321)$." }
+      ],
+      "finalAnswer": { "value": "126", "unit": "grams" },
+      "solutionNarrative": "$A(20) = 200(1 - e^{-1}) \\approx 200(1 - 0.3679) = 200(0.6321) \\approx 126$ g."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s10",
+      "concepts": ["circuits-and-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "An RL circuit has a 12 V battery and 4 ohm resistor. The current obeys $L i' + R i = V$ and rises toward a steady value $V/R$ where $i' = 0$. What is the steady-state current (amperes)?",
+      "steps": [
+        { "instruction": "At steady state $i' = 0$, so $Ri = V$. Compute $i = V/R = 12/4$.", "answer": "3", "accept": [], "hint": "Divide the voltage by the resistance." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "amperes" },
+      "solutionNarrative": "Setting $i'=0$ gives $Ri = V$, so $i = 12/4 = 3$ A."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s11",
+      "concepts": ["circuits-and-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An RL circuit with $L = 2$ H, $R = 4$ ohm, $V = 12$ V gives current $i(t) = 3(1 - e^{-2t})$ amperes. Find the steady-state current and the time constant $L/R$.",
+      "steps": [
+        { "instruction": "As $t \\to \\infty$, $e^{-2t} \\to 0$. What steady-state current does $i(t)$ approach (amperes)?", "answer": "3", "accept": [], "hint": "$i(t) = 3(1 - e^{-2t})$; the exponential dies out." },
+        { "instruction": "Compute the time constant $L/R = 2/4$ (seconds).", "answer": "0.5", "accept": ["1/2"], "hint": "Divide inductance by resistance." }
+      ],
+      "finalAnswer": { "value": "0.5", "unit": "seconds" },
+      "solutionNarrative": "The current approaches $3$ A; the time constant is $L/R = 2/4 = 0.5$ s."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s12",
+      "concepts": ["circuits-and-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The RL current is $i(t) = 3(1 - e^{-2t})$ amperes. What is the current at $t = 0.5$ s? Round to two decimals (use $e \\approx 2.718$).",
+      "steps": [
+        { "instruction": "At $t = 0.5$, the exponent is $-2(0.5) = -1$. Compute $e^{-1}$ to four decimals.", "answer": "0.3679", "accept": ["0.368"], "hint": "$e^{-1} = 1/2.718$." },
+        { "instruction": "Compute $i(0.5) = 3(1 - e^{-1})$, rounded to two decimals.", "answer": "1.90", "accept": ["1.9"], "hint": "$3(1 - 0.3679) = 3(0.6321)$." }
+      ],
+      "finalAnswer": { "value": "1.90", "unit": "amperes" },
+      "solutionNarrative": "$i(0.5) = 3(1 - e^{-1}) \\approx 3(0.6321) \\approx 1.90$ A — about 63% of the final 3 A, since $t$ equals one time constant."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s13",
+      "concepts": ["circuits-and-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A patient receives a drug by continuous IV at 50 mg/hr; the body clears it at rate $k = 0.25$ /hr. The plasma amount obeys $y' + 0.25y = 50$ and reaches steady state where $y' = 0$. Find the steady-state amount (mg).",
+      "steps": [
+        { "instruction": "At steady state $y' = 0$, so $0.25y = 50$. Solve for $y$.", "answer": "200", "accept": [], "hint": "Divide the infusion rate by the clearance rate: $50/0.25$." }
+      ],
+      "finalAnswer": { "value": "200", "unit": "mg" },
+      "solutionNarrative": "Setting $y'=0$: $0.25y = 50$, so $y = 50/0.25 = 200$ mg at steady state."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s14",
+      "concepts": ["integrating-factor"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $y' + 5y = 10$ with $y(0) = 0$. The solution is $y = 2(1 - e^{-5x})$. Find the constant $C$ in the general form $y = 2 + Ce^{-5x}$.",
+      "steps": [
+        { "instruction": "Write the general solution as $y = 2 + Ce^{-5x}$ and apply $y(0) = 0$. Solve for $C$.", "answer": "-2", "accept": [], "hint": "At $x=0$: $0 = 2 + C$." }
+      ],
+      "finalAnswer": { "value": "-2", "unit": "" },
+      "solutionNarrative": "From $0 = 2 + C$ we get $C = -2$, so $y = 2 - 2e^{-5x} = 2(1 - e^{-5x})$."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s15",
+      "concepts": ["standard-form"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A room's temperature obeys Newton's law: $T' = -0.1(T - 18)$, where 18 C is the outside temperature. Rewrite this in standard form $T' + P(t)T = Q(t)$ and give the constant $P(t)$.",
+      "steps": [
+        { "instruction": "Expand the right side and move the $T$ term to the left. What is $P(t)$, the coefficient of $T$?", "answer": "0.1", "accept": ["1/10"], "hint": "$T' = -0.1T + 1.8$ becomes $T' + 0.1T = 1.8$." }
+      ],
+      "finalAnswer": { "value": "0.1", "unit": "" },
+      "solutionNarrative": "Expanding gives $T' + 0.1T = 1.8$, so $P(t) = 0.1$ (and $Q(t) = 1.8$)."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s16",
+      "concepts": ["mixing-problems"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 50 L tank of pure water is fed brine at 3 g/L flowing in at 2 L/min, draining at 2 L/min. Set up the salt equation $A' + \\frac{r}{V}A = c_{in} r_{in}$ and find the steady-state salt amount (grams).",
+      "steps": [
+        { "instruction": "Rate of salt in is $3 \\times 2$ g/min. What is the rate in (g/min)?", "answer": "6", "accept": [], "hint": "Concentration times flow rate." },
+        { "instruction": "At steady state, amount = inflow concentration × volume = $3 \\times 50$. Compute it (grams).", "answer": "150", "accept": [], "hint": "The tank's concentration eventually matches 3 g/L across 50 L." }
+      ],
+      "finalAnswer": { "value": "150", "unit": "grams" },
+      "solutionNarrative": "Salt enters at $3 \\times 2 = 6$ g/min; at steady state the tank holds $3 \\times 50 = 150$ g."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s17",
+      "concepts": ["circuits-and-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "An RC circuit charges a capacitor toward final charge $CV$. With $C = 0.5$ F and $V = 10$ V, what is the steady-state charge (coulombs)?",
+      "steps": [
+        { "instruction": "Steady-state charge is $CV$. Compute $0.5 \\times 10$.", "answer": "5", "accept": [], "hint": "Multiply capacitance by voltage." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "coulombs" },
+      "solutionNarrative": "The capacitor charges to $CV = 0.5 \\times 10 = 5$ C."
+    },
+    {
+      "id": "differential-equations.linear-first-order.s18",
+      "concepts": ["integrating-factor"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $y' - y = 0$ with $y(0) = 4$. The solution is $y = 4e^{x}$. Evaluate $y(1)$ to two decimals (use $e \\approx 2.718$).",
+      "steps": [
+        { "instruction": "Here $P = -1$, so $\\mu = e^{-x}$ and the solution is $y = Ce^{x}$. Use $y(0)=4$ to find $C$.", "answer": "4", "accept": [], "hint": "At $x=0$, $e^0 = 1$, so $4 = C$." },
+        { "instruction": "Evaluate $y(1) = 4e^{1}$, rounded to two decimals.", "answer": "10.87", "accept": ["10.872"], "hint": "$4 \\times 2.718$." }
+      ],
+      "finalAnswer": { "value": "10.87", "unit": "" },
+      "solutionNarrative": "With $C = 4$, $y = 4e^x$, so $y(1) = 4e \\approx 4(2.718) = 10.87$."
+    }
+  ]
+}

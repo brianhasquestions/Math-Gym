@@ -1,0 +1,263 @@
+{
+  "id": "geometry.angles-and-lines",
+  "subject": "geometry",
+  "title": "Lines and Angles",
+  "prerequisites": [],
+  "estimatedMinutes": 35,
+  "keyConcepts": [
+    {
+      "id": "angle-pairs",
+      "label": "Angle pairs",
+      "microLesson": "Certain pairs of angles always add up to a fixed total. **Complementary** angles sum to $90^\\circ$ (think of a corner of a square split in two). **Supplementary** angles sum to $180^\\circ$ (think of a straight line split in two). **Vertical** angles — the opposite angles where two lines cross — are always *equal*. **Adjacent** angles simply share a vertex and a side. So if one angle in a complementary pair is $32^\\circ$, its partner is $90 - 32 = 58^\\circ$."
+    },
+    {
+      "id": "parallel-lines-transversal",
+      "label": "Parallel lines and a transversal",
+      "microLesson": "When a single line (a **transversal**) crosses two **parallel** lines, it creates eight angles with tidy relationships. **Corresponding** angles (same position at each crossing) are equal. **Alternate interior** angles (between the parallels, opposite sides of the transversal) are equal. **Alternate exterior** angles are equal too. **Co-interior** (same-side interior) angles are *supplementary* — they sum to $180^\\circ$. These rules let you find every angle from just one."
+    },
+    {
+      "id": "angle-arithmetic",
+      "label": "Angle arithmetic",
+      "microLesson": "Unknown angles are found by writing a sum and solving. Angles on a straight line sum to $180^\\circ$; angles around a point sum to $360^\\circ$; the three angles of a triangle sum to $180^\\circ$. Often the unknown appears in an expression: if two angles $(2x + 10)^\\circ$ and $(x - 4)^\\circ$ are complementary, then $(2x + 10) + (x - 4) = 90$, so $3x + 6 = 90$, giving $x = 28$."
+    },
+    {
+      "id": "angle-relationships-applied",
+      "label": "Angles in the real world",
+      "microLesson": "Angles describe physical layouts: the angle between clock hands, the slope of a wheelchair ramp, the crossing angle of two roads, the cut on a mitre joint, and the bounce of a reflected light beam. The **law of reflection** says a beam reflects off a surface at the same angle it arrives. A mitre joint that turns a corner of $90^\\circ$ is cut at half that, $45^\\circ$. A clock's hands move $30^\\circ$ per hour ($360 \\div 12$)."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Angles are everywhere you build, aim, or measure\n\nEvery time a carpenter cuts a corner, a surveyor lays out two crossing roads, a solar panel is tilted toward the sun, or a clockmaker spaces the hands, the same handful of angle rules are doing the work. **Lines and angles** is the grammar of geometry: a small set of facts that, combined, let you find an unknown angle you can't measure directly from one or two angles you can.\n\nThe whole subject rests on two anchors:\n\n- A **straight line** measures $180^\\circ$.\n- A **full turn** around a point measures $360^\\circ$.\n\nEverything else follows from those.\n\n## Angle pairs: the four you'll use constantly\n\n- **Complementary** angles add to $90^\\circ$. If one is $32^\\circ$, the other is $58^\\circ$.\n- **Supplementary** angles add to $180^\\circ$. If one is $130^\\circ$, the other is $50^\\circ$.\n- **Vertical** angles are the *opposite* angles formed when two lines cross. They are always **equal**.\n- **Adjacent** angles share a vertex and a side — they sit next to each other.\n\nWhen two lines cross, you get two pairs of equal vertical angles, and any two angles side by side are supplementary (they sit on a straight line).\n\n## Parallel lines cut by a transversal\n\nWhen one line crosses two **parallel** lines, eight angles appear, but there are really only **two** distinct values — every angle is either equal to or supplementary to any other.\n\n$$\\text{corresponding} = \\text{equal}, \\quad \\text{alternate interior} = \\text{equal}, \\quad \\text{co-interior} = 180^\\circ.$$\n\n- **Corresponding** angles occupy the same position at each crossing — equal.\n- **Alternate interior** angles lie between the parallels on opposite sides of the transversal — equal.\n- **Co-interior** (same-side interior) angles lie between the parallels on the same side — they **sum to $180^\\circ$**.\n\nKnow one angle and you know all eight.\n\n## Angle arithmetic: write a sum, then solve\n\nMost problems reduce to writing an equation from a known total and solving it:\n\n- Angles on a straight line: sum to $180^\\circ$.\n- Angles around a point: sum to $360^\\circ$.\n- Angles in a triangle: sum to $180^\\circ$.\n\nOften the unknown hides inside an expression. If $(2x + 10)^\\circ$ and $(x - 4)^\\circ$ are **complementary**:\n\n$$(2x + 10) + (x - 4) = 90 \\;\\Rightarrow\\; 3x + 6 = 90 \\;\\Rightarrow\\; x = 28.$$\n\nThe two angles are then $66^\\circ$ and $24^\\circ$, which do sum to $90^\\circ$. **Always check** that your angles add to the total you started from.\n\n## Out in the world\n\nThe clock face is a circle, so each of the 12 hour marks is $360 \\div 12 = 30^\\circ$ apart. A reflected light beam leaves a mirror at the same angle it struck it (the **law of reflection**). A mitre joint that closes a $90^\\circ$ corner is cut at half the turn, $45^\\circ$. These aren't new rules — they're the same sums and pairs, applied to something you can hold in your hands."
+  },
+  "application": {
+    "summary": "Angle rules let you find a measurement you can't reach from one or two you can — the cut on a mitre joint, the angle between clock hands, the bounce of a light beam, the crossing angle of two roads, or the slope of a ramp. Most real problems reduce to 'these angles sum to 90, 180, or 360 — solve for the missing one.'",
+    "domains": ["carpentry", "navigation", "physics", "everyday life"],
+    "workedExample": "**Cutting a picture-frame corner.**\n\nA picture frame is a rectangle, so each corner closes a $90^\\circ$ turn. To make that corner, two pieces of moulding meet along a diagonal joint — a **mitre**. The mitre cut on each piece is *half* the corner angle, because the two equal cuts together make up the full corner:\n\n$$\\text{mitre angle} = \\frac{90^\\circ}{2} = 45^\\circ.$$\n\nNow suppose you're building a hexagonal frame instead. Each corner of a regular hexagon turns through $120^\\circ$, so each mitre cut is $120 \\div 2 = 60^\\circ$. The same halving rule scales to any frame: measure the corner, cut half. Get it wrong by even a couple of degrees and six small errors stack into a visible gap — which is exactly why the arithmetic matters on the workbench, not just the page.",
+    "domainNotes": [
+      "**Carpentry:** mitre and bevel cuts are half the corner angle; crown moulding and trim depend on supplementary/complementary pairs.",
+      "**Navigation/surveying:** bearings and the crossing angles of roads or property lines use angles around a point and vertical-angle equality.",
+      "**Physics:** the law of reflection (angle in = angle out) governs mirrors, periscopes, and how light bounces; ramps and inclines are angle-of-elevation problems.",
+      "**Everyday life:** clock-hand angles, the tilt of a solar panel or satellite dish, and the lean of a ladder are all single-angle computations."
+    ]
+  },
+  "generators": ["complement-supplement-v1", "vertical-angle-v1", "transversal-v1", "angle-on-line-v1", "clock-angle-v1"],
+  "problems": [
+    {
+      "id": "geometry.angles-and-lines.s01",
+      "concepts": ["angle-pairs"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A solar panel and its support bracket form a complementary pair of angles (they add to $90^\\circ$). If the panel sits at $35^\\circ$, what is the bracket angle? Give your answer in degrees.",
+      "steps": [
+        { "instruction": "Complementary angles sum to 90. Subtract the panel angle from 90 (answer in degrees).", "answer": "55", "accept": [], "hint": "$90 - 35$." }
+      ],
+      "finalAnswer": { "value": "55", "unit": "degrees" },
+      "solutionNarrative": "Complementary angles add to $90^\\circ$, so the bracket angle is $90 - 35 = 55^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s02",
+      "concepts": ["angle-pairs"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A door is open so that the angle between the open door and the wall is $110^\\circ$. The angle on the other side of the door (between the door and the rest of the wall) is supplementary to it. What is that angle, in degrees?",
+      "steps": [
+        { "instruction": "Supplementary angles sum to 180. Subtract the known angle from 180 (answer in degrees).", "answer": "70", "accept": [], "hint": "$180 - 110$." }
+      ],
+      "finalAnswer": { "value": "70", "unit": "degrees" },
+      "solutionNarrative": "The two angles lie on a straight wall, so they are supplementary: $180 - 110 = 70^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s03",
+      "concepts": ["angle-pairs"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two straight roads cross. The angle in one corner of the intersection measures $63^\\circ$. (a) What is the angle directly opposite it (its vertical angle)? (b) What is the angle right next to it (supplementary)? Answer each in degrees.",
+      "steps": [
+        { "instruction": "Vertical angles are equal. State the opposite angle (degrees).", "answer": "63", "accept": [], "hint": "Vertical (opposite) angles are equal." },
+        { "instruction": "The adjacent angle lies on a straight road, so it is supplementary. Find it (degrees).", "answer": "117", "accept": [], "hint": "$180 - 63$." }
+      ],
+      "finalAnswer": { "value": "117", "unit": "degrees" },
+      "solutionNarrative": "The vertical (opposite) angle equals the original, $63^\\circ$. The adjacent angle sits on a straight line, so it is $180 - 63 = 117^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s04",
+      "concepts": ["angle-pairs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two lines cross. One angle is $(3x + 5)^\\circ$ and the vertical angle opposite it is $(x + 41)^\\circ$. Find $x$, then find the measure of that angle.",
+      "steps": [
+        { "instruction": "Vertical angles are equal. Set the two expressions equal.", "answer": "3x + 5 = x + 41", "accept": ["3x+5=x+41"], "hint": "Equal vertical angles: $3x + 5 = x + 41$." },
+        { "instruction": "Solve for $x$.", "answer": "x = 18", "accept": ["x=18", "18"], "hint": "Subtract $x$ and 5 from both sides: $2x = 36$." },
+        { "instruction": "Substitute to find the angle measure (degrees).", "answer": "59", "accept": [], "hint": "$3(18) + 5 = 59$, and check $18 + 41 = 59$." }
+      ],
+      "finalAnswer": { "value": "59", "unit": "degrees" },
+      "solutionNarrative": "Vertical angles are equal: $3x + 5 = x + 41$ gives $2x = 36$, so $x = 18$. The angle is $3(18) + 5 = 59^\\circ$ (and $18 + 41 = 59^\\circ$ confirms it)."
+    },
+    {
+      "id": "geometry.angles-and-lines.s05",
+      "concepts": ["parallel-lines-transversal"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A transversal crosses two parallel lines. One angle measures $74^\\circ$. What is its corresponding angle at the other crossing? Answer in degrees.",
+      "steps": [
+        { "instruction": "Corresponding angles between parallel lines are equal. State the measure (degrees).", "answer": "74", "accept": [], "hint": "Corresponding angles are equal." }
+      ],
+      "finalAnswer": { "value": "74", "unit": "degrees" },
+      "solutionNarrative": "Corresponding angles formed by a transversal across parallel lines are equal, so it is $74^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s06",
+      "concepts": ["parallel-lines-transversal"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A straight road (a transversal) crosses two parallel railway tracks. The angle it makes on the upper track is $58^\\circ$. By the alternate interior angle rule, what equal angle does it make on the lower track between the rails? And what is the co-interior angle on the same side? Answer each in degrees.",
+      "steps": [
+        { "instruction": "Alternate interior angles are equal. State the alternate interior angle (degrees).", "answer": "58", "accept": [], "hint": "Alternate interior angles are equal." },
+        { "instruction": "Co-interior (same-side interior) angles are supplementary. Find that angle (degrees).", "answer": "122", "accept": [], "hint": "$180 - 58$." }
+      ],
+      "finalAnswer": { "value": "122", "unit": "degrees" },
+      "solutionNarrative": "Alternate interior angles are equal, so that angle is $58^\\circ$. The co-interior angle on the same side is supplementary: $180 - 58 = 122^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s07",
+      "concepts": ["parallel-lines-transversal", "angle-arithmetic"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A transversal crosses two parallel lines. A co-interior pair (same-side interior angles) measures $(2x + 20)^\\circ$ and $(3x)^\\circ$. Find $x$ and then the larger of the two angles.",
+      "steps": [
+        { "instruction": "Co-interior angles sum to 180. Write the equation.", "answer": "(2x + 20) + 3x = 180", "accept": ["2x+20+3x=180", "(2x+20)+3x=180", "5x+20=180"], "hint": "Same-side interior angles are supplementary." },
+        { "instruction": "Combine and solve for $x$.", "answer": "x = 32", "accept": ["x=32", "32"], "hint": "$5x + 20 = 180$, so $5x = 160$." },
+        { "instruction": "Find the larger angle by substituting into the bigger expression (degrees).", "answer": "96", "accept": [], "hint": "$3x = 3(32) = 96$; the other is $2(32)+20 = 84$." }
+      ],
+      "finalAnswer": { "value": "96", "unit": "degrees" },
+      "solutionNarrative": "Co-interior angles are supplementary: $(2x+20) + 3x = 180$ gives $5x + 20 = 180$, so $x = 32$. The angles are $84^\\circ$ and $96^\\circ$; the larger is $96^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s08",
+      "concepts": ["angle-arithmetic"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Three angles sit side by side on a straight line. Two of them measure $40^\\circ$ and $75^\\circ$. What is the third angle? Answer in degrees.",
+      "steps": [
+        { "instruction": "Angles on a straight line sum to 180. Subtract the two known angles (degrees).", "answer": "65", "accept": [], "hint": "$180 - 40 - 75$." }
+      ],
+      "finalAnswer": { "value": "65", "unit": "degrees" },
+      "solutionNarrative": "Angles on a straight line total $180^\\circ$: $180 - 40 - 75 = 65^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s09",
+      "concepts": ["angle-arithmetic"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Four roads meet at a single roundabout, splitting the full turn around the centre into four angles. Three of them measure $90^\\circ$, $100^\\circ$, and $80^\\circ$. What is the fourth angle? Answer in degrees.",
+      "steps": [
+        { "instruction": "Angles around a point sum to 360. Subtract the three known angles (degrees).", "answer": "90", "accept": [], "hint": "$360 - 90 - 100 - 80$." }
+      ],
+      "finalAnswer": { "value": "90", "unit": "degrees" },
+      "solutionNarrative": "Angles around a point total $360^\\circ$: $360 - 90 - 100 - 80 = 90^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s10",
+      "concepts": ["angle-arithmetic"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two angles are complementary. One is $(2x + 10)^\\circ$ and the other is $(x - 4)^\\circ$. Find $x$, then find both angles.",
+      "steps": [
+        { "instruction": "Complementary angles sum to 90. Write the equation.", "answer": "(2x + 10) + (x - 4) = 90", "accept": ["2x+10+x-4=90", "(2x+10)+(x-4)=90", "3x+6=90"], "hint": "Set the sum equal to 90." },
+        { "instruction": "Combine and solve for $x$.", "answer": "x = 28", "accept": ["x=28", "28"], "hint": "$3x + 6 = 90$, so $3x = 84$." },
+        { "instruction": "Find the larger angle (degrees).", "answer": "66", "accept": [], "hint": "$2x + 10 = 2(28) + 10 = 66$; the other is $28 - 4 = 24$." }
+      ],
+      "finalAnswer": { "value": "66", "unit": "degrees" },
+      "solutionNarrative": "$(2x+10) + (x-4) = 90$ gives $3x + 6 = 90$, so $x = 28$. The angles are $66^\\circ$ and $24^\\circ$, which sum to $90^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s11",
+      "concepts": ["angle-relationships-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A clock's 12 hour marks are evenly spaced around the circular face. What is the angle between two neighbouring hour marks (for example, from the 12 to the 1)? Answer in degrees.",
+      "steps": [
+        { "instruction": "A full circle is 360 degrees, divided into 12 equal gaps. Divide (answer in degrees).", "answer": "30", "accept": [], "hint": "$360 \\div 12$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "degrees" },
+      "solutionNarrative": "The face is a $360^\\circ$ circle split into 12 equal gaps: $360 \\div 12 = 30^\\circ$ per hour mark."
+    },
+    {
+      "id": "geometry.angles-and-lines.s12",
+      "concepts": ["angle-relationships-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A carpenter is joining two pieces of moulding to make a square picture-frame corner, which closes a $90^\\circ$ turn. Each piece gets a mitre cut equal to half the corner angle. What angle is each mitre cut? Answer in degrees.",
+      "steps": [
+        { "instruction": "The mitre cut is half the corner angle. Divide 90 by 2 (answer in degrees).", "answer": "45", "accept": [], "hint": "$90 \\div 2$." }
+      ],
+      "finalAnswer": { "value": "45", "unit": "degrees" },
+      "solutionNarrative": "Two equal cuts make up the $90^\\circ$ corner, so each mitre is $90 \\div 2 = 45^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s13",
+      "concepts": ["angle-relationships-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "At exactly 3:00, the hour hand points at the 3 and the minute hand points at the 12. Each hour mark is $30^\\circ$ apart. There are 3 gaps between the 12 and the 3. What is the angle between the hands? Answer in degrees.",
+      "steps": [
+        { "instruction": "Multiply the number of hour gaps by 30 degrees per gap (answer in degrees).", "answer": "90", "accept": [], "hint": "$3 \\times 30$." }
+      ],
+      "finalAnswer": { "value": "90", "unit": "degrees" },
+      "solutionNarrative": "From the 12 to the 3 is 3 gaps of $30^\\circ$ each: $3 \\times 30 = 90^\\circ$ — a right angle."
+    },
+    {
+      "id": "geometry.angles-and-lines.s14",
+      "concepts": ["angle-relationships-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A beam of light strikes a flat mirror, making an angle of $34^\\circ$ with the mirror's surface. By the law of reflection, the reflected beam leaves at the same angle to the surface. What is the total angle between the incoming beam and the reflected beam (the sum of the two equal angles)? Answer in degrees.",
+      "steps": [
+        { "instruction": "The two equal angles each measure 34 degrees. Add them (answer in degrees).", "answer": "68", "accept": [], "hint": "$34 + 34$." }
+      ],
+      "finalAnswer": { "value": "68", "unit": "degrees" },
+      "solutionNarrative": "The beam arrives and leaves at $34^\\circ$ to the surface; the angle between incoming and reflected beams is $34 + 34 = 68^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s15",
+      "concepts": ["angle-relationships-applied", "angle-arithmetic"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A carpenter builds a regular hexagonal (6-sided) frame. Each interior corner of a regular hexagon measures $120^\\circ$. The two pieces meeting at a corner each get a mitre cut equal to half the corner angle. (a) What is each mitre cut? (b) A regular pentagon (5-sided) frame has corners of $108^\\circ$; what mitre cut does it need? Answer each in degrees.",
+      "steps": [
+        { "instruction": "Hexagon mitre: divide the $120^\\circ$ corner by 2 (degrees).", "answer": "60", "accept": [], "hint": "$120 \\div 2$." },
+        { "instruction": "Pentagon mitre: divide the $108^\\circ$ corner by 2 (degrees).", "answer": "54", "accept": [], "hint": "$108 \\div 2$." }
+      ],
+      "finalAnswer": { "value": "54", "unit": "degrees" },
+      "solutionNarrative": "Each mitre is half the corner: hexagon $120 \\div 2 = 60^\\circ$, pentagon $108 \\div 2 = 54^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s16",
+      "concepts": ["angle-arithmetic", "angle-pairs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An angle of $(4x)^\\circ$ and an angle of $(2x + 30)^\\circ$ are supplementary. Find $x$ and the smaller angle.",
+      "steps": [
+        { "instruction": "Supplementary angles sum to 180. Write the equation.", "answer": "4x + (2x + 30) = 180", "accept": ["4x+2x+30=180", "4x+(2x+30)=180", "6x+30=180"], "hint": "Set the sum equal to 180." },
+        { "instruction": "Combine and solve for $x$.", "answer": "x = 25", "accept": ["x=25", "25"], "hint": "$6x + 30 = 180$, so $6x = 150$." },
+        { "instruction": "Find the smaller angle by substituting (degrees).", "answer": "80", "accept": [], "hint": "$2x + 30 = 80$; the other is $4x = 100$." }
+      ],
+      "finalAnswer": { "value": "80", "unit": "degrees" },
+      "solutionNarrative": "$4x + (2x+30) = 180$ gives $6x + 30 = 180$, so $x = 25$. The angles are $100^\\circ$ and $80^\\circ$; the smaller is $80^\\circ$."
+    },
+    {
+      "id": "geometry.angles-and-lines.s17",
+      "concepts": ["parallel-lines-transversal"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two parallel guide rails are crossed by a diagonal support beam (a transversal). At the top rail the beam makes a $112^\\circ$ angle on the upper-left. Find: (a) its vertical angle at that same crossing, and (b) the corresponding angle's supplement at the bottom rail (i.e. the angle next to the corresponding $112^\\circ$ angle). Answer each in degrees.",
+      "steps": [
+        { "instruction": "Vertical angle of $112^\\circ$ at the top crossing (degrees).", "answer": "112", "accept": [], "hint": "Vertical angles are equal." },
+        { "instruction": "The corresponding angle at the bottom rail is also $112^\\circ$; its adjacent angle on the straight rail is supplementary. Find it (degrees).", "answer": "68", "accept": [], "hint": "$180 - 112$." }
+      ],
+      "finalAnswer": { "value": "68", "unit": "degrees" },
+      "solutionNarrative": "The vertical angle equals $112^\\circ$. The corresponding angle at the bottom rail is $112^\\circ$, and its adjacent angle on the straight rail is $180 - 112 = 68^\\circ$."
+    }
+  ]
+}

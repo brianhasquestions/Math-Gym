@@ -1,0 +1,283 @@
+{
+  "id": "cryptography.rsa",
+  "subject": "cryptography",
+  "title": "RSA: Public-Key Encryption",
+  "prerequisites": ["cryptography.modular-exponentiation", "cryptography.gcd-euclid"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "rsa-keygen",
+      "label": "Key generation",
+      "microLesson": "Pick two primes $p, q$. Compute $n = pq$ (the public modulus) and $\\varphi(n) = (p-1)(q-1)$ (kept secret). Choose a public exponent $e$ with $\\gcd(e, \\varphi(n)) = 1$, then find the private exponent $d = e^{-1} \\bmod \\varphi(n)$ using the extended Euclidean algorithm, so $ed \\equiv 1 \\pmod{\\varphi(n)}$. Publish $(n, e)$; guard $d$ with your life. Example: $p=3, q=11$ gives $n=33$, $\\varphi = 20$, $e=3$, $d=7$ (since $3 \\cdot 7 = 21 \\equiv 1 \\bmod 20$)."
+    },
+    {
+      "id": "rsa-encrypt",
+      "label": "Encryption",
+      "microLesson": "Anyone holding the public key $(n, e)$ encrypts a message $m$ (an integer with $0 \\le m < n$) by computing $c = m^e \\bmod n$ with square-and-multiply. No secrets are needed to encrypt — that is the whole point of PUBLIC-key cryptography. Example with $(n, e) = (33, 3)$: $m = 4$ becomes $c = 4^3 = 64 \\equiv 31 \\pmod{33}$."
+    },
+    {
+      "id": "rsa-decrypt",
+      "label": "Decryption",
+      "microLesson": "Only the holder of the private exponent $d$ can undo the encryption: $m = c^d \\bmod n$, again by square-and-multiply. Continuing the example: $c = 31$, $d = 7$, and $31^7 \\bmod 33$: $31^2 \\equiv 4$, $31^4 \\equiv 16$, so $31^7 \\equiv 16 \\cdot 4 \\cdot 31 \\equiv 4 \\pmod{33}$ — the original message. Same operation as encryption, different exponent: that symmetry is what makes signatures possible too."
+    },
+    {
+      "id": "why-rsa-works",
+      "label": "Why it works (and how it breaks)",
+      "microLesson": "Decryption inverts encryption because $ed \\equiv 1 \\pmod{\\varphi(n)}$: $c^d = m^{ed} = m^{k\\varphi(n)+1} \\equiv m \\pmod n$ by Euler's theorem. Everything secret flows from $\\varphi(n) = (p-1)(q-1)$ — so anyone who FACTORS $n$ gets $\\varphi(n)$, computes $d = e^{-1} \\bmod \\varphi(n)$, and reads every message. RSA's security is exactly the difficulty of factoring: trivial for $n = 91 = 7 \\times 13$, unknown-how for a 2048-bit $n$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The padlock anyone can snap shut\n\nDiffie–Hellman lets two live parties build a secret together. RSA solves a different problem: how do you receive secrets from *anyone* — even someone messaging you while you sleep? The answer is a padlock: you hand out open padlocks (your **public key**) and keep the only key that opens them (your **private key**). Anyone can snap a padlock shut; only you can open it. When your browser verified this site's certificate, an RSA (or elliptic-curve) signature was checked in exactly this spirit.\n\n## Key generation: three numbers from two primes\n\n1. Pick two primes $p$ and $q$. Toy size: $p = 11$, $q = 13$. Real size: each prime around 1024 bits.\n2. Compute the modulus $n = pq = 143$ — this is public.\n3. Compute $\\varphi(n) = (p-1)(q-1) = 10 \\cdot 12 = 120$ — this is the crown jewel, and it stays secret. Note you can only compute it easily because you know $p$ and $q$.\n4. Choose a public exponent $e$ with $\\gcd(e, \\varphi(n)) = 1$; say $e = 7$.\n5. Find the private exponent $d = e^{-1} \\bmod \\varphi(n)$ with the extended Euclidean algorithm: $d = 103$, since $7 \\cdot 103 = 721 = 6 \\cdot 120 + 1$.\n\nPublish $(n, e) = (143, 7)$. Keep $d = 103$. Forget $p$, $q$, and $\\varphi(n)$ if you like — but never let them leak, because each one reveals $d$.\n\n## Encrypt and decrypt: the same move with different exponents\n\nA message is an integer $m$ with $0 \\le m < n$ (real systems chop data into blocks and pad them). Then:\n\n$$c = m^e \\bmod n \\qquad\\text{(anyone can do this)}$$\n$$m = c^d \\bmod n \\qquad\\text{(only $d$'s owner can)}$$\n\nBoth are single modular exponentiations — square-and-multiply, which you already own. Encrypt $m = 5$ with our toy key: $5^7 \\bmod 143 = 47$. Decrypt: $47^{103} \\bmod 143 = 5$. A 103-exponent sounds brutal, but $103 = 64+32+4+2+1$ means seven squarings and four multiplies.\n\n## Why decryption is guaranteed to undo encryption\n\nThis is Euler's theorem earning its keep. Since $ed \\equiv 1 \\pmod{\\varphi(n)}$, we can write $ed = k\\varphi(n) + 1$. Then\n\n$$c^d = m^{ed} = m^{k\\varphi(n) + 1} = \\left(m^{\\varphi(n)}\\right)^k \\cdot m \\equiv 1^k \\cdot m = m \\pmod n.$$\n\nEvery encrypt-then-decrypt round trip returns exactly $m$. No coincidences, no lucky examples — the exponent arithmetic mod $\\varphi(n)$ makes it an identity.\n\n## How it breaks: factoring\n\nThe public key exposes $n$. If an attacker factors $n$ into $p \\cdot q$, she computes $\\varphi(n) = (p-1)(q-1)$, runs the same extended Euclid you did, and owns $d$. You will do this attack yourself: factor $n = 91$, recover the private key in four short steps. It works because 91 is tiny. The best known algorithms cannot factor a well-chosen 2048-bit $n$ in any humanly relevant time — and that gap between 'trivial at toy size' and 'impossible at real size' *is* RSA. (This is also why quantum computers alarm cryptographers: Shor's algorithm factors fast, which is driving the migration to post-quantum schemes.)\n\n## Signatures: encrypt with the private key\n\nRun the machine backwards and you get authentication instead of secrecy. Compute $s = m^d \\bmod n$ with your PRIVATE key; anyone can check $s^e \\bmod n = m$ with your public key. Only $d$'s holder could have produced an $s$ that verifies — so a valid signature proves the message came from you and wasn't altered. This is how code signing, TLS certificates, and JWT tokens work. (Real signatures hash the message first and pad carefully, but the exponent math is exactly this.)\n\n## Toy vs. real\n\nOur $n$ fits in a byte; real $n$ is 2048 or 4096 bits. Raw 'textbook RSA' as practiced here is deliberately breakable in other ways too — real systems add structured randomness (OAEP padding) so identical messages never produce identical ciphertexts. And RSA is slow per byte, so in practice it encrypts only a small secret — typically an AES-256 session key — and AES does the heavy lifting. Public-key math performs the introduction; symmetric crypto carries the conversation."
+  },
+  "application": {
+    "summary": "RSA turns the gap between multiplying primes (easy) and factoring their product (hard) into public-key encryption and digital signatures — the trust layer behind TLS certificates, code signing, and secure key delivery.",
+    "domains": ["network security", "software distribution", "finance", "messaging"],
+    "workedExample": "**A full RSA round trip with $p = 11$, $q = 13$.**\n\n*Key generation:* $n = 11 \\times 13 = 143$ and $\\varphi(n) = 10 \\times 12 = 120$. Choose $e = 7$ ($\\gcd(7, 120) = 1$ ✓). Extended Euclid gives $d = 103$: check $7 \\times 103 = 721 = 6 \\times 120 + 1$ ✓. Public key $(143, 7)$; private key $d = 103$.\n\n*Encrypt $m = 5$:* $c = 5^7 \\bmod 143$. Squares: $5^2 = 25$, $5^4 = 625 \\equiv 53$. Then $5^7 = 5^4 \\cdot 5^2 \\cdot 5 \\equiv 53 \\cdot 25 = 1325 \\equiv 38$, and $38 \\cdot 5 = 190 \\equiv 47 \\pmod{143}$. Send $c = 47$.\n\n*Decrypt:* $m = 47^{103} \\bmod 143$. Since $103 = 64 + 32 + 4 + 2 + 1$, seven squarings suffice: $47^2 \\equiv 64$, $47^4 \\equiv 92$, $47^8 \\equiv 27$, $47^{16} \\equiv 14$, $47^{32} \\equiv 53$, $47^{64} \\equiv 92 \\pmod{143}$. Multiply the needed ones: $92 \\cdot 53 \\cdot 92 \\cdot 64 \\cdot 47 \\equiv 5 \\pmod{143}$. **The original message returns** — guaranteed, because $7 \\cdot 103 \\equiv 1 \\pmod{120}$.\n\n*The attack:* an adversary factors $143 = 11 \\times 13$ instantly, recomputes $\\varphi = 120$ and $d = 103$, and reads everything. Real keys survive only because factoring a 2048-bit $n$ is beyond every known algorithm.",
+    "domainNotes": [
+      "**TLS certificates:** a certificate is the site's public key plus an RSA/ECDSA signature from a certificate authority — your browser verifies the signature chain before trusting the padlock icon.",
+      "**Code signing:** OS and app-store updates ship with a signature made by the vendor's private key; your device verifies with the public key before installing — this is why a tampered update refuses to run.",
+      "**SSH and messaging:** your SSH keypair is often RSA; Signal/WhatsApp use public-key identity keys to authenticate the Diffie–Hellman exchanges that key AES.",
+      "**Key delivery:** in practice RSA usually encrypts a small AES-256 session key, not the data itself — public-key math opens the channel, symmetric crypto carries the payload."
+    ]
+  },
+  "generators": [
+    "cr2-keygen-d1", "cr2-keygen-d2", "cr2-keygen-d3",
+    "cr2-encrypt-d1", "cr2-encrypt-d2", "cr2-encrypt-d3",
+    "cr2-decrypt-d1", "cr2-decrypt-d2", "cr2-decrypt-d3",
+    "cr2-whyworks-d1", "cr2-whyworks-d2", "cr2-whyworks-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.rsa.s01",
+      "concepts": ["rsa-keygen"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Build a toy RSA key from $p = 3$ and $q = 11$, with public exponent $e = 3$.",
+      "steps": [
+        { "instruction": "Compute the modulus $n = pq$.", "answer": "33", "accept": [], "hint": "$3 \\times 11$." },
+        { "instruction": "Compute $\\varphi(n) = (p-1)(q-1)$.", "answer": "20", "accept": [], "hint": "$2 \\times 10$." },
+        { "instruction": "Check $e = 3$ is valid: what is $\\gcd(3, 20)$?", "answer": "1", "accept": [], "hint": "20 has factors 2 and 5 only — nothing shared with 3." },
+        { "instruction": "Find $d$ with $3d \\equiv 1 \\pmod{20}$. (Try small multiples of 3: which one is 1 more than a multiple of 20?)", "answer": "7", "accept": [], "hint": "$3 \\times 7 = 21 = 20 + 1$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "$n = 33$, $\\varphi = 20$, and $\\gcd(3, 20) = 1$ so $e = 3$ is legal. Since $3 \\cdot 7 = 21 \\equiv 1 \\pmod{20}$, the private exponent is $d = 7$. Public key $(33, 3)$, private key $7$."
+    },
+    {
+      "id": "cryptography.rsa.s02",
+      "concepts": ["rsa-keygen"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Generate an RSA key from $p = 5$, $q = 11$ with $e = 3$, and verify the private exponent.",
+      "steps": [
+        { "instruction": "Compute $n = pq$.", "answer": "55", "accept": [], "hint": "$5 \\times 11$." },
+        { "instruction": "Compute $\\varphi(n) = (p-1)(q-1)$.", "answer": "40", "accept": [], "hint": "$4 \\times 10$." },
+        { "instruction": "Find $d = 3^{-1} \\bmod 40$: which $d$ makes $3d$ equal 1 more than a multiple of 40?", "answer": "27", "accept": [], "hint": "$3 \\times 27 = 81 = 2 \\times 40 + 1$." },
+        { "instruction": "Verify: what is $3 \\times 27 \\bmod 40$?", "answer": "1", "accept": [], "hint": "$81 - 80 = 1$." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "" },
+      "solutionNarrative": "$n = 55$, $\\varphi = 40$. The inverse of 3 mod 40 is 27 because $81 \\equiv 1 \\pmod{40}$. Public key $(55, 3)$, private key $27$."
+    },
+    {
+      "id": "cryptography.rsa.s03",
+      "concepts": ["rsa-keygen"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Generate the key used in this topic's worked example: $p = 11$, $q = 13$, $e = 7$. Every stage is a number.",
+      "steps": [
+        { "instruction": "Compute $n = pq$.", "answer": "143", "accept": [], "hint": "$11 \\times 13$." },
+        { "instruction": "Compute $\\varphi(n) = (p-1)(q-1)$.", "answer": "120", "accept": [], "hint": "$10 \\times 12$." },
+        { "instruction": "Validity check: what is $\\gcd(7, 120)$?", "answer": "1", "accept": [], "hint": "$120 = 2^3 \\cdot 3 \\cdot 5$ — no 7 anywhere." },
+        { "instruction": "Find $d = 7^{-1} \\bmod 120$. (Extended Euclid, or hunt for a multiple of 7 that is $1$ more than a multiple of 120.)", "answer": "103", "accept": [], "hint": "$7 \\times 103 = 721 = 6 \\times 120 + 1$." },
+        { "instruction": "Confirm: what is $7 \\times 103 \\bmod 120$?", "answer": "1", "accept": [], "hint": "$721 - 720 = 1$." }
+      ],
+      "finalAnswer": { "value": "103", "unit": "" },
+      "solutionNarrative": "$n = 143$, $\\varphi = 120$, $\\gcd(7,120)=1$, and extended Euclid gives $d = 103$ since $721 = 6 \\cdot 120 + 1$. Public key $(143, 7)$; private key $103$."
+    },
+    {
+      "id": "cryptography.rsa.s04",
+      "concepts": ["rsa-encrypt"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Encrypt the message $m = 4$ with the public key $(n, e) = (33, 3)$.",
+      "steps": [
+        { "instruction": "Compute $m^2 \\bmod 33$: what is $4^2 \\bmod 33$?", "answer": "16", "accept": [], "hint": "$16 < 33$, no reduction needed." },
+        { "instruction": "Multiply by $m$ once more: $c = 4^3 = 16 \\cdot 4 \\bmod 33$. What is $c$?", "answer": "31", "accept": [], "hint": "$64 - 33 = 31$." }
+      ],
+      "finalAnswer": { "value": "31", "unit": "" },
+      "solutionNarrative": "$c = 4^3 = 64 \\equiv 31 \\pmod{33}$. Anyone can compute this — encryption needs no secrets."
+    },
+    {
+      "id": "cryptography.rsa.s05",
+      "concepts": ["rsa-encrypt"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Encrypt $m = 8$ with the public key $(n, e) = (55, 3)$.",
+      "steps": [
+        { "instruction": "Compute $8^2 \\bmod 55$.", "answer": "9", "accept": [], "hint": "$64 - 55 = 9$." },
+        { "instruction": "Multiply by 8: $c = 8^3 \\equiv 9 \\cdot 8 \\pmod{55}$. What is $c$?", "answer": "17", "accept": [], "hint": "$72 - 55 = 17$." }
+      ],
+      "finalAnswer": { "value": "17", "unit": "" },
+      "solutionNarrative": "$8^2 = 64 \\equiv 9$, then $9 \\cdot 8 = 72 \\equiv 17 \\pmod{55}$. The ciphertext is $c = 17$ — reducing after each multiply kept everything under 100."
+    },
+    {
+      "id": "cryptography.rsa.s06",
+      "concepts": ["rsa-encrypt"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Encrypt $m = 5$ with the worked-example public key $(n, e) = (143, 7)$, using full square-and-multiply ($7 = 4 + 2 + 1$).",
+      "steps": [
+        { "instruction": "Compute $5^2 \\bmod 143$.", "answer": "25", "accept": [], "hint": "$25 < 143$." },
+        { "instruction": "Square: $5^4 = 625 \\bmod 143$. What is it?", "answer": "53", "accept": [], "hint": "$4 \\times 143 = 572$, and $625 - 572 = 53$." },
+        { "instruction": "Combine the first two factors: $5^4 \\cdot 5^2 \\equiv 53 \\cdot 25 = 1325 \\pmod{143}$. What is $1325 \\bmod 143$?", "answer": "38", "accept": [], "hint": "$9 \\times 143 = 1287$, and $1325 - 1287 = 38$." },
+        { "instruction": "Multiply by the last factor $5$: $c = 38 \\cdot 5 \\bmod 143$. What is $c$?", "answer": "47", "accept": [], "hint": "$190 - 143 = 47$." }
+      ],
+      "finalAnswer": { "value": "47", "unit": "" },
+      "solutionNarrative": "$5^7 = 5^4 \\cdot 5^2 \\cdot 5$: squares give $25$ and $53$, then $53 \\cdot 25 \\equiv 38$ and $38 \\cdot 5 \\equiv 47 \\pmod{143}$. Ciphertext $c = 47$ — decrypted in the worked example by $47^{103} \\bmod 143$."
+    },
+    {
+      "id": "cryptography.rsa.s07",
+      "concepts": ["rsa-decrypt"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Your private key for $n = 33$ is $d = 3$. A ciphertext $c = 9$ arrives. Decrypt it.",
+      "steps": [
+        { "instruction": "Compute $c^2 \\bmod 33$: what is $9^2 \\bmod 33$?", "answer": "15", "accept": [], "hint": "$81 - 66 = 15$." },
+        { "instruction": "Multiply by $c$: $m = 9^3 \\equiv 15 \\cdot 9 \\pmod{33}$. What is the message $m$?", "answer": "3", "accept": [], "hint": "$135 = 4 \\times 33 + 3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$m = 9^3 = 729 \\equiv 3 \\pmod{33}$. (The sender had encrypted $m = 3$ with the matching public exponent $e = 7$: $3^7 = 2187 \\equiv 9 \\pmod{33}$ — the round trip closes.)"
+    },
+    {
+      "id": "cryptography.rsa.s08",
+      "concepts": ["rsa-decrypt"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "For the key $n = 35$, $e = 5$, $d = 5$, the ciphertext $c = 33$ arrives (it encrypts some $m$ via $m^5 \\bmod 35$). Decrypt: $m = 33^5 \\bmod 35$.",
+      "steps": [
+        { "instruction": "Compute $33^2 \\bmod 35$.", "answer": "4", "accept": [], "hint": "$33 \\equiv -2$, so $33^2 \\equiv (-2)^2 = 4 \\pmod{35}$." },
+        { "instruction": "Square: $33^4 \\equiv 4^2 \\pmod{35}$. What is it?", "answer": "16", "accept": [], "hint": "$16 < 35$." },
+        { "instruction": "Combine: $m = 33^5 = 33^4 \\cdot 33 \\equiv 16 \\cdot 33 \\pmod{35}$. What is $m$?", "answer": "3", "accept": [], "hint": "$16 \\cdot 33 = 528 = 15 \\times 35 + 3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Using $33 \\equiv -2 \\pmod{35}$ makes the squaring easy: $33^2 \\equiv 4$, $33^4 \\equiv 16$, and $16 \\cdot 33 = 528 \\equiv 3$. The message was $m = 3$ (check: $3^5 = 243 \\equiv 33 \\pmod{35}$)."
+    },
+    {
+      "id": "cryptography.rsa.s09",
+      "concepts": ["rsa-decrypt"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Close the loop on problem s04: the ciphertext $c = 31$ was made with public key $(33, 3)$, and your private exponent is $d = 7$. Recover the message via $m = 31^7 \\bmod 33$, with $7 = 4 + 2 + 1$.",
+      "steps": [
+        { "instruction": "Compute $31^2 \\bmod 33$.", "answer": "4", "accept": [], "hint": "$31 \\equiv -2$, so $31^2 \\equiv 4 \\pmod{33}$." },
+        { "instruction": "Square: $31^4 \\equiv 4^2 \\pmod{33}$. What is it?", "answer": "16", "accept": [], "hint": "$16 < 33$." },
+        { "instruction": "Combine the squares: $31^4 \\cdot 31^2 \\equiv 16 \\cdot 4 = 64 \\pmod{33}$. What is $64 \\bmod 33$?", "answer": "31", "accept": [], "hint": "$64 - 33 = 31$." },
+        { "instruction": "Multiply by the last factor: $m = 31 \\cdot 31 \\bmod 33$. What is the recovered message $m$?", "answer": "4", "accept": [], "hint": "$961 = 29 \\times 33 + 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$31^7 = 31^4 \\cdot 31^2 \\cdot 31 \\equiv 16 \\cdot 4 \\cdot 31 \\equiv 31 \\cdot 31 \\equiv 4 \\pmod{33}$ — exactly the $m = 4$ encrypted in s04. Round trip complete: $ed = 3 \\cdot 7 = 21 \\equiv 1 \\pmod{20}$ made it inevitable."
+    },
+    {
+      "id": "cryptography.rsa.s10",
+      "concepts": ["why-rsa-works"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The key pair $e = 3$, $d = 7$ was built for $\\varphi(n) = 20$. Verify the defining property $ed \\equiv 1 \\pmod{\\varphi(n)}$.",
+      "steps": [
+        { "instruction": "Compute the product $e \\cdot d = 3 \\times 7$.", "answer": "21", "accept": [], "hint": "Just multiply." },
+        { "instruction": "Reduce: what is $21 \\bmod 20$?", "answer": "1", "accept": [], "hint": "$21 = 20 + 1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$ed = 21 \\equiv 1 \\pmod{20}$. That single congruence is the engine: it lets $m^{ed} = m^{20k+1} \\equiv m \\pmod{n}$ by Euler's theorem, so decryption always undoes encryption."
+    },
+    {
+      "id": "cryptography.rsa.s11",
+      "concepts": ["why-rsa-works"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Prove the round trip on a concrete case. Key: $n = 35$, $e = 5$, $d = 5$ (valid since $\\varphi(35) = 24$ and $5 \\cdot 5 = 25 \\equiv 1 \\bmod 24$). Encrypt $m = 2$, then decrypt and confirm you get 2 back.",
+      "steps": [
+        { "instruction": "Encrypt: $c = 2^5 \\bmod 35$. What is $c$?", "answer": "32", "accept": [], "hint": "$2^5 = 32 < 35$." },
+        { "instruction": "Begin decrypting: compute $32^2 \\bmod 35$.", "answer": "9", "accept": [], "hint": "$32 \\equiv -3$, so $32^2 \\equiv 9 \\pmod{35}$." },
+        { "instruction": "Square: $32^4 \\equiv 9^2 = 81 \\pmod{35}$. What is it?", "answer": "11", "accept": [], "hint": "$81 - 70 = 11$." },
+        { "instruction": "Combine: $32^5 = 32^4 \\cdot 32 \\equiv 11 \\cdot 32 \\pmod{35}$. What comes out?", "answer": "2", "accept": [], "hint": "$352 = 10 \\times 35 + 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Encrypt: $2^5 = 32$. Decrypt: $32^5 \\equiv 11 \\cdot 32 = 352 \\equiv 2 \\pmod{35}$ — the original message, exactly as $ed \\equiv 1 \\pmod{24}$ guarantees: $2^{25} = (2^{24}) \\cdot 2 \\equiv 1 \\cdot 2$."
+    },
+    {
+      "id": "cryptography.rsa.s12",
+      "concepts": ["why-rsa-works"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Play the attacker. A public key is $(n, e) = (91, 5)$. Factor the modulus and recover the private key.",
+      "steps": [
+        { "instruction": "Factor $n = 91$: what is its smaller prime factor?", "answer": "7", "accept": [], "hint": "Try dividing by small primes: 91 is not even, not divisible by 3 or 5..." },
+        { "instruction": "What is the other prime factor?", "answer": "13", "accept": [], "hint": "$91 / 7$." },
+        { "instruction": "Now compute the 'secret' $\\varphi(91) = (7-1)(13-1)$.", "answer": "72", "accept": [], "hint": "$6 \\times 12$." },
+        { "instruction": "Recover the private key: find $d = 5^{-1} \\bmod 72$.", "answer": "29", "accept": [], "hint": "$5 \\times 29 = 145 = 2 \\times 72 + 1$." }
+      ],
+      "finalAnswer": { "value": "29", "unit": "" },
+      "solutionNarrative": "$91 = 7 \\times 13$, so $\\varphi = 72$ and $d = 29$ ($145 \\equiv 1 \\bmod 72$). Four short steps turned a public key into the private key — the ONLY thing preventing this on real RSA is that nobody can factor a 2048-bit $n$."
+    },
+    {
+      "id": "cryptography.rsa.s13",
+      "concepts": ["rsa-encrypt", "rsa-decrypt"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A full round trip on the key $n = 33$, $e = 3$, $d = 7$. Encrypt $m = 5$, then start the decryption far enough to see it coming back.",
+      "steps": [
+        { "instruction": "Encrypt: $5^2 \\bmod 33$ first.", "answer": "25", "accept": [], "hint": "$25 < 33$." },
+        { "instruction": "Finish encrypting: $c = 5^3 \\equiv 25 \\cdot 5 \\pmod{33}$. What is $c$?", "answer": "26", "accept": [], "hint": "$125 = 3 \\times 33 + 26$." },
+        { "instruction": "Decryption is $26^7 \\bmod 33$. Using $26 \\equiv -7$: what is $26^2 \\bmod 33$?", "answer": "16", "accept": [], "hint": "$(-7)^2 = 49 = 33 + 16$." },
+        { "instruction": "Square: $26^4 \\equiv 16^2 = 256 \\pmod{33}$. What is it?", "answer": "25", "accept": [], "hint": "$231 = 7 \\times 33$, and $256 - 231 = 25$." },
+        { "instruction": "Combine: $26^7 = 26^4 \\cdot 26^2 \\cdot 26 \\equiv 25 \\cdot 16 \\cdot 26 \\pmod{33}$. First, $25 \\cdot 16 = 400 \\bmod 33$?", "answer": "4", "accept": [], "hint": "$396 = 12 \\times 33$." },
+        { "instruction": "Last multiply: $m = 4 \\cdot 26 \\bmod 33$. What message comes back?", "answer": "5", "accept": [], "hint": "$104 = 3 \\times 33 + 5$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Encrypt: $5^3 = 125 \\equiv 26 \\pmod{33}$. Decrypt: $26^7 \\equiv 25 \\cdot 16 \\cdot 26 \\equiv 4 \\cdot 26 = 104 \\equiv 5 \\pmod{33}$. The 5 you started with returns, because $3 \\cdot 7 \\equiv 1 \\pmod{20}$."
+    },
+    {
+      "id": "cryptography.rsa.s14",
+      "concepts": ["rsa-encrypt"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Encrypt $m = 5$ with the public key $(n, e) = (33, 3)$ — no secrets required.",
+      "steps": [
+        { "instruction": "Compute $5^2 \\bmod 33$.", "answer": "25", "accept": [], "hint": "$25 < 33$." },
+        { "instruction": "Multiply by 5: $c = 5^3 \\equiv 25 \\cdot 5 \\pmod{33}$. What is $c$?", "answer": "26", "accept": [], "hint": "$125 - 99 = 26$." }
+      ],
+      "finalAnswer": { "value": "26", "unit": "" },
+      "solutionNarrative": "$c = 5^3 = 125 \\equiv 26 \\pmod{33}$. Note that WITHOUT $d = 7$ (or the factorization of 33) there's no fast way back from 26 to 5."
+    },
+    {
+      "id": "cryptography.rsa.s15",
+      "concepts": ["rsa-decrypt"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The key $n = 65$, $e = 7$, $d = 7$ is self-inverse ($\\varphi(65) = 48$ and $7 \\cdot 7 = 49 \\equiv 1 \\bmod 48$). The ciphertext $c = 63$ arrives. Decrypt via $m = 63^7 \\bmod 65$, with $7 = 4 + 2 + 1$.",
+      "steps": [
+        { "instruction": "Compute $63^2 \\bmod 65$.", "answer": "4", "accept": [], "hint": "$63 \\equiv -2$, so $63^2 \\equiv 4 \\pmod{65}$." },
+        { "instruction": "Square: $63^4 \\equiv 4^2 \\pmod{65}$. What is it?", "answer": "16", "accept": [], "hint": "$16 < 65$." },
+        { "instruction": "Combine the squares: $63^4 \\cdot 63^2 \\equiv 16 \\cdot 4 \\pmod{65}$. What is that?", "answer": "64", "accept": [], "hint": "$64 < 65$ — one short of the modulus." },
+        { "instruction": "Final multiply: $m = 64 \\cdot 63 \\bmod 65$. What is the message?", "answer": "2", "accept": [], "hint": "$64 \\equiv -1$ and $63 \\equiv -2$, so the product is $\\equiv 2 \\pmod{65}$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$63^7 \\equiv 16 \\cdot 4 \\cdot 63 \\equiv 64 \\cdot 63 \\equiv (-1)(-2) = 2 \\pmod{65}$. The message was $m = 2$ (indeed $2^7 = 128 \\equiv 63 \\pmod{65}$). Negative-residue shortcuts make hand decryption pleasant."
+    },
+    {
+      "id": "cryptography.rsa.s16",
+      "concepts": ["rsa-keygen"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Build a key from $p = 5$, $q = 7$ with $e = 5$.",
+      "steps": [
+        { "instruction": "Compute $n = pq$.", "answer": "35", "accept": [], "hint": "$5 \\times 7$." },
+        { "instruction": "Compute $\\varphi(n) = (p-1)(q-1)$.", "answer": "24", "accept": [], "hint": "$4 \\times 6$." },
+        { "instruction": "Find $d$ with $5d \\equiv 1 \\pmod{24}$.", "answer": "5", "accept": [], "hint": "$5 \\times 5 = 25 = 24 + 1$ — this key is its own inverse." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$n = 35$, $\\varphi = 24$, and $5 \\cdot 5 = 25 \\equiv 1 \\pmod{24}$, so $d = 5$. (Toy keys can be self-inverse like this; real keys never are — $e$ is typically 65537 and $d$ is enormous.)"
+    }
+  ]
+}

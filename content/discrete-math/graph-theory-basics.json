@@ -1,0 +1,284 @@
+{
+  "id": "discrete-math.graph-theory-basics",
+  "subject": "discrete-math",
+  "title": "Graph Theory: Networks, Paths, and Trees",
+  "prerequisites": ["discrete-math.sets-and-set-operations"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "vertices-edges-degree",
+      "label": "Vertices, edges, and degree",
+      "microLesson": "A graph $G = (V, E)$ is just two sets: vertices (dots) and edges (connections between pairs of dots). The degree $\\deg(v)$ of a vertex counts the edges touching it, and because every edge has exactly two endpoints, the handshake lemma says $\\sum_{v \\in V} \\deg(v) = 2|E|$ — the degree sum is always twice the edge count, hence always even. Micro-example: a triangle $A$–$B$–$C$ has 3 edges and every vertex has degree 2, so the degree sum is $6 = 2 \\cdot 3$. A graph on $n$ vertices with no repeated edges can have at most $\\binom{n}{2} = \\frac{n(n-1)}{2}$ edges — one per pair of vertices."
+    },
+    {
+      "id": "paths-cycles-connectivity",
+      "label": "Paths, cycles, and connectivity",
+      "microLesson": "A walk is any vertex sequence where consecutive vertices are joined by an edge; a path is a walk that never repeats a vertex; a cycle returns to its start without repeating anything else. A graph is connected when some path links every pair of vertices — otherwise it splits into connected components, its separate islands. Micro-example: in the walk $A, B, C, B, D$ the vertex $B$ repeats, so it is a walk of length 4 but not a path. Reading these facts straight off a drawn graph — which vertices you can reach, how short the shortest route is — is the core skill."
+    },
+    {
+      "id": "euler-paths-and-circuits",
+      "label": "Euler paths and circuits",
+      "microLesson": "An Euler path traverses every edge of a graph exactly once; if it ends where it started it is an Euler circuit. Euler's theorem: a connected graph has an Euler path if and only if it has exactly 0 or 2 vertices of odd degree, and an Euler circuit if and only if it has 0. When there are exactly 2 odd vertices, every Euler path must start at one and end at the other. Micro-example: a square with one diagonal has degrees $3, 2, 3, 2$ — two odd vertices — so an Euler path exists, running corner-to-corner along the diagonal's endpoints. Königsberg's bridge graph had degrees $3, 3, 3, 5$ (four odd), which is why no walk could cross each bridge once."
+    },
+    {
+      "id": "trees",
+      "label": "Trees",
+      "microLesson": "A tree is a connected graph with no cycles — the leanest possible network. Every tree on $|V|$ vertices has exactly $|E| = |V| - 1$ edges; adding any edge creates a cycle, and removing any edge disconnects it. Degree-1 vertices are called leaves, and every finite tree with at least 2 vertices has at least two of them. Micro-example: a file system with 47 folders is a tree with 46 parent–child links, and each folder except the root has exactly one parent. A spanning tree of a connected graph keeps all the vertices but only $|V| - 1$ of the edges — the cheapest skeleton that still connects everything."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The city that broke a Sunday stroll\n\nIn 1736 the citizens of Königsberg had a standing puzzle: the river Pregel carved their city into four land masses, stitched together by seven bridges, and nobody could take a walk that crossed every bridge exactly once. Leonhard Euler settled it — not by trying harder, but by throwing away the city. Land masses became dots, bridges became lines, and everything else (distances, street names, the river itself) turned out to be irrelevant. That act of ruthless abstraction created **graph theory**, and it is why your social network, the internet's routing tables, your build system's dependency chart, and a git commit history are all, mathematically, the same object: a **graph**.\n\n## Vertices, edges, and the handshake lemma\n\nA graph $G = (V, E)$ is two sets: **vertices** $V$ (the dots) and **edges** $E$ (the connections, each joining a pair of vertices). The **degree** $\\deg(v)$ of a vertex counts the edges touching it. Here is one to read:\n\n```plot\n{ \"type\": \"graph\", \"nodes\": [ { \"id\": \"A\", \"x\": 0, \"y\": 2 }, { \"id\": \"B\", \"x\": 2, \"y\": 3 }, { \"id\": \"C\", \"x\": 2, \"y\": 1 }, { \"id\": \"D\", \"x\": 4, \"y\": 2 }, { \"id\": \"E\", \"x\": 6, \"y\": 2 } ], \"edges\": [ [\"A\", \"B\"], [\"A\", \"C\"], [\"B\", \"C\"], [\"B\", \"D\"], [\"C\", \"D\"], [\"D\", \"E\"] ], \"caption\": \"A graph with 5 vertices and 6 edges. Count each vertex's edges: the degrees are 2, 3, 3, 3, 1.\" }\n```\n\nCount the degrees: $\\deg(A) = 2$, $\\deg(B) = 3$, $\\deg(C) = 3$, $\\deg(D) = 3$, $\\deg(E) = 1$. They sum to $12$, and the graph has $6$ edges. That is not a coincidence — every edge has exactly two endpoints, so each edge contributes $2$ to the total:\n\n$$\\sum_{v \\in V} \\deg(v) = 2|E|.$$\n\nThis is the **handshake lemma** (total handshakes at a party, counted person by person, double-counts the handshakes), and it is your first sanity check on any graph you draw: if your degrees sum to an odd number, you miscounted. It also forces a slick corollary: the number of odd-degree vertices in any graph is **even** — odd ones must pair up to keep the sum even. One more counting fact you will use constantly: $n$ vertices can support at most $\\binom{n}{2} = \\frac{n(n-1)}{2}$ edges, one per pair. Ten servers can be directly cabled in at most $45$ ways.\n\n## Getting around: walks, paths, components\n\nA **walk** is any hop-by-hop route: a vertex sequence where consecutive vertices share an edge. A **path** is a walk with no repeated vertices — the routes you actually want. A **cycle** comes back to its start without repeating anything else along the way. And a graph is **connected** if every pair of vertices is joined by some path; otherwise it shatters into **connected components**, islands with no bridges between them. In the graph above, $C \\to B \\to D \\to E$ is a path of length 3, and $A \\to B \\to C \\to A$ is a cycle of length 3. When you look at a social network and ask \"can a rumor started here reach everyone?\", you are asking whether the graph is connected — and if not, how many components it has.\n\n## Euler's answer\n\nBack to Königsberg. An **Euler path** walks every *edge* exactly once (vertices may repeat); an **Euler circuit** does so and returns home. Euler noticed that every time a route passes *through* a vertex it consumes two edges — one in, one out. So every vertex except possibly the start and end must have even degree. The full theorem: a connected graph has an Euler path **iff it has exactly 0 or 2 odd-degree vertices**, and an Euler circuit iff it has 0. With exactly 2, every Euler path must start at one odd vertex and end at the other.\n\n```plot\n{ \"type\": \"graph\", \"nodes\": [ { \"id\": \"P\", \"x\": 0, \"y\": 0, \"color\": \"warn\" }, { \"id\": \"Q\", \"x\": 0, \"y\": 2 }, { \"id\": \"R\", \"x\": 2, \"y\": 2, \"color\": \"warn\" }, { \"id\": \"S\", \"x\": 2, \"y\": 0 } ], \"edges\": [ [\"P\", \"Q\"], [\"Q\", \"R\"], [\"R\", \"S\"], [\"S\", \"P\"], [\"P\", \"R\"] ], \"caption\": \"Degrees 3, 2, 3, 2: the two odd vertices P and R (amber) must be the endpoints. One Euler path: P, Q, R, S, P, R.\" }\n```\n\nKönigsberg's four land masses had degrees $3, 3, 3, 5$ — **four** odd vertices — so no walk could cross each bridge once. Case closed, in 1736, without leaving the desk. The same test runs every mail route, snowplow schedule, and street-sweeping plan today: this is the **route-inspection problem**, and when a street network fails the test, the fix is to retrace edges — each retraced edge effectively duplicates one edge and turns two odd vertices even. Notice the first graph in this lecture has four odd vertices ($B$, $C$, $D$, $E$), so it fails too.\n\n## Trees: the minimal networks\n\nStrip a connected graph down until removing anything more would disconnect it, and you get a **tree**: connected, and containing no cycles. Trees are the skeletons of computing — file systems, org charts, HTML documents, binary search trees, and every 'parent pointer' structure you have ever used.\n\n```plot\n{ \"type\": \"graph\", \"nodes\": [ { \"id\": \"R\", \"x\": 3, \"y\": 3, \"color\": \"success\" }, { \"id\": \"A\", \"x\": 1.5, \"y\": 2 }, { \"id\": \"B\", \"x\": 4.5, \"y\": 2 }, { \"id\": \"C\", \"x\": 0.5, \"y\": 1 }, { \"id\": \"D\", \"x\": 2.5, \"y\": 1 }, { \"id\": \"E\", \"x\": 3.5, \"y\": 1 }, { \"id\": \"F\", \"x\": 5.5, \"y\": 1 } ], \"edges\": [ [\"R\", \"A\"], [\"R\", \"B\"], [\"A\", \"C\"], [\"A\", \"D\"], [\"B\", \"E\"], [\"B\", \"F\"] ], \"caption\": \"A tree: 7 vertices, 6 edges, no cycles. The four degree-1 vertices C, D, E, F are its leaves.\" }\n```\n\nEvery tree obeys the tightest edge budget possible: $|E| = |V| - 1$. One more edge and a cycle appears; one fewer and it falls apart. Degree-1 vertices are **leaves**, and every tree with at least two vertices has at least two of them (a maximal path must end somewhere). Flip the idea around and you get **spanning trees**: given a messy connected network, a spanning tree keeps all $|V|$ vertices but only $|V| - 1$ edges — exactly one route between any two points, zero redundancy. That is what network engineers compute when they want to connect every office with the least fiber, and what the spanning-tree protocol computes inside your Ethernet switches to kill routing loops. Count dots, count lines, check parity — that is most of graph theory's entry fee, and it buys you Euler's 1736 result before the end of this session."
+  },
+  "application": {
+    "summary": "Graphs are the universal data structure for anything made of things-plus-connections: friendships, roads, flights, package dependencies, git histories, and network cables. Degree counts, connectivity, Euler's parity test, and tree structure answer real routing, scheduling, and network-design questions with nothing but counting.",
+    "domains": ["social networks", "road and flight networks", "build systems and dependency graphs", "network routing and design", "version control (git DAGs)"],
+    "workedExample": "**Fully analyzing one small graph.** Take $G$ with vertices $\\{A, B, C, D, E\\}$ and edges $\\{A\\text{–}B,\\ A\\text{–}C,\\ B\\text{–}C,\\ C\\text{–}D,\\ C\\text{–}E\\}$ — say, five routers, with $C$ as the hub.\n\n*Degrees.* Go vertex by vertex: $\\deg(A) = 2$ (to $B$, $C$), $\\deg(B) = 2$ (to $A$, $C$), $\\deg(C) = 4$ (to $A$, $B$, $D$, $E$), $\\deg(D) = 1$, $\\deg(E) = 1$.\n\n*Handshake check.* The degree sum is $2 + 2 + 4 + 1 + 1 = 10$, and $2|E| = 2 \\cdot 5 = 10$. It balances — the edge list and the degree count agree, so no edge was missed or double-counted.\n\n*Odd-degree census.* The odd-degree vertices are $D$ and $E$ — exactly **two**. The graph is connected (every vertex reaches every other through $C$).\n\n*Euler verdict.* Connected with exactly 2 odd vertices means an Euler path exists, and it must run from $D$ to $E$ (or back). Check by hand: $D \\to C \\to A \\to B \\to C \\to E$ uses each of the five edges exactly once. A technician could walk-test every cable in one pass, starting at $D$. No Euler *circuit*, though — that would need zero odd vertices.\n\n*Tree verdict.* A tree on 5 vertices needs exactly $5 - 1 = 4$ edges; $G$ has 5. And there is the witness: the cycle $A \\to B \\to C \\to A$. Not a tree — but delete any one edge of that triangle and you get a spanning tree with the mandatory 4 edges and exactly one route between every pair of routers.\n\nThat five-step ritual — degrees, handshake check, odd count, Euler verdict, tree verdict — is the complete health check you can run on any graph someone hands you.",
+    "domainNotes": [
+      "**Social networks:** your friend graph's degree is your friend count; the handshake lemma says the total friend count across all users is exactly twice the number of friendships — how platforms sanity-check their edge tables.",
+      "**Road and flight networks:** route inspection (snowplows, mail trucks, street sweepers) is Euler's bridge problem at city scale — count the odd-degree intersections, and every pair beyond the first two means retraced streets.",
+      "**Build systems:** package dependencies form a directed graph that must stay acyclic; a build order exists precisely because you can process a DAG dependencies-first, and a cycle is the dreaded 'circular dependency' error.",
+      "**Network design:** connecting $n$ offices needs at least $n - 1$ links — a spanning tree; every link beyond that is redundancy you pay for, and the spanning-tree protocol in Ethernet switches prunes back to a tree to prevent broadcast storms.",
+      "**Version control:** a git history is a DAG of commits (merge commits have two parents); 'is this fix in that release?' is a reachability question — exactly the connectivity reading you practice here."
+    ]
+  },
+  "generators": [],
+  "problems": [
+    {
+      "id": "discrete-math.graph-theory-basics.s01",
+      "concepts": ["vertices-edges-degree"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Read the graph in the figure: vertices $A, B, C, D$ with the edges drawn.",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 0, "y": 2 }, { "id": "B", "x": 2, "y": 3 }, { "id": "C", "x": 2, "y": 1 }, { "id": "D", "x": 4, "y": 1 } ], "edges": [ ["A", "B"], ["B", "C"], ["C", "D"], ["A", "C"] ], "caption": "A graph on 4 vertices" },
+      "steps": [
+        { "instruction": "How many edges does the graph have? (Give a whole number.)", "answer": "4", "accept": [], "hint": "Count the line segments: A–B, B–C, C–D, A–C." },
+        { "instruction": "What is the degree of vertex $C$ — how many edges touch it?", "answer": "3", "accept": [], "hint": "Edges at C go to A, B, and D." },
+        { "instruction": "By the handshake lemma the degrees sum to $2|E|$. What is the sum of all four degrees?", "answer": "8", "accept": [], "hint": "Twice the edge count — or add them: 2 + 2 + 3 + 1." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "The 4 edges are A–B, B–C, C–D, A–C. Degrees: $\\deg(A)=2$, $\\deg(B)=2$, $\\deg(C)=3$, $\\deg(D)=1$, summing to $8 = 2 \\cdot 4$ — the handshake lemma checks out."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s02",
+      "concepts": ["vertices-edges-degree"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The figure shows a graph on 6 vertices. Use the handshake lemma to audit it.",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 0, "y": 3 }, { "id": "B", "x": 0, "y": 1 }, { "id": "C", "x": 1.5, "y": 2 }, { "id": "D", "x": 3, "y": 2 }, { "id": "E", "x": 4.5, "y": 3 }, { "id": "F", "x": 4.5, "y": 1 } ], "edges": [ ["A", "B"], ["A", "C"], ["B", "C"], ["C", "D"], ["D", "E"], ["D", "F"], ["E", "F"] ], "caption": "Two triangles joined by a bridge edge C–D" },
+      "steps": [
+        { "instruction": "Count the edges in the figure. (Whole number.)", "answer": "7", "accept": [], "hint": "Three in each triangle, plus the connecting edge C–D." },
+        { "instruction": "Without adding the degrees one by one, what must the degree sum be?", "answer": "14", "accept": [], "hint": "Handshake lemma: exactly $2|E|$." },
+        { "instruction": "How many vertices have odd degree? (Whole number.)", "answer": "2", "accept": [], "hint": "Degrees are 2, 2, 3, 3, 2, 2 — only C and D are odd." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "" },
+      "solutionNarrative": "Edges: A–B, A–C, B–C, C–D, D–E, D–F, E–F, so $|E| = 7$ and the degree sum is $2 \\cdot 7 = 14$. Checking: A, B, E, F have degree 2 while C and D have degree 3, and $2+2+3+3+2+2 = 14$. Exactly 2 vertices are odd — an even count, as the handshake lemma demands."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s03",
+      "concepts": ["vertices-edges-degree"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A data center has 10 servers. Six of them are core servers, each cabled to exactly 4 others; the remaining four are edge servers, each cabled to exactly 3 others. No pair of servers has more than one cable.",
+      "steps": [
+        { "instruction": "Compute the total degree sum: $6 \\cdot 4 + 4 \\cdot 3$.", "answer": "36", "accept": [], "hint": "$24 + 12$." },
+        { "instruction": "The handshake lemma says cables $= \\frac{\\text{degree sum}}{2}$. How many cables are there?", "answer": "18", "accept": [], "hint": "Halve 36." },
+        { "instruction": "A colleague claims a different rack has 5 machines of odd degree and the rest even. Is that possible for any graph? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The degree sum must be even, so odd-degree vertices come in pairs." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "cables" },
+      "solutionNarrative": "Degree sum $= 6 \\cdot 4 + 4 \\cdot 3 = 36$, so there are $36 / 2 = 18$ cables. The colleague's claim is impossible: since $\\sum \\deg(v) = 2|E|$ is even, the number of odd-degree vertices in any graph is even — never 5. (For scale: 10 servers could support at most $\\binom{10}{2} = 45$ cables.)"
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s04",
+      "concepts": ["vertices-edges-degree"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Six chess teams enter a round-robin tournament: every team plays every other team exactly once. Model it as a graph — teams are vertices, games are edges.",
+      "steps": [
+        { "instruction": "What is the degree of each team's vertex — how many games does one team play?", "answer": "5", "accept": [], "hint": "It plays each of the other 5 teams once." },
+        { "instruction": "How many games are played in total? Use $\\binom{6}{2} = \\frac{6 \\cdot 5}{2}$.", "answer": "15", "accept": [], "hint": "The degree sum is $6 \\cdot 5 = 30$; games are half that." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "games" },
+      "solutionNarrative": "Each of the 6 teams plays the other 5, so every vertex has degree 5. Summing degrees counts every game twice: $6 \\cdot 5 = 30$, so there are $15$ games — exactly $\\binom{6}{2}$, the maximum number of edges a 6-vertex graph can carry. This is the complete graph $K_6$."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s05",
+      "concepts": ["paths-cycles-connectivity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Look at the graph in the figure: vertices $A$ through $E$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 1, "y": 3 }, { "id": "B", "x": 0, "y": 1 }, { "id": "C", "x": 2, "y": 1 }, { "id": "D", "x": 4, "y": 3 }, { "id": "E", "x": 5, "y": 1 } ], "edges": [ ["A", "B"], ["B", "C"], ["A", "C"], ["D", "E"] ], "caption": "A graph on 5 vertices" },
+      "steps": [
+        { "instruction": "How many edges does the graph have? (Whole number.)", "answer": "4", "accept": [], "hint": "Three in the triangle, one more on the right." },
+        { "instruction": "How many connected components does it have — separate islands with no edges between them?", "answer": "2", "accept": [], "hint": "The triangle A, B, C is one piece; D–E is another." },
+        { "instruction": "Is the graph connected? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Connected means ONE component — a path between every pair." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "components" },
+      "solutionNarrative": "The triangle $\\{A, B, C\\}$ and the pair $\\{D, E\\}$ have no edge between them, so the graph splits into 2 connected components and is not connected: no walk of any length gets you from $A$ to $D$."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s06",
+      "concepts": ["paths-cycles-connectivity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The figure shows a 5-cycle $A\\text{–}B\\text{–}C\\text{–}D\\text{–}E\\text{–}A$ with one extra chord $B\\text{–}E$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 2, "y": 4 }, { "id": "B", "x": 4, "y": 3 }, { "id": "C", "x": 3.5, "y": 1 }, { "id": "D", "x": 0.5, "y": 1 }, { "id": "E", "x": 0, "y": 3 } ], "edges": [ ["A", "B"], ["B", "C"], ["C", "D"], ["D", "E"], ["E", "A"], ["B", "E"] ], "caption": "A pentagon with the chord B–E" },
+      "steps": [
+        { "instruction": "How many edges does the shortest path from $C$ to $A$ use? (Whole number.)", "answer": "2", "accept": [], "hint": "C–B–A. There is no direct edge C–A." },
+        { "instruction": "What is the length (number of edges) of the shortest cycle in this graph?", "answer": "3", "accept": [], "hint": "The chord B–E closes the triangle A–B–E." },
+        { "instruction": "Is the graph connected? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Can you trace a route between every pair of vertices?" }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Shortest $C \\to A$ route: $C \\to B \\to A$, length 2 (going the other way, $C \\to D \\to E \\to A$, costs 3). The chord $B$–$E$ creates the triangle $A \\to B \\to E \\to A$, a cycle of length 3 — shorter than the original 5-cycle. Everything is reachable from everything, so the graph is connected."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s07",
+      "concepts": ["paths-cycles-connectivity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The figure shows a build-system dependency graph: an arrow $X \\to Y$ means package $X$ must be built before package $Y$. The packages are $L$ (lib), $U$ (utils), $C$ (core), $A$ (api), and $T$ (cli tool).",
+      "plot": { "type": "graph", "nodes": [ { "id": "L", "x": 0, "y": 2 }, { "id": "U", "x": 0, "y": 0 }, { "id": "C", "x": 2, "y": 1 }, { "id": "A", "x": 4, "y": 2 }, { "id": "T", "x": 4, "y": 0 } ], "edges": [ { "from": "L", "to": "C", "directed": true }, { "from": "U", "to": "C", "directed": true }, { "from": "C", "to": "A", "directed": true }, { "from": "C", "to": "T", "directed": true }, { "from": "U", "to": "T", "directed": true } ], "caption": "Dependency graph: an arrow X to Y means X builds before Y" },
+      "steps": [
+        { "instruction": "How many arrows point directly INTO $T$ — its direct dependencies? (Whole number.)", "answer": "2", "accept": [], "hint": "Follow arrowheads landing on T: one from C, one from U." },
+        { "instruction": "Counting all upstream packages (direct and indirect), how many packages must be built before $T$?", "answer": "3", "accept": [], "hint": "C and U directly — and C itself needs L, so L counts too." },
+        { "instruction": "A build order exists only if the graph has no directed cycle. Does this graph contain a cycle? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Try to follow arrows and return to your start — every arrow moves left-to-right." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "packages" },
+      "solutionNarrative": "Direct dependencies of $T$: $C$ and $U$ (2 arrows in). Transitively, $C$ needs $L$, so building $T$ requires $\\{L, U, C\\}$ — 3 packages ($A$ is a sibling, not upstream). No directed cycle exists, so a valid build order exists, e.g. $L, U, C, A, T$. This reachability reading is exactly how build tools and git answer 'what does this depend on?'"
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s08",
+      "concepts": ["paths-cycles-connectivity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A subway network has stations $A, B, C, D$ with direct lines $A\\text{–}B$, $B\\text{–}C$, and $B\\text{–}D$. A tourist rides the walk $A, B, C, B, D$ — hopping along an existing line at each step.",
+      "steps": [
+        { "instruction": "How many edges (line segments) does the walk traverse, counting repeats? (Whole number.)", "answer": "4", "accept": [], "hint": "A→B, B→C, C→B, B→D." },
+        { "instruction": "How many DISTINCT stations does the walk visit?", "answer": "4", "accept": [], "hint": "A, B, C, D — B is visited twice but counted once." },
+        { "instruction": "A path is a walk that never repeats a vertex. Is the tourist's walk a path? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Station B appears twice in the sequence." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The walk $A, B, C, B, D$ has length 4 (four hops) and visits 4 distinct stations, but it passes through $B$ twice — so it is a walk, not a path. The path from $A$ to $D$ is $A, B, D$: any walk between two vertices can be trimmed down to a path by cutting out the loops."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s09",
+      "concepts": ["euler-paths-and-circuits"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The figure shows a square $A\\text{–}B\\text{–}C\\text{–}D$ with one diagonal $A\\text{–}C$. Can you trace every edge exactly once without lifting your pen?",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 0, "y": 0 }, { "id": "B", "x": 0, "y": 2 }, { "id": "C", "x": 2, "y": 2 }, { "id": "D", "x": 2, "y": 0 } ], "edges": [ ["A", "B"], ["B", "C"], ["C", "D"], ["D", "A"], ["A", "C"] ], "caption": "A square with one diagonal" },
+      "steps": [
+        { "instruction": "What is the degree of vertex $A$? (Whole number.)", "answer": "3", "accept": [], "hint": "Edges at A go to B, D, and along the diagonal to C." },
+        { "instruction": "How many vertices of the graph have ODD degree?", "answer": "2", "accept": [], "hint": "Degrees are 3, 2, 3, 2 — the diagonal's endpoints are the odd ones." },
+        { "instruction": "The graph is connected. Does it have an Euler path — a route using every edge exactly once? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Euler's theorem: connected with exactly 0 or 2 odd vertices." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Degrees: $\\deg(A) = \\deg(C) = 3$ (the diagonal's endpoints), $\\deg(B) = \\deg(D) = 2$. Exactly 2 odd vertices in a connected graph means an Euler path exists — for example $A \\to B \\to C \\to D \\to A \\to C$ — and it must start at one odd vertex and end at the other. No Euler circuit, though: that needs zero odd vertices."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s10",
+      "concepts": ["euler-paths-and-circuits"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A snowplow must clear every street of the neighborhood in the figure exactly once (intersections $A$–$F$, streets as edges). The city wants to know if a wasteless route exists.",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 0, "y": 2 }, { "id": "B", "x": 2, "y": 2 }, { "id": "C", "x": 4, "y": 2 }, { "id": "D", "x": 0, "y": 0 }, { "id": "E", "x": 2, "y": 0 }, { "id": "F", "x": 4, "y": 0 } ], "edges": [ ["A", "B"], ["B", "C"], ["A", "D"], ["B", "E"], ["C", "F"], ["D", "E"], ["E", "F"] ], "caption": "Street network: 6 intersections, 7 streets" },
+      "steps": [
+        { "instruction": "How many intersections have an ODD number of streets meeting there? (Whole number.)", "answer": "2", "accept": [], "hint": "Degrees: A:2, B:3, C:2, D:2, E:3, F:2." },
+        { "instruction": "The network is connected. Can the plow drive every street exactly once? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Exactly 2 odd intersections is one of Euler's allowed counts." },
+        { "instruction": "If the plow starts at intersection $B$, at which intersection must the route end? Answer with the single letter.", "answer": "e", "accept": [], "hint": "An Euler path runs between the two odd-degree vertices." }
+      ],
+      "finalAnswer": { "value": "e", "unit": "" },
+      "solutionNarrative": "Degrees: $A$:2, $B$:3, $C$:2, $D$:2, $E$:3, $F$:2 (sum $14 = 2 \\cdot 7$, checking out). Exactly two odd intersections, $B$ and $E$, so an Euler route exists and must run from one to the other: starting at $B$ it must end at $E$ — for example $B \\to A \\to D \\to E \\to B \\to C \\to F \\to E$. This is the route-inspection problem every plow and mail truck solves."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s11",
+      "concepts": ["euler-paths-and-circuits"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The figure shows the complete graph $K_4$: four vertices, every pair joined. Diagnose it with Euler's theorem, then fix it.",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 0, "y": 0 }, { "id": "B", "x": 0, "y": 2 }, { "id": "C", "x": 2, "y": 2 }, { "id": "D", "x": 2, "y": 0 } ], "edges": [ ["A", "B"], ["B", "C"], ["C", "D"], ["D", "A"], ["A", "C"], ["B", "D"] ], "caption": "K4: every pair of the 4 vertices is joined (6 edges)" },
+      "steps": [
+        { "instruction": "What is the degree of each vertex? (One number — they are all equal.)", "answer": "3", "accept": [], "hint": "Each vertex connects to the other 3." },
+        { "instruction": "How many odd-degree vertices does $K_4$ have?", "answer": "4", "accept": [], "hint": "All of them are odd." },
+        { "instruction": "Does $K_4$ have an Euler path? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Euler allows exactly 0 or 2 odd vertices — 4 is too many." },
+        { "instruction": "You may retrace (traverse twice) some edges. What is the MINIMUM number of edges to retrace so one route covers every edge?", "answer": "1", "accept": [], "hint": "Retracing an edge between two odd vertices makes both even — leaving 2 odd, which Euler permits." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "edge" },
+      "solutionNarrative": "Every vertex of $K_4$ has degree 3, so all 4 are odd — more than Euler's limit of 2, hence no Euler path. Retracing one edge, say $B$–$D$, effectively adds a parallel edge: $B$ and $D$ become degree 4 (even), leaving only $A$ and $C$ odd. Now a route exists, e.g. $A \\to B \\to D \\to B \\to C \\to D \\to A \\to C$ (retracing $B$–$D$ once). One retraced edge is the minimum — each retrace fixes at most 2 of the 4 odd vertices, and 2 may remain. This is route inspection: pair up the odd vertices as cheaply as possible."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s12",
+      "concepts": ["euler-paths-and-circuits"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The original Königsberg puzzle: four land masses joined by seven bridges, giving a graph whose vertices have degrees $3, 3, 3, 5$. Settle it the way Euler did in 1736.",
+      "steps": [
+        { "instruction": "Add up the four degrees: $3 + 3 + 3 + 5$.", "answer": "14", "accept": [], "hint": "Straight addition." },
+        { "instruction": "By the handshake lemma, how many bridges (edges) does that degree sum confirm?", "answer": "7", "accept": [], "hint": "Edges are half the degree sum." },
+        { "instruction": "How many of the four land masses have ODD degree?", "answer": "4", "accept": [], "hint": "Check each of 3, 3, 3, 5 for oddness." },
+        { "instruction": "Can any walk cross every bridge exactly once? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "An Euler path tolerates at most 2 odd vertices." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Degree sum $3+3+3+5 = 14 = 2 \\cdot 7$ — consistent with the seven bridges. All four land masses have odd degree, and Euler's theorem allows an every-edge-once walk only with 0 or 2 odd vertices. Four odd vertices means the stroll is impossible — the answer Euler delivered without ever needing to try a single route."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s13",
+      "concepts": ["trees"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The figure shows a tree rooted at $R$. Read off its anatomy.",
+      "plot": { "type": "graph", "nodes": [ { "id": "R", "x": 2, "y": 3, "color": "success" }, { "id": "A", "x": 1, "y": 2 }, { "id": "B", "x": 3, "y": 2 }, { "id": "C", "x": 0.5, "y": 1 }, { "id": "D", "x": 1.5, "y": 1 }, { "id": "E", "x": 3, "y": 1 } ], "edges": [ ["R", "A"], ["R", "B"], ["A", "C"], ["A", "D"], ["B", "E"] ], "caption": "A tree with root R at the top" },
+      "steps": [
+        { "instruction": "How many vertices does the tree have? (Whole number.)", "answer": "6", "accept": [], "hint": "Count every circle, including R." },
+        { "instruction": "How many edges does it have? For a tree this must be $|V| - 1$.", "answer": "5", "accept": [], "hint": "6 vertices minus 1." },
+        { "instruction": "How many leaves (degree-1 vertices) does it have?", "answer": "3", "accept": [], "hint": "C, D, and E touch only one edge each; B touches two (R and E)." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "leaves" },
+      "solutionNarrative": "The tree has $|V| = 6$ vertices and $|E| = 5 = 6 - 1$ edges, exactly the tree budget. The leaves are $C$, $D$, $E$ (each degree 1); $B$ is not a leaf since it touches both $R$ and $E$, and $\\deg(A) = 3$, $\\deg(R) = 2$."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s14",
+      "concepts": ["trees"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Is the graph in the figure a tree? Convict or acquit it with edge counting, then find the witness.",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 0, "y": 2 }, { "id": "B", "x": 2, "y": 2 }, { "id": "C", "x": 3.5, "y": 3 }, { "id": "D", "x": 3.5, "y": 1 }, { "id": "E", "x": 5.5, "y": 1 } ], "edges": [ ["A", "B"], ["B", "C"], ["C", "D"], ["D", "B"], ["D", "E"] ], "caption": "A connected graph on 5 vertices" },
+      "steps": [
+        { "instruction": "How many edges does the graph have? (Whole number.)", "answer": "5", "accept": [], "hint": "A–B, B–C, C–D, D–B, D–E." },
+        { "instruction": "A tree on 5 vertices must have exactly how many edges?", "answer": "4", "accept": [], "hint": "$|E| = |V| - 1$." },
+        { "instruction": "So: is this graph a tree? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "One edge over budget means a cycle is hiding somewhere." },
+        { "instruction": "What is the length (number of edges) of the cycle it contains?", "answer": "3", "accept": [], "hint": "Trace B to C to D and back to B." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The graph is connected with 5 vertices but 5 edges — one more than the tree budget of $5 - 1 = 4$ — so it cannot be a tree. The witness is the triangle $B \\to C \\to D \\to B$, a cycle of length 3. Delete any one of those three edges and the remaining 4 edges form a spanning tree."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s15",
+      "concepts": ["trees"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The figure shows a company's office network: 5 offices, 7 fiber links. Leadership wants to cut costs down to a spanning tree — every office still reachable, zero redundant links.",
+      "plot": { "type": "graph", "nodes": [ { "id": "A", "x": 0, "y": 2 }, { "id": "B", "x": 2, "y": 3 }, { "id": "C", "x": 2, "y": 1 }, { "id": "D", "x": 4, "y": 3 }, { "id": "E", "x": 4, "y": 1 } ], "edges": [ ["A", "B"], ["A", "C"], ["B", "C"], ["B", "D"], ["C", "D"], ["C", "E"], ["D", "E"] ], "caption": "Office network: 5 offices, 7 fiber links" },
+      "steps": [
+        { "instruction": "A spanning tree of a 5-vertex network keeps how many links? (Whole number.)", "answer": "4", "accept": [], "hint": "Trees always have $|V| - 1$ edges." },
+        { "instruction": "How many of the 7 links can be cut?", "answer": "3", "accept": [], "hint": "$7 - 4$." },
+        { "instruction": "After the cuts, exactly how many distinct paths connect any given pair of offices?", "answer": "1", "accept": [], "hint": "That's the defining luxury-free property of a tree: a second path would close a cycle." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "links" },
+      "solutionNarrative": "Any spanning tree on 5 offices has exactly $5 - 1 = 4$ links, so $7 - 4 = 3$ links are redundant. One valid keep-set: A–B, B–C, C–D, C–E (check: connected, 4 edges, no cycle). In the resulting tree exactly one path joins each pair of offices — cheap, but fragile: any single link failure now splits the network, which is why real designs keep some redundancy and let the spanning-tree protocol disable it in software."
+    },
+    {
+      "id": "discrete-math.graph-theory-basics.s16",
+      "concepts": ["trees"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A hard drive's folder hierarchy is a tree: one root folder, and every other folder sits inside exactly one parent. This drive has 47 folders in total.",
+      "steps": [
+        { "instruction": "How many parent–child links does the hierarchy contain? (Whole number.)", "answer": "46", "accept": [], "hint": "A tree has $|V| - 1$ edges: every folder except the root contributes exactly one link to its parent." },
+        { "instruction": "Every folder except the root has exactly how many parents?", "answer": "1", "accept": [], "hint": "If a folder had two parents, two different paths would reach it from the root — a cycle in the underlying graph." }
+      ],
+      "finalAnswer": { "value": "46", "unit": "links" },
+      "solutionNarrative": "A tree on 47 vertices has exactly $47 - 1 = 46$ edges — each non-root folder supplies exactly one link, the edge to its unique parent. That uniqueness is why file paths like /home/docs/tax are unambiguous: in a tree there is exactly one route from the root to any folder. Symlinks are the exception that proves the rule — they add extra edges and turn the file system into a general graph, cycles and all."
+    }
+  ]
+}

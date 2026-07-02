@@ -1,0 +1,280 @@
+{
+  "id": "differential-equations.nonhomogeneous-second-order",
+  "subject": "differential-equations",
+  "title": "Nonhomogeneous Second-Order Equations",
+  "prerequisites": ["differential-equations.second-order-linear"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "complementary-solution",
+      "label": "The complementary solution",
+      "microLesson": "A forced equation $ay'' + by' + cy = g(t)$ still contains the old homogeneous equation inside it. The **complementary solution** $y_c$ solves $ay'' + by' + cy = 0$ — just set the forcing to zero and use the characteristic equation exactly as before. Example: for $y'' + y' - 6y = 18$, the homogeneous part gives $r^2 + r - 6 = 0$, so $r = 2$ or $r = -3$. The roots describe the system's *own* behavior (the transient), independent of the push."
+    },
+    {
+      "id": "particular-form",
+      "label": "Choosing the form of y_p",
+      "microLesson": "The forcing term dictates the *shape* of the particular solution. Constant or polynomial forcing → a polynomial of the same degree ($A$, or $At + B$). Exponential $ke^{\\\\alpha t}$ → $Ae^{\\\\alpha t}$. Sine or cosine $k\\\\sin(\\\\omega t)$ → $A\\\\cos(\\\\omega t) + B\\\\sin(\\\\omega t)$ (**always both**, because derivatives swap sine and cosine). One trap: if the guess already solves the homogeneous equation — the forcing exponent is a characteristic root, or the forcing frequency matches the natural frequency — multiply the guess by $t$ (the **resonance bump**): $Ate^{\\\\alpha t}$."
+    },
+    {
+      "id": "undetermined-coefficients",
+      "label": "Solving for the coefficients",
+      "microLesson": "Once the form is chosen, substitute it into the equation and **match coefficients** — the calculus collapses into a small linear system. Example: for $y'' + 3y' + 2y = 10$, guess $y_p = A$; the derivatives of a constant vanish, leaving $2A = 10$, so $A = 5$. For $y'' - y' - 2y = 6e^{3t}$, guess $Ae^{3t}$; each derivative multiplies by 3, so $(3^2 - 3 - 2)A = 4A = 6$ and $A = 3/2$. Every problem of this type ends in plain algebra for $A$ (and $B$)."
+    },
+    {
+      "id": "general-solution-ivp",
+      "label": "Assembling y = y_c + y_p and applying initial conditions",
+      "microLesson": "The general solution of a forced equation is the sum $y = y_c + y_p$: transient plus steady response. Write it with the constants still free, e.g. $y = C_1e^{-t} + C_2e^{-2t} + 3$. Then — and only then — apply the initial conditions to the **full** sum, never to $y_c$ alone. $y(0)$ and $y'(0)$ give two linear equations in $C_1, C_2$ (remember $e^0 = 1$), a 2×2 system you solve by substitution or elimination."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When the outside world starts pushing\n\nThe homogeneous equation $ay'' + by' + cy = 0$ describes a system **left alone**: a suspension settling after one pothole, a circuit ringing after the switch opens. But most real systems are continuously *driven* — an engine shakes the chassis, a wall socket drives the circuit, wind pushes the bridge, the cruise-control throttle pushes the car. Driving adds a **forcing term** $g(t)$ to the right side:\n\n$$a y'' + b y' + c y = g(t).$$\n\nThis is a **nonhomogeneous** equation, and its solution always splits into two stories: what the system does on its own, and how it answers the push.\n\n## The master recipe: $y = y_c + y_p$\n\n1. **Complementary solution $y_c$** — solve the homogeneous equation ($g = 0$) exactly as before: characteristic equation, roots, done. This is the system's own **transient** behavior; with damping, it dies out.\n2. **Particular solution $y_p$** — any *one* function that satisfies the full forced equation. This is the **steady response** to the driving.\n3. **Add them**: $y = y_c + y_p$ is the general solution.\n4. **Apply initial conditions last**, to the full sum — never to $y_c$ alone, because $y_p$ contributes to $y(0)$ and $y'(0)$ too.\n\n## Undetermined coefficients: guess the shape, solve for the numbers\n\nThe forcing term tells you the *shape* of $y_p$; substitution pins down the numbers.\n\n- Constant or polynomial forcing $\\\\to$ polynomial of the same degree: guess $A$, or $At + B$.\n- Exponential forcing $ke^{\\\\alpha t}$ $\\\\to$ guess $Ae^{\\\\alpha t}$.\n- Sinusoidal forcing $k\\\\sin(\\\\omega t)$ or $k\\\\cos(\\\\omega t)$ $\\\\to$ guess $A\\\\cos(\\\\omega t) + B\\\\sin(\\\\omega t)$ — **always both terms**, because differentiating swaps sine and cosine.\n\n### Worked example (constant forcing)\n\n$y'' + 3y' + 2y = 10$. Guess $y_p = A$. A constant has zero derivatives, so substituting leaves $2A = 10$, giving $A = 5$.\n\n### Worked example (exponential forcing)\n\n$y'' - y' - 2y = 6e^{3t}$. Guess $y_p = Ae^{3t}$. Every derivative multiplies by 3, so substituting gives $(3^2 - 3 - 2)Ae^{3t} = 4Ae^{3t} = 6e^{3t}$. Match coefficients: $4A = 6$, so $A = 3/2$. Notice the pattern: plug $\\\\alpha$ into the characteristic polynomial, and that number multiplies $A$.\n\nThe calculus always collapses into a small linear system in $A$ and $B$ — matching the $t$-coefficients, the constants, or the $\\\\sin$/$\\\\cos$ coefficients on each side.\n\n## The resonance bump\n\nThere is one famous trap. If your guess **already solves the homogeneous equation** — the forcing exponent $\\\\alpha$ is a characteristic root, or the forcing frequency equals the natural frequency — then substituting the plain guess produces $0$, and no choice of $A$ can match the forcing. The fix: **multiply the guess by $t$**, e.g. $Ate^{\\\\alpha t}$ or $t(A\\\\cos\\\\omega t + B\\\\sin\\\\omega t)$.\n\nThe physics behind the fix is dramatic: pushing a system at its *own* natural frequency makes the response **grow with $t$** instead of staying bounded. That is resonance — the reason soldiers break step before crossing a footbridge, the reason an opera singer can crack a glass, and the reason engineers keep a building's natural frequency far from earthquake frequencies. The little factor of $t$ in the mathematics *is* the growing amplitude in the real world.\n\n## Initial conditions come last\n\nWith $y = y_c + y_p$ assembled, $y(0)$ and $y'(0)$ give two linear equations in $C_1$ and $C_2$ (remember $e^0 = 1$, and that the derivative of $y_p$ counts too). Solve the 2×2 system by substitution, and the motion is completely determined: transient from the initial state, plus the steady answer to the push."
+  },
+  "application": {
+    "summary": "Nonhomogeneous second-order equations model every driven oscillator: a car suspension under a constant load, an RLC circuit driven by a source, cruise control answering a throttle step, a bridge pushed by wind or marching feet. The solution y = y_c + y_p cleanly separates the dying transient (complementary) from the lasting steady response (particular), and the resonance bump t·y_p is the mathematics of why driving a system at its natural frequency is dangerous.",
+    "domains": ["mechanical engineering", "electrical engineering", "control systems", "structural engineering"],
+    "workedExample": "**A step input: loading the suspension.**\n\nA scaled suspension model obeys $y'' + 5y' + 6y = 12$, where the constant 12 is a suddenly applied load (a step input), with $y(0) = 0$ and $y'(0) = 1$.\n\n**Complementary:** $r^2 + 5r + 6 = 0$ factors as $(r+2)(r+3)$, so $r = -2, -3$ and $y_c = C_1e^{-2t} + C_2e^{-3t}$ — a pure decaying transient.\n\n**Particular:** constant forcing, so guess $y_p = A$. Substituting: $6A = 12$, so $A = 2$.\n\n**Assemble and fit:** $y = C_1e^{-2t} + C_2e^{-3t} + 2$. From $y(0) = 0$: $C_1 + C_2 + 2 = 0$, so $C_1 + C_2 = -2$. From $y'(0) = 1$: $-2C_1 - 3C_2 = 1$. Substituting $C_1 = -2 - C_2$ gives $4 + 2C_2 - 3C_2 = 1$, so $C_2 = 3$ and $C_1 = -5$.\n\n$$y = -5e^{-2t} + 3e^{-3t} + 2.$$\n\nBoth exponentials die out within a couple of seconds, and the suspension settles at exactly $y = 2$ — the steady deflection $12/6$ predicted by the particular solution alone. That split is how a control engineer reads every step response: $y_p$ tells you *where* the system ends up; $y_c$ tells you *how* it gets there (overshoot, settling time). The same computation sizes the steady current in a driven RLC circuit and the sag of a loaded beam.",
+    "domainNotes": [
+      "**Mechanical:** forced spring-mass-dampers — engine vibration, road input, rotating imbalance; the particular solution is the persistent vibration the mounts must absorb.",
+      "**Electrical:** driven RLC circuits, $Lq'' + Rq' + \\\\tfrac{1}{C}q = E(t)$; the particular solution is the steady-state current, the complementary part the switch-on transient.",
+      "**Control systems:** cruise control and thermostats answering a step input; y_p sets the final value, y_c the overshoot and settling.",
+      "**Structural (resonance):** wind, earthquakes, or marching soldiers forcing a bridge near its natural frequency — the $t\\\\cdot y_p$ resonance bump is why soldiers are ordered to break step and why the Tacoma Narrows bridge failed."
+    ]
+  },
+  "generators": [
+    "def2-complementary-solution-d1",
+    "def2-complementary-solution-d2",
+    "def2-complementary-solution-d3",
+    "def2-particular-form-d1",
+    "def2-particular-form-d2",
+    "def2-particular-form-d3",
+    "def2-undetermined-coefficients-d1",
+    "def2-undetermined-coefficients-d2",
+    "def2-undetermined-coefficients-d3",
+    "def2-general-solution-ivp-d1",
+    "def2-general-solution-ivp-d2",
+    "def2-general-solution-ivp-d3"
+  ],
+  "problems": [
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s01",
+      "concepts": ["complementary-solution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The equation $y'' + y' - 6y = 18$ is nonhomogeneous. Find the roots that build its complementary solution $y_c$.",
+      "steps": [
+        { "instruction": "The complementary solution solves the homogeneous part: set the right side to 0. Write the characteristic equation.", "answer": "r^2 + r - 6 = 0", "accept": ["r^2+r-6=0"], "hint": "Drop the forcing term 18, then $y'' \\\\to r^2$, $y' \\\\to r$, $y \\\\to 1$." },
+        { "instruction": "Factor and solve for both roots. Separate them with 'or' or a comma.", "form": "solutions", "answer": "r = 2 or r = -3", "accept": ["2, -3", "-3, 2"], "hint": "$(r - 2)(r + 3) = 0$." }
+      ],
+      "finalAnswer": { "value": "r = 2, r = -3", "unit": "" },
+      "solutionNarrative": "The homogeneous part gives $r^2 + r - 6 = 0 = (r-2)(r+3)$, so $r = 2$ or $r = -3$ and $y_c = C_1e^{2t} + C_2e^{-3t}$. The forcing 18 plays no role in $y_c$."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s02",
+      "concepts": ["complementary-solution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the complementary-solution roots for $2y'' - 3y' - 2y = 4e^{t}$.",
+      "steps": [
+        { "instruction": "Write the characteristic equation of the homogeneous part (keep the leading coefficient).", "answer": "2r^2 - 3r - 2 = 0", "accept": ["2r^2-3r-2=0"], "hint": "Set the right side to 0; the coefficient on $y''$ becomes the coefficient on $r^2$." },
+        { "instruction": "Solve for both roots.", "form": "solutions", "answer": "r = 2 or r = -1/2", "accept": ["2, -1/2", "-1/2, 2", "2, -0.5", "-0.5, 2"], "hint": "$(2r + 1)(r - 2) = 0$." }
+      ],
+      "finalAnswer": { "value": "r = 2, r = -1/2", "unit": "" },
+      "solutionNarrative": "$2r^2 - 3r - 2 = 0 = (2r+1)(r-2)$, so $r = 2$ or $r = -\\\\tfrac{1}{2}$. The exponential forcing matters only for $y_p$, not for these roots."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s03",
+      "concepts": ["complementary-solution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A driven series RLC circuit gives $q'' + 4q' + 13q = 26$ for the charge $q$. Find the (complex) roots of the complementary solution.",
+      "steps": [
+        { "instruction": "Write the characteristic equation of the homogeneous part.", "answer": "r^2 + 4r + 13 = 0", "accept": ["r^2+4r+13=0"], "hint": "Zero out the source term 26, then $q'' \\\\to r^2$, $q' \\\\to r$, $q \\\\to 1$." },
+        { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=4$, $c=13$).", "answer": "-36", "accept": [], "hint": "$4^2 - 4(1)(13) = 16 - 52$." },
+        { "instruction": "Apply the quadratic formula to find both complex roots.", "form": "solutions", "answer": "r = -2 + 3i or r = -2 - 3i", "accept": ["-2+3i, -2-3i", "-2-3i, -2+3i"], "hint": "$r = \\\\dfrac{-4 \\\\pm \\\\sqrt{-36}}{2} = -2 \\\\pm 3i$." }
+      ],
+      "finalAnswer": { "value": "r = -2 + 3i, r = -2 - 3i", "unit": "" },
+      "solutionNarrative": "The homogeneous part has characteristic equation $r^2 + 4r + 13 = 0$ with discriminant $-36$, so $r = -2 \\\\pm 3i$: the circuit's own response is a decaying oscillation, on top of which the driven steady state sits."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s04",
+      "concepts": ["particular-form"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $y'' + 3y' + 2y = 5e^{4t}$, choose the correct form of the particular solution $y_p$.",
+      "steps": [
+        { "instruction": "Find the roots of the homogeneous part $r^2 + 3r + 2 = 0$.", "form": "solutions", "answer": "r = -1 or r = -2", "accept": ["-1, -2", "-2, -1"], "hint": "$(r+1)(r+2) = 0$." },
+        { "instruction": "Is the forcing exponent 4 one of those roots? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Compare 4 against $-1$ and $-2$." },
+        { "instruction": "No resonance, so use the plain exponential guess. Write the form of $y_p$ (use the letter A for the unknown coefficient).", "answer": "Ae^(4t)", "accept": ["Ae^{4t}", "A*e^(4t)", "A e^{4t}"], "hint": "An exponential forcing $ke^{4t}$ calls for $Ae^{4t}$." }
+      ],
+      "finalAnswer": { "value": "Ae^(4t)", "unit": "" },
+      "solutionNarrative": "The roots are $-1$ and $-2$; the forcing exponent 4 is not a root, so the plain guess $y_p = Ae^{4t}$ works — no resonance bump needed."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s05",
+      "concepts": ["particular-form"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A suspension carrying a constant load obeys $y'' + 4y' + 4y = 8$. Choose the form of the particular solution.",
+      "steps": [
+        { "instruction": "Is $r = 0$ a root of the characteristic equation $r^2 + 4r + 4 = 0$? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Substitute $r = 0$: does $0 + 0 + 4$ equal 0?" },
+        { "instruction": "The forcing is a constant, so guess a constant. Write the form of $y_p$ (a single unknown letter).", "answer": "A", "accept": ["y_p = A", "constant A", "a constant"], "hint": "A constant forcing calls for a constant particular solution $A$." }
+      ],
+      "finalAnswer": { "value": "A", "unit": "" },
+      "solutionNarrative": "Constant forcing → constant guess $y_p = A$. Since $r = 0$ is not a characteristic root (the roots are $-2$, repeated), no $t$-bump is needed."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s06",
+      "concepts": ["particular-form"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $y'' + 2y' + 5y = 12\\\\sin(3t)$, choose the form of the particular solution.",
+      "steps": [
+        { "instruction": "Only sine appears in the forcing. Does $y_p$ still need a cosine term as well? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Differentiating sine produces cosine — the guess must be closed under differentiation." },
+        { "instruction": "Write the form of $y_p$ (use A and B for the unknown coefficients).", "answer": "A cos(3t) + B sin(3t)", "accept": ["Acos(3t)+Bsin(3t)", "A sin(3t) + B cos(3t)", "Asin(3t)+Bcos(3t)"], "hint": "Sinusoidal forcing at frequency 3 calls for $A\\\\cos(3t) + B\\\\sin(3t)$." }
+      ],
+      "finalAnswer": { "value": "A cos(3t) + B sin(3t)", "unit": "" },
+      "solutionNarrative": "Because derivatives swap sine and cosine, the guess must contain both: $y_p = A\\\\cos(3t) + B\\\\sin(3t)$. (The homogeneous roots $-1 \\\\pm 2i$ don't match frequency 3, so no bump.)"
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s07",
+      "concepts": ["particular-form"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An undamped footbridge is modeled by $y'' + 9y = 2\\\\sin(3t)$ — marching feet push it at frequency 3. Choose the form of the particular solution (this is why soldiers break step).",
+      "steps": [
+        { "instruction": "Find the bridge's natural angular frequency $\\\\omega = \\\\sqrt{9}$.", "answer": "3", "accept": ["3 rad/s"], "hint": "$r^2 + 9 = 0$ gives $r = \\\\pm 3i$, so $\\\\omega = 3$." },
+        { "instruction": "What is the forcing frequency in $2\\\\sin(3t)$?", "answer": "3", "accept": ["3 rad/s"], "hint": "Read the number multiplying $t$ inside the sine." },
+        { "instruction": "The frequencies match. Is this resonance? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Forcing frequency = natural frequency is exactly the resonance condition." },
+        { "instruction": "The plain guess already solves the homogeneous equation, so multiply it by $t$. Write the bumped form of $y_p$.", "answer": "At cos(3t) + Bt sin(3t)", "accept": ["t(A cos(3t) + B sin(3t))", "Atcos(3t)+Btsin(3t)", "t(Acos(3t)+Bsin(3t))", "At cos 3t + Bt sin 3t"], "hint": "Take $A\\\\cos(3t) + B\\\\sin(3t)$ and multiply the whole thing by $t$." }
+      ],
+      "finalAnswer": { "value": "At cos(3t) + Bt sin(3t)", "unit": "" },
+      "solutionNarrative": "Natural frequency $\\\\omega = 3$ equals the forcing frequency 3 — resonance. The guess must be bumped to $y_p = t(A\\\\cos 3t + B\\\\sin 3t)$; that factor of $t$ is the growing amplitude that makes soldiers break step on bridges."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s08",
+      "concepts": ["undetermined-coefficients"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the particular solution of $y'' + 3y' + 2y = 10$ using the guess $y_p = A$.",
+      "steps": [
+        { "instruction": "A constant has zero derivatives, so substituting $y_p = A$ leaves only the $y$-term. Write the resulting equation.", "answer": "2A = 10", "accept": ["2A=10"], "hint": "$y_p'' = 0$ and $y_p' = 0$, so only $2y_p = 2A$ survives on the left." },
+        { "instruction": "Solve for $A$.", "answer": "5", "accept": ["A = 5", "A=5"], "hint": "Divide both sides by 2." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Substituting the constant guess kills both derivative terms, leaving $2A = 10$, so $A = 5$ and $y_p = 5$."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s09",
+      "concepts": ["undetermined-coefficients"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the coefficient $A$ in $y_p = Ae^{3t}$ for $y'' - y' - 2y = 6e^{3t}$.",
+      "steps": [
+        { "instruction": "Substituting $Ae^{3t}$ multiplies it by the characteristic polynomial at 3. Compute $3^2 - 3 - 2$.", "answer": "4", "accept": [], "hint": "$9 - 3 - 2$." },
+        { "instruction": "So $4A = 6$. Solve for $A$ (fraction or decimal).", "answer": "3/2", "accept": ["A = 3/2", "A=3/2", "1.5", "A = 1.5"], "hint": "Divide 6 by 4 and reduce." }
+      ],
+      "finalAnswer": { "value": "3/2", "unit": "" },
+      "solutionNarrative": "Each derivative of $Ae^{3t}$ multiplies it by 3, so substitution gives $(9 - 3 - 2)A = 4A = 6$ and $A = \\\\tfrac{3}{2}$: $y_p = \\\\tfrac{3}{2}e^{3t}$."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s10",
+      "concepts": ["undetermined-coefficients"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A motor ramps up its push linearly: $y'' + 4y' + 3y = 9t$. Find the coefficients in $y_p = At + B$.",
+      "steps": [
+        { "instruction": "With $y_p = At + B$, we get $y_p' = A$ and $y_p'' = 0$, so the left side is $3At + (4A + 3B)$. Match the $t$-coefficients and solve for $A$.", "answer": "3", "accept": ["A = 3", "A=3"], "hint": "$3A = 9$." },
+        { "instruction": "Match the constant terms: $4A + 3B = 0$. Solve for $B$.", "answer": "-4", "accept": ["B = -4", "B=-4"], "hint": "$4(3) + 3B = 0$, so $3B = -12$." }
+      ],
+      "finalAnswer": { "value": "A = 3, B = -4", "unit": "" },
+      "solutionNarrative": "Matching $t$-coefficients: $3A = 9$, so $A = 3$. Matching constants: $4A + 3B = 0$ gives $B = -4$. So $y_p = 3t - 4$ — the response tracks the ramp with a constant lag."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s11",
+      "concepts": ["undetermined-coefficients"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the particular solution of $y'' + 2y' + y = 10\\\\sin(t)$ using $y_p = A\\\\cos(t) + B\\\\sin(t)$. Substituting and collecting terms gives $2B\\\\cos(t) - 2A\\\\sin(t) = 10\\\\sin(t)$.",
+      "steps": [
+        { "instruction": "Match the cosine coefficients: $2B = 0$. Solve for $B$.", "answer": "0", "accept": ["B = 0", "B=0"], "hint": "There is no cosine on the right side." },
+        { "instruction": "Match the sine coefficients: $-2A = 10$. Solve for $A$.", "answer": "-5", "accept": ["A = -5", "A=-5"], "hint": "Divide 10 by $-2$." },
+        { "instruction": "Write the particular solution $y_p$ with your values of $A$ and $B$.", "answer": "-5cos(t)", "accept": ["-5 cos(t)", "y_p = -5cos(t)", "-5cos t", "-5 cos t"], "hint": "$A = -5$, $B = 0$, so only the cosine term survives." }
+      ],
+      "finalAnswer": { "value": "y_p = -5cos(t)", "unit": "" },
+      "solutionNarrative": "Cosine terms: $2B = 0$, so $B = 0$. Sine terms: $-2A = 10$, so $A = -5$. Thus $y_p = -5\\\\cos(t)$ — the damping term shifts the response a quarter-cycle from the sine forcing."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s12",
+      "concepts": ["general-solution-ivp"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $y'' + 3y' + 2y = 6$, the complementary roots are $r = -1$ and $r = -2$, and the particular solution is $y_p = 3$. Assemble the general solution, then apply $y(0) = 8$.",
+      "steps": [
+        { "instruction": "Write the general solution $y = y_c + y_p$ using constants C1 and C2 (use e^( ) notation).", "answer": "y = C1e^(-t) + C2e^(-2t) + 3", "accept": ["y = C1e^{-t} + C2e^{-2t} + 3", "y=C1e^(-t)+C2e^(-2t)+3", "C1e^(-t) + C2e^(-2t) + 3", "C1e^(-t)+C2e^(-2t)+3", "y = 3 + C1e^(-t) + C2e^(-2t)"], "hint": "One exponential per root, plus the particular constant 3." },
+        { "instruction": "Apply $y(0) = 8$ (note $e^0 = 1$): $C_1 + C_2 + 3 = 8$. What does $C_1 + C_2$ equal?", "answer": "5", "accept": ["C1 + C2 = 5", "C1+C2=5"], "hint": "Subtract the particular value 3 from 8." }
+      ],
+      "finalAnswer": { "value": "C1 + C2 = 5", "unit": "" },
+      "solutionNarrative": "$y = C_1e^{-t} + C_2e^{-2t} + 3$. At $t = 0$ every exponential equals 1, so $C_1 + C_2 + 3 = 8$, giving $C_1 + C_2 = 5$. (A second condition would pin down $C_1$ and $C_2$ individually.)"
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s13",
+      "concepts": ["general-solution-ivp", "undetermined-coefficients"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve the initial-value problem $y'' - y' - 6y = 12$, $y(0) = 1$, $y'(0) = 4$. The complementary roots are $r = 3$ and $r = -2$.",
+      "steps": [
+        { "instruction": "Find the particular solution: substitute $y_p = A$ to get $-6A = 12$. Solve for $A$.", "answer": "-2", "accept": ["A = -2", "A=-2"], "hint": "Divide 12 by $-6$." },
+        { "instruction": "The general solution is $y = C_1e^{3t} + C_2e^{-2t} - 2$. Apply $y(0) = 1$: what does $C_1 + C_2$ equal?", "answer": "3", "accept": ["C1 + C2 = 3", "C1+C2=3"], "hint": "$C_1 + C_2 - 2 = 1$." },
+        { "instruction": "Differentiate and apply $y'(0) = 4$: $3C_1 - 2C_2 = 4$. Substitute $C_2 = 3 - C_1$ and solve for $C_1$.", "answer": "2", "accept": ["C1 = 2", "C1=2"], "hint": "$3C_1 - 2(3 - C_1) = 5C_1 - 6 = 4$." },
+        { "instruction": "Now find $C_2$.", "answer": "1", "accept": ["C2 = 1", "C2=1"], "hint": "$C_2 = 3 - C_1 = 3 - 2$." }
+      ],
+      "finalAnswer": { "value": "C1 = 2, C2 = 1", "unit": "" },
+      "solutionNarrative": "$y_p = -2$ (from $-6A = 12$). Then $y = C_1e^{3t} + C_2e^{-2t} - 2$ with $C_1 + C_2 = 3$ and $3C_1 - 2C_2 = 4$; solving gives $C_1 = 2$, $C_2 = 1$, so $y = 2e^{3t} + e^{-2t} - 2$."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s14",
+      "concepts": ["general-solution-ivp"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A forced spring-mass system obeys $y'' + 4y' + 3y = 16e^{t}$ with $y(0) = 5$ and $y'(0) = -5$. The complementary roots are $r = -1$ and $r = -3$. Find the full solution.",
+      "steps": [
+        { "instruction": "Find the particular coefficient: substituting $y_p = Ae^{t}$ gives $(1 + 4 + 3)A = 16$, i.e. $8A = 16$. Solve for $A$.", "answer": "2", "accept": ["A = 2", "A=2"], "hint": "Divide 16 by 8." },
+        { "instruction": "Write the general solution $y = y_c + y_p$ using constants C1 and C2 (use e^( ) notation).", "answer": "y = C1e^(-t) + C2e^(-3t) + 2e^(t)", "accept": ["y = C1e^{-t} + C2e^{-3t} + 2e^{t}", "y=C1e^(-t)+C2e^(-3t)+2e^(t)", "C1e^(-t) + C2e^(-3t) + 2e^(t)", "C1e^(-t)+C2e^(-3t)+2e^(t)", "y = C1e^(-t) + C2e^(-3t) + 2e^t"], "hint": "One exponential per root, plus $2e^{t}$ from the particular solution." },
+        { "instruction": "Apply $y(0) = 5$: $C_1 + C_2 + 2 = 5$. What does $C_1 + C_2$ equal?", "answer": "3", "accept": ["C1 + C2 = 3", "C1+C2=3"], "hint": "Remember the particular term contributes $2e^{0} = 2$." },
+        { "instruction": "Differentiate and apply $y'(0) = -5$: $-C_1 - 3C_2 + 2 = -5$. Substitute $C_1 = 3 - C_2$ and solve for $C_2$.", "answer": "2", "accept": ["C2 = 2", "C2=2"], "hint": "$-(3 - C_2) - 3C_2 = -3 - 2C_2 = -7$." },
+        { "instruction": "Now find $C_1$.", "answer": "1", "accept": ["C1 = 1", "C1=1"], "hint": "$C_1 = 3 - C_2 = 3 - 2$." }
+      ],
+      "finalAnswer": { "value": "C1 = 1, C2 = 2", "unit": "" },
+      "solutionNarrative": "$8A = 16$ gives $A = 2$, so $y = C_1e^{-t} + C_2e^{-3t} + 2e^{t}$. The conditions give $C_1 + C_2 = 3$ and $-C_1 - 3C_2 + 2 = -5$, so $C_2 = 2$, $C_1 = 1$: $y = e^{-t} + 2e^{-3t} + 2e^{t}$. The transient decays; the driven $2e^{t}$ term dominates."
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s15",
+      "concepts": ["complementary-solution", "particular-form"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A driven spring-mass system obeys $y'' + 5y' + 6y = 4e^{t}$. Find the complementary roots and choose the form of $y_p$.",
+      "steps": [
+        { "instruction": "Solve the characteristic equation $r^2 + 5r + 6 = 0$ of the homogeneous part.", "form": "solutions", "answer": "r = -2 or r = -3", "accept": ["-2, -3", "-3, -2"], "hint": "$(r+2)(r+3) = 0$." },
+        { "instruction": "Is the forcing exponent 1 a root? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Compare 1 against $-2$ and $-3$." },
+        { "instruction": "Write the form of $y_p$.", "answer": "Ae^(t)", "accept": ["Ae^{t}", "Ae^t", "A*e^(t)", "A e^{t}"], "hint": "Exponential forcing with no resonance: $Ae^{t}$." }
+      ],
+      "finalAnswer": { "value": "Ae^(t)", "unit": "" },
+      "solutionNarrative": "The roots are $-2$ and $-3$; the forcing exponent 1 is not a root, so $y_p = Ae^{t}$. (Substituting would give $12A = 4$, $A = 1/3$.)"
+    },
+    {
+      "id": "differential-equations.nonhomogeneous-second-order.s16",
+      "concepts": ["undetermined-coefficients"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A driven RLC circuit obeys $q'' + 2q' + 10q = 20t$ (a ramped source). Find the particular solution.",
+      "steps": [
+        { "instruction": "The forcing is a degree-1 polynomial. Write the form of $y_p$ (use A and B).", "answer": "At + B", "accept": ["At+B", "B + At", "at+b"], "hint": "Polynomial forcing → polynomial guess of the same degree." },
+        { "instruction": "Substituting gives $10At + (2A + 10B) = 20t$. Match the $t$-coefficients and solve for $A$.", "answer": "2", "accept": ["A = 2", "A=2"], "hint": "$10A = 20$." },
+        { "instruction": "Match the constants: $2A + 10B = 0$. Solve for $B$ (fraction or decimal).", "answer": "-2/5", "accept": ["B = -2/5", "B=-2/5", "-0.4", "B = -0.4"], "hint": "$2(2) + 10B = 0$, so $10B = -4$." }
+      ],
+      "finalAnswer": { "value": "A = 2, B = -2/5", "unit": "" },
+      "solutionNarrative": "Guess $q_p = At + B$. Matching $t$-terms: $10A = 20$, so $A = 2$. Matching constants: $2A + 10B = 0$ gives $B = -\\\\tfrac{2}{5}$. So $q_p = 2t - \\\\tfrac{2}{5}$ — the charge tracks the ramp with a small constant offset."
+    }
+  ]
+}

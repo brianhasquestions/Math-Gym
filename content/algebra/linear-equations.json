@@ -1,0 +1,162 @@
+{
+  "id": "algebra.linear-equations",
+  "subject": "algebra",
+  "title": "Linear Equations in One Variable",
+  "prerequisites": [],
+  "estimatedMinutes": 35,
+  "keyConcepts": [
+    {
+      "id": "isolate-variable",
+      "label": "Isolating the variable",
+      "microLesson": "An equation is a balance scale: whatever you do to one side, you must do to the other. To get $x$ alone, undo what's attached to it in reverse order — undo addition/subtraction first, then multiplication/division. Example: in $3x + 4 = 19$, first subtract 4 from both sides to get $3x = 15$, then divide both sides by 3 to get $x = 5$."
+    },
+    {
+      "id": "combine-like-terms",
+      "label": "Combining like terms",
+      "microLesson": "Like terms have the exact same variable part. $5x$ and $2x$ are like terms (both have $x$) and combine to $7x$. Constants like $4$ and $9$ combine to $13$. You cannot combine $5x$ and $4$ — they're different kinds of thing, like dollars and apples. Tidy each side first, then solve."
+    },
+    {
+      "id": "distribute",
+      "label": "Distributing",
+      "microLesson": "A number multiplying a parenthesis multiplies everything inside it: $a(b + c) = ab + ac$. So $3(x + 2) = 3x + 6$. Watch signs carefully: $-2(x - 5) = -2x + 10$, because $-2 \\times -5 = +10$. Distribute first to clear the parentheses, then collect like terms."
+    },
+    {
+      "id": "variables-both-sides",
+      "label": "Variables on both sides",
+      "microLesson": "When $x$ appears on both sides, the goal is to gather all the $x$ terms on one side and all the constants on the other. Move the smaller variable term to avoid negatives when you can. From $4x + 25 = x + 40$, subtract $x$ from both sides to get $3x + 25 = 40$, then solve as usual."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The one question algebra keeps answering\n\nAlmost every real decision has the same shape: *\"At what point do these two things become equal?\"* or *\"What value makes this work out?\"* A **linear equation** is the tool for answering exactly that kind of question, as long as the unknown isn't squared, square-rooted, or stuck in a denominator.\n\nA linear equation in one variable looks like this:\n\n$$ax + b = c$$\n\nwhere $x$ is the unknown you're hunting for, and $a$, $b$, $c$ are just numbers from the situation. **Linear** means the variable appears only to the first power — no $x^2$, no $\\sqrt{x}$. Graphed, these are straight lines, which is exactly why constant rates (dollars per hour, miles per gallon, cost per unit) always produce them.\n\n## The core idea: keep the scale balanced\n\nThink of an equation as a balance scale. The `=` sign says *the left side weighs exactly the same as the right side.* You're allowed to change the equation as long as you keep it balanced — **whatever you do to one side, you do to the other.**\n\nTo solve, you peel away everything around $x$ until it stands alone, **undoing operations in reverse order**:\n\n1. First undo addition and subtraction (move constants away from $x$).\n2. Then undo multiplication and division (strip the coefficient off $x$).\n\n### Worked example\n\nSuppose $3x + 4 = 19$.\n\n- Subtract 4 from both sides: $3x = 15$.\n- Divide both sides by 3: $x = 5$.\n\nThat's it. And you can always **check** by putting the answer back: $3(5) + 4 = 19$. ✓ Checking is not optional padding — it's how you catch your own mistakes for free.\n\n## When the variable shows up more than once\n\nReal problems rarely arrive pre-tidied. You'll see parentheses and the variable on both sides:\n\n$$2(x + 3) = 5x - 9$$\n\nThe procedure is always the same three moves, in order:\n\n1. **Distribute** to clear parentheses: $2x + 6 = 5x - 9$.\n2. **Gather** the variable on one side and constants on the other. Subtract $2x$: $6 = 3x - 9$. Add 9: $15 = 3x$.\n3. **Isolate**: divide by 3: $x = 5$.\n\nThe whole of this topic is just those moves — *distribute, combine like terms, gather, isolate* — applied with care to signs.\n\n## The three outcomes\n\nNot every equation has one neat answer, and knowing which case you're in matters in the real world:\n\n- **One solution** (the usual case): you land on $x = \\text{number}$.\n- **No solution**: the variable cancels and you're left with something false, like $7 = 4$. In a real model, this means *the two scenarios never meet.*\n- **Infinitely many solutions**: the variable cancels and you get something always true, like $5 = 5$. This means *the two things were the same all along.*"
+  },
+  "application": {
+    "summary": "Linear equations answer 'when are these equal?' and 'what value makes this work?' — the two questions behind comparison shopping, break-even analysis, budgeting, mixing, scaling recipes, dosage, and pacing.",
+    "domains": ["personal finance", "business", "engineering", "everyday life"],
+    "workedExample": "**Break-even: which gym membership wins?**\n\nGym A charges a \\$25 sign-up fee plus \\$4 per class. Gym B charges \\$40 up front plus \\$1 per class. If you take a lot of classes, B's cheaper per-class rate should win — but where's the cutoff?\n\nLet $x$ be the number of classes. Set the two total costs equal:\n\n$$25 + 4x = 40 + x$$\n\nGather variables and constants: subtract $x$ from both sides to get $25 + 3x = 40$, then subtract 25 to get $3x = 15$, so $x = 5$.\n\n**At 5 classes the two gyms cost the same (\\$45).** Fewer than 5 classes a month? Gym A is cheaper. More than 5? Gym B wins. That single number turns a vague 'it depends' into a confident decision — and the exact same setup decides between two phone plans, two contractors, or buying versus subscribing.",
+    "domainNotes": [
+      "**Finance:** break-even points, comparing plans, figuring how many months until an upfront cost pays off.",
+      "**Engineering:** solving for an unknown dimension, force, or current when the relationship is proportional.",
+      "**Health/cooking:** scaling a recipe or a dose to a target, finding the right dilution.",
+      "**Logistics:** when does a faster-but-pricier option overtake a cheaper-but-slower one."
+    ]
+  },
+  "generators": ["linear-oneside-v1", "linear-twoside-v1", "linear-distribute-v1"],
+  "problems": [
+    {
+      "id": "algebra.linear-equations.s01",
+      "concepts": ["isolate-variable"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A phone plan costs \\$15 per month plus a one-time \\$45 activation fee. After how many months will you have paid \\$150 in total?",
+      "steps": [
+        { "instruction": "Write an equation for the total paid after $x$ months equal to 150.", "answer": "15x + 45 = 150", "accept": ["15x+45=150", "45+15x=150"], "hint": "Total = monthly cost × months + one-time fee." },
+        { "instruction": "Subtract the activation fee from both sides.", "answer": "15x = 105", "accept": ["15x=105"], "hint": "Undo the +45 first by subtracting 45 from both sides." },
+        { "instruction": "Solve for $x$.", "answer": "x = 7", "accept": ["x=7", "7"], "hint": "Divide both sides by 15." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "months" },
+      "solutionNarrative": "Set up $15x + 45 = 150$. Subtract 45 to get $15x = 105$, then divide by 15 to get $x = 7$ months."
+    },
+    {
+      "id": "algebra.linear-equations.s02",
+      "concepts": ["combine-like-terms", "isolate-variable"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You buy 3 identical notebooks and a \\$2 pen. The total is \\$14. What does each notebook cost?",
+      "steps": [
+        { "instruction": "Write an equation where $x$ is the cost of one notebook.", "answer": "3x + 2 = 14", "accept": ["3x+2=14", "2+3x=14"], "hint": "Three notebooks at $x$ each, plus the $2 pen, totals 14." },
+        { "instruction": "Subtract the pen's cost from both sides.", "answer": "3x = 12", "accept": ["3x=12"], "hint": "Undo the +2." },
+        { "instruction": "Solve for $x$.", "answer": "x = 4", "accept": ["x=4", "4"], "hint": "Divide both sides by 3." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "dollars" },
+      "solutionNarrative": "From $3x + 2 = 14$, subtract 2 to get $3x = 12$, then divide by 3: each notebook costs \\$4."
+    },
+    {
+      "id": "algebra.linear-equations.s03",
+      "concepts": ["variables-both-sides"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Streaming service A costs \\$8/month plus a \\$12 setup fee. Service B costs \\$6/month plus a \\$20 setup fee. After how many months do they cost the same?",
+      "steps": [
+        { "instruction": "Write an equation setting the two total costs equal (use $x$ for months).", "answer": "8x + 12 = 6x + 20", "accept": ["8x+12=6x+20", "12+8x=20+6x"], "hint": "Each total is monthly × months + setup fee." },
+        { "instruction": "Gather the variable terms on one side (subtract $6x$).", "answer": "2x + 12 = 20", "accept": ["2x+12=20", "12+2x=20"], "hint": "Subtract 6x from both sides." },
+        { "instruction": "Isolate the variable term (subtract 12).", "answer": "2x = 8", "accept": ["2x=8"], "hint": "Move the constant 12 to the right." },
+        { "instruction": "Solve for $x$.", "answer": "x = 4", "accept": ["x=4", "4"], "hint": "Divide both sides by 2." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "months" },
+      "solutionNarrative": "Set $8x + 12 = 6x + 20$. Subtract $6x$: $2x + 12 = 20$. Subtract 12: $2x = 8$. Divide by 2: they match at 4 months."
+    },
+    {
+      "id": "algebra.linear-equations.s04",
+      "concepts": ["distribute", "variables-both-sides"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A caterer charges \\$5 per guest plus a flat \\$30. A competitor charges \\$3 per guest but counts each guest as bringing 2 plates at \\$1.50 per plate (so \\$3 per guest as well) plus a \\$50 flat fee and an extra \\$2 per guest service charge. Model the first caterer's cost as $5(x) + 30$ and the second as $3x + 2x + 50$. For how many guests $x$ are the costs equal?",
+      "steps": [
+        { "instruction": "Write the equation by simplifying each side's like terms.", "answer": "5x + 30 = 5x + 50", "accept": ["5x+30=5x+50"], "hint": "On the right, 3x + 2x combine to 5x." },
+        { "instruction": "Subtract $5x$ from both sides and state what remains.", "answer": "30 = 50", "accept": ["30=50"], "hint": "The variable terms are identical — see what happens when they cancel." },
+        { "instruction": "Is the statement 30 = 50 true or false? Type 'true' or 'false'.", "answer": "false", "accept": ["false", "f"], "hint": "Is 30 actually equal to 50?" },
+        { "instruction": "So how many solutions does the equation have? Type a number, or 'none', or 'infinite'.", "answer": "none", "accept": ["none", "no solution", "0", "zero"], "hint": "A false statement after the variable cancels means the two costs never meet." }
+      ],
+      "finalAnswer": { "value": "none", "unit": "" },
+      "solutionNarrative": "Both sides simplify to a $5x$ term. Subtracting $5x$ leaves $30 = 50$, which is false, so there is NO number of guests at which the costs are equal — the second caterer is always \\$20 more."
+    },
+    {
+      "id": "algebra.linear-equations.s05",
+      "concepts": ["distribute", "isolate-variable"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rectangular garden is 3 feet longer than it is wide. You have 26 feet of fencing for the full perimeter. How wide is the garden? (Perimeter $= 2(\\text{width}) + 2(\\text{width} + 3)$.)",
+      "steps": [
+        { "instruction": "Write the perimeter equation with $x$ as the width.", "answer": "2x + 2(x + 3) = 26", "accept": ["2x+2(x+3)=26", "2(x+3)+2x=26"], "hint": "Length is x + 3; perimeter is 2·width + 2·length." },
+        { "instruction": "Distribute and combine like terms on the left.", "answer": "4x + 6 = 26", "accept": ["4x+6=26", "6+4x=26"], "hint": "2(x+3) = 2x + 6, then add the other 2x." },
+        { "instruction": "Subtract 6 from both sides.", "answer": "4x = 20", "accept": ["4x=20"], "hint": "Undo the +6." },
+        { "instruction": "Solve for $x$.", "answer": "x = 5", "accept": ["x=5", "5"], "hint": "Divide both sides by 4." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "feet" },
+      "solutionNarrative": "$2x + 2(x+3) = 26$ distributes to $4x + 6 = 26$. Subtract 6: $4x = 20$. Divide by 4: the width is 5 feet (and the length is 8 feet)."
+    },
+    {
+      "id": "algebra.linear-equations.s06",
+      "concepts": ["isolate-variable"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $7x - 9 = 33$.",
+      "steps": [
+        { "instruction": "Add 9 to both sides.", "answer": "7x = 42", "accept": ["7x=42"], "hint": "Undo the -9 first." },
+        { "instruction": "Solve for $x$.", "answer": "x = 6", "accept": ["x=6", "6"], "hint": "Divide both sides by 7." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Add 9: $7x = 42$. Divide by 7: $x = 6$."
+    },
+    {
+      "id": "algebra.linear-equations.s07",
+      "concepts": ["variables-both-sides", "combine-like-terms"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $5x + 3 = 2x + 18$.",
+      "steps": [
+        { "instruction": "Subtract $2x$ from both sides.", "answer": "3x + 3 = 18", "accept": ["3x+3=18", "3+3x=18"], "hint": "Gather the variable on the left." },
+        { "instruction": "Subtract 3 from both sides.", "answer": "3x = 15", "accept": ["3x=15"], "hint": "Move the constant." },
+        { "instruction": "Solve for $x$.", "answer": "x = 5", "accept": ["x=5", "5"], "hint": "Divide by 3." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Subtract $2x$: $3x + 3 = 18$. Subtract 3: $3x = 15$. Divide by 3: $x = 5$."
+    },
+    {
+      "id": "algebra.linear-equations.s08",
+      "concepts": ["distribute", "variables-both-sides"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $3(x + 4) = 5(x - 2)$.",
+      "steps": [
+        { "instruction": "Distribute both sides.", "answer": "3x + 12 = 5x - 10", "accept": ["3x+12=5x-10"], "hint": "3(x+4) = 3x + 12 and 5(x-2) = 5x - 10." },
+        { "instruction": "Subtract $3x$ from both sides.", "answer": "12 = 2x - 10", "accept": ["12=2x-10", "2x-10=12"], "hint": "Gather variables on the right to keep the coefficient positive." },
+        { "instruction": "Add 10 to both sides.", "answer": "22 = 2x", "accept": ["22=2x", "2x=22"], "hint": "Move the constant." },
+        { "instruction": "Solve for $x$.", "answer": "x = 11", "accept": ["x=11", "11"], "hint": "Divide both sides by 2." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "" },
+      "solutionNarrative": "Distribute: $3x + 12 = 5x - 10$. Subtract $3x$: $12 = 2x - 10$. Add 10: $22 = 2x$. Divide by 2: $x = 11$."
+    }
+  ]
+}

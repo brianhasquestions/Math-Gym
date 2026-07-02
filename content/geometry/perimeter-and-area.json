@@ -1,0 +1,273 @@
+{
+  "id": "geometry.perimeter-and-area",
+  "subject": "geometry",
+  "title": "Perimeter and Area",
+  "prerequisites": [],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "rectangle-square",
+      "label": "Rectangles and squares",
+      "microLesson": "**Perimeter** is the distance around the edge; **area** is the surface inside. For a rectangle of length $l$ and width $w$: perimeter $P = 2l + 2w$ and area $A = l \\times w$. A square is the special case $l = w = s$, so $P = 4s$ and $A = s^2$. If you know the area and one side, divide to find the other: a $48\\text{ ft}^2$ room that is $6$ ft wide is $48 \\div 6 = 8$ ft long."
+    },
+    {
+      "id": "triangle-parallelogram-trapezoid",
+      "label": "Triangles, parallelograms, trapezoids",
+      "microLesson": "These all use a **base** and a perpendicular **height**. Triangle: $A = \\tfrac{1}{2} b h$ (half of the enclosing rectangle). Parallelogram: $A = b h$ (slide the slanted end over and it's a rectangle). Trapezoid (two parallel sides $b_1$ and $b_2$): $A = \\tfrac{1}{2}(b_1 + b_2)h$ — the average of the two bases times the height. The height is always the straight-across distance, not a slanted side."
+    },
+    {
+      "id": "circle-circumference-area",
+      "label": "Circle circumference and area",
+      "microLesson": "A circle is set by its **radius** $r$ (center to edge); the **diameter** is $d = 2r$. The distance around is the **circumference** $C = 2\\pi r$, and the surface is the **area** $A = \\pi r^2$. We use $\\pi \\approx 3.14$. For $r = 5$: $C = 2(3.14)(5) = 31.4$ and $A = 3.14(5)^2 = 3.14(25) = 78.5$. Squaring the radius for area is the most common slip — area grows with $r^2$, not $r$."
+    },
+    {
+      "id": "composite-and-applied",
+      "label": "Composite figures and real costs",
+      "microLesson": "Real shapes are rarely one clean rectangle. **Build them from pieces:** add areas for an L-shape, or subtract a hole (a pool inside a patio, a window in a wall). Then connect area to money and materials: paint, flooring, sod, and turf are sold per square unit, so **cost $=$ area $\\times$ price-per-unit**. Fencing follows the **perimeter**. A $12 \\times 10$ ft floor is $120\\text{ ft}^2$; at $\\$3/\\text{ft}^2$ that is $\\$360$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Two questions every project asks\n\nBefore you tile a floor, fence a yard, or order sod for a field, you have to answer one of two questions: *how far is it around the edge?* or *how much surface is inside?* The first is **perimeter**, the second is **area**, and almost every building, landscaping, and material-buying decision comes down to one of them.\n\n- **Perimeter** is a length — feet of fencing, trim, or edging. It's measured in plain units (ft, m).\n- **Area** is a surface — square feet of flooring, paint, or turf. It's measured in *square* units ($\\text{ft}^2$, $\\text{m}^2$).\n\nMixing them up is the classic costly mistake: order fence by area or paint by perimeter and you'll buy wildly the wrong amount.\n\n## Rectangles and squares\n\nFor a rectangle with length $l$ and width $w$:\n\n$$P = 2l + 2w, \\qquad A = l \\times w.$$\n\nA **square** is just a rectangle with all sides equal to $s$, so $P = 4s$ and $A = s^2$. These also run **backwards**: if a room's area is $48\\text{ ft}^2$ and it's $6$ ft wide, the length is $48 \\div 6 = 8$ ft. If a square's area is $49\\text{ ft}^2$, the side is $\\sqrt{49} = 7$ ft.\n\n## Triangles, parallelograms, and trapezoids\n\nEvery one of these uses a **base** and a perpendicular **height** (the straight-across distance, never a slanted side):\n\n- **Triangle:** $A = \\tfrac{1}{2} b h$ — exactly half the rectangle that boxes it in.\n- **Parallelogram:** $A = b h$ — shear the slanted end straight and it's a rectangle.\n- **Trapezoid:** $A = \\tfrac{1}{2}(b_1 + b_2)h$ — average the two parallel sides, then multiply by the height.\n\n### Worked example\n\nA triangular sail has base $6$ ft and height $9$ ft: $A = \\tfrac{1}{2}(6)(9) = 27\\text{ ft}^2$.\n\n## Circles\n\nA circle is fixed by its **radius** $r$ (center to edge); the **diameter** is $d = 2r$. Two formulas, both built on $\\pi$:\n\n$$C = 2\\pi r \\quad (\\text{distance around}), \\qquad A = \\pi r^2 \\quad (\\text{surface inside}).$$\n\nWe approximate $\\pi \\approx 3.14$ and round answers to one decimal place. For a circular table of radius $5$ ft: $C = 2(3.14)(5) = 31.4$ ft of edging, and $A = 3.14(5)^2 = 78.5\\text{ ft}^2$ of surface. **Square the radius first**, then multiply by $\\pi$ — area scales with $r^2$, so doubling the radius quadruples the area.\n\n## Composite figures: add and subtract\n\nReal regions are combinations. Break them into shapes you know, then **add** (an L-shaped room = two rectangles) or **subtract** (a walkway around a pool = big rectangle minus the pool). Whatever's left is your answer.\n\n## From area to dollars\n\nThe payoff: materials are priced per unit. Flooring, paint, sod, and turf cost **area $\\times$ price-per-square-unit**; fencing costs **perimeter $\\times$ price-per-foot**. Get the geometry right and the budget falls straight out — that's the whole point of measuring carefully."
+  },
+  "application": {
+    "summary": "Perimeter answers 'how much edging or fencing?' and area answers 'how much surface — flooring, paint, sod, turf — and what will it cost?' These two measurements drive nearly every construction, landscaping, and material-purchasing decision, with composite figures and cost = area × price tying it to real budgets.",
+    "domains": ["construction", "landscaping", "interior design", "everyday life"],
+    "workedExample": "**Sodding a backyard, with a patio to skip**\n\nA backyard is a $40\\text{ ft} \\times 30\\text{ ft}$ rectangle, but a $10\\text{ ft} \\times 8\\text{ ft}$ patio in one corner doesn't need grass. How much sod, and what does it cost at $\\$2$ per square foot?\n\nTotal yard area: $40 \\times 30 = 1200\\text{ ft}^2$. Patio area to subtract: $10 \\times 8 = 80\\text{ ft}^2$. So the sodded region is $1200 - 80 = 1120\\text{ ft}^2$.\n\nCost $=$ area $\\times$ price $= 1120 \\times \\$2 = \\$2240$.\n\nNotice we **subtracted** the composite piece before paying — ordering sod for the full $1200\\text{ ft}^2$ would have wasted \\$160. The same subtract-the-hole logic prices a walkway around a pool, a window opening in a painted wall, or a flower bed cut into a lawn.",
+    "domainNotes": [
+      "**Construction:** square footage of flooring or drywall, and gallons of paint (wall area ÷ coverage).",
+      "**Landscaping:** sod and turf by area, fencing and edging by perimeter, mulch by bed area.",
+      "**Interior design:** rug and tile sizing, countertop area, and trim length around a room.",
+      "**Everyday life:** the area (and so the value) of a pizza, a TV screen, or a tarp."
+    ]
+  },
+  "generators": ["rect-area-perim-v1", "triangle-area-v1", "trapezoid-area-v1", "circle-area-circ-v1", "fencing-cost-v1"],
+  "problems": [
+    {
+      "id": "geometry.perimeter-and-area.s01",
+      "concepts": ["rectangle-square"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A rectangular rug is 9 feet long and 4 feet wide. What is its area?",
+      "steps": [
+        { "instruction": "Multiply length by width to find the area.", "answer": "36", "accept": ["36 ft^2", "36 square feet"], "hint": "Area of a rectangle is length × width." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "square feet" },
+      "solutionNarrative": "Area $= l \\times w = 9 \\times 4 = 36\\text{ ft}^2$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s02",
+      "concepts": ["rectangle-square"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You want to fence a square garden plot whose side is 12 feet. How many feet of fencing do you need for the full perimeter?",
+      "steps": [
+        { "instruction": "A square's perimeter is 4 times its side. Compute it.", "answer": "48", "accept": ["48 ft", "48 feet"], "hint": "$P = 4s = 4 \\times 12$." }
+      ],
+      "finalAnswer": { "value": "48", "unit": "feet" },
+      "solutionNarrative": "Perimeter of a square $= 4s = 4 \\times 12 = 48$ feet of fencing."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s03",
+      "concepts": ["rectangle-square"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rectangular kitchen floor has an area of 90 square feet. If it is 6 feet wide, how long is it?",
+      "steps": [
+        { "instruction": "Area = length × width, so length = area ÷ width. Divide.", "answer": "15", "accept": ["15 ft", "15 feet"], "hint": "$90 \\div 6$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "feet" },
+      "solutionNarrative": "Length $=$ area $\\div$ width $= 90 \\div 6 = 15$ feet."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s04",
+      "concepts": ["rectangle-square"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A rectangle has length 11 and width 7. Find its perimeter.",
+      "steps": [
+        { "instruction": "Use $P = 2l + 2w$.", "answer": "36", "accept": ["P = 36", "36 units"], "hint": "$2(11) + 2(7) = 22 + 14$." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "" },
+      "solutionNarrative": "$P = 2(11) + 2(7) = 22 + 14 = 36$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s05",
+      "concepts": ["triangle-parallelogram-trapezoid"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A triangular garden flag has a base of 10 inches and a height of 6 inches. What is its area?",
+      "steps": [
+        { "instruction": "Use the triangle area formula $A = \\tfrac{1}{2} b h$.", "answer": "30", "accept": ["30 in^2", "30 square inches"], "hint": "$\\tfrac{1}{2} \\times 10 \\times 6$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "square inches" },
+      "solutionNarrative": "$A = \\tfrac{1}{2}(10)(6) = \\tfrac{1}{2}(60) = 30\\text{ in}^2$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s06",
+      "concepts": ["triangle-parallelogram-trapezoid"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A parallelogram-shaped parking space has a base of 9 feet and a perpendicular height of 5 feet. What is its area?",
+      "steps": [
+        { "instruction": "Use the parallelogram area formula $A = b h$.", "answer": "45", "accept": ["45 ft^2", "45 square feet"], "hint": "Multiply base by the perpendicular height: $9 \\times 5$." }
+      ],
+      "finalAnswer": { "value": "45", "unit": "square feet" },
+      "solutionNarrative": "$A = b h = 9 \\times 5 = 45\\text{ ft}^2$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s07",
+      "concepts": ["triangle-parallelogram-trapezoid"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A garden bed is shaped like a trapezoid: its two parallel sides are 14 ft and 10 ft, and the distance between them (height) is 6 ft. What is its area?",
+      "steps": [
+        { "instruction": "Add the two parallel sides $b_1 + b_2$.", "answer": "24", "accept": ["24 ft"], "hint": "$14 + 10$." },
+        { "instruction": "Apply $A = \\tfrac{1}{2}(b_1 + b_2)h$ using that sum and the height 6.", "answer": "72", "accept": ["72 ft^2", "72 square feet"], "hint": "$\\tfrac{1}{2} \\times 24 \\times 6$." }
+      ],
+      "finalAnswer": { "value": "72", "unit": "square feet" },
+      "solutionNarrative": "$b_1 + b_2 = 24$; $A = \\tfrac{1}{2}(24)(6) = 12 \\times 6 = 72\\text{ ft}^2$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s08",
+      "concepts": ["circle-circumference-area"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A circular tabletop has a radius of 10 inches. Find its circumference. Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Use $C = 2\\pi r$ with $\\pi \\approx 3.14$. Compute and round to 1 decimal place.", "answer": "62.8", "accept": ["62.8 in", "62.8 inches"], "hint": "$2 \\times 3.14 \\times 10$." }
+      ],
+      "finalAnswer": { "value": "62.8", "unit": "inches" },
+      "solutionNarrative": "$C = 2\\pi r \\approx 2(3.14)(10) = 62.8$ inches."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s09",
+      "concepts": ["circle-circumference-area"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 16-inch pizza has a diameter of 16 inches. What is its area? Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Find the radius (half the diameter).", "answer": "8", "accept": ["8 in", "8 inches"], "hint": "Radius $= 16 \\div 2$." },
+        { "instruction": "Apply $A = \\pi r^2$ with $\\pi \\approx 3.14$. Round to 1 decimal place.", "answer": "200.96", "accept": ["201", "201.0"], "hint": "$3.14 \\times 8^2 = 3.14 \\times 64$." }
+      ],
+      "finalAnswer": { "value": "200.96", "unit": "square inches" },
+      "solutionNarrative": "Radius $= 8$; $A = \\pi r^2 \\approx 3.14(64) = 200.96\\text{ in}^2$ (about $201$)."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s10",
+      "concepts": ["circle-circumference-area"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A circular flower bed of radius 7 ft will be edged with metal trim and filled with mulch. Find the circumference (trim needed) and the area (mulch coverage). Use $\\pi \\approx 3.14$ and round each to 1 decimal place.",
+      "steps": [
+        { "instruction": "Circumference: $C = 2\\pi r$. Round to 1 decimal place.", "answer": "43.96", "accept": ["44", "44.0"], "hint": "$2 \\times 3.14 \\times 7$." },
+        { "instruction": "Area: $A = \\pi r^2$. Round to 1 decimal place.", "answer": "153.86", "accept": ["153.9"], "hint": "$3.14 \\times 7^2 = 3.14 \\times 49$." }
+      ],
+      "finalAnswer": { "value": "153.86", "unit": "square feet" },
+      "solutionNarrative": "$C = 2(3.14)(7) = 43.96$ ft of trim; $A = 3.14(49) = 153.86\\text{ ft}^2$ of mulch coverage (about $153.9$)."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s11",
+      "concepts": ["composite-and-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You are laying hardwood flooring in a 12 ft by 10 ft room. The flooring costs \\$4 per square foot. What is the total cost?",
+      "steps": [
+        { "instruction": "Find the floor area (length × width).", "answer": "120", "accept": ["120 ft^2", "120 square feet"], "hint": "$12 \\times 10$." },
+        { "instruction": "Multiply the area by the price per square foot to get the cost.", "answer": "480", "accept": ["480 dollars", "\\$480"], "hint": "$120 \\times 4$." }
+      ],
+      "finalAnswer": { "value": "480", "unit": "dollars" },
+      "solutionNarrative": "Area $= 12 \\times 10 = 120\\text{ ft}^2$; cost $= 120 \\times \\$4 = \\$480$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s12",
+      "concepts": ["composite-and-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A soccer practice field measures 50 yards by 30 yards and will be covered with artificial turf at \\$8 per square yard. What is the total turf cost?",
+      "steps": [
+        { "instruction": "Find the field's area in square yards.", "answer": "1500", "accept": ["1500 yd^2", "1500 square yards"], "hint": "$50 \\times 30$." },
+        { "instruction": "Multiply the area by \\$8 per square yard.", "answer": "12000", "accept": ["12000 dollars", "\\$12000"], "hint": "$1500 \\times 8$." }
+      ],
+      "finalAnswer": { "value": "12000", "unit": "dollars" },
+      "solutionNarrative": "Area $= 50 \\times 30 = 1500\\text{ yd}^2$; cost $= 1500 \\times \\$8 = \\$12{,}000$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s13",
+      "concepts": ["composite-and-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rectangular patio is 20 ft by 16 ft. A rectangular swimming pool 12 ft by 8 ft sits inside it. The area around the pool (the patio minus the pool) will be tiled. How many square feet of tile are needed?",
+      "steps": [
+        { "instruction": "Find the full patio area.", "answer": "320", "accept": ["320 ft^2", "320 square feet"], "hint": "$20 \\times 16$." },
+        { "instruction": "Find the pool's area.", "answer": "96", "accept": ["96 ft^2", "96 square feet"], "hint": "$12 \\times 8$." },
+        { "instruction": "Subtract the pool from the patio to get the tiled area.", "answer": "224", "accept": ["224 ft^2", "224 square feet"], "hint": "$320 - 96$." }
+      ],
+      "finalAnswer": { "value": "224", "unit": "square feet" },
+      "solutionNarrative": "Patio $= 20 \\times 16 = 320\\text{ ft}^2$; pool $= 12 \\times 8 = 96\\text{ ft}^2$; tiled area $= 320 - 96 = 224\\text{ ft}^2$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s14",
+      "concepts": ["composite-and-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An L-shaped room is made of two rectangles: one is 10 ft by 8 ft, the other is 6 ft by 4 ft. What is the total floor area?",
+      "steps": [
+        { "instruction": "Find the area of the first rectangle.", "answer": "80", "accept": ["80 ft^2", "80 square feet"], "hint": "$10 \\times 8$." },
+        { "instruction": "Find the area of the second rectangle.", "answer": "24", "accept": ["24 ft^2", "24 square feet"], "hint": "$6 \\times 4$." },
+        { "instruction": "Add the two areas together.", "answer": "104", "accept": ["104 ft^2", "104 square feet"], "hint": "$80 + 24$." }
+      ],
+      "finalAnswer": { "value": "104", "unit": "square feet" },
+      "solutionNarrative": "Split the L into two rectangles: $10 \\times 8 = 80$ and $6 \\times 4 = 24$; total $= 80 + 24 = 104\\text{ ft}^2$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s15",
+      "concepts": ["composite-and-applied", "rectangle-square"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You are fencing a rectangular yard that is 25 ft by 15 ft. Fencing costs \\$6 per foot. What is the total fencing cost for the full perimeter?",
+      "steps": [
+        { "instruction": "Find the perimeter of the yard.", "answer": "80", "accept": ["80 ft", "80 feet"], "hint": "$P = 2(25) + 2(15)$." },
+        { "instruction": "Multiply the perimeter by \\$6 per foot.", "answer": "480", "accept": ["480 dollars", "\\$480"], "hint": "$80 \\times 6$." }
+      ],
+      "finalAnswer": { "value": "480", "unit": "dollars" },
+      "solutionNarrative": "Perimeter $= 2(25) + 2(15) = 50 + 30 = 80$ ft; cost $= 80 \\times \\$6 = \\$480$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s16",
+      "concepts": ["triangle-parallelogram-trapezoid"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the area of a triangle with base 12 and height 5.",
+      "steps": [
+        { "instruction": "Apply $A = \\tfrac{1}{2} b h$.", "answer": "30", "accept": ["30 units^2"], "hint": "$\\tfrac{1}{2} \\times 12 \\times 5$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "" },
+      "solutionNarrative": "$A = \\tfrac{1}{2}(12)(5) = \\tfrac{1}{2}(60) = 30$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s17",
+      "concepts": ["circle-circumference-area"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the area of a circle with radius 5. Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Apply $A = \\pi r^2$ with $\\pi \\approx 3.14$. Round to 1 decimal place.", "answer": "78.5", "accept": ["78.50"], "hint": "$3.14 \\times 5^2 = 3.14 \\times 25$." }
+      ],
+      "finalAnswer": { "value": "78.5", "unit": "" },
+      "solutionNarrative": "$A = \\pi r^2 \\approx 3.14(25) = 78.5$."
+    },
+    {
+      "id": "geometry.perimeter-and-area.s18",
+      "concepts": ["rectangle-square"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A square has a side length of 7. Find its area.",
+      "steps": [
+        { "instruction": "Apply $A = s^2$.", "answer": "49", "accept": ["49 units^2"], "hint": "$7^2$." }
+      ],
+      "finalAnswer": { "value": "49", "unit": "" },
+      "solutionNarrative": "$A = s^2 = 7^2 = 49$."
+    }
+  ]
+}

@@ -1,0 +1,336 @@
+{
+  "id": "calculus-1.analyzing-functions",
+  "subject": "calculus-1",
+  "title": "Analyzing Functions with Derivatives",
+  "prerequisites": ["calculus-1.differentiation-rules"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "critical-points",
+      "label": "Finding critical points",
+      "microLesson": "A **critical point** is an input where the function might turn around — where its slope is momentarily zero (a flat tangent) or undefined. For a polynomial, that means solving $f'(x) = 0$. Example: if $f(x) = x^3 - 3x$, then $f'(x) = 3x^2 - 3$, and $3x^2 - 3 = 0$ gives $x = -1$ and $x = 1$. These are the only candidates for peaks and valleys."
+    },
+    {
+      "id": "increasing-decreasing",
+      "label": "Increasing vs. decreasing",
+      "microLesson": "The sign of $f'(x)$ tells you which way the function is heading. Where $f'(x) > 0$ the function is **increasing** (rising); where $f'(x) < 0$ it is **decreasing** (falling). To find an interval, solve the inequality. For $f'(x) = 2x - 6$, the function increases when $2x - 6 > 0$, i.e. $x > 3$, and decreases when $x < 3$."
+    },
+    {
+      "id": "concavity-inflection",
+      "label": "Concavity and inflection",
+      "microLesson": "The second derivative $f''(x)$ measures how the slope itself is changing — the curve's *bend*. Where $f''(x) > 0$ the graph is **concave up** (holds water, slope increasing); where $f''(x) < 0$ it is **concave down** (sheds water, slope decreasing). An **inflection point** is where concavity switches, found by solving $f''(x) = 0$ and checking the sign changes."
+    },
+    {
+      "id": "extrema-classification",
+      "label": "Classifying extrema",
+      "microLesson": "Once you have a critical point, classify it. **First-derivative test:** if $f'$ goes $+$ then $-$, it's a **local max**; if $-$ then $+$, a **local min**. **Second-derivative test:** at a critical point, $f''>0$ means a local min, $f''<0$ a local max. The extreme **value** is $f$ evaluated there. For $f(x)=x^2-4x+1$, $f'(x)=2x-4=0$ at $x=2$; $f''>0$, so the minimum value is $f(2)=-3$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Reading a function's story from its slope\n\nA derivative is a rate of change, but it's also a **storyteller**. Hand it a profit function, a position function, or a population model, and $f'$ and $f''$ tell you exactly where the quantity is rising, where it peaks, where it bottoms out, and where its momentum is building or fading — all without graphing a single point by hand. This is the everyday job of calculus in the wild: not computing derivatives for their own sake, but *interpreting* them to make a decision.\n\nThroughout, we'll use **polynomials**, because their derivatives are again polynomials and the algebra stays clean.\n\n## Step 1: Critical points — the candidates for turning\n\nA function can only change direction where its slope is zero or undefined. For a polynomial $f$, those spots are the solutions of\n\n$$f'(x) = 0.$$\n\nThese are the **critical points** — the *only* places a smooth curve can peak or bottom out. Example: $f(x) = x^3 - 6x^2 + 9x$ has $f'(x) = 3x^2 - 12x + 9 = 3(x-1)(x-3)$, so the critical points are $x = 1$ and $x = 3$.\n\n## Step 2: Increasing or decreasing — the sign of $f'$\n\nThe **sign** of $f'$ between the critical points tells you the direction of travel:\n\n- $f'(x) > 0$ → the function is **increasing** (a profit rising, a car speeding up).\n- $f'(x) < 0$ → the function is **decreasing** (cooling off, slowing down).\n\nFor an interval question, just solve the inequality. With $f'(x) = 2x - 6$, the function increases exactly when $x > 3$.\n\n## Step 3: Classify the turning points\n\nKnowing a critical point exists isn't enough — is it a hilltop or a valley? Two tests:\n\n- **First-derivative test:** track the sign of $f'$ as $x$ passes the point. $+\\to-$ is a **local maximum** (rose, then fell). $-\\to+$ is a **local minimum**.\n- **Second-derivative test:** evaluate $f''$ at the critical point. $f''<0$ → **local max** (concave down). $f''>0$ → **local min** (concave up).\n\nThe **value** of the extreme is $f$ evaluated at that $x$. The peak of a real quantity — maximum profit, highest point of a trajectory — is exactly this.\n\nThe cubic $f(x) = x^3 - 3x$ shows the whole story at once. Its derivative $f'(x) = 3x^2 - 3$ is zero at $x = -1$ and $x = 1$. Reading left to right: the curve **rises** to a **local maximum** at $(-1, 2)$, **falls** through the origin to a **local minimum** at $(1, -2)$, then rises again.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-3, 3], \"yRange\": [-4, 4], \"grid\": true, \"curves\": [ { \"fn\": \"x^3-3*x\", \"label\": \"y=x^3-3x\", \"color\": \"accent\", \"labelAt\": 2 } ], \"points\": [ { \"x\": -1, \"y\": 2, \"label\": \"local max\", \"color\": \"warn\" }, { \"x\": 1, \"y\": -2, \"label\": \"local min\", \"color\": \"success\" }, { \"x\": 0, \"y\": 0, \"label\": \"inflection\", \"color\": \"text\" } ], \"caption\": \"y = x^3 - 3x: rising to a local max at (-1, 2), falling to a local min at (1, -2), with the bend flipping at the inflection point (0, 0)\" }\n```\n\nBetween the two turning points the tangent slopes downhill — that is the interval $-1 < x < 1$ where $f' < 0$ and the function is decreasing.\n\n## Step 4: Concavity and inflection — the second derivative\n\nThe second derivative describes the **bend** of the curve:\n\n- $f''(x) > 0$: **concave up** — the slope is increasing, the curve cups upward. In a model, growth is *accelerating*.\n- $f''(x) < 0$: **concave down** — the slope is decreasing, the curve arches over. Growth is *decelerating*.\n\nWhere concavity flips, you have an **inflection point**, found by solving $f''(x) = 0$ and confirming the sign actually changes. In real data, an inflection point is often the most important moment of all: the point where a surging epidemic stops accelerating, or where a booming business's growth begins to slow even while sales are still climbing."
+  },
+  "application": {
+    "summary": "Derivatives turn a raw function into a decision tool: f' says when profit or velocity is rising versus falling and locates the peak (the best price, the highest point of a flight), while f'' says when growth is accelerating versus slowing and finds the turning point in real data — the moment a surge stops surging.",
+    "domains": ["business", "physics", "epidemiology", "engineering"],
+    "workedExample": "**Where is profit maximized?**\n\nA shop's daily profit (dollars) when it sells $x$ items is modeled by $P(x) = -x^2 + 40x - 100$. Selling more isn't always better — at some point each extra item costs more than it earns. Where's the peak?\n\nTake the derivative and set it to zero:\n\n$$P'(x) = -2x + 40 = 0 \\;\\Rightarrow\\; x = 20.$$\n\nThis is the only critical point. Check the bend: $P''(x) = -2 < 0$, so the curve is concave down — a **maximum**, not a minimum. So selling **20 items** is optimal, and the peak profit is\n\n$$P(20) = -(20)^2 + 40(20) - 100 = \\$300.$$\n\nThe same two moves — set $P' = 0$, check $P''$ — find the cheapest production level, the strongest dosage, or the highest point of a thrown ball. And $P''$ alone answers a different question: *is profit still accelerating, or has the momentum started to fade?*",
+    "domainNotes": [
+      "**Business:** the production level or price that maximizes profit (set marginal profit $P' = 0$); whether growth is still accelerating ($P'' > 0$).",
+      "**Physics:** velocity is the derivative of position, acceleration the second — $f' = 0$ marks the top of a trajectory, $f''$ its acceleration.",
+      "**Epidemiology:** the inflection point of an infection curve ($f'' = 0$) is when new cases stop accelerating — the turning point officials watch for.",
+      "**Engineering:** locating maximum stress or deflection along a beam, where the rate of change crosses zero."
+    ]
+  },
+  "generators": ["critical-quadratic-v1", "increasing-decreasing-v1", "concavity-v1", "extrema-quadratic-v1"],
+  "problems": [
+    {
+      "id": "calculus-1.analyzing-functions.s01",
+      "concepts": ["critical-points"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the critical point of $f(x) = x^2 - 6x + 4$.",
+      "steps": [
+        { "instruction": "Differentiate $f$.", "answer": "f'(x) = 2x - 6", "accept": ["2x - 6", "2x-6"], "hint": "Bring down the power: the derivative of $x^2$ is $2x$." },
+        { "instruction": "Set $f'(x) = 0$ and solve for $x$.", "answer": "x = 3", "accept": ["3"], "hint": "Solve $2x - 6 = 0$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$f'(x) = 2x - 6$; setting it to zero gives $x = 3$, the only critical point."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s02",
+      "concepts": ["critical-points"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the critical points of $f(x) = x^3 - 12x$.",
+      "steps": [
+        { "instruction": "Differentiate $f$.", "answer": "f'(x) = 3x^2 - 12", "accept": ["3x^2 - 12", "3x^2-12"], "hint": "The derivative of $x^3$ is $3x^2$." },
+        { "instruction": "Set $f'(x) = 0$ and solve. Enter both $x$-values.", "answer": "x = 2 or x = -2", "accept": ["2, -2", "-2, 2", "2 or -2"], "hint": "$3x^2 - 12 = 0 \\Rightarrow x^2 = 4$, so $x = \\pm 2$." }
+      ],
+      "finalAnswer": { "value": "x = 2, x = -2", "unit": "" },
+      "solutionNarrative": "$f'(x) = 3x^2 - 12 = 0$ gives $x^2 = 4$, so the critical points are $x = 2$ and $x = -2$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s03",
+      "concepts": ["critical-points", "extrema-classification"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the critical points of $f(x) = x^3 - 6x^2 + 9x + 2$.",
+      "steps": [
+        { "instruction": "Differentiate $f$.", "answer": "f'(x) = 3x^2 - 12x + 9", "accept": ["3x^2 - 12x + 9", "3x^2-12x+9"], "hint": "Differentiate term by term." },
+        { "instruction": "Factor out the common factor 3.", "answer": "3(x^2 - 4x + 3)", "accept": ["3(x^2-4x+3)"], "hint": "Every coefficient is divisible by 3." },
+        { "instruction": "Set $f'(x) = 0$ and solve. Enter both $x$-values.", "answer": "x = 1 or x = 3", "accept": ["1, 3", "3, 1", "1 or 3"], "hint": "$x^2 - 4x + 3 = (x-1)(x-3)$." }
+      ],
+      "finalAnswer": { "value": "x = 1, x = 3", "unit": "" },
+      "solutionNarrative": "$f'(x) = 3x^2 - 12x + 9 = 3(x-1)(x-3) = 0$, so the critical points are $x = 1$ and $x = 3$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s04",
+      "concepts": ["increasing-decreasing"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2 - 8x + 5$, is the function increasing or decreasing at $x = 1$?",
+      "steps": [
+        { "instruction": "Differentiate $f$.", "answer": "f'(x) = 2x - 8", "accept": ["2x - 8", "2x-8"], "hint": "Derivative of $x^2$ is $2x$." },
+        { "instruction": "Evaluate $f'(1)$.", "answer": "-6", "accept": [], "hint": "Substitute $x = 1$ into $2x - 8$." },
+        { "instruction": "Since $f'(1) < 0$, is $f$ increasing or decreasing there? (one word)", "answer": "decreasing", "accept": ["falling"], "hint": "A negative slope means the function is going down." }
+      ],
+      "finalAnswer": { "value": "decreasing", "unit": "" },
+      "solutionNarrative": "$f'(x) = 2x - 8$, and $f'(1) = -6 < 0$, so the function is decreasing at $x = 1$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s05",
+      "concepts": ["increasing-decreasing"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2 - 10x + 1$, find the interval where the function is increasing (as an inequality in $x$).",
+      "steps": [
+        { "instruction": "Differentiate $f$.", "answer": "f'(x) = 2x - 10", "accept": ["2x - 10", "2x-10"], "hint": "Derivative of $x^2$ is $2x$." },
+        { "instruction": "The function increases where $f'(x) > 0$. Solve $2x - 10 > 0$.", "answer": "x > 5", "accept": ["5 < x"], "hint": "Add 10, then divide by 2." }
+      ],
+      "finalAnswer": { "value": "x > 5", "unit": "" },
+      "solutionNarrative": "$f'(x) = 2x - 10 > 0$ when $x > 5$, so the function is increasing for $x > 5$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s06",
+      "concepts": ["increasing-decreasing", "critical-points"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^3 - 3x^2$, find the interval where the function is decreasing (as an inequality in $x$). Its critical points are $x = 0$ and $x = 2$.",
+      "steps": [
+        { "instruction": "Differentiate $f$.", "answer": "f'(x) = 3x^2 - 6x", "accept": ["3x^2 - 6x", "3x^2-6x"], "hint": "Differentiate term by term." },
+        { "instruction": "Factor $f'(x)$.", "answer": "3x(x - 2)", "accept": ["3x(x-2)"], "hint": "Pull out $3x$." },
+        { "instruction": "The function decreases where $f'(x) < 0$, which is between the two roots. Give the interval as a compound inequality.", "answer": "0 < x < 2", "accept": ["0<x<2"], "hint": "Between $x = 0$ and $x = 2$ the product $3x(x-2)$ is negative." }
+      ],
+      "finalAnswer": { "value": "0 < x < 2", "unit": "" },
+      "solutionNarrative": "$f'(x) = 3x(x-2)$ is negative between its roots, so $f$ is decreasing on $0 < x < 2$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s07",
+      "concepts": ["concavity-inflection"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^3 - 3x$, is the graph concave up or concave down at $x = 1$?",
+      "steps": [
+        { "instruction": "Find the second derivative $f''(x)$.", "answer": "f''(x) = 6x", "accept": ["6x"], "hint": "$f'(x) = 3x^2 - 3$, then differentiate again." },
+        { "instruction": "Evaluate $f''(1)$.", "answer": "6", "accept": [], "hint": "Substitute $x = 1$ into $6x$." },
+        { "instruction": "Since $f''(1) > 0$, is the graph concave up or concave down? (two words)", "answer": "concave up", "accept": ["up"], "hint": "Positive second derivative means the curve cups upward." }
+      ],
+      "finalAnswer": { "value": "concave up", "unit": "" },
+      "solutionNarrative": "$f''(x) = 6x$, and $f''(1) = 6 > 0$, so the graph is concave up at $x = 1$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s08",
+      "concepts": ["concavity-inflection"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the inflection point ($x$-value) of $f(x) = x^3 - 9x^2 + 2x$.",
+      "steps": [
+        { "instruction": "Find the second derivative $f''(x)$.", "answer": "f''(x) = 6x - 18", "accept": ["6x - 18", "6x-18"], "hint": "$f'(x) = 3x^2 - 18x + 2$, then differentiate again." },
+        { "instruction": "Set $f''(x) = 0$ and solve for $x$.", "answer": "x = 3", "accept": ["3"], "hint": "Solve $6x - 18 = 0$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$f''(x) = 6x - 18 = 0$ at $x = 3$, where concavity changes, so the inflection point is at $x = 3$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s09",
+      "concepts": ["concavity-inflection"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^4 - 6x^2$, find the interval where the graph is concave down. (The inflection points are at $x = -1$ and $x = 1$.)",
+      "steps": [
+        { "instruction": "Find the second derivative $f''(x)$.", "answer": "f''(x) = 12x^2 - 12", "accept": ["12x^2 - 12", "12x^2-12"], "hint": "$f'(x) = 4x^3 - 12x$, then differentiate again." },
+        { "instruction": "Factor $f''(x)$.", "answer": "12(x^2 - 1)", "accept": ["12(x^2-1)", "12(x-1)(x+1)"], "hint": "Pull out 12; the rest is a difference of squares." },
+        { "instruction": "Concave down means $f''(x) < 0$, which happens between the inflection points. Give the interval as a compound inequality.", "answer": "-1 < x < 1", "accept": ["-1<x<1"], "hint": "$12(x^2 - 1) < 0$ when $x^2 < 1$." }
+      ],
+      "finalAnswer": { "value": "-1 < x < 1", "unit": "" },
+      "solutionNarrative": "$f''(x) = 12(x^2 - 1)$ is negative when $x^2 < 1$, so the graph is concave down on $-1 < x < 1$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s10",
+      "concepts": ["extrema-classification"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2 - 4x + 7$, find the local minimum value.",
+      "steps": [
+        { "instruction": "Differentiate and set $f'(x) = 0$ to find the critical $x$.", "answer": "x = 2", "accept": ["2"], "hint": "$f'(x) = 2x - 4 = 0$." },
+        { "instruction": "Evaluate $f(2)$ to get the minimum value.", "answer": "3", "accept": [], "hint": "$f(2) = 4 - 8 + 7$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$f'(x) = 2x - 4 = 0$ at $x = 2$; since the parabola opens up, $f(2) = 3$ is the local minimum value."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s11",
+      "concepts": ["extrema-classification"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The function $f(x) = x^3 - 3x$ has critical points at $x = -1$ and $x = 1$. Which one is the local maximum? Give its $x$-value.",
+      "steps": [
+        { "instruction": "Find the second derivative $f''(x)$.", "answer": "f''(x) = 6x", "accept": ["6x"], "hint": "$f'(x) = 3x^2 - 3$, then differentiate." },
+        { "instruction": "The local max is where $f'' < 0$. Evaluate $f''(-1)$.", "answer": "-6", "accept": [], "hint": "Substitute $x = -1$ into $6x$." },
+        { "instruction": "Since $f''(-1) < 0$, which critical $x$ is the local maximum?", "answer": "x = -1", "accept": ["-1"], "hint": "Concave down at a critical point means a local max." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$f''(x) = 6x$; at $x = -1$, $f''(-1) = -6 < 0$ (concave down), so $x = -1$ is the local maximum."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s12",
+      "concepts": ["extrema-classification", "critical-points"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the local maximum VALUE of $f(x) = x^3 - 12x + 5$. Its critical points are $x = -2$ and $x = 2$.",
+      "steps": [
+        { "instruction": "Find $f''(x)$.", "answer": "f''(x) = 6x", "accept": ["6x"], "hint": "$f'(x) = 3x^2 - 12$, then differentiate." },
+        { "instruction": "The local max is at the critical point where $f'' < 0$. Which $x$ is that?", "answer": "x = -2", "accept": ["-2"], "hint": "$f''(-2) = -12 < 0$, so $x = -2$ gives the max." },
+        { "instruction": "Evaluate $f(-2)$ to get the local maximum value.", "answer": "21", "accept": [], "hint": "$f(-2) = (-8) - 12(-2) + 5 = -8 + 24 + 5$." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "" },
+      "solutionNarrative": "$f''(x) = 6x$; at $x = -2$, $f'' < 0$ so it's the max. $f(-2) = -8 + 24 + 5 = 21$ is the local maximum value."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s13",
+      "concepts": ["extrema-classification", "critical-points"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A shop's daily profit (dollars) from selling $x$ items is $P(x) = -x^2 + 60x - 200$. How many items maximize profit?",
+      "steps": [
+        { "instruction": "Differentiate the profit $P(x)$.", "answer": "P'(x) = -2x + 60", "accept": ["-2x + 60", "-2x+60", "60 - 2x"], "hint": "Differentiate term by term." },
+        { "instruction": "Set $P'(x) = 0$ and solve for $x$.", "answer": "x = 30", "accept": ["30"], "hint": "Solve $-2x + 60 = 0$." },
+        { "instruction": "Confirm it's a max: what is the sign of $P''(x) = -2$? Type 'negative' or 'positive'.", "answer": "negative", "accept": [], "hint": "$P''(x) = -2$ is concave down, so the critical point is a maximum." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "items" },
+      "solutionNarrative": "$P'(x) = -2x + 60 = 0$ at $x = 30$; since $P''(x) = -2 < 0$ the curve is concave down, so selling 30 items maximizes profit."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s14",
+      "concepts": ["extrema-classification"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ball's height (feet) after $t$ seconds is $h(t) = -16t^2 + 64t + 5$. What is the maximum height reached?",
+      "steps": [
+        { "instruction": "Differentiate the height to get the velocity $h'(t)$.", "answer": "h'(t) = -32t + 64", "accept": ["-32t + 64", "-32t+64", "64 - 32t"], "hint": "Differentiate term by term." },
+        { "instruction": "The peak is where velocity is zero. Solve $h'(t) = 0$ for $t$.", "answer": "t = 2", "accept": ["2"], "hint": "Solve $-32t + 64 = 0$." },
+        { "instruction": "Evaluate $h(2)$ to get the maximum height.", "answer": "69", "accept": [], "hint": "$h(2) = -16(4) + 64(2) + 5 = -64 + 128 + 5$." }
+      ],
+      "finalAnswer": { "value": "69", "unit": "feet" },
+      "solutionNarrative": "Velocity $h'(t) = -32t + 64 = 0$ at $t = 2$ s (the top of the flight). $h(2) = -64 + 128 + 5 = 69$ feet is the maximum height."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s15",
+      "concepts": ["increasing-decreasing"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A company's revenue (thousands of dollars) $t$ months after launch is $R(t) = t^2 - 14t + 60$ (early on, ramp-up costs make it dip). Is revenue rising or falling at $t = 5$?",
+      "steps": [
+        { "instruction": "Differentiate $R(t)$.", "answer": "R'(t) = 2t - 14", "accept": ["2t - 14", "2t-14"], "hint": "Differentiate term by term." },
+        { "instruction": "Evaluate $R'(5)$.", "answer": "-4", "accept": [], "hint": "Substitute $t = 5$ into $2t - 14$." },
+        { "instruction": "Since $R'(5) < 0$, is revenue rising or falling? Answer 'increasing' or 'decreasing'.", "answer": "decreasing", "accept": ["falling"], "hint": "A negative rate of change means it is falling." }
+      ],
+      "finalAnswer": { "value": "decreasing", "unit": "" },
+      "solutionNarrative": "$R'(t) = 2t - 14$, and $R'(5) = -4 < 0$, so revenue is still decreasing at month 5 (it bottoms out at $t = 7$)."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s16",
+      "concepts": ["concavity-inflection"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The number of infected people in an outbreak is modeled by $N(t) = -t^3 + 18t^2 + 5t$ for $t$ in days. New infections stop accelerating at the inflection point. On which day does that turning point occur?",
+      "steps": [
+        { "instruction": "Find the first derivative $N'(t)$ (the infection rate).", "answer": "N'(t) = -3t^2 + 36t + 5", "accept": ["-3t^2 + 36t + 5", "-3t^2+36t+5"], "hint": "Differentiate term by term." },
+        { "instruction": "Find the second derivative $N''(t)$.", "answer": "N''(t) = -6t + 36", "accept": ["-6t + 36", "-6t+36", "36 - 6t"], "hint": "Differentiate $N'(t)$." },
+        { "instruction": "Set $N''(t) = 0$ and solve for $t$ to find the inflection day.", "answer": "t = 6", "accept": ["6"], "hint": "Solve $-6t + 36 = 0$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "days" },
+      "solutionNarrative": "$N''(t) = -6t + 36 = 0$ at $t = 6$. Before day 6 the curve is concave up (accelerating); after, concave down — so day 6 is the inflection point where new infections stop accelerating."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s17",
+      "concepts": ["critical-points", "extrema-classification"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A drone's altitude (meters) is $A(t) = -t^2 + 12t$ over the first several seconds. At what time $t$ does it reach its highest point?",
+      "steps": [
+        { "instruction": "Differentiate $A(t)$.", "answer": "A'(t) = -2t + 12", "accept": ["-2t + 12", "-2t+12", "12 - 2t"], "hint": "Differentiate term by term." },
+        { "instruction": "Set $A'(t) = 0$ and solve for $t$.", "answer": "t = 6", "accept": ["6"], "hint": "Solve $-2t + 12 = 0$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "seconds" },
+      "solutionNarrative": "$A'(t) = -2t + 12 = 0$ at $t = 6$; since $A''(t) = -2 < 0$ the altitude peaks there, at $t = 6$ seconds."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s18",
+      "concepts": ["critical-points", "extrema-classification"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The graph of $f(x) = x^3 - 3x$ is shown. Read off the coordinates of the local MAXIMUM as a point $(x, y)$.",
+      "plot": { "type": "cartesian", "xRange": [-3, 3], "yRange": [-3, 3], "grid": true, "curves": [ { "fn": "x^3-3*x", "label": "y=x^3-3x", "color": "accent", "labelAt": 2 } ], "points": [ { "x": -1, "y": 2, "label": "max", "color": "warn" }, { "x": 1, "y": -2, "label": "min", "color": "success" } ] },
+      "steps": [
+        { "instruction": "The local maximum is the peak on the left of the graph. Read its $x$-coordinate.", "answer": "-1", "accept": [], "hint": "It sits directly above $x = -1$." },
+        { "instruction": "State the local maximum as a point $(x, y)$.", "answer": "(-1, 2)", "accept": ["(-1,2)"], "hint": "The peak reaches up to $y = 2$." }
+      ],
+      "finalAnswer": { "value": "(-1, 2)", "unit": "" },
+      "solutionNarrative": "The curve rises to a peak at $(-1, 2)$ before turning down — that is the local maximum, confirmed by $f'(-1) = 0$ and $f''(-1) < 0$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s19",
+      "concepts": ["increasing-decreasing"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "From the graph of $f(x) = x^3 - 3x$ below, give the interval (as a compound inequality in $x$) on which the function is DECREASING — the stretch between the two turning points where the curve falls.",
+      "plot": { "type": "cartesian", "xRange": [-3, 3], "yRange": [-3, 3], "grid": true, "curves": [ { "fn": "x^3-3*x", "color": "accent" } ], "points": [ { "x": -1, "y": 2, "label": "max", "color": "warn" }, { "x": 1, "y": -2, "label": "min", "color": "success" } ] },
+      "steps": [
+        { "instruction": "At which $x$ does the curve stop rising (the left turning point)?", "answer": "-1", "accept": [], "hint": "The local maximum." },
+        { "instruction": "At which $x$ does it start rising again (the right turning point)?", "answer": "1", "accept": [], "hint": "The local minimum." },
+        { "instruction": "The function decreases between them. State the interval as a compound inequality.", "answer": "-1 < x < 1", "accept": ["-1<x<1"], "hint": "Between the max and the min the graph slopes down." }
+      ],
+      "finalAnswer": { "value": "-1 < x < 1", "unit": "" },
+      "solutionNarrative": "The curve falls from the local max at $x = -1$ to the local min at $x = 1$, so $f$ is decreasing on $-1 < x < 1$ (where $f'(x) = 3x^2 - 3 < 0$)."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s20",
+      "concepts": ["increasing-decreasing"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The graph of $f(x) = x^3 - 12x$ is shown with two marked points $A$ and $B$. At the marked point $A = (-2, 16)$, is $f'(x)$ positive, negative, or zero? (It is the left turning point.)",
+      "plot": { "type": "cartesian", "xRange": [-4, 4], "yRange": [-18, 18], "grid": true, "curves": [ { "fn": "x^3-12*x", "label": "y=x^3-12x", "color": "accent", "labelAt": 2.7 } ], "points": [ { "x": -2, "y": 16, "label": "A", "color": "warn" }, { "x": 2, "y": -16, "label": "B", "color": "success" } ] },
+      "steps": [
+        { "instruction": "At a turning point (a peak or valley) the tangent line is flat. What is the value of $f'(-2)$?", "answer": "0", "accept": [], "hint": "$A$ is the top of the left hump — the slope there is momentarily zero." },
+        { "instruction": "Is $A$ a local maximum or a local minimum? (one word)", "answer": "maximum", "accept": ["max"], "hint": "The curve peaks at $A$ then falls." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "$A$ is the left turning point (a local maximum), so the tangent is horizontal and $f'(-2) = 0$. Indeed $f'(x) = 3x^2 - 12 = 0$ at $x = -2$."
+    },
+    {
+      "id": "calculus-1.analyzing-functions.s21",
+      "concepts": ["extrema-classification", "critical-points"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the same graph of $f(x) = x^3 - 12x$, read off the coordinates of the local MINIMUM (point $B$) as a point $(x, y)$.",
+      "plot": { "type": "cartesian", "xRange": [-4, 4], "yRange": [-18, 18], "grid": true, "curves": [ { "fn": "x^3-12*x", "color": "accent" } ], "points": [ { "x": -2, "y": 16, "label": "A", "color": "warn" }, { "x": 2, "y": -16, "label": "B", "color": "success" } ] },
+      "steps": [
+        { "instruction": "Read the $x$-coordinate of the valley (point $B$).", "answer": "2", "accept": [], "hint": "$B$ sits above $x = 2$." },
+        { "instruction": "State the local minimum as a point $(x, y)$.", "answer": "(2, -16)", "accept": ["(2,-16)"], "hint": "The valley bottoms out at $y = -16$." }
+      ],
+      "finalAnswer": { "value": "(2, -16)", "unit": "" },
+      "solutionNarrative": "$B$ is the local minimum at $(2, -16)$: $f'(x) = 3x^2 - 12 = 0$ at $x = 2$, and $f(2) = 8 - 24 = -16$."
+    }
+  ]
+}

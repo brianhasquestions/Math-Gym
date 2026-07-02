@@ -1,0 +1,250 @@
+{
+  "id": "linear-algebra.linear-independence",
+  "subject": "linear-algebra",
+  "title": "Linear Independence",
+  "prerequisites": ["linear-algebra.vectors-and-span"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "independence-test",
+      "label": "Testing for independence",
+      "microLesson": "A set of vectors is **independent** if no vector is a combination of the others — each one adds genuinely new direction. It is **dependent** if at least one is redundant. The practical test: stack the vectors as columns and row-reduce. If every column has a pivot, they're independent; if a column has no pivot, that vector is redundant and the set is dependent. Equivalently, the only way to combine them to get $\\mathbf{0}$ is with all-zero coefficients."
+    },
+    {
+      "id": "determinant-method",
+      "label": "The determinant shortcut",
+      "microLesson": "For exactly $n$ vectors in $\\mathbb{R}^n$ (a square matrix), there's a one-number test: form the matrix with the vectors as columns and compute its **determinant**. If $\\det \\neq 0$, the vectors are independent; if $\\det = 0$, they're dependent. A zero determinant means the vectors collapse the space — they don't span all $n$ dimensions, so one must be redundant. This shortcut only applies when the count of vectors equals the dimension."
+    },
+    {
+      "id": "dependency-relations",
+      "label": "Finding the dependency relation",
+      "microLesson": "When a set is dependent, *knowing* it's redundant isn't enough — you often want the actual relationship. A **dependency relation** is a set of coefficients $c_1, c_2, \\dots$ (not all zero) with $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 + \\cdots = \\mathbf{0}$. It tells you exactly how to write one vector in terms of the others. You find it by solving the homogeneous system: row-reduce, then read off how the free variable forces the others."
+    },
+    {
+      "id": "rank-and-independence",
+      "label": "Rank: counting independent vectors",
+      "microLesson": "The **rank** of a set of vectors is the maximum number of them that are independent — equivalently, the number of pivots after row reduction, or the dimension of their span. If you have 5 vectors but the rank is 3, then 2 are redundant. Rank turns 'is it dependent?' into the sharper question 'how much genuinely independent information is here?' — the count of non-redundant directions."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The real question: is anything redundant?\n\nSuppose you've bolted six strain gauges onto a bridge, or you're feeding twelve columns of data into a model, or three cables are pulling on a single anchor point. A natural and expensive question keeps coming up: **are all of these actually telling me something new, or is some of it just repackaged versions of the rest?**\n\nThat is precisely the question of **linear independence**. A collection of vectors is **independent** when every one of them points in a genuinely new direction that the others cannot reproduce. It is **dependent** when at least one vector is a *combination* of the others — redundant, derivable, dead weight.\n\n## The clean definition\n\nVectors $\\mathbf{v}_1, \\mathbf{v}_2, \\dots, \\mathbf{v}_k$ are **linearly independent** if the only way to make\n\n$$c_1 \\mathbf{v}_1 + c_2 \\mathbf{v}_2 + \\cdots + c_k \\mathbf{v}_k = \\mathbf{0}$$\n\nis to take $c_1 = c_2 = \\cdots = c_k = 0$ (the trivial combination). If there is **any** other set of coefficients — some not zero — that produces $\\mathbf{0}$, the vectors are **dependent**, and that very combination tells you how one vector is built from the others.\n\n## Test 1: Row reduction (always works)\n\nStack the vectors as the columns of a matrix and row-reduce to echelon form. Count the **pivots**:\n\n- A pivot in **every** column $\\Rightarrow$ **independent**.\n- A column with **no pivot** $\\Rightarrow$ **dependent** (that column's vector is redundant).\n\nThis works for any number of vectors in any dimension. The number of pivots is the **rank** — the count of genuinely independent directions.\n\n## Test 2: The determinant (the square shortcut)\n\nWhen you have *exactly* $n$ vectors in $\\mathbb{R}^n$, the matrix is square and you get a one-number test:\n\n$$\\det \\neq 0 \\;\\Rightarrow\\; \\text{independent}, \\qquad \\det = 0 \\;\\Rightarrow\\; \\text{dependent}.$$\n\nFor a $2\\times 2$ matrix $\\begin{pmatrix} a & b \\\\\\\\ c & d \\end{pmatrix}$, the determinant is $ad - bc$. A zero determinant means the vectors fail to span all $n$ dimensions — they've collapsed, so one is redundant. **Caution:** this only applies when the number of vectors equals the dimension. Three vectors in $\\mathbb{R}^2$ are *always* dependent (you can't fit three independent directions in a plane), and no determinant is needed.\n\n## Finding the dependency relation\n\nWhen a set is dependent, the useful output is often the **relationship** itself. Solve $c_1\\mathbf{v}_1 + \\cdots + c_k\\mathbf{v}_k = \\mathbf{0}$: row-reduce, identify the **free variable**, and read off the forced coefficients. For example, if $\\mathbf{v}_3 = 2\\mathbf{v}_1 + 3\\mathbf{v}_2$, then $2\\mathbf{v}_1 + 3\\mathbf{v}_2 - \\mathbf{v}_3 = \\mathbf{0}$ is the relation, with coefficient vector $\\langle 2, 3, -1 \\rangle$.\n\n## Rank: how much information is really there\n\nThe **rank** is the maximum number of independent vectors in the set — the number of pivots. If five sensors have rank 3, then two of them are redundant: their readings are determined by the other three. Rank is the single number that answers *\"how many genuinely independent measurements do I have?\"*"
+  },
+  "application": {
+    "summary": "Linear independence answers 'is any of this redundant?' — the question behind dropping duplicate sensors, removing collinear features before fitting a model, checking whether a set of forces is over-specified, and finding the true number of independent measurements (the rank) in a pile of data.",
+    "domains": ["data science", "engineering", "physics", "control systems"],
+    "workedExample": "**Are these three sensors redundant?**\n\nThree temperature sensors report readings that you model as vectors $\\mathbf{s}_1 = \\langle 1, 0, 2 \\rangle$, $\\mathbf{s}_2 = \\langle 0, 1, 1 \\rangle$, $\\mathbf{s}_3 = \\langle 2, 1, 5 \\rangle$. Is the third sensor giving you new information, or is it just a blend of the first two?\n\nWith three vectors in $\\mathbb{R}^3$ the matrix is square, so use the determinant. Place them as columns:\n\n$$\\det \\begin{pmatrix} 1 & 0 & 2 \\\\\\\\ 0 & 1 & 1 \\\\\\\\ 2 & 1 & 5 \\end{pmatrix} = 1(1\\cdot 5 - 1\\cdot 1) - 0 + 2(0\\cdot 1 - 1\\cdot 2) = 1(4) + 2(-2) = 0.$$\n\nThe determinant is **0**, so the set is **dependent** — the third sensor is redundant. Solving the relation confirms $\\mathbf{s}_3 = 2\\mathbf{s}_1 + \\mathbf{s}_2$: sensor 3 carries no information you didn't already have. You can drop it and save the wiring, calibration, and maintenance. The rank of the set is **2** — two genuinely independent measurements, not three.",
+    "domainNotes": [
+      "**Data science:** collinear features (one column a combination of others) make a regression unstable; checking independence/rank tells you which columns to drop.",
+      "**Engineering:** a set of forces or constraints that is linearly dependent is over-specified or redundant — the determinant flags it instantly.",
+      "**Sensors/measurement:** the rank of stacked sensor vectors is the number of truly independent readings; redundant sensors add cost without information.",
+      "**Control systems:** controllability and observability hinge on whether certain vectors are independent (a full-rank matrix)."
+    ]
+  },
+  "generators": ["indep-det-v1", "laf-independence-test-d1", "laf-independence-test-d2", "laf-independence-test-d3", "laf-determinant-method-d1", "laf-determinant-method-d3", "laf-dependency-relations-d1", "laf-dependency-relations-d2", "laf-dependency-relations-d3", "laf-rank-and-independence-d1", "laf-rank-and-independence-d2", "laf-rank-and-independence-d3"],
+  "problems": [
+    {
+      "id": "linear-algebra.linear-independence.s01",
+      "concepts": ["independence-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Are the vectors $\\langle 1, 0 \\rangle$ and $\\langle 0, 1 \\rangle$ linearly independent or dependent?",
+      "steps": [
+        { "instruction": "Can either vector be written as a multiple of the other? Answer 'independent' or 'dependent'.", "answer": "independent", "accept": ["linearly independent"], "hint": "Neither standard axis vector is a scalar multiple of the other." }
+      ],
+      "finalAnswer": { "value": "independent", "unit": "" },
+      "solutionNarrative": "$\\langle 1,0\\rangle$ and $\\langle 0,1\\rangle$ point in perpendicular directions; neither is a multiple of the other, so they are independent."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s02",
+      "concepts": ["independence-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Are the vectors $\\langle 2, 4 \\rangle$ and $\\langle 1, 2 \\rangle$ linearly independent or dependent?",
+      "steps": [
+        { "instruction": "Is one vector a scalar multiple of the other? Answer 'independent' or 'dependent'.", "answer": "dependent", "accept": ["linearly dependent"], "hint": "Notice that $\\langle 2,4\\rangle = 2\\langle 1,2\\rangle$." }
+      ],
+      "finalAnswer": { "value": "dependent", "unit": "" },
+      "solutionNarrative": "$\\langle 2,4\\rangle = 2\\langle 1,2\\rangle$, so one is a multiple of the other and the set is dependent."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s03",
+      "concepts": ["independence-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Are $\\langle 1, 2, 3 \\rangle$, $\\langle 2, 4, 6 \\rangle$, and $\\langle 0, 1, 0 \\rangle$ independent or dependent?",
+      "steps": [
+        { "instruction": "Compare the first two vectors. Is $\\langle 2,4,6 \\rangle$ a multiple of $\\langle 1,2,3 \\rangle$? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Divide each component of the second by the first." },
+        { "instruction": "Since two of the three vectors are multiples, is the whole set independent or dependent?", "answer": "dependent", "accept": ["linearly dependent"], "hint": "If any one vector is redundant, the entire set is dependent." }
+      ],
+      "finalAnswer": { "value": "dependent", "unit": "" },
+      "solutionNarrative": "$\\langle 2,4,6\\rangle = 2\\langle 1,2,3\\rangle$, so the first two are redundant. The presence of that redundancy makes the whole set dependent, regardless of the third vector."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s04",
+      "concepts": ["independence-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A data table has three feature columns modeled as $\\langle 1, 1, 0 \\rangle$, $\\langle 0, 1, 1 \\rangle$, and $\\langle 1, 0, -1 \\rangle$. To check for redundant features, decide whether these three vectors are independent or dependent.",
+      "steps": [
+        { "instruction": "Look for a combination: compute $\\langle 1,1,0\\rangle - \\langle 0,1,1\\rangle$. What vector do you get? Write it as <a, b, c>.", "answer": "<1, 0, -1>", "accept": ["<1,0,-1>", "(1, 0, -1)", "1, 0, -1"], "hint": "Subtract component by component." },
+        { "instruction": "That result equals the third column. So the columns are independent or dependent?", "answer": "dependent", "accept": ["linearly dependent"], "hint": "The third feature is exactly column 1 minus column 2 — redundant." }
+      ],
+      "finalAnswer": { "value": "dependent", "unit": "" },
+      "solutionNarrative": "$\\langle 1,1,0\\rangle - \\langle 0,1,1\\rangle = \\langle 1,0,-1\\rangle$, which is the third column. The third feature is fully determined by the first two, so the columns are dependent — drop one feature."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s05",
+      "concepts": ["determinant-method"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For the vectors $\\langle 1, 0 \\rangle$ and $\\langle 0, 1 \\rangle$, compute the determinant of the matrix with these as columns.",
+      "steps": [
+        { "instruction": "Compute $\\det \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} = ad - bc$. Give the number.", "answer": "1", "accept": [], "hint": "$ad - bc = (1)(1) - (0)(0)$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\det = (1)(1) - (0)(0) = 1$. Since it is nonzero, the vectors are independent."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s06",
+      "concepts": ["determinant-method"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the determinant to decide whether $\\langle 3, 2 \\rangle$ and $\\langle 6, 4 \\rangle$ are independent.",
+      "steps": [
+        { "instruction": "Compute $\\det \\begin{pmatrix} 3 & 6 \\\\ 2 & 4 \\end{pmatrix} = ad - bc$. Give the number.", "answer": "0", "accept": [], "hint": "$(3)(4) - (6)(2) = 12 - 12$." },
+        { "instruction": "Based on the determinant, are the vectors independent? Answer 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "A zero determinant means dependent, so 'no' for independent." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$\\det = (3)(4) - (6)(2) = 0$. A zero determinant means the vectors are dependent, so they are NOT independent."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s07",
+      "concepts": ["determinant-method"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute the determinant of the matrix whose columns are $\\langle 1, 0, 2 \\rangle$, $\\langle 0, 1, 1 \\rangle$, $\\langle 2, 1, 5 \\rangle$.",
+      "steps": [
+        { "instruction": "Expand along the first row: $1\\cdot(1\\cdot5 - 1\\cdot1) - 0 + 2\\cdot(0\\cdot1 - 1\\cdot2)$. Give the number.", "answer": "0", "accept": [], "hint": "$1(5-1) + 2(0-2) = 4 - 4$." },
+        { "instruction": "Are the three vectors independent? Answer 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Zero determinant means dependent." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "Expanding gives $1(4) + 2(-2) = 0$. The determinant is 0, so the vectors are dependent (not independent)."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s08",
+      "concepts": ["determinant-method"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Three force vectors act at an anchor point: $\\langle 1, 2, 0 \\rangle$, $\\langle 0, 1, 3 \\rangle$, $\\langle 1, 0, 1 \\rangle$ (newtons). Use the determinant to decide whether the set of forces is redundant (dependent).",
+      "steps": [
+        { "instruction": "Form the matrix with these as columns and expand the determinant along the first row: $1(1\\cdot1 - 3\\cdot0) - 0 + 1(2\\cdot3 - 1\\cdot0)$. Give the number.", "answer": "7", "accept": [], "hint": "$1(1-0) + 1(6-0) = 1 + 6$." },
+        { "instruction": "Is the set of forces redundant? Answer 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "A nonzero determinant means independent, so not redundant." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "The determinant is $1(1) + 1(6) = 7 \\neq 0$, so the three forces are independent — none is a combination of the others, and the set is not redundant."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s09",
+      "concepts": ["dependency-relations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The vectors $\\mathbf{v}_1 = \\langle 1, 1 \\rangle$ and $\\mathbf{v}_2 = \\langle 2, 2 \\rangle$ are dependent. We want coefficients with $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{0}$. If $c_2 = 1$, what is $c_1$?",
+      "steps": [
+        { "instruction": "Since $\\mathbf{v}_2 = 2\\mathbf{v}_1$, we need $c_1\\mathbf{v}_1 + \\mathbf{v}_2 = \\mathbf{0}$. What value of $c_1$ works? Give the number.", "answer": "-2", "accept": [], "hint": "$\\mathbf{v}_2 = 2\\mathbf{v}_1$, so $-2\\mathbf{v}_1 + \\mathbf{v}_2 = \\mathbf{0}$." }
+      ],
+      "finalAnswer": { "value": "-2", "unit": "" },
+      "solutionNarrative": "Because $\\mathbf{v}_2 = 2\\mathbf{v}_1$, we have $-2\\mathbf{v}_1 + 1\\cdot\\mathbf{v}_2 = \\mathbf{0}$, so $c_1 = -2$."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s10",
+      "concepts": ["dependency-relations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $\\mathbf{v}_1 = \\langle 1, 0 \\rangle$, $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$, and $\\mathbf{v}_3 = \\langle 3, 2 \\rangle$, write $\\mathbf{v}_3$ in terms of $\\mathbf{v}_1$ and $\\mathbf{v}_2$.",
+      "steps": [
+        { "instruction": "Find $a$ and $b$ so that $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$. What is $a$ (the coefficient of $\\mathbf{v}_1$)?", "answer": "3", "accept": [], "hint": "The first component of $\\mathbf{v}_3$ is 3." },
+        { "instruction": "What is $b$ (the coefficient of $\\mathbf{v}_2$)?", "answer": "2", "accept": [], "hint": "The second component of $\\mathbf{v}_3$ is 2." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$\\mathbf{v}_3 = \\langle 3,2\\rangle = 3\\langle 1,0\\rangle + 2\\langle 0,1\\rangle = 3\\mathbf{v}_1 + 2\\mathbf{v}_2$, so $a = 3$, $b = 2$."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s11",
+      "concepts": ["dependency-relations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A redundant sensor reads $\\mathbf{s}_3 = \\langle 2, 1, 5 \\rangle$, which is built from $\\mathbf{s}_1 = \\langle 1, 0, 2 \\rangle$ and $\\mathbf{s}_2 = \\langle 0, 1, 1 \\rangle$. The dependency relation is $c_1\\mathbf{s}_1 + c_2\\mathbf{s}_2 + c_3\\mathbf{s}_3 = \\mathbf{0}$ with $c_3 = -1$. Find the coefficient vector $\\langle c_1, c_2, c_3 \\rangle$.",
+      "steps": [
+        { "instruction": "First express $\\mathbf{s}_3 = a\\mathbf{s}_1 + b\\mathbf{s}_2$. What is $a$? (Match the first component: $a\\cdot1 + b\\cdot0 = 2$.)", "answer": "2", "accept": [], "hint": "The first component forces $a = 2$." },
+        { "instruction": "What is $b$? (Match the second component: $a\\cdot0 + b\\cdot1 = 1$.)", "answer": "1", "accept": [], "hint": "The second component forces $b = 1$. Check the third: $2(2)+1(1)=5$. ✓" },
+        { "instruction": "Since $\\mathbf{s}_3 = 2\\mathbf{s}_1 + \\mathbf{s}_2$, rearrange to $2\\mathbf{s}_1 + \\mathbf{s}_2 - \\mathbf{s}_3 = \\mathbf{0}$. Give the coefficient vector $\\langle c_1, c_2, c_3 \\rangle$.", "answer": "<2, 1, -1>", "accept": ["<2,1,-1>", "(2, 1, -1)", "2, 1, -1"], "hint": "$c_1 = 2$, $c_2 = 1$, $c_3 = -1$." }
+      ],
+      "finalAnswer": { "value": "<2, 1, -1>", "unit": "" },
+      "solutionNarrative": "Matching components gives $\\mathbf{s}_3 = 2\\mathbf{s}_1 + \\mathbf{s}_2$. Rearranged, $2\\mathbf{s}_1 + 1\\mathbf{s}_2 - 1\\mathbf{s}_3 = \\mathbf{0}$, so the coefficient vector is $\\langle 2, 1, -1 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s12",
+      "concepts": ["rank-and-independence"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "What is the rank of the set $\\{\\langle 1, 0 \\rangle, \\langle 0, 1 \\rangle\\}$ — i.e., how many of these vectors are independent?",
+      "steps": [
+        { "instruction": "Neither is a multiple of the other, so how many independent vectors are there? Give the number.", "answer": "2", "accept": [], "hint": "Both standard axis vectors count; the rank equals the number of independent ones." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Both vectors are independent, so the rank is 2."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s13",
+      "concepts": ["rank-and-independence"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the rank of $\\{\\langle 1, 2 \\rangle, \\langle 2, 4 \\rangle, \\langle 5, 1 \\rangle\\}$ (how many independent vectors).",
+      "steps": [
+        { "instruction": "The first two: is $\\langle 2,4\\rangle$ a multiple of $\\langle 1,2\\rangle$? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$\\langle 2,4\\rangle = 2\\langle 1,2\\rangle$." },
+        { "instruction": "So one of those two is redundant. Counting $\\langle 1,2\\rangle$ and the independent $\\langle 5,1\\rangle$, what is the rank? Give the number.", "answer": "2", "accept": [], "hint": "Two distinct directions survive: $\\langle 1,2\\rangle$ and $\\langle 5,1\\rangle$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$\\langle 2,4\\rangle$ is a multiple of $\\langle 1,2\\rangle$, so it adds nothing. The surviving independent directions are $\\langle 1,2\\rangle$ and $\\langle 5,1\\rangle$, giving rank 2 (the most possible in $\\mathbb{R}^2$)."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s14",
+      "concepts": ["rank-and-independence"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Five sensors produce readings modeled as $\\langle 1,0,0\\rangle$, $\\langle 0,1,0\\rangle$, $\\langle 0,0,1\\rangle$, $\\langle 2,3,1\\rangle$, $\\langle 1,1,1\\rangle$ in $\\mathbb{R}^3$. How many genuinely independent measurements are there (the rank)?",
+      "steps": [
+        { "instruction": "The first three vectors are the standard axes of $\\mathbb{R}^3$. What is the maximum possible rank of any set of vectors in $\\mathbb{R}^3$? Give the number.", "answer": "3", "accept": [], "hint": "You cannot have more than 3 independent directions in 3D space." },
+        { "instruction": "Since the first three already span all of $\\mathbb{R}^3$, the other two must be combinations of them. So what is the rank? Give the number.", "answer": "3", "accept": [], "hint": "The rank can't exceed 3, and the three axis vectors already achieve it." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "The three standard axis vectors are independent and span $\\mathbb{R}^3$, so the rank is already 3 — the maximum in three dimensions. The remaining two sensors are necessarily combinations of them, so 5 sensors carry only 3 independent measurements; 2 are redundant."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s15",
+      "concepts": ["rank-and-independence"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "What is the rank of the single-vector set $\\{\\langle 0, 0, 0 \\rangle\\}$ (the zero vector)?",
+      "steps": [
+        { "instruction": "The zero vector points in no direction and adds no independent information. What is the rank? Give the number.", "answer": "0", "accept": [], "hint": "Any set containing only the zero vector is dependent and contributes no independent direction." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "The zero vector is always dependent (e.g. $5\\cdot\\mathbf{0} = \\mathbf{0}$ with a nonzero coefficient), so it contributes no independent direction and the rank is 0."
+    },
+    {
+      "id": "linear-algebra.linear-independence.s16",
+      "concepts": ["independence-test", "determinant-method"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Decide whether $\\langle 1, 2, 1 \\rangle$, $\\langle 2, 0, 1 \\rangle$, $\\langle 1, 1, 0 \\rangle$ are independent, using the determinant.",
+      "steps": [
+        { "instruction": "Expand the determinant of the matrix with these columns along the first row: $1(0\\cdot0 - 1\\cdot1) - 2(2\\cdot0 - 1\\cdot1) + 1(2\\cdot1 - 0\\cdot1)$. Give the number.", "answer": "3", "accept": [], "hint": "$1(0-1) - 2(0-1) + 1(2-0) = -1 + 2 + 2$." },
+        { "instruction": "Based on that determinant, are the vectors independent or dependent?", "answer": "independent", "accept": ["linearly independent"], "hint": "A nonzero determinant means independent." }
+      ],
+      "finalAnswer": { "value": "independent", "unit": "" },
+      "solutionNarrative": "The determinant is $-1 + 2 + 2 = 3 \\neq 0$, so the three vectors are linearly independent."
+    }
+  ]
+}

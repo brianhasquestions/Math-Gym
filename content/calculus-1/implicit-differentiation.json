@@ -1,0 +1,265 @@
+{
+  "id": "calculus-1.implicit-differentiation",
+  "subject": "calculus-1",
+  "title": "Implicit Differentiation",
+  "prerequisites": ["calculus-1.differentiation-rules"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "differentiate-term-by-term",
+      "label": "Differentiating an implicit equation",
+      "microLesson": "When a curve is given as an equation in $x$ and $y$ (like $x^2 + y^2 = 25$), treat $y$ as a hidden function of $x$ and differentiate both sides term by term. Every $y$-term picks up a chain-rule factor $y'$: $\\frac{d}{dx}y^2 = 2y\\,y'$, while $x$-terms differentiate normally ($\\frac{d}{dx}x^2 = 2x$). A mixed term like $xy$ needs the product rule: $\\frac{d}{dx}(xy) = y + x\\,y'$."
+    },
+    {
+      "id": "solve-for-dydx",
+      "label": "Solving for dy/dx",
+      "microLesson": "After differentiating, $y'$ appears as an ordinary unknown in a linear equation — so isolate it with algebra. Gather every term containing $y'$ on one side, factor $y'$ out, and divide. From $2x + 2y\\,y' = 0$: subtract $2x$, divide by $2y$, and $\\frac{dy}{dx} = -\\frac{x}{y}$. The answer is usually a fraction involving both $x$ and $y$ — that's normal for implicit curves."
+    },
+    {
+      "id": "slope-at-point",
+      "label": "Slope at a point on the curve",
+      "microLesson": "An implicit derivative like $\\frac{dy}{dx} = -\\frac{x}{y}$ needs both coordinates: two points on a circle can share the same $x$ but have different slopes. Plug in the full point $(x_0, y_0)$ — it must actually lie on the curve — to get a number. On $x^2 + y^2 = 25$ at $(3, 4)$: slope $= -\\frac{3}{4}$; at $(3, -4)$: slope $= +\\frac{3}{4}$."
+    },
+    {
+      "id": "tangent-lines-implicit",
+      "label": "Tangent lines to implicit curves",
+      "microLesson": "Once you have the slope $m$ at a point $(x_0, y_0)$, the tangent line is the usual point–slope line: $y - y_0 = m(x - x_0)$, rearranged to $y = mx + b$. This is how you find where a wheel releases a particle, where a lens surface reflects a ray, or the best linear approximation to a constraint curve — no solving for $y$ required at any stage."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The curves your derivative rules couldn't touch\n\nEverything you've differentiated so far arrived pre-packaged as $y = f(x)$: cost as a function of units, height as a function of time. But many of the most useful curves in science and engineering refuse to be written that way. A circular gear profile is $x^2 + y^2 = r^2$. A planetary orbit is $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$. A pressure–volume constraint might be $PV = c$, and an economist's indifference curve mixes its variables freely, like $x^2 + xy = 7$. Try to solve any of these for $y$ and you get two branches, a mess of square roots, or nothing usable at all.\n\n**Implicit differentiation** finds the slope $\\frac{dy}{dx}$ anywhere on such a curve *without ever solving for* $y$. It's a small twist on the rules you already know — and it is also the missing prerequisite that **Related Rates** always quietly assumed: every time a related-rates problem differentiates $x^2 + y^2 = z^2$ with respect to $t$ and terms like $2x\\frac{dx}{dt}$ appear, that *is* implicit differentiation, just with respect to time. Master it here and those manipulations stop being magic.\n\n## The one idea: y is secretly a function of x\n\nNear any well-behaved point, the curve does define $y$ as *some* function of $x$ — we just can't (or won't) write the formula. So treat $y$ as $y(x)$ and differentiate both sides of the equation with respect to $x$:\n\n- **$x$-terms behave normally:** $\\frac{d}{dx}x^2 = 2x$.\n- **$y$-terms pick up a chain-rule factor $y'$:** $\\frac{d}{dx}y^2 = 2y\\,y'$, because $y^2$ is really $(y(x))^2$ — outer derivative $2y$, times the inner derivative $y'$.\n- **Mixed terms need the product rule:** $\\frac{d}{dx}(xy) = (1)\\,y + x\\,y' = y + x\\,y'$.\n- **Constants still die:** $\\frac{d}{dx}\\,25 = 0$.\n\nForgetting the $y'$ on a $y$-term is *the* classic error — it's exactly the chain-rule mistake from the last topic in new clothing.\n\n## The procedure, start to finish\n\nTake the circle $x^2 + y^2 = 25$.\n\n1. **Differentiate both sides term by term:** $2x + 2y\\,y' = 0$.\n2. **Gather the $y'$ terms** (here there's just one): $2y\\,y' = -2x$.\n3. **Divide to isolate:** $\\frac{dy}{dx} = -\\frac{x}{y}$.\n4. **Evaluate at a point on the curve** if you need a number: at $(3, 4)$ the slope is $-\\frac{3}{4}$; at $(3, -4)$ it's $+\\frac{3}{4}$.\n\nNotice the answer contains **both** $x$ and $y$. That's not sloppiness — it's necessary. A circle has two points above each $x$-value with different slopes, so $x$ alone can't determine the slope; the formula needs to know which point you're standing on.\n\nAfter differentiating, $y'$ is just an ordinary unknown in a *linear* equation, so step 2–3 is plain algebra: collect, factor out $y'$ if it appears in several terms, divide.\n\n## Tangent lines: from slope to usable prediction\n\nThe slope at a point immediately gives the **tangent line** via point–slope form. On $x^2 + y^2 = 2$ at $(1,1)$: slope $= -\\frac{1}{1} = -1$, so the tangent is $y - 1 = -1(x - 1)$, i.e. $y = -x + 2$. That line is where a stone leaves a sling, the flat approximation a machinist uses at a contact point, and the local trade-off rate along a constraint curve. One derivative, one point, one line — and you never once solved for $y$.\n\n## Where you'll use this next\n\nRelated rates (differentiating constraints with respect to time), curve sketching for conics, and later the gradients of multivariable calculus all lean on this exact move: *differentiate the relationship, not the formula*."
+  },
+  "application": {
+    "summary": "Implicit differentiation finds slopes and tangent lines on curves that can't be written as y = f(x) — circles, ellipses, gear and lens profiles, constraint curves in economics and physics — and it is the differentiation move that every related-rates problem is built on.",
+    "domains": ["engineering", "physics", "economics", "astronomy"],
+    "workedExample": "**Where does the hammer fly off?**\n\nA hammer thrower spins a hammer on a wire; the hammer traces the circle $x^2 + y^2 = 100$ (meters, thrower at the origin). When released, the hammer leaves along the **tangent line** at the release point. Suppose release happens at $(6, 8)$.\n\nDifferentiate the circle implicitly: $2x + 2y\\,y' = 0$, so $\\frac{dy}{dx} = -\\frac{x}{y}$.\n\nAt $(6, 8)$ the slope is $-\\frac{6}{8} = -\\frac{3}{4}$.\n\nTangent line: $y - 8 = -\\frac{3}{4}(x - 6)$, which rearranges to $y = -\\frac{3x}{4} + \\frac{25}{2}$.\n\nThat line is the hammer's initial flight path — the safety cage, the landing sector, and the throw distance are all computed from it. Note what made this possible: the circle is *not* a function ($x = 6$ has two $y$-values), yet implicit differentiation delivered the slope directly from the equation.",
+    "domainNotes": [
+      "**Engineering:** tangent directions on gear teeth, cams, and lens surfaces determine contact forces and reflection angles; the profiles are implicit curves.",
+      "**Physics/astronomy:** orbits are ellipses $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$; the velocity vector at any orbital point is tangent to the ellipse.",
+      "**Economics:** along an indifference or constraint curve like $x^2 + xy = c$, the slope $\\frac{dy}{dx}$ is the marginal rate of substitution — the trade-off between the two goods.",
+      "**Coming next:** related rates differentiates constraints like $x^2 + y^2 = z^2$ with respect to time — implicit differentiation with $t$ as the base variable."
+    ]
+  },
+  "generators": [
+    "c1i-diff-term-d1", "c1i-diff-term-d2", "c1i-diff-term-d3",
+    "c1i-solve-dydx-d1", "c1i-solve-dydx-d2", "c1i-solve-dydx-d3",
+    "c1i-slope-d1", "c1i-slope-d2", "c1i-slope-d3",
+    "c1i-tangent-d1", "c1i-tangent-d2", "c1i-tangent-d3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-1.implicit-differentiation.s01",
+      "concepts": ["differentiate-term-by-term"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Suppose $y$ is a function of $x$. Differentiate $y^3$ with respect to $x$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Apply the chain rule: outer power rule on $y^3$, times the derivative of the inside, $y'$.", "answer": "3y^2y'", "accept": ["3y^2 y'", "3y^2*y'", "3y^2(dy/dx)", "3y^2 dy/dx", "3y^2dy/dx"], "hint": "$y^3$ is really $(y(x))^3$: bring down the 3, lower the power, then multiply by $y'$." }
+      ],
+      "finalAnswer": { "value": "3y^2 y'", "unit": "" },
+      "solutionNarrative": "Because $y$ depends on $x$, the chain rule gives $\\frac{d}{dx}y^3 = 3y^2 \\cdot y'$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s02",
+      "concepts": ["differentiate-term-by-term"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A circular garden bed has edge $x^2 + y^2 = 25$ (meters). To find the slope of the edge, first differentiate both sides with respect to $x$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate the left side term by term (remember the $y$-term carries a $y'$).", "answer": "2x + 2yy'", "accept": ["2x+2y*y'", "2x + 2y y'", "2x+2ydy/dx", "2x+2y(dy/dx)", "2yy'+2x"], "hint": "$\\frac{d}{dx}x^2 = 2x$ and $\\frac{d}{dx}y^2 = 2y\\,y'$ by the chain rule." },
+        { "instruction": "Differentiate the right side, the constant 25.", "answer": "0", "accept": [], "hint": "The derivative of any constant is 0." }
+      ],
+      "finalAnswer": { "value": "2x + 2yy' = 0", "unit": "" },
+      "solutionNarrative": "Term by term: $\\frac{d}{dx}x^2 = 2x$, $\\frac{d}{dx}y^2 = 2y\\,y'$, and the constant 25 differentiates to 0, giving $2x + 2y\\,y' = 0$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s03",
+      "concepts": ["differentiate-term-by-term"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An economist's constraint curve is $x^2 + xy = 7$. Differentiate both sides with respect to $x$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate the first term, $x^2$.", "answer": "2x", "accept": ["2*x"], "hint": "Ordinary power rule — no $y$ involved." },
+        { "instruction": "Differentiate the mixed term $xy$ using the product rule.", "answer": "y + xy'", "accept": ["y+x*y'", "xy'+y", "y+xdy/dx", "y+x(dy/dx)", "y + x y'"], "hint": "Product rule: $(1)(y) + (x)(y')$." },
+        { "instruction": "Assemble the differentiated equation (the right side is a constant).", "answer": "2x + y + xy' = 0", "accept": ["2x+y+xy'=0", "2x + y + x y' = 0", "xy'+2x+y=0", "2x+y+x*y'=0"], "hint": "Add both derivatives and set them equal to the derivative of 7, which is 0." }
+      ],
+      "finalAnswer": { "value": "2x + y + xy' = 0", "unit": "" },
+      "solutionNarrative": "$\\frac{d}{dx}x^2 = 2x$; the product rule gives $\\frac{d}{dx}(xy) = y + x\\,y'$; the constant 7 goes to 0. Altogether: $2x + y + x\\,y' = 0$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s04",
+      "concepts": ["differentiate-term-by-term"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Differentiate both sides of $x^3 + y^2 = 10$ with respect to $x$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate the left side term by term.", "answer": "3x^2 + 2yy'", "accept": ["3x^2+2y*y'", "3x^2 + 2y y'", "2yy'+3x^2", "3x^2+2ydy/dx", "3x^2+2y(dy/dx)"], "hint": "$x^3$ gives $3x^2$; $y^2$ gives $2y\\,y'$ by the chain rule." },
+        { "instruction": "Write the full differentiated equation.", "answer": "3x^2 + 2yy' = 0", "accept": ["3x^2+2y*y'=0", "2yy'+3x^2=0", "3x^2+2ydy/dx=0"], "hint": "The constant 10 differentiates to 0." }
+      ],
+      "finalAnswer": { "value": "3x^2 + 2yy' = 0", "unit": "" },
+      "solutionNarrative": "$\\frac{d}{dx}x^3 = 3x^2$, $\\frac{d}{dx}y^2 = 2y\\,y'$, and the right side goes to 0: $3x^2 + 2y\\,y' = 0$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s05",
+      "concepts": ["differentiate-term-by-term"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The folium curve satisfies $x^3 + y^3 = 6xy$. Differentiate both sides with respect to $x$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate the left side, $x^3 + y^3$.", "answer": "3x^2 + 3y^2y'", "accept": ["3x^2+3y^2*y'", "3x^2 + 3y^2 y'", "3y^2y'+3x^2", "3x^2+3y^2dy/dx"], "hint": "$x^3 \\to 3x^2$; $y^3 \\to 3y^2\\,y'$ (chain rule)." },
+        { "instruction": "Differentiate the right side, $6xy$, with the product rule.", "answer": "6y + 6xy'", "accept": ["6y+6x*y'", "6xy'+6y", "6y + 6x y'", "6y+6xdy/dx"], "hint": "$6\\,\\frac{d}{dx}(xy) = 6(y + x\\,y')$." },
+        { "instruction": "Write the full differentiated equation.", "answer": "3x^2 + 3y^2y' = 6y + 6xy'", "accept": ["3x^2+3y^2*y'=6y+6x*y'", "3x^2 + 3y^2 y' = 6y + 6x y'", "6y+6xy'=3x^2+3y^2y'"], "hint": "Set your two results equal — sides differentiate independently." }
+      ],
+      "finalAnswer": { "value": "3x^2 + 3y^2y' = 6y + 6xy'", "unit": "" },
+      "solutionNarrative": "Left side: $3x^2 + 3y^2\\,y'$. Right side (product rule): $6y + 6x\\,y'$. Equate: $3x^2 + 3y^2\\,y' = 6y + 6x\\,y'$. From here you would gather the $y'$ terms and factor."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s06",
+      "concepts": ["solve-for-dydx"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Differentiating a circle produced $2x + 2y\\,y' = 0$. Solve for $y' = \\frac{dy}{dx}$.",
+      "steps": [
+        { "instruction": "Move the $x$-term to the right side.", "answer": "2yy' = -2x", "accept": ["2y*y'=-2x", "2y y' = -2x", "-2x=2yy'", "2ydy/dx=-2x"], "hint": "Subtract $2x$ from both sides." },
+        { "instruction": "Divide to isolate $y'$. Give the simplified fraction in $x$ and $y$.", "answer": "-x/y", "accept": ["-(x/y)", "(-x)/y", "-2x/(2y)"], "hint": "Divide both sides by $2y$, then cancel the 2s." }
+      ],
+      "finalAnswer": { "value": "-x/y", "unit": "" },
+      "solutionNarrative": "From $2y\\,y' = -2x$, divide by $2y$: $\\frac{dy}{dx} = -\\frac{x}{y}$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s07",
+      "concepts": ["solve-for-dydx"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A circular running track satisfies $x^2 + y^2 = 25$. Find a formula for the slope $\\frac{dy}{dx}$ at any point of the track. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate both sides with respect to $x$.", "answer": "2x + 2yy' = 0", "accept": ["2x+2y*y'=0", "2x + 2y y' = 0", "2yy'+2x=0", "2x+2ydy/dx=0"], "hint": "$x^2 \\to 2x$, $y^2 \\to 2y\\,y'$, constant $\\to 0$." },
+        { "instruction": "Solve for $y'$. Give a fraction in $x$ and $y$.", "answer": "-x/y", "accept": ["-(x/y)", "(-x)/y", "-2x/(2y)"], "hint": "Isolate the $y'$ term, then divide by its coefficient $2y$." }
+      ],
+      "finalAnswer": { "value": "-x/y", "unit": "" },
+      "solutionNarrative": "Differentiate: $2x + 2y\\,y' = 0$. Then $2y\\,y' = -2x$, so $\\frac{dy}{dx} = -\\frac{x}{y}$ — the slope depends on both coordinates."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s08",
+      "concepts": ["solve-for-dydx"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A gas at constant temperature satisfies $xy = 12$ (pressure $x$ times volume $y$ is constant). Find $\\frac{dy}{dx}$, the rate volume trades off against pressure. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate both sides with the product rule.", "answer": "y + xy' = 0", "accept": ["y+x*y'=0", "y + x y' = 0", "xy'+y=0", "y+xdy/dx=0"], "hint": "$\\frac{d}{dx}(xy) = y + x\\,y'$; the constant 12 goes to 0." },
+        { "instruction": "Solve for $y'$. Give a fraction in $x$ and $y$.", "answer": "-y/x", "accept": ["-(y/x)", "(-y)/x"], "hint": "Move $y$ across, then divide by $x$." }
+      ],
+      "finalAnswer": { "value": "-y/x", "unit": "" },
+      "solutionNarrative": "Product rule gives $y + x\\,y' = 0$, so $x\\,y' = -y$ and $\\frac{dy}{dx} = -\\frac{y}{x}$: volume falls as pressure rises, faster when volume is large."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s09",
+      "concepts": ["solve-for-dydx"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The ellipse $x^2 + 3y^2 = 12$ is given. Solve for $\\frac{dy}{dx}$ in terms of $x$ and $y$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate both sides with respect to $x$.", "answer": "2x + 6yy' = 0", "accept": ["2x+6y*y'=0", "2x + 6y y' = 0", "6yy'+2x=0", "2x+6ydy/dx=0"], "hint": "$3y^2 \\to 3 \\cdot 2y\\,y' = 6y\\,y'$." },
+        { "instruction": "Isolate the $y'$ term.", "answer": "6yy' = -2x", "accept": ["6y*y'=-2x", "-2x=6yy'", "6ydy/dx=-2x"], "hint": "Subtract $2x$ from both sides." },
+        { "instruction": "Divide and simplify. Give the reduced fraction in $x$ and $y$.", "answer": "-x/(3y)", "accept": ["-(x/(3y))", "(-x)/(3y)", "-2x/(6y)"], "hint": "Divide by $6y$; the fraction $\\frac{-2x}{6y}$ reduces." }
+      ],
+      "finalAnswer": { "value": "-x/(3y)", "unit": "" },
+      "solutionNarrative": "Differentiate: $2x + 6y\\,y' = 0$. Isolate: $6y\\,y' = -2x$. Divide: $\\frac{dy}{dx} = \\frac{-2x}{6y} = -\\frac{x}{3y}$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s10",
+      "concepts": ["slope-at-point"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A Ferris wheel rim satisfies $x^2 + y^2 = 25$ (meters), and implicit differentiation gives $\\frac{dy}{dx} = -\\frac{x}{y}$. A cabin sits at the point $(3, 4)$. What is the slope of the rim there?",
+      "steps": [
+        { "instruction": "Substitute $x = 3$, $y = 4$ into $-\\frac{x}{y}$. Give a fraction or decimal.", "answer": "-3/4", "accept": ["-0.75"], "hint": "Both coordinates go in — the slope formula needs the whole point." }
+      ],
+      "finalAnswer": { "value": "-3/4", "unit": "" },
+      "solutionNarrative": "Slope $= -\\frac{x}{y} = -\\frac{3}{4}$ at $(3,4)$. (At the mirror point $(3,-4)$ the slope would be $+\\frac{3}{4}$ — that's why the formula keeps $y$.)"
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s11",
+      "concepts": ["slope-at-point"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the slope of the ellipse $x^2 + 4y^2 = 8$ at the point $(2, 1)$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate both sides with respect to $x$.", "answer": "2x + 8yy' = 0", "accept": ["2x+8y*y'=0", "2x + 8y y' = 0", "8yy'+2x=0", "2x+8ydy/dx=0"], "hint": "$4y^2 \\to 8y\\,y'$." },
+        { "instruction": "Solve for $y'$ as a fraction in $x$ and $y$.", "answer": "-x/(4y)", "accept": ["-(x/(4y))", "(-x)/(4y)", "-2x/(8y)"], "hint": "$8y\\,y' = -2x$, then divide and reduce." },
+        { "instruction": "Evaluate the slope at $(2, 1)$. Give a fraction or decimal.", "answer": "-1/2", "accept": ["-0.5", "-2/4"], "hint": "$-\\frac{2}{4 \\cdot 1}$." }
+      ],
+      "finalAnswer": { "value": "-1/2", "unit": "" },
+      "solutionNarrative": "Differentiate: $2x + 8y\\,y' = 0$, so $y' = -\\frac{x}{4y}$. At $(2,1)$: $-\\frac{2}{4} = -\\frac{1}{2}$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s12",
+      "concepts": ["slope-at-point"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The curve $x^3 + y^3 = 9$ passes through $(1, 2)$. Find the slope of the curve at that point. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate both sides with respect to $x$.", "answer": "3x^2 + 3y^2y' = 0", "accept": ["3x^2+3y^2*y'=0", "3x^2 + 3y^2 y' = 0", "3y^2y'+3x^2=0", "3x^2+3y^2dy/dx=0"], "hint": "$y^3 \\to 3y^2\\,y'$ by the chain rule." },
+        { "instruction": "Solve for $y'$ as a fraction in $x$ and $y$.", "answer": "-x^2/y^2", "accept": ["-(x^2/y^2)", "(-x^2)/y^2", "-3x^2/(3y^2)"], "hint": "$3y^2\\,y' = -3x^2$; divide and cancel the 3s." },
+        { "instruction": "Evaluate at $(1, 2)$. Give a fraction or decimal.", "answer": "-1/4", "accept": ["-0.25"], "hint": "$-\\frac{1^2}{2^2}$." }
+      ],
+      "finalAnswer": { "value": "-1/4", "unit": "" },
+      "solutionNarrative": "Differentiating gives $3x^2 + 3y^2\\,y' = 0$, so $y' = -\\frac{x^2}{y^2}$. At $(1,2)$: $-\\frac{1}{4}$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s13",
+      "concepts": ["slope-at-point"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A satellite's orbit satisfies $x^2 + 2y^2 = 27$ (thousands of km). Mission control needs the slope of the orbit as the satellite passes $(3, 3)$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate both sides with respect to $x$.", "answer": "2x + 4yy' = 0", "accept": ["2x+4y*y'=0", "2x + 4y y' = 0", "4yy'+2x=0", "2x+4ydy/dx=0"], "hint": "$2y^2 \\to 4y\\,y'$." },
+        { "instruction": "Solve for $y'$ as a reduced fraction in $x$ and $y$.", "answer": "-x/(2y)", "accept": ["-(x/(2y))", "(-x)/(2y)", "-2x/(4y)"], "hint": "$4y\\,y' = -2x$, then divide and reduce." },
+        { "instruction": "Evaluate the slope at $(3, 3)$. Give a fraction or decimal.", "answer": "-1/2", "accept": ["-0.5", "-3/6"], "hint": "$-\\frac{3}{2 \\cdot 3}$." }
+      ],
+      "finalAnswer": { "value": "-1/2", "unit": "" },
+      "solutionNarrative": "Differentiate: $2x + 4y\\,y' = 0$, so $y' = -\\frac{x}{2y}$. At $(3,3)$ the orbit's slope is $-\\frac{1}{2}$ — the direction the satellite is heading at that instant."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s14",
+      "concepts": ["tangent-lines-implicit"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the tangent line to the circle $x^2 + y^2 = 2$ at the point $(1, 1)$. (The implicit derivative of a circle is $\\frac{dy}{dx} = -\\frac{x}{y}$.)",
+      "steps": [
+        { "instruction": "Find the slope at $(1, 1)$.", "answer": "-1", "accept": ["-1/1"], "hint": "$-\\frac{x}{y} = -\\frac{1}{1}$." },
+        { "instruction": "Write the tangent line in the form $y = mx + b$.", "answer": "y = -x + 2", "accept": ["y=-x+2", "y=2-x", "y = 2 - x"], "hint": "Point–slope: $y - 1 = -1(x - 1)$, then simplify." }
+      ],
+      "finalAnswer": { "value": "y = -x + 2", "unit": "" },
+      "solutionNarrative": "Slope $= -\\frac{1}{1} = -1$. Point–slope: $y - 1 = -(x - 1)$, so $y = -x + 2$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s15",
+      "concepts": ["tangent-lines-implicit"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the tangent line to the hyperbola $xy = 6$ at the point $(2, 3)$. (Use $y'$ for $\\frac{dy}{dx}$.)",
+      "steps": [
+        { "instruction": "Differentiate $xy = 6$ and solve for $y'$.", "answer": "-y/x", "accept": ["-(y/x)", "(-y)/x"], "hint": "$y + x\\,y' = 0$, so $y' = -\\frac{y}{x}$." },
+        { "instruction": "Find the slope at $(2, 3)$. Give a fraction or decimal.", "answer": "-3/2", "accept": ["-1.5"], "hint": "$-\\frac{3}{2}$ — plug in both coordinates." },
+        { "instruction": "Write the tangent line in the form $y = mx + b$.", "answer": "y = -3x/2 + 6", "accept": ["y=-3x/2+6", "y=-1.5x+6", "y = -(3/2)x + 6", "y=6-3x/2", "y = 6 - 3x/2"], "hint": "Point–slope: $y - 3 = -\\frac{3}{2}(x - 2)$; distribute and add 3." }
+      ],
+      "finalAnswer": { "value": "y = -3x/2 + 6", "unit": "" },
+      "solutionNarrative": "From $y + x\\,y' = 0$, $y' = -\\frac{y}{x}$, which is $-\\frac{3}{2}$ at $(2,3)$. Then $y - 3 = -\\frac{3}{2}(x-2)$ gives $y = -\\frac{3x}{2} + 6$."
+    },
+    {
+      "id": "calculus-1.implicit-differentiation.s16",
+      "concepts": ["tangent-lines-implicit"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A robot rounds the circular track $x^2 + y^2 = 100$ (meters) and releases a package at $(6, 8)$; the package slides off along the tangent line. Find that line. (The circle's implicit derivative is $\\frac{dy}{dx} = -\\frac{x}{y}$.)",
+      "steps": [
+        { "instruction": "Find the slope at $(6, 8)$. Give a reduced fraction or decimal.", "answer": "-3/4", "accept": ["-0.75", "-6/8"], "hint": "$-\\frac{6}{8}$ reduces." },
+        { "instruction": "Write the tangent line in the form $y = mx + b$.", "answer": "y = -3x/4 + 25/2", "accept": ["y=-3x/4+25/2", "y=-0.75x+12.5", "y = -(3/4)x + 25/2", "y=-3x/4+12.5"], "hint": "Point–slope: $y - 8 = -\\frac{3}{4}(x - 6)$; note $8 + \\frac{18}{4} = \\frac{25}{2}$." }
+      ],
+      "finalAnswer": { "value": "y = -3x/4 + 25/2", "unit": "" },
+      "solutionNarrative": "Slope $= -\\frac{6}{8} = -\\frac{3}{4}$. Then $y - 8 = -\\frac{3}{4}(x - 6)$ gives $y = -\\frac{3x}{4} + \\frac{25}{2}$ — the package's straight-line path."
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "id": "matrix-algebra.matrix-inverses",
+  "subject": "matrix-algebra",
+  "title": "Matrix Inverses",
+  "prerequisites": ["matrix-algebra.determinants"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "invertibility-test",
+      "label": "Testing for invertibility",
+      "microLesson": "A square matrix has an inverse only when its **determinant is not zero**. So before inverting anything, compute $\\det(A)$. For $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$, the determinant is $ad - bc$. If $\\det(A) \\neq 0$ the matrix is **invertible** (also called *nonsingular*); if $\\det(A) = 0$ it is **singular** and has no inverse. A zero determinant means the matrix squashes space flat, and you can't un-squash it."
+    },
+    {
+      "id": "inverse-2x2",
+      "label": "Inverting a 2×2 matrix",
+      "microLesson": "For $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ with $\\det(A) = ad - bc \\neq 0$, the inverse is $A^{-1} = \\dfrac{1}{ad - bc} \\begin{bmatrix} d & -b \\\\ -c & a \\end{bmatrix}$. In words: **swap** $a$ and $d$, **negate** $b$ and $c$, then **divide every entry by the determinant**. Always verify with $A A^{-1} = I$, the identity matrix $\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$."
+    },
+    {
+      "id": "solve-with-inverse",
+      "label": "Solving A x = b with the inverse",
+      "microLesson": "A linear system can be packed into one matrix equation $A\\mathbf{x} = \\mathbf{b}$, where $A$ holds the coefficients, $\\mathbf{x}$ is the unknown vector, and $\\mathbf{b}$ is the right-hand side. If $A$ is invertible, multiply both sides on the **left** by $A^{-1}$: since $A^{-1}A = I$, you get $\\mathbf{x} = A^{-1}\\mathbf{b}$. Order matters — the inverse goes on the left of $\\mathbf{b}$."
+    },
+    {
+      "id": "inverse-applied",
+      "label": "Inverses in the real world",
+      "microLesson": "An inverse **undoes** a transformation. That makes it the universal tool for *reversing* a process: solve a 2-equation system in one shot ($\\mathbf{x} = A^{-1}\\mathbf{b}$), **decode** a message that was scrambled by multiplying by a matrix, or reverse a geometric transformation back to where it started. Whenever something was done *by multiplying by $A$*, multiplying by $A^{-1}$ takes you back."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The matrix that undoes things\n\nMultiplying by a matrix *does something* — it rotates, scales, mixes, or encodes. The natural follow-up question is always: **how do I undo it?** For ordinary numbers, you undo $\\times 5$ by multiplying by $\\tfrac{1}{5}$. The **inverse matrix** $A^{-1}$ plays that exact role for matrices: it's the matrix that cancels $A$, defined by\n\n$$A A^{-1} = A^{-1} A = I,$$\n\nwhere $I$ is the identity matrix $\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$ — the matrix that does nothing.\n\n## First: does an inverse even exist?\n\nNot every matrix can be undone. The single check is the **determinant**:\n\n$$\\det\\!\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix} = ad - bc.$$\n\n- $\\det(A) \\neq 0$: the matrix is **invertible** (nonsingular) — an inverse exists.\n- $\\det(A) = 0$: the matrix is **singular** — no inverse exists.\n\nGeometrically, the determinant is the area-scaling factor. A determinant of zero means $A$ collapses the plane onto a line (or a point) — information is destroyed, and a flattened thing can't be un-flattened. That's *why* the test works.\n\n## The 2×2 formula\n\nFor an invertible $2 \\times 2$ matrix there's a clean closed form:\n\n$$A^{-1} = \\frac{1}{ad - bc} \\begin{bmatrix} d & -b \\\\ -c & a \\end{bmatrix}.$$\n\nThe recipe is three moves: **swap** the diagonal entries $a$ and $d$, **negate** the off-diagonal entries $b$ and $c$, then **divide every entry by the determinant**. For example, with $A = \\begin{bmatrix} 4 & 3 \\\\ 1 & 1 \\end{bmatrix}$, the determinant is $4(1) - 3(1) = 1$, so\n\n$$A^{-1} = \\frac{1}{1}\\begin{bmatrix} 1 & -3 \\\\ -1 & 4 \\end{bmatrix} = \\begin{bmatrix} 1 & -3 \\\\ -1 & 4 \\end{bmatrix}.$$\n\nAlways **check** by multiplying: $A A^{-1}$ should land exactly on $I$. When the determinant isn't $\\pm 1$, the entries become fractions — keep them as fractions like $\\tfrac{1}{2}$ rather than rounding.\n\n## Why we bother: solving systems in one shot\n\nA pair of linear equations\n\n$$\\begin{aligned} 2x + y &= 5 \\\\ x + y &= 3 \\end{aligned}$$\n\nis really one matrix equation $A\\mathbf{x} = \\mathbf{b}$ with $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 1 \\end{bmatrix}$, $\\mathbf{x} = \\begin{bmatrix} x \\\\ y \\end{bmatrix}$, $\\mathbf{b} = \\begin{bmatrix} 5 \\\\ 3 \\end{bmatrix}$. If $A^{-1}$ exists, multiply both sides on the left:\n\n$$A^{-1}A\\,\\mathbf{x} = A^{-1}\\mathbf{b} \\;\\Rightarrow\\; \\mathbf{x} = A^{-1}\\mathbf{b}.$$\n\nOne matrix-times-vector and the whole system is solved at once. The same inverse reuses instantly if only $\\mathbf{b}$ changes — handy when the same coefficients appear across many scenarios."
+  },
+  "application": {
+    "summary": "An inverse undoes a matrix, which makes it the tool for reversing any process built from matrix multiplication: solving a 2-equation linear system in one step via x = A⁻¹b, decoding a message that was encrypted by multiplying by a matrix, and reversing a geometric transformation back to its original coordinates.",
+    "domains": ["cryptography", "economics", "engineering", "computer graphics"],
+    "workedExample": "**Decoding a scrambled message.**\n\nTo send the two-number message $\\begin{bmatrix} x \\\\ y \\end{bmatrix}$ securely, the sender multiplies it by an *encoding matrix* $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 1 \\end{bmatrix}$ and transmits the result $\\mathbf{c} = A\\mathbf{x}$. Suppose you receive the coded pair $\\mathbf{c} = \\begin{bmatrix} 8 \\\\ 5 \\end{bmatrix}$. To read it, you need the **decoding matrix** $A^{-1}$.\n\nFirst $\\det(A) = 2(1) - 1(1) = 1 \\neq 0$, so $A$ is invertible. The inverse is $A^{-1} = \\dfrac{1}{1}\\begin{bmatrix} 1 & -1 \\\\ -1 & 2 \\end{bmatrix}$. Now decode:\n\n$$\\mathbf{x} = A^{-1}\\mathbf{c} = \\begin{bmatrix} 1 & -1 \\\\ -1 & 2 \\end{bmatrix}\\begin{bmatrix} 8 \\\\ 5 \\end{bmatrix} = \\begin{bmatrix} 8 - 5 \\\\ -8 + 10 \\end{bmatrix} = \\begin{bmatrix} 3 \\\\ 2 \\end{bmatrix}.$$\n\nThe original message was $\\langle 3, 2 \\rangle$. The exact same arithmetic that decodes a cipher also solves a system of equations — the inverse is the single reverse gear behind both.",
+    "domainNotes": [
+      "**Cryptography:** Hill ciphers encode text by multiplying number blocks by a key matrix; the receiver decodes by multiplying by its inverse.",
+      "**Economics:** input–output models solve for the production levels that meet demand via $\\mathbf{x} = (I - A)^{-1}\\mathbf{d}$.",
+      "**Engineering:** circuit and structural problems reduce to $A\\mathbf{x} = \\mathbf{b}$; the inverse recovers currents or forces from the measured outputs.",
+      "**Computer graphics:** every transform that scales or rotates an object is undone by the inverse matrix to map screen coordinates back to model space."
+    ]
+  },
+  "generators": ["invertibility-test-v1", "inverse-2x2-v1", "solve-with-inverse-v1"],
+  "problems": [
+    {
+      "id": "matrix-algebra.matrix-inverses.s01",
+      "concepts": ["invertibility-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the determinant of $A = \\begin{bmatrix} 3 & 2 \\\\ 1 & 4 \\end{bmatrix}$ and state whether $A$ is invertible.",
+      "steps": [
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "10", "accept": [], "hint": "$ad - bc = 3 \\cdot 4 - 2 \\cdot 1$." },
+        { "instruction": "Is $A$ invertible? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "A nonzero determinant means invertible." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\det(A) = 3\\cdot4 - 2\\cdot1 = 10 \\neq 0$, so $A$ is invertible."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s02",
+      "concepts": ["invertibility-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the determinant of $A = \\begin{bmatrix} 2 & 4 \\\\ 1 & 2 \\end{bmatrix}$ and state whether $A$ is invertible.",
+      "steps": [
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "0", "accept": [], "hint": "$2 \\cdot 2 - 4 \\cdot 1$." },
+        { "instruction": "Is $A$ invertible? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "A zero determinant means singular — no inverse." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$\\det(A) = 2\\cdot2 - 4\\cdot1 = 0$, so $A$ is singular and has no inverse."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s03",
+      "concepts": ["invertibility-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $A = \\begin{bmatrix} 5 & 3 \\\\ 2 & 1 \\end{bmatrix}$, find the determinant and decide if it is invertible.",
+      "steps": [
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "-1", "accept": [], "hint": "$5 \\cdot 1 - 3 \\cdot 2 = 5 - 6$." },
+        { "instruction": "Is $A$ invertible? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "A determinant of $-1$ is nonzero." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\det(A) = 5\\cdot1 - 3\\cdot2 = -1 \\neq 0$, so $A$ is invertible (a determinant of $\\pm 1$ even guarantees integer inverse entries)."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s04",
+      "concepts": ["invertibility-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An encoding scheme can only be decoded if its key matrix is invertible. A clerk proposes the key $A = \\begin{bmatrix} 6 & 9 \\\\ 4 & 6 \\end{bmatrix}$. Determine whether messages encoded with this key can ever be decoded.",
+      "steps": [
+        { "instruction": "Compute the determinant of the key matrix.", "answer": "0", "accept": [], "hint": "$6 \\cdot 6 - 9 \\cdot 4 = 36 - 36$." },
+        { "instruction": "Can messages encoded with this key be decoded? Answer the invertibility question: type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Decoding needs the inverse, which exists only when the determinant is nonzero." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$\\det(A) = 36 - 36 = 0$, so the key is singular. No inverse exists, so the encoding cannot be reversed — the clerk must pick a different key."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s05",
+      "concepts": ["inverse-2x2"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the inverse of $A = \\begin{bmatrix} 4 & 3 \\\\ 1 & 1 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "1", "accept": [], "hint": "$4 \\cdot 1 - 3 \\cdot 1$." },
+        { "instruction": "Swap the diagonal, negate the off-diagonal, and divide by the determinant. Enter the inverse as [[a, b], [c, d]].", "answer": "[[1, -3], [-1, 4]]", "accept": [], "hint": "$\\frac{1}{1}\\begin{bmatrix} 1 & -3 \\\\ -1 & 4 \\end{bmatrix}$." }
+      ],
+      "finalAnswer": { "value": "[[1, -3], [-1, 4]]", "unit": "" },
+      "solutionNarrative": "$\\det = 1$, so $A^{-1} = \\begin{bmatrix} 1 & -3 \\\\ -1 & 4 \\end{bmatrix}$. Check: $A A^{-1} = I$."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s06",
+      "concepts": ["inverse-2x2"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the inverse of $A = \\begin{bmatrix} 2 & 0 \\\\ 0 & 4 \\end{bmatrix}$. Enter fractions, not rounded decimals.",
+      "steps": [
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "8", "accept": [], "hint": "$2 \\cdot 4 - 0 \\cdot 0$." },
+        { "instruction": "Apply the formula and divide each entry by the determinant. Enter the inverse as [[a, b], [c, d]] using fractions.", "answer": "[[1/2, 0], [0, 1/4]]", "accept": [], "hint": "$\\frac{1}{8}\\begin{bmatrix} 4 & 0 \\\\ 0 & 2 \\end{bmatrix}$; simplify each entry." }
+      ],
+      "finalAnswer": { "value": "[[1/2, 0], [0, 1/4]]", "unit": "" },
+      "solutionNarrative": "$\\det = 8$, so $A^{-1} = \\frac{1}{8}\\begin{bmatrix} 4 & 0 \\\\ 0 & 2 \\end{bmatrix} = \\begin{bmatrix} 1/2 & 0 \\\\ 0 & 1/4 \\end{bmatrix}$. A diagonal matrix inverts entrywise as reciprocals."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s07",
+      "concepts": ["inverse-2x2"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the inverse of $A = \\begin{bmatrix} 3 & 5 \\\\ 1 & 2 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "1", "accept": [], "hint": "$3 \\cdot 2 - 5 \\cdot 1 = 6 - 5$." },
+        { "instruction": "Apply the inverse formula. Enter as [[a, b], [c, d]].", "answer": "[[2, -5], [-1, 3]]", "accept": [], "hint": "Swap 3 and 2, negate 5 and 1, divide by 1." }
+      ],
+      "finalAnswer": { "value": "[[2, -5], [-1, 3]]", "unit": "" },
+      "solutionNarrative": "$\\det = 1$, so $A^{-1} = \\begin{bmatrix} 2 & -5 \\\\ -1 & 3 \\end{bmatrix}$. Check: $A A^{-1} = I$."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s08",
+      "concepts": ["inverse-2x2"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the inverse of $A = \\begin{bmatrix} 4 & 6 \\\\ 2 & 4 \\end{bmatrix}$. Enter fractions, not rounded decimals.",
+      "steps": [
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "4", "accept": [], "hint": "$4 \\cdot 4 - 6 \\cdot 2 = 16 - 12$." },
+        { "instruction": "Form $\\frac{1}{\\det}\\begin{bmatrix} d & -b \\\\ -c & a \\end{bmatrix}$ and simplify each entry to a fraction. Enter as [[a, b], [c, d]].", "answer": "[[1, -3/2], [-1/2, 1]]", "accept": [], "hint": "$\\frac{1}{4}\\begin{bmatrix} 4 & -6 \\\\ -2 & 4 \\end{bmatrix}$; reduce $4/4$, $-6/4$, $-2/4$, $4/4$." }
+      ],
+      "finalAnswer": { "value": "[[1, -3/2], [-1/2, 1]]", "unit": "" },
+      "solutionNarrative": "$\\det = 4$, so $A^{-1} = \\frac{1}{4}\\begin{bmatrix} 4 & -6 \\\\ -2 & 4 \\end{bmatrix} = \\begin{bmatrix} 1 & -3/2 \\\\ -1/2 & 1 \\end{bmatrix}$. Check: $A A^{-1} = I$."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s09",
+      "concepts": ["solve-with-inverse"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $A^{-1} = \\begin{bmatrix} 1 & -3 \\\\ -1 & 4 \\end{bmatrix}$ and $\\mathbf{b} = \\begin{bmatrix} 5 \\\\ 2 \\end{bmatrix}$, solve $A\\mathbf{x} = \\mathbf{b}$ by computing $\\mathbf{x} = A^{-1}\\mathbf{b}$.",
+      "steps": [
+        { "instruction": "Multiply $A^{-1}\\mathbf{b}$ and enter the solution as <x, y>.", "answer": "<-1, 3>", "accept": [], "hint": "Top: $1\\cdot5 + (-3)\\cdot2$. Bottom: $-1\\cdot5 + 4\\cdot2$." }
+      ],
+      "finalAnswer": { "value": "<-1, 3>", "unit": "" },
+      "solutionNarrative": "$\\mathbf{x} = \\begin{bmatrix} 1\\cdot5 - 3\\cdot2 \\\\ -1\\cdot5 + 4\\cdot2 \\end{bmatrix} = \\begin{bmatrix} -1 \\\\ 3 \\end{bmatrix}$, so $\\mathbf{x} = \\langle -1, 3 \\rangle$."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s10",
+      "concepts": ["solve-with-inverse", "inverse-2x2"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $A\\mathbf{x} = \\mathbf{b}$ for $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 1 \\end{bmatrix}$ and $\\mathbf{b} = \\begin{bmatrix} 5 \\\\ 3 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Compute the inverse $A^{-1}$. Enter as [[a, b], [c, d]].", "answer": "[[1, -1], [-1, 2]]", "accept": [], "hint": "$\\det = 2\\cdot1 - 1\\cdot1 = 1$; swap and negate." },
+        { "instruction": "Compute $\\mathbf{x} = A^{-1}\\mathbf{b}$ and enter as <x, y>.", "answer": "<2, 1>", "accept": [], "hint": "Top: $1\\cdot5 + (-1)\\cdot3$. Bottom: $-1\\cdot5 + 2\\cdot3$." }
+      ],
+      "finalAnswer": { "value": "<2, 1>", "unit": "" },
+      "solutionNarrative": "$\\det = 1$, so $A^{-1} = \\begin{bmatrix} 1 & -1 \\\\ -1 & 2 \\end{bmatrix}$. Then $\\mathbf{x} = A^{-1}\\mathbf{b} = \\langle 2, 1 \\rangle$, which solves $2x+y=5$, $x+y=3$."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s11",
+      "concepts": ["solve-with-inverse", "inverse-2x2"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $A\\mathbf{x} = \\mathbf{b}$ for $A = \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$ and $\\mathbf{b} = \\begin{bmatrix} 5 \\\\ 11 \\end{bmatrix}$. Use fractions where needed.",
+      "steps": [
+        { "instruction": "Compute the determinant.", "answer": "-2", "accept": [], "hint": "$1\\cdot4 - 2\\cdot3 = 4 - 6$." },
+        { "instruction": "Compute $A^{-1}$ and enter as [[a, b], [c, d]] using fractions.", "answer": "[[-2, 1], [3/2, -1/2]]", "accept": [], "hint": "$\\frac{1}{-2}\\begin{bmatrix} 4 & -2 \\\\ -3 & 1 \\end{bmatrix}$." },
+        { "instruction": "Compute $\\mathbf{x} = A^{-1}\\mathbf{b}$ and enter as <x, y>.", "answer": "<1, 2>", "accept": [], "hint": "Top: $-2\\cdot5 + 1\\cdot11$. Bottom: $\\frac{3}{2}\\cdot5 - \\frac{1}{2}\\cdot11$." }
+      ],
+      "finalAnswer": { "value": "<1, 2>", "unit": "" },
+      "solutionNarrative": "$\\det = -2$, so $A^{-1} = \\begin{bmatrix} -2 & 1 \\\\ 3/2 & -1/2 \\end{bmatrix}$. Then $\\mathbf{x} = \\langle -10+11,\\ 7.5-5.5 \\rangle = \\langle 1, 2 \\rangle$."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s12",
+      "concepts": ["solve-with-inverse"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A café sells small and large coffees. One morning order: 2 smalls + 1 large costs \\$8; 1 small + 1 large costs \\$5. With $x$ = small price and $y$ = large price, the system is $A\\mathbf{x} = \\mathbf{b}$ with $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 1 \\end{bmatrix}$, $\\mathbf{b} = \\begin{bmatrix} 8 \\\\ 5 \\end{bmatrix}$. Find each price.",
+      "steps": [
+        { "instruction": "Compute $A^{-1}$. Enter as [[a, b], [c, d]].", "answer": "[[1, -1], [-1, 2]]", "accept": [], "hint": "$\\det = 1$; swap diagonal, negate off-diagonal." },
+        { "instruction": "Compute $\\mathbf{x} = A^{-1}\\mathbf{b}$ and enter the prices as <x, y>.", "answer": "<3, 2>", "accept": [], "hint": "Top: $1\\cdot8 - 1\\cdot5$. Bottom: $-1\\cdot8 + 2\\cdot5$." }
+      ],
+      "finalAnswer": { "value": "<3, 2>", "unit": "dollars" },
+      "solutionNarrative": "$A^{-1} = \\begin{bmatrix} 1 & -1 \\\\ -1 & 2 \\end{bmatrix}$, so $\\mathbf{x} = A^{-1}\\mathbf{b} = \\langle 3, 2 \\rangle$: a small is \\$3 and a large is \\$2."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s13",
+      "concepts": ["inverse-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A message was encoded by multiplying by $A$, where $A^{-1} = \\begin{bmatrix} 1 & -1 \\\\ -1 & 2 \\end{bmatrix}$ is the decoding matrix. You receive the coded pair $\\mathbf{c} = \\begin{bmatrix} 8 \\\\ 5 \\end{bmatrix}$. Decode it.",
+      "steps": [
+        { "instruction": "Multiply $A^{-1}\\mathbf{c}$ to recover the original message. Enter as <x, y>.", "answer": "<3, 2>", "accept": [], "hint": "Top: $1\\cdot8 - 1\\cdot5$. Bottom: $-1\\cdot8 + 2\\cdot5$." }
+      ],
+      "finalAnswer": { "value": "<3, 2>", "unit": "" },
+      "solutionNarrative": "$\\mathbf{x} = A^{-1}\\mathbf{c} = \\begin{bmatrix} 8-5 \\\\ -8+10 \\end{bmatrix} = \\langle 3, 2 \\rangle$. Multiplying the cipher by the inverse undoes the encoding."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s14",
+      "concepts": ["inverse-applied", "inverse-2x2"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A Hill-cipher key is $A = \\begin{bmatrix} 3 & 2 \\\\ 4 & 3 \\end{bmatrix}$. To decode, you first need the decoding matrix $A^{-1}$. Find it.",
+      "steps": [
+        { "instruction": "Compute the determinant of the key.", "answer": "1", "accept": [], "hint": "$3\\cdot3 - 2\\cdot4 = 9 - 8$." },
+        { "instruction": "Compute the decoding matrix $A^{-1}$. Enter as [[a, b], [c, d]].", "answer": "[[3, -2], [-4, 3]]", "accept": [], "hint": "Swap the 3's, negate 2 and 4, divide by 1." }
+      ],
+      "finalAnswer": { "value": "[[3, -2], [-4, 3]]", "unit": "" },
+      "solutionNarrative": "$\\det = 1$, so $A^{-1} = \\begin{bmatrix} 3 & -2 \\\\ -4 & 3 \\end{bmatrix}$. Every received block is decoded by multiplying it by this matrix."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s15",
+      "concepts": ["inverse-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A drawing program scaled and sheared a point by the transform $A = \\begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\end{bmatrix}$, landing it at screen position $\\mathbf{p} = \\begin{bmatrix} 7 \\\\ 3 \\end{bmatrix}$. To support 'undo', find the original point by reversing the transform.",
+      "steps": [
+        { "instruction": "Compute the determinant of $A$.", "answer": "1", "accept": [], "hint": "$1\\cdot1 - 2\\cdot0$." },
+        { "instruction": "Compute the inverse transform $A^{-1}$. Enter as [[a, b], [c, d]].", "answer": "[[1, -2], [0, 1]]", "accept": [], "hint": "Swap diagonal (both 1), negate the 2 and the 0, divide by 1." },
+        { "instruction": "Apply $\\mathbf{x} = A^{-1}\\mathbf{p}$ to recover the original point. Enter as <x, y>.", "answer": "<1, 3>", "accept": [], "hint": "Top: $1\\cdot7 - 2\\cdot3$. Bottom: $0\\cdot7 + 1\\cdot3$." }
+      ],
+      "finalAnswer": { "value": "<1, 3>", "unit": "" },
+      "solutionNarrative": "$\\det = 1$, so $A^{-1} = \\begin{bmatrix} 1 & -2 \\\\ 0 & 1 \\end{bmatrix}$. Then $A^{-1}\\mathbf{p} = \\langle 7-6,\\ 3 \\rangle = \\langle 1, 3 \\rangle$ — the point before the shear."
+    },
+    {
+      "id": "matrix-algebra.matrix-inverses.s16",
+      "concepts": ["solve-with-inverse", "invertibility-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two alloys are blended. Mix 1 uses 3 units of metal X + 1 of metal Y; mix 2 uses 5 of X + 2 of Y. The totals available give $A = \\begin{bmatrix} 3 & 5 \\\\ 1 & 2 \\end{bmatrix}$ and $\\mathbf{b} = \\begin{bmatrix} 13 \\\\ 5 \\end{bmatrix}$, where $\\mathbf{x} = \\langle$batches of mix 1, batches of mix 2$\\rangle$. First confirm $A$ is invertible, then solve.",
+      "steps": [
+        { "instruction": "Compute the determinant and state invertibility ('yes'/'no').", "answer": "yes", "accept": [], "hint": "$\\det = 3\\cdot2 - 5\\cdot1 = 1 \\neq 0$." },
+        { "instruction": "Compute $A^{-1}$. Enter as [[a, b], [c, d]].", "answer": "[[2, -5], [-1, 3]]", "accept": [], "hint": "$\\det = 1$; swap 3 and 2, negate 5 and 1." },
+        { "instruction": "Compute $\\mathbf{x} = A^{-1}\\mathbf{b}$ and enter as <x, y>.", "answer": "<1, 2>", "accept": [], "hint": "Top: $2\\cdot13 - 5\\cdot5$. Bottom: $-1\\cdot13 + 3\\cdot5$." }
+      ],
+      "finalAnswer": { "value": "<1, 2>", "unit": "batches" },
+      "solutionNarrative": "$\\det = 1$ so $A$ is invertible; $A^{-1} = \\begin{bmatrix} 2 & -5 \\\\ -1 & 3 \\end{bmatrix}$ and $\\mathbf{x} = A^{-1}\\mathbf{b} = \\langle 1, 2 \\rangle$: 1 batch of mix 1 and 2 of mix 2."
+    }
+  ]
+}

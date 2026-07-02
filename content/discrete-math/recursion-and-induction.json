@@ -1,0 +1,278 @@
+{
+  "id": "discrete-math.recursion-and-induction",
+  "subject": "discrete-math",
+  "title": "Recursion, Recurrences, and Induction",
+  "prerequisites": ["discrete-math.logic-and-propositions", "algebra-2.sequences-and-series"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "evaluating-recurrences",
+      "label": "Unrolling a recurrence",
+      "microLesson": "A recurrence defines each term from earlier ones, plus base cases that stop the infinite regress. To evaluate, unroll upward from the base: Tower of Hanoi has $h(1) = 1$ and $h(n) = 2h(n-1) + 1$, so $h(2) = 2 \\cdot 1 + 1 = 3$, $h(3) = 2 \\cdot 3 + 1 = 7$, $h(4) = 15$. Fibonacci works the same way with two base cases: $f(1) = f(2) = 1$, then $f(3) = 2$, $f(4) = 3$, $f(5) = 5$. Every term is one small arithmetic move on top of the previous ones — never skip a rung."
+    },
+    {
+      "id": "closed-forms",
+      "label": "Spotting and verifying closed forms",
+      "microLesson": "A closed form computes term $n$ directly, with no ladder-climbing. Adding a constant $d$ each step gives the arithmetic form $a(n) = a(0) + dn$; multiplying by $r$ gives the geometric form $a(n) = a(0)\\,r^n$; Hanoi's $h(n) = 2h(n-1) + 1$ hides $h(n) = 2^n - 1$. To *verify* a claimed closed form, substitute it into the recurrence — $2(2^{n-1} - 1) + 1 = 2^n - 2 + 1 = 2^n - 1$ ✓ — and check it agrees at the base case. Matching the first few terms is a conjecture; the substitution check is what makes it a fact."
+    },
+    {
+      "id": "induction-structure",
+      "label": "Base case and inductive step",
+      "microLesson": "An induction proof has exactly two moving parts: a **base case** ($P(1)$ checked directly) and an **inductive step** (a proof that $P(k)$ implies $P(k+1)$ for every $k$). Together they topple all the dominoes: $P(1)$, then $P(2)$, then $P(3)$, forever. The classic claim $1 + 2 + \\cdots + n = \\frac{n(n+1)}{2}$ passes a spot check at $n = 4$ — the sum is $10$ and the formula gives $\\frac{4 \\cdot 5}{2} = 10$ — but only the inductive step, which turns $\\frac{k(k+1)}{2} + (k+1)$ into $\\frac{(k+1)(k+2)}{2}$, covers all $n$ at once. Drop either part and the whole proof collapses."
+    },
+    {
+      "id": "recursive-counting",
+      "label": "Recurrences that count",
+      "microLesson": "Many counting questions answer 'how many for size $n$?' with a recurrence built from a story about the *last* choice. Climbing $n$ stairs taking 1 or 2 steps at a time: the final move came from stair $n-1$ or stair $n-2$, so the count satisfies $f(n) = f(n-1) + f(n-2)$ — Fibonacci in disguise. Each new element of a set doubles its subsets (every old subset appears once without it and once with it), so $s(n) = 2s(n-1)$ and $s(n) = 2^n$. Write the last choice down and the recurrence writes itself."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The equation that calls itself\n\nMerge sort's entire plan for sorting a million numbers is a shrug: split the list in half, sort each half — *using merge sort* — then stitch the sorted halves together in one pass. The cost of that plan writes itself down as $T(n) = 2T(n/2) + n$: to price the whole job, price two half-size jobs plus a merge. An equation that defines a quantity in terms of smaller instances of itself is a **recurrence** — the native language of recursive algorithms, compound interest, and at least one apocalyptic legend. Three skills ahead: *evaluating* recurrences by unrolling, *escaping* them with closed forms, and *proving* facts about all $n$ with induction.\n\n## Rules need a floor\n\nA recurrence has two parts, and both are load-bearing. The **rule** relates a term to earlier ones; the **base cases** stop the infinite regress. Fibonacci: $f(1) = 1$, $f(2) = 1$, and $f(n) = f(n-1) + f(n-2)$. Delete the base cases and $f(5)$ dissolves into an endless chain of 'ask about something smaller' — recursion without a floor is a stack overflow, in mathematics exactly as in code.\n\nTo **evaluate**, unroll upward from the floor: $f(3) = 1 + 1 = 2$, $f(4) = 2 + 1 = 3$, $f(5) = 5$, $f(6) = 8$, giving $1, 1, 2, 3, 5, 8, 13, 21, \\dots$ Your savings account runs the same machinery: at $5\\%$ annual interest, $a(n) = 1.05\\,a(n-1)$ — every 'what is it worth in a decade?' is a recurrence unrolled ten times.\n\n## The monks' recurrence\n\nThe Tower of Hanoi puzzle asks you to move a stack of $n$ disks between pegs, one disk at a time, never placing a larger disk on a smaller one. The recursive insight: to move $n$ disks, first move the top $n-1$ out of the way, carry the biggest disk across (one move), then move the $n-1$ back on top. That story *is* the recurrence\n\n$$h(n) = 2h(n-1) + 1, \\qquad h(1) = 1,$$\n\nand unrolling gives $1, 3, 7, 15, 31, 63, \\dots$ — each term one shy of a power of two. Hold that thought.\n\n## Closed forms: skipping the ladder\n\nUnrolling is honest but slow: finding $h(64)$ that way means 63 rungs of arithmetic. A **closed form** jumps straight to term $n$. Two patterns account for most of what you will meet: add a constant $d$ every step and you get the *arithmetic* form $a(n) = a(0) + dn$; multiply by a constant $r$ every step and you get the *geometric* form $a(n) = a(0)\\,r^n$ — which is why compound interest at rate $r$ is exactly $a(0)(1+r)^n$.\n\nHanoi's $1, 3, 7, 15, 31$ suggests $h(n) = 2^n - 1$. But a pattern in five terms is a conjecture, not a theorem. The verification is substitution: *if* $h(n-1) = 2^{n-1} - 1$, then the rule gives $2(2^{n-1} - 1) + 1 = 2^n - 2 + 1 = 2^n - 1$ — the same formula, one index up — and the base checks too: $2^1 - 1 = 1$. Works at the floor, survives the rule: that two-part check has a name, and it is the next section.\n\nFirst, though, look at what the closed form is telling you. $2^n - 1$ is *exponential*, and exponentials do not merely beat polynomials — they lap them:\n\n```plot\n{ \"xRange\": [0, 10], \"yRange\": [0, 1050], \"curves\": [ { \"fn\": \"2^x\", \"label\": \"2^n\" }, { \"fn\": \"x^2\", \"color\": \"warn\", \"label\": \"n²\" } ], \"caption\": \"Exponential vs polynomial: by n = 10, 2^n has reached 1024 while n^2 is still at 100 — and the gap only widens\" }\n```\n\nAn algorithm whose cost recurrence solves to $2^n$ is unusable beyond toy inputs; one that solves to $n^2$ or, like merge sort, to roughly $n \\log n$, scales. Solving recurrences is how you tell the difference *before* you run the code.\n\n## Induction: the proof that climbs\n\n**Mathematical induction** proves a statement $P(n)$ for *every* $n \\ge 1$ with two finite pieces of work. The **base case**: check $P(1)$ directly. The **inductive step**: prove that for every $k$, $P(k) \\Rightarrow P(k+1)$. Dominoes: the base case tips the first one, the step guarantees each falling domino knocks over the next, and so $P(1), P(2), P(3), \\dots$ all fall. Assuming $P(k)$ in the step is not circular — you never assert $P(k)$ outright, only the conditional.\n\nRun it on the most famous sum in mathematics, $P(n)\\!:\\ 1 + 2 + \\cdots + n = \\frac{n(n+1)}{2}$. Base: at $n = 1$, both sides are $1$. Step: assume the sum up to $k$ is $\\frac{k(k+1)}{2}$; add the next term:\n\n$$\\frac{k(k+1)}{2} + (k+1) = (k+1)\\left(\\frac{k}{2} + 1\\right) = \\frac{(k+1)(k+2)}{2},$$\n\nwhich is exactly the formula with $n = k+1$. Done — for all $n$, forever. Checking $n = 4$ by hand ($1+2+3+4 = 10 = \\frac{4 \\cdot 5}{2}$) is a worthwhile sanity check, but the step is what covers infinity.\n\nThis is also the backbone of algorithm correctness. 'Merge sort sorts every list' is an induction on length: it trivially sorts length-1 lists (base), and if it sorts all shorter lists, the merge of two sorted halves is sorted (step). Every recursive program carries an induction proof in its skeleton.\n\n## Counting by recurrence\n\nRecurrences also *count*, and the trick is always the same: classify by the **last choice**. Climbing $n$ stairs in hops of 1 or 2: the last hop came from stair $n-1$ or stair $n-2$, and those pots share nothing, so $f(n) = f(n-1) + f(n-2)$ with $f(1) = 1$, $f(2) = 2$ — the count runs $1, 2, 3, 5, 8, 13, \\dots$, Fibonacci wearing a hard hat. Subsets of an $n$-element set: the newest element is in or out, matching every smaller subset twice, so $s(n) = 2s(n-1)$ with closed form $2^n$. Model, compute, verify — that loop is the whole discipline in miniature."
+  },
+  "application": {
+    "summary": "Recurrences price recursive algorithms (merge sort's T(n) = 2T(n/2) + n), model compound growth, and count combinatorial structures, while induction is the proof pattern that certifies an algorithm correct on every input — one base case and one step covering infinitely many cases.",
+    "domains": ["algorithm analysis", "software correctness", "finance and compound growth", "combinatorics and counting", "puzzles and games"],
+    "workedExample": "**Tower of Hanoi, end to end.**\n\nThe rules: move a tower of $n$ disks from one peg to another, one disk per move, never a larger disk on a smaller one. The recursive strategy — park the top $n-1$ disks on the spare peg, carry the largest disk across, restack the $n-1$ on top — costs $h(n-1)$ moves, then $1$, then $h(n-1)$ again. So $h(n) = 2h(n-1) + 1$ with $h(1) = 1$.\n\n*Build the table by unrolling:*\n\n$h(1) = 1$\n\n$h(2) = 2 \\cdot 1 + 1 = 3$\n\n$h(3) = 2 \\cdot 3 + 1 = 7$\n\n$h(4) = 2 \\cdot 7 + 1 = 15$\n\n$h(5) = 2 \\cdot 15 + 1 = 31$\n\n*Conjecture:* each value sits exactly one below a power of two ($2, 4, 8, 16, 32$), so guess $h(n) = 2^n - 1$.\n\n*Verify against the recurrence:* if $h(n-1) = 2^{n-1} - 1$, the rule gives $2(2^{n-1} - 1) + 1 = 2^n - 2 + 1 = 2^n - 1$ — the conjectured formula, one index later. The base case agrees too: $2^1 - 1 = 1 = h(1)$. Base plus step: that substitution check is a proof by induction, so the closed form holds for every $n$.\n\n*The legend:* monks in a temple shuffle a tower of 64 golden disks by these rules; when they finish, the world ends. The closed form prices the apocalypse instantly: $h(64) = 2^{64} - 1 = 18{,}446{,}744{,}073{,}709{,}551{,}615$ moves. At one move per second, that is about $5.8 \\times 10^{11}$ years — roughly 585 billion years, some forty times the current age of the universe. Sleep well: exponential growth is on your side for once.",
+    "domainNotes": [
+      "**Algorithm analysis:** merge sort's cost obeys $T(n) = 2T(n/2) + n$ — two half-size sorts plus a linear merge — which solves to about $n \\log_2 n$; the same unroll-and-conjecture workflow you use on Hanoi is how algorithm designers budget running time before writing a line of code.",
+      "**Software correctness:** proofs that recursive functions and loops do what they claim are inductions — base case for the trivial input, inductive step showing each recursive call or loop iteration preserves the property (a 'loop invariant').",
+      "**Finance:** an account at interest rate $r$ is the recurrence $a(n) = (1+r)\\,a(n-1)$ with geometric closed form $a(0)(1+r)^n$ — compound interest is just a recurrence your bank unrolls monthly.",
+      "**Combinatorics:** staircase climbs, domino tilings, and binary strings without repeated 0s all obey $f(n) = f(n-1) + f(n-2)$, while subsets double via $s(n) = 2s(n-1)$; counting by 'last choice' turns stories into recurrences.",
+      "**Puzzles and games:** Tower of Hanoi's $2^n - 1$ is the canonical exponential blow-up — a 10-disk toy takes 1023 moves, and the legendary 64-disk version outlasts the universe."
+    ]
+  },
+  "generators": [],
+  "problems": [
+    {
+      "id": "discrete-math.recursion-and-induction.s01",
+      "concepts": ["evaluating-recurrences"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The Fibonacci recurrence: $f(1) = 1$, $f(2) = 1$, and $f(n) = f(n-1) + f(n-2)$ for $n \\ge 3$. Unroll it term by term to find $f(6)$.",
+      "steps": [
+        { "instruction": "Compute $f(3) = f(2) + f(1)$. (Give an integer.)", "answer": "2", "accept": [], "hint": "$1 + 1$." },
+        { "instruction": "Compute $f(4) = f(3) + f(2)$.", "answer": "3", "accept": [], "hint": "$2 + 1$." },
+        { "instruction": "Compute $f(5) = f(4) + f(3)$.", "answer": "5", "accept": [], "hint": "$3 + 2$." },
+        { "instruction": "Compute $f(6) = f(5) + f(4)$.", "answer": "8", "accept": [], "hint": "$5 + 3$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "Unrolling from the base cases: $f(3) = 2$, $f(4) = 3$, $f(5) = 5$, $f(6) = 8$. Each term is one addition on top of the two before it — the sequence runs $1, 1, 2, 3, 5, 8, \\dots$"
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s02",
+      "concepts": ["evaluating-recurrences"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bacteria colony doubles every hour: $a(0) = 3$ million cells and $a(n) = 2a(n-1)$. Track the colony through hour 4.",
+      "steps": [
+        { "instruction": "Compute $a(1)$, in millions. (Give an integer.)", "answer": "6", "accept": [], "hint": "$2 \\cdot 3$." },
+        { "instruction": "Compute $a(2)$.", "answer": "12", "accept": [], "hint": "Double $a(1)$." },
+        { "instruction": "Compute $a(3)$ and $a(4)$, as a comma-separated list in order (e.g. 10,20).", "answer": "24,48", "accept": [], "hint": "Double twice more: $2 \\cdot 12$, then $2 \\cdot 24$." }
+      ],
+      "finalAnswer": { "value": "48", "unit": "million cells" },
+      "solutionNarrative": "Doubling each hour: $3 \\to 6 \\to 12 \\to 24 \\to 48$ million cells. This is the geometric recurrence $a(n) = 2a(n-1)$, whose closed form $a(n) = 3 \\cdot 2^n$ confirms $a(4) = 3 \\cdot 16 = 48$."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s03",
+      "concepts": ["evaluating-recurrences"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Tower of Hanoi: moving an $n$-disk tower takes $h(n)$ moves, where $h(1) = 1$ and $h(n) = 2h(n-1) + 1$ (park $n-1$ disks, carry the biggest, restack). Unroll the recurrence all the way to a 6-disk tower.",
+      "steps": [
+        { "instruction": "Compute $h(2) = 2h(1) + 1$. (Give an integer.)", "answer": "3", "accept": [], "hint": "$2 \\cdot 1 + 1$." },
+        { "instruction": "Compute $h(3)$.", "answer": "7", "accept": [], "hint": "$2 \\cdot 3 + 1$." },
+        { "instruction": "Compute $h(4)$ and $h(5)$, as a comma-separated list in order (e.g. 9,19).", "answer": "15,31", "accept": [], "hint": "$2 \\cdot 7 + 1$, then $2 \\cdot 15 + 1$." },
+        { "instruction": "Compute $h(6)$.", "answer": "63", "accept": [], "hint": "$2 \\cdot 31 + 1$." }
+      ],
+      "finalAnswer": { "value": "63", "unit": "moves" },
+      "solutionNarrative": "Unrolling: $1, 3, 7, 15, 31, 63$ — each term doubles the last and adds one. Every value is one below a power of two, foreshadowing the closed form $h(n) = 2^n - 1$: indeed $h(6) = 2^6 - 1 = 63$."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s04",
+      "concepts": ["evaluating-recurrences"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A recurrence with a twist: $a(1) = 2$ and $a(n) = 3a(n-1) - 1$. Unroll it to $a(4)$, one rung at a time.",
+      "steps": [
+        { "instruction": "Compute $a(2) = 3a(1) - 1$. (Give an integer.)", "answer": "5", "accept": [], "hint": "$3 \\cdot 2 - 1$." },
+        { "instruction": "Compute $a(3)$.", "answer": "14", "accept": [], "hint": "$3 \\cdot 5 - 1$." },
+        { "instruction": "Compute $a(4)$.", "answer": "41", "accept": [], "hint": "$3 \\cdot 14 - 1$." }
+      ],
+      "finalAnswer": { "value": "41", "unit": "" },
+      "solutionNarrative": "Each rung applies the rule to the previous value: $a(2) = 5$, $a(3) = 14$, $a(4) = 41$. The 'multiply and adjust' shape is exactly Hanoi's $2h(n-1) + 1$ with different constants — a family of recurrences, one unrolling technique."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s05",
+      "concepts": ["closed-forms"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The recurrence $a(0) = 5$, $a(n) = a(n-1) + 3$ adds the same amount every step, so its closed form is arithmetic: $a(n) = 5 + 3n$. Confirm the recurrence and the closed form agree, then use the closed form to jump ahead.",
+      "steps": [
+        { "instruction": "From the recurrence, compute $a(1)$. (Give an integer.)", "answer": "8", "accept": [], "hint": "$5 + 3$." },
+        { "instruction": "From the recurrence, compute $a(2)$.", "answer": "11", "accept": [], "hint": "$8 + 3$." },
+        { "instruction": "Now skip the ladder: evaluate the closed form at $n = 10$, i.e. $5 + 3 \\cdot 10$.", "answer": "35", "accept": [], "hint": "One multiplication, one addition." }
+      ],
+      "finalAnswer": { "value": "35", "unit": "" },
+      "solutionNarrative": "The recurrence gives $8, 11, 14, \\dots$ and the closed form matches: $5 + 3 \\cdot 1 = 8$, $5 + 3 \\cdot 2 = 11$. At $n = 10$ the closed form jumps straight to $35$ — ten unrolling steps compressed into one formula."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s06",
+      "concepts": ["closed-forms"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Tower of Hanoi's recurrence $h(n) = 2h(n-1) + 1$ has the closed form $h(n) = 2^n - 1$. Use it to price large towers instantly — no unrolling.",
+      "steps": [
+        { "instruction": "Compute $2^6$. (Give an integer.)", "answer": "64", "accept": [], "hint": "Double 32." },
+        { "instruction": "So a 6-disk tower needs $h(6) = 2^6 - 1$ moves. How many?", "answer": "63", "accept": [], "hint": "One below the power of two." },
+        { "instruction": "Compute $2^{10}$.", "answer": "1024", "accept": [], "hint": "$2^{10}$ is the famous 'kilo'." },
+        { "instruction": "So a 10-disk tower needs $h(10)$ moves. How many?", "answer": "1023", "accept": [], "hint": "$1024 - 1$." }
+      ],
+      "finalAnswer": { "value": "1023", "unit": "moves" },
+      "solutionNarrative": "The closed form turns a 9-rung unroll into arithmetic: $h(6) = 64 - 1 = 63$ and $h(10) = 1024 - 1 = 1023$. At one move per second a 10-disk tower already takes 17 minutes — exponential cost bites early."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s07",
+      "concepts": ["closed-forms"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The recurrence $a(1) = 2$, $a(n) = a(n-1) + 2n$ hides a polynomial closed form. Unroll a few terms, spot the pattern, and name the formula.",
+      "steps": [
+        { "instruction": "Compute $a(2) = a(1) + 2 \\cdot 2$. (Give an integer.)", "answer": "6", "accept": [], "hint": "$2 + 4$." },
+        { "instruction": "Compute $a(3)$.", "answer": "12", "accept": [], "hint": "$6 + 2 \\cdot 3$." },
+        { "instruction": "Compute $a(4)$.", "answer": "20", "accept": [], "hint": "$12 + 2 \\cdot 4$." },
+        { "instruction": "The terms $2, 6, 12, 20$ are $1 \\cdot 2,\\ 2 \\cdot 3,\\ 3 \\cdot 4,\\ 4 \\cdot 5$. Give the closed form as an expression in $n$ (e.g. n^2-3n).", "answer": "n(n+1)", "accept": ["n^2+n"], "hint": "Each term is $n$ times its successor." }
+      ],
+      "finalAnswer": { "value": "n(n+1)", "unit": "" },
+      "solutionNarrative": "Unrolling gives $2, 6, 12, 20$ — consecutive products, so conjecture $a(n) = n(n+1)$. Verify by substitution: $(n-1)n + 2n = n^2 - n + 2n = n^2 + n = n(n+1)$ ✓, and the base agrees: $1 \\cdot 2 = 2$. Pattern spotted, then proved."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s08",
+      "concepts": ["closed-forms"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The geometric recurrence $b(0) = 2$, $b(n) = 3b(n-1)$ multiplies by 3 every step, so its closed form is $b(n) = 2 \\cdot 3^n$. Check that the two agree, then jump ahead with the formula.",
+      "steps": [
+        { "instruction": "From the recurrence, compute $b(1)$. (Give an integer.)", "answer": "6", "accept": [], "hint": "$3 \\cdot 2$." },
+        { "instruction": "From the recurrence, compute $b(2)$.", "answer": "18", "accept": [], "hint": "$3 \\cdot 6$." },
+        { "instruction": "From the closed form, compute $b(4) = 2 \\cdot 3^4$.", "answer": "162", "accept": [], "hint": "$3^4 = 81$." }
+      ],
+      "finalAnswer": { "value": "162", "unit": "" },
+      "solutionNarrative": "Recurrence and closed form march in lockstep: $2 \\cdot 3^1 = 6$ and $2 \\cdot 3^2 = 18$ match the unrolled values. The closed form then leaps to $b(4) = 2 \\cdot 81 = 162$ without touching $b(3)$ — the whole point of solving a recurrence."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s09",
+      "concepts": ["induction-structure"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The classic claim $P(n)$: $\\ 1 + 2 + \\cdots + n = \\frac{n(n+1)}{2}$. Every induction proof starts the way you are about to — by checking small cases directly.",
+      "steps": [
+        { "instruction": "Check the base case $P(1)$: the left side is just $1$. What does the formula $\\frac{1 \\cdot 2}{2}$ give? (Give an integer.)", "answer": "1", "accept": [], "hint": "$2/2$." },
+        { "instruction": "Check $P(4)$ by hand: compute the sum $1 + 2 + 3 + 4$.", "answer": "10", "accept": [], "hint": "Add left to right." },
+        { "instruction": "Now the formula at $n = 4$: compute $\\frac{4 \\cdot 5}{2}$.", "answer": "10", "accept": [], "hint": "$20/2$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "Both sides agree at $n = 1$ (the base case) and at $n = 4$ ($10 = 10$). Spot checks like these catch wrong formulas fast — but they prove nothing beyond the values tested; the inductive step is what covers all $n$."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s10",
+      "concepts": ["induction-structure"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An induction proof establishes its base case at $n = 3$ (not $n = 1$), then proves the inductive step $P(k) \\Rightarrow P(k+1)$ for all $k \\ge 3$. Which values of $n$ does the proof actually cover?",
+      "steps": [
+        { "instruction": "Does this proof establish $P(1)$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The dominoes only start falling at the base case." },
+        { "instruction": "Does it establish $P(100)$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "From $P(3)$, the step climbs to $P(4)$, then $P(5)$, and never stops." },
+        { "instruction": "What is the smallest $n$ for which $P(n)$ is proved? (Give an integer.)", "answer": "3", "accept": [], "hint": "The first domino that actually gets tipped." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Induction covers exactly the base case and everything the step can climb to: $n = 3, 4, 5, \\dots$ Nothing is claimed about $n = 1$ or $n = 2$ — plenty of true-for-large-$n$ facts (like $2^n > n^3$, first true at $n = 10$) need a late base case for exactly this reason."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s11",
+      "concepts": ["induction-structure"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The engine room of the induction proof of $1 + 2 + \\cdots + n = \\frac{n(n+1)}{2}$ is the step from $P(k)$ to $P(k+1)$. Run that step concretely at $k = 9$.",
+      "steps": [
+        { "instruction": "Assume $P(9)$: the sum $1 + \\cdots + 9$ equals $\\frac{9 \\cdot 10}{2}$. Compute that value. (Give an integer.)", "answer": "45", "accept": [], "hint": "$90/2$." },
+        { "instruction": "The inductive step adds the next term, $k + 1 = 10$. What is the new total?", "answer": "55", "accept": [], "hint": "$45 + 10$." },
+        { "instruction": "For $P(10)$ to hold, the formula must give the same number: compute $\\frac{10 \\cdot 11}{2}$.", "answer": "55", "accept": [], "hint": "$110/2$." },
+        { "instruction": "Did the formula survive the step from $k = 9$ to $k + 1 = 10$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare your last two answers." }
+      ],
+      "finalAnswer": { "value": "55", "unit": "" },
+      "solutionNarrative": "Assuming the formula at $k = 9$ gives $45$; adding the next term gives $55$; and the formula at $10$ gives $\\frac{10 \\cdot 11}{2} = 55$. This is one concrete instance of the general algebra $\\frac{k(k+1)}{2} + (k+1) = \\frac{(k+1)(k+2)}{2}$, which proves the step for *every* $k$ at once."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s12",
+      "concepts": ["induction-structure"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A proof that merge sort correctly sorts *every* list proceeds by induction on the list length $n$. Identify which part of the proof does which job.",
+      "steps": [
+        { "instruction": "Verifying directly that merge sort handles every length-1 list (it is already sorted) is the ___ case. Type 'base' or 'inductive'.", "answer": "base", "accept": [], "hint": "It is checked outright, with no assumption." },
+        { "instruction": "Showing that correctness on all lists shorter than $k + 1$ forces correctness on lists of length $k + 1$ is the ___ step. Type 'base' or 'inductive'.", "answer": "inductive", "accept": [], "hint": "It has the shape $P(k) \\Rightarrow P(k+1)$: an assumption pushed one rung higher." }
+      ],
+      "finalAnswer": { "value": "inductive", "unit": "" },
+      "solutionNarrative": "The length-1 check is the base case; the 'if it sorts shorter lists, the merge of two sorted halves is sorted' argument is the inductive step. Together they certify merge sort on every list length — every recursive algorithm carries an induction proof in its skeleton."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s13",
+      "concepts": ["recursive-counting"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Every new element added to a set doubles its number of subsets — each old subset appears once without the new element and once with it. So $s(0) = 1$ (the empty set has one subset) and $s(n) = 2s(n-1)$. Count subsets up to $n = 4$.",
+      "steps": [
+        { "instruction": "Compute $s(1)$. (Give an integer.)", "answer": "2", "accept": [], "hint": "Double $s(0) = 1$." },
+        { "instruction": "Compute $s(2)$.", "answer": "4", "accept": [], "hint": "Double again." },
+        { "instruction": "Compute $s(3)$.", "answer": "8", "accept": [], "hint": "Double again." },
+        { "instruction": "Compute $s(4)$.", "answer": "16", "accept": [], "hint": "Double once more." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "subsets" },
+      "solutionNarrative": "Doubling from $s(0) = 1$ gives $2, 4, 8, 16$ — the closed form is $s(n) = 2^n$, and a 4-element set indeed has $2^4 = 16$ subsets. The recurrence *is* the counting argument: in-or-out for the newest element."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s14",
+      "concepts": ["recursive-counting"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You climb a staircase of $n$ steps taking either 1 or 2 steps at a time. The last hop came from step $n-1$ or step $n-2$, so the number of distinct climbs satisfies $f(n) = f(n-1) + f(n-2)$, with $f(1) = 1$ and $f(2) = 2$. Count the ways up a 6-step staircase.",
+      "steps": [
+        { "instruction": "Compute $f(3) = f(2) + f(1)$. (Give an integer.)", "answer": "3", "accept": [], "hint": "$2 + 1$." },
+        { "instruction": "Compute $f(4)$.", "answer": "5", "accept": [], "hint": "$3 + 2$." },
+        { "instruction": "Compute $f(5)$ and $f(6)$, as a comma-separated list in order (e.g. 7,12).", "answer": "8,13", "accept": [], "hint": "$5 + 3$, then $8 + 5$." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "ways" },
+      "solutionNarrative": "The counts run $1, 2, 3, 5, 8, 13$ — Fibonacci shifted by one, because the 'last hop' story splits every climb into two disjoint pots. A 6-step staircase has 13 distinct climbs."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s15",
+      "concepts": ["recursive-counting"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Count binary passwords of length $n$ that contain no two consecutive 0s. A valid string either ends in 1 (preceded by any valid string of length $n-1$) or ends in 10 (preceded by any valid string of length $n-2$), so $g(n) = g(n-1) + g(n-2)$. Build the base cases from scratch, then unroll to $g(5)$.",
+      "steps": [
+        { "instruction": "$g(1)$: how many length-1 strings avoid two consecutive 0s? (Give the count as an integer.)", "answer": "2", "accept": [], "hint": "Both '0' and '1' qualify — a single character can't repeat." },
+        { "instruction": "$g(2)$: of the four length-2 strings, only '00' is forbidden. How many qualify?", "answer": "3", "accept": [], "hint": "'01', '10', '11' survive." },
+        { "instruction": "Unroll the recurrence: give $g(3)$ and $g(4)$ as a comma-separated list in order (e.g. 4,7).", "answer": "5,8", "accept": [], "hint": "$3 + 2$, then $5 + 3$." },
+        { "instruction": "Compute $g(5)$.", "answer": "13", "accept": [], "hint": "$8 + 5$." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "strings" },
+      "solutionNarrative": "Base cases $g(1) = 2$, $g(2) = 3$, then the last-character split gives $5, 8, 13$ — Fibonacci numbers again, because 'ends in 1' and 'ends in 10' partition every valid string. Of the $2^5 = 32$ length-5 strings, only 13 dodge a double zero."
+    },
+    {
+      "id": "discrete-math.recursion-and-induction.s16",
+      "concepts": ["recursive-counting"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A chain letter: one person mails it in round 0, and each round every *new* recipient forwards it to 3 people who haven't seen it. New recipients per round: $c(0) = 1$, $c(n) = 3c(n-1)$. Count the new recipients through round 4.",
+      "steps": [
+        { "instruction": "Compute $c(1)$. (Give an integer.)", "answer": "3", "accept": [], "hint": "$3 \\cdot 1$." },
+        { "instruction": "Compute $c(2)$.", "answer": "9", "accept": [], "hint": "$3 \\cdot 3$." },
+        { "instruction": "Compute $c(3)$ and $c(4)$, as a comma-separated list in order (e.g. 20,60).", "answer": "27,81", "accept": [], "hint": "Triple twice more: $3 \\cdot 9$, then $3 \\cdot 27$." }
+      ],
+      "finalAnswer": { "value": "81", "unit": "people" },
+      "solutionNarrative": "Tripling from $c(0) = 1$ gives $3, 9, 27, 81$ — the geometric recurrence $c(n) = 3c(n-1)$ with closed form $3^n$. By round 4, 81 new people receive the letter, and by round 20 the 'new recipients' would outnumber humanity: exponential growth is why chain letters (and rumors, and viruses) saturate fast."
+    }
+  ]
+}

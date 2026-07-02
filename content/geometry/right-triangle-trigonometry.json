@@ -1,0 +1,261 @@
+{
+  "id": "geometry.right-triangle-trigonometry",
+  "subject": "geometry",
+  "title": "Right-Triangle Trigonometry",
+  "prerequisites": ["geometry.pythagorean-theorem"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "trig-ratios",
+      "label": "Sine, cosine, and tangent ratios",
+      "microLesson": "In a right triangle, pick an angle (not the right angle). The side across from it is the **opposite**, the side touching it (not the hypotenuse) is the **adjacent**, and the longest side facing the right angle is the **hypotenuse**. Then **SOH-CAH-TOA**: $\\sin = \\frac{\\text{opp}}{\\text{hyp}}$, $\\cos = \\frac{\\text{adj}}{\\text{hyp}}$, $\\tan = \\frac{\\text{opp}}{\\text{adj}}$. In a 3-4-5 triangle with the angle opposite the side of length 3, $\\sin = \\frac{3}{5}$, $\\cos = \\frac{4}{5}$, $\\tan = \\frac{3}{4}$."
+    },
+    {
+      "id": "find-missing-side",
+      "label": "Finding a missing side",
+      "microLesson": "When you know one angle and one side, a trig ratio finds another side. Decide which sides the angle relates (opp, adj, hyp), pick the matching ratio, and solve. To find a tower's height $h$ when you stand 25 m away at a $40^\\circ$ angle: the height is opposite, the 25 m is adjacent, so $\\tan 40^\\circ = \\frac{h}{25}$, giving $h = 25\\tan 40^\\circ \\approx 21.0$ m. Always round lengths to 1 decimal place."
+    },
+    {
+      "id": "find-missing-angle",
+      "label": "Finding a missing angle",
+      "microLesson": "When you know two sides, the **inverse** trig functions recover the angle. If $\\sin\\theta = \\frac{\\text{opp}}{\\text{hyp}}$, then $\\theta = \\sin^{-1}\\!\\left(\\frac{\\text{opp}}{\\text{hyp}}\\right)$; likewise $\\cos^{-1}$ and $\\tan^{-1}$. In a 3-4-5 triangle, $\\tan\\theta = \\frac{3}{4}$, so $\\theta = \\tan^{-1}(0.75) \\approx 36.9^\\circ$, which rounds to $37^\\circ$. Round angles to the nearest degree."
+    },
+    {
+      "id": "angles-of-elevation-depression",
+      "label": "Angles of elevation and depression",
+      "microLesson": "The **angle of elevation** is measured upward from the horizontal to a higher object; the **angle of depression** is measured downward from the horizontal to a lower object. Both sit inside a right triangle whose legs are a horizontal distance and a vertical height. Sketch the triangle, label the known angle and side, then apply SOH-CAH-TOA. These power surveying, navigation, and any 'how tall / how far' question solved from the ground."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Measuring what you cannot reach\n\nHow tall is that tree? How far offshore is that boat? How steep is this wheelchair ramp? You can't run a tape measure up a tree or out to sea — but you *can* measure an angle and a distance from where you stand. **Right-triangle trigonometry** turns those two easy measurements into the answer. It is the everyday engine behind surveying, navigation, construction, and any time a right angle shows up.\n\nEvery right triangle has one $90^\\circ$ angle. Trig links the triangle's **angles** to the **ratios of its sides**. Once you can move between angles and side-ratios, you can find any missing side or angle from just enough information.\n\n## Naming the sides\n\nPick one of the two non-right angles and call it $\\theta$. Relative to $\\theta$:\n\n- **Opposite** — the side directly across from $\\theta$.\n- **Adjacent** — the side next to $\\theta$ that is *not* the hypotenuse.\n- **Hypotenuse** — the longest side, always across from the $90^\\circ$ angle.\n\nThe same physical side can be 'opposite' for one angle and 'adjacent' for the other — the labels depend on which angle you chose.\n\n## The three ratios: SOH-CAH-TOA\n\n$$\\sin\\theta = \\frac{\\text{opposite}}{\\text{hypotenuse}}, \\qquad \\cos\\theta = \\frac{\\text{adjacent}}{\\text{hypotenuse}}, \\qquad \\tan\\theta = \\frac{\\text{opposite}}{\\text{adjacent}}.$$\n\nThe mnemonic **SOH-CAH-TOA** packs all three: **S**in = **O**pp/**H**yp, **C**os = **A**dj/**H**yp, **T**an = **O**pp/**A**dj. In a classic **3-4-5** right triangle, taking the angle opposite the side of length 3:\n\n$$\\sin\\theta = \\tfrac{3}{5} = 0.6, \\qquad \\cos\\theta = \\tfrac{4}{5} = 0.8, \\qquad \\tan\\theta = \\tfrac{3}{4} = 0.75.$$\n\nHere is that triangle with every side named from $\\theta$'s point of view — the labels are relative to the marked angle, not fixed properties of the sides:\n\n```plot\n{ \"xRange\": [-1, 7], \"yRange\": [-1.5, 4.5], \"width\": 400, \"height\": 300, \"grid\": false, \"segments\": [ { \"from\": [0, 0], \"to\": [4, 0], \"color\": \"accent\", \"label\": \"adjacent = 4\" }, { \"from\": [4, 0], \"to\": [4, 3], \"color\": \"accent\", \"label\": \"opposite = 3\" }, { \"from\": [0, 0], \"to\": [4, 3], \"color\": \"warn\", \"label\": \"hypotenuse = 5\" } ], \"points\": [ { \"x\": 0, \"y\": 0, \"label\": \"θ\", \"color\": \"warn\" } ], \"caption\": \"The 3-4-5 triangle seen from θ: sin θ = 3/5, cos θ = 4/5, tan θ = 3/4\" }\n```\n\n## Finding a missing side\n\nKnow an angle and a side, want another side? Choose the ratio that connects the side you have to the side you want, then solve.\n\n**Worked example.** You stand 25 m from the base of a flagpole and measure the angle up to its top as $40^\\circ$. The height $h$ is *opposite* the angle; the 25 m is *adjacent*. Tangent connects them:\n\n$$\\tan 40^\\circ = \\frac{h}{25} \\;\\Rightarrow\\; h = 25\\tan 40^\\circ \\approx 25(0.8391) \\approx 21.0 \\text{ m}.$$\n\nThe sketch is always the same L-shape — horizontal distance, vertical target, and the line of sight as hypotenuse:\n\n```plot\n{ \"xRange\": [-4, 32], \"yRange\": [-3, 25], \"width\": 440, \"height\": 340, \"grid\": false, \"segments\": [ { \"from\": [0, 0], \"to\": [25, 0], \"color\": \"accent\", \"label\": \"25 m\" }, { \"from\": [25, 0], \"to\": [25, 20.98], \"color\": \"warn\", \"label\": \"h ≈ 21.0\" }, { \"from\": [0, 0], \"to\": [25, 20.98], \"color\": \"dim\", \"dashed\": true } ], \"points\": [ { \"x\": 0, \"y\": 0, \"label\": \"40°\", \"color\": \"warn\" } ], \"caption\": \"Flagpole: the height is opposite, the 25 m is adjacent, so h = 25 tan 40° ≈ 21.0 m\" }\n```\n\nBecause trig values are usually irrational, **round lengths to 1 decimal place** at the end.\n\n## Finding a missing angle\n\nKnow two sides, want the angle? Use the **inverse** functions $\\sin^{-1}$, $\\cos^{-1}$, $\\tan^{-1}$ (also written arcsin, arccos, arctan):\n\n$$\\tan\\theta = \\frac{\\text{opp}}{\\text{adj}} \\;\\Rightarrow\\; \\theta = \\tan^{-1}\\!\\left(\\frac{\\text{opp}}{\\text{adj}}\\right).$$\n\nFor the 3-4-5 triangle, $\\theta = \\tan^{-1}(0.75) \\approx 36.87^\\circ$, which **rounds to $37^\\circ$**. Round angles to the nearest degree.\n\n## Elevation and depression\n\nLook *up* at something higher and the angle from horizontal is the **angle of elevation**; look *down* at something lower and it's the **angle of depression**. Each one is just an angle inside a right triangle whose legs are a horizontal distance and a vertical height — so the whole toolkit above applies directly. Sketch the triangle, label what you know, and reach for SOH-CAH-TOA."
+  },
+  "application": {
+    "summary": "Right-triangle trig converts an easy-to-measure angle and distance into an out-of-reach length or angle. It answers 'how tall', 'how far', and 'how steep' — the core of surveying, navigation, construction, and ramp/roof design.",
+    "domains": ["surveying", "navigation", "construction", "everyday life"],
+    "workedExample": "**How tall is the tree?**\n\nYou want a tree's height but can't climb it. You walk 50 ft from its base on level ground and measure the angle of elevation to the top as $35^\\circ$. The height $h$ is *opposite* that angle and the 50 ft is *adjacent*, so tangent is the right ratio:\n\n$$\\tan 35^\\circ = \\frac{h}{50} \\;\\Rightarrow\\; h = 50\\tan 35^\\circ \\approx 50(0.7002) \\approx 35.0 \\text{ ft}.$$\n\nTwo ground measurements — one distance, one angle — and the tree is **about 35.0 ft tall**. The identical setup finds a building's height, a cliff-to-boat distance (using the angle of *depression*), or the rise of a ramp. Reverse it — measure two sides instead — and an inverse trig function hands you the angle, which is exactly how you check whether a ramp meets a legal slope limit.",
+    "domainNotes": [
+      "**Surveying:** measuring heights and distances of inaccessible points (towers, cliffs, far banks) from a known baseline and angle.",
+      "**Navigation:** angle of depression from a lighthouse or ship's bridge gives the distance to a boat or buoy.",
+      "**Construction:** roof pitch, stair rise/run, and ramp incline are all angle-versus-distance right-triangle problems.",
+      "**Everyday life:** safe ladder angles, shadow-based height estimates, and mounting a TV or shelf at the right tilt."
+    ]
+  },
+  "generators": ["trig-ratio-v1", "trig-find-side-v1", "trig-find-angle-v1", "trig-elevation-v1"],
+  "problems": [
+    {
+      "id": "geometry.right-triangle-trigonometry.s01",
+      "concepts": ["trig-ratios"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A right triangle has legs 3 and 4 and hypotenuse 5. For the angle $\\theta$ opposite the side of length 3, find $\\sin\\theta$, $\\cos\\theta$, and $\\tan\\theta$ as exact fractions. The triangle is shown in the figure.",
+      "plot": { "xRange": [-1, 7], "yRange": [-1.5, 4.5], "width": 400, "height": 300, "grid": false, "segments": [ { "from": [0, 0], "to": [4, 0], "color": "accent", "label": "4" }, { "from": [4, 0], "to": [4, 3], "color": "accent", "label": "3" }, { "from": [0, 0], "to": [4, 3], "color": "warn", "label": "5" } ], "points": [ { "x": 0, "y": 0, "label": "θ", "color": "warn" } ], "caption": "Legs 3 and 4, hypotenuse 5; θ is the angle opposite the side of length 3" },
+      "steps": [
+        { "instruction": "Find $\\sin\\theta = \\frac{\\text{opposite}}{\\text{hypotenuse}}$ as a fraction.", "answer": "3/5", "accept": ["0.6"], "hint": "The opposite side is 3 and the hypotenuse is 5." },
+        { "instruction": "Find $\\cos\\theta = \\frac{\\text{adjacent}}{\\text{hypotenuse}}$ as a fraction.", "answer": "4/5", "accept": ["0.8"], "hint": "The adjacent side is 4 and the hypotenuse is 5." },
+        { "instruction": "Find $\\tan\\theta = \\frac{\\text{opposite}}{\\text{adjacent}}$ as a fraction.", "answer": "3/4", "accept": ["0.75"], "hint": "Opposite is 3 and adjacent is 4." }
+      ],
+      "finalAnswer": { "value": "3/5, 4/5, 3/4", "unit": "" },
+      "solutionNarrative": "With opposite 3, adjacent 4, hypotenuse 5: $\\sin\\theta = 3/5$, $\\cos\\theta = 4/5$, $\\tan\\theta = 3/4$."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s02",
+      "concepts": ["trig-ratios"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A right triangle has legs 5 and 12 and hypotenuse 13. For the angle $\\theta$ opposite the side of length 5, find $\\sin\\theta$, $\\cos\\theta$, and $\\tan\\theta$ as exact fractions.",
+      "steps": [
+        { "instruction": "Find $\\sin\\theta = \\frac{\\text{opposite}}{\\text{hypotenuse}}$ as a fraction.", "answer": "5/13", "accept": [], "hint": "Opposite is 5, hypotenuse is 13." },
+        { "instruction": "Find $\\cos\\theta = \\frac{\\text{adjacent}}{\\text{hypotenuse}}$ as a fraction.", "answer": "12/13", "accept": [], "hint": "Adjacent is 12, hypotenuse is 13." },
+        { "instruction": "Find $\\tan\\theta = \\frac{\\text{opposite}}{\\text{adjacent}}$ as a fraction.", "answer": "5/12", "accept": [], "hint": "Opposite is 5, adjacent is 12." }
+      ],
+      "finalAnswer": { "value": "5/13, 12/13, 5/12", "unit": "" },
+      "solutionNarrative": "With opposite 5, adjacent 12, hypotenuse 13: $\\sin\\theta = 5/13$, $\\cos\\theta = 12/13$, $\\tan\\theta = 5/12$."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s03",
+      "concepts": ["trig-ratios"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A wheelchair ramp rises 5 ft over a horizontal run of 12 ft, with a sloped surface (hypotenuse) of 13 ft. Let $\\theta$ be the ramp's incline angle at the bottom. Express $\\sin\\theta$, $\\cos\\theta$, and $\\tan\\theta$ as exact fractions.",
+      "steps": [
+        { "instruction": "Which fraction equals $\\sin\\theta$ (rise over slope length)?", "answer": "5/13", "accept": [], "hint": "Rise 5 is opposite the angle; the 13 ft sloped surface is the hypotenuse." },
+        { "instruction": "Which fraction equals $\\cos\\theta$ (run over slope length)?", "answer": "12/13", "accept": [], "hint": "The 12 ft run is adjacent; the 13 ft surface is the hypotenuse." },
+        { "instruction": "Which fraction equals $\\tan\\theta$ (rise over run)?", "answer": "5/12", "accept": [], "hint": "Rise 5 over run 12." }
+      ],
+      "finalAnswer": { "value": "5/13, 12/13, 5/12", "unit": "" },
+      "solutionNarrative": "The ramp is a 5-12-13 right triangle: rise 5 (opposite), run 12 (adjacent), surface 13 (hypotenuse). So $\\sin\\theta = 5/13$, $\\cos\\theta = 12/13$, $\\tan\\theta = 5/12$."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s04",
+      "concepts": ["find-missing-side"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a right triangle, an angle of $40^\\circ$ has an adjacent leg of 25. Find the opposite leg. Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Which ratio links the opposite leg to the adjacent leg? Set it up as an equation for the opposite side $x$.", "answer": "tan(40) = x/25", "accept": ["tan40=x/25", "x = 25tan40", "x=25tan(40)"], "hint": "Opposite over adjacent is tangent." },
+        { "instruction": "Solve for $x = 25\\tan 40^\\circ$ and round to 1 decimal place.", "answer": "21.0", "accept": [], "hint": "$\\tan 40^\\circ \\approx 0.8391$, so $25 \\times 0.8391 \\approx 20.98$." }
+      ],
+      "finalAnswer": { "value": "21.0", "unit": "" },
+      "solutionNarrative": "$\\tan 40^\\circ = x/25$, so $x = 25\\tan 40^\\circ \\approx 20.98 \\approx 21.0$."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s05",
+      "concepts": ["find-missing-side"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 12 ft ladder leans against a wall, making a $38^\\circ$ angle with the ground. How high up the wall does the ladder reach? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "The height is opposite the $38^\\circ$ angle and 12 ft is the hypotenuse. Which ratio applies? Set up the equation for the height $h$.", "answer": "sin(38) = h/12", "accept": ["sin38=h/12", "h = 12sin38", "h=12sin(38)"], "hint": "Opposite over hypotenuse is sine." },
+        { "instruction": "Solve for $h = 12\\sin 38^\\circ$ and round to 1 decimal place (feet).", "answer": "7.4", "accept": [], "hint": "$\\sin 38^\\circ \\approx 0.6157$, so $12 \\times 0.6157 \\approx 7.39$." }
+      ],
+      "finalAnswer": { "value": "7.4", "unit": "feet" },
+      "solutionNarrative": "Height is opposite, ladder is hypotenuse: $\\sin 38^\\circ = h/12$, so $h = 12\\sin 38^\\circ \\approx 7.39 \\approx 7.4$ ft."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s06",
+      "concepts": ["find-missing-side"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A guy wire runs from the top of a pole to a ground anchor, making a $32^\\circ$ angle with the pole. The pole is 8 m tall and the wire meets the pole at the top, so the 8 m side is adjacent to the $32^\\circ$ angle. How long is the wire (the hypotenuse)? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "The 8 m pole is adjacent to the $32^\\circ$ angle and the wire is the hypotenuse. Which ratio links adjacent and hypotenuse? Set up the equation for the wire length $w$.", "answer": "cos(32) = 8/w", "accept": ["cos32=8/w", "w = 8/cos32", "w=8/cos(32)"], "hint": "Adjacent over hypotenuse is cosine; here adjacent is known and hypotenuse is unknown." },
+        { "instruction": "Solve for $w = 8 / \\cos 32^\\circ$ and round to 1 decimal place (meters).", "answer": "9.4", "accept": [], "hint": "$\\cos 32^\\circ \\approx 0.8480$, so $8 / 0.8480 \\approx 9.43$." }
+      ],
+      "finalAnswer": { "value": "9.4", "unit": "meters" },
+      "solutionNarrative": "$\\cos 32^\\circ = 8/w$, so $w = 8/\\cos 32^\\circ \\approx 9.43 \\approx 9.4$ m."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s07",
+      "concepts": ["find-missing-angle"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a 3-4-5 right triangle, find the angle $\\theta$ whose opposite leg is 3 and adjacent leg is 4. Round to the nearest degree.",
+      "steps": [
+        { "instruction": "Set up the inverse-tangent equation for $\\theta$ using opposite over adjacent.", "answer": "theta = tan^-1(3/4)", "accept": ["arctan(3/4)", "tan^-1(0.75)", "theta=arctan(3/4)"], "hint": "$\\tan\\theta = 3/4$, so $\\theta = \\tan^{-1}(3/4)$." },
+        { "instruction": "Evaluate $\\tan^{-1}(0.75)$ and round to the nearest degree.", "answer": "37", "accept": [], "hint": "$\\tan^{-1}(0.75) \\approx 36.87^\\circ$." }
+      ],
+      "finalAnswer": { "value": "37", "unit": "degrees" },
+      "solutionNarrative": "$\\theta = \\tan^{-1}(3/4) \\approx 36.87^\\circ \\approx 37^\\circ$."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s08",
+      "concepts": ["find-missing-angle"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A ramp rises 9 inches over a horizontal run of 12 inches. What angle does the ramp make with the ground? Round to the nearest degree. The ramp is shown in the figure.",
+      "plot": { "xRange": [-2, 16], "yRange": [-2, 11], "width": 400, "height": 300, "grid": false, "segments": [ { "from": [0, 0], "to": [12, 0], "color": "accent", "label": "run = 12" }, { "from": [12, 0], "to": [12, 9], "color": "accent", "label": "rise = 9" }, { "from": [0, 0], "to": [12, 9], "color": "warn", "label": "ramp" } ], "points": [ { "x": 0, "y": 0, "label": "θ = ?", "color": "warn" } ], "caption": "The ramp climbs 9 inches over a 12-inch run; θ is the angle it makes with the ground" },
+      "steps": [
+        { "instruction": "Set up the inverse-tangent equation using rise over run.", "answer": "theta = tan^-1(9/12)", "accept": ["arctan(9/12)", "tan^-1(0.75)", "theta=arctan(9/12)", "tan^-1(3/4)"], "hint": "$\\tan\\theta = 9/12$ (the rise over the run)." },
+        { "instruction": "Evaluate the inverse tangent and round to the nearest degree.", "answer": "37", "accept": [], "hint": "$9/12 = 0.75$ and $\\tan^{-1}(0.75) \\approx 36.87^\\circ$." }
+      ],
+      "finalAnswer": { "value": "37", "unit": "degrees" },
+      "solutionNarrative": "$\\tan\\theta = 9/12 = 0.75$, so $\\theta = \\tan^{-1}(0.75) \\approx 36.87^\\circ \\approx 37^\\circ$."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s09",
+      "concepts": ["find-missing-angle"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "From the deck of a boat, a surveyor sights the top of a 40 m cliff. The boat is 30 m from the base of the cliff. What is the angle of elevation from the boat to the top of the cliff? Round to the nearest degree.",
+      "steps": [
+        { "instruction": "The 40 m height is opposite the angle and the 30 m distance is adjacent. Set up the inverse-tangent equation for the elevation angle.", "answer": "theta = tan^-1(40/30)", "accept": ["arctan(40/30)", "theta=arctan(40/30)", "tan^-1(4/3)"], "hint": "$\\tan\\theta = \\text{opposite}/\\text{adjacent} = 40/30$." },
+        { "instruction": "Evaluate the inverse tangent and round to the nearest degree.", "answer": "53", "accept": [], "hint": "$40/30 \\approx 1.333$ and $\\tan^{-1}(1.333) \\approx 53.13^\\circ$." }
+      ],
+      "finalAnswer": { "value": "53", "unit": "degrees" },
+      "solutionNarrative": "$\\tan\\theta = 40/30 \\approx 1.333$, so $\\theta = \\tan^{-1}(1.333) \\approx 53.13^\\circ \\approx 53^\\circ$."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s10",
+      "concepts": ["angles-of-elevation-depression"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Standing 50 ft from the base of a tree on level ground, you measure the angle of elevation to its top as $35^\\circ$. How tall is the tree? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Height is opposite the angle, 50 ft is adjacent. Set up the tangent equation for the height $h$.", "answer": "tan(35) = h/50", "accept": ["tan35=h/50", "h = 50tan35", "h=50tan(35)"], "hint": "Opposite over adjacent is tangent." },
+        { "instruction": "Solve for $h = 50\\tan 35^\\circ$ and round to 1 decimal place (feet).", "answer": "35.0", "accept": [], "hint": "$\\tan 35^\\circ \\approx 0.7002$, so $50 \\times 0.7002 \\approx 35.01$." }
+      ],
+      "finalAnswer": { "value": "35.0", "unit": "feet" },
+      "solutionNarrative": "$\\tan 35^\\circ = h/50$, so $h = 50\\tan 35^\\circ \\approx 35.01 \\approx 35.0$ ft."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s11",
+      "concepts": ["angles-of-elevation-depression"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "From the top of a 120 ft lighthouse, the angle of depression to a boat at sea is $22^\\circ$. How far is the boat from the base of the lighthouse (horizontal distance)? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "The angle of depression equals the angle of elevation at the boat. The 120 ft height is opposite that angle and the distance $d$ is adjacent. Set up the tangent equation.", "answer": "tan(22) = 120/d", "accept": ["tan22=120/d", "d = 120/tan22", "d=120/tan(22)"], "hint": "$\\tan 22^\\circ = \\text{opposite}/\\text{adjacent} = 120/d$." },
+        { "instruction": "Solve for $d = 120 / \\tan 22^\\circ$ and round to 1 decimal place (feet).", "answer": "297.0", "accept": [], "hint": "$\\tan 22^\\circ \\approx 0.4040$, so $120 / 0.4040 \\approx 297.0$." }
+      ],
+      "finalAnswer": { "value": "297.0", "unit": "feet" },
+      "solutionNarrative": "By alternate angles the depression angle equals the elevation angle at the boat: $\\tan 22^\\circ = 120/d$, so $d = 120/\\tan 22^\\circ \\approx 297.0$ ft."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s12",
+      "concepts": ["angles-of-elevation-depression"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A surveyor stands 100 ft from the base of a building and measures the angle of elevation to its roof as $58^\\circ$. The surveyor's instrument is 5 ft above the ground. How tall is the building? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "First find the height of the roof above instrument level. Set up the tangent equation for that height $y$.", "answer": "tan(58) = y/100", "accept": ["tan58=y/100", "y = 100tan58", "y=100tan(58)"], "hint": "The roof's height above the instrument is opposite the angle; the 100 ft distance is adjacent." },
+        { "instruction": "Solve for $y = 100\\tan 58^\\circ$ and round to 1 decimal place.", "answer": "160.0", "accept": [], "hint": "$\\tan 58^\\circ \\approx 1.6003$, so $100 \\times 1.6003 \\approx 160.03$." },
+        { "instruction": "Add the 5 ft instrument height to get the building's full height. Round to 1 decimal place (feet).", "answer": "165.0", "accept": [], "hint": "Add 5 to your previous answer: $160.0 + 5$." }
+      ],
+      "finalAnswer": { "value": "165.0", "unit": "feet" },
+      "solutionNarrative": "Above the instrument: $y = 100\\tan 58^\\circ \\approx 160.0$ ft. Adding the 5 ft instrument height gives $160.0 + 5 = 165.0$ ft."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s13",
+      "concepts": ["find-missing-side"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A roof rafter makes a $55^\\circ$ angle with the horizontal. The rafter (hypotenuse) is 20 ft long. What is the vertical rise of the roof? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "The rise is opposite the $55^\\circ$ angle and the 20 ft rafter is the hypotenuse. Set up the sine equation for the rise $h$.", "answer": "sin(55) = h/20", "accept": ["sin55=h/20", "h = 20sin55", "h=20sin(55)"], "hint": "Opposite over hypotenuse is sine." },
+        { "instruction": "Solve for $h = 20\\sin 55^\\circ$ and round to 1 decimal place (feet).", "answer": "16.4", "accept": [], "hint": "$\\sin 55^\\circ \\approx 0.8192$, so $20 \\times 0.8192 \\approx 16.38$." }
+      ],
+      "finalAnswer": { "value": "16.4", "unit": "feet" },
+      "solutionNarrative": "$\\sin 55^\\circ = h/20$, so $h = 20\\sin 55^\\circ \\approx 16.38 \\approx 16.4$ ft."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s14",
+      "concepts": ["find-missing-angle"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a 5-12-13 right triangle, find the angle $\\theta$ whose opposite leg is 5 and adjacent leg is 12. Round to the nearest degree.",
+      "steps": [
+        { "instruction": "Set up the inverse-tangent equation using opposite over adjacent.", "answer": "theta = tan^-1(5/12)", "accept": ["arctan(5/12)", "theta=arctan(5/12)"], "hint": "$\\tan\\theta = 5/12$." },
+        { "instruction": "Evaluate the inverse tangent and round to the nearest degree.", "answer": "23", "accept": [], "hint": "$5/12 \\approx 0.4167$ and $\\tan^{-1}(0.4167) \\approx 22.62^\\circ$." }
+      ],
+      "finalAnswer": { "value": "23", "unit": "degrees" },
+      "solutionNarrative": "$\\tan\\theta = 5/12 \\approx 0.4167$, so $\\theta = \\tan^{-1}(0.4167) \\approx 22.62^\\circ \\approx 23^\\circ$."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s15",
+      "concepts": ["angles-of-elevation-depression"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 200 ft length of road climbs a hill at a constant angle of elevation of $6^\\circ$. How much higher (vertical gain) are you at the top? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "The 200 ft road is the hypotenuse and the vertical gain is opposite the $6^\\circ$ angle. Set up the sine equation for the gain $h$.", "answer": "sin(6) = h/200", "accept": ["sin6=h/200", "h = 200sin6", "h=200sin(6)"], "hint": "Opposite over hypotenuse is sine." },
+        { "instruction": "Solve for $h = 200\\sin 6^\\circ$ and round to 1 decimal place (feet).", "answer": "20.9", "accept": [], "hint": "$\\sin 6^\\circ \\approx 0.1045$, so $200 \\times 0.1045 \\approx 20.9$." }
+      ],
+      "finalAnswer": { "value": "20.9", "unit": "feet" },
+      "solutionNarrative": "$\\sin 6^\\circ = h/200$, so $h = 200\\sin 6^\\circ \\approx 20.9$ ft of vertical gain."
+    },
+    {
+      "id": "geometry.right-triangle-trigonometry.s16",
+      "concepts": ["find-missing-angle"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A surveyor sights a far hilltop and finds the horizontal distance is 100 m and the hilltop is 85 m higher than the surveyor. What is the angle of elevation to the hilltop? Round to the nearest degree.",
+      "steps": [
+        { "instruction": "Set up the inverse-tangent equation using the 85 m rise over the 100 m horizontal distance.", "answer": "theta = tan^-1(85/100)", "accept": ["arctan(85/100)", "theta=arctan(85/100)", "tan^-1(0.85)"], "hint": "$\\tan\\theta = 85/100$." },
+        { "instruction": "Evaluate the inverse tangent and round to the nearest degree.", "answer": "40", "accept": [], "hint": "$85/100 = 0.85$ and $\\tan^{-1}(0.85) \\approx 40.36^\\circ$." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "degrees" },
+      "solutionNarrative": "$\\tan\\theta = 85/100 = 0.85$, so $\\theta = \\tan^{-1}(0.85) \\approx 40.36^\\circ \\approx 40^\\circ$."
+    }
+  ]
+}

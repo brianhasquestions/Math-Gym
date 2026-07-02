@@ -1,0 +1,281 @@
+{
+  "id": "trigonometry.trig-equations",
+  "subject": "trigonometry",
+  "title": "Solving Trigonometric Equations",
+  "prerequisites": ["trigonometry.trig-identities"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "basic-trig-equations",
+      "label": "Basic equations: sin x = k",
+      "microLesson": "An equation like $\\sin x = \\frac{1}{2}$ asks: *at which angles does sine take this value?* Because sine repeats, there are usually TWO answers per revolution. Find the **reference angle** from the special-value table ($\\sin 30^\\circ = \\frac{1}{2}$), then place it in every quadrant where the function has the right sign. Sine is positive in quadrants I and II, so on $[0^\\circ, 360^\\circ)$: $x = 30^\\circ$ or $x = 180^\\circ - 30^\\circ = 150^\\circ$. Give the full solution set, in degrees."
+    },
+    {
+      "id": "multi-step-isolation",
+      "label": "Isolate the trig function first",
+      "microLesson": "Treat $\\sin x$ or $\\cos x$ as a single unknown and use ordinary algebra to get it alone — exactly like isolating $x$ in a linear equation. From $2\\cos x - 1 = 0$: add 1, divide by 2, so $\\cos x = \\frac{1}{2}$. THEN switch to unit-circle thinking: cosine is positive in quadrants I and IV, so $x = 60^\\circ$ or $x = 300^\\circ$. Algebra first, angles last."
+    },
+    {
+      "id": "factoring-trig",
+      "label": "Factoring trig equations",
+      "microLesson": "When the equation is quadratic in a trig function, substitute $u = \\sin x$ and factor like any quadratic. $2\\sin^2 x - \\sin x = 0$ becomes $2u^2 - u = 0$, which factors as $u(2u - 1) = 0$, so $u = 0$ or $u = \\frac{1}{2}$. Each value spawns its own mini-equation: $\\sin x = 0$ gives $x = 0^\\circ, 180^\\circ$ and $\\sin x = \\frac{1}{2}$ gives $x = 30^\\circ, 150^\\circ$. Merge every root into one solution set — and never divide by the trig factor, or you silently delete solutions."
+    },
+    {
+      "id": "applied-periodic",
+      "label": "Solving periodic models: A sin(Bt) + D = k",
+      "microLesson": "Tides, temperatures, and Ferris wheels follow $h(t) = A\\sin(Bt) + D$. Asking *when* the quantity reaches a target $k$ means solving a trig equation: isolate to $\\sin(Bt) = \\frac{k - D}{A}$, find the angles $Bt$ that work, then divide by $B$ to convert angles into times. If $3\\sin(30t) + 5 = 6.5$, then $\\sin(30t) = \\frac{1}{2}$, so $30t = 30^\\circ$ gives the first time $t = 1$ and $30t = 150^\\circ$ gives the second, $t = 5$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When does the tide hit 7 feet?\n\nA harbor's water depth follows $d(t) = 2\\sin(30t)^\\circ + 6$ feet, $t$ hours after low-slack. A sailboat needs 7 feet to clear the bar. *When can it leave?* That question — **when does a periodic quantity reach a target value?** — is a trigonometric equation, and this topic is the toolkit for solving it.\n\nThroughout, we work in **degrees** and report every solution on one full cycle, $[0^\\circ, 360^\\circ)$, unless the problem says otherwise.\n\n## One value, two angles\n\nSolve $\\sin x = \\frac{1}{2}$. A single equation, but the unit circle crosses height $\\frac{1}{2}$ **twice** per revolution. The recipe:\n\n1. **Reference angle** — which special angle gives the value? $\\sin 30^\\circ = \\frac{1}{2}$.\n2. **Quadrants** — where does the function have the right sign? Sine is positive in quadrants I and II.\n3. **Place the reference angle**: QI keeps it ($x = 30^\\circ$); QII reflects it ($x = 180^\\circ - 30^\\circ = 150^\\circ$).\n\nSolution set: $x = 30^\\circ$ or $x = 150^\\circ$. For negative values the same recipe works — $\\cos x = -\\frac{1}{2}$ puts the $60^\\circ$ reference angle into QII and QIII: $x = 120^\\circ$ or $240^\\circ$. Tangent is the exception: its period is $180^\\circ$, so its two solutions per cycle are always $180^\\circ$ apart.\n\nA picture shows *why* two answers appear: the wave $y = \\sin x$ crosses the height $\\frac{1}{2}$ twice on its way through one cycle — once rising, once falling.\n\n```plot\n{ \"xRange\": [0, 360], \"yRange\": [-1.5, 1.5], \"curves\": [ { \"fn\": \"sin(x*pi/180)\", \"color\": \"accent\", \"label\": \"y = sin x\", \"labelAt\": 245 } ], \"segments\": [ { \"from\": [0, 0.5], \"to\": [360, 0.5], \"dashed\": true, \"color\": \"warn\", \"label\": \"y = 1/2\" } ], \"points\": [ { \"x\": 30, \"y\": 0.5, \"label\": \"30°\", \"color\": \"warn\" }, { \"x\": 150, \"y\": 0.5, \"label\": \"150°\", \"color\": \"warn\" } ], \"caption\": \"One cycle of y = sin x (x in degrees): the line y = 1/2 is crossed at x = 30° and x = 150°\" }\n```\n\n## Algebra first, angles last\n\nMost equations don't arrive pre-isolated. Treat the whole trig function as a single unknown and do ordinary algebra on it:\n\n$$2\\cos x - 1 = 0 \\;\\Rightarrow\\; 2\\cos x = 1 \\;\\Rightarrow\\; \\cos x = \\tfrac{1}{2}.$$\n\nOnly *now* switch to unit-circle thinking: cosine is positive in QI and QIV, reference angle $60^\\circ$, so $x = 60^\\circ$ or $x = 300^\\circ$. Every isolation move you learned for linear equations — adding, dividing, gathering like terms across the equals sign — transfers unchanged.\n\n## Quadratic in disguise: factor it\n\n$$2\\sin^2 x - \\sin x = 0$$\n\nSubstitute $u = \\sin x$ and this is just $2u^2 - u = 0$, which factors: $u(2u - 1) = 0$. **Never divide both sides by $\\sin x$** — that would throw away every solution where $\\sin x = 0$. Each factor spawns a mini-equation:\n\n- $\\sin x = 0$: $x = 0^\\circ$ or $180^\\circ$.\n- $\\sin x = \\frac{1}{2}$: $x = 30^\\circ$ or $150^\\circ$.\n\nMerge everything: $x = 0^\\circ, 30^\\circ, 150^\\circ, 180^\\circ$. Four solutions from one equation — periodic functions are generous that way.\n\n## Back to the harbor\n\nSet the model equal to the target and unwind it from the outside in:\n\n$$2\\sin(30t) + 6 = 7 \\;\\Rightarrow\\; \\sin(30t) = \\tfrac{1}{2}.$$\n\nThe *angle* $30t$ must be $30^\\circ$ or $150^\\circ$, so $t = 1$ or $t = 5$: the boat can clear the bar starting **1 hour** after low-slack, and the depth drops back through 7 ft at $t = 5$. Dividing by $B$ at the end converts angle solutions into times — and the window between them is when the model stays above the target.\n\n## The full playbook\n\n1. **Isolate** the trig function with algebra (factor if it's quadratic).\n2. **Reference angle** from the special-value table.\n3. **Quadrants** by the sign of the value.\n4. **List every solution** in $[0^\\circ, 360^\\circ)$ — usually two per function value.\n5. In models, **divide by $B$** to turn angles into times."
+  },
+  "application": {
+    "summary": "Trig equations answer 'when does a periodic quantity hit a target?' — the question behind tide tables, Ferris-wheel timing, daily temperature crossings, AC circuits, and daylight-hours planning.",
+    "domains": ["marine navigation", "mechanical engineering", "meteorology", "electrical engineering"],
+    "workedExample": "**When is the harbor deep enough?**\n\nA harbor's depth is modeled by $d(t) = 2\\sin(30t)^\\circ + 6$ feet, where $t$ is hours after 6 a.m. A sailboat drawing 7 feet of clearance needs $d(t) = 7$ to cross the sandbar. Set the model equal to the target:\n\n$$2\\sin(30t) + 6 = 7$$\n\nIsolate the sine: subtract 6 and divide by 2, so $\\sin(30t) = \\frac{1}{2}$. The angle $30t$ must therefore be $30^\\circ$ (quadrant I) or $150^\\circ$ (quadrant II). Divide each by 30:\n\n$$t = 1 \\quad \\text{or} \\quad t = 5.$$\n\n**The depth crosses 7 ft at 7 a.m. rising and 11 a.m. falling — the safe window is those four hours.** The identical computation schedules a Ferris-wheel photo at a chosen height, finds the hours a city spends above 24°C, or locates the instant an AC voltage crosses a threshold. One equation type, an entire calendar of periodic events.",
+    "domainNotes": [
+      "**Marine navigation:** tide-height models tell harbormasters the window when draft-limited vessels can safely enter or leave.",
+      "**Mechanical engineering:** Ferris wheels, cam followers, and pistons are sinusoidal — solving $h(t) = k$ times a sensor trigger or a photo opportunity.",
+      "**Meteorology:** daily temperature and annual daylight follow sine models; solving for a target finds frost windows and growing-season boundaries.",
+      "**Electrical engineering:** AC voltage is $V = A\\sin(\\omega t)$; threshold-crossing times set the firing angles of dimmers and rectifiers."
+    ]
+  },
+  "generators": [
+    "trg2-eq-basic-d1",
+    "trg2-eq-basic-d2",
+    "trg2-eq-basic-d3",
+    "trg2-eq-isolate-d1",
+    "trg2-eq-isolate-d2",
+    "trg2-eq-isolate-d3",
+    "trg2-eq-factor-d1",
+    "trg2-eq-factor-d2",
+    "trg2-eq-factor-d3",
+    "trg2-eq-applied-d1",
+    "trg2-eq-applied-d2",
+    "trg2-eq-applied-d3"
+  ],
+  "problems": [
+    {
+      "id": "trigonometry.trig-equations.s01",
+      "concepts": ["basic-trig-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $\\sin x = \\frac{1}{2}$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "What is the reference angle — the special angle whose sine is $\\frac{1}{2}$? (Degrees.)", "answer": "30", "accept": ["30 degrees"], "hint": "From the special-value table: $\\sin 30^\\circ = \\frac{1}{2}$." },
+        { "instruction": "Sine is positive in quadrants I and II. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 30 or x = 150", "accept": ["30, 150"], "form": "solutions", "hint": "QI keeps the reference angle; QII uses $180^\\circ - 30^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 30° or x = 150°", "unit": "" },
+      "solutionNarrative": "Reference angle $30^\\circ$; sine is positive in QI and QII, so $x = 30^\\circ$ or $x = 180^\\circ - 30^\\circ = 150^\\circ$."
+    },
+    {
+      "id": "trigonometry.trig-equations.s02",
+      "concepts": ["basic-trig-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $\\cos x = -\\frac{1}{2}$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "What is the reference angle — the special angle whose cosine is $\\frac{1}{2}$? (Degrees.)", "answer": "60", "accept": ["60 degrees"], "hint": "$\\cos 60^\\circ = \\frac{1}{2}$; the minus sign only affects the quadrants." },
+        { "instruction": "Cosine is NEGATIVE in quadrants II and III. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 120 or x = 240", "accept": ["120, 240"], "form": "solutions", "hint": "QII: $180^\\circ - 60^\\circ$. QIII: $180^\\circ + 60^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 120° or x = 240°", "unit": "" },
+      "solutionNarrative": "Reference angle $60^\\circ$; cosine is negative in QII and QIII, so $x = 180 - 60 = 120^\\circ$ or $x = 180 + 60 = 240^\\circ$."
+    },
+    {
+      "id": "trigonometry.trig-equations.s03",
+      "concepts": ["basic-trig-equations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $\\tan x = -1$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "What is the reference angle — the special angle whose tangent is $1$? (Degrees.)", "answer": "45", "accept": ["45 degrees"], "hint": "$\\tan 45^\\circ = 1$." },
+        { "instruction": "Tangent has period $180^\\circ$. How many degrees apart are consecutive solutions of a tangent equation?", "answer": "180", "accept": ["180 degrees"], "hint": "Unlike sine and cosine (period $360^\\circ$), tangent repeats every half revolution." },
+        { "instruction": "Tangent is negative in quadrants II and IV. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 135 or x = 315", "accept": ["135, 315"], "form": "solutions", "hint": "QII: $180^\\circ - 45^\\circ = 135^\\circ$; then add the $180^\\circ$ period." }
+      ],
+      "finalAnswer": { "value": "x = 135° or x = 315°", "unit": "" },
+      "solutionNarrative": "Reference angle $45^\\circ$; tangent is negative in QII and QIV, giving $x = 135^\\circ$ and $x = 135 + 180 = 315^\\circ$ — always $180^\\circ$ apart for tangent."
+    },
+    {
+      "id": "trigonometry.trig-equations.s04",
+      "concepts": ["multi-step-isolation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $2\\cos x - 1 = 0$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "Isolate the trig function: what must $\\cos x$ equal?", "answer": "1/2", "accept": ["0.5", "cos(x) = 1/2", "cosx = 0.5"], "hint": "Add 1 to both sides, then divide by 2 — treat $\\cos x$ like a single unknown." },
+        { "instruction": "Cosine is positive in quadrants I and IV. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 60 or x = 300", "accept": ["60, 300"], "form": "solutions", "hint": "Reference angle $60^\\circ$; QIV uses $360^\\circ - 60^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 60° or x = 300°", "unit": "" },
+      "solutionNarrative": "Isolate: $\\cos x = \\frac{1}{2}$. Cosine is positive in QI and QIV, so $x = 60^\\circ$ or $x = 360 - 60 = 300^\\circ$."
+    },
+    {
+      "id": "trigonometry.trig-equations.s05",
+      "concepts": ["multi-step-isolation"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $2\\sin x - \\sqrt{3} = 0$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "Isolate the trig function: what must $\\sin x$ equal? Give the exact value.", "answer": "sqrt(3)/2", "accept": ["√3/2", "0.8660254", "sin(x) = sqrt(3)/2"], "hint": "Add $\\sqrt{3}$ to both sides, then divide by 2." },
+        { "instruction": "Sine is positive in quadrants I and II. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 60 or x = 120", "accept": ["60, 120"], "form": "solutions", "hint": "$\\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$; QII uses $180^\\circ - 60^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 60° or x = 120°", "unit": "" },
+      "solutionNarrative": "Isolate: $\\sin x = \\frac{\\sqrt{3}}{2}$, reference angle $60^\\circ$. Sine positive in QI/QII gives $x = 60^\\circ$ or $x = 120^\\circ$."
+    },
+    {
+      "id": "trigonometry.trig-equations.s06",
+      "concepts": ["multi-step-isolation"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $5\\cos x - 2 = 3\\cos x - 1$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "Gather the trig terms on one side (subtract $3\\cos x$ and add 2 to both sides). What equation remains?", "answer": "2cos(x) = 1", "accept": ["2cosx=1", "2cos(x)=1", "cos(x) = 1/2"], "hint": "Exactly like $5y - 2 = 3y - 1$: gather $y$ terms left, constants right." },
+        { "instruction": "What must $\\cos x$ equal?", "answer": "1/2", "accept": ["0.5", "cos(x) = 1/2"], "hint": "Divide both sides by 2." },
+        { "instruction": "List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 60 or x = 300", "accept": ["60, 300"], "form": "solutions", "hint": "Cosine positive in QI and QIV, reference angle $60^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 60° or x = 300°", "unit": "" },
+      "solutionNarrative": "Gathering like terms gives $2\\cos x = 1$, so $\\cos x = \\frac{1}{2}$ and $x = 60^\\circ$ or $300^\\circ$. The algebra is identical to a linear equation in $y$ — the trig only enters at the last step."
+    },
+    {
+      "id": "trigonometry.trig-equations.s07",
+      "concepts": ["factoring-trig"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $2\\sin^2 x - \\sin x = 0$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "Substitute $u = \\sin x$. What quadratic equation results?", "answer": "2u^2 - u = 0", "accept": ["2u^2-u=0", "2u^2 = u"], "hint": "Replace every $\\sin x$ with $u$." },
+        { "instruction": "Factor the left side (do NOT divide by $u$ — that loses solutions).", "answer": "u(2u - 1) = 0", "accept": ["u(2u-1)=0", "(2u-1)u=0"], "form": "factored", "hint": "Pull out the common factor $u$." },
+        { "instruction": "Solve each factor: list the possible values of $u$.", "answer": "u = 0 or u = 1/2", "accept": ["0, 1/2", "0, 0.5"], "form": "solutions", "hint": "$u = 0$ or $2u - 1 = 0$." },
+        { "instruction": "Convert back: $\\sin x = 0$ gives two solutions and $\\sin x = \\frac{1}{2}$ gives two more. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 0 or x = 30 or x = 150 or x = 180", "accept": ["0, 30, 150, 180"], "form": "solutions", "hint": "$\\sin x = 0$ at $0^\\circ, 180^\\circ$; $\\sin x = \\frac{1}{2}$ at $30^\\circ, 150^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 0°, 30°, 150°, 180°", "unit": "" },
+      "solutionNarrative": "With $u = \\sin x$: $u(2u - 1) = 0$, so $\\sin x = 0$ (giving $0^\\circ, 180^\\circ$) or $\\sin x = \\frac{1}{2}$ (giving $30^\\circ, 150^\\circ$). Four solutions total — dividing by $\\sin x$ would have silently deleted two of them."
+    },
+    {
+      "id": "trigonometry.trig-equations.s08",
+      "concepts": ["factoring-trig"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $\\cos^2 x - \\cos x = 0$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "Substitute $u = \\cos x$ and factor the resulting quadratic.", "answer": "u(u - 1) = 0", "accept": ["u(u-1)=0", "(u-1)u=0"], "form": "factored", "hint": "$u^2 - u = 0$; pull out the common factor $u$." },
+        { "instruction": "List the possible values of $u$.", "answer": "u = 0 or u = 1", "accept": ["0, 1"], "form": "solutions", "hint": "Each factor set to zero." },
+        { "instruction": "Convert back to $x$: $\\cos x = 0$ gives two solutions and $\\cos x = 1$ gives one. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 0 or x = 90 or x = 270", "accept": ["0, 90, 270"], "form": "solutions", "hint": "$\\cos x = 0$ at $90^\\circ, 270^\\circ$; $\\cos x = 1$ only at $0^\\circ$ (since $360^\\circ$ is excluded)." }
+      ],
+      "finalAnswer": { "value": "x = 0°, 90°, 270°", "unit": "" },
+      "solutionNarrative": "$u(u - 1) = 0$ gives $\\cos x = 0$ ($x = 90^\\circ, 270^\\circ$) or $\\cos x = 1$ ($x = 0^\\circ$). Note the uneven split: $\\cos x = 1$ happens only once per cycle."
+    },
+    {
+      "id": "trigonometry.trig-equations.s09",
+      "concepts": ["factoring-trig"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $2\\sin^2 x - 3\\sin x + 1 = 0$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "Substitute $u = \\sin x$. What quadratic results?", "answer": "2u^2 - 3u + 1 = 0", "accept": ["2u^2-3u+1=0"], "hint": "Replace $\\sin^2 x$ with $u^2$ and $\\sin x$ with $u$." },
+        { "instruction": "Factor the quadratic.", "answer": "(2u - 1)(u - 1) = 0", "accept": ["(2u-1)(u-1)=0", "(u-1)(2u-1)=0"], "form": "factored", "hint": "Look for factors of the form $(2u - ?)(u - ?)$ whose product gives $+1$ and sum $-3u$." },
+        { "instruction": "List the possible values of $u$.", "answer": "u = 1/2 or u = 1", "accept": ["1/2, 1", "0.5, 1"], "form": "solutions", "hint": "Set each factor to zero." },
+        { "instruction": "Convert back: $\\sin x = \\frac{1}{2}$ gives two solutions, $\\sin x = 1$ gives one. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 30 or x = 90 or x = 150", "accept": ["30, 90, 150"], "form": "solutions", "hint": "$\\sin x = \\frac{1}{2}$ at $30^\\circ, 150^\\circ$; $\\sin x = 1$ only at $90^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 30°, 90°, 150°", "unit": "" },
+      "solutionNarrative": "Factoring $2u^2 - 3u + 1 = (2u - 1)(u - 1)$ gives $\\sin x = \\frac{1}{2}$ ($30^\\circ, 150^\\circ$) or $\\sin x = 1$ ($90^\\circ$): three solutions."
+    },
+    {
+      "id": "trigonometry.trig-equations.s10",
+      "concepts": ["applied-periodic"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A slow observation wheel carries a cabin whose height follows $h(t) = 10\\sin(30t)^\\circ + 12$ meters, $t$ minutes after boarding. When does the cabin FIRST reach a height of 17 m?",
+      "steps": [
+        { "instruction": "Set $h(t) = 17$ and isolate the sine: what must $\\sin(30t)$ equal?", "answer": "1/2", "accept": ["0.5", "sin(30t) = 1/2"], "hint": "Subtract 12 from both sides, then divide by 10." },
+        { "instruction": "What is the smallest positive angle (in degrees) whose sine is $\\frac{1}{2}$?", "answer": "30", "accept": ["30 degrees"], "hint": "The special-value table: $\\sin 30^\\circ = \\frac{1}{2}$." },
+        { "instruction": "Set $30t = 30$ and solve for $t$ (minutes).", "answer": "1", "accept": ["t = 1"], "hint": "Divide both sides by 30 to convert the angle into a time." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "minutes" },
+      "solutionNarrative": "$10\\sin(30t) + 12 = 17$ isolates to $\\sin(30t) = \\frac{1}{2}$, so the angle $30t$ first equals $30^\\circ$, giving $t = 1$ minute."
+    },
+    {
+      "id": "trigonometry.trig-equations.s11",
+      "concepts": ["applied-periodic"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A harbor's depth follows $d(t) = 2\\sin(30t)^\\circ + 6$ feet, $t$ hours after 6 a.m. A sailboat needs 7 feet of water. Find the FIRST TWO times the depth equals 7 ft. The model and the 7 ft target line are shown in the figure.",
+      "plot": { "xRange": [0, 12], "yRange": [0, 9], "curves": [ { "fn": "2*sin(x*pi/6)+6", "color": "accent", "label": "d(t)", "labelAt": 8.5 } ], "segments": [ { "from": [0, 7], "to": [12, 7], "dashed": true, "color": "warn", "label": "7 ft" } ], "caption": "Harbor depth d(t) = 2 sin(30t)° + 6 over the 12-hour cycle, with the 7 ft target line" },
+      "steps": [
+        { "instruction": "Set $d(t) = 7$ and isolate the sine: what must $\\sin(30t)$ equal?", "answer": "1/2", "accept": ["0.5", "sin(30t) = 1/2"], "hint": "Subtract 6, then divide by 2." },
+        { "instruction": "The angle $30t$ can be $30^\\circ$ (quadrant I). Solve $30t = 30$ for the first time $t$ (hours).", "answer": "1", "accept": ["t = 1"], "hint": "Divide by 30." },
+        { "instruction": "The angle can also be $180^\\circ - 30^\\circ = 150^\\circ$ (quadrant II). Solve $30t = 150$ for the second time $t$ (hours).", "answer": "5", "accept": ["t = 5"], "hint": "Divide 150 by 30." }
+      ],
+      "finalAnswer": { "value": "t = 1 and t = 5", "unit": "hours" },
+      "solutionNarrative": "$\\sin(30t) = \\frac{1}{2}$ means $30t = 30^\\circ$ or $150^\\circ$, so $t = 1$ (7 a.m., rising) and $t = 5$ (11 a.m., falling). Between those times the harbor stays deeper than 7 ft."
+    },
+    {
+      "id": "trigonometry.trig-equations.s12",
+      "concepts": ["applied-periodic"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A city's temperature follows $T(t) = 8\\sin(15t)^\\circ + 20$ °C, where $t$ is hours after 6 a.m. (the model's period is 24 h). A greenhouse vent must open whenever $T = 24$ °C. Find both times in the first cycle when the temperature equals 24 °C.",
+      "steps": [
+        { "instruction": "Set $T(t) = 24$ and isolate the sine: what must $\\sin(15t)$ equal?", "answer": "1/2", "accept": ["0.5", "sin(15t) = 1/2"], "hint": "Subtract 20 from both sides, then divide by 8." },
+        { "instruction": "Using the quadrant-I angle ($15t = 30^\\circ$), solve for the first time $t$ (hours).", "answer": "2", "accept": ["t = 2"], "hint": "Divide 30 by 15." },
+        { "instruction": "Using the quadrant-II angle ($15t = 150^\\circ$), solve for the second time $t$ (hours).", "answer": "10", "accept": ["t = 10"], "hint": "Divide 150 by 15." },
+        { "instruction": "The vent stays open between those crossings. For how many hours is $T \\geq 24$ °C?", "answer": "8", "accept": ["8 hours"], "hint": "Subtract the first crossing time from the second." }
+      ],
+      "finalAnswer": { "value": "t = 2 and t = 10 (open 8 hours)", "unit": "" },
+      "solutionNarrative": "$\\sin(15t) = \\frac{1}{2}$ gives $15t = 30^\\circ$ or $150^\\circ$: crossings at $t = 2$ (8 a.m.) and $t = 10$ (4 p.m.). The temperature sits at or above 24 °C for the $10 - 2 = 8$ hours in between."
+    },
+    {
+      "id": "trigonometry.trig-equations.s13",
+      "concepts": ["basic-trig-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $\\cos x = \\frac{\\sqrt{2}}{2}$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "What is the reference angle — the special angle whose cosine is $\\frac{\\sqrt{2}}{2}$? (Degrees.)", "answer": "45", "accept": ["45 degrees"], "hint": "$\\cos 45^\\circ = \\frac{\\sqrt{2}}{2}$." },
+        { "instruction": "Cosine is positive in quadrants I and IV. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 45 or x = 315", "accept": ["45, 315"], "form": "solutions", "hint": "QI keeps the reference angle; QIV uses $360^\\circ - 45^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 45° or x = 315°", "unit": "" },
+      "solutionNarrative": "Reference angle $45^\\circ$; cosine positive in QI and QIV gives $x = 45^\\circ$ or $x = 360 - 45 = 315^\\circ$."
+    },
+    {
+      "id": "trigonometry.trig-equations.s14",
+      "concepts": ["multi-step-isolation"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $2\\sin x + 1 = 0$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "Isolate the trig function: what must $\\sin x$ equal?", "answer": "-1/2", "accept": ["-0.5", "sin(x) = -1/2"], "hint": "Subtract 1 from both sides, then divide by 2 — watch the sign." },
+        { "instruction": "Sine is NEGATIVE in quadrants III and IV. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 210 or x = 330", "accept": ["210, 330"], "form": "solutions", "hint": "Reference angle $30^\\circ$: QIII is $180 + 30$, QIV is $360 - 30$." }
+      ],
+      "finalAnswer": { "value": "x = 210° or x = 330°", "unit": "" },
+      "solutionNarrative": "Isolate: $\\sin x = -\\frac{1}{2}$. The reference angle is $30^\\circ$ and sine is negative in QIII/QIV, so $x = 210^\\circ$ or $330^\\circ$."
+    },
+    {
+      "id": "trigonometry.trig-equations.s15",
+      "concepts": ["factoring-trig"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $2\\cos^2 x + \\cos x = 0$ for all $x$ in $[0^\\circ, 360^\\circ)$.",
+      "steps": [
+        { "instruction": "Substitute $u = \\cos x$ and factor the resulting quadratic.", "answer": "u(2u + 1) = 0", "accept": ["u(2u+1)=0", "(2u+1)u=0"], "form": "factored", "hint": "$2u^2 + u = 0$; pull out the common factor $u$." },
+        { "instruction": "List the possible values of $u$.", "answer": "u = 0 or u = -1/2", "accept": ["0, -1/2", "0, -0.5"], "form": "solutions", "hint": "$u = 0$ or $2u + 1 = 0$." },
+        { "instruction": "Convert back: $\\cos x = 0$ and $\\cos x = -\\frac{1}{2}$ each give two solutions. List ALL solutions in $[0^\\circ, 360^\\circ)$.", "answer": "x = 90 or x = 120 or x = 240 or x = 270", "accept": ["90, 120, 240, 270"], "form": "solutions", "hint": "$\\cos x = 0$ at $90^\\circ, 270^\\circ$; $\\cos x = -\\frac{1}{2}$ at $120^\\circ, 240^\\circ$." }
+      ],
+      "finalAnswer": { "value": "x = 90°, 120°, 240°, 270°", "unit": "" },
+      "solutionNarrative": "$u(2u + 1) = 0$ gives $\\cos x = 0$ ($90^\\circ, 270^\\circ$) or $\\cos x = -\\frac{1}{2}$ ($120^\\circ, 240^\\circ$) — four solutions, which dividing by $\\cos x$ would have cut to two."
+    },
+    {
+      "id": "trigonometry.trig-equations.s16",
+      "concepts": ["applied-periodic"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A buoy bobs on ocean swell so its height follows $h(t) = 4\\sin(15t)^\\circ + 6$ feet, $t$ seconds after a sensor starts. When does the buoy FIRST reach 8 feet?",
+      "steps": [
+        { "instruction": "Set $h(t) = 8$ and isolate the sine: what must $\\sin(15t)$ equal?", "answer": "1/2", "accept": ["0.5", "sin(15t) = 1/2"], "hint": "Subtract 6, then divide by 4." },
+        { "instruction": "Set the angle $15t$ equal to the smallest positive solution ($30^\\circ$) and solve for $t$ (seconds).", "answer": "2", "accept": ["t = 2"], "hint": "$15t = 30$, so divide by 15." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "seconds" },
+      "solutionNarrative": "$4\\sin(15t) + 6 = 8$ isolates to $\\sin(15t) = \\frac{1}{2}$; the first angle is $15t = 30^\\circ$, so $t = 2$ seconds."
+    }
+  ]
+}

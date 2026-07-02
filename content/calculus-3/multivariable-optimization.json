@@ -1,0 +1,282 @@
+{
+  "id": "calculus-3.multivariable-optimization",
+  "subject": "calculus-3",
+  "title": "Multivariable Optimization",
+  "prerequisites": ["calculus-3.partial-derivatives"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "critical-points",
+      "label": "Finding critical points",
+      "microLesson": "A smooth surface $f(x,y)$ can only peak, dip, or level off where it is flat in **every** direction at once. That means both partials vanish: $f_x = 0$ **and** $f_y = 0$. Solve those two equations together. For $f(x,y) = x^2 + y^2 - 4x - 6y$, set $f_x = 2x - 4 = 0$ and $f_y = 2y - 6 = 0$, giving the single critical point $(2, 3)$. Critical points are the only candidates for an interior max or min."
+    },
+    {
+      "id": "second-derivative-test",
+      "label": "The second-derivative test",
+      "microLesson": "Finding a flat point isn't enough — you must classify it. Compute the **discriminant** $D = f_{xx}\\,f_{yy} - (f_{xy})^2$ at the critical point. If $D > 0$ and $f_{xx} > 0$ it's a **minimum**; if $D > 0$ and $f_{xx} < 0$ it's a **maximum**; if $D < 0$ it's a **saddle point** (up one way, down another); if $D = 0$ the test is inconclusive. $D$ is a single number; the classification is a word."
+    },
+    {
+      "id": "lagrange-multipliers",
+      "label": "Lagrange multipliers",
+      "microLesson": "To optimize $f(x,y)$ subject to a constraint $g(x,y) = k$, the best point is where the constraint curve is tangent to a level curve of $f$ — meaning the gradients are parallel: $\\nabla f = \\lambda \\nabla g$. That gives $f_x = \\lambda g_x$, $f_y = \\lambda g_y$, plus the constraint itself. Solve the system for $x$, $y$, $\\lambda$, then read off the optimal value. This is how you squeeze the most out of a fixed budget, fence, or material."
+    },
+    {
+      "id": "optimization-applied",
+      "label": "Applied optimization",
+      "microLesson": "Real problems give you a quantity that depends on two free choices — profit from two products, the cost of a box's surface, the total distance from a hub to several sites. Write that quantity as $f(x,y)$, find where both partials are zero, and classify to confirm it's the max or min you want. The math doesn't change; the payoff is a concrete best price, dimension, or location."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The shape of every two-variable decision\n\nMost real optimization has **two knobs**, not one. How much of product A *and* product B should a factory make? What length *and* width minimize the metal in a can? Where should a warehouse sit to be closest to *all* its stores? Each is a surface $z = f(x,y)$ floating over the $xy$-plane, and you want its highest peak or lowest valley.\n\nIn one variable you set $f'(x) = 0$. In two variables the same idea splits in two: a smooth surface is flat at a peak or pit only if it's flat in the $x$-direction **and** the $y$-direction simultaneously.\n\n## Step 1 — Critical points: set both partials to zero\n\nA **critical point** is where\n\n$$f_x(x,y) = 0 \\quad\\text{and}\\quad f_y(x,y) = 0.$$\n\nThese are two equations in two unknowns; solve them together. For $f(x,y) = x^2 + y^2 - 4x - 6y$:\n\n$$f_x = 2x - 4 = 0 \\Rightarrow x = 2, \\qquad f_y = 2y - 6 = 0 \\Rightarrow y = 3.$$\n\nThe only critical point is $(2, 3)$. It's a *candidate* — but is it a min, a max, or neither?\n\n## Step 2 — Classify with the second-derivative test\n\nCompute the second partials and form the **discriminant**:\n\n$$D = f_{xx}\\,f_{yy} - \\left(f_{xy}\\right)^2.$$\n\nThen read the verdict at the critical point:\n\n- $D > 0$ and $f_{xx} > 0$ → **local minimum** (a bowl).\n- $D > 0$ and $f_{xx} < 0$ → **local maximum** (a dome).\n- $D < 0$ → **saddle point** (rises one way, falls another — neither).\n- $D = 0$ → inconclusive; the test says nothing.\n\nFor the example, $f_{xx} = 2$, $f_{yy} = 2$, $f_{xy} = 0$, so $D = (2)(2) - 0 = 4 > 0$ with $f_{xx} = 2 > 0$: a **minimum** at $(2,3)$.\n\n## Step 3 — When there's a constraint: Lagrange multipliers\n\nOften you can't roam freely — a budget, a fixed perimeter, or a fixed surface area pins you to a curve $g(x,y) = k$. The optimum on that curve occurs where a level curve of $f$ just **touches** the constraint, so their gradients line up:\n\n$$\\nabla f = \\lambda\\,\\nabla g \\quad\\Longrightarrow\\quad f_x = \\lambda g_x,\\; f_y = \\lambda g_y.$$\n\nTogether with the constraint $g(x,y) = k$, that's three equations in $x$, $y$, $\\lambda$. Solve, and the multiplier $\\lambda$ even carries meaning: it's the rate the optimum improves if you loosen the constraint by one unit — a *shadow price*.\n\n## Why this is the workhorse of applied math\n\nProfit, cost, distance, error — almost every quantity worth optimizing depends on more than one choice. The three steps above (locate flat points, classify them, and handle constraints) turn a vague 'find the best' into a concrete number you can act on."
+  },
+  "application": {
+    "summary": "Two-variable optimization finds the best of anything you control with two levers: the production mix that maximizes profit, the dimensions that minimize material or cost, and the location that minimizes total distance. Critical points locate the candidates, the discriminant confirms max vs min vs saddle, and Lagrange multipliers handle a fixed budget or material.",
+    "domains": ["business", "engineering", "operations", "economics"],
+    "workedExample": "**The profit-maximizing product mix**\n\nA shop makes $x$ hundred units of a basic widget and $y$ hundred units of a deluxe one. Modeling shows weekly profit (in \\$thousands) is\n\n$$P(x,y) = -x^2 - y^2 + 4x + 6y - 5.$$\n\nThe quadratic dips because flooding the market drives prices down. To find the best mix, set both partials to zero:\n\n$$P_x = -2x + 4 = 0 \\Rightarrow x = 2, \\qquad P_y = -2y + 6 = 0 \\Rightarrow y = 3.$$\n\nClassify it: $P_{xx} = -2$, $P_{yy} = -2$, $P_{xy} = 0$, so $D = (-2)(-2) - 0 = 4 > 0$ with $P_{xx} = -2 < 0$ — a **maximum**. The peak profit is\n\n$$P(2,3) = -4 - 9 + 8 + 18 - 5 = 8,$$\n\nso \\$8{,}000 per week at 200 basic and 300 deluxe units. Same three steps decide a box's least-cost dimensions or a hub's best location — only the function changes.",
+    "domainNotes": [
+      "**Business:** the product mix or pricing pair that maximizes profit, where over-producing eventually cuts margins.",
+      "**Engineering:** dimensions that minimize material — least surface area for a fixed volume tank or box.",
+      "**Operations:** siting a facility to minimize total (squared) distance to the demand points it serves.",
+      "**Economics:** maximizing utility or output subject to a fixed budget — exactly the Lagrange-multiplier setup, with $\\lambda$ as the shadow price."
+    ]
+  },
+  "generators": ["critical-point-2d-v1", "second-deriv-test-v1", "lagrange-v1"],
+  "problems": [
+    {
+      "id": "calculus-3.multivariable-optimization.s01",
+      "concepts": ["critical-points"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the critical point of $f(x,y) = x^2 + y^2 - 6x + 8y + 1$.",
+      "steps": [
+        { "instruction": "Compute $f_x$ and set it to zero; solve for $x$.", "answer": "x = 3", "accept": ["3", "x=3"], "hint": "$f_x = 2x - 6$." },
+        { "instruction": "Compute $f_y$ and set it to zero; solve for $y$.", "answer": "y = -4", "accept": ["-4", "y=-4"], "hint": "$f_y = 2y + 8$." },
+        { "instruction": "Write the critical point as $(x, y)$.", "answer": "(3, -4)", "accept": ["(3,-4)"], "hint": "Combine the two coordinates you just found." }
+      ],
+      "finalAnswer": { "value": "(3, -4)", "unit": "" },
+      "solutionNarrative": "$f_x = 2x - 6 = 0 \\Rightarrow x = 3$ and $f_y = 2y + 8 = 0 \\Rightarrow y = -4$, so the critical point is $(3, -4)$."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s02",
+      "concepts": ["critical-points"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the critical point of $f(x,y) = x^2 + 3y^2 - 8x + 12y$.",
+      "steps": [
+        { "instruction": "Set $f_x = 0$ and solve for $x$.", "answer": "x = 4", "accept": ["4", "x=4"], "hint": "$f_x = 2x - 8$." },
+        { "instruction": "Set $f_y = 0$ and solve for $y$.", "answer": "y = -2", "accept": ["-2", "y=-2"], "hint": "$f_y = 6y + 12$." },
+        { "instruction": "Write the critical point as $(x, y)$.", "answer": "(4, -2)", "accept": ["(4,-2)"], "hint": "Combine both coordinates." }
+      ],
+      "finalAnswer": { "value": "(4, -2)", "unit": "" },
+      "solutionNarrative": "$f_x = 2x - 8 = 0 \\Rightarrow x = 4$ and $f_y = 6y + 12 = 0 \\Rightarrow y = -2$, giving $(4, -2)$."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s03",
+      "concepts": ["critical-points"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the critical point of $f(x,y) = x^2 + xy + y^2 - 6x$.",
+      "steps": [
+        { "instruction": "Write the equation from $f_x = 0$.", "answer": "2x + y - 6 = 0", "accept": ["2x+y-6=0", "2x+y=6"], "hint": "$f_x = 2x + y - 6$." },
+        { "instruction": "Write the equation from $f_y = 0$.", "answer": "x + 2y = 0", "accept": ["x+2y=0"], "hint": "$f_y = x + 2y$." },
+        { "instruction": "Solve the two equations together and give the critical point $(x, y)$.", "answer": "(4, -2)", "accept": ["(4,-2)"], "hint": "From $x = -2y$, substitute into $2x + y = 6$." }
+      ],
+      "finalAnswer": { "value": "(4, -2)", "unit": "" },
+      "solutionNarrative": "$f_x = 2x + y - 6 = 0$ and $f_y = x + 2y = 0$. From the second, $x = -2y$; substituting gives $-4y + y = 6$, so $y = -2$ and $x = 4$: the point $(4, -2)$."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s04",
+      "concepts": ["critical-points"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The function $f(x,y) = x^3 - 3x + y^2 - 4y$ has two critical points. Find the one with the larger $x$-coordinate.",
+      "steps": [
+        { "instruction": "Set $f_x = 0$. Which positive value of $x$ solves it?", "answer": "x = 1", "accept": ["1", "x=1"], "hint": "$f_x = 3x^2 - 3 = 0 \\Rightarrow x^2 = 1$, so $x = \\pm 1$; take the larger." },
+        { "instruction": "Set $f_y = 0$ and solve for $y$.", "answer": "y = 2", "accept": ["2", "y=2"], "hint": "$f_y = 2y - 4$." },
+        { "instruction": "Write the critical point as $(x, y)$.", "answer": "(1, 2)", "accept": ["(1,2)"], "hint": "Pair the larger $x$ with the $y$ you found." }
+      ],
+      "finalAnswer": { "value": "(1, 2)", "unit": "" },
+      "solutionNarrative": "$f_x = 3x^2 - 3 = 0$ gives $x = \\pm 1$; the larger is $x = 1$. $f_y = 2y - 4 = 0$ gives $y = 2$. The point is $(1, 2)$ (the other critical point is $(-1, 2)$)."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s05",
+      "concepts": ["second-derivative-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "At its critical point, $f(x,y) = x^2 + y^2 - 2x - 4y$ has $f_{xx} = 2$, $f_{yy} = 2$, $f_{xy} = 0$. Compute $D$ and classify the point.",
+      "steps": [
+        { "instruction": "Compute the discriminant $D = f_{xx} f_{yy} - (f_{xy})^2$.", "answer": "4", "accept": [], "hint": "$D = (2)(2) - 0^2$." },
+        { "instruction": "Since $D > 0$ and $f_{xx} > 0$, classify the point in one word.", "answer": "minimum", "accept": ["local minimum", "min", "minimum point"], "hint": "Positive $D$ with a positive $f_{xx}$ is a bowl." }
+      ],
+      "finalAnswer": { "value": "minimum", "unit": "" },
+      "solutionNarrative": "$D = (2)(2) - 0^2 = 4 > 0$ and $f_{xx} = 2 > 0$, so the critical point is a local minimum."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s06",
+      "concepts": ["second-derivative-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The function $f(x,y) = x^2 - y^2$ has a critical point at the origin. Compute $D$ and classify it.",
+      "steps": [
+        { "instruction": "Find $f_{xx}$, $f_{yy}$, and $f_{xy}$.", "answer": "f_xx = 2, f_yy = -2, f_xy = 0", "accept": ["2, -2, 0"], "hint": "Differentiate $f_x = 2x$ and $f_y = -2y$ again." },
+        { "instruction": "Compute the discriminant $D = f_{xx} f_{yy} - (f_{xy})^2$.", "answer": "-4", "accept": [], "hint": "$D = (2)(-2) - 0^2$." },
+        { "instruction": "Since $D < 0$, classify the point.", "answer": "saddle point", "accept": ["saddle", "saddle-point"], "hint": "A negative discriminant always means this kind of point." }
+      ],
+      "finalAnswer": { "value": "saddle point", "unit": "" },
+      "solutionNarrative": "$f_{xx} = 2$, $f_{yy} = -2$, $f_{xy} = 0$, so $D = (2)(-2) - 0 = -4 < 0$: the origin is a saddle point."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s07",
+      "concepts": ["second-derivative-test", "critical-points"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x,y) = x^2 + y^2 - xy - 9x$, find the critical point, then compute $D$ and classify it.",
+      "steps": [
+        { "instruction": "Solve $f_x = 0$ and $f_y = 0$ together for the critical point $(x, y)$.", "answer": "(6, 3)", "accept": ["(6,3)"], "hint": "$f_x = 2x - y - 9 = 0$, $f_y = 2y - x = 0$; so $x = 2y$." },
+        { "instruction": "Compute the discriminant $D = f_{xx} f_{yy} - (f_{xy})^2$ (here $f_{xx}=2$, $f_{yy}=2$, $f_{xy}=-1$).", "answer": "3", "accept": [], "hint": "$D = (2)(2) - (-1)^2 = 4 - 1$." },
+        { "instruction": "Since $D > 0$ and $f_{xx} > 0$, classify the point in one word.", "answer": "minimum", "accept": ["local minimum", "min"], "hint": "Positive $D$, positive $f_{xx}$." }
+      ],
+      "finalAnswer": { "value": "minimum at (6, 3)", "unit": "" },
+      "solutionNarrative": "From $f_y = 2y - x = 0$, $x = 2y$; substituting into $2x - y - 9 = 0$ gives $4y - y = 9$, so $y = 3$, $x = 6$. Then $D = (2)(2) - (-1)^2 = 3 > 0$ with $f_{xx} = 2 > 0$: a local minimum at $(6, 3)$."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s08",
+      "concepts": ["lagrange-multipliers"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Maximize $f(x,y) = xy$ subject to $x + y = 10$ using Lagrange multipliers (with $x, y > 0$).",
+      "steps": [
+        { "instruction": "The conditions $f_x = \\lambda g_x$ and $f_y = \\lambda g_y$ give $y = \\lambda$ and $x = \\lambda$. What relationship between $x$ and $y$ does this force?", "answer": "x = y", "accept": ["y=x", "x=y"], "hint": "Both equal $\\lambda$, so they equal each other." },
+        { "instruction": "Use $x = y$ in the constraint $x + y = 10$ to find $x$.", "answer": "x = 5", "accept": ["5", "x=5"], "hint": "$2x = 10$." },
+        { "instruction": "Compute the maximum value $f = xy$.", "answer": "25", "accept": ["f=25"], "hint": "$x = y = 5$, so $xy = 25$." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "" },
+      "solutionNarrative": "$\\nabla f = \\lambda \\nabla g$ gives $y = \\lambda$, $x = \\lambda$, so $x = y$. The constraint forces $x = y = 5$, and the maximum product is $f = 25$."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s09",
+      "concepts": ["lagrange-multipliers"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Minimize $f(x,y) = x^2 + y^2$ subject to $x + 2y = 10$ using Lagrange multipliers.",
+      "steps": [
+        { "instruction": "From $f_x = \\lambda g_x$ and $f_y = \\lambda g_y$ we get $2x = \\lambda$ and $2y = 2\\lambda$. Express $y$ in terms of $x$.", "answer": "y = 2x", "accept": ["y=2x"], "hint": "$2y = 2\\lambda = 2(2x)$, so $y = 2x$." },
+        { "instruction": "Substitute $y = 2x$ into $x + 2y = 10$ and solve for $x$.", "answer": "x = 2", "accept": ["2", "x=2"], "hint": "$x + 4x = 10$." },
+        { "instruction": "Find $y$, then compute the minimum value $f = x^2 + y^2$.", "answer": "20", "accept": ["f=20"], "hint": "$y = 4$, so $f = 4 + 16$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "" },
+      "solutionNarrative": "$2x = \\lambda$ and $2y = 2\\lambda$ give $y = 2x$. Then $x + 4x = 10$ so $x = 2$, $y = 4$, and $f = 2^2 + 4^2 = 20$, the minimum squared distance from the origin to the line."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s10",
+      "concepts": ["lagrange-multipliers"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rectangular pen along a river needs no fence on the river side. With 40 m of fence for the other three sides (two widths $x$ and one length $y$, so $2x + y = 40$), maximize the area $A = xy$ using Lagrange multipliers.",
+      "steps": [
+        { "instruction": "From $A_x = \\lambda g_x$ and $A_y = \\lambda g_y$ we get $y = 2\\lambda$ and $x = \\lambda$. Express $y$ in terms of $x$.", "answer": "y = 2x", "accept": ["y=2x"], "hint": "$y = 2\\lambda$ and $x = \\lambda$, so $y = 2x$." },
+        { "instruction": "Substitute into $2x + y = 40$ and solve for $x$.", "answer": "x = 10", "accept": ["10", "x=10"], "hint": "$2x + 2x = 40$." },
+        { "instruction": "Find $y$, then compute the maximum area $A = xy$.", "answer": "200", "accept": ["A=200"], "hint": "$y = 20$, so $A = 10 \\times 20$." }
+      ],
+      "finalAnswer": { "value": "200", "unit": "square meters" },
+      "solutionNarrative": "$\\nabla A = \\lambda \\nabla g$ gives $y = 2\\lambda$, $x = \\lambda$, so $y = 2x$. Then $2x + 2x = 40$ gives $x = 10$, $y = 20$, and the maximum area is $A = 200$ m²."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s11",
+      "concepts": ["optimization-applied", "critical-points"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A firm's weekly profit (in \\$thousands) from making $x$ hundred chairs and $y$ hundred tables is $P(x,y) = -x^2 - y^2 + 6x + 10y - 4$. Find the production amounts that maximize profit.",
+      "steps": [
+        { "instruction": "Set $P_x = 0$ and solve for $x$.", "answer": "x = 3", "accept": ["3", "x=3"], "hint": "$P_x = -2x + 6$." },
+        { "instruction": "Set $P_y = 0$ and solve for $y$.", "answer": "y = 5", "accept": ["5", "y=5"], "hint": "$P_y = -2y + 10$." },
+        { "instruction": "Write the optimal production as the point $(x, y)$.", "answer": "(3, 5)", "accept": ["(3,5)"], "hint": "Pair the two values." }
+      ],
+      "finalAnswer": { "value": "(3, 5)", "unit": "" },
+      "solutionNarrative": "$P_x = -2x + 6 = 0 \\Rightarrow x = 3$ and $P_y = -2y + 10 = 0 \\Rightarrow y = 5$. Producing 300 chairs and 500 tables maximizes profit."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s12",
+      "concepts": ["optimization-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Using the profit model $P(x,y) = -x^2 - y^2 + 6x + 10y - 4$ (\\$thousands) from the previous problem, the maximum occurs at $(3, 5)$. What is the maximum weekly profit, in \\$thousands?",
+      "steps": [
+        { "instruction": "Substitute $x = 3$, $y = 5$ into $P(x,y)$.", "answer": "P = -9 - 25 + 18 + 50 - 4", "accept": ["-9-25+18+50-4"], "hint": "Plug in each term carefully before adding." },
+        { "instruction": "Evaluate to get the maximum profit (in \\$thousands).", "answer": "30", "accept": ["P=30", "30000"], "hint": "$-9 - 25 + 18 + 50 - 4$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "thousand dollars" },
+      "solutionNarrative": "$P(3,5) = -9 - 25 + 18 + 50 - 4 = 30$, so the maximum weekly profit is \\$30,000."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s13",
+      "concepts": ["optimization-applied", "second-derivative-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An open-top rectangular box must hold $32$ m³. With a square base of side $x$ and height $h = 32/x^2$, its surface area (base plus four sides) is $S(x) = x^2 + 128/x$. Find the base side $x$ that minimizes material, and confirm it is a minimum.",
+      "steps": [
+        { "instruction": "Set $S'(x) = 0$. Write the equation after clearing the fraction.", "answer": "2x^3 = 128", "accept": ["2x^3=128", "x^3=64"], "hint": "$S'(x) = 2x - 128/x^2 = 0$, so $2x^3 = 128$." },
+        { "instruction": "Solve for $x$.", "answer": "x = 4", "accept": ["4", "x=4"], "hint": "$x^3 = 64$." },
+        { "instruction": "Compute $S''(x) = 2 + 256/x^3$ at $x = 4$. Is it positive (minimum) or negative? Give the value.", "answer": "6", "accept": ["S''=6", "positive, 6"], "hint": "$2 + 256/64 = 2 + 4$. A positive second derivative confirms a minimum." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "meters" },
+      "solutionNarrative": "$S'(x) = 2x - 128/x^2 = 0$ gives $x^3 = 64$, so $x = 4$ m. Since $S''(4) = 2 + 256/64 = 6 > 0$, this is a minimum (height $h = 32/16 = 2$ m)."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s14",
+      "concepts": ["optimization-applied", "critical-points"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A delivery hub at $(x, y)$ should minimize the total squared distance to three stores at $(0,0)$, $(6,0)$, and $(0,9)$: $f(x,y) = (x^2+y^2) + ((x-6)^2+y^2) + (x^2+(y-9)^2)$. Find the best location.",
+      "steps": [
+        { "instruction": "Set $f_x = 0$ and solve for $x$.", "answer": "x = 2", "accept": ["2", "x=2"], "hint": "$f_x = 2x + 2(x-6) + 2x = 6x - 12$." },
+        { "instruction": "Set $f_y = 0$ and solve for $y$.", "answer": "y = 3", "accept": ["3", "y=3"], "hint": "$f_y = 2y + 2y + 2(y-9) = 6y - 18$." },
+        { "instruction": "Write the optimal hub location as $(x, y)$.", "answer": "(2, 3)", "accept": ["(2,3)"], "hint": "This is the average (centroid) of the three store points." }
+      ],
+      "finalAnswer": { "value": "(2, 3)", "unit": "" },
+      "solutionNarrative": "$f_x = 6x - 12 = 0 \\Rightarrow x = 2$ and $f_y = 6y - 18 = 0 \\Rightarrow y = 3$. The best hub sits at $(2, 3)$, the centroid of the three stores."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s15",
+      "concepts": ["optimization-applied", "lagrange-multipliers"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A factory's output is $Q(x,y) = xy$ where $x$ is labor units and $y$ is capital units. Each labor unit costs \\$2 and each capital unit \\$8, and the budget is \\$80, so $2x + 8y = 80$. Maximize output using Lagrange multipliers.",
+      "steps": [
+        { "instruction": "From $Q_x = \\lambda g_x$ and $Q_y = \\lambda g_y$: $y = 2\\lambda$ and $x = 8\\lambda$. Express $x$ in terms of $y$.", "answer": "x = 4y", "accept": ["x=4y"], "hint": "$x = 8\\lambda$ and $y = 2\\lambda$, so $x = 4y$." },
+        { "instruction": "Substitute $x = 4y$ into $2x + 8y = 80$ and solve for $y$.", "answer": "y = 5", "accept": ["5", "y=5"], "hint": "$8y + 8y = 80$." },
+        { "instruction": "Find $x$, then compute the maximum output $Q = xy$.", "answer": "100", "accept": ["Q=100"], "hint": "$x = 20$, so $Q = 20 \\times 5$." }
+      ],
+      "finalAnswer": { "value": "100", "unit": "output units" },
+      "solutionNarrative": "$\\nabla Q = \\lambda \\nabla g$ gives $y = 2\\lambda$, $x = 8\\lambda$, so $x = 4y$. Then $8y + 8y = 80$ gives $y = 5$, $x = 20$, and maximum output $Q = 100$."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s16",
+      "concepts": ["second-derivative-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "At its critical point, $f(x,y) = -x^2 - y^2 + 2x + 2y$ has $f_{xx} = -2$, $f_{yy} = -2$, $f_{xy} = 0$. Compute $D$ and classify the point.",
+      "steps": [
+        { "instruction": "Compute $D = f_{xx} f_{yy} - (f_{xy})^2$.", "answer": "4", "accept": [], "hint": "$(-2)(-2) - 0^2$." },
+        { "instruction": "Since $D > 0$ and $f_{xx} < 0$, classify the point in one word.", "answer": "maximum", "accept": ["local maximum", "max"], "hint": "Positive $D$ with a negative $f_{xx}$ is a dome." }
+      ],
+      "finalAnswer": { "value": "maximum", "unit": "" },
+      "solutionNarrative": "$D = (-2)(-2) - 0 = 4 > 0$ and $f_{xx} = -2 < 0$, so the critical point is a local maximum."
+    },
+    {
+      "id": "calculus-3.multivariable-optimization.s17",
+      "concepts": ["lagrange-multipliers"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Maximize $f(x,y) = 2x + 3y$ on the constraint... actually, minimize $f(x,y) = x^2 + y^2$ subject to $3x + 4y = 25$ using Lagrange multipliers.",
+      "steps": [
+        { "instruction": "From $2x = 3\\lambda$ and $2y = 4\\lambda$, express $y$ in terms of $x$.", "answer": "y = 4x/3", "accept": ["y=4x/3", "3y=4x"], "hint": "Divide: $\\frac{2y}{2x} = \\frac{4\\lambda}{3\\lambda} = \\frac{4}{3}$." },
+        { "instruction": "Substitute into $3x + 4y = 25$ and solve for $x$.", "answer": "x = 3", "accept": ["3", "x=3"], "hint": "$3x + 16x/3 = 25 \\Rightarrow 9x + 16x = 75$." },
+        { "instruction": "Find $y$, then compute the minimum $f = x^2 + y^2$.", "answer": "25", "accept": ["f=25"], "hint": "$y = 4$, so $f = 9 + 16$." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "" },
+      "solutionNarrative": "$2x = 3\\lambda$, $2y = 4\\lambda$ give $y = \\tfrac{4}{3}x$. Then $9x + 16x = 75$ so $x = 3$, $y = 4$, and $f = 9 + 16 = 25$ (the squared distance from the origin to the line)."
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "id": "matrix-algebra.matrix-operations",
+  "subject": "matrix-algebra",
+  "title": "Matrix Operations",
+  "prerequisites": [],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "matrix-dimensions",
+      "label": "Dimensions and entries",
+      "microLesson": "A matrix is just a rectangular table of numbers. Its **dimensions** are always stated rows-by-columns: a matrix with 2 rows and 3 columns is a $2 \\times 3$ matrix. The **entry** $a_{ij}$ sits in row $i$, column $j$ — row first, column second. In $\\begin{bmatrix} 5 & 8 \\\\ 1 & 9 \\end{bmatrix}$, the entry $a_{21} = 1$ (second row, first column). Getting the order right matters: $a_{12}$ and $a_{21}$ are usually different numbers."
+    },
+    {
+      "id": "matrix-addition",
+      "label": "Adding and subtracting matrices",
+      "microLesson": "To add or subtract two matrices, just add or subtract the numbers in matching positions — entry by entry. This only works when both matrices have the **same dimensions**; otherwise the operation is undefined. $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} + \\begin{bmatrix} 5 & 0 \\\\ 1 & 6 \\end{bmatrix} = \\begin{bmatrix} 6 & 2 \\\\ 4 & 10 \\end{bmatrix}$. It's exactly how you'd total two spreadsheets cell by cell."
+    },
+    {
+      "id": "scalar-multiplication",
+      "label": "Scalar multiplication",
+      "microLesson": "Multiplying a matrix by a single number (a **scalar**) multiplies *every* entry by that number. $3 \\begin{bmatrix} 2 & 1 \\\\ 0 & 4 \\end{bmatrix} = \\begin{bmatrix} 6 & 3 \\\\ 0 & 12 \\end{bmatrix}$. This lets you build **linear combinations** like $2A - 3B$: scale each matrix first, then add or subtract entry by entry. Scaling a whole price table by $1.1$ to apply a 10% markup is exactly this operation."
+    },
+    {
+      "id": "operations-applied",
+      "label": "Operations on real data",
+      "microLesson": "Real data often lives in matrices: rows for products, columns for stores; rows for players, columns for games. **Adding** two such tables totals them (this month + last month). **Scaling** applies a uniform rate (double every order, add tax). **Combinations** like $A - B$ find a change or difference. The arithmetic is identical to abstract matrices — the entries just carry meaning like 'units of cereal at Store 2'."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Tables of numbers you can do arithmetic on\n\nA spreadsheet of sales — products down the side, stores across the top — is already a **matrix**: a rectangular grid of numbers. Matrix operations are the rules for combining whole tables at once, so instead of adding 200 cells by hand you write $A + B$ and mean it precisely. That is why matrices run everything from inventory systems to image filters to the math behind 3D graphics.\n\n## Dimensions and entries: addresses in the grid\n\nEvery matrix has **dimensions** written rows $\\times$ columns. This table\n\n$$A = \\begin{bmatrix} 5 & 8 & 2 \\\\ 1 & 9 & 4 \\end{bmatrix}$$\n\nis a $2 \\times 3$ matrix: 2 rows, 3 columns. A single number inside is an **entry**, addressed as $a_{ij}$ — **row $i$ first, column $j$ second**. So $a_{13} = 2$ (row 1, column 3) and $a_{21} = 1$ (row 2, column 1). Order is not optional: $a_{12}$ and $a_{21}$ generally name different cells.\n\nA matrix with the same number of rows and columns (like $3 \\times 3$) is called **square**.\n\n## Addition and subtraction: cell by cell\n\nTo add two matrices, add the entries in **matching positions**. To subtract, subtract them.\n\n$$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} + \\begin{bmatrix} 5 & 0 \\\\ 1 & 6 \\end{bmatrix} = \\begin{bmatrix} 6 & 2 \\\\ 4 & 10 \\end{bmatrix}$$\n\nThe one rule: the matrices must have the **same dimensions**. You can't add a $2 \\times 2$ to a $2 \\times 3$ — there's no partner for the extra column, so the sum is **undefined**.\n\n## Scalar multiplication: scale everything at once\n\nA **scalar** is a plain number. Multiplying a matrix by a scalar multiplies **every entry**:\n\n$$3 \\begin{bmatrix} 2 & 1 \\\\ 0 & 4 \\end{bmatrix} = \\begin{bmatrix} 6 & 3 \\\\ 0 & 12 \\end{bmatrix}$$\n\nThis is how you apply a uniform rate to a whole table — a 10% markup is multiplication by $1.1$; doubling an order is multiplication by $2$.\n\n## Linear combinations: the two tools together\n\nMost real formulas mix scaling and adding. To compute $2A - 3B$, **scale each matrix first, then combine entry by entry**:\n\n$$2\\begin{bmatrix} 1 & 2 \\\\ 0 & 5 \\end{bmatrix} - 3\\begin{bmatrix} 1 & 0 \\\\ 2 & 1 \\end{bmatrix} = \\begin{bmatrix} 2 & 4 \\\\ 0 & 10 \\end{bmatrix} - \\begin{bmatrix} 3 & 0 \\\\ 6 & 3 \\end{bmatrix} = \\begin{bmatrix} -1 & 4 \\\\ -6 & 7 \\end{bmatrix}$$\n\nThat single expression might mean *\"two weeks of the first store's sales minus three times a baseline\"* — the whole comparison done in one line.\n\n## Why the same-dimension rule matters\n\nAddition and subtraction only make sense when the tables line up. If two inventory reports don't have the same products in the same rows, adding them is meaningless — and the math agrees by leaving the operation undefined. Checking dimensions first is the matrix version of *checking units* before you combine quantities."
+  },
+  "application": {
+    "summary": "Matrix addition totals two data tables (this month + last month, Store A + Store B); scalar multiplication applies a uniform rate (markup, tax, doubling an order); and combinations like A - B reveal change or difference. The same-dimension rule is just the requirement that the tables line up.",
+    "domains": ["retail/inventory", "business", "sports analytics", "data analysis"],
+    "workedExample": "**Combining inventory across two stores**\n\nA chain tracks units of three products (rows: cereal, milk, eggs) at each store (this is one column per store). Store A's stock is $\\begin{bmatrix} 40 \\\\ 25 \\\\ 60 \\end{bmatrix}$ and Store B's is $\\begin{bmatrix} 30 \\\\ 50 \\\\ 20 \\end{bmatrix}$.\n\n**Total stock** across both stores is the sum, added row by row:\n\n$$\\begin{bmatrix} 40 \\\\ 25 \\\\ 60 \\end{bmatrix} + \\begin{bmatrix} 30 \\\\ 50 \\\\ 20 \\end{bmatrix} = \\begin{bmatrix} 70 \\\\ 75 \\\\ 80 \\end{bmatrix}$$\n\nSuppose headquarters wants every store to **double** its cereal-milk-eggs holdings for a promotion. That's scalar multiplication by 2: Store A would need $2\\begin{bmatrix} 40 \\\\ 25 \\\\ 60 \\end{bmatrix} = \\begin{bmatrix} 80 \\\\ 50 \\\\ 120 \\end{bmatrix}$. The same two moves — add to total, scale to adjust — drive almost every inventory, payroll, and scorekeeping system.",
+    "domainNotes": [
+      "**Retail/inventory:** add stock matrices across stores or weeks; scale by a reorder multiplier or markup.",
+      "**Business:** combine cost and revenue tables; apply a uniform tax or discount rate to a price matrix.",
+      "**Sports analytics:** add per-game stat tables to get season totals; subtract to compare two players.",
+      "**Data analysis:** subtract a baseline matrix from current data to get the change in every cell at once."
+    ]
+  },
+  "generators": ["mat-add-v1", "mat-scalar-v1", "mat-dimensions-v1"],
+  "problems": [
+    {
+      "id": "matrix-algebra.matrix-operations.s01",
+      "concepts": ["matrix-dimensions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the matrix $A = \\begin{bmatrix} 5 & 8 & 2 \\\\ 1 & 9 & 4 \\end{bmatrix}$. State its dimensions.",
+      "steps": [
+        { "instruction": "How many rows does $A$ have?", "answer": "2", "accept": [], "hint": "Count the horizontal lines of numbers." },
+        { "instruction": "How many columns does $A$ have?", "answer": "3", "accept": [], "hint": "Count the vertical lines of numbers." }
+      ],
+      "finalAnswer": { "value": "2 x 3", "unit": "" },
+      "solutionNarrative": "There are 2 horizontal rows and 3 vertical columns, so $A$ is a $2 \\times 3$ matrix."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s02",
+      "concepts": ["matrix-dimensions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $A = \\begin{bmatrix} 7 & 3 & 0 \\\\ 2 & 6 & 9 \\end{bmatrix}$. Read off the requested entries (row first, column second).",
+      "steps": [
+        { "instruction": "What is the entry $a_{13}$ (row 1, column 3)?", "answer": "0", "accept": [], "hint": "Go to row 1, then count over to the third column." },
+        { "instruction": "What is the entry $a_{21}$ (row 2, column 1)?", "answer": "2", "accept": [], "hint": "Row 2, first column." },
+        { "instruction": "What is the entry $a_{22}$ (row 2, column 2)?", "answer": "6", "accept": [], "hint": "Row 2, second column." }
+      ],
+      "finalAnswer": { "value": "0, 2, 6", "unit": "" },
+      "solutionNarrative": "Reading row-then-column: $a_{13} = 0$, $a_{21} = 2$, and $a_{22} = 6$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s03",
+      "concepts": ["matrix-dimensions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A matrix $B$ has dimensions $4 \\times 5$. Answer the following about it.",
+      "steps": [
+        { "instruction": "How many entries does $B$ have in total?", "answer": "20", "accept": [], "hint": "A grid with 4 rows and 5 columns has rows × columns cells." },
+        { "instruction": "Is $B$ a square matrix? Answer 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "A matrix is square only when its number of rows equals its number of columns." },
+        { "instruction": "In the address $b_{ij}$, which index gives the row — the first or the second?", "answer": "first", "accept": ["1", "1st"], "hint": "The convention is always row first, column second." }
+      ],
+      "finalAnswer": { "value": "20 entries; not square; row is first", "unit": "" },
+      "solutionNarrative": "A $4 \\times 5$ matrix has $4 \\times 5 = 20$ entries. Since $4 \\ne 5$ it is not square, and in $b_{ij}$ the first index $i$ is always the row."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s04",
+      "concepts": ["matrix-addition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} + \\begin{bmatrix} 5 & 0 \\\\ 1 & 6 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Add the matrices entry by entry. Give the result as [[a, b], [c, d]].", "answer": "[[6, 2], [4, 10]]", "accept": [], "hint": "Add numbers in matching positions: $1+5$, $2+0$, $3+1$, $4+6$." }
+      ],
+      "finalAnswer": { "value": "[[6, 2], [4, 10]]", "unit": "" },
+      "solutionNarrative": "Adding matching entries: $1+5=6$, $2+0=2$, $3+1=4$, $4+6=10$, giving $\\begin{bmatrix} 6 & 2 \\\\ 4 & 10 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s05",
+      "concepts": ["matrix-addition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute the difference $\\begin{bmatrix} 8 & 5 \\\\ 7 & 2 \\end{bmatrix} - \\begin{bmatrix} 3 & 5 \\\\ 1 & 9 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Subtract entry by entry. Give the result as [[a, b], [c, d]].", "answer": "[[5, 0], [6, -7]]", "accept": [], "hint": "Subtract matching positions: $8-3$, $5-5$, $7-1$, $2-9$." }
+      ],
+      "finalAnswer": { "value": "[[5, 0], [6, -7]]", "unit": "" },
+      "solutionNarrative": "Subtracting matching entries: $8-3=5$, $5-5=0$, $7-1=6$, $2-9=-7$, giving $\\begin{bmatrix} 5 & 0 \\\\ 6 & -7 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s06",
+      "concepts": ["matrix-addition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "You are asked to compute $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} + \\begin{bmatrix} 5 & 6 & 7 \\\\ 8 & 9 & 0 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "What are the dimensions of the first matrix? Answer as 'rows x columns', e.g. 2 x 2.", "answer": "2 x 2", "accept": ["2x2", "2 by 2"], "hint": "Count its rows and columns." },
+        { "instruction": "What are the dimensions of the second matrix?", "answer": "2 x 3", "accept": ["2x3", "2 by 3"], "hint": "Count its rows and columns." },
+        { "instruction": "Is this sum defined? Answer 'yes' or 'no'.", "answer": "no", "accept": ["n", "undefined"], "hint": "Addition requires identical dimensions." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The matrices are $2 \\times 2$ and $2 \\times 3$. Because the dimensions differ, there is no entry-by-entry partner for the extra column, so the sum is undefined."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s07",
+      "concepts": ["scalar-multiplication"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $3 \\begin{bmatrix} 2 & 1 \\\\ 0 & 4 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Multiply every entry by 3. Give the result as [[a, b], [c, d]].", "answer": "[[6, 3], [0, 12]]", "accept": [], "hint": "$3 \\times 2$, $3 \\times 1$, $3 \\times 0$, $3 \\times 4$." }
+      ],
+      "finalAnswer": { "value": "[[6, 3], [0, 12]]", "unit": "" },
+      "solutionNarrative": "Multiplying every entry by 3: $\\begin{bmatrix} 6 & 3 \\\\ 0 & 12 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s08",
+      "concepts": ["scalar-multiplication"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $-2 \\begin{bmatrix} 3 & -1 \\\\ 5 & 0 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Multiply every entry by $-2$, watching the signs. Give the result as [[a, b], [c, d]].", "answer": "[[-6, 2], [-10, 0]]", "accept": [], "hint": "$-2 \\times 3 = -6$, and $-2 \\times -1 = +2$." }
+      ],
+      "finalAnswer": { "value": "[[-6, 2], [-10, 0]]", "unit": "" },
+      "solutionNarrative": "Multiplying by $-2$: $-2 \\cdot 3 = -6$, $-2 \\cdot (-1) = 2$, $-2 \\cdot 5 = -10$, $-2 \\cdot 0 = 0$, giving $\\begin{bmatrix} -6 & 2 \\\\ -10 & 0 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s09",
+      "concepts": ["scalar-multiplication", "matrix-addition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $A = \\begin{bmatrix} 1 & 2 \\\\ 0 & 5 \\end{bmatrix}$ and $B = \\begin{bmatrix} 1 & 0 \\\\ 2 & 1 \\end{bmatrix}$. Compute $2A - 3B$.",
+      "steps": [
+        { "instruction": "First compute $2A$. Give it as [[a, b], [c, d]].", "answer": "[[2, 4], [0, 10]]", "accept": [], "hint": "Multiply every entry of $A$ by 2." },
+        { "instruction": "Now compute $3B$. Give it as [[a, b], [c, d]].", "answer": "[[3, 0], [6, 3]]", "accept": [], "hint": "Multiply every entry of $B$ by 3." },
+        { "instruction": "Subtract: $2A - 3B$. Give the result as [[a, b], [c, d]].", "answer": "[[-1, 4], [-6, 7]]", "accept": [], "hint": "Subtract $3B$ from $2A$ entry by entry: $2-3$, $4-0$, $0-6$, $10-3$." }
+      ],
+      "finalAnswer": { "value": "[[-1, 4], [-6, 7]]", "unit": "" },
+      "solutionNarrative": "$2A = \\begin{bmatrix} 2 & 4 \\\\ 0 & 10 \\end{bmatrix}$ and $3B = \\begin{bmatrix} 3 & 0 \\\\ 6 & 3 \\end{bmatrix}$. Subtracting: $\\begin{bmatrix} -1 & 4 \\\\ -6 & 7 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s10",
+      "concepts": ["operations-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bakery tracks units sold of (cupcakes, cookies) on two days as column matrices. Monday sold $\\begin{bmatrix} 12 \\\\ 30 \\end{bmatrix}$ and Tuesday sold $\\begin{bmatrix} 18 \\\\ 25 \\end{bmatrix}$. Find the two-day total.",
+      "steps": [
+        { "instruction": "Add the two columns entry by entry. Give the result as [[a], [b]].", "answer": "[[30], [55]]", "accept": [], "hint": "Cupcakes: $12 + 18$. Cookies: $30 + 25$." }
+      ],
+      "finalAnswer": { "value": "[[30], [55]]", "unit": "units" },
+      "solutionNarrative": "Adding the columns: cupcakes $12 + 18 = 30$, cookies $30 + 25 = 55$, giving $\\begin{bmatrix} 30 \\\\ 55 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s11",
+      "concepts": ["operations-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A store's inventory of (shirts, pants) by size sits in $\\begin{bmatrix} 10 & 8 \\\\ 6 & 4 \\end{bmatrix}$ (rows = product, columns = size). The manager doubles every quantity for a sale. Find the new inventory.",
+      "steps": [
+        { "instruction": "Multiply the whole matrix by 2. Give the result as [[a, b], [c, d]].", "answer": "[[20, 16], [12, 8]]", "accept": [], "hint": "Double every entry." }
+      ],
+      "finalAnswer": { "value": "[[20, 16], [12, 8]]", "unit": "units" },
+      "solutionNarrative": "Scalar multiplication by 2 doubles each entry: $\\begin{bmatrix} 20 & 16 \\\\ 12 & 8 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s12",
+      "concepts": ["operations-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two stores' stock of three products are columns. Store A: $\\begin{bmatrix} 40 \\\\ 25 \\\\ 60 \\end{bmatrix}$, Store B: $\\begin{bmatrix} 30 \\\\ 50 \\\\ 20 \\end{bmatrix}$. Headquarters wants the combined chain-wide total.",
+      "steps": [
+        { "instruction": "Add the two store columns entry by entry. Give the result as [[a], [b], [c]].", "answer": "[[70], [75], [80]]", "accept": [], "hint": "Add row by row: $40+30$, $25+50$, $60+20$." }
+      ],
+      "finalAnswer": { "value": "[[70], [75], [80]]", "unit": "units" },
+      "solutionNarrative": "Chain-wide total is the sum: $40+30=70$, $25+50=75$, $60+20=80$, giving $\\begin{bmatrix} 70 \\\\ 75 \\\\ 80 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s13",
+      "concepts": ["operations-applied", "scalar-multiplication"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cafe's wholesale price matrix (dollars) for two items at two suppliers is $\\begin{bmatrix} 4 & 5 \\\\ 2 & 3 \\end{bmatrix}$. The cafe marks everything up to triple the wholesale price for the menu. Find the menu-price matrix.",
+      "steps": [
+        { "instruction": "Multiply the price matrix by 3. Give the result as [[a, b], [c, d]].", "answer": "[[12, 15], [6, 9]]", "accept": [], "hint": "Triple every price: $3 \\times 4$, $3 \\times 5$, $3 \\times 2$, $3 \\times 3$." }
+      ],
+      "finalAnswer": { "value": "[[12, 15], [6, 9]]", "unit": "dollars" },
+      "solutionNarrative": "Tripling each price by scalar multiplication: $\\begin{bmatrix} 12 & 15 \\\\ 6 & 9 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s14",
+      "concepts": ["operations-applied", "matrix-addition"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A player's stats (rows: points, rebounds) over two games are $\\begin{bmatrix} 20 \\\\ 8 \\end{bmatrix}$ and $\\begin{bmatrix} 16 \\\\ 12 \\end{bmatrix}$. A teammate's totals over the same two games are $\\begin{bmatrix} 30 \\\\ 14 \\end{bmatrix}$. By how much do the first player's two-game totals trail the teammate's, stat by stat?",
+      "steps": [
+        { "instruction": "First find the first player's two-game total by adding their two game columns. Give it as [[a], [b]].", "answer": "[[36], [20]]", "accept": [], "hint": "Points: $20 + 16$. Rebounds: $8 + 12$." },
+        { "instruction": "Now subtract the first player's total from the teammate's total to get the gap. Give it as [[a], [b]].", "answer": "[[-6], [6]]", "accept": [], "hint": "Teammate minus player: $30 - 36$ and $14 - 20$." }
+      ],
+      "finalAnswer": { "value": "[[-6], [6]]", "unit": "" },
+      "solutionNarrative": "The first player's totals are $\\begin{bmatrix} 36 \\\\ 20 \\end{bmatrix}$. The teammate minus the player gives $\\begin{bmatrix} 30-36 \\\\ 14-20 \\end{bmatrix} = \\begin{bmatrix} -6 \\\\ 6 \\end{bmatrix}$: the player actually scored 6 more points but grabbed 6 fewer rebounds."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s15",
+      "concepts": ["operations-applied", "scalar-multiplication"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Last month's sales matrix (rows: products, columns: two stores) was $A = \\begin{bmatrix} 10 & 6 \\\\ 4 & 8 \\end{bmatrix}$. This month's was $B = \\begin{bmatrix} 14 & 6 \\\\ 9 & 5 \\end{bmatrix}$. Management projects next month at twice this month's sales plus last month's, i.e. $2B + A$. Find the projection.",
+      "steps": [
+        { "instruction": "First compute $2B$. Give it as [[a, b], [c, d]].", "answer": "[[28, 12], [18, 10]]", "accept": [], "hint": "Double every entry of $B$." },
+        { "instruction": "Now add $A$ to get $2B + A$. Give the result as [[a, b], [c, d]].", "answer": "[[38, 18], [22, 18]]", "accept": [], "hint": "Add $A$ entry by entry: $28+10$, $12+6$, $18+4$, $10+8$." }
+      ],
+      "finalAnswer": { "value": "[[38, 18], [22, 18]]", "unit": "units" },
+      "solutionNarrative": "$2B = \\begin{bmatrix} 28 & 12 \\\\ 18 & 10 \\end{bmatrix}$; adding $A$ gives $\\begin{bmatrix} 38 & 18 \\\\ 22 & 18 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s16",
+      "concepts": ["matrix-addition", "scalar-multiplication"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $A = \\begin{bmatrix} 2 & 0 & 1 \\\\ 3 & 5 & 4 \\end{bmatrix}$ and $B = \\begin{bmatrix} 1 & 6 & 0 \\\\ 2 & 1 & 7 \\end{bmatrix}$. Compute $A + 2B$.",
+      "steps": [
+        { "instruction": "First compute $2B$. Give it as [[a, b, c], [d, e, f]].", "answer": "[[2, 12, 0], [4, 2, 14]]", "accept": [], "hint": "Double every entry of $B$." },
+        { "instruction": "Now add $A$ to get $A + 2B$. Give the result as [[a, b, c], [d, e, f]].", "answer": "[[4, 12, 1], [7, 7, 18]]", "accept": [], "hint": "Add matching entries: $2+2$, $0+12$, $1+0$, $3+4$, $5+2$, $4+14$." }
+      ],
+      "finalAnswer": { "value": "[[4, 12, 1], [7, 7, 18]]", "unit": "" },
+      "solutionNarrative": "$2B = \\begin{bmatrix} 2 & 12 & 0 \\\\ 4 & 2 & 14 \\end{bmatrix}$; adding $A$ entry by entry gives $\\begin{bmatrix} 4 & 12 & 1 \\\\ 7 & 7 & 18 \\end{bmatrix}$."
+    },
+    {
+      "id": "matrix-algebra.matrix-operations.s17",
+      "concepts": ["matrix-dimensions", "matrix-addition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $A = \\begin{bmatrix} 9 & 1 \\\\ 4 & 7 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Is $A$ a square matrix? Answer 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "It is square when rows equal columns." },
+        { "instruction": "Compute $A + A$. Give the result as [[a, b], [c, d]].", "answer": "[[18, 2], [8, 14]]", "accept": [], "hint": "Adding $A$ to itself doubles every entry." }
+      ],
+      "finalAnswer": { "value": "[[18, 2], [8, 14]]", "unit": "" },
+      "solutionNarrative": "$A$ is $2 \\times 2$, so it is square. Adding $A$ to itself doubles each entry: $\\begin{bmatrix} 18 & 2 \\\\ 8 & 14 \\end{bmatrix}$."
+    }
+  ]
+}

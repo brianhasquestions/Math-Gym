@@ -1,0 +1,272 @@
+{
+  "id": "linear-algebra.linear-transformations",
+  "subject": "linear-algebra",
+  "title": "Linear Transformations",
+  "prerequisites": ["linear-algebra.vectors-and-span"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "is-linear",
+      "label": "Testing whether a map is linear",
+      "microLesson": "A map $T$ is a **linear transformation** when it respects addition and scaling: $T(\\mathbf{u}+\\mathbf{v}) = T(\\mathbf{u})+T(\\mathbf{v})$ and $T(c\\mathbf{u}) = cT(\\mathbf{u})$. A quick consequence: a linear map must send $\\mathbf{0}$ to $\\mathbf{0}$. Anything built only from constant-coefficient sums of the inputs (like $T(x,y)=(2x-y,\\;x)$) is linear; anything with a squared term, a product of inputs, or an added constant (like $T(x,y)=(x+1,\\;xy)$) is not."
+    },
+    {
+      "id": "standard-matrix",
+      "label": "The standard matrix",
+      "microLesson": "Every linear map from $\\mathbb{R}^n$ to $\\mathbb{R}^m$ is just multiplication by a single matrix $A$. To find it, feed in the basis vectors: $T(\\mathbf{e}_1), T(\\mathbf{e}_2), \\dots$ become the **columns** of $A$. So if $T(1,0)=(2,3)$ and $T(0,1)=(-1,4)$, then $A=\\begin{bmatrix}2 & -1\\\\3 & 4\\end{bmatrix}$. Knowing where the basis vectors land tells you where *every* vector lands."
+    },
+    {
+      "id": "apply-and-compose",
+      "label": "Applying and composing",
+      "microLesson": "To apply $T$ to a vector $\\mathbf{x}$, compute $A\\mathbf{x}$: each output entry is a row of $A$ dotted with $\\mathbf{x}$. To do one transformation *then* another, you **multiply** their matrices — $T$ then $S$ is the matrix $BA$ (the second map sits on the left). Order matters: $BA$ and $AB$ usually differ, which is why rotating-then-shearing differs from shearing-then-rotating."
+    },
+    {
+      "id": "kernel-and-image",
+      "label": "Kernel, image, and rank-nullity",
+      "microLesson": "The **kernel** (null space) is every input that $T$ crushes to $\\mathbf{0}$; its dimension is the **nullity**. The **image** (column space) is every output $T$ can produce; its dimension is the **rank**. The **rank-nullity theorem** ties them together: $\\text{rank} + \\text{nullity} = n$, the number of input columns. A nonzero kernel means information is lost — distinct inputs collapse to the same output."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A transformation is a machine that moves space\n\nEvery time a game engine rotates a model, a camera flattens a 3D scene onto your screen, or a recommender squeezes a long list of features into a few numbers, the same operation is running underneath: a **linear transformation**. It takes a vector in and sends a vector out, and it does so *predictably* — straight lines stay straight, the origin stays put, and evenly spaced points stay evenly spaced.\n\nFormally, a map $T:\\mathbb{R}^n \\to \\mathbb{R}^m$ is **linear** when it satisfies two rules:\n\n$$T(\\mathbf{u}+\\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v}), \\qquad T(c\\,\\mathbf{u}) = c\\,T(\\mathbf{u}).$$\n\nThe first says it doesn't matter whether you add two inputs and *then* transform, or transform each and *then* add. The second says scaling the input just scales the output. Together they force $T(\\mathbf{0}) = \\mathbf{0}$, which is the fastest sniff-test: **if the map shifts the origin, or has a squared term, or multiplies two inputs together, it is not linear.**\n\n## Why a single matrix captures everything\n\nHere is the idea that makes linear algebra so powerful. Suppose you know only where $T$ sends the **standard basis vectors** $\\mathbf{e}_1 = (1,0)$ and $\\mathbf{e}_2 = (0,1)$. Because any vector is a combination $\\mathbf{x} = x\\,\\mathbf{e}_1 + y\\,\\mathbf{e}_2$, linearity forces\n\n$$T(\\mathbf{x}) = x\\,T(\\mathbf{e}_1) + y\\,T(\\mathbf{e}_2).$$\n\nSo the images of the basis vectors determine *every* output. Stack those images as **columns** and you get the **standard matrix** $A$:\n\n$$A = \\begin{bmatrix} | & | \\\\ T(\\mathbf{e}_1) & T(\\mathbf{e}_2) \\\\ | & | \\end{bmatrix}, \\qquad T(\\mathbf{x}) = A\\mathbf{x}.$$\n\nFor example, if $T(1,0) = (2,3)$ and $T(0,1) = (-1,4)$, then $A = \\begin{bmatrix} 2 & -1 \\\\ 3 & 4 \\end{bmatrix}$, and applying $T$ to any vector is just a matrix-times-vector multiply.\n\nWatch the map move the basis vectors — each image lands exactly on a column of $A$:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-2,4],\"yRange\":[-1,5],\"grid\":true,\"segments\":[{\"from\":[0,0],\"to\":[1,0],\"arrow\":true,\"label\":\"e1\",\"color\":\"dim\"},{\"from\":[0,0],\"to\":[0,1],\"arrow\":true,\"label\":\"e2\",\"color\":\"dim\"},{\"from\":[0,0],\"to\":[2,3],\"arrow\":true,\"label\":\"T(e1) = (2,3)\",\"color\":\"accent\"},{\"from\":[0,0],\"to\":[-1,4],\"arrow\":true,\"label\":\"T(e2) = (-1,4)\",\"color\":\"warn\"}],\"caption\":\"T sends e1 to (2,3) and e2 to (-1,4) — the two columns of the standard matrix A\"}\n```\n\n## Applying and composing\n\nTo **apply** $T$, multiply: each entry of $A\\mathbf{x}$ is one row of $A$ dotted with $\\mathbf{x}$. To **compose** — do $T$ (matrix $A$) and then $S$ (matrix $B$) — multiply the matrices, with the *second* map on the left:\n\n$$(S \\circ T)(\\mathbf{x}) = B(A\\mathbf{x}) = (BA)\\mathbf{x}.$$\n\nMatrix multiplication is **not commutative**: $BA \\neq AB$ in general. Rotating a sprite and *then* shearing it lands somewhere different from shearing and then rotating — the math knows this because the products differ.\n\n## Kernel, image, and the conservation law\n\nTwo subspaces tell you what a transformation keeps and what it throws away.\n\n- The **kernel** (or null space) is the set of inputs that $T$ sends to $\\mathbf{0}$. Its dimension is the **nullity**. If the kernel contains anything besides $\\mathbf{0}$, then different inputs collapse to the same output — information is lost, and $T$ is **not one-to-one**.\n- The **image** (or column space) is the set of all reachable outputs — the span of the columns of $A$. Its dimension is the **rank**. If the image fills the whole target space, $T$ is **onto**.\n\nThe **rank-nullity theorem** ties them together for a map with $n$ input columns:\n\n$$\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n.$$\n\nThink of it as conservation of dimension: every input direction either survives into the image or gets crushed into the kernel. When you project a 3D point onto a 2D screen, one whole direction (depth) collapses to zero — that lost dimension is exactly the kernel, and rank-nullity guarantees $2 + 1 = 3$."
+  },
+  "application": {
+    "summary": "Linear transformations are the engine behind computer graphics (rotate, scale, shear, project), dimensionality reduction (squeezing many features into few), and any linear system that maps inputs to outputs. The standard matrix packages the whole map; rank and nullity tell you what survives and what is lost.",
+    "domains": ["computer graphics", "data science", "engineering", "robotics"],
+    "workedExample": "**Flattening a 3D point onto the screen**\n\nA renderer drops the depth coordinate to project a 3D point $(x,y,z)$ onto the 2D screen as $(x,y)$. This map $T:\\mathbb{R}^3 \\to \\mathbb{R}^2$ is linear, so it has a standard matrix. Find it by transforming the basis vectors:\n\n$$T(1,0,0) = (1,0), \\quad T(0,1,0) = (0,1), \\quad T(0,0,1) = (0,0).$$\n\nStacking these as columns gives\n\n$$A = \\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\end{bmatrix}.$$\n\nApply it to the point $(4, 7, 9)$: $A\\,(4,7,9) = (4, 7)$ — the depth is gone, exactly as a screen projection should behave. What got lost? Every point straight behind another lands on the same pixel, so the **kernel** is the depth axis, spanned by $(0,0,1)$ — a 1-dimensional null space. The **image** is the full 2D screen, so the rank is 2. Rank-nullity checks out: $2 + 1 = 3$, the number of input dimensions. That single 'lost' dimension is why a 2D screen can't tell you how far away something is.",
+    "domainNotes": [
+      "**Computer graphics:** rotation, scaling, reflection, and shear are all matrices; composing several effects is one matrix multiply done once per frame.",
+      "**Data science:** projecting high-dimensional feature vectors down to a few dimensions is a linear map; the rank tells you how much structure survives.",
+      "**Engineering:** a linear sensor or circuit maps an input vector to an output vector through its standard matrix; the kernel is the set of inputs it can't detect.",
+      "**Robotics:** mapping joint angles to end-effector position uses linear approximations whose matrix (the Jacobian) governs which motions are reachable."
+    ]
+  },
+  "generators": ["apply-T-v1", "laf-is-linear-d1", "laf-is-linear-d2", "laf-is-linear-d3", "laf-standard-matrix-d1", "laf-standard-matrix-d2", "laf-standard-matrix-d3", "laf-apply-and-compose-d2", "laf-apply-and-compose-d3", "laf-kernel-and-image-d1", "laf-kernel-and-image-d2", "laf-kernel-and-image-d3"],
+  "problems": [
+    {
+      "id": "linear-algebra.linear-transformations.s01",
+      "concepts": ["is-linear"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is the map $T(x, y) = (2x,\\; 3y)$ a linear transformation? Answer 'yes' or 'no'.",
+      "steps": [
+        { "instruction": "Check whether $T(\\mathbf{0}) = \\mathbf{0}$ and every output is a constant-coefficient combination of the inputs. Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Each output entry is just a number times an input, with no constants added and no squares or products." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Both output entries are constant multiples of a single input ($2x$ and $3y$), with no added constant, square, or product. The map sends $(0,0)$ to $(0,0)$ and satisfies both linearity rules, so it is linear."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s02",
+      "concepts": ["is-linear"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is the map $T(x, y) = (x + 3,\\; y)$ a linear transformation? Answer 'yes' or 'no'.",
+      "steps": [
+        { "instruction": "Compute $T(0,0)$. Must a linear map send the zero vector to the zero vector? Then answer 'yes' or 'no' for whether $T$ is linear.", "answer": "no", "accept": [], "hint": "$T(0,0) = (3, 0) \\neq (0,0)$." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$T(0,0) = (3,0)$, not the zero vector. A linear map must fix the origin, so the added constant $+3$ makes this map not linear."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s03",
+      "concepts": ["is-linear"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Is the map $T(x, y) = (xy,\\; x)$ a linear transformation? Answer 'yes' or 'no'.",
+      "steps": [
+        { "instruction": "Look at the first output entry, $xy$. Test scaling: does $T(2x, 2y)$ equal $2\\,T(x,y)$? Then answer 'yes' or 'no' for whether $T$ is linear.", "answer": "no", "accept": [], "hint": "Scaling inputs by 2 multiplies $xy$ by 4, not 2 — a product of inputs breaks linearity." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The entry $xy$ multiplies the two inputs. Scaling both inputs by $c$ multiplies $xy$ by $c^2$, but linearity demands a single factor of $c$. So the map is not linear."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s04",
+      "concepts": ["is-linear"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A pricing model maps a quantity vector $(a, b)$ for two products to a total revenue $T(a, b) = 5a + 8b$ (a single number). A second model adds a flat \\$10 service fee: $S(a, b) = 5a + 8b + 10$. Which model is a linear transformation — answer with the linearity of $T$ first ('yes' or 'no'), then of $S$.",
+      "steps": [
+        { "instruction": "Is the pure revenue map $T(a,b) = 5a + 8b$ linear? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "It is a constant-coefficient sum of the inputs with no added constant, and $T(0,0)=0$." },
+        { "instruction": "Is the fee-added map $S(a,b) = 5a + 8b + 10$ linear? Answer 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$S(0,0) = 10 \\neq 0$; the flat fee breaks linearity." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$T$ is a constant-coefficient sum of inputs and sends $(0,0)$ to $0$, so it is linear. $S$ adds a flat \\$10, so $S(0,0)=10\\neq 0$ — that constant offset (an affine map, not linear) makes $S$ not a linear transformation."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s05",
+      "concepts": ["standard-matrix"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A linear map satisfies $T(1,0) = (3, 1)$ and $T(0,1) = (2, 5)$. Write its standard matrix in the form [[a, b], [c, d]].",
+      "steps": [
+        { "instruction": "Use the images of the basis vectors as the columns of the matrix. Write it as [[a, b], [c, d]].", "answer": "[[3, 2], [1, 5]]", "accept": [], "hint": "First column is $T(1,0)=(3,1)$, second column is $T(0,1)=(2,5)$." }
+      ],
+      "finalAnswer": { "value": "[[3, 2], [1, 5]]", "unit": "" },
+      "solutionNarrative": "The columns of the standard matrix are the images of the basis vectors: $T(1,0)=(3,1)$ is the first column and $T(0,1)=(2,5)$ is the second, giving [[3, 2], [1, 5]]."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s06",
+      "concepts": ["standard-matrix"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A graphics engine scales the x-axis by 2 and the y-axis by 3: $T(x, y) = (2x,\\; 3y)$. Find its standard matrix in the form [[a, b], [c, d]].",
+      "plot": {"type":"cartesian","xRange":[-1,3],"yRange":[-1,4],"grid":true,"segments":[{"from":[0,0],"to":[2,0],"arrow":true,"label":"T(e1)","color":"accent"},{"from":[0,0],"to":[0,3],"arrow":true,"label":"T(e2)","color":"warn"},{"from":[0,0],"to":[1,0],"arrow":true,"label":"e1","color":"dim"},{"from":[0,0],"to":[0,1],"arrow":true,"label":"e2","color":"dim"}],"caption":"The scaling T(x, y) = (2x, 3y) stretches e1 along the x-axis and e2 along the y-axis"},
+      "steps": [
+        { "instruction": "Compute $T(1,0)$ (the first column).", "answer": "<2, 0>", "accept": [], "hint": "Substitute $x=1, y=0$ into $(2x, 3y)$." },
+        { "instruction": "Compute $T(0,1)$ (the second column).", "answer": "<0, 3>", "accept": [], "hint": "Substitute $x=0, y=1$ into $(2x, 3y)$." },
+        { "instruction": "Assemble the standard matrix as [[a, b], [c, d]].", "answer": "[[2, 0], [0, 3]]", "accept": [], "hint": "Place $T(1,0)$ and $T(0,1)$ as columns." }
+      ],
+      "finalAnswer": { "value": "[[2, 0], [0, 3]]", "unit": "" },
+      "solutionNarrative": "$T(1,0)=(2,0)$ and $T(0,1)=(0,3)$. Stacking these as columns gives the diagonal scaling matrix [[2, 0], [0, 3]]."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s07",
+      "concepts": ["standard-matrix"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 90-degree counterclockwise rotation sends $(1,0)$ to $(0,1)$ and $(0,1)$ to $(-1,0)$. Find its standard matrix in the form [[a, b], [c, d]].",
+      "steps": [
+        { "instruction": "Identify the first column, $T(1,0)$, as a vector.", "answer": "<0, 1>", "accept": [], "hint": "The image of $(1,0)$ is given as $(0,1)$." },
+        { "instruction": "Identify the second column, $T(0,1)$, as a vector.", "answer": "<-1, 0>", "accept": [], "hint": "The image of $(0,1)$ is given as $(-1,0)$." },
+        { "instruction": "Assemble the standard matrix as [[a, b], [c, d]].", "answer": "[[0, -1], [1, 0]]", "accept": [], "hint": "Columns are $(0,1)$ and $(-1,0)$." }
+      ],
+      "finalAnswer": { "value": "[[0, -1], [1, 0]]", "unit": "" },
+      "solutionNarrative": "The columns are the images of the basis vectors: $(0,1)$ and $(-1,0)$. The 90-degree rotation matrix is therefore [[0, -1], [1, 0]]."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s08",
+      "concepts": ["apply-and-compose"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $A = \\begin{bmatrix} 2 & 0 \\\\ 1 & 3 \\end{bmatrix}$. Apply this transformation to the vector $(4, 1)$. Give the resulting vector as <a, b>.",
+      "steps": [
+        { "instruction": "Multiply $A$ by $(4,1)$: dot each row with the vector. Give the result as <a, b>.", "answer": "<8, 7>", "accept": [], "hint": "First entry: $2\\cdot4 + 0\\cdot1$. Second entry: $1\\cdot4 + 3\\cdot1$." }
+      ],
+      "finalAnswer": { "value": "<8, 7>", "unit": "" },
+      "solutionNarrative": "Row 1 dotted with $(4,1)$ is $2(4)+0(1)=8$; row 2 is $1(4)+3(1)=7$. So $A(4,1) = (8, 7)$."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s09",
+      "concepts": ["apply-and-compose"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A renderer projects 3D points to 2D by dropping depth, with matrix $A = \\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\end{bmatrix}$. Apply it to the point $(5, 2, 9)$. Give the resulting screen vector as <a, b>.",
+      "steps": [
+        { "instruction": "Multiply $A$ by $(5, 2, 9)$: dot each row with the point. Give the result as <a, b>.", "answer": "<5, 2>", "accept": [], "hint": "Row 1 picks out $x$; row 2 picks out $y$; the depth $z$ is multiplied by zero." }
+      ],
+      "finalAnswer": { "value": "<5, 2>", "unit": "" },
+      "solutionNarrative": "Row 1 dotted with $(5,2,9)$ gives $1(5)+0(2)+0(9)=5$; row 2 gives $0(5)+1(2)+0(9)=2$. The depth is discarded, leaving the screen point $(5, 2)$."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s10",
+      "concepts": ["apply-and-compose"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A sprite is first scaled by $A = \\begin{bmatrix} 2 & 0 \\\\ 0 & 1 \\end{bmatrix}$, then sheared by $B = \\begin{bmatrix} 1 & 1 \\\\ 0 & 1 \\end{bmatrix}$. The combined transformation (scale then shear) is the matrix $BA$. Compute $BA$ as [[a, b], [c, d]].",
+      "steps": [
+        { "instruction": "Compute the matrix product $BA$ (the second map $B$ on the left). Give it as [[a, b], [c, d]].", "answer": "[[2, 1], [0, 1]]", "accept": [], "hint": "Entry (row $i$, col $j$) of $BA$ is row $i$ of $B$ dotted with column $j$ of $A$." }
+      ],
+      "finalAnswer": { "value": "[[2, 1], [0, 1]]", "unit": "" },
+      "solutionNarrative": "$BA = \\begin{bmatrix} 1 & 1 \\\\ 0 & 1 \\end{bmatrix}\\begin{bmatrix} 2 & 0 \\\\ 0 & 1 \\end{bmatrix}$. Top row: $(1\\cdot2+1\\cdot0,\\;1\\cdot0+1\\cdot1)=(2,1)$. Bottom row: $(0\\cdot2+1\\cdot0,\\;0\\cdot0+1\\cdot1)=(0,1)$. So $BA = $ [[2, 1], [0, 1]]."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s11",
+      "concepts": ["apply-and-compose", "standard-matrix"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $A = \\begin{bmatrix} 1 & 2 \\\\ 0 & 1 \\end{bmatrix}$ and $B = \\begin{bmatrix} 3 & 0 \\\\ 1 & 1 \\end{bmatrix}$. Compute the composition $AB$ (apply $B$ first, then $A$) as [[a, b], [c, d]].",
+      "steps": [
+        { "instruction": "Compute the matrix product $AB$. Give it as [[a, b], [c, d]].", "answer": "[[5, 2], [1, 1]]", "accept": [], "hint": "Top-left: row 1 of $A$ dotted with column 1 of $B$: $1\\cdot3 + 2\\cdot1$." }
+      ],
+      "finalAnswer": { "value": "[[5, 2], [1, 1]]", "unit": "" },
+      "solutionNarrative": "Top row of $AB$: $(1\\cdot3+2\\cdot1,\\;1\\cdot0+2\\cdot1)=(5,2)$. Bottom row: $(0\\cdot3+1\\cdot1,\\;0\\cdot0+1\\cdot1)=(1,1)$. So $AB = $ [[5, 2], [1, 1]]."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s12",
+      "concepts": ["kernel-and-image"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The transformation $A = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$ is the identity on $\\mathbb{R}^2$. What is the dimension of its kernel (null space)? Give a number.",
+      "steps": [
+        { "instruction": "The identity sends a vector to $\\mathbf{0}$ only when the vector is already $\\mathbf{0}$. What is the dimension of the kernel? Give a number.", "answer": "0", "accept": [], "hint": "Only the zero vector maps to zero, so the kernel is just the origin." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "The identity map is one-to-one: the only input sent to $\\mathbf{0}$ is $\\mathbf{0}$ itself. The kernel contains only the origin, so its dimension is 0."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s13",
+      "concepts": ["kernel-and-image"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 3D-to-2D projection has matrix $A = \\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\end{bmatrix}$ (it drops the depth coordinate). Using rank-nullity with 3 input columns, find the dimension of the kernel. Give a number.",
+      "steps": [
+        { "instruction": "The image is the full 2D screen, so the rank is 2. The map has 3 input columns. Use rank + nullity = number of columns to find the nullity. Give a number.", "answer": "1", "accept": [], "hint": "$2 + \\text{nullity} = 3$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "The rank is 2 (the output fills the 2D screen) and there are 3 input columns, so rank-nullity gives $2 + \\text{nullity} = 3$, hence nullity $= 1$ — the lost depth direction."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s14",
+      "concepts": ["kernel-and-image"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The matrix $A = \\begin{bmatrix} 1 & 2 \\\\ 2 & 4 \\end{bmatrix}$ has its second row equal to twice its first, so its rank is 1. Find a nonzero vector in the kernel with the smallest integer components. Give it as <a, b>.",
+      "steps": [
+        { "instruction": "Solve $A\\mathbf{x} = \\mathbf{0}$, i.e. $x + 2y = 0$, for a nonzero vector with smallest integer components. Give it as <a, b>.", "answer": "<-2, 1>", "accept": ["<2, -1>"], "hint": "From $x + 2y = 0$, set $y = 1$ to get $x = -2$." }
+      ],
+      "finalAnswer": { "value": "<-2, 1>", "unit": "" },
+      "solutionNarrative": "Both rows give the equation $x + 2y = 0$. Choosing $y = 1$ gives $x = -2$, so $(-2, 1)$ is a smallest-integer kernel vector (and $A(-2,1) = (-2+2,\\;-4+4) = (0,0)$)."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s15",
+      "concepts": ["kernel-and-image"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A sensor encodes two readings into one signal via $A = \\begin{bmatrix} 3 & 6 \\end{bmatrix}$, so $T(x, y) = 3x + 6y$ (a map from $\\mathbb{R}^2$ to $\\mathbb{R}^1$). The output is a single nonzero combination, so the rank is 1. Find the dimension of the kernel, then a smallest-integer kernel vector.",
+      "steps": [
+        { "instruction": "With 2 input columns and rank 1, use rank-nullity to find the kernel dimension. Give a number.", "answer": "1", "accept": [], "hint": "$1 + \\text{nullity} = 2$." },
+        { "instruction": "Solve $3x + 6y = 0$ for a nonzero vector with smallest integer components. Give it as <a, b>.", "answer": "<-2, 1>", "accept": ["<2, -1>"], "hint": "Divide by 3: $x + 2y = 0$, so set $y = 1$." }
+      ],
+      "finalAnswer": { "value": "<-2, 1>", "unit": "" },
+      "solutionNarrative": "Rank 1 with 2 columns gives nullity $2 - 1 = 1$. The kernel solves $3x + 6y = 0$, i.e. $x + 2y = 0$; with $y = 1$, $x = -2$, so $(-2, 1)$ spans the kernel — the pair of readings the sensor cannot distinguish from no signal."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s16",
+      "concepts": ["kernel-and-image"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A linear map $T:\\mathbb{R}^4 \\to \\mathbb{R}^3$ has rank 3 (its image fills the target). Using rank-nullity, what is the dimension of its kernel? Give a number.",
+      "steps": [
+        { "instruction": "Apply rank + nullity = number of input columns, with 4 columns and rank 3. Give a number.", "answer": "1", "accept": [], "hint": "$3 + \\text{nullity} = 4$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "The map has 4 input columns and rank 3, so rank-nullity gives $3 + \\text{nullity} = 4$, hence the kernel has dimension 1."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s17",
+      "concepts": ["standard-matrix", "apply-and-compose"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A linear map satisfies $T(1,0) = (1, -2)$ and $T(0,1) = (4, 3)$. First write its standard matrix as [[a, b], [c, d]], then apply $T$ to $(2, 1)$ as <a, b>.",
+      "steps": [
+        { "instruction": "Build the standard matrix from the basis images, as [[a, b], [c, d]].", "answer": "[[1, 4], [-2, 3]]", "accept": [], "hint": "Columns are $T(1,0)=(1,-2)$ and $T(0,1)=(4,3)$." },
+        { "instruction": "Apply the matrix to $(2,1)$. Give the result as <a, b>.", "answer": "<6, -1>", "accept": [], "hint": "Row 1: $1\\cdot2 + 4\\cdot1$. Row 2: $-2\\cdot2 + 3\\cdot1$." }
+      ],
+      "finalAnswer": { "value": "<6, -1>", "unit": "" },
+      "solutionNarrative": "Columns give $A = $ [[1, 4], [-2, 3]]. Applying to $(2,1)$: row 1 is $1(2)+4(1)=6$, row 2 is $-2(2)+3(1)=-1$, so $T(2,1) = (6, -1)$."
+    },
+    {
+      "id": "linear-algebra.linear-transformations.s18",
+      "concepts": ["is-linear", "standard-matrix"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Consider $T(x, y) = (x - y,\\; 2x + y)$. First decide whether it is linear ('yes'/'no'), then give its standard matrix as [[a, b], [c, d]].",
+      "steps": [
+        { "instruction": "Is $T$ linear? Each output is a constant-coefficient sum of inputs with no constants, squares, or products. Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Both entries are plain weighted sums of $x$ and $y$." },
+        { "instruction": "Find the standard matrix from $T(1,0)$ and $T(0,1)$, as [[a, b], [c, d]].", "answer": "[[1, -1], [2, 1]]", "accept": [], "hint": "$T(1,0)=(1,2)$ and $T(0,1)=(-1,1)$ are the columns." }
+      ],
+      "finalAnswer": { "value": "[[1, -1], [2, 1]]", "unit": "" },
+      "solutionNarrative": "Both outputs are constant-coefficient sums of the inputs, so $T$ is linear. $T(1,0)=(1,2)$ and $T(0,1)=(-1,1)$ form the columns, giving the standard matrix [[1, -1], [2, 1]]."
+    }
+  ]
+}

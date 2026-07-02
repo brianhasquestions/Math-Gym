@@ -1,0 +1,275 @@
+{
+  "id": "trigonometry.radians-and-unit-circle",
+  "subject": "trigonometry",
+  "title": "Radians and the Unit Circle",
+  "prerequisites": ["geometry.right-triangle-trigonometry"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "degrees-to-radians",
+      "label": "Converting between degrees and radians",
+      "microLesson": "A **radian** measures an angle by arc length: one radian is the angle that cuts an arc equal to the radius. A full turn is $2\\pi$ radians $= 360^\\circ$, so $180^\\circ = \\pi$. To convert degrees to radians multiply by $\\frac{\\pi}{180}$; radians to degrees, multiply by $\\frac{180}{\\pi}$. Example: $60^\\circ \\times \\frac{\\pi}{180} = \\frac{\\pi}{3}$, and $\\frac{5\\pi}{6} \\times \\frac{180}{\\pi} = 150^\\circ$. Answers like $\\pi/6$ can be typed as `pi/6`."
+    },
+    {
+      "id": "unit-circle-coordinates",
+      "label": "Coordinates on the unit circle",
+      "microLesson": "On a circle of radius 1 centered at the origin, the point at angle $\\theta$ (measured counterclockwise from the positive $x$-axis) has coordinates $(\\cos\\theta, \\sin\\theta)$. This upgrades SOH-CAH-TOA to *every* angle, not just acute ones. Memorize the special angles: at $30^\\circ$ the point is $(\\frac{\\sqrt{3}}{2}, \\frac{1}{2})$, at $45^\\circ$ it is $(\\frac{\\sqrt{2}}{2}, \\frac{\\sqrt{2}}{2})$, at $60^\\circ$ it is $(\\frac{1}{2}, \\frac{\\sqrt{3}}{2})$, and the axes give $(1,0)$, $(0,1)$, $(-1,0)$, $(0,-1)$."
+    },
+    {
+      "id": "reference-angles-signs",
+      "label": "Reference angles and quadrant signs",
+      "microLesson": "The **reference angle** is the acute angle between the terminal side and the $x$-axis — it tells you the *size* of $\\sin$, $\\cos$, $\\tan$, while the **quadrant** tells you the *sign*. Mnemonic **All Students Take Calculus**: in QI all are positive, QII only Sine, QIII only Tangent, QIV only Cosine. Example: $210^\\circ$ is in QIII with reference angle $30^\\circ$, so $\\sin 210^\\circ = -\\frac{1}{2}$ and $\\tan 210^\\circ = +\\frac{\\sqrt{3}}{3}$."
+    },
+    {
+      "id": "arc-length-angular-velocity",
+      "label": "Arc length and angular velocity",
+      "microLesson": "Radians make circular motion easy: an angle $\\theta$ (in radians!) on a circle of radius $r$ cuts an arc of length $s = r\\theta$. Turning at an **angular velocity** $\\omega$ radians per unit time moves a rim point at linear speed $v = r\\omega$. One revolution is $2\\pi$ radians, so a record spinning at 45 rpm has $\\omega = 45 \\cdot \\frac{2\\pi}{60} = \\frac{3\\pi}{2}$ rad/s. These two formulas run wheels, gears, turntables, and satellite orbits."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Why measure angles a second way?\n\nYour bike odometer has one job: turn *wheel rotations* into *distance*. A satellite dish tracker turns *degrees of sweep* into *how far the dish edge moves*. Both jobs need the same missing link: a way to connect an **angle** to a **length**. Degrees can't do it directly — 1 degree of a huge circle is a long arc, 1 degree of a tiny circle is a short one, and the number 360 was chosen by ancient astronomers, not by geometry.\n\n**Radians** are the fix. Define the angle by the arc it cuts: an angle of **1 radian** cuts an arc exactly one radius long. Then arc length is just\n\n$$s = r\\theta,$$\n\nno conversion constants, no fuss. Since the full circumference is $2\\pi r$, a full turn is $2\\pi$ radians. That gives the master conversion:\n\n$$180^\\circ = \\pi \\text{ radians} \\qquad \\Rightarrow \\qquad \\text{deg} \\to \\text{rad: multiply by } \\tfrac{\\pi}{180}, \\quad \\text{rad} \\to \\text{deg: multiply by } \\tfrac{180}{\\pi}.$$\n\nSo $60^\\circ = \\frac{60\\pi}{180} = \\frac{\\pi}{3}$, and $\\frac{3\\pi}{4} = \\frac{3}{4}(180^\\circ) = 135^\\circ$. The common angles are worth knowing cold: $30^\\circ = \\frac{\\pi}{6}$, $45^\\circ = \\frac{\\pi}{4}$, $60^\\circ = \\frac{\\pi}{3}$, $90^\\circ = \\frac{\\pi}{2}$.\n\n## The unit circle: trig for every angle\n\nRight-triangle trig only handles angles between $0^\\circ$ and $90^\\circ$ — but a Ferris wheel keeps turning past 90. Put a circle of radius 1 at the origin and let $\\theta$ be the angle measured counterclockwise from the positive $x$-axis. The point where the angle's arm crosses the circle is defined to be\n\n$$(x, y) = (\\cos\\theta, \\sin\\theta).$$\n\nFor acute angles this agrees exactly with SOH-CAH-TOA (the hypotenuse is 1), but now $\\theta$ can be anything: $200^\\circ$, $\\frac{7\\pi}{2}$, even negative. The special right triangles hand you the key values: at $\\frac{\\pi}{6}$ the point is $(\\frac{\\sqrt{3}}{2}, \\frac{1}{2})$, at $\\frac{\\pi}{4}$ it is $(\\frac{\\sqrt{2}}{2}, \\frac{\\sqrt{2}}{2})$, at $\\frac{\\pi}{3}$ it is $(\\frac{1}{2}, \\frac{\\sqrt{3}}{2})$.\n\nHere is the picture to keep in mind: the arm of length 1 at $\\theta = \\frac{\\pi}{3}$ lands on the circle at exactly $(\\frac{1}{2}, \\frac{\\sqrt{3}}{2})$, and the dashed drop to the $x$-axis is what makes the coordinates *be* cosine and sine.\n\n```plot\n{ \"xRange\": [-1.4, 1.4], \"yRange\": [-1.4, 1.4], \"width\": 340, \"height\": 340, \"grid\": false, \"curves\": [ { \"fn\": \"sqrt(1 - x^2)\", \"color\": \"accent\" }, { \"fn\": \"-sqrt(1 - x^2)\", \"color\": \"accent\" } ], \"segments\": [ { \"from\": [0, 0], \"to\": [0.5, 0.866], \"color\": \"warn\", \"label\": \"1\" }, { \"from\": [0.5, 0.866], \"to\": [0.5, 0], \"dashed\": true, \"color\": \"dim\" } ], \"points\": [ { \"x\": 0.5, \"y\": 0.866, \"label\": \"(1/2, √3/2)\", \"color\": \"warn\" } ], \"caption\": \"The unit circle: at θ = π/3 the radius arm lands at (cos θ, sin θ) = (1/2, √3/2) ≈ (0.5, 0.866)\" }\n```\n\n## Reference angles: recycle what you know\n\nWhat about $\\frac{5\\pi}{6}$ or $210^\\circ$? Every angle has a **reference angle** — the acute angle between its arm and the $x$-axis — and its sine and cosine have the *same absolute value* as the reference angle's. Only the **signs** change, and the quadrant decides them: $x = \\cos\\theta$ is negative on the left half, $y = \\sin\\theta$ is negative on the bottom half, and $\\tan = \\frac{\\sin}{\\cos}$ follows from those. The mnemonic **All Students Take Calculus** (QI: All, QII: Sine, QIII: Tangent, QIV: Cosine) names who stays positive.\n\nExample: $\\frac{5\\pi}{6}$ sits in QII with reference angle $\\frac{\\pi}{6}$, so $\\cos\\frac{5\\pi}{6} = -\\frac{\\sqrt{3}}{2}$ and $\\sin\\frac{5\\pi}{6} = +\\frac{1}{2}$.\n\n## Putting radians to work: motion\n\nBecause $s = r\\theta$, anything that spins becomes arithmetic. A gear of radius 4 cm turning through $\\frac{3\\pi}{4}$ moves its teeth $4 \\cdot \\frac{3\\pi}{4} = 3\\pi$ cm. Spin rate works the same way: angular velocity $\\omega$ (radians per second) gives rim speed $v = r\\omega$. Convert rpm by remembering each revolution is $2\\pi$ radians. This is why engineers, physicists, and every calculus course after this one work in radians by default — the formulas only stay this clean in radians."
+  },
+  "application": {
+    "summary": "Radians tie angles directly to distance (s = r·theta) and speed (v = r·omega), which is how wheels become odometers, gears transmit motion, and orbits get timed. The unit circle extends sine and cosine to every angle, powering everything periodic.",
+    "domains": ["engineering", "physics", "navigation", "everyday life"],
+    "workedExample": "**How fast is the edge of the record moving?**\n\nA vinyl record 30 cm across (radius 15 cm) spins at 45 rpm. How fast does a speck of dust on the rim travel?\n\nFirst convert the spin rate to radians. Each revolution is $2\\pi$ radians and there are 60 seconds in a minute, so\n\n$$\\omega = 45 \\text{ rpm} \\times \\frac{2\\pi \\text{ rad}}{1 \\text{ rev}} \\times \\frac{1 \\text{ min}}{60 \\text{ s}} = \\frac{3\\pi}{2} \\text{ rad/s}.$$\n\nThen the rim speed is $v = r\\omega = 15 \\cdot \\frac{3\\pi}{2} = \\frac{45\\pi}{2} \\approx 70.7$ cm/s.\n\nTwo formulas, no triangles drawn: **the dust travels about 70.7 cm every second.** The identical computation sizes bike gears, sets CNC spindle feeds, and converts a satellite's orbital sweep into ground-track speed — radians are the unit that makes rotation and distance the same currency.",
+    "domainNotes": [
+      "**Engineering:** gear trains and belt drives transmit motion through $s = r\\theta$ — equal arc, different radii, different angles.",
+      "**Physics:** angular velocity $\\omega$ and rim speed $v = r\\omega$ describe every rotating body, from hard drives to planets.",
+      "**Navigation:** latitude/longitude are angles; multiplying by Earth's radius turns a degree of latitude into kilometers of travel.",
+      "**Everyday life:** odometers count wheel turns, clock hands sweep arcs, and a pizza slice's crust length is just $r\\theta$."
+    ]
+  },
+  "generators": [
+    "trg-deg2rad-d1",
+    "trg-rad2deg-d2",
+    "trg-coterminal-d3",
+    "trg-unit-coords-d1",
+    "trg-unit-coords-d2",
+    "trg-unit-coords-d3",
+    "trg-ref-quad-d1",
+    "trg-ref-signs-d2",
+    "trg-ref-eval-d3",
+    "trg-arc-d1",
+    "trg-arc-d2",
+    "trg-arc-d3"
+  ],
+  "problems": [
+    {
+      "id": "trigonometry.radians-and-unit-circle.s01",
+      "concepts": ["degrees-to-radians"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A pizza is cut into 6 equal slices. Find the central angle of one slice in degrees, then convert it to radians (exact, in terms of $\\pi$).",
+      "steps": [
+        { "instruction": "How many degrees is one slice? (The whole pizza is $360^\\circ$.)", "answer": "60", "accept": [], "hint": "Divide 360 by 6." },
+        { "instruction": "What do you multiply a degree measure by to convert it to radians?", "answer": "pi/180", "accept": ["π/180"], "hint": "$180^\\circ = \\pi$ radians, so the factor is $\\frac{\\pi}{180}$." },
+        { "instruction": "Convert $60^\\circ$ to radians (exact).", "answer": "pi/3", "accept": ["π/3"], "hint": "$\\frac{60\\pi}{180}$ reduces — divide top and bottom by 60." }
+      ],
+      "finalAnswer": { "value": "pi/3", "unit": "radians" },
+      "solutionNarrative": "One slice is $360^\\circ/6 = 60^\\circ$. Multiplying by $\\frac{\\pi}{180}$ gives $\\frac{60\\pi}{180} = \\frac{\\pi}{3}$ radians."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s02",
+      "concepts": ["degrees-to-radians"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Convert $45^\\circ$ to radians. Give an exact answer in terms of $\\pi$.",
+      "steps": [
+        { "instruction": "Multiply by the conversion factor and simplify: $45 \\cdot \\frac{\\pi}{180}$.", "answer": "pi/4", "accept": ["π/4", "45pi/180"], "hint": "$\\frac{45}{180}$ reduces to $\\frac{1}{4}$." }
+      ],
+      "finalAnswer": { "value": "pi/4", "unit": "radians" },
+      "solutionNarrative": "$45 \\cdot \\frac{\\pi}{180} = \\frac{45\\pi}{180} = \\frac{\\pi}{4}$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s03",
+      "concepts": ["degrees-to-radians"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert $\\frac{5\\pi}{6}$ radians to degrees.",
+      "steps": [
+        { "instruction": "What do you multiply a radian measure by to convert it to degrees?", "answer": "180/pi", "accept": ["180/π"], "hint": "It's the reciprocal of the degrees-to-radians factor." },
+        { "instruction": "Compute $\\frac{5\\pi}{6} \\cdot \\frac{180}{\\pi}$ (degrees).", "answer": "150", "accept": [], "hint": "The $\\pi$'s cancel: $\\frac{5 \\cdot 180}{6}$." }
+      ],
+      "finalAnswer": { "value": "150", "unit": "degrees" },
+      "solutionNarrative": "$\\frac{5\\pi}{6} \\cdot \\frac{180}{\\pi} = \\frac{5 \\cdot 180}{6} = 150^\\circ$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s04",
+      "concepts": ["degrees-to-radians"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ceiling fan blade makes 3.5 complete revolutions before stopping. Express the total angle it turned in radians (exact) and in degrees.",
+      "steps": [
+        { "instruction": "How many radians is one full revolution? (Exact.)", "answer": "2pi", "accept": ["2π"], "hint": "A full turn is the whole circle: $2\\pi$ radians." },
+        { "instruction": "Multiply to get the total angle in radians (exact, in terms of $\\pi$).", "answer": "7pi", "accept": ["7π", "7pi/1"], "hint": "$3.5 \\times 2\\pi$." },
+        { "instruction": "Convert the total to degrees.", "answer": "1260", "accept": [], "hint": "$3.5 \\times 360$, or $7\\pi \\cdot \\frac{180}{\\pi}$." }
+      ],
+      "finalAnswer": { "value": "7pi", "unit": "radians (= 1260 degrees)" },
+      "solutionNarrative": "Each revolution is $2\\pi$, so $3.5$ revolutions is $7\\pi$ radians, and $7\\pi \\cdot \\frac{180}{\\pi} = 1260^\\circ$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s05",
+      "concepts": ["unit-circle-coordinates"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the coordinates of the point on the unit circle at angle $\\theta = \\frac{\\pi}{4}$ (that is, $45^\\circ$). Give exact values. The point is labeled $P$ in the figure.",
+      "plot": { "xRange": [-1.4, 1.4], "yRange": [-1.4, 1.4], "width": 340, "height": 340, "grid": false, "curves": [ { "fn": "sqrt(1 - x^2)", "color": "accent" }, { "fn": "-sqrt(1 - x^2)", "color": "accent" } ], "segments": [ { "from": [0, 0], "to": [0.7071, 0.7071], "color": "warn", "label": "1" }, { "from": [0.7071, 0.7071], "to": [0.7071, 0], "dashed": true, "color": "dim" } ], "points": [ { "x": 0.7071, "y": 0.7071, "label": "P", "color": "warn" } ], "caption": "The arm at θ = π/4 (45°) meets the unit circle at P = (cos θ, sin θ)" },
+      "steps": [
+        { "instruction": "What is the $x$-coordinate, $\\cos\\frac{\\pi}{4}$? (Exact — type sqrt(2)/2.)", "answer": "sqrt(2)/2", "accept": ["√2/2", "1/sqrt(2)"], "hint": "The 45-45-90 triangle has legs $\\frac{\\sqrt{2}}{2}$ when the hypotenuse is 1." },
+        { "instruction": "What is the $y$-coordinate, $\\sin\\frac{\\pi}{4}$? (Exact.)", "answer": "sqrt(2)/2", "accept": ["√2/2", "1/sqrt(2)"], "hint": "At $45^\\circ$ the $x$- and $y$-coordinates are equal." }
+      ],
+      "finalAnswer": { "value": "(sqrt(2)/2, sqrt(2)/2)", "unit": "" },
+      "solutionNarrative": "At $45^\\circ$ the point is $\\left(\\frac{\\sqrt{2}}{2}, \\frac{\\sqrt{2}}{2}\\right)$ — both coordinates equal because the triangle is isosceles."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s06",
+      "concepts": ["unit-circle-coordinates"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the coordinates of the point on the unit circle at angle $\\theta = \\frac{2\\pi}{3}$. Give exact values.",
+      "steps": [
+        { "instruction": "Which quadrant is $\\frac{2\\pi}{3}$ in? (Type a Roman numeral like II.)", "answer": "II", "accept": ["2", "two", "quadrant 2", "quadrant ii", "q2"], "hint": "$\\frac{2\\pi}{3} = 120^\\circ$, which is between $90^\\circ$ and $180^\\circ$." },
+        { "instruction": "What is $\\cos\\frac{2\\pi}{3}$ (the $x$-coordinate)? Exact.", "answer": "-1/2", "accept": [], "hint": "Reference angle $\\frac{\\pi}{3}$ gives $\\frac{1}{2}$; cosine is negative in QII." },
+        { "instruction": "What is $\\sin\\frac{2\\pi}{3}$ (the $y$-coordinate)? Exact.", "answer": "sqrt(3)/2", "accept": ["√3/2"], "hint": "Sine keeps the reference-angle value $\\frac{\\sqrt{3}}{2}$ and is positive in QII." }
+      ],
+      "finalAnswer": { "value": "(-1/2, sqrt(3)/2)", "unit": "" },
+      "solutionNarrative": "$\\frac{2\\pi}{3} = 120^\\circ$ lies in QII with reference angle $60^\\circ$, so the point is $\\left(-\\frac{1}{2}, \\frac{\\sqrt{3}}{2}\\right)$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s07",
+      "concepts": ["unit-circle-coordinates"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A surveillance drone circles a station at a radius of 10 m. Its position is $(10\\cos\\theta, 10\\sin\\theta)$ with the station at the origin. Find its exact coordinates when $\\theta = \\frac{5\\pi}{6}$.",
+      "steps": [
+        { "instruction": "What is $\\cos\\frac{5\\pi}{6}$? Exact.", "answer": "-sqrt(3)/2", "accept": ["-√3/2"], "hint": "QII with reference angle $\\frac{\\pi}{6}$: cosine is negative there." },
+        { "instruction": "So what is the drone's $x$-coordinate, $10\\cos\\frac{5\\pi}{6}$? Exact.", "answer": "-5sqrt(3)", "accept": ["-5√3", "-5*sqrt(3)"], "hint": "$10 \\cdot \\left(-\\frac{\\sqrt{3}}{2}\\right)$." },
+        { "instruction": "What is $\\sin\\frac{5\\pi}{6}$? Exact.", "answer": "1/2", "accept": [], "hint": "Sine of the reference angle $\\frac{\\pi}{6}$ is $\\frac{1}{2}$, and sine is positive in QII." },
+        { "instruction": "So what is the drone's $y$-coordinate, $10\\sin\\frac{5\\pi}{6}$?", "answer": "5", "accept": [], "hint": "$10 \\cdot \\frac{1}{2}$." }
+      ],
+      "finalAnswer": { "value": "(-5sqrt(3), 5)", "unit": "meters" },
+      "solutionNarrative": "$\\frac{5\\pi}{6}$ is in QII with reference angle $\\frac{\\pi}{6}$: $\\cos = -\\frac{\\sqrt{3}}{2}$, $\\sin = \\frac{1}{2}$. Scaling by the 10 m radius puts the drone at $(-5\\sqrt{3}, 5)$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s08",
+      "concepts": ["unit-circle-coordinates"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the coordinates of the point on the unit circle at angle $\\theta = \\pi$ (that is, $180^\\circ$).",
+      "steps": [
+        { "instruction": "Give the point as an ordered pair $(x, y)$.", "answer": "(-1, 0)", "accept": ["(-1,0)"], "hint": "At $180^\\circ$ the arm points along the negative $x$-axis." }
+      ],
+      "finalAnswer": { "value": "(-1, 0)", "unit": "" },
+      "solutionNarrative": "At $\\theta = \\pi$ the terminal arm points left along the $x$-axis, so the point is $(-1, 0)$: $\\cos\\pi = -1$, $\\sin\\pi = 0$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s09",
+      "concepts": ["reference-angles-signs"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the angle $210^\\circ$.",
+      "steps": [
+        { "instruction": "Which quadrant does $210^\\circ$ lie in? (Type a Roman numeral like III.)", "answer": "III", "accept": ["3", "three", "quadrant 3", "quadrant iii", "q3"], "hint": "It's between $180^\\circ$ and $270^\\circ$." },
+        { "instruction": "What is its reference angle, in degrees?", "answer": "30", "accept": [], "hint": "In QIII the reference angle is $\\theta - 180^\\circ$." }
+      ],
+      "finalAnswer": { "value": "quadrant III, reference angle 30", "unit": "degrees" },
+      "solutionNarrative": "$210^\\circ$ is past $180^\\circ$ but short of $270^\\circ$, so QIII; its reference angle is $210 - 180 = 30^\\circ$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s10",
+      "concepts": ["reference-angles-signs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\cos 300^\\circ$ exactly using a reference angle.",
+      "steps": [
+        { "instruction": "Which quadrant is $300^\\circ$ in? (Roman numeral.)", "answer": "IV", "accept": ["4", "four", "quadrant 4", "quadrant iv", "q4"], "hint": "Between $270^\\circ$ and $360^\\circ$." },
+        { "instruction": "Is cosine positive or negative there? (Type positive or negative.)", "answer": "positive", "accept": ["+", "pos"], "hint": "All Students Take Calculus: in QIV, Cosine is the one that stays positive." },
+        { "instruction": "The reference angle is $360 - 300 = 60^\\circ$. So what is $\\cos 300^\\circ$? Exact.", "answer": "1/2", "accept": [], "hint": "$\\cos 60^\\circ = \\frac{1}{2}$, kept positive in QIV." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "$300^\\circ$ is in QIV (cosine positive) with reference angle $60^\\circ$, so $\\cos 300^\\circ = +\\cos 60^\\circ = \\frac{1}{2}$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s11",
+      "concepts": ["reference-angles-signs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\tan\\frac{7\\pi}{6}$ exactly using a reference angle.",
+      "steps": [
+        { "instruction": "Which quadrant is $\\frac{7\\pi}{6}$ in? (Roman numeral.)", "answer": "III", "accept": ["3", "three", "quadrant 3", "quadrant iii", "q3"], "hint": "$\\frac{7\\pi}{6}$ is just past $\\pi$ ($180^\\circ$)." },
+        { "instruction": "What is the reference angle, in radians? (Exact.)", "answer": "pi/6", "accept": ["π/6"], "hint": "In QIII the reference angle is $\\theta - \\pi = \\frac{7\\pi}{6} - \\frac{6\\pi}{6}$." },
+        { "instruction": "Is tangent positive or negative in that quadrant?", "answer": "positive", "accept": ["+", "pos"], "hint": "All Students **Take** Calculus — Tangent is positive in QIII." },
+        { "instruction": "So what is $\\tan\\frac{7\\pi}{6}$? Exact.", "answer": "sqrt(3)/3", "accept": ["√3/3", "1/sqrt(3)"], "hint": "$\\tan\\frac{\\pi}{6} = \\frac{\\sqrt{3}}{3}$, and the QIII sign is positive." }
+      ],
+      "finalAnswer": { "value": "sqrt(3)/3", "unit": "" },
+      "solutionNarrative": "$\\frac{7\\pi}{6}$ lies in QIII with reference angle $\\frac{\\pi}{6}$. Tangent is positive in QIII, so $\\tan\\frac{7\\pi}{6} = +\\tan\\frac{\\pi}{6} = \\frac{\\sqrt{3}}{3}$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s12",
+      "concepts": ["arc-length-angular-velocity"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A pendulum 6 inches long swings through an angle of $\\frac{\\pi}{3}$ radians. How far does its tip travel in one swing? Give the exact arc length, then a decimal rounded to 1 decimal place.",
+      "steps": [
+        { "instruction": "Apply $s = r\\theta$. What is the exact arc length (in terms of $\\pi$)?", "answer": "2pi", "accept": ["2π", "6pi/3"], "hint": "$s = 6 \\cdot \\frac{\\pi}{3}$." },
+        { "instruction": "Round the arc length to 1 decimal place (inches).", "answer": "6.3", "accept": [], "hint": "$2\\pi \\approx 6.283$." }
+      ],
+      "finalAnswer": { "value": "2pi", "unit": "inches (about 6.3)" },
+      "solutionNarrative": "$s = r\\theta = 6 \\cdot \\frac{\\pi}{3} = 2\\pi \\approx 6.3$ inches. The angle must be in radians for $s = r\\theta$ to work."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s13",
+      "concepts": ["arc-length-angular-velocity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bicycle wheel has a radius of 30 cm. How far does the bike travel while the wheel makes 5 complete revolutions? Give the exact answer in terms of $\\pi$.",
+      "steps": [
+        { "instruction": "What total angle (in radians, exact) do 5 revolutions sweep?", "answer": "10pi", "accept": ["10π"], "hint": "Each revolution is $2\\pi$ radians." },
+        { "instruction": "Use $s = r\\theta$ to find the distance traveled, exactly (cm).", "answer": "300pi", "accept": ["300π"], "hint": "$s = 30 \\cdot 10\\pi$." }
+      ],
+      "finalAnswer": { "value": "300pi", "unit": "cm (about 942.5)" },
+      "solutionNarrative": "Five revolutions is $10\\pi$ radians, so the rim — and hence the bike — moves $s = 30 \\cdot 10\\pi = 300\\pi \\approx 942.5$ cm."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s14",
+      "concepts": ["arc-length-angular-velocity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A satellite in circular orbit 7000 km from Earth's center completes one orbit every 2 hours. Find its angular velocity (rad/h, exact) and its speed (km/h, exact in terms of $\\pi$).",
+      "steps": [
+        { "instruction": "One orbit is $2\\pi$ radians in 2 hours. What is the angular velocity $\\omega$ in rad/h? (Exact.)", "answer": "pi", "accept": ["π", "2pi/2"], "hint": "$\\omega = \\frac{2\\pi}{2}$." },
+        { "instruction": "Use $v = r\\omega$ to find the speed, exact (km/h).", "answer": "7000pi", "accept": ["7000π"], "hint": "$v = 7000 \\cdot \\pi$." },
+        { "instruction": "Round the speed to the nearest whole km/h.", "answer": "21991", "accept": [], "hint": "$7000\\pi \\approx 21991.1$." }
+      ],
+      "finalAnswer": { "value": "7000pi", "unit": "km/h (about 21991)" },
+      "solutionNarrative": "$\\omega = \\frac{2\\pi}{2} = \\pi$ rad/h, so $v = r\\omega = 7000\\pi \\approx 21991$ km/h. Radians make the orbit-speed conversion a single multiplication."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s15",
+      "concepts": ["degrees-to-radians"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert $240^\\circ$ to radians. Give an exact answer in terms of $\\pi$.",
+      "steps": [
+        { "instruction": "Multiply by $\\frac{\\pi}{180}$ and reduce the fraction.", "answer": "4pi/3", "accept": ["4π/3", "240pi/180"], "hint": "$\\frac{240}{180}$ reduces to $\\frac{4}{3}$." }
+      ],
+      "finalAnswer": { "value": "4pi/3", "unit": "radians" },
+      "solutionNarrative": "$240 \\cdot \\frac{\\pi}{180} = \\frac{240\\pi}{180} = \\frac{4\\pi}{3}$."
+    },
+    {
+      "id": "trigonometry.radians-and-unit-circle.s16",
+      "concepts": ["arc-length-angular-velocity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An arc of length 12 is cut from a circle of radius 4. Find the central angle in radians, then convert it to degrees (round to 1 decimal place).",
+      "steps": [
+        { "instruction": "Solve $s = r\\theta$ for the angle: $\\theta = \\frac{s}{r}$. (Radians.)", "answer": "3", "accept": [], "hint": "$\\theta = \\frac{12}{4}$." },
+        { "instruction": "Convert 3 radians to degrees; round to 1 decimal place.", "answer": "171.9", "accept": [], "hint": "$3 \\cdot \\frac{180}{\\pi} \\approx 171.89$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "radians (about 171.9 degrees)" },
+      "solutionNarrative": "$\\theta = \\frac{s}{r} = \\frac{12}{4} = 3$ radians — just under $\\pi$. In degrees: $3 \\cdot \\frac{180}{\\pi} \\approx 171.9^\\circ$."
+    }
+  ]
+}

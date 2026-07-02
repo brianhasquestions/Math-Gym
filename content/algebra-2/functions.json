@@ -1,0 +1,252 @@
+{
+  "id": "algebra-2.functions",
+  "subject": "algebra-2",
+  "title": "Functions: Notation, Domain, and Range",
+  "prerequisites": [],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "function-notation",
+      "label": "Function notation",
+      "microLesson": "A function is a rule that turns each input into exactly one output. The notation $f(x)$ means \"the output of rule $f$ when the input is $x$\" — it is NOT multiplication. To **evaluate**, substitute the number everywhere $x$ appears. If $f(x) = 2x + 3$, then $f(5) = 2(5) + 3 = 13$. Reading it backward, $f(5) = 13$ says \"input 5 produces output 13.\""
+    },
+    {
+      "id": "domain-and-range",
+      "label": "Domain and range",
+      "microLesson": "The **domain** is every input the rule is allowed to take; the **range** is every output it can produce. Most lines and parabolas accept all real inputs. Two things break that: dividing by zero (the input that makes a denominator zero is excluded) and square-rooting a negative (the inside must be $\\geq 0$). A parabola like $x^2$ accepts all $x$ but only outputs $y \\geq 0$."
+    },
+    {
+      "id": "composition",
+      "label": "Composing functions",
+      "microLesson": "Composition feeds one function's output into another: $f(g(x))$ means \"do $g$ first, then $f$.\" You substitute the entire rule $g(x)$ in for $x$ inside $f$. If $f(x) = x + 1$ and $g(x) = 2x$, then $f(g(x)) = (2x) + 1 = 2x + 1$. Order matters: $g(f(x)) = 2(x + 1) = 2x + 2$ is different. To evaluate at a number, work inside-out."
+    },
+    {
+      "id": "inverse-functions",
+      "label": "Inverse functions",
+      "microLesson": "An **inverse** $f^{-1}$ undoes what $f$ does: if $f$ turns 3 into 11, then $f^{-1}$ turns 11 back into 3. To find it for a linear rule, write $y = f(x)$, swap $x$ and $y$, then solve for $y$. From $y = 2x + 5$: swap to $x = 2y + 5$, solve to get $y = \\dfrac{x - 5}{2}$. Check: feeding an output back through the inverse returns the original input."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A function is just a reliable machine\n\nEvery time you convert money, compute a tax, or read pay from hours worked, you're using a **function**: a rule that takes an input and returns *exactly one* output. That \"exactly one\" is the whole point — a vending machine that sometimes gave a soda and sometimes a sandwich for the same button would be useless. A function is a machine you can trust to be consistent.\n\nWe write the rule as $f(x)$, read \"$f$ of $x$.\" Here $x$ is the input you drop in, and $f(x)$ is what comes out. **It is not $f$ times $x$** — it's the output of rule $f$ at input $x$.\n\n## Evaluating: just substitute\n\nTo **evaluate** a function, replace every $x$ with the input and compute. If a taxi charges \\$3 to start plus \\$2 per mile, the fare is $f(x) = 2x + 3$ dollars for $x$ miles. A 5-mile ride costs\n\n$$f(5) = 2(5) + 3 = 13.$$\n\nRead the other direction, $f(5) = 13$ is a complete sentence: *input 5 produces output 13.* So a statement like $f(a) = b$ always means \"when the input is $a$, the output is $b$.\"\n\nOn a graph, evaluating is locating a single point. For the taxi rule, the input $5$ and the output $13$ meet at the point $(5, 13)$ on the line:\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-1, 8], \"yRange\": [-2, 20], \"grid\": true, \"curves\": [ { \"fn\": \"2*x+3\", \"label\": \"f(x)=2x+3\", \"color\": \"accent\", \"labelAt\": 6.6 } ], \"points\": [ { \"x\": 5, \"y\": 13, \"label\": \"(5, f(5)) = (5, 13)\", \"color\": \"warn\" } ], \"segments\": [ { \"from\": [5, 0], \"to\": [5, 13], \"dashed\": true, \"color\": \"dim\" }, { \"from\": [0, 13], \"to\": [5, 13], \"dashed\": true, \"color\": \"dim\" } ], \"caption\": \"f(x) = 2x + 3: input 5 on the x-axis meets output 13 on the y-axis at (5, 13)\" }\n```\n\n## Domain and range: what's allowed in, what comes out\n\nThe **domain** is the set of inputs the rule accepts. The **range** is the set of outputs it can produce.\n\nFor most lines and parabolas, *any* real number is a legal input, so the domain is **all real numbers**. Only two situations restrict it:\n\n- **Division by zero is forbidden.** For $f(x) = \\dfrac{1}{x - 4}$, the input $x = 4$ makes the denominator zero, so 4 is *excluded* from the domain.\n- **Square roots need a non-negative inside.** For $f(x) = \\sqrt{x - 2}$, we need $x - 2 \\geq 0$, so the domain is $x \\geq 2$.\n\nRange is about outputs. A line covers every output, but $f(x) = x^2$ never produces a negative, so its range is $y \\geq 0$.\n\nBoth ideas show up vividly on one graph: $f(x) = \\sqrt{x - 2}$ simply has no graph to the left of $x = 2$ (the domain restriction), and it never dips below the x-axis (the range).\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-1, 11], \"yRange\": [-1, 4], \"grid\": true, \"curves\": [ { \"fn\": \"sqrt(x-2)\", \"label\": \"y=sqrt(x-2)\", \"color\": \"accent\", \"labelAt\": 8 } ], \"points\": [ { \"x\": 2, \"y\": 0, \"label\": \"(2,0)\", \"color\": \"warn\" } ], \"caption\": \"y = √(x − 2) starts at (2, 0): domain x ≥ 2, range y ≥ 0\" }\n```\n\n## Composition: chaining two machines\n\nReal processes stack. A store takes 10% off, *then* sales tax is added to the discounted price. That's a **composition** — the output of one rule becomes the input of the next.\n\nWe write $f(g(x))$ for \"do $g$ first, then $f$.\" Build it by substituting the whole rule $g(x)$ in for $x$ inside $f$. With $f(x) = x + 1$ and $g(x) = 2x$:\n\n$$f(g(x)) = f(2x) = (2x) + 1 = 2x + 1.$$\n\n**Order matters.** Going the other way, $g(f(x)) = 2(x + 1) = 2x + 2$ — a different rule. To evaluate at a number, work from the inside out: $f(g(3)) = f(6) = 7$.\n\n## Inverses: running the machine backward\n\nAn **inverse function** $f^{-1}$ undoes $f$. If converting Celsius to Fahrenheit is $f$, then converting Fahrenheit back to Celsius is $f^{-1}$. If $f$ sends 3 to 11, then $f^{-1}$ sends 11 back to 3.\n\nTo find the inverse of a linear rule:\n\n1. Write $y = f(x)$.\n2. **Swap** $x$ and $y$.\n3. **Solve** for $y$.\n\nFor $f(x) = 2x + 5$: start with $y = 2x + 5$, swap to $x = 2y + 5$, subtract 5 to get $x - 5 = 2y$, divide by 2:\n\n$$f^{-1}(x) = \\frac{x - 5}{2}.$$\n\nCheck it: $f(3) = 11$, and $f^{-1}(11) = \\dfrac{11 - 5}{2} = 3$. Back where we started — that round-trip is exactly what \"inverse\" means."
+  },
+  "application": {
+    "summary": "A function is any reliable input → output rule: price → tax, hours → pay, Celsius → Fahrenheit. Evaluating reads the rule forward; the domain/range say which inputs are legal and which outputs are possible; composition chains two real processes (discount then tax); and the inverse runs a conversion backward.",
+    "domains": ["personal finance", "everyday life", "physics", "business"],
+    "workedExample": "**Discount, then tax — one combined rule.**\n\nA \\$50 item is marked down 20%, and then 8% sales tax is applied to the *discounted* price. These are two machines in a row.\n\nFirst the discount: paying 80% of the price is $g(x) = 0.8x$. On \\$50 that's $g(50) = 40$.\n\nThen the tax: adding 8% multiplies by 1.08, so $f(x) = 1.08x$. On the \\$40 discounted price that's $f(40) = 43.20$.\n\nChaining them is a **composition**: $f(g(x)) = 1.08(0.8x) = 0.864x$. So the whole checkout is a single rule — multiply the sticker price by $0.864$. On \\$50 it gives $0.864 \\times 50 = 43.20$, matching the step-by-step result. Now reverse it: if a friend paid \\$43.20 and asks the original sticker price, the **inverse** $\\dfrac{x}{0.864}$ undoes the process and returns \\$50.",
+    "domainNotes": [
+      "**Finance:** a tax or commission rule turns an amount into a charge; composing discount-then-tax collapses two steps into one multiplier.",
+      "**Everyday life:** unit conversions (Celsius↔Fahrenheit, miles↔km) are functions, and the reverse conversion is exactly the inverse.",
+      "**Physics/engineering:** domain restrictions encode what's physically legal — time can't be negative, and a square-root model demands its input stay non-negative.",
+      "**Business:** a pay rule like hours → wages is read forward to budget, and backward (inverse) to find the hours needed to hit a target paycheck."
+    ]
+  },
+  "generators": ["func-eval-v1", "func-compose-v1", "func-inverse-v1", "func-domain-v1"],
+  "problems": [
+    {
+      "id": "algebra-2.functions.s01",
+      "concepts": ["function-notation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $f(x) = 2x + 3$, evaluate $f(5)$.",
+      "steps": [
+        { "instruction": "Substitute 5 for $x$ in the expression.", "answer": "2(5) + 3", "accept": ["2*5+3", "2(5)+3"], "hint": "Replace every $x$ with 5." },
+        { "instruction": "Compute the result.", "answer": "13", "accept": [], "hint": "$10 + 3$." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "" },
+      "solutionNarrative": "$f(5) = 2(5) + 3 = 10 + 3 = 13$."
+    },
+    {
+      "id": "algebra-2.functions.s02",
+      "concepts": ["function-notation"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A taxi charges a \\$3 base fare plus \\$2 per mile, so the fare is $f(x) = 2x + 3$ dollars for $x$ miles. What does a 7-mile ride cost?",
+      "steps": [
+        { "instruction": "Substitute 7 for $x$.", "answer": "2(7) + 3", "accept": ["2*7+3", "2(7)+3"], "hint": "The input is the number of miles, 7." },
+        { "instruction": "Compute the fare.", "answer": "17", "accept": [], "hint": "$14 + 3$." }
+      ],
+      "finalAnswer": { "value": "17", "unit": "dollars" },
+      "solutionNarrative": "$f(7) = 2(7) + 3 = 17$, so the ride costs \\$17."
+    },
+    {
+      "id": "algebra-2.functions.s03",
+      "concepts": ["function-notation"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $f(x) = x^2 - 4x + 1$, evaluate $f(-2)$.",
+      "steps": [
+        { "instruction": "Substitute $-2$ for every $x$.", "answer": "(-2)^2 - 4(-2) + 1", "accept": ["(-2)^2-4(-2)+1"], "hint": "Keep the parentheses around $-2$ so the square and the product get the right sign." },
+        { "instruction": "Compute the result.", "answer": "13", "accept": [], "hint": "$4 + 8 + 1$." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "" },
+      "solutionNarrative": "$f(-2) = (-2)^2 - 4(-2) + 1 = 4 + 8 + 1 = 13$."
+    },
+    {
+      "id": "algebra-2.functions.s04",
+      "concepts": ["function-notation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A pay rule is $P(h) = 18h + 25$ dollars for $h$ hours worked (a \\$25 daily stipend plus \\$18/hour). On Friday the worker earned \\$169. Solve $P(h) = 169$ to find the hours worked.",
+      "steps": [
+        { "instruction": "Set the pay rule equal to 169.", "answer": "18h + 25 = 169", "accept": ["18h+25=169", "25+18h=169"], "hint": "Replace $P(h)$ with the rule and set it equal to the earnings." },
+        { "instruction": "Subtract the stipend from both sides.", "answer": "18h = 144", "accept": ["18h=144"], "hint": "Undo the +25." },
+        { "instruction": "Solve for $h$.", "answer": "h = 8", "accept": ["h=8", "8"], "hint": "Divide both sides by 18." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "hours" },
+      "solutionNarrative": "$18h + 25 = 169$; subtract 25 to get $18h = 144$, then divide by 18: $h = 8$ hours."
+    },
+    {
+      "id": "algebra-2.functions.s05",
+      "concepts": ["domain-and-range"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "What is the domain of the linear function $f(x) = 3x - 7$?",
+      "steps": [
+        { "instruction": "A line accepts every real input. State the domain in words.", "answer": "all real numbers", "accept": ["all reals", "every real number", "(-infinity, infinity)"], "hint": "Is there any input that breaks the rule? No division, no square root." }
+      ],
+      "finalAnswer": { "value": "all real numbers", "unit": "" },
+      "solutionNarrative": "There is no division or square root, so any real number is a legal input: the domain is all real numbers."
+    },
+    {
+      "id": "algebra-2.functions.s06",
+      "concepts": ["domain-and-range"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "What is the range of $f(x) = x^2$? Give your answer as an inequality in $y$.",
+      "steps": [
+        { "instruction": "Squaring any real number is never negative. State the range as an inequality.", "answer": "y >= 0", "accept": ["y>=0", "0<=y"], "hint": "What is the smallest output $x^2$ can produce?" }
+      ],
+      "finalAnswer": { "value": "y >= 0", "unit": "" },
+      "solutionNarrative": "A square is never negative and reaches 0 at $x = 0$, so the outputs are exactly $y \\geq 0$."
+    },
+    {
+      "id": "algebra-2.functions.s07",
+      "concepts": ["domain-and-range"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The function $f(x) = \\sqrt{x - 5}$ requires the inside of the square root to be non-negative. What is its domain? Give your answer as an inequality in $x$.",
+      "steps": [
+        { "instruction": "Set the inside of the root to be $\\geq 0$.", "answer": "x - 5 >= 0", "accept": ["x-5>=0", "0<=x-5"], "hint": "The expression under the square root cannot be negative." },
+        { "instruction": "Solve the inequality for $x$.", "answer": "x >= 5", "accept": ["x>=5", "5<=x"], "hint": "Add 5 to both sides." }
+      ],
+      "finalAnswer": { "value": "x >= 5", "unit": "" },
+      "solutionNarrative": "We need $x - 5 \\geq 0$, i.e. $x \\geq 5$, so the domain is $x \\geq 5$."
+    },
+    {
+      "id": "algebra-2.functions.s08",
+      "concepts": ["domain-and-range"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A cost-per-person rule is $f(x) = \\dfrac{600}{x - 8}$ dollars when $x$ people split a fixed cost after 8 organizers attend free. One input value is forbidden because it makes the denominator zero. Which $x$-value is excluded from the domain?",
+      "steps": [
+        { "instruction": "Set the denominator equal to zero.", "answer": "x - 8 = 0", "accept": ["x-8=0"], "hint": "Division by zero is undefined, so find where the denominator is 0." },
+        { "instruction": "Solve for the excluded value of $x$.", "answer": "x = 8", "accept": ["x=8", "8"], "hint": "Add 8 to both sides." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "The denominator $x - 8$ is zero when $x = 8$, so $x = 8$ is excluded from the domain."
+    },
+    {
+      "id": "algebra-2.functions.s09",
+      "concepts": ["composition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $f(x) = x + 1$ and $g(x) = 2x$, find $f(g(x))$.",
+      "steps": [
+        { "instruction": "Substitute the whole rule $g(x) = 2x$ in for $x$ inside $f$.", "answer": "2x + 1", "accept": ["(2x)+1", "1+2x"], "hint": "$f(\\text{input}) = \\text{input} + 1$; the input is $2x$." }
+      ],
+      "finalAnswer": { "value": "2x + 1", "unit": "" },
+      "solutionNarrative": "$f(g(x)) = f(2x) = (2x) + 1 = 2x + 1$."
+    },
+    {
+      "id": "algebra-2.functions.s10",
+      "concepts": ["composition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $f(x) = 3x - 4$ and $g(x) = x + 2$, find $g(f(x))$.",
+      "steps": [
+        { "instruction": "Substitute the rule $f(x) = 3x - 4$ in for $x$ inside $g$.", "answer": "(3x - 4) + 2", "accept": ["3x-4+2"], "hint": "$g(\\text{input}) = \\text{input} + 2$; the input is $3x - 4$." },
+        { "instruction": "Combine like terms.", "answer": "3x - 2", "accept": ["-2+3x"], "hint": "$-4 + 2 = -2$." }
+      ],
+      "finalAnswer": { "value": "3x - 2", "unit": "" },
+      "solutionNarrative": "$g(f(x)) = (3x - 4) + 2 = 3x - 2$."
+    },
+    {
+      "id": "algebra-2.functions.s11",
+      "concepts": ["composition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $f(x) = x^2$ and $g(x) = x + 3$, find $f(g(x))$ as an expanded polynomial.",
+      "steps": [
+        { "instruction": "Substitute $g(x) = x + 3$ in for $x$ inside $f$.", "answer": "(x + 3)^2", "accept": ["(x+3)^2"], "hint": "$f(\\text{input}) = (\\text{input})^2$; the input is $x + 3$." },
+        { "instruction": "Expand the square.", "answer": "x^2 + 6x + 9", "accept": ["x^2+6x+9"], "hint": "$(x+3)^2 = x^2 + 2(3)x + 9$." }
+      ],
+      "finalAnswer": { "value": "x^2 + 6x + 9", "unit": "" },
+      "solutionNarrative": "$f(g(x)) = (x + 3)^2 = x^2 + 6x + 9$."
+    },
+    {
+      "id": "algebra-2.functions.s12",
+      "concepts": ["composition"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A store applies a 20% discount, $g(x) = 0.8x$, and then 8% sales tax, $f(x) = 1.08x$, to the discounted price. Find the combined checkout rule $f(g(x))$, then use it to find the final cost of a \\$50 item.",
+      "steps": [
+        { "instruction": "Substitute $g(x) = 0.8x$ in for $x$ inside $f(x) = 1.08x$.", "answer": "1.08(0.8x)", "accept": ["1.08*0.8x", "1.08(0.8x)"], "hint": "Feed the discounted price into the tax rule." },
+        { "instruction": "Multiply the constants to get the combined rule.", "answer": "0.864x", "accept": ["0.864*x"], "hint": "$1.08 \\times 0.8 = 0.864$." },
+        { "instruction": "Evaluate the combined rule at $x = 50$.", "answer": "43.20", "accept": ["43.2"], "hint": "$0.864 \\times 50$." }
+      ],
+      "finalAnswer": { "value": "43.20", "unit": "dollars" },
+      "solutionNarrative": "$f(g(x)) = 1.08(0.8x) = 0.864x$; at $x = 50$ that is $0.864 \\times 50 = 43.20$, so the item costs \\$43.20."
+    },
+    {
+      "id": "algebra-2.functions.s13",
+      "concepts": ["inverse-functions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the inverse of $f(x) = x + 6$.",
+      "steps": [
+        { "instruction": "Write $y = x + 6$, swap $x$ and $y$, then solve for $y$.", "answer": "x - 6", "accept": ["-6+x"], "hint": "After swapping, $x = y + 6$; subtract 6." }
+      ],
+      "finalAnswer": { "value": "x - 6", "unit": "" },
+      "solutionNarrative": "Swapping $x$ and $y$ in $y = x + 6$ gives $x = y + 6$, so $f^{-1}(x) = x - 6$."
+    },
+    {
+      "id": "algebra-2.functions.s14",
+      "concepts": ["inverse-functions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the inverse of $f(x) = 2x + 5$.",
+      "steps": [
+        { "instruction": "Write $y = 2x + 5$, swap $x$ and $y$: $x = 2y + 5$. Subtract 5 from both sides.", "answer": "x - 5 = 2y", "accept": ["x-5=2y", "2y=x-5"], "hint": "Isolate the term with $y$." },
+        { "instruction": "Divide both sides by 2 to solve for $y$.", "answer": "(x - 5)/2", "accept": ["(x-5)/2", "0.5x - 2.5", "0.5x-2.5"], "hint": "Dividing $x - 5$ by 2 gives the inverse rule." }
+      ],
+      "finalAnswer": { "value": "(x - 5)/2", "unit": "" },
+      "solutionNarrative": "Swap to get $x = 2y + 5$, subtract 5 for $x - 5 = 2y$, divide by 2: $f^{-1}(x) = \\dfrac{x - 5}{2}$."
+    },
+    {
+      "id": "algebra-2.functions.s15",
+      "concepts": ["inverse-functions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = 2x + 5$, its inverse is $f^{-1}(x) = \\dfrac{x - 5}{2}$. Verify by computing $f^{-1}(11)$, which should return the input that gives $f = 11$.",
+      "steps": [
+        { "instruction": "Substitute 11 into the inverse: $\\dfrac{11 - 5}{2}$. Compute it.", "answer": "3", "accept": [], "hint": "$\\dfrac{6}{2}$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$f^{-1}(11) = \\dfrac{11 - 5}{2} = 3$, which matches $f(3) = 2(3) + 5 = 11$ — the inverse undoes $f$."
+    },
+    {
+      "id": "algebra-2.functions.s16",
+      "concepts": ["inverse-functions"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Celsius converts to Fahrenheit by $F(c) = 1.8c + 32$. Find the inverse rule that converts Fahrenheit back to Celsius (use $x$ for the Fahrenheit input).",
+      "steps": [
+        { "instruction": "Write $y = 1.8c + 32$, swap to $x = 1.8c + 32$, and subtract 32 from both sides.", "answer": "x - 32 = 1.8c", "accept": ["x-32=1.8c", "1.8c=x-32"], "hint": "Isolate the term with $c$." },
+        { "instruction": "Divide both sides by 1.8 to solve for $c$.", "answer": "(x - 32)/1.8", "accept": ["(x-32)/1.8"], "hint": "The inverse divides the shifted value by 1.8." }
+      ],
+      "finalAnswer": { "value": "(x - 32)/1.8", "unit": "" },
+      "solutionNarrative": "From $x = 1.8c + 32$, subtract 32 to get $x - 32 = 1.8c$, then divide by 1.8: the inverse is $\\dfrac{x - 32}{1.8}$ degrees Celsius."
+    }
+  ]
+}

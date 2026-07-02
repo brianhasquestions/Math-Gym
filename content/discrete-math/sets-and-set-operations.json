@@ -1,0 +1,273 @@
+{
+  "id": "discrete-math.sets-and-set-operations",
+  "subject": "discrete-math",
+  "title": "Sets and Set Operations",
+  "prerequisites": ["discrete-math.logic-and-propositions"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "membership-and-subsets",
+      "label": "Membership and subsets",
+      "microLesson": "A set is an unordered collection with no duplicates, written by roster — $A = \\{2, 4, 6, 8\\}$ — or by set-builder rule — $\\{x \\in \\mathbb{Z} : 1 \\le x \\le 20 \\text{ and } 6 \\mid x\\} = \\{6, 12, 18\\}$. The symbol $\\in$ asks about one element ($6 \\in A$ is true, $5 \\in A$ is false), while $\\subseteq$ asks whether EVERY element of one set lives in another: $\\{2, 4\\} \\subseteq A$ but $\\{2, 5\\} \\not\\subseteq A$. The empty set $\\emptyset$ has no elements and is a subset of every set. A set with $n$ elements has exactly $2^n$ subsets, because each element independently makes an in-or-out choice: $\\{6, 12, 18\\}$ has $2^3 = 8$ subsets, from $\\emptyset$ up to the whole set."
+    },
+    {
+      "id": "union-intersection-difference",
+      "label": "Union, intersection, difference",
+      "microLesson": "The three workhorse operations: $A \\cup B$ collects everything in either set, $A \\cap B$ keeps only what is in both, and $A \\setminus B$ keeps what is in $A$ but not $B$. With $A = \\{1, 3, 5, 7\\}$ and $B = \\{3, 4, 5, 6\\}$: $A \\cap B = \\{3, 5\\}$, $A \\cup B = \\{1, 3, 4, 5, 6, 7\\}$, and $A \\setminus B = \\{1, 7\\}$ — note $A \\setminus B \\ne B \\setminus A = \\{4, 6\\}$. When a universe $U$ is fixed, the complement $\\overline{A} = U \\setminus A$ is everything outside $A$. These are exactly SQL's UNION, INTERSECT, and EXCEPT, so every one you compute by hand is a query you could run."
+    },
+    {
+      "id": "cardinality-inclusion-exclusion",
+      "label": "Cardinality and inclusion-exclusion",
+      "microLesson": "Adding $|A| + |B|$ counts the overlap twice, so the correct size of a union is $|A \\cup B| = |A| + |B| - |A \\cap B|$ — subtract once to fix the double count. Example: $|A| = 7$, $|B| = 5$, $|A \\cap B| = 3$ gives $|A \\cup B| = 7 + 5 - 3 = 9$. The formula runs in any direction: if a survey of 50 people finds 32 like X, 27 like Y, and everyone likes at least one, the overlap must be $32 + 27 - 50 = 9$. Drawing the two-circle Venn diagram splits the world into 'only $A$', 'both', 'only $B$', and 'neither' — four regions whose counts must add up to the total, which is your built-in arithmetic check."
+    },
+    {
+      "id": "power-sets-and-products",
+      "label": "Power sets and Cartesian products",
+      "microLesson": "The power set $\\mathcal{P}(A)$ is the set of ALL subsets of $A$: for $A = \\{1, 2\\}$, $\\mathcal{P}(A) = \\{\\emptyset, \\{1\\}, \\{2\\}, \\{1, 2\\}\\}$, and in general $|\\mathcal{P}(A)| = 2^{|A|}$ because each element is an independent yes/no bit. That is literally how computers store sets: a subset of 5 feature flags is a 5-bit number, one of $2^5 = 32$ configurations. The Cartesian product $A \\times B$ is the set of ordered PAIRS $(a, b)$ with $a \\in A$, $b \\in B$, so $|A \\times B| = |A| \\cdot |B|$: 4 sizes times 5 toppings is $4 \\cdot 5 = 20$ possible pizzas. Order matters in products ($A \\times B \\ne B \\times A$ as sets of pairs) even though it never matters inside a set."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Every query you run is set algebra\n\nType a search with two filters, run a SQL `JOIN`, check whether a user may open a file, dedupe a mailing list — under the hood, every one of those is an operation on sets. A database table is a set of rows. A user's permissions are a set of grants. `UNION`, `INTERSECT`, `EXCEPT`, and `DISTINCT` are not *analogies* for set theory; they are set theory, shipped in every database since the 1970s. Learn to compute with sets by hand and you can predict what any of those systems will return before you hit enter.\n\n## Naming a set: roster, rule, and the two membership questions\n\nA **set** is an unordered collection of distinct things. $\\{1, 2, 3\\}$, $\\{3, 2, 1\\}$, and $\\{1, 1, 2, 3\\}$ are all the *same* set — order and repetition carry no information. You can name a set two ways:\n\n- **Roster:** list the elements. $A = \\{2, 4, 6, 8\\}$.\n- **Set-builder:** state the admission rule. $B = \\{x \\in \\mathbb{Z} : 1 \\le x \\le 20 \\text{ and } 6 \\mid x\\}$ — 'the integers between 1 and 20 divisible by 6' — which unpacks to the roster $\\{6, 12, 18\\}$.\n\nTwo different questions get asked about sets, and mixing them up is the classic beginner bug:\n\n- $x \\in A$ asks whether **one element** is in the set: $6 \\in A$ is true, $5 \\in A$ is false.\n- $S \\subseteq A$ asks whether **every element of a set** $S$ is also in $A$: $\\{2, 8\\} \\subseteq A$, but $\\{2, 5\\} \\not\\subseteq A$ because of the 5.\n\nThe **empty set** $\\emptyset = \\{\\}$ has no elements, and it is a subset of *every* set — the claim 'every element of $\\emptyset$ is in $A$' has nothing to check, so it holds. Every set is also a subset of itself. Between those extremes, a set with $n$ elements has $2^n$ subsets in total, because building a subset means making an independent in-or-out choice for each element: $\\{6, 12, 18\\}$ has $2^3 = 8$ subsets.\n\n## The big three operations\n\nFix two sets, say $A = \\{1, 3, 5, 7\\}$ and $B = \\{3, 4, 5, 6\\}$.\n\n- **Union** $A \\cup B = \\{1, 3, 4, 5, 6, 7\\}$: everything in either. SQL's `UNION` (which also deduplicates, exactly like a set must).\n- **Intersection** $A \\cap B = \\{3, 5\\}$: only what is in both. SQL's `INTERSECT`, and the essence of an inner `JOIN` on matching keys.\n- **Difference** $A \\setminus B = \\{1, 7\\}$: in $A$ but not $B$. SQL's `EXCEPT`. Direction matters: $B \\setminus A = \\{4, 6\\}$, a different set.\n\nWhen everything lives inside a fixed **universe** $U$ — all rows in the table, all user ids in the system — the **complement** $\\overline{A} = U \\setminus A$ is everything outside $A$. 'Users who did NOT click' only means something once you say who all the users are; the complement is always *relative to a universe*.\n\n## Counting without double-counting\n\nHow big is a union? The naive answer $|A| + |B|$ counts every element of $A \\cap B$ **twice**. Subtract the overlap once and the count is exact:\n\n$$|A \\cup B| = |A| + |B| - |A \\cap B|.$$\n\nThis is **inclusion-exclusion**, and it is the single most-used counting identity in applied work. A survey says 25 of 40 students drink coffee, 18 drink tea, and 10 drink both. At least one? $25 + 18 - 10 = 33$. Neither? $40 - 33 = 7$. The two-circle Venn picture splits the room into four regions — only-coffee (15), both (10), only-tea (8), neither (7) — and $15 + 10 + 8 + 7 = 40$ is your arithmetic self-check. The formula also runs backwards: if you know the union and the two sides, the overlap is forced, which is how analysts infer 'users who did both' from three log counts they *can* measure.\n\n## Power sets and products: the two ways sets make bigger sets\n\nThe **power set** $\\mathcal{P}(A)$ is the set of all subsets of $A$. For $A = \\{1, 2\\}$:\n\n$$\\mathcal{P}(A) = \\{\\, \\emptyset, \\{1\\}, \\{2\\}, \\{1, 2\\} \\,\\}, \\qquad |\\mathcal{P}(A)| = 2^{|A|} = 4.$$\n\nThe $2^n$ is the same in-or-out argument as before, and it is why a set of $n$ boolean feature flags has $2^n$ possible configurations and why an $n$-permission system has $2^n$ possible roles — each subset is one bitmask. Power sets nest: $\\mathcal{P}(\\mathcal{P}(A))$ is the set of subsets of a 4-element set, so it has $2^4 = 16$ elements. Keep the levels straight: $\\{1\\} \\in \\mathcal{P}(A)$ but $\\{1\\} \\subseteq A$.\n\nThe **Cartesian product** $A \\times B$ is the set of ordered pairs $(a, b)$ with $a \\in A$ and $b \\in B$, so $|A \\times B| = |A| \\cdot |B|$. This is SQL's `CROSS JOIN`, the grid of every (size, topping) combination, and the reason the coordinate plane is written $\\mathbb{R} \\times \\mathbb{R}$. Pairs are *ordered* — $(1, 2) \\ne (2, 1)$ — even though sets themselves are not.\n\n## The takeaway\n\nFour ideas — membership, the big three operations, inclusion-exclusion, and the two set-builders $\\mathcal{P}$ and $\\times$ — cover a startling fraction of real computing: query engines, permission checks, dedup jobs, survey math, configuration counting. The problems ahead keep the sets small enough to write out in full, so every union you take and every overlap you subtract can be checked element by element."
+  },
+  "application": {
+    "summary": "Set operations are the working vocabulary of data systems: SQL's UNION/INTERSECT/EXCEPT and JOINs are set algebra on tables, permission checks are subset tests, deduplication is the definition of a set, and inclusion-exclusion turns overlapping log or survey counts into exact numbers.",
+    "domains": ["databases and SQL queries", "permissions and access control", "log analysis and deduplication", "survey and A/B-test analysis", "configuration counting"],
+    "workedExample": "**How many users touched the product this week? A full inclusion-exclusion pass over the logs.**\n\nA web service has $|U| = 5000$ registered users. This week's logs show $|S| = 3200$ distinct users ran a search and $|C| = 2100$ distinct users started a checkout. The analytics dashboard also reports that $|S \\cup C| = 4300$ distinct users did at least one of the two. Marketing wants the four Venn regions: search-only, checkout-only, both, and inactive.\n\n*Step 1 — the overlap.* Inclusion-exclusion rearranged: $|S \\cap C| = |S| + |C| - |S \\cup C| = 3200 + 2100 - 4300 = 1000$. One thousand users both searched and checked out.\n\n*Step 2 — the exclusive regions.* Search-only is $|S \\setminus C| = |S| - |S \\cap C| = 3200 - 1000 = 2200$. Checkout-only is $|C \\setminus S| = 2100 - 1000 = 1100$.\n\n*Step 3 — the complement.* Inactive users form $\\overline{S \\cup C}$ relative to the universe of registered users: $5000 - 4300 = 700$.\n\n*Step 4 — the audit.* The four regions must tile the universe: $2200 + 1000 + 1100 + 700 = 5000$. It balances, so no user was double-counted and none was dropped.\n\nEvery number here is one SQL query — the overlap is an `INTERSECT` (or an inner `JOIN` on user id), search-only is an `EXCEPT`, and the audit row is a `GROUP BY` sanity check — but inclusion-exclusion let us get all four regions from three aggregate counts without ever pulling the raw user lists.",
+    "domainNotes": [
+      "**Databases:** SQL's `UNION`, `INTERSECT`, and `EXCEPT` are literally $\\cup$, $\\cap$, $\\setminus$ on result sets; `SELECT DISTINCT` enforces the no-duplicates rule that makes a bag of rows into a set, and a `CROSS JOIN` materializes a Cartesian product $A \\times B$.",
+      "**Access control:** 'may this user do this action' is the subset test $\\text{required} \\subseteq \\text{granted}$; with $n$ permissions there are $2^n$ possible roles — one per element of the power set — which is why real systems store grants as bitmasks.",
+      "**Deduplication:** merging two contact lists or two log streams is computing a union; finding records present in both systems is an intersection; a migration's 'what did we miss' report is a set difference.",
+      "**Survey and A/B analysis:** overlapping cohorts (clicked ad A, clicked ad B) are counted with $|A \\cup B| = |A| + |B| - |A \\cap B|$; the formula also runs backwards to infer an unmeasured overlap from three measured totals.",
+      "**Configuration counting:** $n$ boolean feature flags give $2^n$ configurations (the power set of the flag set), and a form with independent choices multiplies out as a Cartesian product — 4 sizes $\\times$ 5 toppings $\\times$ 3 drinks $= 60$ orders."
+    ]
+  },
+  "generators": [],
+  "problems": [
+    {
+      "id": "discrete-math.sets-and-set-operations.s01",
+      "concepts": ["membership-and-subsets"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $A = \\{2, 4, 6, 8\\}$. Answer three quick membership questions about $A$.",
+      "steps": [
+        { "instruction": "Is $6 \\in A$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Scan the roster: is 6 listed?" },
+        { "instruction": "Is $5 \\in A$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$A$ contains only even numbers." },
+        { "instruction": "What is the cardinality $|A|$ — the number of elements? (Give a number.)", "answer": "4", "accept": [], "hint": "Count the entries in the roster." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$6$ appears in the roster and $5$ does not, so $6 \\in A$ and $5 \\notin A$; counting the four listed elements gives $|A| = 4$."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s02",
+      "concepts": ["membership-and-subsets"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Unpack the set-builder description $A = \\{x \\in \\mathbb{Z} : 1 \\le x \\le 20 \\text{ and } 6 \\mid x\\}$ — the integers from 1 to 20 that are divisible by 6.",
+      "steps": [
+        { "instruction": "List the elements of $A$ in any order, separated by commas.", "answer": "6, 12, 18", "accept": [], "hint": "Multiples of 6: 6, 12, 18, 24, ... — which stay at or below 20?", "form": "solutions" },
+        { "instruction": "What is $|A|$?", "answer": "3", "accept": [], "hint": "Count the elements you just listed." },
+        { "instruction": "How many subsets does $A$ have? (A set with $n$ elements has $2^n$ subsets.)", "answer": "8", "accept": [], "hint": "$2^3$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "The multiples of 6 up to 20 are $\\{6, 12, 18\\}$, so $|A| = 3$ and the number of subsets is $2^3 = 8$ — each element makes an independent in-or-out choice."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s03",
+      "concepts": ["membership-and-subsets"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $A = \\{1, 2, 3, 4\\}$. Count several families of subsets of $A$ — each count follows from the in-or-out choice principle, applied carefully.",
+      "steps": [
+        { "instruction": "How many subsets does $A$ have in total?", "answer": "16", "accept": [], "hint": "$2^4$." },
+        { "instruction": "How many PROPER subsets does $A$ have (subsets that are not $A$ itself)?", "answer": "15", "accept": [], "hint": "Throw out exactly one subset from the total: $A$ itself." },
+        { "instruction": "How many subsets of $A$ contain the element 1?", "answer": "8", "accept": [], "hint": "Force 1 in; the other three elements still choose freely: $2^3$." },
+        { "instruction": "How many subsets of $A$ contain BOTH 1 and 2?", "answer": "4", "accept": [], "hint": "Two elements are forced in; only 3 and 4 still choose: $2^2$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Total: $2^4 = 16$; proper subsets exclude only $A$ itself, leaving 15. Fixing 1 inside leaves free choices on $\\{2, 3, 4\\}$, giving $2^3 = 8$; fixing both 1 and 2 leaves $2^2 = 4$."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s04",
+      "concepts": ["membership-and-subsets"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A deploy system identifies permissions by numeric id. The staging role carries the grant set $A = \\{2, 3, 5\\}$ and the production role carries $B = \\{2, 3, 5, 7, 11\\}$. A role check passes when the required set is a subset of the granted set.",
+      "steps": [
+        { "instruction": "Is every staging permission also a production permission — is $A \\subseteq B$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Check each of 2, 3, 5 against the roster of $B$." },
+        { "instruction": "Is $B \\subseteq A$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Find one element of $B$ missing from $A$ — 7 will do." },
+        { "instruction": "How many permissions does production have that staging lacks — what is $|B \\setminus A|$?", "answer": "2", "accept": [], "hint": "$B \\setminus A = \\{7, 11\\}$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "All of 2, 3, 5 appear in $B$, so $A \\subseteq B$; but $7 \\in B$ is missing from $A$, so $B \\not\\subseteq A$. The extra production grants are $B \\setminus A = \\{7, 11\\}$, so $|B \\setminus A| = 2$."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s05",
+      "concepts": ["union-intersection-difference"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $A = \\{1, 3, 5, 7\\}$ and $B = \\{3, 4, 5, 6\\}$. Compute the intersection and the union.",
+      "steps": [
+        { "instruction": "List the elements of $A \\cap B$ (in both sets) in any order, separated by commas.", "answer": "3, 5", "accept": [], "hint": "Walk through $A$ and keep each element that also appears in $B$.", "form": "solutions" },
+        { "instruction": "List the elements of $A \\cup B$ (in either set) in any order, separated by commas.", "answer": "1, 3, 4, 5, 6, 7", "accept": [], "hint": "Merge the rosters and drop duplicates — 3 and 5 appear only once.", "form": "solutions" },
+        { "instruction": "What is $|A \\cup B|$?", "answer": "6", "accept": [], "hint": "Count your merged list." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$A \\cap B = \\{3, 5\\}$ and $A \\cup B = \\{1, 3, 4, 5, 6, 7\\}$, so $|A \\cup B| = 6$ — note $4 + 4 - 2 = 6$, inclusion-exclusion in miniature."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s06",
+      "concepts": ["union-intersection-difference"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Work inside the universe $U = \\{1, 2, 3, 4, 5, 6, 7, 8, 9, 10\\}$. Let $A = \\{2, 4, 6, 8, 10\\}$ (the evens) and $B = \\{3, 6, 9\\}$ (the multiples of 3).",
+      "steps": [
+        { "instruction": "List the elements of $A \\setminus B$ in any order, separated by commas.", "answer": "2, 4, 8, 10", "accept": [], "hint": "Start from $A$ and delete anything that is also in $B$ — only 6 gets deleted.", "form": "solutions" },
+        { "instruction": "List the elements of $A \\cup B$ in any order, separated by commas.", "answer": "2, 3, 4, 6, 8, 9, 10", "accept": [], "hint": "Merge the two rosters; 6 appears in both but is listed once.", "form": "solutions" },
+        { "instruction": "List the elements of the complement $\\overline{A \\cup B} = U \\setminus (A \\cup B)$ in any order, separated by commas.", "answer": "1, 5, 7", "accept": [], "hint": "Which members of $U$ are neither even nor a multiple of 3?", "form": "solutions" },
+        { "instruction": "What is $|\\overline{A \\cup B}|$?", "answer": "3", "accept": [], "hint": "Count your last list." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$A \\setminus B = \\{2, 4, 8, 10\\}$ (only 6 is shared), $A \\cup B = \\{2, 3, 4, 6, 8, 9, 10\\}$, and what remains of $U$ is $\\{1, 5, 7\\}$ — three elements, so $|A \\cup B| + 3 = 10$ checks out."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s07",
+      "concepts": ["union-intersection-difference"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Your on-call dashboard lists distinct error codes per day. Monday logged $M = \\{101, 102, 105, 108\\}$ and Tuesday logged $T = \\{102, 104, 108, 110\\}$. Triage wants three answers.",
+      "steps": [
+        { "instruction": "Which codes fired on BOTH days? List the elements of $M \\cap T$ in any order, separated by commas.", "answer": "102, 108", "accept": [], "hint": "Walk Monday's list and keep what reappears on Tuesday.", "form": "solutions" },
+        { "instruction": "Which codes are NEW on Tuesday? List the elements of $T \\setminus M$ in any order, separated by commas.", "answer": "104, 110", "accept": [], "hint": "Start from Tuesday and delete anything Monday already saw.", "form": "solutions" },
+        { "instruction": "How many DISTINCT codes fired across the two days — what is $|M \\cup T|$?", "answer": "6", "accept": [], "hint": "$4 + 4$ minus the 2 shared codes." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Recurring codes: $M \\cap T = \\{102, 108\\}$; new on Tuesday: $T \\setminus M = \\{104, 110\\}$; the deduplicated union has $4 + 4 - 2 = 6$ codes. This is exactly a `SELECT DISTINCT` over two days of logs."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s08",
+      "concepts": ["union-intersection-difference"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $A = \\{1, 2, 3, 4, 5, 6\\}$, $B = \\{4, 5, 6, 7\\}$, and $C = \\{2, 4, 6, 8\\}$. Evaluate two nested expressions — parentheses first, exactly as a query planner would.",
+      "steps": [
+        { "instruction": "List the elements of $A \\cap B$ in any order, separated by commas.", "answer": "4, 5, 6", "accept": [], "hint": "Which elements of $B$ are at most 6?", "form": "solutions" },
+        { "instruction": "Now remove $C$: list the elements of $(A \\cap B) \\setminus C$ in any order, separated by commas.", "answer": "5", "accept": [], "hint": "From $\\{4, 5, 6\\}$, delete the members of $C$ — 4 and 6 go.", "form": "solutions" },
+        { "instruction": "List the elements of $B \\cup C$ in any order, separated by commas.", "answer": "2, 4, 5, 6, 7, 8", "accept": [], "hint": "Merge $\\{4,5,6,7\\}$ and $\\{2,4,6,8\\}$, listing shared elements once.", "form": "solutions" },
+        { "instruction": "List the elements of $A \\setminus (B \\cup C)$ in any order, separated by commas.", "answer": "1, 3", "accept": [], "hint": "Which elements of $A$ avoid your merged set entirely?", "form": "solutions" }
+      ],
+      "finalAnswer": { "value": "{1, 3}", "unit": "" },
+      "solutionNarrative": "$(A \\cap B) \\setminus C = \\{4,5,6\\} \\setminus \\{2,4,6,8\\} = \\{5\\}$, while $A \\setminus (B \\cup C) = \\{1,...,6\\} \\setminus \\{2,4,5,6,7,8\\} = \\{1, 3\\}$. Parenthesization matters: evaluate the inner operation first, always."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s09",
+      "concepts": ["cardinality-inclusion-exclusion"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two sets satisfy $|A| = 7$, $|B| = 5$, and $|A \\cap B| = 3$. Find $|A \\cup B|$ with inclusion-exclusion.",
+      "steps": [
+        { "instruction": "First the naive double-counting sum: $|A| + |B| = {}$?", "answer": "12", "accept": [], "hint": "$7 + 5$." },
+        { "instruction": "The overlap was counted twice, so subtract it once: $|A \\cup B| = |A| + |B| - |A \\cap B| = {}$?", "answer": "9", "accept": [], "hint": "$12 - 3$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$|A \\cup B| = 7 + 5 - 3 = 9$: the three shared elements were counted twice in the sum, so one copy of the overlap comes back out."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s10",
+      "concepts": ["cardinality-inclusion-exclusion"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A dorm survey of 40 students finds 25 drink coffee, 18 drink tea, and 10 drink both. The cafeteria wants to know who drinks at least one, and who drinks neither.",
+      "steps": [
+        { "instruction": "Compute the double-counting sum $25 + 18$.", "answer": "43", "accept": [], "hint": "Straight addition — but notice it already exceeds 40, so something is counted twice." },
+        { "instruction": "How many students drink at least one of the two? Apply $|C \\cup T| = |C| + |T| - |C \\cap T|$.", "answer": "33", "accept": [], "hint": "$43 - 10$." },
+        { "instruction": "How many drink NEITHER?", "answer": "7", "accept": [], "hint": "Subtract the at-least-one count from the 40 surveyed." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "$|C \\cup T| = 25 + 18 - 10 = 33$ students drink at least one, leaving $40 - 33 = 7$ who drink neither. Region check: $15 + 10 + 8 + 7 = 40$."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s11",
+      "concepts": ["cardinality-inclusion-exclusion"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "All 50 developers on a team use at least one of two languages: 32 use Python and 27 use JavaScript. Run inclusion-exclusion BACKWARDS to find the overlap the survey never asked about.",
+      "steps": [
+        { "instruction": "Compute $|P| + |J| = 32 + 27$.", "answer": "59", "accept": [], "hint": "It exceeds the team size — the excess IS the double-counted overlap." },
+        { "instruction": "Since everyone uses at least one, $|P \\cup J| = 50$. Solve for the overlap: $|P \\cap J| = |P| + |J| - |P \\cup J|$.", "answer": "9", "accept": [], "hint": "$59 - 50$." },
+        { "instruction": "How many developers use ONLY Python?", "answer": "23", "accept": [], "hint": "$|P| - |P \\cap J| = 32 - 9$." }
+      ],
+      "finalAnswer": { "value": "23", "unit": "" },
+      "solutionNarrative": "The sum $32 + 27 = 59$ overshoots the 50-person union by exactly the overlap, so $|P \\cap J| = 9$; Python-only is $32 - 9 = 23$ (and JavaScript-only is $27 - 9 = 18$; $23 + 9 + 18 = 50$)."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s12",
+      "concepts": ["cardinality-inclusion-exclusion"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An ad platform tracked 200 site visitors: 90 clicked ad $A$, 75 clicked ad $B$, and 150 clicked at least one of the two. Recover all four Venn regions from these three aggregate counts.",
+      "steps": [
+        { "instruction": "How many visitors clicked BOTH ads? Use $|A \\cap B| = |A| + |B| - |A \\cup B|$.", "answer": "15", "accept": [], "hint": "$90 + 75 - 150$." },
+        { "instruction": "How many clicked ONLY ad $A$?", "answer": "75", "accept": [], "hint": "$|A| - |A \\cap B| = 90 - 15$." },
+        { "instruction": "How many clicked ONLY ad $B$?", "answer": "60", "accept": [], "hint": "$75 - 15$." },
+        { "instruction": "How many of the 200 visitors clicked NEITHER ad?", "answer": "50", "accept": [], "hint": "$200 - |A \\cup B|$. Check: your four regions should sum to 200." }
+      ],
+      "finalAnswer": { "value": "50", "unit": "" },
+      "solutionNarrative": "Overlap: $90 + 75 - 150 = 15$; only-$A$ is $90 - 15 = 75$; only-$B$ is $75 - 15 = 60$; neither is $200 - 150 = 50$. Audit: $75 + 15 + 60 + 50 = 200$, so every visitor is counted exactly once."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s13",
+      "concepts": ["power-sets-and-products"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $A = \\{1, 2, 3\\}$. Size up the two constructions that build bigger sets from $A$: the Cartesian product $A \\times A$ and the power set $\\mathcal{P}(A)$.",
+      "steps": [
+        { "instruction": "What is $|A|$?", "answer": "3", "accept": [], "hint": "Count the roster." },
+        { "instruction": "How many ordered pairs are in $A \\times A$? (Recall $|A \\times B| = |A| \\cdot |B|$.)", "answer": "9", "accept": [], "hint": "$3 \\cdot 3$ — a full 3-by-3 grid of pairs." },
+        { "instruction": "How many elements does the power set $\\mathcal{P}(A)$ have? (Recall $|\\mathcal{P}(A)| = 2^{|A|}$.)", "answer": "8", "accept": [], "hint": "$2^3$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$|A \\times A| = 3 \\cdot 3 = 9$ ordered pairs, while $|\\mathcal{P}(A)| = 2^3 = 8$ subsets — products multiply sizes, power sets exponentiate them."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s14",
+      "concepts": ["power-sets-and-products"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A pizza app offers a set $S$ of 4 sizes and a set $T$ of 5 toppings (each order picks exactly one of each), so an order form is an element of $S \\times T$. The product team then adds a set $D$ of 3 drinks to the combo.",
+      "steps": [
+        { "instruction": "How many (size, topping) orders exist — what is $|S \\times T|$?", "answer": "20", "accept": [], "hint": "$4 \\cdot 5$." },
+        { "instruction": "After the drinks launch, an order is an element of $S \\times T \\times D$. How many orders are possible now?", "answer": "60", "accept": [], "hint": "Multiply your previous answer by $|D| = 3$." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "" },
+      "solutionNarrative": "$|S \\times T| = 4 \\cdot 5 = 20$ and $|S \\times T \\times D| = 20 \\cdot 3 = 60$: Cartesian products multiply, which is why every independent dropdown on a form multiplies the number of possible submissions."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s15",
+      "concepts": ["power-sets-and-products"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $A = \\{1, 2\\}$. Climb two levels of the power-set tower: from $A$ to $\\mathcal{P}(A)$ to $\\mathcal{P}(\\mathcal{P}(A))$. Keep the levels straight — at each step you are taking subsets of the PREVIOUS set.",
+      "steps": [
+        { "instruction": "How many elements does $\\mathcal{P}(A)$ have?", "answer": "4", "accept": [], "hint": "$2^2$: the subsets are $\\emptyset, \\{1\\}, \\{2\\}, \\{1,2\\}$." },
+        { "instruction": "How many subsets of $\\mathcal{P}(A)$ contain $\\emptyset$ as an ELEMENT? ($\\emptyset$ is one of the 4 members of $\\mathcal{P}(A)$, so fix it in and count.)", "answer": "8", "accept": [], "hint": "One member forced in, the other three choose freely: $2^3$." },
+        { "instruction": "How many elements does $\\mathcal{P}(\\mathcal{P}(A))$ have in total?", "answer": "16", "accept": [], "hint": "The power set of a 4-element set: $2^4$." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "" },
+      "solutionNarrative": "$|\\mathcal{P}(A)| = 2^2 = 4$, so $|\\mathcal{P}(\\mathcal{P}(A))| = 2^4 = 16$; among those 16 subsets, the ones containing the member $\\emptyset$ number $2^3 = 8$. Each level of the tower feeds its SIZE, not its contents, into the next $2^n$."
+    },
+    {
+      "id": "discrete-math.sets-and-set-operations.s16",
+      "concepts": ["power-sets-and-products"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A web app has 5 boolean feature flags. A deployment configuration is a SUBSET of the flag set (the flags that are switched on), so the space of configurations is exactly the power set of the flags.",
+      "steps": [
+        { "instruction": "How many distinct configurations are possible?", "answer": "32", "accept": [], "hint": "$2^5$ — each flag is an independent on/off bit." },
+        { "instruction": "QA only tests configurations where the dark-mode flag is ON. How many configurations is that?", "answer": "16", "accept": [], "hint": "One flag pinned on, four still free: $2^4$." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "" },
+      "solutionNarrative": "The 5 flags give $2^5 = 32$ subsets; pinning one flag on leaves $2^4 = 16$. This power-set blowup is why exhaustive testing of flag combinations stops being feasible after a couple dozen flags."
+    }
+  ]
+}

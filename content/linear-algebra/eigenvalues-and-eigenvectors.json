@@ -1,0 +1,277 @@
+{
+  "id": "linear-algebra.eigenvalues-and-eigenvectors",
+  "subject": "linear-algebra",
+  "title": "Eigenvalues and Eigenvectors",
+  "prerequisites": ["matrix-algebra.determinants", "algebra.quadratic-equations"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "characteristic-equation",
+      "label": "The characteristic equation",
+      "microLesson": "A matrix $A$ usually rotates and stretches vectors. An **eigenvector** is a special direction that $A$ leaves pointing the same way, only scaled by a factor $\\lambda$ (the **eigenvalue**): $A\\mathbf{v} = \\lambda\\mathbf{v}$. To find the $\\lambda$ that allow this, you need $\\det(A - \\lambda I) = 0$ — the **characteristic equation**. For a $2\\times 2$ matrix this expands to $\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$."
+    },
+    {
+      "id": "find-eigenvalues",
+      "label": "Finding the eigenvalues",
+      "microLesson": "The eigenvalues are exactly the roots of the characteristic polynomial. So once you have $\\det(A - \\lambda I) = 0$, you just **solve that polynomial** — factor it or use the quadratic formula. For $\\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$ the equation is $(2-\\lambda)(3-\\lambda)=0$, giving $\\lambda = 2$ or $\\lambda = 3$. A diagonal or triangular matrix wears its eigenvalues on its diagonal."
+    },
+    {
+      "id": "find-eigenvectors",
+      "label": "Finding the eigenvectors",
+      "microLesson": "Each eigenvalue $\\lambda$ has a direction attached. Plug it back in and solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for $\\mathbf{v}$. Because any scalar multiple of an eigenvector is also an eigenvector, the answer is a whole line of vectors — so we report the one with the **smallest positive integer components**. Always verify with $A\\mathbf{v} = \\lambda\\mathbf{v}$: the matrix really does just scale it."
+    },
+    {
+      "id": "eigen-applied",
+      "label": "Reading eigenvalues in the real world",
+      "microLesson": "Eigen-structure is the hidden skeleton of a system. The **dominant eigenvector** (largest $\\lambda$) is the long-run steady state of a Markov chain or the ranking in PageRank. The **sign of the eigenvalues** decides stability: all negative means a system settles, any positive means it blows up. In PCA the top eigenvector is the **principal direction** of the data; in mechanics eigenvalues are squared natural frequencies — the **vibration modes**."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The direction a matrix can't twist\n\nMultiply a vector by a matrix and, in general, it gets **rotated and stretched** — it comes out pointing somewhere new. But almost every matrix has a few special directions it can only *stretch*, never turn. Those directions are **eigenvectors**, and the stretch factor for each is its **eigenvalue** $\\lambda$. The defining relationship is beautifully simple:\n\n$$A\\mathbf{v} = \\lambda \\mathbf{v}, \\qquad \\mathbf{v} \\neq \\mathbf{0}.$$\n\nApplying the whole matrix $A$ to $\\mathbf{v}$ does nothing more than scaling by the single number $\\lambda$. This is not a curiosity — it is *why* Google can rank the web, why an engineer knows whether a bridge will shake itself apart, and why a data scientist can compress a million columns down to two.\n\n## Step 1: the characteristic equation\n\nRewrite $A\\mathbf{v} = \\lambda\\mathbf{v}$ as $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. We want a **nonzero** $\\mathbf{v}$, which can only happen if the matrix $A - \\lambda I$ squashes some direction to zero — that is, if it is singular. A matrix is singular exactly when its determinant is zero, so:\n\n$$\\det(A - \\lambda I) = 0.$$\n\nThis is the **characteristic equation**. For a $2\\times 2$ matrix it always expands to a tidy quadratic in $\\lambda$:\n\n$$\\lambda^2 - (\\operatorname{trace} A)\\,\\lambda + \\det A = 0,$$\n\nwhere the trace is the sum of the diagonal entries. Notice this is exactly the quadratic-equation machinery you already own.\n\n## Step 2: solve for the eigenvalues\n\nThe eigenvalues are the **roots** of that polynomial. Take\n\n$$A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}.$$\n\nThe trace is $7$ and the determinant is $4\\cdot 3 - 1\\cdot 2 = 10$, so the characteristic equation is\n\n$$\\lambda^2 - 7\\lambda + 10 = 0 \\;\\Rightarrow\\; (\\lambda - 2)(\\lambda - 5) = 0,$$\n\ngiving $\\lambda = 2$ or $\\lambda = 5$. (Shortcut: a diagonal or triangular matrix shows its eigenvalues right on the diagonal.)\n\n## Step 3: find each eigenvector\n\nFor each eigenvalue, substitute it back and solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. For $\\lambda = 5$:\n\n$$A - 5I = \\begin{bmatrix} -1 & 1 \\\\ 2 & -2 \\end{bmatrix}, \\quad\\text{so } -v_1 + v_2 = 0 \\;\\Rightarrow\\; \\mathbf{v} = \\langle 1, 1 \\rangle.$$\n\nFor $\\lambda = 2$: $2v_1 + v_2 = 0 \\Rightarrow \\mathbf{v} = \\langle 1, -2 \\rangle$. Any scalar multiple works, so we report the **smallest positive integer components**. Always check: $A\\langle 1,1\\rangle = \\langle 5,5\\rangle = 5\\langle 1,1\\rangle$. ✓\n\nSeen in the plane, that check is the whole story: $A$ moves $\\mathbf{v} = \\langle 1, 1 \\rangle$ along its own line — stretched by the factor 5, twisted not at all.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-1,6],\"yRange\":[-1,6],\"grid\":true,\"segments\":[{\"from\":[-1,-1],\"to\":[6,6],\"dashed\":true,\"color\":\"faint\"},{\"from\":[0,0],\"to\":[5,5],\"arrow\":true,\"label\":\"Av = <5,5>\",\"color\":\"warn\"},{\"from\":[0,0],\"to\":[1,1],\"arrow\":true,\"label\":\"v = <1,1>\",\"color\":\"accent\"}],\"caption\":\"For A = [[4,1],[2,3]], the eigenvector v = <1,1> is only stretched: Av = 5v stays on the dashed eigenline through the origin\"}\n```\n\n## Why anyone cares\n\nThe payoff is that a complicated repeated process becomes trivial along its eigenvectors — applying $A$ a thousand times just multiplies by $\\lambda^{1000}$. That single fact is the engine behind steady states of populations, the stability of feedback systems, the principal directions in PCA, and the natural vibration modes of any structure."
+  },
+  "application": {
+    "summary": "Eigenvalues and eigenvectors expose what a repeated linear process does in the long run. The dominant eigenvector is the steady state of a Markov chain (and the heart of PageRank); the signs of the eigenvalues decide whether a system settles or blows up; the top eigenvector is the principal direction in PCA; and eigenvalues are squared natural frequencies in vibration analysis.",
+    "domains": ["data science", "engineering", "economics", "physics"],
+    "workedExample": "**Where does the population settle?**\n\nA city splits into Downtown and Suburb. Each year 70% of downtowners stay and 30% leave for the suburb, while 40% of suburbanites move downtown and 60% stay. The transition matrix is\n\n$$A = \\begin{bmatrix} 0.7 & 0.4 \\\\ 0.3 & 0.6 \\end{bmatrix}.$$\n\nThe long-run distribution is the eigenvector for the **dominant eigenvalue** $\\lambda = 1$ (every column sums to 1, so $1$ is always an eigenvalue of a Markov matrix). Solving $(A - I)\\mathbf{v} = \\mathbf{0}$ gives $-0.3 v_1 + 0.4 v_2 = 0$, so $\\mathbf{v} = \\langle 4, 3 \\rangle$. Normalizing, **4/7 of people end up downtown and 3/7 in the suburb**, no matter where they started. The other eigenvalue here is $0.3$; because it is less than 1, the transient differences shrink by 30% each year and wash out. Google's PageRank is exactly this idea on a graph of 100 billion web pages — the dominant eigenvector *is* the ranking.",
+    "domainNotes": [
+      "**Data science:** PCA picks the eigenvector of the covariance matrix with the largest eigenvalue as the principal direction — the axis that captures the most variance.",
+      "**Engineering:** structures have natural vibration modes whose frequencies are square roots of eigenvalues; matching a driving force to one of them causes resonance.",
+      "**Economics/biology:** Markov and Leslie matrices have a dominant eigenvalue (growth rate) whose eigenvector is the stable long-run distribution.",
+      "**Control theory:** a linear system is stable only if every eigenvalue has a negative real part — a single positive eigenvalue means it diverges."
+    ]
+  },
+  "generators": ["find-eigenvalues-v1", "char-equation-v1", "laf-characteristic-equation-d1", "laf-characteristic-equation-d3", "laf-find-eigenvalues-d1", "laf-find-eigenvalues-d3", "laf-find-eigenvectors-d1", "laf-find-eigenvectors-d2", "laf-find-eigenvectors-d3", "laf-eigen-applied-d1", "laf-eigen-applied-d2", "laf-eigen-applied-d3"],
+  "problems": [
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s01",
+      "concepts": ["characteristic-equation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Write the characteristic equation $\\det(A - \\lambda I) = 0$ for $A = \\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Using $\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$, the trace is $2+3=5$ and the determinant is $6$. Write the characteristic equation.", "answer": "lambda^2 - 5lambda + 6 = 0", "accept": ["lambda^2-5lambda+6=0"], "hint": "Plug trace 5 and determinant 6 into $\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$." }
+      ],
+      "finalAnswer": { "value": "lambda^2 - 5lambda + 6 = 0", "unit": "" },
+      "solutionNarrative": "Trace $=5$, determinant $=6$, so the characteristic equation is $\\lambda^2 - 5\\lambda + 6 = 0$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s02",
+      "concepts": ["characteristic-equation"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Form the characteristic equation for $A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Compute the trace (sum of diagonal entries).", "answer": "7", "accept": [], "hint": "$4 + 3$." },
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "10", "accept": [], "hint": "$4\\cdot 3 - 1\\cdot 2$." },
+        { "instruction": "Write the characteristic equation $\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$.", "answer": "lambda^2 - 7lambda + 10 = 0", "accept": ["lambda^2-7lambda+10=0"], "hint": "Substitute trace 7 and determinant 10." }
+      ],
+      "finalAnswer": { "value": "lambda^2 - 7lambda + 10 = 0", "unit": "" },
+      "solutionNarrative": "Trace $=7$, determinant $=10$, so $\\lambda^2 - 7\\lambda + 10 = 0$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s03",
+      "concepts": ["characteristic-equation"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Form the characteristic equation by expanding $\\det(A - \\lambda I)$ directly for $A = \\begin{bmatrix} 5 & -2 \\\\ 4 & -1 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Write the matrix $A - \\lambda I$, then compute its determinant $(5-\\lambda)(-1-\\lambda) - (-2)(4)$. Multiply it out and set equal to zero as a polynomial in lambda.", "answer": "lambda^2 - 4lambda + 3 = 0", "accept": ["lambda^2-4lambda+3=0"], "hint": "$(5-\\lambda)(-1-\\lambda) = \\lambda^2 - 4\\lambda - 5$; then $-(-2)(4) = +8$, so $\\lambda^2 - 4\\lambda + 3$." }
+      ],
+      "finalAnswer": { "value": "lambda^2 - 4lambda + 3 = 0", "unit": "" },
+      "solutionNarrative": "$(5-\\lambda)(-1-\\lambda) + 8 = \\lambda^2 - 4\\lambda - 5 + 8 = \\lambda^2 - 4\\lambda + 3$, so the characteristic equation is $\\lambda^2 - 4\\lambda + 3 = 0$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s04",
+      "concepts": ["find-eigenvalues"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the eigenvalues of $A = \\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Solve $\\lambda^2 - 5\\lambda + 6 = 0$ for the eigenvalues.", "form": "solutions", "answer": "lambda = 2 or lambda = 3", "accept": ["2, 3", "3, 2"], "hint": "It factors as $(\\lambda - 2)(\\lambda - 3) = 0$; a diagonal matrix shows its eigenvalues on the diagonal." }
+      ],
+      "finalAnswer": { "value": "lambda = 2, lambda = 3", "unit": "" },
+      "solutionNarrative": "$(\\lambda-2)(\\lambda-3)=0$ gives $\\lambda = 2$ or $\\lambda = 3$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s05",
+      "concepts": ["find-eigenvalues"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the eigenvalues of $A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "Write the characteristic equation (trace 7, determinant 10).", "answer": "lambda^2 - 7lambda + 10 = 0", "accept": ["lambda^2-7lambda+10=0"], "hint": "$\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$." },
+        { "instruction": "Solve for both eigenvalues.", "form": "solutions", "answer": "lambda = 2 or lambda = 5", "accept": ["2, 5", "5, 2"], "hint": "Factor: $(\\lambda - 2)(\\lambda - 5) = 0$." }
+      ],
+      "finalAnswer": { "value": "lambda = 2, lambda = 5", "unit": "" },
+      "solutionNarrative": "$\\lambda^2 - 7\\lambda + 10 = (\\lambda-2)(\\lambda-5) = 0$, so $\\lambda = 2$ or $\\lambda = 5$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s06",
+      "concepts": ["find-eigenvalues"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the eigenvalues of the $3\\times 3$ upper-triangular matrix $A = \\begin{bmatrix} 2 & 5 & 1 \\\\ 0 & 3 & 7 \\\\ 0 & 0 & 6 \\end{bmatrix}$.",
+      "steps": [
+        { "instruction": "For a triangular matrix the eigenvalues are the diagonal entries. State the characteristic equation as a product set to zero.", "answer": "(2 - lambda)(3 - lambda)(6 - lambda) = 0", "accept": ["(lambda - 2)(lambda - 3)(lambda - 6) = 0", "(2-lambda)(3-lambda)(6-lambda)=0", "(lambda-2)(lambda-3)(lambda-6)=0"], "hint": "$\\det(A - \\lambda I)$ of a triangular matrix is the product of $(\\text{diagonal} - \\lambda)$ terms." },
+        { "instruction": "Give all three eigenvalues.", "form": "solutions", "answer": "lambda = 2 or lambda = 3 or lambda = 6", "accept": ["2, 3, 6", "2, 6, 3", "3, 2, 6", "6, 3, 2"], "hint": "Read them off the diagonal." }
+      ],
+      "finalAnswer": { "value": "lambda = 2, lambda = 3, lambda = 6", "unit": "" },
+      "solutionNarrative": "A triangular matrix has its eigenvalues on the diagonal: $\\lambda = 2, 3, 6$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s07",
+      "concepts": ["find-eigenvectors"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $A = \\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$, find an eigenvector for $\\lambda = 3$. Give the eigenvector with the smallest positive integer components.",
+      "steps": [
+        { "instruction": "Solve $(A - 3I)\\mathbf{v} = \\mathbf{0}$ and give the eigenvector with smallest positive integer components as $\\langle v_1, v_2 \\rangle$.", "answer": "<0, 1>", "accept": ["(0, 1)", "0, 1"], "hint": "$A - 3I = \\begin{bmatrix} -1 & 0 \\\\ 0 & 0 \\end{bmatrix}$ forces $v_1 = 0$ and leaves $v_2$ free." }
+      ],
+      "finalAnswer": { "value": "<0, 1>", "unit": "" },
+      "solutionNarrative": "$(A-3I)\\mathbf{v}=\\mathbf{0}$ forces $v_1 = 0$, so the eigenvector is $\\langle 0, 1 \\rangle$. Check: $A\\langle 0,1\\rangle = \\langle 0,3\\rangle = 3\\langle 0,1\\rangle$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s08",
+      "concepts": ["find-eigenvectors"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}$, find an eigenvector for $\\lambda = 5$. Give the eigenvector with the smallest positive integer components.",
+      "steps": [
+        { "instruction": "Form $A - 5I$ and write the equation its first row gives for $v_1, v_2$.", "answer": "-v1 + v2 = 0", "accept": ["-v1+v2=0", "v2 = v1", "v2=v1", "v1 = v2", "v1=v2"], "hint": "$A - 5I = \\begin{bmatrix} -1 & 1 \\\\ 2 & -2 \\end{bmatrix}$; the top row is $-v_1 + v_2 = 0$." },
+        { "instruction": "Give the eigenvector with smallest positive integer components as $\\langle v_1, v_2 \\rangle$.", "answer": "<1, 1>", "accept": ["(1, 1)", "1, 1"], "hint": "$v_2 = v_1$, so the simplest is $\\langle 1, 1 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<1, 1>", "unit": "" },
+      "solutionNarrative": "$A - 5I$ gives $-v_1 + v_2 = 0$, so $v_2 = v_1$ and the eigenvector is $\\langle 1, 1 \\rangle$. Check: $A\\langle 1,1\\rangle = \\langle 5,5\\rangle = 5\\langle 1,1\\rangle$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s09",
+      "concepts": ["find-eigenvectors"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}$, find an eigenvector for the other eigenvalue $\\lambda = 2$. Give the eigenvector with the smallest positive integer components.",
+      "steps": [
+        { "instruction": "Form $A - 2I$ and write the equation its first row gives.", "answer": "2v1 + v2 = 0", "accept": ["2v1+v2=0", "v2 = -2v1", "v2=-2v1"], "hint": "$A - 2I = \\begin{bmatrix} 2 & 1 \\\\ 2 & 1 \\end{bmatrix}$; the top row is $2v_1 + v_2 = 0$." },
+        { "instruction": "Choosing $v_1 = 1$ gives the smallest positive first component. Give the eigenvector $\\langle v_1, v_2 \\rangle$.", "answer": "<1, -2>", "accept": ["(1, -2)", "1, -2"], "hint": "$v_2 = -2v_1 = -2$." }
+      ],
+      "finalAnswer": { "value": "<1, -2>", "unit": "" },
+      "solutionNarrative": "$A - 2I$ gives $2v_1 + v_2 = 0$, so $v_2 = -2v_1$ and the eigenvector is $\\langle 1, -2 \\rangle$. Check: $A\\langle 1,-2\\rangle = \\langle 2,-4\\rangle = 2\\langle 1,-2\\rangle$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s10",
+      "concepts": ["find-eigenvalues", "find-eigenvectors"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The symmetric matrix $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 2 \\end{bmatrix}$ appears in many applications. Find its eigenvalues, then an eigenvector for the larger one.",
+      "steps": [
+        { "instruction": "Write and solve the characteristic equation (trace 4, determinant 3) for both eigenvalues.", "form": "solutions", "answer": "lambda = 1 or lambda = 3", "accept": ["1, 3", "3, 1"], "hint": "$\\lambda^2 - 4\\lambda + 3 = (\\lambda-1)(\\lambda-3) = 0$." },
+        { "instruction": "For $\\lambda = 3$, form $A - 3I$ and give the eigenvector with smallest positive integer components as $\\langle v_1, v_2 \\rangle$.", "answer": "<1, 1>", "accept": ["(1, 1)", "1, 1"], "hint": "$A - 3I = \\begin{bmatrix} -1 & 1 \\\\ 1 & -1 \\end{bmatrix}$ gives $v_1 = v_2$." }
+      ],
+      "finalAnswer": { "value": "<1, 1>", "unit": "" },
+      "solutionNarrative": "$\\lambda = 1$ or $3$; for $\\lambda = 3$, $-v_1 + v_2 = 0$ gives the eigenvector $\\langle 1, 1 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s11",
+      "concepts": ["eigen-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A linear system $\\mathbf{x}' = A\\mathbf{x}$ has eigenvalues $\\lambda = -2$ and $\\lambda = -5$. A system is stable (settles to rest) only if every eigenvalue is negative. Is this system stable?",
+      "steps": [
+        { "instruction": "Both eigenvalues are negative. Is the system stable? Type 'yes' or 'no'.", "answer": "yes", "accept": ["stable"], "hint": "Stability requires all eigenvalues to be negative — here both are." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Both eigenvalues $-2$ and $-5$ are negative, so every mode decays and the system is stable."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s12",
+      "concepts": ["eigen-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A two-region migration model uses the Markov matrix $A = \\begin{bmatrix} 0.7 & 0.4 \\\\ 0.3 & 0.6 \\end{bmatrix}$. The long-run population distribution is the eigenvector for the dominant eigenvalue $\\lambda = 1$. Find that steady-state direction with smallest positive integer components.",
+      "steps": [
+        { "instruction": "Form $A - I$ and write the equation its first row gives ($-0.3 v_1 + 0.4 v_2 = 0$, i.e. $3v_1 = 4v_2$).", "answer": "3v1 = 4v2", "accept": ["3v1=4v2", "3v1 - 4v2 = 0", "3v1-4v2=0"], "hint": "$A - I = \\begin{bmatrix} -0.3 & 0.4 \\\\ 0.3 & -0.4 \\end{bmatrix}$; multiply the top row by 10." },
+        { "instruction": "Give the steady-state eigenvector with smallest positive integer components as $\\langle v_1, v_2 \\rangle$.", "answer": "<4, 3>", "accept": ["(4, 3)", "4, 3"], "hint": "From $3v_1 = 4v_2$, take $v_1 = 4, v_2 = 3$." }
+      ],
+      "finalAnswer": { "value": "<4, 3>", "unit": "" },
+      "solutionNarrative": "$(A-I)\\mathbf{v}=\\mathbf{0}$ gives $3v_1 = 4v_2$, so the steady state is $\\langle 4, 3 \\rangle$: in the long run 4/7 of people live in region 1 and 3/7 in region 2."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s13",
+      "concepts": ["eigen-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "In PCA, a dataset has covariance matrix $C = \\begin{bmatrix} 5 & 2 \\\\ 2 & 5 \\end{bmatrix}$. The principal direction is the eigenvector of the largest eigenvalue. Find the largest eigenvalue, then the principal direction.",
+      "steps": [
+        { "instruction": "Write and solve the characteristic equation (trace 10, determinant 21) for both eigenvalues.", "form": "solutions", "answer": "lambda = 3 or lambda = 7", "accept": ["3, 7", "7, 3"], "hint": "$\\lambda^2 - 10\\lambda + 21 = (\\lambda-3)(\\lambda-7) = 0$." },
+        { "instruction": "The largest eigenvalue is 7. Form $C - 7I$ and write the equation its first row gives.", "answer": "-2v1 + 2v2 = 0", "accept": ["-2v1+2v2=0", "v1 = v2", "v1=v2", "v2 = v1", "v2=v1"], "hint": "$C - 7I = \\begin{bmatrix} -2 & 2 \\\\ 2 & -2 \\end{bmatrix}$; the top row is $-2v_1 + 2v_2 = 0$." },
+        { "instruction": "Give the principal direction with smallest positive integer components as $\\langle v_1, v_2 \\rangle$.", "answer": "<1, 1>", "accept": ["(1, 1)", "1, 1"], "hint": "$v_1 = v_2$, so $\\langle 1, 1 \\rangle$ — the data spreads most along the 45° line." }
+      ],
+      "finalAnswer": { "value": "<1, 1>", "unit": "" },
+      "solutionNarrative": "Eigenvalues are 3 and 7; the largest, 7, has eigenvector $\\langle 1, 1 \\rangle$, so the principal direction is the 45° line where the data varies most."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s14",
+      "concepts": ["eigen-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A control system has state matrix with eigenvalues $\\lambda = 3$ and $\\lambda = -1$. Stability requires every eigenvalue to be negative. How many of these eigenvalues are positive, and is the system stable?",
+      "steps": [
+        { "instruction": "How many of the eigenvalues are positive? Type a number.", "answer": "1", "accept": ["one"], "hint": "Only $\\lambda = 3$ is positive." },
+        { "instruction": "Because at least one eigenvalue is positive, is the system stable? Type 'yes' or 'no'.", "answer": "no", "accept": ["unstable"], "hint": "A single positive eigenvalue makes the system diverge." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "One eigenvalue ($\\lambda = 3$) is positive, so that mode grows without bound: the system is not stable."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s15",
+      "concepts": ["find-eigenvalues", "eigen-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A vibrating system has stiffness/mass matrix $A = \\begin{bmatrix} 5 & 0 \\\\ 0 & 8 \\end{bmatrix}$, whose eigenvalues are the squared natural frequencies $\\omega^2$. Find the eigenvalues (the values of $\\omega^2$).",
+      "steps": [
+        { "instruction": "This diagonal matrix shows its eigenvalues on the diagonal. Give both eigenvalues.", "form": "solutions", "answer": "lambda = 5 or lambda = 8", "accept": ["5, 8", "8, 5"], "hint": "For a diagonal matrix the eigenvalues are the diagonal entries." }
+      ],
+      "finalAnswer": { "value": "lambda = 5, lambda = 8", "unit": "" },
+      "solutionNarrative": "A diagonal matrix has its eigenvalues on the diagonal, so $\\omega^2 = 5$ and $\\omega^2 = 8$ — the two natural modes of the system."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s16",
+      "concepts": ["characteristic-equation", "find-eigenvalues"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $A = \\begin{bmatrix} 1 & 2 \\\\ 2 & 1 \\end{bmatrix}$, form the characteristic equation and find the eigenvalues.",
+      "steps": [
+        { "instruction": "Write the characteristic equation (trace 2, determinant $-3$).", "answer": "lambda^2 - 2lambda - 3 = 0", "accept": ["lambda^2-2lambda-3=0"], "hint": "$\\det = 1\\cdot 1 - 2\\cdot 2 = -3$." },
+        { "instruction": "Solve for both eigenvalues.", "form": "solutions", "answer": "lambda = 3 or lambda = -1", "accept": ["3, -1", "-1, 3"], "hint": "$(\\lambda - 3)(\\lambda + 1) = 0$." }
+      ],
+      "finalAnswer": { "value": "lambda = 3, lambda = -1", "unit": "" },
+      "solutionNarrative": "$\\lambda^2 - 2\\lambda - 3 = (\\lambda-3)(\\lambda+1) = 0$, so $\\lambda = 3$ or $\\lambda = -1$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s17",
+      "concepts": ["find-eigenvectors"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For the diagonal matrix $A = \\begin{bmatrix} 6 & 0 \\\\ 0 & 2 \\end{bmatrix}$, find an eigenvector for $\\lambda = 6$. Give the eigenvector with the smallest positive integer components.",
+      "steps": [
+        { "instruction": "Solve $(A - 6I)\\mathbf{v} = \\mathbf{0}$ and give the eigenvector as $\\langle v_1, v_2 \\rangle$.", "answer": "<1, 0>", "accept": ["(1, 0)", "1, 0"], "hint": "$A - 6I = \\begin{bmatrix} 0 & 0 \\\\ 0 & -4 \\end{bmatrix}$ forces $v_2 = 0$ and leaves $v_1$ free." }
+      ],
+      "finalAnswer": { "value": "<1, 0>", "unit": "" },
+      "solutionNarrative": "$(A-6I)\\mathbf{v}=\\mathbf{0}$ forces $v_2 = 0$, so the eigenvector is $\\langle 1, 0 \\rangle$. Check: $A\\langle 1,0\\rangle = \\langle 6,0\\rangle = 6\\langle 1,0\\rangle$."
+    },
+    {
+      "id": "linear-algebra.eigenvalues-and-eigenvectors.s18",
+      "concepts": ["characteristic-equation", "find-eigenvalues", "find-eigenvectors"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A predator-prey interaction year over year follows $A = \\begin{bmatrix} 3 & 1 \\\\ 0 & 2 \\end{bmatrix}$. Find the characteristic equation, the eigenvalues, and an eigenvector for the dominant (largest) eigenvalue, which sets the long-run growth direction.",
+      "steps": [
+        { "instruction": "Write the characteristic equation (this triangular matrix has trace 5, determinant 6).", "answer": "lambda^2 - 5lambda + 6 = 0", "accept": ["lambda^2-5lambda+6=0", "(3 - lambda)(2 - lambda) = 0", "(lambda - 3)(lambda - 2) = 0"], "hint": "$\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$, or read the diagonal for a triangular matrix." },
+        { "instruction": "Solve for both eigenvalues.", "form": "solutions", "answer": "lambda = 2 or lambda = 3", "accept": ["2, 3", "3, 2"], "hint": "$(\\lambda - 2)(\\lambda - 3) = 0$, matching the diagonal entries." },
+        { "instruction": "The dominant eigenvalue is 3. Form $A - 3I$ and give its eigenvector with smallest positive integer components as $\\langle v_1, v_2 \\rangle$.", "answer": "<1, 0>", "accept": ["(1, 0)", "1, 0"], "hint": "$A - 3I = \\begin{bmatrix} 0 & 1 \\\\ 0 & -1 \\end{bmatrix}$ forces $v_2 = 0$." }
+      ],
+      "finalAnswer": { "value": "<1, 0>", "unit": "" },
+      "solutionNarrative": "$\\lambda^2 - 5\\lambda + 6 = (\\lambda-2)(\\lambda-3) = 0$, so $\\lambda = 2, 3$. For the dominant $\\lambda = 3$, $A - 3I$ forces $v_2 = 0$, giving $\\langle 1, 0 \\rangle$ — the long-run population grows by a factor of 3 each year along that direction."
+    }
+  ]
+}

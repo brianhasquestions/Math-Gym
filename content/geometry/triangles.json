@@ -1,0 +1,275 @@
+{
+  "id": "geometry.triangles",
+  "subject": "geometry",
+  "title": "Triangles",
+  "prerequisites": [],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "angle-sum",
+      "label": "Angle sum and exterior angles",
+      "microLesson": "The three interior angles of any triangle always add up to $180^\\circ$. So if you know two angles, the third is just $180^\\circ$ minus their sum. Example: angles of $50^\\circ$ and $70^\\circ$ leave $180 - 50 - 70 = 60^\\circ$. The **exterior angle theorem** is a handy shortcut: an exterior angle equals the sum of the two interior angles it does *not* touch. So an exterior angle next to a $40^\\circ$ angle, on a triangle whose other two angles are $40^\\circ$ and $65^\\circ$, measures $40 + 65 = 105^\\circ$."
+    },
+    {
+      "id": "triangle-types",
+      "label": "Classifying triangles",
+      "microLesson": "Triangles get two names — one by sides, one by angles. **By sides:** *equilateral* (all three equal), *isosceles* (exactly two equal), *scalene* (all different). **By angles:** *acute* (all angles under $90^\\circ$), *right* (one angle exactly $90^\\circ$), *obtuse* (one angle over $90^\\circ$). A key fact: in an isosceles triangle the two **base angles** (opposite the equal sides) are equal. So if the apex angle is $40^\\circ$, the two base angles share the remaining $140^\\circ$ equally — $70^\\circ$ each."
+    },
+    {
+      "id": "triangle-inequality",
+      "label": "The triangle inequality",
+      "microLesson": "Three lengths only form a triangle if **the sum of any two of them is greater than the third**. The quick test: add the two shortest sides; if that beats the longest side, they work. Lengths $3, 4, 5$ form a triangle because $3 + 4 = 7 > 5$. Lengths $2, 3, 6$ do not, because $2 + 3 = 5$, which is not greater than $6$. Given two sides $a$ and $b$, the third side must lie strictly between $|a - b|$ and $a + b$."
+    },
+    {
+      "id": "perimeter-and-basic-area",
+      "label": "Perimeter and area",
+      "microLesson": "The **perimeter** is the distance around the triangle — just add the three side lengths. The **area** is $\\tfrac{1}{2} \\times \\text{base} \\times \\text{height}$, where the height is the perpendicular distance from the base to the opposite corner (not a slanted side). A triangle with base $10$ and height $6$ has area $\\tfrac{1}{2}(10)(6) = 30$ square units. Always match your units: a base in meters and a height in meters give an area in square meters."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The shape that holds everything up\n\nLook at a roof truss, a bridge, a bicycle frame, a camera tripod, or a crane's boom and you'll see the same shape over and over: the **triangle**. There's a reason. A triangle is the only polygon that can't be flexed out of shape without changing the length of a side — push on a square and it collapses into a parallelogram, but push on a triangle and it holds. That rigidity is why builders, engineers, and designers reach for triangles whenever something has to stay put under load. Understanding a few simple rules about their angles and sides lets you size a roof, check whether a set of beams will actually meet, or compute how much fabric a sail needs.\n\n## Rule 1: the angles always sum to 180°\n\nNo matter how a triangle is shaped, its three interior angles add to exactly\n\n$$\\angle A + \\angle B + \\angle C = 180^\\circ.$$\n\nThis is the single most useful fact about triangles. Know any two angles and the third is forced:\n\n$$\\angle C = 180^\\circ - \\angle A - \\angle B.$$\n\nA roof truss whose two base angles are each $35^\\circ$ must have a peak angle of $180 - 35 - 35 = 110^\\circ$. There's a fast companion rule, the **exterior angle theorem**: if you extend one side, the angle formed outside equals the sum of the two *non-adjacent* interior angles. It saves a step whenever you'd otherwise find an angle just to subtract it again.\n\n## Rule 2: name it by sides and by angles\n\nEvery triangle earns two labels. **By its sides:**\n\n- **Equilateral** — all three sides equal (and, it turns out, all three angles are $60^\\circ$).\n- **Isosceles** — exactly two sides equal; the two angles opposite those sides (the *base angles*) are equal too.\n- **Scalene** — all three sides different.\n\n**By its largest angle:**\n\n- **Acute** — every angle under $90^\\circ$.\n- **Right** — one angle exactly $90^\\circ$.\n- **Obtuse** — one angle over $90^\\circ$.\n\nThe isosceles base-angle rule is a workhorse: a symmetric gable, bracket, or sail is isosceles, so finding one base angle gives you the other for free.\n\n## Rule 3: not every three lengths form a triangle\n\nIf you cut three beams and try to join them, they only close into a triangle when **the two shorter ones together out-reach the longest one**. Formally, for sides $a$, $b$, $c$:\n\n$$a + b > c, \\quad a + c > b, \\quad b + c > a.$$\n\nIn practice you only need to check the two shortest against the longest. Beams of $3$, $4$, and $5$ work ($3 + 4 = 7 > 5$); beams of $2$, $3$, and $6$ don't ($2 + 3 = 5$, not greater than $6$) — they'd fall flat. If two sides are fixed at $a$ and $b$, the third must satisfy $|a - b| < c < a + b$.\n\n## Rule 4: perimeter and area\n\n**Perimeter** is just the walk around the edge — add the three sides. **Area** uses a base and the *perpendicular* height to the opposite vertex:\n\n$$\\text{Area} = \\tfrac{1}{2} \\, b \\, h.$$\n\nA triangular garden bed with a $10$ ft base and a $6$ ft height covers $\\tfrac{1}{2}(10)(6) = 30$ square feet of soil. The catch that trips people up: $h$ is the straight-up height, not the length of a slanted side. Get those four rules under your belt and most everyday triangle problems become arithmetic."
+  },
+  "application": {
+    "summary": "Triangle rules size and check real structures: the angle sum and exterior-angle theorem set roof pitches and bracket angles, classification tells you which symmetry shortcuts apply, the triangle inequality decides whether a set of beams can actually meet, and perimeter/area quantify fencing, fabric, and material for plots, sails, and garden beds.",
+    "domains": ["construction", "engineering", "landscaping", "everyday life"],
+    "workedExample": "**Sizing a symmetric roof truss**\n\nA gable roof truss is an isosceles triangle: the two rafters are equal, so the two base angles where they meet the horizontal tie beam are equal. The builder wants a peak (apex) angle of $90^\\circ$ for a steep roof. What are the base angles, and how much steel edging trims the whole triangle if the tie beam is $8$ m and each rafter is $5$ m?\n\n*Angles.* The three angles sum to $180^\\circ$. The peak takes $90^\\circ$, leaving $180 - 90 = 90^\\circ$ to split equally between the two equal base angles:\n\n$$\\text{each base angle} = \\frac{90^\\circ}{2} = 45^\\circ.$$\n\n*Perimeter.* Add the three sides: $8 + 5 + 5 = 18$ m of edging.\n\n*Area (material for the gable face).* Using the $8$ m tie beam as the base, the height to the peak is $3$ m here, so $\\text{Area} = \\tfrac{1}{2}(8)(3) = 12$ m². Two angle facts and two formulas have completely specified the truss — the same moves size brackets, sails, and triangular plots.",
+    "domainNotes": [
+      "**Construction:** roof pitch and truss angles from the angle sum; the isosceles base-angle rule handles symmetric gables and braces.",
+      "**Engineering:** the triangle inequality is a feasibility check — three members can only form a rigid joint if the two shorter out-reach the longest.",
+      "**Landscaping:** perimeter gives fencing or edging for a triangular plot or bed; area gives soil, mulch, or sod quantities.",
+      "**Everyday life:** sail and shade-sail fabric, triangular shelving brackets, and flag dimensions all come straight from area and angle rules."
+    ]
+  },
+  "generators": ["tri-angle-sum-v1", "tri-exterior-v1", "tri-classify-angles-v1", "tri-classify-sides-v1", "tri-inequality-v1", "tri-perimeter-v1", "tri-area-basic-v1"],
+  "problems": [
+    {
+      "id": "geometry.triangles.s01",
+      "concepts": ["angle-sum"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A triangular support bracket has two known angles of $55^\\circ$ and $65^\\circ$. What is the third angle? (Answer in degrees.)",
+      "steps": [
+        { "instruction": "Add the two known angles (degrees).", "answer": "120", "accept": [], "hint": "55 + 65." },
+        { "instruction": "Subtract that sum from 180 to get the third angle (degrees).", "answer": "60", "accept": [], "hint": "180 - 120." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "degrees" },
+      "solutionNarrative": "The angles sum to $180^\\circ$. The two known angles total $55 + 65 = 120^\\circ$, so the third is $180 - 120 = 60^\\circ$."
+    },
+    {
+      "id": "geometry.triangles.s02",
+      "concepts": ["angle-sum"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A roof truss is built so its peak angle is twice each of its two equal base angles. The three angles still sum to $180^\\circ$. What is the measure of each base angle? (Answer in degrees.)",
+      "steps": [
+        { "instruction": "If each base angle is $x$, the peak is $2x$ and all three sum to 180. Write the equation.", "answer": "x + x + 2x = 180", "accept": ["4x = 180", "4x=180", "x+x+2x=180"], "hint": "Two base angles of x plus a peak of 2x equal 180." },
+        { "instruction": "Combine like terms to get a single term in $x$ equal to 180.", "answer": "4x = 180", "accept": ["4x=180"], "hint": "x + x + 2x = 4x." },
+        { "instruction": "Solve for $x$, the base angle (degrees).", "answer": "45", "accept": [], "hint": "Divide 180 by 4." }
+      ],
+      "finalAnswer": { "value": "45", "unit": "degrees" },
+      "solutionNarrative": "With base angles $x$ and peak $2x$: $x + x + 2x = 4x = 180$, so $x = 45^\\circ$ (and the peak is $90^\\circ$)."
+    },
+    {
+      "id": "geometry.triangles.s03",
+      "concepts": ["angle-sum"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "On a triangular plot of land, a surveyor extends one side past a corner to create an exterior angle. The two interior angles NOT touching that exterior angle measure $48^\\circ$ and $73^\\circ$. By the exterior angle theorem, the exterior angle equals their sum. Find the exterior angle, then find the interior angle at that same corner. (Answers in degrees.)",
+      "steps": [
+        { "instruction": "Use the exterior angle theorem: add the two non-adjacent interior angles to get the exterior angle (degrees).", "answer": "121", "accept": [], "hint": "48 + 73." },
+        { "instruction": "The interior angle at that corner is supplementary to the exterior angle. Subtract from 180 (degrees).", "answer": "59", "accept": [], "hint": "180 - 121." },
+        { "instruction": "Check: the three interior angles (48, 73, and the one you found) should sum to 180. What is their sum?", "answer": "180", "accept": [], "hint": "48 + 73 + 59." }
+      ],
+      "finalAnswer": { "value": "59", "unit": "degrees" },
+      "solutionNarrative": "Exterior angle $= 48 + 73 = 121^\\circ$. The interior angle at that corner is $180 - 121 = 59^\\circ$, and indeed $48 + 73 + 59 = 180^\\circ$."
+    },
+    {
+      "id": "geometry.triangles.s04",
+      "concepts": ["triangle-types"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A triangular shelf bracket has sides measuring 12 cm, 12 cm, and 9 cm. Classify it by its sides (equilateral, isosceles, or scalene).",
+      "steps": [
+        { "instruction": "How many of the three sides are equal? Then name the type (one word).", "answer": "isosceles", "accept": ["isoceles"], "hint": "Exactly two sides (the 12 cm pair) are equal." }
+      ],
+      "finalAnswer": { "value": "isosceles", "unit": "" },
+      "solutionNarrative": "Two sides are equal (12 cm and 12 cm) and the third differs, so the bracket is isosceles."
+    },
+    {
+      "id": "geometry.triangles.s05",
+      "concepts": ["triangle-types"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A triangular sail is isosceles. Its apex (top) angle measures $40^\\circ$, and the two base angles are equal. Find each base angle, then classify the sail by its angles (acute, right, or obtuse).",
+      "steps": [
+        { "instruction": "The two equal base angles share what's left after the apex. Subtract the apex from 180 (degrees).", "answer": "140", "accept": [], "hint": "180 - 40." },
+        { "instruction": "Split that equally between the two base angles. Each base angle is (degrees):", "answer": "70", "accept": [], "hint": "Divide 140 by 2." },
+        { "instruction": "All three angles (40, 70, 70) are under 90. Classify by angles (one word).", "answer": "acute", "accept": [], "hint": "No angle reaches 90 degrees." }
+      ],
+      "finalAnswer": { "value": "70", "unit": "degrees" },
+      "solutionNarrative": "The base angles share $180 - 40 = 140^\\circ$, so each is $70^\\circ$. Since all angles ($40, 70, 70$) are below $90^\\circ$, the sail is acute."
+    },
+    {
+      "id": "geometry.triangles.s06",
+      "concepts": ["triangle-types", "angle-sum"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A triangular garden bed has angles measuring $x$, $2x$, and $3x$ degrees. Find $x$, identify the largest angle, and classify the bed by its angles (acute, right, or obtuse).",
+      "steps": [
+        { "instruction": "The three angles sum to 180. Combine $x + 2x + 3x$ and write it equal to 180.", "answer": "6x = 180", "accept": ["6x=180"], "hint": "x + 2x + 3x = 6x." },
+        { "instruction": "Solve for $x$ (degrees).", "answer": "30", "accept": [], "hint": "Divide 180 by 6." },
+        { "instruction": "The largest angle is $3x$. What is it (degrees)?", "answer": "90", "accept": [], "hint": "3 times 30." },
+        { "instruction": "Since the largest angle is exactly 90, classify by angles (one word).", "answer": "right", "accept": [], "hint": "Exactly one 90-degree angle." }
+      ],
+      "finalAnswer": { "value": "right", "unit": "" },
+      "solutionNarrative": "$x + 2x + 3x = 6x = 180$, so $x = 30^\\circ$. The angles are $30^\\circ$, $60^\\circ$, $90^\\circ$; the $90^\\circ$ angle makes the bed a right triangle."
+    },
+    {
+      "id": "geometry.triangles.s07",
+      "concepts": ["triangle-inequality"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A builder has three beams measuring 6 ft, 8 ft, and 10 ft and wants to join them into a triangular frame. Can these three lengths form a triangle? (Answer yes or no.)",
+      "steps": [
+        { "instruction": "Add the two shorter beams (feet).", "answer": "14", "accept": [], "hint": "6 + 8." },
+        { "instruction": "Is that sum greater than the longest beam (10)? Answer yes or no.", "answer": "yes", "accept": [], "hint": "Compare 14 with 10." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The two shorter beams sum to $6 + 8 = 14$ ft, which exceeds the longest beam (10 ft), so they form a triangle."
+    },
+    {
+      "id": "geometry.triangles.s08",
+      "concepts": ["triangle-inequality"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A crew has three support struts measuring 4 m, 5 m, and 11 m. Can they be joined into a triangular brace? (Answer yes or no, after testing.)",
+      "steps": [
+        { "instruction": "Add the two shorter struts (meters).", "answer": "9", "accept": [], "hint": "4 + 5." },
+        { "instruction": "Is that sum greater than the longest strut (11)? Answer yes or no.", "answer": "no", "accept": [], "hint": "Compare 9 with 11." },
+        { "instruction": "So can these lengths form a triangle? Answer yes or no.", "answer": "no", "accept": [], "hint": "The triangle inequality fails, so they cannot close into a triangle." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The two shorter struts sum to $4 + 5 = 9$ m, which is less than the longest strut (11 m), so the inequality fails — they cannot form a triangle."
+    },
+    {
+      "id": "geometry.triangles.s09",
+      "concepts": ["triangle-inequality"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An engineer fixes two sides of a triangular bracket at 7 cm and 10 cm. The third side must be longer than the difference of these and shorter than their sum. Find the range of possible whole-number lengths for the third side.",
+      "steps": [
+        { "instruction": "Find the lower bound: the difference of the two sides (cm).", "answer": "3", "accept": [], "hint": "10 - 7." },
+        { "instruction": "Find the upper bound: the sum of the two sides (cm).", "answer": "17", "accept": [], "hint": "10 + 7." },
+        { "instruction": "The third side $c$ must be strictly between these. What is the smallest whole-number length allowed (cm)?", "answer": "4", "accept": [], "hint": "Strictly greater than 3 means the next whole number." },
+        { "instruction": "What is the largest whole-number length allowed (cm)?", "answer": "16", "accept": [], "hint": "Strictly less than 17 means the whole number just below it." }
+      ],
+      "finalAnswer": { "value": "4 to 16", "unit": "cm" },
+      "solutionNarrative": "The third side must satisfy $|10 - 7| < c < 10 + 7$, i.e. $3 < c < 17$. The whole-number lengths run from 4 cm up to 16 cm."
+    },
+    {
+      "id": "geometry.triangles.s10",
+      "concepts": ["perimeter-and-basic-area"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A triangular garden plot has sides of 9 m, 12 m, and 15 m. How many meters of fencing are needed to enclose it (the perimeter)?",
+      "steps": [
+        { "instruction": "Add the three side lengths (meters).", "answer": "36", "accept": [], "hint": "9 + 12 + 15." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "meters" },
+      "solutionNarrative": "Perimeter is the sum of the sides: $9 + 12 + 15 = 36$ m of fencing."
+    },
+    {
+      "id": "geometry.triangles.s11",
+      "concepts": ["perimeter-and-basic-area"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A triangular shade sail has a base of 8 ft and a perpendicular height of 5 ft. What is its area, used to estimate the fabric needed? (Answer in square feet.)",
+      "steps": [
+        { "instruction": "Multiply base times height (8 × 5).", "answer": "40", "accept": [], "hint": "8 × 5 = 40." },
+        { "instruction": "Take half of that for the area (square feet).", "answer": "20", "accept": [], "hint": "Area = (1/2) × base × height." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "square feet" },
+      "solutionNarrative": "Area $= \\tfrac{1}{2}(8)(5) = \\tfrac{1}{2}(40) = 20$ square feet of fabric."
+    },
+    {
+      "id": "geometry.triangles.s12",
+      "concepts": ["perimeter-and-basic-area"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A triangular garden bed has a base of 14 ft and a perpendicular height of 9 ft. Mulch covers the whole bed at a rate of one bag per 10 square feet. First find the area, then the number of bags needed (rounding up to a whole bag).",
+      "steps": [
+        { "instruction": "Compute the area: half of base times height, $\\tfrac{1}{2}(14)(9)$ (square feet).", "answer": "63", "accept": [], "hint": "14 × 9 = 126, then halve it." },
+        { "instruction": "Divide the area by 10 sq ft per bag, then round up to a whole bag. How many bags?", "answer": "7", "accept": [], "hint": "63 ÷ 10 = 6.3, round up." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "bags" },
+      "solutionNarrative": "Area $= \\tfrac{1}{2}(14)(9) = 63$ sq ft. At 10 sq ft per bag, $63 / 10 = 6.3$, which rounds up to 7 bags."
+    },
+    {
+      "id": "geometry.triangles.s13",
+      "concepts": ["perimeter-and-basic-area", "triangle-types"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An isosceles triangular sign has two equal sides of 13 in and a base of 10 in. The perpendicular height from the base to the apex is 12 in. Find both the perimeter and the area of the sign. (Perimeter in inches, area in square inches.)",
+      "steps": [
+        { "instruction": "Perimeter: add the three sides, 13 + 13 + 10 (inches).", "answer": "36", "accept": [], "hint": "Two equal sides plus the base." },
+        { "instruction": "Area: compute base times height, 10 × 12 (square inches before halving).", "answer": "120", "accept": [], "hint": "10 × 12 = 120." },
+        { "instruction": "Halve that product for the area (square inches).", "answer": "60", "accept": [], "hint": "Area = (1/2) × 10 × 12." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "square inches" },
+      "solutionNarrative": "Perimeter $= 13 + 13 + 10 = 36$ in. Area $= \\tfrac{1}{2}(10)(12) = 60$ square inches."
+    },
+    {
+      "id": "geometry.triangles.s14",
+      "concepts": ["angle-sum"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two angles of a triangle are $90^\\circ$ and $35^\\circ$. Find the third angle. (Answer in degrees.)",
+      "steps": [
+        { "instruction": "Add the two known angles (degrees).", "answer": "125", "accept": [], "hint": "90 + 35." },
+        { "instruction": "Subtract from 180 to get the third angle (degrees).", "answer": "55", "accept": [], "hint": "180 - 125." }
+      ],
+      "finalAnswer": { "value": "55", "unit": "degrees" },
+      "solutionNarrative": "The angles sum to $180^\\circ$: $180 - 90 - 35 = 55^\\circ$."
+    },
+    {
+      "id": "geometry.triangles.s15",
+      "concepts": ["triangle-types"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A triangle has all three sides different and one angle measuring $110^\\circ$. Give its classification by sides and by angles (two words).",
+      "steps": [
+        { "instruction": "All three sides differ. Name the side classification (one word).", "answer": "scalene", "accept": [], "hint": "No two sides are equal." },
+        { "instruction": "One angle exceeds 90 degrees. Name the angle classification (one word).", "answer": "obtuse", "accept": [], "hint": "An angle over 90 degrees is obtuse." }
+      ],
+      "finalAnswer": { "value": "scalene obtuse", "unit": "" },
+      "solutionNarrative": "Three unequal sides make it scalene; an angle of $110^\\circ$ (over $90^\\circ$) makes it obtuse — a scalene obtuse triangle."
+    },
+    {
+      "id": "geometry.triangles.s16",
+      "concepts": ["triangle-inequality"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Can lengths 2, 3, and 5 form a triangle? (Answer yes or no.)",
+      "steps": [
+        { "instruction": "Add the two shorter lengths.", "answer": "5", "accept": [], "hint": "2 + 3." },
+        { "instruction": "Is that sum greater than the longest length (5)? Answer yes or no.", "answer": "no", "accept": [], "hint": "5 is not greater than 5; it must be strictly greater." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$2 + 3 = 5$, which is not strictly greater than the longest side (5), so the lengths cannot form a triangle (they lie flat)."
+    },
+    {
+      "id": "geometry.triangles.s17",
+      "concepts": ["perimeter-and-basic-area"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A triangle has a base of 7 units and an area of 21 square units. Find its perpendicular height.",
+      "steps": [
+        { "instruction": "Start from Area $= \\tfrac{1}{2} \\, b \\, h$. With area 21 and base 7, write $\\tfrac{1}{2}(7)h = 21$, then multiply both sides by 2.", "answer": "7h = 42", "accept": ["7h=42"], "hint": "Doubling both sides clears the 1/2." },
+        { "instruction": "Solve for $h$ (units).", "answer": "6", "accept": [], "hint": "Divide 42 by 7." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "units" },
+      "solutionNarrative": "$\\tfrac{1}{2}(7)h = 21$ gives $7h = 42$, so $h = 6$ units."
+    }
+  ]
+}

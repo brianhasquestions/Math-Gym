@@ -1,0 +1,266 @@
+{
+  "id": "algebra-2.radicals",
+  "subject": "algebra-2",
+  "title": "Radical Expressions and Equations",
+  "prerequisites": [],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "evaluate-roots",
+      "label": "Evaluating roots",
+      "microLesson": "A square root asks: *what number, squared, gives this?* Since $7 \\times 7 = 49$, we have $\\sqrt{49} = 7$. A cube root asks for a number multiplied by itself three times: $\\sqrt[3]{27} = 3$ because $3^3 = 27$. Many roots come out as clean whole numbers or decimals — $\\sqrt{0.25} = 0.5$. When a root *isn't* clean, like $\\sqrt{20} \\approx 4.5$, you estimate it as a decimal."
+    },
+    {
+      "id": "simplify-radicals",
+      "label": "Simplifying radicals",
+      "microLesson": "A radical is **simplified** when no perfect-square factor is left under the root. The trick: pull out perfect squares. $\\sqrt{144} = 12$ because 144 is a perfect square. When the radicand isn't a perfect square, split it: $\\sqrt{50} = \\sqrt{25 \\times 2} = 5\\sqrt{2}$, since $\\sqrt{25} = 5$ comes out and the 2 stays in. The goal is the smallest possible number left under the root."
+    },
+    {
+      "id": "solve-radical-equations",
+      "label": "Solving radical equations",
+      "microLesson": "To free a variable trapped under a root, **isolate the radical**, then **square both sides** to cancel it. $\\sqrt{x} = 6$ becomes $x = 36$. From $\\sqrt{x - 2} = 5$, square to get $x - 2 = 25$, so $x = 27$. Squaring can create **extraneous** (fake) solutions, so always substitute your answer back into the *original* equation. If it doesn't check, the equation has **no solution**."
+    },
+    {
+      "id": "radical-applications",
+      "label": "Radicals in the real world",
+      "microLesson": "Square roots appear whenever something is reversed from an area or a square law. The straight-line distance between two points uses $d = \\sqrt{(\\Delta x)^2 + (\\Delta y)^2}$. A pendulum's swing time is $T = 2\\pi\\sqrt{L/g}$. Free-fall time from height $h$ is $t = \\sqrt{2h/g}$. Each gives a real, roundable number you can act on."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Roots: running squaring backwards\n\nSquaring a number is everywhere in the physical world — areas, energy, the way gravity and light fall off with distance. A **radical** (a root) is the undo button. If squaring takes 7 to 49, the **square root** takes 49 back to 7:\n\n$$\\sqrt{49} = 7 \\quad\\text{because}\\quad 7^2 = 49.$$\n\nThe small number tucked into the notch, the **index**, says which power to undo. A **cube root** undoes cubing: $\\sqrt[3]{27} = 3$ because $3^3 = 27$. With no index written, it's always a square root.\n\nThe quantity under the root is the **radicand**. Many radicands are *perfect* powers and give clean answers — $\\sqrt{144} = 12$, $\\sqrt{0.25} = 0.5$, $\\sqrt[3]{64} = 4$. Most are not, and then the honest answer is a decimal estimate: $\\sqrt{20} \\approx 4.5$. Knowing the nearest perfect squares ($16$ and $25$) tells you the answer sits between 4 and 5 before you ever touch a calculator.\n\n## Simplifying: pull out the perfect squares\n\nA radical is **simplified** when nothing under the root is a hidden perfect square. The move is to factor out the largest perfect square you can:\n\n$$\\sqrt{50} = \\sqrt{25 \\times 2} = \\sqrt{25}\\,\\sqrt{2} = 5\\sqrt{2}.$$\n\nThe 25 escapes as a 5; the 2 has no square factor, so it stays. If the radicand *is* a perfect square, everything comes out and you're left with a plain integer — that's the cleanest case and the one to hope for.\n\n## Solving radical equations: isolate, then square\n\nWhen the unknown is trapped under a root, the strategy is two steps:\n\n1. **Isolate the radical** — get the root term alone on one side.\n2. **Square both sides** — squaring and square-rooting cancel, freeing the variable.\n\n### Worked example\n\nSolve $\\sqrt{x - 2} = 5$.\n\n- The radical is already isolated.\n- Square both sides: $x - 2 = 25$.\n- Solve: $x = 27$.\n\n**Always check**, because squaring can manufacture fake answers. Substitute back: $\\sqrt{27 - 2} = \\sqrt{25} = 5$. ✓\n\n## Watch for extraneous roots\n\nSquaring is not perfectly reversible — it erases minus signs. That means a solved value can satisfy the *squared* equation but fail the *original*. Consider $\\sqrt{x} = -3$. Squaring gives $x = 9$, but $\\sqrt{9} = +3$, not $-3$. The check fails, so the real answer is **no solution**. A square root (the principal root) is never negative, so any equation setting it equal to a negative number is doomed from the start. Checking is the only thing that catches this — it is never optional."
+  },
+  "application": {
+    "summary": "Square roots are the undo button for square laws, which run through physics and geometry. Straight-line distance, the swing time of a pendulum, the time an object takes to fall, and the speed hidden inside a kinetic-energy figure are all recovered by taking a root — each producing a concrete number you can round and use.",
+    "domains": ["physics", "engineering", "navigation", "everyday life"],
+    "workedExample": "**How long does a pendulum take to swing?**\n\nA grandfather clock's pendulum is $L = 0.99$ m long. The period (one full back-and-forth) is\n\n$$T = 2\\pi\\sqrt{\\frac{L}{g}}, \\qquad g = 9.8\\ \\text{m/s}^2.$$\n\nWork inside-out. The fraction is $0.99 / 9.8 \\approx 0.101$. Its square root is $\\sqrt{0.101} \\approx 0.318$. Multiply by $2\\pi \\approx 6.283$:\n\n$$T \\approx 6.283 \\times 0.318 \\approx 2.0\\ \\text{seconds}.$$\n\nThat 2-second swing is exactly why a 1-meter pendulum keeps such famous time. The same square-root structure tells a diver the fall time from a board, a sailor the distance to a landmark, and an engineer the speed locked inside a moving object's energy — all by undoing a square.",
+    "domainNotes": [
+      "**Physics:** pendulum period $T = 2\\pi\\sqrt{L/g}$ and free-fall time $t = \\sqrt{2h/g}$ both isolate a time by taking a root.",
+      "**Navigation/geometry:** straight-line distance $d = \\sqrt{(\\Delta x)^2 + (\\Delta y)^2}$ turns two coordinate gaps into one distance.",
+      "**Engineering:** kinetic energy $E = \\tfrac{1}{2}mv^2$ rearranges to $v = \\sqrt{2E/m}$ to recover a speed from an energy.",
+      "**Everyday life:** estimating how far you can see to the horizon, or how fast a fallen object was going on impact."
+    ]
+  },
+  "generators": ["root-eval-v1", "simplify-radical-v1", "solve-radical-eq-v1", "radical-area-v1"],
+  "problems": [
+    {
+      "id": "algebra-2.radicals.s01",
+      "concepts": ["evaluate-roots"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate: $\\sqrt{49}$",
+      "steps": [
+        { "instruction": "What number times itself gives 49?", "answer": "7", "accept": ["7"], "hint": "$7 \\times 7 = 49$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "Since $7^2 = 49$, $\\sqrt{49} = 7$."
+    },
+    {
+      "id": "algebra-2.radicals.s02",
+      "concepts": ["evaluate-roots"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate the cube root: $\\sqrt[3]{27}$",
+      "steps": [
+        { "instruction": "What number multiplied by itself three times gives 27?", "answer": "3", "accept": ["3"], "hint": "$3 \\times 3 \\times 3 = 27$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Since $3^3 = 27$, $\\sqrt[3]{27} = 3$."
+    },
+    {
+      "id": "algebra-2.radicals.s03",
+      "concepts": ["evaluate-roots"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate the decimal square root: $\\sqrt{0.25}$",
+      "steps": [
+        { "instruction": "What number, squared, gives 0.25?", "answer": "0.5", "accept": ["0.5", ".5", "1/2"], "hint": "$0.5 \\times 0.5 = 0.25$." }
+      ],
+      "finalAnswer": { "value": "0.5", "unit": "" },
+      "solutionNarrative": "Since $0.5^2 = 0.25$, $\\sqrt{0.25} = 0.5$."
+    },
+    {
+      "id": "algebra-2.radicals.s04",
+      "concepts": ["evaluate-roots"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Estimate $\\sqrt{20}$ rounded to 1 decimal place.",
+      "steps": [
+        { "instruction": "Which two consecutive whole numbers does $\\sqrt{20}$ fall between? Give the smaller one.", "answer": "4", "accept": ["4"], "hint": "$4^2 = 16$ and $5^2 = 25$, and 20 is between them." },
+        { "instruction": "Now give $\\sqrt{20}$ rounded to 1 decimal place.", "answer": "4.5", "accept": ["4.5"], "hint": "$4.4^2 = 19.36$ and $4.5^2 = 20.25$, so it rounds to 4.5." }
+      ],
+      "finalAnswer": { "value": "4.5", "unit": "" },
+      "solutionNarrative": "20 sits between $16$ and $25$, so $\\sqrt{20}$ is between 4 and 5. Since $4.5^2 = 20.25 \\approx 20$, $\\sqrt{20} \\approx 4.5$."
+    },
+    {
+      "id": "algebra-2.radicals.s05",
+      "concepts": ["simplify-radicals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Simplify: $\\sqrt{144}$",
+      "steps": [
+        { "instruction": "144 is a perfect square. What is its square root?", "answer": "12", "accept": ["12"], "hint": "$12 \\times 12 = 144$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "144 is a perfect square: $12^2 = 144$, so $\\sqrt{144} = 12$."
+    },
+    {
+      "id": "algebra-2.radicals.s06",
+      "concepts": ["simplify-radicals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Simplify $\\sqrt{50}$ to the form $a\\sqrt{b}$. Type your answer exactly as a number, then \\sqrt, then the radicand in braces — for example 3\\sqrt{2}.",
+      "steps": [
+        { "instruction": "Find the largest perfect-square factor of 50.", "answer": "25", "accept": ["25"], "hint": "$50 = 25 \\times 2$, and 25 is a perfect square." },
+        { "instruction": "Write the simplified radical in the form a\\sqrt{b}.", "answer": "5\\sqrt{2}", "accept": [], "hint": "$\\sqrt{25} = 5$ comes out; the 2 stays under the root." }
+      ],
+      "finalAnswer": { "value": "5\\sqrt{2}", "unit": "" },
+      "solutionNarrative": "$\\sqrt{50} = \\sqrt{25 \\times 2} = 5\\sqrt{2}$."
+    },
+    {
+      "id": "algebra-2.radicals.s07",
+      "concepts": ["simplify-radicals", "evaluate-roots"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A square patio has an area of 196 square feet. How long is each side?",
+      "steps": [
+        { "instruction": "Side length is the square root of the area. Set up the expression.", "answer": "\\sqrt{196}", "accept": ["sqrt(196)", "\\sqrt{196}"], "hint": "For a square, side $= \\sqrt{\\text{area}}$." },
+        { "instruction": "Evaluate $\\sqrt{196}$.", "answer": "14", "accept": ["14"], "hint": "$14 \\times 14 = 196$." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "feet" },
+      "solutionNarrative": "Side $= \\sqrt{196} = 14$ feet, since $14^2 = 196$."
+    },
+    {
+      "id": "algebra-2.radicals.s08",
+      "concepts": ["solve-radical-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\sqrt{x} = 6$",
+      "steps": [
+        { "instruction": "Square both sides to free $x$.", "answer": "x = 36", "accept": ["x=36", "36"], "hint": "Squaring undoes the square root: $(\\sqrt{x})^2 = x$ and $6^2 = 36$." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "" },
+      "solutionNarrative": "Square both sides: $x = 36$. Check: $\\sqrt{36} = 6$. ✓"
+    },
+    {
+      "id": "algebra-2.radicals.s09",
+      "concepts": ["solve-radical-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\sqrt{x - 2} = 5$",
+      "steps": [
+        { "instruction": "Square both sides.", "answer": "x - 2 = 25", "accept": ["x-2=25"], "hint": "$(\\sqrt{x-2})^2 = x - 2$ and $5^2 = 25$." },
+        { "instruction": "Solve for $x$.", "answer": "x = 27", "accept": ["x=27", "27"], "hint": "Add 2 to both sides." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "" },
+      "solutionNarrative": "Square both sides: $x - 2 = 25$, so $x = 27$. Check: $\\sqrt{27 - 2} = \\sqrt{25} = 5$. ✓"
+    },
+    {
+      "id": "algebra-2.radicals.s10",
+      "concepts": ["solve-radical-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\sqrt{2x + 1} = 7$",
+      "steps": [
+        { "instruction": "Square both sides.", "answer": "2x + 1 = 49", "accept": ["2x+1=49"], "hint": "$7^2 = 49$." },
+        { "instruction": "Subtract 1 from both sides.", "answer": "2x = 48", "accept": ["2x=48"], "hint": "Undo the +1." },
+        { "instruction": "Solve for $x$.", "answer": "x = 24", "accept": ["x=24", "24"], "hint": "Divide both sides by 2." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "Square: $2x + 1 = 49$. Subtract 1: $2x = 48$. Divide by 2: $x = 24$. Check: $\\sqrt{2(24)+1} = \\sqrt{49} = 7$. ✓"
+    },
+    {
+      "id": "algebra-2.radicals.s11",
+      "concepts": ["solve-radical-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\sqrt{x} + 3 = 8$",
+      "steps": [
+        { "instruction": "Isolate the radical by subtracting 3 from both sides.", "answer": "\\sqrt{x} = 5", "accept": ["sqrt(x)=5", "\\sqrt{x}=5"], "hint": "Get the root term alone first, before squaring." },
+        { "instruction": "Square both sides to solve for $x$.", "answer": "x = 25", "accept": ["x=25", "25"], "hint": "$5^2 = 25$." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "" },
+      "solutionNarrative": "Isolate first: $\\sqrt{x} = 5$. Square: $x = 25$. Check: $\\sqrt{25} + 3 = 5 + 3 = 8$. ✓"
+    },
+    {
+      "id": "algebra-2.radicals.s12",
+      "concepts": ["solve-radical-equations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve for $x$:  $\\sqrt{x} = -3$. Watch for an extraneous result.",
+      "steps": [
+        { "instruction": "Square both sides to get a candidate value.", "answer": "x = 9", "accept": ["x=9", "9"], "hint": "$(-3)^2 = 9$." },
+        { "instruction": "Check $x = 9$ in the ORIGINAL equation: does $\\sqrt{9} = -3$? Type 'yes' or 'no'.", "answer": "no", "accept": ["no", "n"], "hint": "The principal square root $\\sqrt{9} = +3$, not $-3$." },
+        { "instruction": "So how many solutions does the equation have? Type a number or 'no solution'.", "answer": "no solution", "accept": ["no solution", "none", "0", "zero"], "hint": "A square root can never equal a negative number." }
+      ],
+      "finalAnswer": { "value": "no solution", "unit": "" },
+      "solutionNarrative": "Squaring gives $x = 9$, but $\\sqrt{9} = 3 \\ne -3$, so 9 is extraneous. A principal square root is never negative, so there is no solution."
+    },
+    {
+      "id": "algebra-2.radicals.s13",
+      "concepts": ["solve-radical-equations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A safety guideline says a square play area must be sized so that $\\sqrt{A - 19} = 9$, where $A$ is its area in square meters. Find the required area $A$.",
+      "steps": [
+        { "instruction": "Square both sides.", "answer": "A - 19 = 81", "accept": ["A-19=81"], "hint": "$9^2 = 81$." },
+        { "instruction": "Solve for $A$.", "answer": "A = 100", "accept": ["A=100", "100"], "hint": "Add 19 to both sides." }
+      ],
+      "finalAnswer": { "value": "100", "unit": "square meters" },
+      "solutionNarrative": "Square: $A - 19 = 81$, so $A = 100$. Check: $\\sqrt{100 - 19} = \\sqrt{81} = 9$. ✓"
+    },
+    {
+      "id": "algebra-2.radicals.s14",
+      "concepts": ["radical-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "On a grid, two sensors sit at points 3 units apart horizontally and 4 units apart vertically. The straight-line distance is $d = \\sqrt{3^2 + 4^2}$. Find $d$.",
+      "steps": [
+        { "instruction": "Compute the sum under the root, $3^2 + 4^2$.", "answer": "25", "accept": ["25"], "hint": "$9 + 16 = 25$." },
+        { "instruction": "Take the square root to find $d$.", "answer": "5", "accept": ["5"], "hint": "$\\sqrt{25} = 5$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "units" },
+      "solutionNarrative": "$d = \\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$ units."
+    },
+    {
+      "id": "algebra-2.radicals.s15",
+      "concepts": ["radical-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An object is dropped from a height of $h = 44.1$ m. Free-fall time is $t = \\sqrt{2h/g}$ with $g = 9.8\\ \\text{m/s}^2$. Find $t$ in seconds.",
+      "steps": [
+        { "instruction": "Compute the value inside the root, $2h/g = 2(44.1)/9.8$.", "answer": "9", "accept": ["9"], "hint": "$2 \\times 44.1 = 88.2$, and $88.2 / 9.8 = 9$." },
+        { "instruction": "Take the square root to find $t$ (seconds).", "answer": "3", "accept": ["3"], "hint": "$\\sqrt{9} = 3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "seconds" },
+      "solutionNarrative": "$t = \\sqrt{2(44.1)/9.8} = \\sqrt{9} = 3$ seconds."
+    },
+    {
+      "id": "algebra-2.radicals.s16",
+      "concepts": ["radical-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 2 kg cart has kinetic energy $E = 36$ joules. Its speed is $v = \\sqrt{2E/m}$. Find $v$ in m/s.",
+      "steps": [
+        { "instruction": "Compute the value inside the root, $2E/m = 2(36)/2$.", "answer": "36", "accept": ["36"], "hint": "$2 \\times 36 = 72$, and $72 / 2 = 36$." },
+        { "instruction": "Take the square root to find $v$ (m/s).", "answer": "6", "accept": ["6"], "hint": "$\\sqrt{36} = 6$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "m/s" },
+      "solutionNarrative": "$v = \\sqrt{2(36)/2} = \\sqrt{36} = 6$ m/s."
+    },
+    {
+      "id": "algebra-2.radicals.s17",
+      "concepts": ["radical-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A pendulum of length $L = 2.45$ m has period $T = 2\\pi\\sqrt{L/g}$ with $g = 9.8\\ \\text{m/s}^2$. Find $T$ rounded to 1 decimal place. (Use $2\\pi \\approx 6.283$.)",
+      "steps": [
+        { "instruction": "Compute the fraction inside the root, $L/g = 2.45/9.8$.", "answer": "0.25", "accept": ["0.25", ".25", "1/4"], "hint": "$2.45 / 9.8 = 0.25$." },
+        { "instruction": "Take the square root of 0.25.", "answer": "0.5", "accept": ["0.5", ".5", "1/2"], "hint": "$\\sqrt{0.25} = 0.5$." },
+        { "instruction": "Multiply by $2\\pi \\approx 6.283$ and round to 1 decimal place to get $T$ (seconds).", "answer": "3.1", "accept": ["3.1"], "hint": "$6.283 \\times 0.5 = 3.1415$, which rounds to 3.1." }
+      ],
+      "finalAnswer": { "value": "3.1", "unit": "seconds" },
+      "solutionNarrative": "$L/g = 0.25$; $\\sqrt{0.25} = 0.5$; $T = 6.283 \\times 0.5 \\approx 3.14$, which rounds to 3.1 seconds."
+    }
+  ]
+}

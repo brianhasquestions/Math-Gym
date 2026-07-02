@@ -1,0 +1,178 @@
+{
+  "id": "algebra.systems-linear-equations",
+  "subject": "algebra",
+  "title": "Systems of Linear Equations (Two Variables)",
+  "prerequisites": ["algebra.linear-equations"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "setup-system",
+      "label": "Setting up a system",
+      "microLesson": "When a problem has two unknowns, you need two equations. Name each unknown with a letter ($x$ and $y$), then write one equation for each separate fact the problem gives you. A ticket problem gives a *count* fact (total tickets) and a *money* fact (total revenue) — that's your two equations: $x + y = \\text{total}$ and $(\\text{price}_x)x + (\\text{price}_y)y = \\text{revenue}$."
+    },
+    {
+      "id": "substitution",
+      "label": "Solving by substitution",
+      "microLesson": "Substitution works best when one equation already gives a variable alone (like $y = 2x + 1$). Take that expression and plug it into the *other* equation everywhere that variable appears. Now you have one equation in one variable — solve it, then back-substitute to get the second variable. Example: into $3x + y = 11$ put $y = 2x+1$ to get $3x + (2x+1) = 11$, so $5x + 1 = 11$, $x = 2$, then $y = 5$."
+    },
+    {
+      "id": "elimination",
+      "label": "Solving by elimination",
+      "microLesson": "Elimination cancels a variable by adding or subtracting the equations. If one equation has $+3y$ and the other has $-3y$, adding them makes $y$ vanish. If the coefficients don't match, multiply an entire equation by a number first to force a match. Once a variable is eliminated you have one equation in one variable — solve and back-substitute."
+    },
+    {
+      "id": "classify-solution",
+      "label": "Classifying the solution",
+      "microLesson": "Two lines can meet once, never, or everywhere. **One solution:** the lines cross at a single point (different slopes). **No solution:** the lines are parallel — same slope, different intercept; algebraically the variables cancel and you get a false statement like $0 = 5$. **Infinitely many:** the two equations are the same line; the variables cancel and you get a true statement like $0 = 0$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Two unknowns need two facts\n\nA single equation like $4x = 40$ pins down one unknown. But the real world is full of problems with **two** unknowns at once: how many adult vs. child tickets, how much of a cheap coffee vs. an expensive one, how fast the boat goes vs. how fast the current pushes it. To solve for two unknowns you need **two independent equations** — together they're called a *system*:\n\n$$\\begin{cases} 2x + y = 10 \\\\ x - y = 2 \\end{cases}$$\n\nA **solution** is a pair $(x, y)$ that makes *both* equations true at the same time. Graphically, each equation is a line, and the solution is the point where the lines cross.\n\n## Method 1: Substitution\n\nUse this when one equation already has a variable by itself (or is easy to get that way). Solve one equation for a variable, then **substitute** that expression into the other equation so only one variable is left.\n\nGiven $y = 2x + 1$ and $3x + y = 11$, replace $y$ in the second equation:\n\n- $3x + (2x + 1) = 11$\n- $5x + 1 = 11$, so $5x = 10$ and $x = 2$.\n- Back-substitute: $y = 2(2) + 1 = 5$. Solution: $(2, 5)$.\n\n## Method 2: Elimination\n\nUse this when the equations are lined up as $ax + by = c$. **Add or subtract** the equations to cancel one variable. If the coefficients of a variable are opposites, adding kills it immediately:\n\n$$\\begin{cases} 2x + y = 10 \\\\ x - y = 2 \\end{cases}$$\n\nThe $+y$ and $-y$ are opposites, so adding the two equations gives $3x = 12$, hence $x = 4$. Substitute back into either equation: $4 - y = 2$, so $y = 2$. Solution: $(4, 2)$.\n\nDraw both equations and the algebra becomes geometry: each is a line, and $(4, 2)$ is the one point sitting on both.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-1, 8], \"yRange\": [-3, 12], \"grid\": true, \"curves\": [ { \"fn\": \"10-2*x\", \"label\": \"2x+y=10\", \"color\": \"accent\", \"labelAt\": 1 }, { \"fn\": \"x-2\", \"label\": \"x-y=2\", \"color\": \"success\", \"labelAt\": 6.3 } ], \"points\": [ { \"x\": 4, \"y\": 2, \"label\": \"(4,2)\", \"color\": \"warn\" } ], \"caption\": \"2x + y = 10 and x − y = 2 cross exactly once — at the solution (4, 2)\" }\n```\n\nIf the coefficients don't line up, multiply an entire equation by a constant first to force a match — that's the only extra move.\n\n## The three outcomes (and what they mean)\n\nJust like single equations, systems have three cases — and each tells a real story:\n\n- **Exactly one solution:** the lines cross once. The two scenarios agree at exactly one point.\n- **No solution:** the lines are parallel. When you eliminate, *both* variables vanish and you're left with a falsehood like $0 = 7$. The scenarios can never both be true.\n- **Infinitely many solutions:** the two equations describe the same line. The variables vanish and you get a truth like $0 = 0$. The two facts were really one fact in disguise.\n\nThe 'no solution' case is easiest to believe once you see it — two lines with the same slope never get any closer:\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-4, 4], \"yRange\": [-7, 9], \"grid\": true, \"curves\": [ { \"fn\": \"2*x+3\", \"label\": \"y=2x+3\", \"color\": \"accent\", \"labelAt\": 1.8 }, { \"fn\": \"2*x-1\", \"label\": \"y=2x-1\", \"color\": \"error\", \"labelAt\": 2.9 } ], \"caption\": \"Same slope 2, different intercepts: parallel lines that never cross — no solution\" }\n```\n\nKnowing which case you're in is often the whole point: \"is there a price that makes these two plans break even?\" might have one answer, no answer, or always."
+  },
+  "application": {
+    "summary": "Any time two quantities trade off against each other under two constraints, you have a system: ticket/seat mixes, blending materials to a target cost or concentration, splitting an investment for a target return, or separating a speed from the current or wind that affects it.",
+    "domains": ["business", "chemistry", "personal finance", "engineering"],
+    "workedExample": "**Blending to hit a target cost.**\n\nA roaster wants 50 lb of a house blend that sells at \\$9/lb. They'll mix a premium bean worth \\$12/lb with a basic bean worth \\$7/lb. How many pounds of each?\n\nLet $x$ = pounds of premium and $y$ = pounds of basic. Two facts give two equations — a *weight* fact and a *value* fact:\n\n$$\\begin{cases} x + y = 50 \\\\ 12x + 7y = 9 \\cdot 50 \\end{cases}$$\n\nThe second equation is $12x + 7y = 450$. From the first, $y = 50 - x$. Substitute: $12x + 7(50 - x) = 450$, so $5x + 350 = 450$, giving $x = 20$ and $y = 30$.\n\n**Mix 20 lb of premium with 30 lb of basic.** The exact same weight-and-value structure sizes a stock portfolio to a target yield, doses two IV solutions to a target concentration, or alloys two metals to a target purity.",
+    "domainNotes": [
+      "**Business:** product mix, ticket pricing, and break-even between two pricing plans with different fixed and variable parts.",
+      "**Chemistry / pharmacy:** mixing two solutions of known concentration to hit a target.",
+      "**Finance:** splitting money between two accounts to reach a target total return.",
+      "**Engineering / physics:** separating a vehicle's own speed from the wind or current using upstream/downstream times."
+    ]
+  },
+  "generators": ["system-setup-v1", "system-substitution-v1", "system-elimination-v1"],
+  "problems": [
+    {
+      "id": "algebra.systems-linear-equations.s01",
+      "concepts": ["setup-system"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two numbers add up to 20, and one is 4 more than the other. Set up a system using $x$ (the larger) and $y$ (the smaller).",
+      "steps": [
+        { "instruction": "Write an equation for the two numbers adding to 20.", "answer": "x + y = 20", "accept": ["y + x = 20"], "hint": "Their sum is 20." },
+        { "instruction": "Write an equation saying the larger is 4 more than the smaller.", "answer": "x = y + 4", "accept": ["x - y = 4"], "hint": "Larger equals smaller plus 4." }
+      ],
+      "finalAnswer": { "value": "x + y = 20; x = y + 4", "unit": "" },
+      "solutionNarrative": "The two facts become $x + y = 20$ and $x = y + 4$. (Solving them gives $x = 12$, $y = 8$.)"
+    },
+    {
+      "id": "algebra.systems-linear-equations.s02",
+      "concepts": ["substitution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve by substitution: $\\begin{cases} y = 3x - 2 \\\\ 2x + y = 13 \\end{cases}$",
+      "steps": [
+        { "instruction": "Substitute $y = 3x - 2$ into the second equation and combine to the form $(\\text{number})x = (\\text{number})$.", "answer": "5x = 15", "accept": ["15 = 5x"], "hint": "$2x + (3x - 2) = 13$, so combine the $x$ terms and move the constant." },
+        { "instruction": "Solve for $x$.", "answer": "x = 3", "accept": ["3"], "hint": "Divide by 5." },
+        { "instruction": "Find $y$ using $y = 3x - 2$.", "answer": "y = 7", "accept": ["7"], "hint": "Plug in $x = 3$." },
+        { "instruction": "Write the solution as an ordered pair.", "answer": "(3, 7)", "accept": ["x=3, y=7", "3,7"], "hint": "(x, y)." }
+      ],
+      "finalAnswer": { "value": "(3, 7)", "unit": "" },
+      "solutionNarrative": "Substituting gives $5x = 15$, so $x = 3$ and $y = 7$. Solution: $(3, 7)$."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s03",
+      "concepts": ["elimination"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve by elimination: $\\begin{cases} 3x + 2y = 16 \\\\ x - 2y = 0 \\end{cases}$",
+      "steps": [
+        { "instruction": "The $y$ terms are opposites. Add the equations to eliminate $y$.", "answer": "4x = 16", "accept": ["16 = 4x"], "hint": "$+2y$ and $-2y$ cancel; add the $x$ terms and the constants." },
+        { "instruction": "Solve for $x$.", "answer": "x = 4", "accept": ["4"], "hint": "Divide by 4." },
+        { "instruction": "Substitute $x = 4$ into $x - 2y = 0$ to find $y$.", "answer": "y = 2", "accept": ["2"], "hint": "$4 - 2y = 0$." },
+        { "instruction": "Write the solution as an ordered pair.", "answer": "(4, 2)", "accept": ["x=4, y=2", "4,2"], "hint": "(x, y)." }
+      ],
+      "finalAnswer": { "value": "(4, 2)", "unit": "" },
+      "solutionNarrative": "Adding cancels $y$: $4x = 16$, so $x = 4$, then $y = 2$. Solution: $(4, 2)$."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s04",
+      "concepts": ["elimination"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve by elimination (you'll need to scale a row first): $\\begin{cases} 2x + 3y = 12 \\\\ x + y = 5 \\end{cases}$",
+      "steps": [
+        { "instruction": "Multiply the second equation by 2 so the $x$ terms match the first. Write the new second equation.", "answer": "2x + 2y = 10", "accept": ["2x+2y=10"], "hint": "Multiply every term of $x + y = 5$ by 2." },
+        { "instruction": "Subtract the new equation from the first to eliminate $x$. Write the result.", "answer": "y = 2", "accept": ["2"], "hint": "$(2x + 3y) - (2x + 2y) = 12 - 10$." },
+        { "instruction": "Substitute $y = 2$ into $x + y = 5$ to find $x$.", "answer": "x = 3", "accept": ["3"], "hint": "$x + 2 = 5$." },
+        { "instruction": "Write the solution as an ordered pair.", "answer": "(3, 2)", "accept": ["x=3, y=2", "3,2"], "hint": "(x, y)." }
+      ],
+      "finalAnswer": { "value": "(3, 2)", "unit": "" },
+      "solutionNarrative": "Scale row 2 to $2x + 2y = 10$, subtract to get $y = 2$, then $x = 3$. Solution: $(3, 2)$."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s05",
+      "concepts": ["classify-solution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "How many solutions does this system have? $\\begin{cases} y = 2x + 3 \\\\ y = 2x - 1 \\end{cases}$",
+      "steps": [
+        { "instruction": "Set the two right-hand sides equal (both equal $y$) and simplify. What equation results?", "answer": "3 = -1", "accept": ["2x+3=2x-1", "0=-4", "-4=0"], "hint": "$2x + 3 = 2x - 1$. Subtract $2x$ from both sides." },
+        { "instruction": "Is that statement true or false? Type 'true' or 'false'.", "answer": "false", "accept": ["f"], "hint": "Is 3 equal to -1?" },
+        { "instruction": "So how many solutions? Type 'none', 'one', or 'infinite'.", "answer": "none", "accept": ["no solution", "0", "zero"], "hint": "Same slope, different intercept means parallel lines." }
+      ],
+      "finalAnswer": { "value": "none", "unit": "" },
+      "solutionNarrative": "Both lines have slope 2 but different intercepts, so they're parallel: subtracting gives $3 = -1$ (false). No solution."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s06",
+      "concepts": ["classify-solution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "How many solutions does this system have? $\\begin{cases} y = -x + 4 \\\\ 2x + 2y = 8 \\end{cases}$",
+      "steps": [
+        { "instruction": "Substitute $y = -x + 4$ into $2x + 2y = 8$ and simplify completely. What statement results?", "answer": "8 = 8", "accept": ["0=0"], "hint": "$2x + 2(-x + 4) = 8$ — watch the $x$ terms cancel." },
+        { "instruction": "Is that statement always true? Type 'true' or 'false'.", "answer": "true", "accept": ["t"], "hint": "Does $8 = 8$ always hold?" },
+        { "instruction": "So how many solutions? Type 'none', 'one', or 'infinite'.", "answer": "infinite", "accept": ["infinitely many", "many"], "hint": "The two equations are the same line." }
+      ],
+      "finalAnswer": { "value": "infinite", "unit": "" },
+      "solutionNarrative": "$2x + 2(-x+4) = 8$ becomes $8 = 8$, always true — the equations are the same line, so infinitely many solutions."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s07",
+      "concepts": ["setup-system", "substitution"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A coffee roaster mixes premium beans at \\$12/lb with basic beans at \\$7/lb to make 50 lb of blend worth \\$9/lb. Let $x$ = lb of premium, $y$ = lb of basic. How much of each?",
+      "steps": [
+        { "instruction": "Write the weight equation (total pounds).", "answer": "x + y = 50", "accept": ["y + x = 50"], "hint": "Premium pounds plus basic pounds equals 50." },
+        { "instruction": "Write the value equation (total dollars). The blend is worth $9 \\times 50 = 450$.", "answer": "12x + 7y = 450", "accept": ["7y + 12x = 450"], "hint": "Each premium lb is worth \\$12, each basic lb \\$7." },
+        { "instruction": "Using $y = 50 - x$, substitute into the value equation and simplify to $(\\text{number})x = (\\text{number})$.", "answer": "5x = 100", "accept": ["100 = 5x"], "hint": "$12x + 7(50 - x) = 450$." },
+        { "instruction": "Solve for $x$ (pounds of premium).", "answer": "x = 20", "accept": ["20"], "hint": "Divide by 5." },
+        { "instruction": "Find $y$ (pounds of basic).", "answer": "y = 30", "accept": ["30"], "hint": "$y = 50 - 20$." }
+      ],
+      "finalAnswer": { "value": "(20, 30)", "unit": "lb" },
+      "solutionNarrative": "From $x + y = 50$ and $12x + 7y = 450$: substituting gives $5x = 100$, so $x = 20$ lb premium and $y = 30$ lb basic."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s08",
+      "concepts": ["substitution"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve: $\\begin{cases} x = 4y - 3 \\\\ 2x + 3y = 5 \\end{cases}$",
+      "steps": [
+        { "instruction": "Substitute $x = 4y - 3$ into the second equation and simplify to $(\\text{number})y = (\\text{number})$.", "answer": "11y = 11", "accept": ["11 = 11y"], "hint": "$2(4y - 3) + 3y = 5$ — distribute, then combine and move the constant." },
+        { "instruction": "Solve for $y$.", "answer": "y = 1", "accept": ["1"], "hint": "Divide by 11." },
+        { "instruction": "Find $x$ using $x = 4y - 3$.", "answer": "x = 1", "accept": ["1"], "hint": "$x = 4(1) - 3$." },
+        { "instruction": "Write the solution as an ordered pair.", "answer": "(1, 1)", "accept": ["x=1, y=1", "1,1"], "hint": "(x, y)." }
+      ],
+      "finalAnswer": { "value": "(1, 1)", "unit": "" },
+      "solutionNarrative": "Substituting gives $11y = 11$, so $y = 1$ and $x = 1$. Solution: $(1, 1)$."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s09",
+      "concepts": ["classify-solution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Plan A costs \\$2 per mile with no base fee. Plan B costs \\$2 per mile plus a \\$30 base fee. Is there a mileage where the two cost the same? Model cost as $y$ and miles as $x$: $\\begin{cases} y = 2x \\\\ y = 2x + 30 \\end{cases}$",
+      "steps": [
+        { "instruction": "Set the two costs equal and simplify. What statement results?", "answer": "0 = 30", "accept": ["2x=2x+30", "0=30", "30=0"], "hint": "$2x = 2x + 30$; subtract $2x$." },
+        { "instruction": "Is that true or false? Type 'true' or 'false'.", "answer": "false", "accept": ["f"], "hint": "Can 0 equal 30?" },
+        { "instruction": "So how many mileages make them equal? Type 'none', 'one', or 'infinite'.", "answer": "none", "accept": ["no solution", "0", "zero"], "hint": "Same per-mile rate, different base fee — Plan B is always \\$30 more." }
+      ],
+      "finalAnswer": { "value": "none", "unit": "" },
+      "solutionNarrative": "Both grow at \\$2/mile but B starts \\$30 higher, so $0 = 30$ (false): they're never equal."
+    }
+  ]
+}

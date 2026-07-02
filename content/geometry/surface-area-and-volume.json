@@ -1,0 +1,269 @@
+{
+  "id": "geometry.surface-area-and-volume",
+  "subject": "geometry",
+  "title": "Surface Area and Volume",
+  "prerequisites": [],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "volume-prisms",
+      "label": "Volume of prisms and cubes",
+      "microLesson": "Volume measures how much space a solid fills, counted in cubic units. For any prism, **volume = area of the cross-section × length**. A box (rectangular prism) is $V = l \\times w \\times h$, and a cube of side $s$ is just $V = s^3$. A triangular prism is the triangle's area $\\tfrac{1}{2}bh$ times the prism's length. Example: a $4 \\times 3 \\times 2$ box holds $4 \\times 3 \\times 2 = 24$ cubic units."
+    },
+    {
+      "id": "volume-cylinders-cones-spheres",
+      "label": "Volume of cylinders, cones, and spheres",
+      "microLesson": "Round solids all use $\\pi$. A **cylinder** is $V = \\pi r^2 h$ (a circle's area times its height). A **cone** holds exactly one-third of the cylinder around it: $V = \\tfrac{1}{3}\\pi r^2 h$. A **sphere** is $V = \\tfrac{4}{3}\\pi r^3$. Use $\\pi \\approx 3.14$ and round to one decimal place. Example: a cylinder with $r = 2$, $h = 5$ holds $3.14 \\times 4 \\times 5 = 62.8$ cubic units."
+    },
+    {
+      "id": "surface-area",
+      "label": "Surface area",
+      "microLesson": "Surface area is the total area of every face — the material you'd need to wrap or build the solid. A rectangular prism has three pairs of faces: $SA = 2(lw + lh + wh)$. A cylinder is two circular ends plus the wrapped side: $SA = 2\\pi r^2 + 2\\pi r h$. Example: a $4 \\times 3 \\times 2$ box has $SA = 2(12 + 8 + 6) = 52$ square units. Volume fills the inside; surface area covers the outside."
+    },
+    {
+      "id": "volume-applied",
+      "label": "Volume in the real world",
+      "microLesson": "Volume answers practical questions: how much water a tank holds, how much concrete fills a slab, how much soil a planter needs, or whether one package is a better deal than another. Keep units straight — $1$ cubic foot $\\approx 7.48$ gallons, and $1$ cubic meter $= 1000$ liters. The math is the same; the payoff is a real quantity you can buy, pour, or pour out."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Two questions every container asks\n\nStand in front of any physical object and there are two measurements you almost always want. **How much fits inside?** — that's **volume**. **How much material covers the outside?** — that's **surface area**. A water tank's volume tells you how many gallons it holds; its surface area tells you how much steel to buy and how much paint to coat it. Pricing a shipping box, mixing concrete, filling a pool, sizing an AC unit to a room — all of it comes down to these two numbers.\n\n**Volume is measured in cubic units** (cubic feet, cm³, liters) because you're counting how many unit cubes pack inside. **Surface area is measured in square units** because you're tiling a 2-D skin over the solid.\n\n## Volume of prisms: cross-section × length\n\nA **prism** is any solid with the same shape running all the way through — a box, a cube, a triangular wedge. The rule is always the same:\n\n$$V = (\\text{area of cross-section}) \\times (\\text{length}).$$\n\n- **Rectangular prism (box):** $V = l \\times w \\times h$.\n- **Cube** (all sides equal $s$): $V = s^3$.\n- **Triangular prism:** $V = \\tfrac{1}{2}bh \\times L$, the triangle's area times the prism's length.\n\nA box measuring $4 \\times 3 \\times 2$ ft holds $4 \\cdot 3 \\cdot 2 = 24$ cubic feet — twenty-four 1-foot cubes packed inside.\n\n## Round solids: bring in $\\pi$\n\nAnything with a circle in it needs $\\pi$. Throughout this topic we use $\\pi \\approx 3.14$ and **round answers to one decimal place**.\n\n- **Cylinder:** a stack of circles — $V = \\pi r^2 h$.\n- **Cone:** exactly one-third of the cylinder that would enclose it — $V = \\tfrac{1}{3}\\pi r^2 h$.\n- **Sphere:** $V = \\tfrac{4}{3}\\pi r^3$.\n\nA soda can with radius $3$ cm and height $12$ cm holds $\\pi r^2 h \\approx 3.14 \\cdot 9 \\cdot 12 = 339.1$ cm³ — about a third of a liter, which matches a real can.\n\n## Surface area: the wrapping\n\nTo find surface area, add up every face.\n\n- **Rectangular prism:** three pairs of faces, $SA = 2(lw + lh + wh)$.\n- **Cylinder:** two circular ends plus the curved side that unrolls into a rectangle, $SA = 2\\pi r^2 + 2\\pi r h$.\n\nThat $4 \\times 3 \\times 2$ box needs $2(4\\cdot3 + 4\\cdot2 + 3\\cdot2) = 2(12 + 8 + 6) = 52$ square feet of cardboard.\n\n## Keep your units honest\n\nThe formulas are easy; the classic mistake is units. A tank in feet gives cubic *feet*, not gallons — multiply by $7.48$ to convert ($1$ ft³ $\\approx 7.48$ gal). A planter in centimeters gives cm³; divide by $1000$ for liters. Always ask *what unit does the question actually want?* and convert at the end."
+  },
+  "application": {
+    "summary": "Surface area and volume turn shapes into quantities you can buy and budget: gallons in a tank, cubic yards of concrete for a slab, liters of soil for a planter, cardboard for a box, and whether the big package is really the better deal. Volume is what fits inside; surface area is the material on the outside.",
+    "domains": ["construction", "manufacturing", "everyday life", "engineering"],
+    "workedExample": "**How much concrete for a patio slab?**\n\nYou're pouring a rectangular patio slab $12$ ft long, $10$ ft wide, and $4$ inches thick. Concrete is sold by volume, so you need cubic feet.\n\nFirst make the units match: $4$ inches $= \\tfrac{4}{12} = 0.333$ ft. The slab is a flat rectangular prism, so\n\n$$V = l \\times w \\times h = 12 \\times 10 \\times 0.333 \\approx 40\\ \\text{ft}^3.$$\n\nConcrete is usually ordered in **cubic yards**, and $1$ yd³ $= 27$ ft³, so $40 \\div 27 \\approx 1.5$ cubic yards. You'd order a bit extra for spillage, but the math just told you the order size — and the exact same prism calculation sizes a soil delivery for a garden bed or the water a rectangular pool holds. Switch to $V = \\pi r^2 h$ and it sizes a cylindrical tank instead.",
+    "domainNotes": [
+      "**Construction:** cubic yards of concrete for slabs and footings; soil or gravel by volume; paint and siding by surface area.",
+      "**Manufacturing/packaging:** material (surface area) to make a box or can, and capacity (volume) of what it holds — the two compete in cost-efficient design.",
+      "**Everyday life:** tank and pool capacity in gallons, comparing package sizes for unit price, scoops of ice cream as spheres and cones.",
+      "**Engineering:** sizing reservoirs and pressure vessels, where both the volume held and the surface to fabricate matter."
+    ]
+  },
+  "generators": ["box-volume-v1", "cylinder-volume-v1", "cone-sphere-volume-v1", "box-surface-v1", "cylinder-surface-v1", "tank-fill-v1"],
+  "problems": [
+    {
+      "id": "geometry.surface-area-and-volume.s01",
+      "concepts": ["volume-prisms"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A shipping box measures 5 ft long, 4 ft wide, and 3 ft tall. How many cubic feet does it hold?",
+      "steps": [
+        { "instruction": "Write the volume as a product of the three dimensions.", "answer": "5 * 4 * 3", "accept": ["5*4*3", "5x4x3", "5 * 4 * 3 = 60"], "hint": "Volume of a box is length × width × height." },
+        { "instruction": "Multiply to find the volume.", "answer": "60", "accept": ["60 ft^3", "60 cubic feet"], "hint": "$5 \\times 4 = 20$, then $\\times 3$." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "cubic feet" },
+      "solutionNarrative": "$V = l \\times w \\times h = 5 \\times 4 \\times 3 = 60$ cubic feet."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s02",
+      "concepts": ["volume-prisms"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A storage cube has edges of 6 ft. A second box is 8 ft long, 3 ft wide, and 3 ft tall. Which holds more, and by how many cubic feet?",
+      "steps": [
+        { "instruction": "Find the volume of the cube ($s^3$).", "answer": "216", "accept": ["216 ft^3"], "hint": "$6 \\times 6 \\times 6$." },
+        { "instruction": "Find the volume of the second box.", "answer": "72", "accept": ["72 ft^3"], "hint": "$8 \\times 3 \\times 3$." },
+        { "instruction": "Subtract to find how much more the larger holds.", "answer": "144", "accept": ["144 ft^3"], "hint": "$216 - 72$." }
+      ],
+      "finalAnswer": { "value": "144", "unit": "cubic feet" },
+      "solutionNarrative": "Cube: $6^3 = 216$ ft³. Box: $8 \\times 3 \\times 3 = 72$ ft³. The cube holds $216 - 72 = 144$ ft³ more."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s03",
+      "concepts": ["volume-prisms"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A barn roof is a triangular prism: the triangular end has a base of 10 ft and a height of 4 ft, and the prism runs 20 ft long. What is the volume of the space under the roof?",
+      "steps": [
+        { "instruction": "Find the area of the triangular cross-section ($\\tfrac{1}{2}bh$).", "answer": "20", "accept": ["20 ft^2", "20 sq ft"], "hint": "$\\tfrac{1}{2} \\times 10 \\times 4$." },
+        { "instruction": "Multiply the cross-section area by the prism's length.", "answer": "400", "accept": ["400 ft^3"], "hint": "$20 \\times 20$." }
+      ],
+      "finalAnswer": { "value": "400", "unit": "cubic feet" },
+      "solutionNarrative": "Cross-section area $= \\tfrac{1}{2}(10)(4) = 20$ ft². Volume $= 20 \\times 20 = 400$ ft³."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s04",
+      "concepts": ["volume-prisms"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the volume of a rectangular prism with length 7, width 2, and height 5.",
+      "steps": [
+        { "instruction": "Multiply the three dimensions.", "answer": "70", "accept": ["70 units^3"], "hint": "$7 \\times 2 \\times 5$." }
+      ],
+      "finalAnswer": { "value": "70", "unit": "cubic units" },
+      "solutionNarrative": "$V = 7 \\times 2 \\times 5 = 70$ cubic units."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s05",
+      "concepts": ["volume-cylinders-cones-spheres"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A soda can is a cylinder with radius 3 cm and height 12 cm. How many cubic centimeters does it hold? Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Compute $r^2$ (the radius squared).", "answer": "9", "accept": [], "hint": "$3^2 = 9$." },
+        { "instruction": "Multiply $3.14 \\times r^2 \\times h$ and round to 1 decimal place.", "answer": "339.1", "accept": ["339.12"], "hint": "$3.14 \\times 9 \\times 12$." }
+      ],
+      "finalAnswer": { "value": "339.1", "unit": "cubic centimeters" },
+      "solutionNarrative": "$V = \\pi r^2 h \\approx 3.14 \\times 9 \\times 12 = 339.12 \\approx 339.1$ cm³."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s06",
+      "concepts": ["volume-cylinders-cones-spheres"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An ice cream cone has radius 3 cm and height 4 cm. How much ice cream fills the cone? Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Compute $r^2 \\times h$ (radius squared times height).", "answer": "36", "accept": [], "hint": "$3^2 \\times 4 = 9 \\times 4$." },
+        { "instruction": "Multiply by $\\tfrac{1}{3} \\times 3.14$ and round to 1 decimal place.", "answer": "37.7", "accept": ["37.68"], "hint": "$\\tfrac{1}{3} \\times 3.14 \\times 36$." }
+      ],
+      "finalAnswer": { "value": "37.7", "unit": "cubic centimeters" },
+      "solutionNarrative": "$V = \\tfrac{1}{3}\\pi r^2 h \\approx \\tfrac{1}{3} \\times 3.14 \\times 9 \\times 4 = 37.68 \\approx 37.7$ cm³."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s07",
+      "concepts": ["volume-cylinders-cones-spheres"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A spherical scoop of ice cream has radius 3 cm. How many cubic centimeters is one scoop? Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Compute $r^3$ (radius cubed).", "answer": "27", "accept": [], "hint": "$3^3 = 3 \\times 3 \\times 3$." },
+        { "instruction": "Multiply by $\\tfrac{4}{3} \\times 3.14$ and round to 1 decimal place.", "answer": "113.0", "accept": ["113.04", "113"], "hint": "$\\tfrac{4}{3} \\times 3.14 \\times 27$." }
+      ],
+      "finalAnswer": { "value": "113.0", "unit": "cubic centimeters" },
+      "solutionNarrative": "$V = \\tfrac{4}{3}\\pi r^3 \\approx \\tfrac{4}{3} \\times 3.14 \\times 27 = 113.04 \\approx 113.0$ cm³."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s08",
+      "concepts": ["volume-cylinders-cones-spheres"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the volume of a cylinder with radius 5 and height 10. Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Compute $r^2 \\times h$.", "answer": "250", "accept": [], "hint": "$5^2 \\times 10 = 25 \\times 10$." },
+        { "instruction": "Multiply by 3.14 and round to 1 decimal place.", "answer": "785", "accept": ["785.0"], "hint": "$3.14 \\times 250$." }
+      ],
+      "finalAnswer": { "value": "785", "unit": "cubic units" },
+      "solutionNarrative": "$V = \\pi r^2 h \\approx 3.14 \\times 25 \\times 10 = 785$ cubic units."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s09",
+      "concepts": ["surface-area"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A closed cardboard box is 5 ft long, 4 ft wide, and 2 ft tall. How many square feet of cardboard cover the outside?",
+      "steps": [
+        { "instruction": "Compute the three face products $lw$, $lh$, and $wh$, then add them.", "answer": "38", "accept": [], "hint": "$5\\cdot4 + 5\\cdot2 + 4\\cdot2 = 20 + 10 + 8$." },
+        { "instruction": "Multiply the sum by 2 for the matching pairs of faces.", "answer": "76", "accept": ["76 ft^2"], "hint": "$2 \\times 38$." }
+      ],
+      "finalAnswer": { "value": "76", "unit": "square feet" },
+      "solutionNarrative": "$SA = 2(lw + lh + wh) = 2(20 + 10 + 8) = 2(38) = 76$ ft²."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s10",
+      "concepts": ["surface-area"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cylindrical can has radius 2 cm and height 5 cm. How much metal (surface area) is needed to make it, including top and bottom? Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Compute the two ends: $2 \\times 3.14 \\times r^2$.", "answer": "25.12", "accept": ["25.1"], "hint": "$2 \\times 3.14 \\times 4$." },
+        { "instruction": "Compute the curved side: $2 \\times 3.14 \\times r \\times h$.", "answer": "62.8", "accept": ["62.80"], "hint": "$2 \\times 3.14 \\times 2 \\times 5$." },
+        { "instruction": "Add the two parts and round to 1 decimal place.", "answer": "87.9", "accept": ["87.92"], "hint": "$25.12 + 62.8$." }
+      ],
+      "finalAnswer": { "value": "87.9", "unit": "square centimeters" },
+      "solutionNarrative": "$SA = 2\\pi r^2 + 2\\pi r h \\approx 25.12 + 62.8 = 87.92 \\approx 87.9$ cm²."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s11",
+      "concepts": ["surface-area"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You are painting the outside of a closed storage chest 6 ft long, 3 ft wide, and 2 ft tall. One can of paint covers 50 square feet. How many cans do you need (round up to a whole can)?",
+      "steps": [
+        { "instruction": "Find the surface area: compute $lw + lh + wh$ first.", "answer": "36", "accept": [], "hint": "$6\\cdot3 + 6\\cdot2 + 3\\cdot2 = 18 + 12 + 6$." },
+        { "instruction": "Double it for the total surface area.", "answer": "72", "accept": ["72 ft^2"], "hint": "$2 \\times 36$." },
+        { "instruction": "Divide by 50 and round up to the next whole can.", "answer": "2", "accept": ["2 cans"], "hint": "$72 \\div 50 = 1.44$, so round up." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "cans" },
+      "solutionNarrative": "$SA = 2(18 + 12 + 6) = 72$ ft². $72 \\div 50 = 1.44$, so you need 2 cans."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s12",
+      "concepts": ["surface-area"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the surface area of a rectangular prism with length 3, width 3, and height 4.",
+      "steps": [
+        { "instruction": "Compute $lw + lh + wh$.", "answer": "33", "accept": [], "hint": "$3\\cdot3 + 3\\cdot4 + 3\\cdot4 = 9 + 12 + 12$." },
+        { "instruction": "Multiply by 2.", "answer": "66", "accept": ["66 units^2"], "hint": "$2 \\times 33$." }
+      ],
+      "finalAnswer": { "value": "66", "unit": "square units" },
+      "solutionNarrative": "$SA = 2(9 + 12 + 12) = 2(33) = 66$ square units."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s13",
+      "concepts": ["volume-applied"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A rectangular planter box is 4 ft long, 2 ft wide, and 1 ft deep. How many cubic feet of soil does it take to fill it?",
+      "steps": [
+        { "instruction": "Multiply the three dimensions to find the volume.", "answer": "8", "accept": ["8 ft^3"], "hint": "$4 \\times 2 \\times 1$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "cubic feet" },
+      "solutionNarrative": "$V = 4 \\times 2 \\times 1 = 8$ cubic feet of soil."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s14",
+      "concepts": ["volume-applied"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rectangular pool is 10 ft long, 5 ft wide, and 4 ft deep. Its volume in cubic feet, multiplied by 7.48, gives the gallons it holds. How many gallons does the full pool hold?",
+      "steps": [
+        { "instruction": "Find the pool's volume in cubic feet.", "answer": "200", "accept": ["200 ft^3"], "hint": "$10 \\times 5 \\times 4$." },
+        { "instruction": "Multiply the volume by 7.48 to convert to gallons.", "answer": "1496", "accept": ["1496 gallons"], "hint": "$200 \\times 7.48$." }
+      ],
+      "finalAnswer": { "value": "1496", "unit": "gallons" },
+      "solutionNarrative": "$V = 10 \\times 5 \\times 4 = 200$ ft³. Gallons $= 200 \\times 7.48 = 1496$."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s15",
+      "concepts": ["volume-applied"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You are pouring a concrete slab 9 ft long, 6 ft wide, and 4 inches thick. Concrete is ordered in cubic yards, where 1 cubic yard = 27 cubic feet. How many cubic yards do you need? Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Convert the 4-inch thickness to feet (divide by 12). Give the decimal.", "answer": "0.333", "accept": ["0.33", "1/3"], "hint": "$4 \\div 12$." },
+        { "instruction": "Find the volume in cubic feet ($9 \\times 6 \\times 0.333$). Round to the nearest whole number.", "answer": "18", "accept": ["18 ft^3", "17.98"], "hint": "$9 \\times 6 = 54$, then $\\times 0.333$." },
+        { "instruction": "Divide by 27 to get cubic yards and round to 1 decimal place.", "answer": "0.7", "accept": ["0.67"], "hint": "$18 \\div 27$." }
+      ],
+      "finalAnswer": { "value": "0.7", "unit": "cubic yards" },
+      "solutionNarrative": "$4$ in $= 0.333$ ft. $V = 9 \\times 6 \\times 0.333 \\approx 18$ ft³. $18 \\div 27 \\approx 0.7$ cubic yards."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s16",
+      "concepts": ["volume-applied", "volume-cylinders-cones-spheres"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cylindrical water tank has radius 5 ft and height 8 ft. How many cubic feet of water does it hold when full? Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Compute $r^2 \\times h$.", "answer": "200", "accept": [], "hint": "$5^2 \\times 8 = 25 \\times 8$." },
+        { "instruction": "Multiply by 3.14 and round to 1 decimal place.", "answer": "628", "accept": ["628.0"], "hint": "$3.14 \\times 200$." }
+      ],
+      "finalAnswer": { "value": "628", "unit": "cubic feet" },
+      "solutionNarrative": "$V = \\pi r^2 h \\approx 3.14 \\times 25 \\times 8 = 628$ cubic feet."
+    },
+    {
+      "id": "geometry.surface-area-and-volume.s17",
+      "concepts": ["volume-applied"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A cube-shaped tank has edges of 3 m. How many cubic meters does it hold?",
+      "steps": [
+        { "instruction": "Cube the edge length ($s^3$).", "answer": "27", "accept": ["27 m^3"], "hint": "$3 \\times 3 \\times 3$." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "cubic meters" },
+      "solutionNarrative": "$V = s^3 = 3^3 = 27$ cubic meters."
+    }
+  ]
+}

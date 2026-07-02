@@ -1,0 +1,287 @@
+{
+  "id": "differential-equations.growth-decay-cooling",
+  "subject": "differential-equations",
+  "title": "Growth, Decay, and Cooling Models",
+  "prerequisites": ["differential-equations.separable-equations"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "exponential-growth",
+      "label": "Exponential growth",
+      "microLesson": "When something grows at a rate proportional to its current size — bacteria, money at continuous interest, an unchecked population — it follows $\\frac{dP}{dt} = kP$, whose solution is $P(t) = P_0 e^{kt}$ with $k > 0$. Here $P_0$ is the starting amount and $k$ is the growth rate. The **doubling time** is $t = \\frac{\\ln 2}{k}$: the time for the quantity to grow to twice its size, independent of where you start."
+    },
+    {
+      "id": "radioactive-decay",
+      "label": "Radioactive decay & half-life",
+      "microLesson": "Decay is the same law with a negative rate: $\\frac{dN}{dt} = -kN$ gives $N(t) = N_0 e^{-kt}$ with $k > 0$. The **half-life** $t_{1/2} = \\frac{\\ln 2}{k}$ is the time for half the material to disappear. Knowing the half-life lets you find $k = \\frac{\\ln 2}{t_{1/2}}$, and knowing how much remains lets you solve for **age**: $t = \\frac{\\ln(N_0/N)}{k}$ — the heart of carbon dating."
+    },
+    {
+      "id": "newtons-cooling",
+      "label": "Newton's law of cooling",
+      "microLesson": "An object cools (or warms) toward its surroundings at a rate proportional to the temperature gap: $\\frac{dT}{dt} = -k(T - T_s)$, where $T_s$ is the ambient temperature. The solution is $T(t) = T_s + (T_0 - T_s)e^{-kt}$. The gap $T_0 - T_s$ shrinks exponentially, so $T$ approaches $T_s$ but never quite reaches it. To find the **time** to hit a target temperature, solve the equation for $t$ using a logarithm."
+    },
+    {
+      "id": "limiting-and-logistic",
+      "label": "Limiting & logistic growth",
+      "microLesson": "Real populations can't grow forever — resources run out. **Logistic growth** $\\frac{dP}{dt} = rP\\left(1 - \\frac{P}{K}\\right)$ has solution $P(t) = \\frac{K}{1 + A e^{-rt}}$, which rises in an S-curve toward the **carrying capacity** $K$. As $t \\to \\infty$, the $e^{-rt}$ term vanishes and $P \\to K$. That **limiting value** $K$ is what the population settles at; you can read it straight from the model or compute the value approached over long times."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## One equation behind four real phenomena\n\nMoney compounding in an account, a culture of bacteria in a dish, a lump of uranium losing atoms, a coffee cooling on the counter — these look unrelated, but they all obey the **same kind of differential equation**: the rate of change is proportional to something. Once you can solve that one pattern, you can predict all four.\n\nThe master pattern is\n\n$$\\frac{dQ}{dt} = kQ,$$\n\nread as *\"the faster there is, the faster it changes.\"* Separating variables and integrating gives the solution we'll use everywhere:\n\n$$Q(t) = Q_0 e^{kt},$$\n\nwhere $Q_0$ is the starting amount. The sign of $k$ decides the story: **$k > 0$ is growth, $k < 0$ is decay.**\n\nHere are the two behaviors side by side — same starting amount $Q_0 = 100$, opposite rates $k = \\pm 0.05$:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,30],\"yRange\":[0,500],\"grid\":true,\"curves\":[{\"fn\":\"100*exp(0.05*x)\",\"label\":\"k = 0.05\",\"color\":\"accent\",\"labelAt\":25},{\"fn\":\"100*exp(-0.05*x)\",\"label\":\"k = -0.05\",\"color\":\"warn\",\"labelAt\":8}],\"points\":[{\"x\":0,\"y\":100,\"label\":\"Q0 = 100\",\"color\":\"dim\"}],\"caption\":\"Q = 100e^(0.05t) grows ever faster while Q = 100e^(-0.05t) decays toward zero (horizontal axis is t)\"}\n```\n\n## Growth: populations and money\n\nWhen $k > 0$, the quantity explodes. A bacterial colony, a viral video's view count, or an investment earning continuous interest all follow $P(t) = P_0 e^{kt}$. The single most useful number is the **doubling time** — how long until you have twice as much:\n\n$$2P_0 = P_0 e^{kt} \\;\\Rightarrow\\; t = \\frac{\\ln 2}{k}.$$\n\nNotice $P_0$ cancels: doubling time doesn't depend on how much you started with. \\$1{,}000 and \\$1{,}000{,}000 both double in the same time at the same rate.\n\n## Decay: radioactivity and medicine\n\nFlip the sign. With $k > 0$, $N(t) = N_0 e^{-kt}$ describes a radioactive sample, a drug clearing your bloodstream, or the carbon-14 in an ancient bone. The signature number here is the **half-life**, the time to lose half the material:\n\n$$\\tfrac{1}{2}N_0 = N_0 e^{-k t_{1/2}} \\;\\Rightarrow\\; t_{1/2} = \\frac{\\ln 2}{k}.$$\n\nRun it backwards and you get **dating**: if a fossil has a known fraction of its original carbon-14 left, solve $N = N_0 e^{-kt}$ for $t$ to find its age.\n\n## Cooling: coffee and crime scenes\n\nA hot object doesn't decay to zero — it cools toward the room. **Newton's law of cooling** adds the ambient temperature $T_s$:\n\n$$\\frac{dT}{dt} = -k(T - T_s) \\;\\Rightarrow\\; T(t) = T_s + (T_0 - T_s)e^{-kt}.$$\n\nThe *temperature gap* $T - T_s$ decays exponentially, so $T$ slides toward $T_s$ and levels off. Forensic investigators run this backwards on a body's temperature to estimate a time of death.\n\nConcretely, a 90°C coffee in a 20°C room with $k = 0.1$ obeys $T(t) = 20 + 70e^{-0.1t}$ — the 70-degree gap decays exponentially, so the curve slides down onto the ambient line and levels off:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,40],\"yRange\":[0,100],\"grid\":true,\"curves\":[{\"fn\":\"20+70*exp(-0.1*x)\",\"label\":\"T(t)\",\"color\":\"accent\",\"labelAt\":6}],\"segments\":[{\"from\":[0,20],\"to\":[40,20],\"dashed\":true,\"label\":\"ambient 20°C\",\"color\":\"dim\"}],\"points\":[{\"x\":0,\"y\":90,\"label\":\"T(0) = 90\",\"color\":\"warn\"}],\"caption\":\"Newton’s cooling with k = 0.1: T(t) = 20 + 70e^(-0.1t) slides onto the dashed ambient line but never crosses it (t in minutes)\"}\n```\n\n## Limited growth: when reality pushes back\n\nNothing grows forever. Add a brake — a **carrying capacity** $K$ — and you get the **logistic model**:\n\n$$\\frac{dP}{dt} = rP\\left(1 - \\frac{P}{K}\\right) \\;\\Rightarrow\\; P(t) = \\frac{K}{1 + A e^{-rt}}.$$\n\nEarly on it looks exponential, but as $P$ nears $K$ the growth chokes off, tracing an S-curve. The **limiting value** is the punchline: as $t \\to \\infty$, $e^{-rt} \\to 0$ and $P \\to K$. A fishery, a spreading rumor, or a new product's adoption all flatten out at their own ceiling."
+  },
+  "application": {
+    "summary": "A single proportional-rate law predicts population and investment growth, radioactive dating and drug clearance, the cooling of food and bodies, and the leveling-off of limited populations. You set up the model, plug in known data to find the rate constant, then solve for an amount, a time, or the limiting value.",
+    "domains": ["biology", "finance", "archaeology", "medicine", "forensics", "ecology"],
+    "workedExample": "**Dating a charcoal sample.**\n\nCarbon-14 has a half-life of 5730 years. An archaeologist finds charcoal in which only 25% of the original carbon-14 remains. How old is it?\n\nFirst get the decay constant from the half-life:\n\n$$k = \\frac{\\ln 2}{5730} \\approx 0.00012097 \\text{ per year}.$$\n\nNow the sample has $N/N_0 = 0.25$, so solve $0.25 = e^{-kt}$ for $t$:\n\n$$t = \\frac{-\\ln(0.25)}{k} = \\frac{\\ln 4}{k} \\approx \\frac{1.3863}{0.00012097} \\approx 11460 \\text{ years}.$$\n\nThat's exactly **two half-lives** — which makes sense, since 25% is half of a half. The same machinery tells a pharmacist when a drug drops to a safe level and tells an investor how long until savings double.",
+    "domainNotes": [
+      "**Biology/ecology:** bacterial and animal populations grow exponentially when unchecked, then follow a logistic curve toward a carrying capacity once food or space runs short.",
+      "**Finance:** continuously compounded interest is pure exponential growth; doubling time ($\\ln 2 / k$) is the quick rule of thumb savers use.",
+      "**Archaeology/geology:** carbon-14 and other isotopes date bones, charcoal, and rock by the fraction of material still remaining.",
+      "**Medicine:** drug half-lives set dosing schedules — how long until a dose clears to a safe or ineffective level.",
+      "**Forensics:** Newton's law of cooling estimates time of death from a body's temperature and the ambient temperature."
+    ]
+  },
+  "generators": ["de-doubling-v1", "de-halflife-v1", "de-cooling-v1", "de-logistic-v1", "def-exponential-growth-d2", "def-exponential-growth-d3", "def-radioactive-decay-d1", "def-radioactive-decay-d3", "def-newtons-cooling-d1", "def-newtons-cooling-d3", "def-limiting-and-logistic-d1", "def-limiting-and-logistic-d3"],
+  "problems": [
+    {
+      "id": "differential-equations.growth-decay-cooling.s01",
+      "concepts": ["exponential-growth"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bacterial culture starts at 500 cells and doubles every 3 hours. Using $P(t) = 500 \\cdot 2^{t/3}$ with $t$ in hours, how many cells are there after 12 hours?",
+      "steps": [
+        { "instruction": "How many doublings occur in 12 hours? Compute $12/3$.", "answer": "4", "accept": [], "hint": "Divide the elapsed time by the doubling period of 3 hours." },
+        { "instruction": "Multiply the starting count by $2^4$ to get the population.", "answer": "8000", "accept": [], "hint": "$500 \\times 2^4 = 500 \\times 16$." }
+      ],
+      "finalAnswer": { "value": "8000", "unit": "cells" },
+      "solutionNarrative": "In 12 hours there are $12/3 = 4$ doublings, so $P = 500 \\cdot 2^4 = 500 \\cdot 16 = 8000$ cells."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s02",
+      "concepts": ["exponential-growth"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A town of 200 deer grows continuously at a rate that makes the herd double every 30 minutes in a simulation, measured in 30-minute steps. Using $P = 200 \\cdot 2^{n}$ where $n$ is the number of 30-minute steps, how many deer after 2 hours?",
+      "steps": [
+        { "instruction": "How many 30-minute steps are in 2 hours?", "answer": "4", "accept": [], "hint": "2 hours = 120 minutes; divide by 30." },
+        { "instruction": "Compute $200 \\cdot 2^4$.", "answer": "3200", "accept": [], "hint": "$2^4 = 16$, then multiply by 200." }
+      ],
+      "finalAnswer": { "value": "3200", "unit": "deer" },
+      "solutionNarrative": "There are $120/30 = 4$ doubling steps, so $P = 200 \\cdot 2^4 = 3200$."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s03",
+      "concepts": ["exponential-growth"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You invest \\$2,000 in an account earning 5% interest compounded continuously, so the balance is $A(t) = 2000\\, e^{0.05 t}$ with $t$ in years. What is the balance after 10 years? Use $e \\approx 2.718$ and round to the nearest cent.",
+      "steps": [
+        { "instruction": "Compute the exponent $0.05 \\times 10$.", "answer": "0.5", "accept": [], "hint": "Multiply the rate by the time." },
+        { "instruction": "Evaluate $2000\\, e^{0.5}$ and round to the nearest cent.", "answer": "3297.44", "accept": ["3297.44"], "hint": "$e^{0.5} \\approx 1.64872$; multiply by 2000." }
+      ],
+      "finalAnswer": { "value": "3297.44", "unit": "dollars" },
+      "solutionNarrative": "The exponent is $0.05 \\cdot 10 = 0.5$, so $A = 2000 e^{0.5} \\approx 2000 \\cdot 1.64872 \\approx \\$3297.44$."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s04",
+      "concepts": ["exponential-growth"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A savings account grows continuously at rate $k = 0.08$ per year. How long until the money doubles? Use $\\ln 2 \\approx 0.6931$ and round to two decimals.",
+      "steps": [
+        { "instruction": "Write the doubling-time formula value: divide $\\ln 2$ by the rate $k$.", "answer": "8.66", "accept": ["8.66"], "hint": "Doubling time $= \\frac{\\ln 2}{k} = \\frac{0.6931}{0.08}$." }
+      ],
+      "finalAnswer": { "value": "8.66", "unit": "years" },
+      "solutionNarrative": "Doubling time $= \\frac{\\ln 2}{k} = \\frac{0.6931}{0.08} \\approx 8.66$ years."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s05",
+      "concepts": ["exponential-growth"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A bacterial population grows continuously as $P(t) = 2000\\, e^{kt}$. It is observed to grow to 3200 in 4 hours, so $k = \\frac{\\ln 1.6}{4}$. First find $k$ (round to 5 decimals), then predict the population after 25 hours (round to the nearest whole cell). Use $\\ln 1.6 \\approx 0.4700$ and $e \\approx 2.718$.",
+      "steps": [
+        { "instruction": "Compute the growth constant $k = \\frac{\\ln 1.6}{4}$ (round to 5 decimals).", "answer": "0.11750", "accept": ["0.1175"], "hint": "Divide 0.4700 by 4." },
+        { "instruction": "Compute the exponent $k \\times 25$ (round to 4 decimals).", "answer": "2.9375", "accept": ["2.9375"], "hint": "Multiply your $k$ by 25." },
+        { "instruction": "Evaluate $2000\\, e^{2.9375}$ and round to the nearest whole cell.", "answer": "37703", "accept": ["37703", "37702", "37704"], "hint": "$e^{2.9375} \\approx 18.85$; multiply by 2000." }
+      ],
+      "finalAnswer": { "value": "37703", "unit": "cells" },
+      "solutionNarrative": "From the data $k = \\frac{\\ln 1.6}{4} \\approx 0.11750$. After 25 hours the exponent is $0.11750 \\cdot 25 = 2.9375$, so $P = 2000\\, e^{2.9375} \\approx 2000 \\cdot 18.85 \\approx 37703$ cells."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s06",
+      "concepts": ["radioactive-decay"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Iodine-131, used in medical imaging, has a half-life of 8 days. A patient receives 80 mg. How much remains after 24 days? Use $N = 80 \\cdot (1/2)^{t/8}$.",
+      "steps": [
+        { "instruction": "How many half-lives pass in 24 days? Compute $24/8$.", "answer": "3", "accept": [], "hint": "Divide elapsed time by the 8-day half-life." },
+        { "instruction": "Compute $80 \\cdot (1/2)^3$.", "answer": "10", "accept": [], "hint": "$(1/2)^3 = 1/8$, and $80/8 = 10$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "mg" },
+      "solutionNarrative": "In 24 days there are $24/8 = 3$ half-lives, so $N = 80 \\cdot (1/2)^3 = 80/8 = 10$ mg."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s07",
+      "concepts": ["radioactive-decay"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A charcoal sample has exactly 25% of its original carbon-14 remaining. Since each half-life cuts the amount in half, how many half-lives have passed?",
+      "steps": [
+        { "instruction": "Starting from 100%, one half-life gives 50%. What percent remains after a second half-life?", "answer": "25", "accept": ["25%"], "hint": "Halve 50%." },
+        { "instruction": "So how many half-lives produce 25% remaining?", "answer": "2", "accept": [], "hint": "100% to 50% to 25% is two halvings." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "half-lives" },
+      "solutionNarrative": "100% halves to 50%, then to 25% — that is 2 half-lives, since 25% is half of a half."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s08",
+      "concepts": ["radioactive-decay"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Cobalt-60, used in cancer therapy, decays as $N(t) = 100\\, e^{-0.02 t}$ (grams, $t$ in years). How much of a 100 g source remains after 50 years? Use $e \\approx 2.718$ and round to two decimals.",
+      "steps": [
+        { "instruction": "Compute the exponent $-0.02 \\times 50$.", "answer": "-1", "accept": [], "hint": "Multiply the rate by the time, keeping the negative sign." },
+        { "instruction": "Evaluate $100\\, e^{-1}$ and round to two decimals.", "answer": "36.79", "accept": ["36.79"], "hint": "$e^{-1} \\approx 0.36788$; multiply by 100." }
+      ],
+      "finalAnswer": { "value": "36.79", "unit": "grams" },
+      "solutionNarrative": "The exponent is $-0.02 \\cdot 50 = -1$, so $N = 100 e^{-1} \\approx 100 \\cdot 0.36788 \\approx 36.79$ grams."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s09",
+      "concepts": ["radioactive-decay"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A wooden artifact retains 70% of its original carbon-14. With carbon-14's half-life of 5730 years, the decay constant is $k = \\frac{\\ln 2}{5730} \\approx 0.00012097$ per year. Estimate the artifact's age using $t = \\frac{-\\ln(0.70)}{k}$. Use $\\ln(0.70) \\approx -0.3567$ and round to the nearest year.",
+      "steps": [
+        { "instruction": "The model is $0.70 = e^{-kt}$. Take logs: what is $-\\ln(0.70)$?", "answer": "0.3567", "accept": ["0.3567"], "hint": "$\\ln(0.70) \\approx -0.3567$, so its negative is positive 0.3567." },
+        { "instruction": "Divide by $k$ to get the age: $\\frac{0.3567}{0.00012097}$ (round to the nearest year).", "answer": "2949", "accept": ["2948", "2950", "2949"], "hint": "Divide 0.3567 by 0.00012097." }
+      ],
+      "finalAnswer": { "value": "2949", "unit": "years" },
+      "solutionNarrative": "From $0.70 = e^{-kt}$, $t = \\frac{-\\ln 0.70}{k} = \\frac{0.3567}{0.00012097} \\approx 2949$ years."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s10",
+      "concepts": ["newtons-cooling"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A cup of coffee at 90°C sits in a 20°C room and cools as $T(t) = 20 + 70\\, e^{-0.1 t}$ (°C, $t$ in minutes). What is its temperature after 10 minutes? Use $e \\approx 2.718$ and round to two decimals.",
+      "plot": {"type":"cartesian","xRange":[0,40],"yRange":[0,100],"grid":true,"curves":[{"fn":"20+70*exp(-0.1*x)","label":"T(t)","color":"accent","labelAt":6}],"segments":[{"from":[0,20],"to":[40,20],"dashed":true,"label":"room 20°C","color":"dim"}],"points":[{"x":0,"y":90,"label":"T(0) = 90","color":"warn"}],"caption":"The coffee’s temperature T(t) = 20 + 70e^(-0.1t) approaching the 20°C room (t in minutes)"},
+      "steps": [
+        { "instruction": "Compute the exponent $-0.1 \\times 10$.", "answer": "-1", "accept": [], "hint": "Multiply the cooling constant by the time." },
+        { "instruction": "Evaluate $20 + 70\\, e^{-1}$ and round to two decimals.", "answer": "45.75", "accept": ["45.75"], "hint": "$70 e^{-1} \\approx 25.75$, then add the room temperature 20." }
+      ],
+      "finalAnswer": { "value": "45.75", "unit": "°C" },
+      "solutionNarrative": "The exponent is $-0.1 \\cdot 10 = -1$, so $T = 20 + 70 e^{-1} \\approx 20 + 25.75 = 45.75$°C."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s11",
+      "concepts": ["newtons-cooling"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bowl of soup at 100°C is placed in a 25°C room. It cools as $T(t) = 25 + 75\\, e^{-0.05 t}$ (°C, $t$ in minutes). Find its temperature after 20 minutes. Use $e \\approx 2.718$ and round to two decimals.",
+      "steps": [
+        { "instruction": "Compute the exponent $-0.05 \\times 20$.", "answer": "-1", "accept": [], "hint": "Multiply the rate by the time." },
+        { "instruction": "Evaluate $25 + 75\\, e^{-1}$ and round to two decimals.", "answer": "52.59", "accept": ["52.59"], "hint": "$75 e^{-1} \\approx 27.59$, then add 25." }
+      ],
+      "finalAnswer": { "value": "52.59", "unit": "°C" },
+      "solutionNarrative": "The exponent is $-0.05 \\cdot 20 = -1$, so $T = 25 + 75 e^{-1} \\approx 25 + 27.59 = 52.59$°C."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s12",
+      "concepts": ["newtons-cooling"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A slice of pizza at 200°F is set in a 70°F kitchen and cools as $T(t) = 70 + 130\\, e^{-0.08 t}$ (°F, $t$ in minutes). How many minutes until it reaches 100°F? Solve $100 = 70 + 130\\, e^{-0.08 t}$. Use $\\ln(30/130) = \\ln(0.23077) \\approx -1.4663$ and round to two decimals.",
+      "steps": [
+        { "instruction": "Isolate the exponential: subtract 70, then divide by 130 to find $e^{-0.08 t}$ (round to 5 decimals).", "answer": "0.23077", "accept": ["0.2308", "0.23077"], "hint": "$(100 - 70)/130 = 30/130$." },
+        { "instruction": "Take the natural log of both sides: what is $-0.08\\, t$ equal to?", "answer": "-1.4663", "accept": ["-1.4663"], "hint": "$\\ln(0.23077) \\approx -1.4663$." },
+        { "instruction": "Solve for $t$ by dividing by $-0.08$ (round to two decimals).", "answer": "18.33", "accept": ["18.33"], "hint": "$t = \\frac{-1.4663}{-0.08}$." }
+      ],
+      "finalAnswer": { "value": "18.33", "unit": "minutes" },
+      "solutionNarrative": "From $100 = 70 + 130 e^{-0.08t}$, $e^{-0.08t} = 30/130 \\approx 0.23077$. Then $-0.08t = \\ln(0.23077) \\approx -1.4663$, so $t \\approx 18.33$ minutes."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s13",
+      "concepts": ["limiting-and-logistic"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A lake's fish population follows the logistic model $P(t) = \\frac{5000}{1 + 9\\, e^{-0.4 t}}$. As the years pass, what value (the carrying capacity) does the population approach?",
+      "plot": {"type":"cartesian","xRange":[0,20],"yRange":[0,6000],"grid":true,"curves":[{"fn":"5000/(1+9*exp(-0.4*x))","label":"P(t)","color":"accent","labelAt":8}],"segments":[{"from":[0,5000],"to":[20,5000],"dashed":true,"color":"dim"}],"caption":"The fish population rises in an S-curve and levels off at the dashed carrying capacity (t in years)"},
+      "steps": [
+        { "instruction": "As $t \\to \\infty$, the term $e^{-0.4 t}$ approaches what number?", "answer": "0", "accept": [], "hint": "A negative exponential decays toward zero over time." },
+        { "instruction": "With that term gone, the denominator becomes $1 + 0 = 1$. What does $P$ approach?", "answer": "5000", "accept": [], "hint": "$P \\to 5000/(1+0)$." }
+      ],
+      "finalAnswer": { "value": "5000", "unit": "fish" },
+      "solutionNarrative": "As $t \\to \\infty$, $e^{-0.4t} \\to 0$, so $P \\to \\frac{5000}{1+0} = 5000$ fish — the carrying capacity."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s14",
+      "concepts": ["limiting-and-logistic"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A new app's user base follows $P(t) = \\frac{1200}{1 + 3\\, e^{-0.5 t}}$ (thousands of users). How many users does it start with at $t = 0$? Recall $e^{0} = 1$.",
+      "steps": [
+        { "instruction": "At $t = 0$, $e^{-0.5 \\cdot 0} = 1$, so the denominator is $1 + 3(1)$. What is the denominator?", "answer": "4", "accept": [], "hint": "$1 + 3 \\cdot 1 = 4$." },
+        { "instruction": "Compute $P(0) = 1200 / 4$.", "answer": "300", "accept": [], "hint": "Divide 1200 by 4." }
+      ],
+      "finalAnswer": { "value": "300", "unit": "thousand users" },
+      "solutionNarrative": "At $t = 0$, $e^0 = 1$, so $P(0) = \\frac{1200}{1 + 3} = \\frac{1200}{4} = 300$ thousand users."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s15",
+      "concepts": ["limiting-and-logistic"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "For the fishery $P(t) = \\frac{5000}{1 + 9\\, e^{-0.4 t}}$, find the population after 5 years. Use $e^{-2} \\approx 0.13534$ and round to the nearest fish.",
+      "steps": [
+        { "instruction": "Compute the exponent $-0.4 \\times 5$.", "answer": "-2", "accept": [], "hint": "Multiply the growth rate by the time." },
+        { "instruction": "Compute the denominator $1 + 9\\, e^{-2}$ (round to 5 decimals).", "answer": "2.21806", "accept": ["2.2181", "2.21806"], "hint": "$9 \\cdot 0.13534 \\approx 1.21806$, then add 1." },
+        { "instruction": "Compute $P = 5000 / 2.21806$ and round to the nearest fish.", "answer": "2254", "accept": ["2254", "2253", "2255"], "hint": "Divide 5000 by your denominator." }
+      ],
+      "finalAnswer": { "value": "2254", "unit": "fish" },
+      "solutionNarrative": "The exponent is $-0.4 \\cdot 5 = -2$, so the denominator is $1 + 9 e^{-2} \\approx 1 + 1.21806 = 2.21806$, giving $P = 5000/2.21806 \\approx 2254$ fish."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s16",
+      "concepts": ["limiting-and-logistic"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A wildlife reserve models its elk herd as $P(t) = \\frac{1200}{1 + 3\\, e^{-0.5 t}}$. Find the herd size after 4 years, and confirm the long-run ceiling. Use $e^{-2} \\approx 0.13534$ and round the herd size to the nearest elk.",
+      "steps": [
+        { "instruction": "Compute the exponent $-0.5 \\times 4$.", "answer": "-2", "accept": [], "hint": "Multiply the rate by the time." },
+        { "instruction": "Compute the denominator $1 + 3\\, e^{-2}$ (round to 5 decimals).", "answer": "1.40602", "accept": ["1.40602", "1.406"], "hint": "$3 \\cdot 0.13534 \\approx 0.40602$, then add 1." },
+        { "instruction": "Compute the herd size $P = 1200 / 1.40602$ (round to the nearest elk).", "answer": "853", "accept": ["853", "854", "852"], "hint": "Divide 1200 by your denominator." },
+        { "instruction": "What is the long-run carrying capacity (the value $P$ approaches as $t \\to \\infty$)?", "answer": "1200", "accept": [], "hint": "As $t \\to \\infty$ the $e^{-0.5t}$ term vanishes, leaving $1200/1$." }
+      ],
+      "finalAnswer": { "value": "853", "unit": "elk" },
+      "solutionNarrative": "At $t = 4$ the exponent is $-2$, so the denominator is $1 + 3 e^{-2} \\approx 1.40602$ and $P = 1200/1.40602 \\approx 853$ elk. As $t \\to \\infty$, the exponential vanishes and $P \\to 1200$ — the carrying capacity."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s17",
+      "concepts": ["radioactive-decay"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A radioactive tracer decays with constant $k = 0.02$ per hour. What is its half-life? Use $\\ln 2 \\approx 0.6931$ and round to two decimals.",
+      "steps": [
+        { "instruction": "Use the half-life formula: divide $\\ln 2$ by $k$.", "answer": "34.66", "accept": ["34.66"], "hint": "Half-life $= \\frac{\\ln 2}{k} = \\frac{0.6931}{0.02}$." }
+      ],
+      "finalAnswer": { "value": "34.66", "unit": "hours" },
+      "solutionNarrative": "Half-life $= \\frac{\\ln 2}{k} = \\frac{0.6931}{0.02} \\approx 34.66$ hours."
+    },
+    {
+      "id": "differential-equations.growth-decay-cooling.s18",
+      "concepts": ["newtons-cooling"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A roast at 165°F is left in a 70°F room cooling as $T(t) = 70 + 95\\, e^{-0.1 t}$ (°F, $t$ in minutes). What temperature does it approach after a very long time?",
+      "steps": [
+        { "instruction": "As $t \\to \\infty$, the term $e^{-0.1 t}$ approaches what number?", "answer": "0", "accept": [], "hint": "A negative exponential decays toward zero." },
+        { "instruction": "With that term gone, what temperature does $T$ approach?", "answer": "70", "accept": [], "hint": "$T \\to 70 + 95 \\cdot 0$, the room temperature." }
+      ],
+      "finalAnswer": { "value": "70", "unit": "°F" },
+      "solutionNarrative": "As $t \\to \\infty$, $e^{-0.1t} \\to 0$, so $T \\to 70 + 95 \\cdot 0 = 70$°F — the roast cools to room temperature."
+    }
+  ]
+}

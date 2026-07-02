@@ -1,0 +1,267 @@
+{
+  "id": "calculus-2.antiderivatives",
+  "subject": "calculus-2",
+  "title": "Antiderivatives and Indefinite Integrals",
+  "prerequisites": ["calculus-1.differentiation-rules"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "power-rule-integration",
+      "label": "The power rule for integration",
+      "microLesson": "Integration runs differentiation backward. To undo the power rule, **add one to the exponent and divide by the new exponent**: $\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1} + C$ (for $n \\neq -1$). So $\\int x^2\\,dx = \\dfrac{x^3}{3} + C$. Check by differentiating: $\\frac{d}{dx}\\big(\\frac{x^3}{3}\\big) = x^2$. ✓ The $+ C$ rides along because the derivative of any constant is zero, so the original constant is invisible to differentiation."
+    },
+    {
+      "id": "antiderivative-rules",
+      "label": "Constant-multiple and sum rules",
+      "microLesson": "Integration is **linear**: constants slide out front and sums split apart. $\\int 6x^2\\,dx = 6\\int x^2\\,dx = 2x^3 + C$, and $\\int (3x^2 + 4x)\\,dx = x^3 + 2x^2 + C$. Often you must **rewrite first** — expand a product like $x(x+2) = x^2 + 2x$ before integrating, since there is no product rule for integrals. Tidy the integrand into a sum of power terms, then integrate term by term."
+    },
+    {
+      "id": "initial-value-problems",
+      "label": "Initial-value problems (finding C)",
+      "microLesson": "An indefinite integral leaves $C$ unknown — every antiderivative is one of a whole family of parallel curves. A single **known point** pins down which one. Integrate to get the general form $F(x) + C$, substitute the given $x$ and $y$, and solve for $C$. If $F'(x) = 2x$ and $F(1) = 5$, then $F(x) = x^2 + C$; plugging in gives $1 + C = 5$, so $C = 4$ and $F(x) = x^2 + 4$."
+    },
+    {
+      "id": "antiderivative-applications",
+      "label": "Recovering quantities from rates",
+      "microLesson": "A rate is a derivative, so reversing it recovers the underlying quantity. Integrate **velocity** to get position, **acceleration** to get velocity, **marginal cost** to get total cost, or a **flow rate** to get accumulated volume. The starting value (position at $t=0$, fixed cost, initial volume) is the constant $C$. Once $C$ is known you can plug in a specific time to get an exact number — a distance, a cost, a volume."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Running the tape backward\n\nDifferentiation answers *\"how fast is this changing?\"* — it turns a position into a velocity, a cost into a marginal cost, a tank's volume into a flow rate. But the questions that matter in practice usually run the other way: you can measure the **rate** and you want the **total**. A car's speedometer reads velocity; you want distance traveled. A meter reads flow; you want the volume that piled up. **Antidifferentiation** is the reverse gear.\n\nAn **antiderivative** of a function $f$ is any function $F$ whose derivative is $f$, that is $F'(x) = f(x)$. Because the derivative of a constant is zero, if $F$ works then so does $F + 5$, $F - 100$, and every other vertical shift. We package the whole family as the **indefinite integral**:\n\n$$\\int f(x)\\,dx = F(x) + C,$$\n\nwhere $C$ is the **constant of integration**. The $\\int$ sign and the $dx$ are bookends saying *\"find the function whose rate is what's inside.\"* Never drop the $+ C$ on an indefinite integral — it represents real, missing information (the starting value).\n\n## The power rule, reversed\n\nThe power rule for derivatives multiplies down by the exponent and drops it by one. To undo it, do the opposite — **raise the exponent by one and divide by the new exponent**:\n\n$$\\int x^n\\,dx = \\frac{x^{n+1}}{n+1} + C \\quad (n \\neq -1).$$\n\nSo $\\int x^3\\,dx = \\frac{x^4}{4} + C$ and $\\int x\\,dx = \\frac{x^2}{2} + C$. The constant $\\int 5\\,dx = 5x + C$, since $5 = 5x^0$. **Always verify by differentiating your answer** — it should hand back the integrand.\n\n## Linearity: the only structural rules you get\n\nIntegration plays nicely with constant multiples and with addition:\n\n$$\\int k\\,f(x)\\,dx = k\\int f(x)\\,dx, \\qquad \\int \\big(f(x) \\pm g(x)\\big)\\,dx = \\int f(x)\\,dx \\pm \\int g(x)\\,dx.$$\n\nThat lets you integrate any polynomial **term by term**. For instance,\n\n$$\\int (3x^2 + 4x - 7)\\,dx = x^3 + 2x^2 - 7x + C.$$\n\nThere is **no product rule or quotient rule for integrals**. When the integrand is a product, **rewrite it first**: $\\int x(2x - 3)\\,dx = \\int (2x^2 - 3x)\\,dx = \\frac{2}{3}x^3 - \\frac{3}{2}x^2 + C$.\n\n## Pinning down C: initial-value problems\n\nThe $+ C$ is not a nuisance — it is the slot where a real-world starting condition goes. Geometrically, $F(x) + C$ is a stack of identical curves shifted up and down; **one known point selects exactly one of them.**\n\nSuppose $F'(x) = 6x^2$ and you know $F(1) = 10$. Integrate to the general form $F(x) = 2x^3 + C$, then substitute the point: $2(1)^3 + C = 10$, so $C = 8$ and $F(x) = 2x^3 + 8$. This two-step move — **integrate, then solve for $C$ using the known value** — is the workhorse of every application below.\n\n## From rates back to quantities\n\nThis is where antiderivatives earn their keep. A rate of change is a derivative, so integrating a rate rebuilds the original quantity, with $C$ supplied by the starting amount:\n\n- **Velocity → position.** If $v(t) = s'(t)$, then $s(t) = \\int v(t)\\,dt$; the constant is the initial position $s(0)$.\n- **Acceleration → velocity.** If $a(t) = v'(t)$, then $v(t) = \\int a(t)\\,dt$; the constant is the initial velocity $v(0)$.\n- **Marginal cost → total cost.** Integrate marginal cost $C'(q)$ to recover cost $C(q)$; the constant is the fixed cost.\n- **Flow rate → volume.** Integrate a flow rate $R(t)$ to get accumulated volume; the constant is the starting volume.\n\nIn each case you integrate, use the known starting value to find $C$, and then evaluate at the time or quantity you care about to land on a concrete number."
+  },
+  "application": {
+    "summary": "Antiderivatives convert a measured rate back into the total it builds up to: speedometer readings into distance, a pump's flow into volume, marginal cost into total cost. You integrate the rate, use a known starting value to fix the constant C, and evaluate to get a concrete distance, cost, or amount.",
+    "domains": ["physics", "engineering", "business", "everyday life"],
+    "workedExample": "**How far does the car travel?**\n\nA car starts from a marker (position $0$) with velocity $v(t) = 6t + 4$ feet per second. Where is it after 5 seconds?\n\nPosition is the antiderivative of velocity:\n\n$$s(t) = \\int (6t + 4)\\,dt = 3t^2 + 4t + C.$$\n\nThe car starts at the marker, so $s(0) = 0$. Substituting: $3(0)^2 + 4(0) + C = 0$, giving $C = 0$, so $s(t) = 3t^2 + 4t$.\n\nNow evaluate at $t = 5$: $s(5) = 3(25) + 4(5) = 75 + 20 = 95$ feet.\n\n**The car is 95 feet down the road.** The very same three moves — integrate the rate, fix $C$ from the start value, evaluate at the target — turn a pump's flow rate into liters in the tank, or a factory's marginal cost into the dollars to make the next 100 units.",
+    "domainNotes": [
+      "**Physics:** integrate acceleration to get velocity and velocity to get position; the two constants are the initial velocity and initial position.",
+      "**Engineering:** accumulate a flow rate into total volume delivered, or a load distribution into shear and moment.",
+      "**Business:** integrate marginal cost or marginal revenue to recover total cost or revenue; the constant is the fixed cost.",
+      "**Everyday life:** turn a filling or draining rate into how much is in the tank, tub, or reservoir at a given moment."
+    ]
+  },
+  "generators": ["antideriv-power-v1", "antideriv-rules-v1", "ivp-v1", "antideriv-app-v1"],
+  "problems": [
+    {
+      "id": "calculus-2.antiderivatives.s01",
+      "concepts": ["power-rule-integration"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the indefinite integral $\\int x^4\\,dx$. Include $+ C$.",
+      "steps": [
+        { "instruction": "Add one to the exponent and divide by the new exponent. Include $+ C$.", "answer": "x^5/5 + C", "accept": [], "hint": "$\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1} + C$, so the new exponent is 5." }
+      ],
+      "finalAnswer": { "value": "x^5/5 + C", "unit": "" },
+      "solutionNarrative": "Raise the exponent to 5 and divide by 5: $\\int x^4\\,dx = \\dfrac{x^5}{5} + C$. Check: $\\frac{d}{dx}(\\frac{x^5}{5}) = x^4$. ✓"
+    },
+    {
+      "id": "calculus-2.antiderivatives.s02",
+      "concepts": ["power-rule-integration"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find $\\int x^2\\,dx$. Include $+ C$.",
+      "steps": [
+        { "instruction": "Apply the power rule for integration. Include $+ C$.", "answer": "x^3/3 + C", "accept": [], "hint": "New exponent is 3; divide by 3." }
+      ],
+      "finalAnswer": { "value": "x^3/3 + C", "unit": "" },
+      "solutionNarrative": "$\\int x^2\\,dx = \\dfrac{x^3}{3} + C$. Differentiating $\\frac{x^3}{3}$ returns $x^2$. ✓"
+    },
+    {
+      "id": "calculus-2.antiderivatives.s03",
+      "concepts": ["power-rule-integration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $\\int (x^3 + x)\\,dx$. Include $+ C$.",
+      "steps": [
+        { "instruction": "Integrate each power term separately. Include $+ C$.", "answer": "x^4/4 + x^2/2 + C", "accept": [], "hint": "$\\int x^3\\,dx = \\frac{x^4}{4}$ and $\\int x\\,dx = \\frac{x^2}{2}$." }
+      ],
+      "finalAnswer": { "value": "x^4/4 + x^2/2 + C", "unit": "" },
+      "solutionNarrative": "Term by term: $\\int x^3\\,dx = \\frac{x^4}{4}$ and $\\int x\\,dx = \\frac{x^2}{2}$, so the integral is $\\frac{x^4}{4} + \\frac{x^2}{2} + C$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s04",
+      "concepts": ["power-rule-integration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $\\int (4x^3 + 6x^2 + 2)\\,dx$. Include $+ C$.",
+      "steps": [
+        { "instruction": "Integrate term by term. Include $+ C$.", "answer": "x^4 + 2x^3 + 2x + C", "accept": [], "hint": "$\\int 4x^3\\,dx = x^4$, $\\int 6x^2\\,dx = 2x^3$, $\\int 2\\,dx = 2x$." }
+      ],
+      "finalAnswer": { "value": "x^4 + 2x^3 + 2x + C", "unit": "" },
+      "solutionNarrative": "$\\int 4x^3\\,dx = x^4$, $\\int 6x^2\\,dx = 2x^3$, $\\int 2\\,dx = 2x$. Together: $x^4 + 2x^3 + 2x + C$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s05",
+      "concepts": ["power-rule-integration"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find $\\int (5x^4 - 9x^2 + 4x - 7)\\,dx$. Include $+ C$.",
+      "steps": [
+        { "instruction": "Integrate each term using the power rule. Include $+ C$.", "answer": "x^5 - 3x^3 + 2x^2 - 7x + C", "accept": [], "hint": "$\\int 5x^4 = x^5$, $\\int 9x^2 = 3x^3$, $\\int 4x = 2x^2$, $\\int 7 = 7x$." }
+      ],
+      "finalAnswer": { "value": "x^5 - 3x^3 + 2x^2 - 7x + C", "unit": "" },
+      "solutionNarrative": "Term by term: $x^5 - 3x^3 + 2x^2 - 7x + C$. Differentiating returns $5x^4 - 9x^2 + 4x - 7$. ✓"
+    },
+    {
+      "id": "calculus-2.antiderivatives.s06",
+      "concepts": ["antiderivative-rules"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find $\\int 6x^2\\,dx$. Include $+ C$.",
+      "steps": [
+        { "instruction": "Pull the constant 6 out front, integrate $x^2$, then multiply. Include $+ C$.", "answer": "2x^3 + C", "accept": [], "hint": "$6 \\cdot \\frac{x^3}{3} = 2x^3$." }
+      ],
+      "finalAnswer": { "value": "2x^3 + C", "unit": "" },
+      "solutionNarrative": "$6\\int x^2\\,dx = 6 \\cdot \\frac{x^3}{3} + C = 2x^3 + C$. Differentiating gives $6x^2$. ✓"
+    },
+    {
+      "id": "calculus-2.antiderivatives.s07",
+      "concepts": ["antiderivative-rules"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Rewrite and integrate $\\int x(x + 4)\\,dx$. There is no product rule — expand first. Include $+ C$.",
+      "steps": [
+        { "instruction": "Expand the integrand into a sum of power terms.", "answer": "x^2 + 4x", "accept": ["4x + x^2"], "hint": "$x(x+4) = x \\cdot x + x \\cdot 4$." },
+        { "instruction": "Integrate the expanded form term by term. Include $+ C$.", "answer": "x^3/3 + 2x^2 + C", "accept": [], "hint": "$\\int x^2 = \\frac{x^3}{3}$ and $\\int 4x = 2x^2$." }
+      ],
+      "finalAnswer": { "value": "x^3/3 + 2x^2 + C", "unit": "" },
+      "solutionNarrative": "Expand: $x(x+4) = x^2 + 4x$. Integrate: $\\frac{x^3}{3} + 2x^2 + C$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s08",
+      "concepts": ["antiderivative-rules"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $\\int (10x^4 - 6x)\\,dx$. Include $+ C$.",
+      "steps": [
+        { "instruction": "Use the constant-multiple and difference rules, integrating each term. Include $+ C$.", "answer": "2x^5 - 3x^2 + C", "accept": [], "hint": "$\\int 10x^4 = 2x^5$ and $\\int 6x = 3x^2$." }
+      ],
+      "finalAnswer": { "value": "2x^5 - 3x^2 + C", "unit": "" },
+      "solutionNarrative": "$\\int 10x^4\\,dx = 2x^5$ and $\\int 6x\\,dx = 3x^2$, so the integral is $2x^5 - 3x^2 + C$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s09",
+      "concepts": ["antiderivative-rules"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Rewrite and integrate $\\int (2x - 1)(x + 3)\\,dx$. Expand before integrating. Include $+ C$.",
+      "steps": [
+        { "instruction": "Expand the product into a sum of power terms.", "answer": "2x^2 + 5x - 3", "accept": ["2x^2 + 5x - 3"], "hint": "$(2x-1)(x+3) = 2x^2 + 6x - x - 3$." },
+        { "instruction": "Integrate the expanded polynomial term by term. Include $+ C$.", "answer": "2x^3/3 + 5x^2/2 - 3x + C", "accept": [], "hint": "$\\int 2x^2 = \\frac{2x^3}{3}$, $\\int 5x = \\frac{5x^2}{2}$, $\\int 3 = 3x$." }
+      ],
+      "finalAnswer": { "value": "2x^3/3 + 5x^2/2 - 3x + C", "unit": "" },
+      "solutionNarrative": "Expand: $(2x-1)(x+3) = 2x^2 + 5x - 3$. Integrate: $\\frac{2x^3}{3} + \\frac{5x^2}{2} - 3x + C$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s10",
+      "concepts": ["initial-value-problems"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "$F'(x) = 2x$ and $F(0) = 5$. Find the constant $C$ in $F(x) = x^2 + C$.",
+      "steps": [
+        { "instruction": "Substitute $x = 0$, $F = 5$ into $x^2 + C$ and solve for $C$.", "answer": "5", "accept": ["C = 5", "C=5"], "hint": "$0^2 + C = 5$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Integrating $2x$ gives $x^2 + C$. With $F(0) = 5$: $0 + C = 5$, so $C = 5$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s11",
+      "concepts": ["initial-value-problems"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "$F'(x) = 6x^2$ and $F(1) = 10$. Find $F(x)$.",
+      "steps": [
+        { "instruction": "Integrate $6x^2$ to get the general antiderivative. Include $+ C$.", "answer": "2x^3 + C", "accept": [], "hint": "$6 \\cdot \\frac{x^3}{3} = 2x^3$." },
+        { "instruction": "Substitute $x = 1$, $F = 10$ and solve for $C$.", "answer": "8", "accept": ["C = 8", "C=8"], "hint": "$2(1)^3 + C = 10$." },
+        { "instruction": "Write the specific function $F(x)$.", "answer": "2x^3 + 8", "accept": [], "hint": "Put your value of $C$ back into $2x^3 + C$." }
+      ],
+      "finalAnswer": { "value": "2x^3 + 8", "unit": "" },
+      "solutionNarrative": "$\\int 6x^2\\,dx = 2x^3 + C$. From $F(1) = 10$: $2 + C = 10$, so $C = 8$ and $F(x) = 2x^3 + 8$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s12",
+      "concepts": ["initial-value-problems"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "$F'(x) = 3x^2 - 4x + 1$ and $F(2) = 7$. Find $F(x)$, then evaluate $F(0)$.",
+      "steps": [
+        { "instruction": "Integrate $3x^2 - 4x + 1$. Include $+ C$.", "answer": "x^3 - 2x^2 + x + C", "accept": [], "hint": "$\\int 3x^2 = x^3$, $\\int 4x = 2x^2$, $\\int 1 = x$." },
+        { "instruction": "Substitute $x = 2$, $F = 7$ and solve for $C$.", "answer": "5", "accept": ["C = 5", "C=5"], "hint": "$8 - 8 + 2 + C = 7$, so $2 + C = 7$." },
+        { "instruction": "Evaluate $F(0)$ using the constant you found.", "answer": "5", "accept": ["F(0) = 5", "5"], "hint": "$F(0) = 0 - 0 + 0 + C = C$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$\\int (3x^2 - 4x + 1)\\,dx = x^3 - 2x^2 + x + C$. At $x = 2$: $8 - 8 + 2 + C = 7$, so $C = 5$. Then $F(0) = C = 5$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s13",
+      "concepts": ["antiderivative-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A drone climbs with velocity $v(t) = 4t$ meters per second, starting from height $0$. Its height is the antiderivative of velocity. How high is it after 3 seconds?",
+      "steps": [
+        { "instruction": "Integrate $v(t) = 4t$ to get the height function $h(t)$. Include $+ C$.", "answer": "2t^2 + C", "accept": [], "hint": "$\\int 4t\\,dt = 2t^2 + C$." },
+        { "instruction": "Use $h(0) = 0$ to find $C$.", "answer": "0", "accept": ["C = 0", "C=0"], "hint": "$2(0)^2 + C = 0$." },
+        { "instruction": "Evaluate $h(3)$ (meters).", "answer": "18", "accept": ["18 m"], "hint": "$2(3)^2 = 2 \\cdot 9$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "meters" },
+      "solutionNarrative": "$h(t) = \\int 4t\\,dt = 2t^2 + C$. Since $h(0) = 0$, $C = 0$. Then $h(3) = 2(9) = 18$ meters."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s14",
+      "concepts": ["antiderivative-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A car passes a marker (position $0$) with velocity $v(t) = 6t + 4$ feet per second. Position is the antiderivative of velocity. How far past the marker is it after 5 seconds?",
+      "steps": [
+        { "instruction": "Integrate $v(t) = 6t + 4$ to get position $s(t)$. Include $+ C$.", "answer": "3t^2 + 4t + C", "accept": [], "hint": "$\\int 6t\\,dt = 3t^2$ and $\\int 4\\,dt = 4t$." },
+        { "instruction": "Use $s(0) = 0$ to find $C$.", "answer": "0", "accept": ["C = 0", "C=0"], "hint": "$3(0)^2 + 4(0) + C = 0$." },
+        { "instruction": "Evaluate $s(5)$ (feet).", "answer": "95", "accept": ["95 ft"], "hint": "$3(25) + 4(5) = 75 + 20$." }
+      ],
+      "finalAnswer": { "value": "95", "unit": "feet" },
+      "solutionNarrative": "$s(t) = \\int (6t + 4)\\,dt = 3t^2 + 4t + C$. With $s(0) = 0$, $C = 0$. Then $s(5) = 75 + 20 = 95$ feet."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s15",
+      "concepts": ["antiderivative-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Water flows into an empty tank at rate $R(t) = 3t^2$ liters per minute. Volume is the antiderivative of the flow rate. How many liters are in the tank after 4 minutes?",
+      "steps": [
+        { "instruction": "Integrate $R(t) = 3t^2$ to get volume $V(t)$. Include $+ C$.", "answer": "t^3 + C", "accept": [], "hint": "$\\int 3t^2\\,dt = t^3 + C$." },
+        { "instruction": "The tank starts empty, so $V(0) = 0$. Find $C$.", "answer": "0", "accept": ["C = 0", "C=0"], "hint": "$0^3 + C = 0$." },
+        { "instruction": "Evaluate $V(4)$ (liters).", "answer": "64", "accept": ["64 L"], "hint": "$4^3 = 64$." }
+      ],
+      "finalAnswer": { "value": "64", "unit": "liters" },
+      "solutionNarrative": "$V(t) = \\int 3t^2\\,dt = t^3 + C$. Empty start means $C = 0$. Then $V(4) = 4^3 = 64$ liters."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s16",
+      "concepts": ["antiderivative-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A factory's marginal cost is $C'(q) = 3q^2 + 10$ dollars per unit, and the fixed cost is $C(0) = 500$ dollars. Find the total cost of producing $q = 10$ units.",
+      "steps": [
+        { "instruction": "Integrate the marginal cost $3q^2 + 10$ to get the cost function. Include $+ C$.", "answer": "q^3 + 10q + C", "accept": [], "hint": "$\\int 3q^2\\,dq = q^3$ and $\\int 10\\,dq = 10q$." },
+        { "instruction": "Use the fixed cost $C(0) = 500$ to find the constant.", "answer": "500", "accept": ["C = 500", "C=500"], "hint": "At $q = 0$ every term but the constant vanishes." },
+        { "instruction": "Evaluate the total cost at $q = 10$ (dollars).", "answer": "1600", "accept": ["1600 dollars", "\\$1600"], "hint": "$10^3 + 10(10) + 500 = 1000 + 100 + 500$." }
+      ],
+      "finalAnswer": { "value": "1600", "unit": "dollars" },
+      "solutionNarrative": "$C(q) = \\int (3q^2 + 10)\\,dq = q^3 + 10q + C$. The fixed cost gives $C = 500$. At $q = 10$: $1000 + 100 + 500 = \\$1600$."
+    },
+    {
+      "id": "calculus-2.antiderivatives.s17",
+      "concepts": ["antiderivative-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rocket sled accelerates at $a(t) = 12t$ ft/s². Its initial velocity is $v(0) = 5$ ft/s. Integrate acceleration to get velocity, then find the velocity at $t = 3$ seconds.",
+      "steps": [
+        { "instruction": "Integrate $a(t) = 12t$ to get velocity $v(t)$. Include $+ C$.", "answer": "6t^2 + C", "accept": [], "hint": "$\\int 12t\\,dt = 6t^2 + C$." },
+        { "instruction": "Use $v(0) = 5$ to find $C$.", "answer": "5", "accept": ["C = 5", "C=5"], "hint": "$6(0)^2 + C = 5$." },
+        { "instruction": "Evaluate $v(3)$ (ft/s).", "answer": "59", "accept": ["59 ft/s"], "hint": "$6(3)^2 + 5 = 54 + 5$." }
+      ],
+      "finalAnswer": { "value": "59", "unit": "ft/s" },
+      "solutionNarrative": "$v(t) = \\int 12t\\,dt = 6t^2 + C$. With $v(0) = 5$, $C = 5$. Then $v(3) = 6(9) + 5 = 54 + 5 = 59$ ft/s."
+    }
+  ]
+}

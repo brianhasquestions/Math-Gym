@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "subjects": [
+    {
+      "id": "algebra",
+      "title": "Algebra",
+      "blurb": "The language of the unknown — model real situations and solve for what you don't yet know.",
+      "topics": [
+        { "id": "algebra.real-numbers", "title": "Real Numbers and Operations", "file": "content/algebra/real-numbers.json", "status": "ready" },
+        { "id": "algebra.variables-expressions", "title": "Variables and Expressions", "file": "content/algebra/variables-expressions.json", "status": "ready" },
+        { "id": "algebra.linear-equations", "title": "Linear Equations in One Variable", "file": "content/algebra/linear-equations.json", "status": "ready" },
+        { "id": "algebra.linear-inequalities", "title": "Linear Inequalities", "file": "content/algebra/linear-inequalities.json", "status": "ready" },
+        { "id": "algebra.graphing-linear-equations", "title": "Graphing Linear Equations", "file": "content/algebra/graphing-linear-equations.json", "status": "ready" },
+        { "id": "algebra.ratios-proportions-percent", "title": "Ratios, Proportions, and Percent", "file": "content/algebra/ratios-proportions-percent.json", "status": "ready" },
+        { "id": "algebra.exponents", "title": "Exponents and Exponent Rules", "file": "content/algebra/exponents.json", "status": "ready" },
+        { "id": "algebra.polynomials-operations", "title": "Polynomial Operations", "file": "content/algebra/polynomials-operations.json", "status": "ready" },
+        { "id": "algebra.factoring", "title": "Factoring Polynomials", "file": "content/algebra/factoring.json", "status": "ready" },
+        { "id": "algebra.quadratic-equations", "title": "Solving Quadratic Equations", "file": "content/algebra/quadratic-equations.json", "status": "ready" },
+        { "id": "algebra.systems-linear-equations", "title": "Systems of Linear Equations (Two Variables)", "file": "content/algebra/systems-linear-equations.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "algebra-2",
+      "title": "Algebra 2",
+      "blurb": "Functions, exponentials, logarithms, and the math of growth.",
+      "topics": [
+        { "id": "algebra-2.functions", "title": "Functions: Notation, Domain, and Range", "file": "content/algebra-2/functions.json", "status": "ready" },
+        { "id": "algebra-2.radicals", "title": "Radical Expressions and Equations", "file": "content/algebra-2/radicals.json", "status": "ready" },
+        { "id": "algebra-2.rational-expressions", "title": "Rational Expressions and Equations", "file": "content/algebra-2/rational-expressions.json", "status": "ready" },
+        { "id": "algebra-2.exponential-functions", "title": "Exponential Functions", "file": "content/algebra-2/exponential-functions.json", "status": "ready" },
+        { "id": "algebra-2.logarithms", "title": "Logarithms", "file": "content/algebra-2/logarithms.json", "status": "ready" },
+        { "id": "algebra-2.sequences-and-series", "title": "Sequences and Series", "file": "content/algebra-2/sequences-and-series.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "geometry",
+      "title": "Geometry",
+      "blurb": "Shape, space, distance, and measurement in the physical world.",
+      "topics": [
+        { "id": "geometry.angles-and-lines", "title": "Lines and Angles", "file": "content/geometry/angles-and-lines.json", "status": "ready" },
+        { "id": "geometry.triangles", "title": "Triangles", "file": "content/geometry/triangles.json", "status": "ready" },
+        { "id": "geometry.similarity", "title": "Similarity and Scale", "file": "content/geometry/similarity.json", "status": "ready" },
+        { "id": "geometry.intro-to-proof", "title": "Introduction to Proof and Logical Reasoning", "file": "content/geometry/intro-to-proof.json", "status": "ready" },
+        { "id": "geometry.pythagorean-theorem", "title": "The Pythagorean Theorem", "file": "content/geometry/pythagorean-theorem.json", "status": "ready" },
+        { "id": "geometry.right-triangle-trigonometry", "title": "Right-Triangle Trigonometry", "file": "content/geometry/right-triangle-trigonometry.json", "status": "ready" },
+        { "id": "geometry.perimeter-and-area", "title": "Perimeter and Area", "file": "content/geometry/perimeter-and-area.json", "status": "ready" },
+        { "id": "geometry.circles", "title": "Circles: Arcs, Angles, and Sectors", "file": "content/geometry/circles.json", "status": "ready" },
+        { "id": "geometry.surface-area-and-volume", "title": "Surface Area and Volume", "file": "content/geometry/surface-area-and-volume.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "trigonometry",
+      "title": "Trigonometry",
+      "blurb": "Angles, waves, and rotation — the math of everything that cycles.",
+      "topics": [
+        { "id": "trigonometry.radians-and-unit-circle", "title": "Radians and the Unit Circle", "file": "content/trigonometry/radians-and-unit-circle.json", "status": "ready" },
+        { "id": "trigonometry.sine-cosine-graphs", "title": "Graphs of Sine and Cosine", "file": "content/trigonometry/sine-cosine-graphs.json", "status": "ready" },
+        { "id": "trigonometry.trig-identities", "title": "Trigonometric Identities", "file": "content/trigonometry/trig-identities.json", "status": "ready" },
+        { "id": "trigonometry.law-of-sines-and-cosines", "title": "The Law of Sines and Cosines", "file": "content/trigonometry/law-of-sines-and-cosines.json", "status": "ready" },
+        { "id": "trigonometry.trig-equations", "title": "Solving Trigonometric Equations", "file": "content/trigonometry/trig-equations.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "calculus-1",
+      "title": "Calculus 1",
+      "blurb": "Rates of change — how fast, how steep, how optimal.",
+      "topics": [
+        { "id": "calculus-1.limits-and-continuity", "title": "Limits and Continuity", "file": "content/calculus-1/limits-and-continuity.json", "status": "ready" },
+        { "id": "calculus-1.derivative-rates-of-change", "title": "The Derivative: Rates of Change", "file": "content/calculus-1/derivative-rates-of-change.json", "status": "ready" },
+        { "id": "calculus-1.differentiation-rules", "title": "Differentiation Rules", "file": "content/calculus-1/differentiation-rules.json", "status": "ready" },
+        { "id": "calculus-1.transcendental-derivatives", "title": "Derivatives of Exponential, Log, and Trig Functions", "file": "content/calculus-1/transcendental-derivatives.json", "status": "ready" },
+        { "id": "calculus-1.implicit-differentiation", "title": "Implicit Differentiation", "file": "content/calculus-1/implicit-differentiation.json", "status": "ready" },
+        { "id": "calculus-1.analyzing-functions", "title": "Analyzing Functions with Derivatives", "file": "content/calculus-1/analyzing-functions.json", "status": "ready" },
+        { "id": "calculus-1.related-rates", "title": "Related Rates", "file": "content/calculus-1/related-rates.json", "status": "ready" },
+        { "id": "calculus-1.optimization", "title": "Optimization", "file": "content/calculus-1/optimization.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "calculus-2",
+      "title": "Calculus 2",
+      "blurb": "Accumulation, areas, and infinite sums.",
+      "topics": [
+        { "id": "calculus-2.antiderivatives", "title": "Antiderivatives and Indefinite Integrals", "file": "content/calculus-2/antiderivatives.json", "status": "ready" },
+        { "id": "calculus-2.definite-integrals", "title": "The Definite Integral and the FTC", "file": "content/calculus-2/definite-integrals.json", "status": "ready" },
+        { "id": "calculus-2.integration-by-substitution", "title": "Integration by Substitution", "file": "content/calculus-2/integration-by-substitution.json", "status": "ready" },
+        { "id": "calculus-2.integration-by-parts", "title": "Integration by Parts", "file": "content/calculus-2/integration-by-parts.json", "status": "ready" },
+        { "id": "calculus-2.applications-of-integration", "title": "Applications of Integration", "file": "content/calculus-2/applications-of-integration.json", "status": "ready" },
+        { "id": "calculus-2.series-and-convergence", "title": "Series and Convergence", "file": "content/calculus-2/series-and-convergence.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "calculus-3",
+      "title": "Calculus 3",
+      "blurb": "Calculus in three dimensions — fields, surfaces, and flow.",
+      "topics": [
+        { "id": "calculus-3.vectors-in-space", "title": "Vectors in Space", "file": "content/calculus-3/vectors-in-space.json", "status": "ready" },
+        { "id": "calculus-3.dot-and-cross-products", "title": "The Dot and Cross Products", "file": "content/calculus-3/dot-and-cross-products.json", "status": "ready" },
+        { "id": "calculus-3.vector-proofs", "title": "Vector Proofs and Identities", "file": "content/calculus-3/vector-proofs.json", "status": "ready" },
+        { "id": "calculus-3.partial-derivatives", "title": "Partial Derivatives", "file": "content/calculus-3/partial-derivatives.json", "status": "ready" },
+        { "id": "calculus-3.gradient-and-directional-derivatives", "title": "The Gradient and Directional Derivatives", "file": "content/calculus-3/gradient-and-directional-derivatives.json", "status": "ready" },
+        { "id": "calculus-3.multivariable-optimization", "title": "Multivariable Optimization", "file": "content/calculus-3/multivariable-optimization.json", "status": "ready" },
+        { "id": "calculus-3.multiple-integrals", "title": "Double and Triple Integrals", "file": "content/calculus-3/multiple-integrals.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "differential-equations",
+      "title": "Differential Equations",
+      "blurb": "The math of systems that change over time.",
+      "topics": [
+        { "id": "differential-equations.introduction", "title": "Introduction to Differential Equations", "file": "content/differential-equations/introduction.json", "status": "ready" },
+        { "id": "differential-equations.separable-equations", "title": "Separable Differential Equations", "file": "content/differential-equations/separable-equations.json", "status": "ready" },
+        { "id": "differential-equations.linear-first-order", "title": "Linear First-Order Equations", "file": "content/differential-equations/linear-first-order.json", "status": "ready" },
+        { "id": "differential-equations.growth-decay-cooling", "title": "Growth, Decay, and Cooling Models", "file": "content/differential-equations/growth-decay-cooling.json", "status": "ready" },
+        { "id": "differential-equations.second-order-linear", "title": "Second-Order Linear Equations", "file": "content/differential-equations/second-order-linear.json", "status": "ready" },
+        { "id": "differential-equations.nonhomogeneous-second-order", "title": "Nonhomogeneous Second-Order Equations", "file": "content/differential-equations/nonhomogeneous-second-order.json", "status": "ready" },
+        { "id": "differential-equations.numerical-methods", "title": "Numerical Methods (Euler's Method)", "file": "content/differential-equations/numerical-methods.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "matrix-algebra",
+      "title": "Matrix Algebra",
+      "blurb": "Grids of numbers that move, scale, and solve.",
+      "topics": [
+        { "id": "matrix-algebra.matrix-operations", "title": "Matrix Operations", "file": "content/matrix-algebra/matrix-operations.json", "status": "ready" },
+        { "id": "matrix-algebra.matrix-multiplication", "title": "Matrix Multiplication", "file": "content/matrix-algebra/matrix-multiplication.json", "status": "ready" },
+        { "id": "matrix-algebra.determinants", "title": "Determinants", "file": "content/matrix-algebra/determinants.json", "status": "ready" },
+        { "id": "matrix-algebra.matrix-inverses", "title": "Matrix Inverses", "file": "content/matrix-algebra/matrix-inverses.json", "status": "ready" },
+        { "id": "matrix-algebra.solving-systems", "title": "Solving Systems with Matrices", "file": "content/matrix-algebra/solving-systems.json", "status": "ready" },
+        { "id": "matrix-algebra.matrix-transformations", "title": "Matrix Transformations and Applications", "file": "content/matrix-algebra/matrix-transformations.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "linear-algebra",
+      "title": "Linear Algebra",
+      "blurb": "Vectors, spaces, and transformations — the backbone of data and graphics.",
+      "topics": [
+        { "id": "linear-algebra.vectors-and-span", "title": "Vectors, Linear Combinations, and Span", "file": "content/linear-algebra/vectors-and-span.json", "status": "ready" },
+        { "id": "linear-algebra.linear-independence", "title": "Linear Independence", "file": "content/linear-algebra/linear-independence.json", "status": "ready" },
+        { "id": "linear-algebra.subspaces-and-basis", "title": "Subspaces, Basis, and Dimension", "file": "content/linear-algebra/subspaces-and-basis.json", "status": "ready" },
+        { "id": "linear-algebra.linear-transformations", "title": "Linear Transformations", "file": "content/linear-algebra/linear-transformations.json", "status": "ready" },
+        { "id": "linear-algebra.eigenvalues-and-eigenvectors", "title": "Eigenvalues and Eigenvectors", "file": "content/linear-algebra/eigenvalues-and-eigenvectors.json", "status": "ready" },
+        { "id": "linear-algebra.diagonalization", "title": "Diagonalization and Matrix Powers", "file": "content/linear-algebra/diagonalization.json", "status": "ready" },
+        { "id": "linear-algebra.orthogonality-and-least-squares", "title": "Orthogonality and Least Squares", "file": "content/linear-algebra/orthogonality-and-least-squares.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "discrete-math",
+      "title": "Discrete Math",
+      "blurb": "Logic, sets, counting, and networks — the math beneath algorithms and computer science.",
+      "topics": [
+        { "id": "discrete-math.logic-and-propositions", "title": "Propositional Logic and Truth Tables", "file": "content/discrete-math/logic-and-propositions.json", "status": "ready" },
+        { "id": "discrete-math.sets-and-set-operations", "title": "Sets and Set Operations", "file": "content/discrete-math/sets-and-set-operations.json", "status": "ready" },
+        { "id": "discrete-math.counting-principles", "title": "Counting: Permutations and Combinations", "file": "content/discrete-math/counting-principles.json", "status": "ready" },
+        { "id": "discrete-math.graph-theory-basics", "title": "Graph Theory: Networks, Paths, and Trees", "file": "content/discrete-math/graph-theory-basics.json", "status": "ready" },
+        { "id": "discrete-math.recursion-and-induction", "title": "Recursion, Recurrences, and Induction", "file": "content/discrete-math/recursion-and-induction.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "cryptography",
+      "title": "Cryptography",
+      "blurb": "The number theory and algebra that lock down the internet — from AES-256 to RSA and elliptic curves.",
+      "topics": [
+        { "id": "cryptography.modular-arithmetic", "title": "Modular Arithmetic: The Clock Behind Ciphers", "file": "content/cryptography/modular-arithmetic.json", "status": "ready" },
+        { "id": "cryptography.gcd-euclid", "title": "GCD, Primes, and the Euclidean Algorithm", "file": "content/cryptography/gcd-euclid.json", "status": "ready" },
+        { "id": "cryptography.modular-exponentiation", "title": "Modular Exponentiation and Fermat–Euler", "file": "content/cryptography/modular-exponentiation.json", "status": "ready" },
+        { "id": "cryptography.rsa", "title": "RSA: Public-Key Encryption", "file": "content/cryptography/rsa.json", "status": "ready" },
+        { "id": "cryptography.aes-finite-fields", "title": "Symmetric Ciphers and Finite Fields (AES)", "file": "content/cryptography/aes-finite-fields.json", "status": "ready" },
+        { "id": "cryptography.ecc", "title": "Elliptic Curve Cryptography", "file": "content/cryptography/ecc.json", "status": "ready" },
+        { "id": "cryptography.crypto-weaknesses", "title": "How Cryptography Breaks: Attacks and Misuse", "file": "content/cryptography/crypto-weaknesses.json", "status": "ready" }
+      ]
+    }
+  ]
+}

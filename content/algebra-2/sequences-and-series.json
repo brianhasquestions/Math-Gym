@@ -1,0 +1,257 @@
+{
+  "id": "algebra-2.sequences-and-series",
+  "subject": "algebra-2",
+  "title": "Sequences and Series",
+  "prerequisites": [],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "arithmetic-sequences",
+      "label": "Arithmetic sequences",
+      "microLesson": "An **arithmetic sequence** adds the same fixed amount — the **common difference** $d$ — to get from one term to the next. Anything growing by a constant step fits: a salary that rises \\$2{,}000 every year, theater rows that each hold 3 more seats. The $n$th term is $a_n = a_1 + (n-1)d$. For $3, 5, 7, 9, \\dots$ we have $a_1 = 3$, $d = 2$, so $a_{10} = 3 + 9(2) = 21$."
+    },
+    {
+      "id": "geometric-sequences",
+      "label": "Geometric sequences",
+      "microLesson": "A **geometric sequence** *multiplies* by the same fixed factor — the **common ratio** $r$ — each step. This is the math of percentages compounding: a balance growing 5% a year ($r = 1.05$), a bouncing ball keeping 60% of its height ($r = 0.6$), equipment depreciating. The $n$th term is $a_n = a_1 \\cdot r^{\\,n-1}$. For $2, 6, 18, 54, \\dots$ we have $a_1 = 2$, $r = 3$, so $a_5 = 2 \\cdot 3^{4} = 162$."
+    },
+    {
+      "id": "arithmetic-series",
+      "label": "Arithmetic series",
+      "microLesson": "A **series** is the *sum* of a sequence's terms. For an arithmetic sequence, pair the first and last terms: each pair sums to the same total, so $S_n = \\dfrac{n}{2}(a_1 + a_n)$ — the number of terms times the average of the first and last. To total the seats in 20 rows where row 1 has 18 and row 20 has 75: $S_{20} = \\dfrac{20}{2}(18 + 75) = 930$ seats."
+    },
+    {
+      "id": "geometric-series",
+      "label": "Geometric series",
+      "microLesson": "A **finite geometric series** sums the terms of a geometric sequence: $S_n = a_1 \\cdot \\dfrac{r^{\\,n} - 1}{r - 1}$. This is the workhorse behind savings plans, loan totals, and any repeated multiplying payment. Depositing \\$100 that grows 10% before each next deposit, the total after a few periods follows this formula. For $3 + 6 + 12 + 24 + 48$ (here $a_1 = 3$, $r = 2$, $n = 5$): $S_5 = 3 \\cdot \\dfrac{2^{5} - 1}{2 - 1} = 93$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The hidden pattern behind growth and totals\n\nSo much of money and planning is just **repeated steps**: a salary that climbs every year, savings you add to every month, a population that grows by a percentage, a loan you chip away at. A **sequence** is an ordered list of numbers produced by one of these step rules; a **series** is what you get when you add those numbers up. Spotting the rule lets you jump to *\"what's the value 30 steps from now?\"* and *\"what's the grand total?\"* without writing out every step.\n\nTwo step rules cover an enormous amount of the real world.\n\n## Arithmetic: same amount added each step\n\nAn **arithmetic sequence** adds a fixed **common difference** $d$ each time. A raise of \\$2{,}000 a year, a theater where each row holds 3 more seats than the last, a savings jar you put the same \\$50 into weekly — all arithmetic.\n\nThe $n$th term has a direct formula, so you never have to count up one step at a time:\n\n$$a_n = a_1 + (n-1)d.$$\n\nFor $5, 8, 11, 14, \\dots$ the first term is $a_1 = 5$ and $d = 3$, so the 12th term is $a_{12} = 5 + 11(3) = 38$.\n\n## Geometric: same factor multiplied each step\n\nA **geometric sequence** *multiplies* by a fixed **common ratio** $r$ each time. This is the signature of anything compounding by a percentage: a balance earning 5% a year ($r = 1.05$), a ball that rebounds to 60% of its drop height ($r = 0.6$), a machine losing 20% of its value annually ($r = 0.8$).\n\n$$a_n = a_1 \\cdot r^{\\,n-1}.$$\n\nFor $4, 12, 36, 108, \\dots$ we have $a_1 = 4$ and $r = 3$, so the 6th term is $a_6 = 4 \\cdot 3^{5} = 972$.\n\nThe difference matters: arithmetic growth is a straight ramp, geometric growth bends upward (or decays toward zero). The same starting number under 10% *added* versus 10% *multiplied* drift apart dramatically over time — the whole reason compound interest is powerful.\n\n## Series: adding the terms up\n\n### Arithmetic series\n\nTo total the first $n$ terms of an arithmetic sequence, use the pairing trick (famously, how a young Gauss summed $1$ to $100$ in seconds). Pair the first term with the last, the second with the second-to-last — every pair has the same sum. That gives\n\n$$S_n = \\frac{n}{2}\\,(a_1 + a_n).$$\n\nIn words: **the number of terms times the average of the first and last.** Twenty theater rows from 18 seats up to 75 seats hold $S_{20} = \\tfrac{20}{2}(18 + 75) = 930$ seats.\n\n### Geometric series\n\nFor a geometric sequence, the finite sum is\n\n$$S_n = a_1 \\cdot \\frac{r^{\\,n} - 1}{r - 1}.$$\n\nThis one formula prices out savings plans, total loan payments, and cumulative depreciation. Five payments of $3, 6, 12, 24, 48$ ($a_1 = 3$, $r = 2$, $n = 5$) total $S_5 = 3 \\cdot \\dfrac{2^{5} - 1}{2 - 1} = 93$.\n\n## How to attack one of these problems\n\n1. **Decide the rule.** Is each step a fixed *add* (arithmetic) or a fixed *multiply* (geometric)? Compute $d = a_2 - a_1$ or $r = a_2 / a_1$ to check.\n2. **Identify $a_1$, then $d$ or $r$, and the $n$ you want.**\n3. **Term or total?** A single value uses the $n$th-term formula; a running total uses a series formula.\n4. **Substitute carefully** — watch that $n - 1$ exponent and the parentheses, and round money to the nearest cent."
+  },
+  "application": {
+    "summary": "Sequences and series turn 'repeated step' situations into instant answers: a single formula gives the salary in year 30, the height of the 8th bounce, the total seats in a theater, or the grand total of a savings plan — without listing every step. Arithmetic models fixed-amount growth; geometric models percentage (compounding) growth.",
+    "domains": ["personal finance", "business", "physics", "everyday life"],
+    "workedExample": "**A salary with annual raises: what's year 10, and the 10-year total?**\n\nYou start at \\$48{,}000 and get a flat \\$2{,}500 raise every year. That's an arithmetic sequence with $a_1 = 48000$ and $d = 2500$.\n\n*Salary in year 10* is the 10th term:\n\n$$a_{10} = 48000 + (10 - 1)(2500) = 48000 + 22500 = \\$70{,}500.$$\n\n*Total earned over the 10 years* is the arithmetic series — number of terms times the average of first and last:\n\n$$S_{10} = \\frac{10}{2}\\,(48000 + 70500) = 5 \\times 118500 = \\$592{,}500.$$\n\nTwo formulas answer 'where will I be?' and 'how much in total?' at once. Swap a flat raise for a 5% raise and the same questions become *geometric* ($r = 1.05$): the per-step formula and the geometric-series formula handle it identically — which is exactly how you compare a fixed raise against a percentage raise before signing.",
+    "domainNotes": [
+      "**Finance:** total of a savings plan, full cost of a loan, year-by-year salary with flat or percentage raises.",
+      "**Business:** cumulative depreciation of equipment, compounding revenue or subscriber growth.",
+      "**Physics:** successive bounce heights of a ball, distances under a constant change each interval.",
+      "**Everyday life:** seats across theater rows, items stacked in a tapering pile, a weekly savings habit."
+    ]
+  },
+  "generators": ["arith-term-v1", "geom-term-v1", "arith-sum-v1", "geom-inf-sum-v1"],
+  "problems": [
+    {
+      "id": "algebra-2.sequences-and-series.s01",
+      "concepts": ["arithmetic-sequences"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the arithmetic sequence $4, 7, 10, 13, \\dots$",
+      "steps": [
+        { "instruction": "Find the common difference $d$.", "answer": "3", "accept": [], "hint": "Subtract any term from the next: $7 - 4$." },
+        { "instruction": "Find the 8th term $a_8$ using $a_n = a_1 + (n-1)d$.", "answer": "25", "accept": [], "hint": "$a_8 = 4 + (8-1)(3)$." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "" },
+      "solutionNarrative": "The common difference is $d = 7 - 4 = 3$. Then $a_8 = 4 + 7(3) = 4 + 21 = 25$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s02",
+      "concepts": ["arithmetic-sequences"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A theater's front row has 20 seats, and each row behind it has 4 more seats than the row in front. How many seats are in row 6?",
+      "steps": [
+        { "instruction": "Identify the common difference $d$ (seats added per row).", "answer": "4", "accept": [], "hint": "Each row gains 4 seats." },
+        { "instruction": "Find the seats in row 6 using $a_n = a_1 + (n-1)d$ with $a_1 = 20$.", "answer": "40", "accept": [], "hint": "$a_6 = 20 + (6-1)(4)$." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "seats" },
+      "solutionNarrative": "With $a_1 = 20$ and $d = 4$, row 6 has $a_6 = 20 + 5(4) = 20 + 20 = 40$ seats."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s03",
+      "concepts": ["arithmetic-sequences"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An arithmetic sequence starts $2, 5, 8, 11, \\dots$. Write the explicit formula for the $n$th term, simplified to the form $an + b$.",
+      "steps": [
+        { "instruction": "Find $a_1$ and the common difference $d$. Enter $d$.", "answer": "3", "accept": [], "hint": "$d = 5 - 2$." },
+        { "instruction": "Substitute into $a_n = a_1 + (n-1)d$ and simplify to the form $an + b$.", "answer": "3n - 1", "accept": ["3*n - 1", "3n-1"], "hint": "$2 + (n-1)(3) = 2 + 3n - 3 = 3n - 1$." }
+      ],
+      "finalAnswer": { "value": "3n - 1", "unit": "" },
+      "solutionNarrative": "$a_1 = 2$, $d = 3$, so $a_n = 2 + (n-1)(3) = 3n - 1$. Check: $n=1$ gives $2$, $n=2$ gives $5$. ✓"
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s04",
+      "concepts": ["arithmetic-sequences"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An employee starts at a salary of \\$45{,}000 and receives a flat raise of \\$2{,}500 each year. What is the salary in year 12? (Year 1 is the starting salary.)",
+      "steps": [
+        { "instruction": "Identify $a_1$ and $d$. Enter the common difference $d$.", "answer": "2500", "accept": [], "hint": "The flat annual raise is the common difference." },
+        { "instruction": "Use $a_n = a_1 + (n-1)d$ to find the year-12 salary.", "answer": "72500", "accept": ["72,500", "$72500", "$72,500"], "hint": "$a_{12} = 45000 + (12-1)(2500)$." }
+      ],
+      "finalAnswer": { "value": "72500", "unit": "dollars" },
+      "solutionNarrative": "With $a_1 = 45000$ and $d = 2500$, year 12 is $a_{12} = 45000 + 11(2500) = 45000 + 27500 = \\$72{,}500$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s05",
+      "concepts": ["geometric-sequences"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the geometric sequence $3, 6, 12, 24, \\dots$",
+      "steps": [
+        { "instruction": "Find the common ratio $r$.", "answer": "2", "accept": [], "hint": "Divide a term by the previous one: $6 \\div 3$." },
+        { "instruction": "Find the 6th term $a_6$ using $a_n = a_1 \\cdot r^{n-1}$.", "answer": "96", "accept": [], "hint": "$a_6 = 3 \\cdot 2^{5} = 3 \\cdot 32$." }
+      ],
+      "finalAnswer": { "value": "96", "unit": "" },
+      "solutionNarrative": "The ratio is $r = 6 / 3 = 2$. Then $a_6 = 3 \\cdot 2^{5} = 3 \\cdot 32 = 96$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s06",
+      "concepts": ["geometric-sequences"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A ball is dropped from 200 cm and on each bounce rebounds to half its previous height. How high (in cm) is the ball at the top of its 3rd bounce?",
+      "steps": [
+        { "instruction": "Identify the common ratio $r$.", "answer": "0.5", "accept": ["1/2"], "hint": "It keeps half its height each bounce." },
+        { "instruction": "The bounce heights are $100, 50, 25, \\dots$ (the first bounce reaches 100). Find the 3rd bounce height with $a_1 = 100$.", "answer": "25", "accept": [], "hint": "$a_3 = 100 \\cdot (0.5)^{2} = 100 \\cdot 0.25$." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "cm" },
+      "solutionNarrative": "The first bounce reaches $200 \\times 0.5 = 100$ cm, so $a_1 = 100$ and $r = 0.5$. The 3rd bounce is $a_3 = 100 \\cdot (0.5)^2 = 25$ cm."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s07",
+      "concepts": ["geometric-sequences"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A geometric sequence has first term $a_1 = 5$ and common ratio $r = 3$. Find the 5th term.",
+      "steps": [
+        { "instruction": "Write the exponent $n - 1$ for the 5th term.", "answer": "4", "accept": [], "hint": "For $a_5$, the exponent is $5 - 1$." },
+        { "instruction": "Compute $a_5 = a_1 \\cdot r^{n-1}$.", "answer": "405", "accept": [], "hint": "$5 \\cdot 3^{4} = 5 \\cdot 81$." }
+      ],
+      "finalAnswer": { "value": "405", "unit": "" },
+      "solutionNarrative": "$a_5 = 5 \\cdot 3^{4} = 5 \\cdot 81 = 405$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s08",
+      "concepts": ["geometric-sequences"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A \\$30{,}000 machine loses 20% of its value each year, so each year it is worth 80% of the year before. What is it worth at the end of year 4? Round to the nearest dollar.",
+      "steps": [
+        { "instruction": "Identify the common ratio $r$ (the fraction of value retained each year).", "answer": "0.8", "accept": ["4/5"], "hint": "Keeping 80% means $r = 0.8$." },
+        { "instruction": "Treating the purchase value \\$30{,}000 as $a_1$ (value at end of year 0), find the value after 4 years: $30000 \\cdot (0.8)^{4}$.", "answer": "12288", "accept": ["12,288", "$12288", "$12,288"], "hint": "$(0.8)^4 = 0.4096$, then $30000 \\times 0.4096$." }
+      ],
+      "finalAnswer": { "value": "12288", "unit": "dollars" },
+      "solutionNarrative": "Retaining 80% each year gives $r = 0.8$. After 4 years the value is $30000 \\cdot (0.8)^4 = 30000 \\cdot 0.4096 = \\$12{,}288$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s09",
+      "concepts": ["arithmetic-series"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the sum of the first 10 terms of the arithmetic sequence $1, 2, 3, \\dots, 10$.",
+      "steps": [
+        { "instruction": "Identify $a_1$ and $a_{10}$. Enter $a_{10}$.", "answer": "10", "accept": [], "hint": "The 10th term of $1, 2, 3, \\dots$ is 10." },
+        { "instruction": "Use $S_n = \\dfrac{n}{2}(a_1 + a_n)$ with $n = 10$.", "answer": "55", "accept": [], "hint": "$\\tfrac{10}{2}(1 + 10) = 5 \\times 11$." }
+      ],
+      "finalAnswer": { "value": "55", "unit": "" },
+      "solutionNarrative": "$S_{10} = \\tfrac{10}{2}(1 + 10) = 5 \\times 11 = 55$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s10",
+      "concepts": ["arithmetic-series"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A theater has 15 rows. The first row has 22 seats and each row has 3 more seats than the one in front. How many seats are in the theater in total?",
+      "steps": [
+        { "instruction": "Find the number of seats in the last (15th) row using $a_n = a_1 + (n-1)d$.", "answer": "64", "accept": [], "hint": "$a_{15} = 22 + (15-1)(3) = 22 + 42$." },
+        { "instruction": "Use $S_n = \\dfrac{n}{2}(a_1 + a_n)$ to total all 15 rows.", "answer": "645", "accept": [], "hint": "$\\tfrac{15}{2}(22 + 64) = 7.5 \\times 86$." }
+      ],
+      "finalAnswer": { "value": "645", "unit": "seats" },
+      "solutionNarrative": "The last row has $a_{15} = 22 + 14(3) = 64$ seats. The total is $S_{15} = \\tfrac{15}{2}(22 + 64) = 7.5 \\times 86 = 645$ seats."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s11",
+      "concepts": ["arithmetic-series"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You save \\$50 in week 1 and increase your weekly deposit by \\$10 each week (so \\$60 in week 2, \\$70 in week 3, and so on). How much have you saved in total after 20 weeks?",
+      "steps": [
+        { "instruction": "Find the deposit in week 20 using $a_n = a_1 + (n-1)d$ with $a_1 = 50$, $d = 10$.", "answer": "240", "accept": ["$240"], "hint": "$a_{20} = 50 + (20-1)(10)$." },
+        { "instruction": "Use $S_n = \\dfrac{n}{2}(a_1 + a_n)$ to total the 20 deposits.", "answer": "2900", "accept": ["2,900", "$2900", "$2,900"], "hint": "$\\tfrac{20}{2}(50 + 240) = 10 \\times 290$." }
+      ],
+      "finalAnswer": { "value": "2900", "unit": "dollars" },
+      "solutionNarrative": "Week 20's deposit is $a_{20} = 50 + 19(10) = 240$. The total saved is $S_{20} = \\tfrac{20}{2}(50 + 240) = 10 \\times 290 = \\$2{,}900$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s12",
+      "concepts": ["geometric-series"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the sum of the geometric series $2 + 4 + 8 + 16 + 32$.",
+      "steps": [
+        { "instruction": "Identify $a_1$, $r$, and $n$. Enter the common ratio $r$.", "answer": "2", "accept": [], "hint": "Each term doubles, so $r = 2$." },
+        { "instruction": "Use $S_n = a_1 \\cdot \\dfrac{r^{n} - 1}{r - 1}$ with $a_1 = 2$, $n = 5$.", "answer": "62", "accept": [], "hint": "$2 \\cdot \\dfrac{2^{5} - 1}{2 - 1} = 2 \\cdot 31$." }
+      ],
+      "finalAnswer": { "value": "62", "unit": "" },
+      "solutionNarrative": "With $a_1 = 2$, $r = 2$, $n = 5$: $S_5 = 2 \\cdot \\dfrac{32 - 1}{1} = 2 \\cdot 31 = 62$. (Check: $2+4+8+16+32 = 62$.)"
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s13",
+      "concepts": ["geometric-series"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the sum of the first 6 terms of the geometric sequence with $a_1 = 4$ and $r = 3$.",
+      "steps": [
+        { "instruction": "Compute $r^{n} = 3^{6}$.", "answer": "729", "accept": [], "hint": "$3^6 = 729$." },
+        { "instruction": "Use $S_n = a_1 \\cdot \\dfrac{r^{n} - 1}{r - 1}$ to find $S_6$.", "answer": "1456", "accept": ["1,456"], "hint": "$4 \\cdot \\dfrac{729 - 1}{3 - 1} = 4 \\cdot \\dfrac{728}{2}$." }
+      ],
+      "finalAnswer": { "value": "1456", "unit": "" },
+      "solutionNarrative": "$S_6 = 4 \\cdot \\dfrac{3^{6} - 1}{3 - 1} = 4 \\cdot \\dfrac{728}{2} = 4 \\cdot 364 = 1456$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s14",
+      "concepts": ["geometric-series"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Each year you deposit into an account that triples small seed amounts: you contribute \\$200 the first year, and each year's contribution is double the previous one (\\$200, \\$400, \\$800, \\dots). What is the total contributed over 7 years?",
+      "steps": [
+        { "instruction": "Identify $a_1$, $r$, and $n$. Enter the common ratio $r$.", "answer": "2", "accept": [], "hint": "Each contribution doubles, so $r = 2$." },
+        { "instruction": "Compute $r^{n} = 2^{7}$.", "answer": "128", "accept": [], "hint": "$2^7 = 128$." },
+        { "instruction": "Use $S_n = a_1 \\cdot \\dfrac{r^{n} - 1}{r - 1}$ to total the 7 contributions.", "answer": "25400", "accept": ["25,400", "$25400", "$25,400"], "hint": "$200 \\cdot \\dfrac{128 - 1}{2 - 1} = 200 \\cdot 127$." }
+      ],
+      "finalAnswer": { "value": "25400", "unit": "dollars" },
+      "solutionNarrative": "With $a_1 = 200$, $r = 2$, $n = 7$: $S_7 = 200 \\cdot \\dfrac{2^{7} - 1}{2 - 1} = 200 \\cdot 127 = \\$25{,}400$."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s15",
+      "concepts": ["arithmetic-sequences", "arithmetic-series"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A stadium section has 12 rows. Row 1 holds 30 seats and each row holds 5 more than the one before. First find how many seats are in the back (12th) row, then the total seats in the section.",
+      "steps": [
+        { "instruction": "Find the seats in row 12 using $a_n = a_1 + (n-1)d$.", "answer": "85", "accept": [], "hint": "$a_{12} = 30 + (12-1)(5) = 30 + 55$." },
+        { "instruction": "Total all 12 rows with $S_n = \\dfrac{n}{2}(a_1 + a_n)$.", "answer": "690", "accept": [], "hint": "$\\tfrac{12}{2}(30 + 85) = 6 \\times 115$." }
+      ],
+      "finalAnswer": { "value": "690", "unit": "seats" },
+      "solutionNarrative": "Row 12 holds $a_{12} = 30 + 11(5) = 85$ seats. The section totals $S_{12} = \\tfrac{12}{2}(30 + 85) = 6 \\times 115 = 690$ seats."
+    },
+    {
+      "id": "algebra-2.sequences-and-series.s16",
+      "concepts": ["geometric-sequences", "geometric-series"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ball is dropped and the heights it reaches each bounce form a geometric sequence: $80, 40, 20, \\dots$ cm. First find the height of the 5th bounce, then the total of the first 5 bounce heights. Round each to the nearest centimeter.",
+      "steps": [
+        { "instruction": "Identify the common ratio $r$.", "answer": "0.5", "accept": ["1/2"], "hint": "Each bounce is half the previous: $40 / 80$." },
+        { "instruction": "Find the 5th bounce height using $a_n = a_1 \\cdot r^{n-1}$ with $a_1 = 80$.", "answer": "5", "accept": [], "hint": "$a_5 = 80 \\cdot (0.5)^{4} = 80 \\cdot 0.0625$." },
+        { "instruction": "Sum the first 5 bounce heights with $S_n = a_1 \\cdot \\dfrac{r^{n} - 1}{r - 1}$.", "answer": "155", "accept": [], "hint": "$80 \\cdot \\dfrac{(0.5)^5 - 1}{0.5 - 1} = 80 \\cdot \\dfrac{-0.96875}{-0.5}$." }
+      ],
+      "finalAnswer": { "value": "155", "unit": "cm" },
+      "solutionNarrative": "Here $r = 0.5$. The 5th bounce is $a_5 = 80 \\cdot (0.5)^4 = 5$ cm. The total of the first 5 is $S_5 = 80 \\cdot \\dfrac{(0.5)^5 - 1}{0.5 - 1} = 80 \\cdot 1.9375 = 155$ cm (i.e. $80+40+20+10+5$)."
+    }
+  ]
+}
