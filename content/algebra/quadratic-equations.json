@@ -160,6 +160,95 @@
       ],
       "finalAnswer": { "value": "5", "unit": "feet" },
       "solutionNarrative": "$w^2 + 3w - 40 = 0 = (w + 8)(w - 5)$, so $w = 5$ (discarding $-8$)."
+    },
+    {
+      "id": "algebra.quadratic-equations.s10",
+      "concepts": ["square-root-method"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve by isolating the square first, then square-rooting:  $2(x - 3)^2 - 8 = 0$.",
+      "steps": [
+        { "instruction": "Add 8 to both sides, then divide by 2 to isolate the square. Write the equation $(x - 3)^2 = (\\text{number})$.", "answer": "(x - 3)^2 = 4", "accept": ["(x-3)^2=4"], "hint": "$2(x-3)^2 = 8$, so $(x-3)^2 = 4$." },
+        { "instruction": "Square-root both sides (remember $\\pm$) and solve. Enter both solutions.", "form": "solutions", "answer": "x = 5 or x = 1", "accept": ["5, 1", "1, 5"], "hint": "$x - 3 = \\pm 2$, so $x = 3 \\pm 2$." }
+      ],
+      "finalAnswer": { "value": "x = 5, x = 1", "unit": "" },
+      "solutionNarrative": "Isolate: $(x-3)^2 = 4$. Then $x - 3 = \\pm 2$, so $x = 5$ or $x = 1$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s11",
+      "concepts": ["discriminant"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A product's profit (in thousands of dollars) at price $x$ is modeled by $-3x^2 + 4x - 5$. Break-even is where profit $= 0$: $3x^2 - 4x + 5 = 0$. Use the discriminant to decide whether any price breaks even.",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac$ for $3x^2 - 4x + 5 = 0$ (here $a=3$, $b=-4$, $c=5$).", "answer": "-44", "accept": [], "hint": "$(-4)^2 - 4(3)(5) = 16 - 60$." },
+        { "instruction": "How many real break-even prices are there? Type 'two', 'one', or 'none'.", "answer": "none", "accept": ["0"], "hint": "A negative discriminant means no real solutions — the product never breaks even." }
+      ],
+      "finalAnswer": { "value": "none", "unit": "" },
+      "solutionNarrative": "Discriminant $16 - 60 = -44 < 0$, so there are no real solutions — no price breaks even."
+    },
+    {
+      "id": "algebra.quadratic-equations.s12",
+      "concepts": ["quadratic-formula"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve using the quadratic formula: $x^2 - 5x + 4 = 0$",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=-5$, $c=4$).", "answer": "9", "accept": [], "hint": "$(-5)^2 - 4(1)(4) = 25 - 16$." },
+        { "instruction": "Apply $x = \\dfrac{-b \\pm \\sqrt{D}}{2a}$ to find both solutions.", "form": "solutions", "answer": "x = 4 or x = 1", "accept": ["4, 1", "1, 4"], "hint": "$x = \\dfrac{5 \\pm 3}{2}$." }
+      ],
+      "finalAnswer": { "value": "x = 4, x = 1", "unit": "" },
+      "solutionNarrative": "Discriminant 9; $x = \\dfrac{5 \\pm 3}{2}$ gives $x = 4$ or $x = 1$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s13",
+      "concepts": ["square-root-method"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A square tile has area 36 in². Its side length $s$ satisfies $s^2 = 36$. What is the side length? (A length must be positive.)",
+      "steps": [
+        { "instruction": "Take the positive square root of both sides to find the side length (inches).", "answer": "s = 6", "accept": ["6"], "hint": "$\\sqrt{36} = 6$; discard the negative root since a length can't be negative." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "inches" },
+      "solutionNarrative": "$s^2 = 36 \\Rightarrow s = \\pm 6$; a length is positive, so $s = 6$ in."
+    },
+    {
+      "id": "algebra.quadratic-equations.s14",
+      "concepts": ["quadratic-formula"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve using the quadratic formula: $x^2 - 2x - 15 = 0$",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=-2$, $c=-15$).", "answer": "64", "accept": [], "hint": "$(-2)^2 - 4(1)(-15) = 4 + 60$." },
+        { "instruction": "Apply the formula to find both solutions.", "form": "solutions", "answer": "x = 5 or x = -3", "accept": ["5, -3", "-3, 5"], "hint": "$x = \\dfrac{2 \\pm 8}{2}$." }
+      ],
+      "finalAnswer": { "value": "x = 5, x = -3", "unit": "" },
+      "solutionNarrative": "Discriminant 64; $x = \\dfrac{2 \\pm 8}{2}$ gives $x = 5$ or $x = -3$."
+    },
+    {
+      "id": "algebra.quadratic-equations.s15",
+      "concepts": ["discriminant"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Without solving, how many real solutions does $x^2 - 4x + 1 = 0$ have?",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=-4$, $c=1$).", "answer": "12", "accept": [], "hint": "$(-4)^2 - 4(1)(1) = 16 - 4$." },
+        { "instruction": "How many real solutions? Type 'two', 'one', or 'none'.", "answer": "two", "accept": ["2"], "hint": "A positive discriminant means two real solutions." }
+      ],
+      "finalAnswer": { "value": "two", "unit": "" },
+      "solutionNarrative": "Discriminant $16 - 4 = 12 > 0$, so there are two real solutions."
+    },
+    {
+      "id": "algebra.quadratic-equations.s16",
+      "concepts": ["square-root-method"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A circular garden's area is $16\\pi$ ft², so its radius $r$ satisfies $r^2 = 16$. What is the radius? (A length must be positive.)",
+      "steps": [
+        { "instruction": "Take the positive square root of both sides to find the radius (feet).", "answer": "r = 4", "accept": ["4"], "hint": "$\\sqrt{16} = 4$; a radius is positive, so discard $-4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "feet" },
+      "solutionNarrative": "$r^2 = 16 \\Rightarrow r = \\pm 4$; a radius is positive, so $r = 4$ ft."
     }
   ]
 }

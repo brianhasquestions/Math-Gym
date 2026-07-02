@@ -42,7 +42,12 @@
       "**Debugging:** minimizing a bug report is counterexample refinement (the smallest input that still fails), and 'this state is impossible — so one of my assumptions is wrong' is proof by contradiction performed at 2 a.m."
     ]
   },
-  "generators": [],
+  "generators": [
+    "dm-proof-dir-d1", "dm-proof-dir-d2", "dm-proof-dir-d3",
+    "dm-proof-ctp-d1", "dm-proof-ctp-d2", "dm-proof-ctp-d3",
+    "dm-proof-con-d1", "dm-proof-con-d2", "dm-proof-con-d3",
+    "dm-proof-cex-d1", "dm-proof-cex-d2", "dm-proof-cex-d3"
+  ],
   "problems": [
     {
       "id": "discrete-math.proof-techniques.s01",

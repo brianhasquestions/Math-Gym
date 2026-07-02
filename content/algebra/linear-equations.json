@@ -157,6 +157,110 @@
       ],
       "finalAnswer": { "value": "11", "unit": "" },
       "solutionNarrative": "Distribute: $3x + 12 = 5x - 10$. Subtract $3x$: $12 = 2x - 10$. Add 10: $22 = 2x$. Divide by 2: $x = 11$."
+    },
+    {
+      "id": "algebra.linear-equations.s09",
+      "concepts": ["isolate-variable"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve for $x$ (note the fractional coefficient):  $\\dfrac{2}{3}x - 5 = 7$.",
+      "steps": [
+        { "instruction": "Add 5 to both sides.", "answer": "(2/3)x = 12", "accept": ["2/3 x = 12", "(2/3)x=12"], "hint": "Undo the -5 first: $7 + 5 = 12$." },
+        { "instruction": "Multiply both sides by $\\tfrac{3}{2}$ (the reciprocal of $\\tfrac{2}{3}$).", "answer": "x = 18", "accept": ["x=18", "18"], "hint": "$12 \\times \\tfrac{3}{2} = 18$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "" },
+      "solutionNarrative": "Add 5: $\\tfrac{2}{3}x = 12$. Multiply by $\\tfrac{3}{2}$: $x = 18$."
+    },
+    {
+      "id": "algebra.linear-equations.s10",
+      "concepts": ["combine-like-terms", "isolate-variable"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve for $x$ by first combining like terms on the left:  $8x - 3 - 5x + 11 = 26$.",
+      "steps": [
+        { "instruction": "Combine the $x$ terms and the constants on the left. Write the simplified equation.", "answer": "3x + 8 = 26", "accept": ["3x+8=26", "8+3x=26"], "hint": "$8x - 5x = 3x$ and $-3 + 11 = 8$." },
+        { "instruction": "Subtract 8 from both sides.", "answer": "3x = 18", "accept": ["3x=18"], "hint": "Undo the +8." },
+        { "instruction": "Solve for $x$.", "answer": "x = 6", "accept": ["x=6", "6"], "hint": "Divide both sides by 3." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Combine like terms: $3x + 8 = 26$. Subtract 8: $3x = 18$. Divide by 3: $x = 6$."
+    },
+    {
+      "id": "algebra.linear-equations.s11",
+      "concepts": ["distribute"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Distribute to remove the parentheses (do not solve):  $4(x + 5)$.",
+      "steps": [
+        { "instruction": "Multiply the 4 through the parentheses. Write the result.", "answer": "4x + 20", "accept": ["20 + 4x"], "hint": "$4 \\cdot x = 4x$ and $4 \\cdot 5 = 20$." }
+      ],
+      "finalAnswer": { "value": "4x + 20", "unit": "" },
+      "solutionNarrative": "$4(x + 5) = 4x + 20$."
+    },
+    {
+      "id": "algebra.linear-equations.s12",
+      "concepts": ["variables-both-sides"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Gather the variable on one side (one step):  $6x = 2x + 12$. Subtract $2x$ from both sides and write the resulting equation.",
+      "steps": [
+        { "instruction": "Subtract $2x$ from both sides. Write the resulting equation.", "answer": "4x = 12", "accept": ["4x=12", "12 = 4x"], "hint": "$6x - 2x = 4x$; the right side loses its $2x$." }
+      ],
+      "finalAnswer": { "value": "4x = 12", "unit": "" },
+      "solutionNarrative": "Subtracting $2x$ from both sides of $6x = 2x + 12$ gives $4x = 12$ (which then solves to $x = 3$)."
+    },
+    {
+      "id": "algebra.linear-equations.s13",
+      "concepts": ["distribute", "isolate-variable"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A recipe for one batch needs $(x + 2)$ cups of flour. For a party you make 3 batches. Write the total cups of flour with the parentheses removed.",
+      "steps": [
+        { "instruction": "Distribute the 3 over $(x + 2)$. Write the expression.", "answer": "3x + 6", "accept": ["6 + 3x"], "hint": "$3 \\cdot x = 3x$ and $3 \\cdot 2 = 6$." }
+      ],
+      "finalAnswer": { "value": "3x + 6", "unit": "cups" },
+      "solutionNarrative": "$3(x + 2) = 3x + 6$ cups of flour."
+    },
+    {
+      "id": "algebra.linear-equations.s14",
+      "concepts": ["variables-both-sides"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two water tanks are draining. Tank A holds $9x$ liters and tank B holds $5x + 20$ liters, where $x$ is a scale factor. They hold the same amount. Subtract $5x$ from both sides to gather the variable, and write the resulting equation.",
+      "steps": [
+        { "instruction": "From $9x = 5x + 20$, subtract $5x$ from both sides. Write the resulting equation.", "answer": "4x = 20", "accept": ["4x=20", "20 = 4x"], "hint": "$9x - 5x = 4x$; the right side loses its $5x$." }
+      ],
+      "finalAnswer": { "value": "4x = 20", "unit": "" },
+      "solutionNarrative": "Subtracting $5x$ from both sides of $9x = 5x + 20$ gives $4x = 20$ (so $x = 5$)."
+    },
+    {
+      "id": "algebra.linear-equations.s15",
+      "concepts": ["isolate-variable", "combine-like-terms"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ride-share charges a \\$4 base fare, then \\$2.50 per mile, but a \\$3 credit is applied. Your total is \\$14. Model it as $2.5x + 4 - 3 = 14$ and find the miles $x$.",
+      "steps": [
+        { "instruction": "Combine the constant terms on the left. Write the simplified equation.", "answer": "2.5x + 1 = 14", "accept": ["2.5x+1=14", "1 + 2.5x = 14"], "hint": "$4 - 3 = 1$." },
+        { "instruction": "Subtract 1 from both sides.", "answer": "2.5x = 13", "accept": ["2.5x=13"], "hint": "Undo the +1." },
+        { "instruction": "Solve for $x$ (divide by 2.5).", "answer": "x = 5.2", "accept": ["x=5.2", "5.2", "26/5"], "hint": "$13 \\div 2.5 = 5.2$." }
+      ],
+      "finalAnswer": { "value": "5.2", "unit": "miles" },
+      "solutionNarrative": "Combine constants: $2.5x + 1 = 14$. Subtract 1: $2.5x = 13$. Divide by 2.5: $x = 5.2$ miles."
+    },
+    {
+      "id": "algebra.linear-equations.s16",
+      "concepts": ["combine-like-terms", "variables-both-sides"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve for $x$ (combine like terms on each side first):  $7x - 2x + 4 = 9 + x - 1$.",
+      "steps": [
+        { "instruction": "Combine like terms on each side. Write the simplified equation.", "answer": "5x + 4 = x + 8", "accept": ["5x+4=x+8"], "hint": "Left: $7x - 2x = 5x$. Right: $9 - 1 = 8$." },
+        { "instruction": "Subtract $x$ from both sides.", "answer": "4x + 4 = 8", "accept": ["4x+4=8"], "hint": "Gather the variable on the left." },
+        { "instruction": "Subtract 4 from both sides.", "answer": "4x = 4", "accept": ["4x=4"], "hint": "Move the constant." },
+        { "instruction": "Solve for $x$.", "answer": "x = 1", "accept": ["x=1", "1"], "hint": "Divide by 4." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "Combine: $5x + 4 = x + 8$. Subtract $x$: $4x + 4 = 8$. Subtract 4: $4x = 4$. Divide by 4: $x = 1$."
     }
   ]
 }

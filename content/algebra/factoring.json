@@ -158,6 +158,92 @@
       ],
       "finalAnswer": { "value": "3", "unit": "seconds" },
       "solutionNarrative": "$-16t^2 + 48t = -16t(t - 3)$, which is zero at $t = 0$ and $t = 3$, so the ball lands at $t = 3$ seconds."
+    },
+    {
+      "id": "algebra.factoring.s10",
+      "concepts": ["trinomial-leading"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Factor completely: $2x^2 + 5x + 2$",
+      "steps": [
+        { "instruction": "Factor this trinomial into two binomials.", "form": "factored", "answer": "(2x + 1)(x + 2)", "accept": [], "hint": "AC method: $a \\cdot c = 4$; two numbers multiplying to 4 and adding to 5 are 4 and 1." }
+      ],
+      "finalAnswer": { "value": "(2x + 1)(x + 2)", "unit": "" },
+      "solutionNarrative": "$2x^2 + 5x + 2 = (2x + 1)(x + 2)$."
+    },
+    {
+      "id": "algebra.factoring.s11",
+      "concepts": ["trinomial-leading"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Factor completely: $3x^2 + 10x + 8$",
+      "steps": [
+        { "instruction": "Compute $a \\cdot c$, then find two integers that multiply to it and add to $b = 10$. Enter them comma-separated.", "answer": "6, 4", "accept": ["4, 6"], "hint": "$a \\cdot c = 3 \\cdot 8 = 24$; which pair multiplies to 24 and adds to 10?" },
+        { "instruction": "Split the middle term and factor by grouping. Write the factorization.", "form": "factored", "answer": "(3x + 4)(x + 2)", "accept": [], "hint": "$3x^2 + 6x + 4x + 8 = 3x(x + 2) + 4(x + 2)$." }
+      ],
+      "finalAnswer": { "value": "(3x + 4)(x + 2)", "unit": "" },
+      "solutionNarrative": "$a \\cdot c = 24$; 6 and 4 split the middle: $3x^2 + 6x + 4x + 8 = (3x + 4)(x + 2)$."
+    },
+    {
+      "id": "algebra.factoring.s12",
+      "concepts": ["gcf"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Factor out the greatest common factor: $5x^2 + 10x$",
+      "steps": [
+        { "instruction": "Write the factored form.", "form": "factored", "answer": "5x(x + 2)", "accept": [], "hint": "The GCF is $5x$; divide each term by it." }
+      ],
+      "finalAnswer": { "value": "5x(x + 2)", "unit": "" },
+      "solutionNarrative": "GCF is $5x$: $5x^2 + 10x = 5x(x + 2)$."
+    },
+    {
+      "id": "algebra.factoring.s13",
+      "concepts": ["difference-of-squares"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Factor completely: $x^2 - 16$",
+      "steps": [
+        { "instruction": "Write $x^2 - 16$ as a difference of squares, then factor it.", "form": "factored", "answer": "(x - 4)(x + 4)", "accept": [], "hint": "$x^2 - 16 = x^2 - 4^2$." }
+      ],
+      "finalAnswer": { "value": "(x - 4)(x + 4)", "unit": "" },
+      "solutionNarrative": "$x^2 - 16 = (x - 4)(x + 4)$."
+    },
+    {
+      "id": "algebra.factoring.s14",
+      "concepts": ["trinomial-simple"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Factor completely: $x^2 + 6x + 8$",
+      "steps": [
+        { "instruction": "Find two integers that multiply to 8 and add to 6. Enter them comma-separated.", "answer": "2, 4", "accept": ["4, 2"], "hint": "Factor pairs of 8: (1,8), (2,4). Which adds to 6?" },
+        { "instruction": "Write the factorization.", "form": "factored", "answer": "(x + 2)(x + 4)", "accept": [], "hint": "Each number $r$ gives a factor $(x + r)$." }
+      ],
+      "finalAnswer": { "value": "(x + 2)(x + 4)", "unit": "" },
+      "solutionNarrative": "2 and 4 multiply to 8 and add to 6: $(x + 2)(x + 4)$."
+    },
+    {
+      "id": "algebra.factoring.s15",
+      "concepts": ["trinomial-leading"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rectangular banner has area $6x^2 + 11x + 3$ square feet, and both sides are binomials with integer coefficients. Factor the area to recover the two side-length expressions.",
+      "steps": [
+        { "instruction": "Factor the area into two binomials — these are the side lengths.", "form": "factored", "answer": "(3x + 1)(2x + 3)", "accept": ["(2x + 3)(3x + 1)"], "hint": "AC method: $a \\cdot c = 18$; 9 and 2 multiply to 18 and add to 11." }
+      ],
+      "finalAnswer": { "value": "(3x + 1)(2x + 3)", "unit": "feet" },
+      "solutionNarrative": "$6x^2 + 11x + 3 = (3x + 1)(2x + 3)$, so the sides are $(3x + 1)$ and $(2x + 3)$ feet."
+    },
+    {
+      "id": "algebra.factoring.s16",
+      "concepts": ["difference-of-squares"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A square frame of side $x$ has a square hole of side 6 cut out; the remaining area is $x^2 - 36$ cm². Factor it to see the dimensions that drive the area.",
+      "steps": [
+        { "instruction": "Factor $x^2 - 36$ as a difference of squares.", "form": "factored", "answer": "(x - 6)(x + 6)", "accept": [], "hint": "$x^2 - 36 = x^2 - 6^2$." }
+      ],
+      "finalAnswer": { "value": "(x - 6)(x + 6)", "unit": "" },
+      "solutionNarrative": "$x^2 - 36 = (x - 6)(x + 6)$."
     }
   ]
 }

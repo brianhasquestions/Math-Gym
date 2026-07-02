@@ -1254,3 +1254,271 @@ fill["dm-rec-cnt-d3"] = (rng, idx) => {
     solutionNarrative: `$L$: $${L.slice(0, N + 1).join(", ")}$ — ${L[N]} regions from ${N} cuts. The added term grows each time ($+1, +2, \\ldots, +${N}$), and those increments sum to the triangular numbers, giving the closed form $1 + \\frac{n(n+1)}{2}$, which indeed yields ${1 + (N * (N + 1)) / 2} at $n = ${N}$. Count what the LAST move adds, and the recurrence writes itself.`,
   };
 };
+
+// ===========================================================================
+// TOPIC 6: discrete-math.proof-techniques
+// ===========================================================================
+
+// --- direct-proof ---
+fill["dm-proof-dir-d1"] = (rng, idx) => {
+  const o1 = 2 * rng.int(2, 9) + 1, o2 = 2 * rng.int(2, 9) + 1, e1 = 2 * rng.int(2, 9);
+  const v = rng.pick([
+    {
+      claim: "the sum of two odd integers is even",
+      algebra: "Write the odds as $2a+1$ and $2b+1$. Their sum is $(2a+1) + (2b+1) = 2a + 2b + 2 = 2(a+b+1)$ — two times an integer. Is the sum even or odd? (Answer: even or odd)",
+      parity: "even", parityHint: "Anything of the form $2 \\times (\\text{integer})$ is even by definition.",
+      check: `Sanity-check the general proof with one case: compute $${o1} + ${o2}$. (Give a number.)`,
+      checkA: `${o1 + o2}`, checkH: `$${o1} + ${o2}$.`,
+      narr: `Direct proof: $(2a+1) + (2b+1) = 2(a+b+1)$, two times an integer — even. The spot check $${o1} + ${o2} = ${o1 + o2}$ illustrates what the algebra already proved for every pair of odds at once.`,
+    },
+    {
+      claim: "the sum of an even integer and an odd integer is odd",
+      algebra: "Write them as $2a$ and $2b+1$. The sum is $2a + 2b + 1 = 2(a+b) + 1$ — two times an integer plus one. Is the sum even or odd? (Answer: even or odd)",
+      parity: "odd", parityHint: "The form $2m + 1$ is the definition of odd.",
+      check: `Sanity-check the general proof with one case: compute $${e1} + ${o1}$. (Give a number.)`,
+      checkA: `${e1 + o1}`, checkH: `$${e1} + ${o1}$.`,
+      narr: `Direct proof: $2a + (2b+1) = 2(a+b) + 1$, which has the odd form $2m+1$. The check $${e1} + ${o1} = ${e1 + o1}$ (odd) illustrates the already-proved general fact.`,
+    },
+    {
+      claim: "the product of an even integer and ANY integer is even",
+      algebra: "Write the even one as $2a$ and the other as $b$. The product is $2a \\cdot b = 2(ab)$ — two times an integer. Is the product even or odd? (Answer: even or odd)",
+      parity: "even", parityHint: "$2 \\times (\\text{integer})$ is even, whatever $b$ is.",
+      check: `Sanity-check the general proof with one case: compute $${e1} \\cdot ${o1}$. (Give a number.)`,
+      checkA: `${e1 * o1}`, checkH: `$${e1} \\times ${o1}$.`,
+      narr: `Direct proof: $2a \\cdot b = 2(ab)$, two times an integer — even, no matter the parity of $b$. The check $${e1} \\cdot ${o1} = ${e1 * o1}$ agrees.`,
+    },
+  ]);
+  return {
+    id: `gen.dm-proof-dir-d1.${idx}`, generated: true, concepts: ["direct-proof"], difficulty: 1, context: "abstract",
+    prompt: `Claim: ${v.claim}. Prove it.`,
+    steps: [
+      { instruction: "The hypothesis translates straight into algebra and computes forward to the conclusion. Which technique fits best? (Answer with one of: direct, contrapositive, contradiction, counterexample)", answer: "direct", accept: ["direct proof"], hint: "No negation, no assumption-for-contradiction — unfold the definitions and compute forward." },
+      { instruction: v.algebra, answer: v.parity, accept: [], hint: v.parityHint },
+      { instruction: v.check, answer: v.checkA, accept: [], hint: v.checkH },
+    ],
+    finalAnswer: { value: v.parity, unit: "" },
+    solutionNarrative: v.narr,
+  };
+};
+fill["dm-proof-dir-d2"] = (rng, idx) => {
+  const c = rng.int(3, 7);
+  return {
+    id: `gen.dm-proof-dir-d2.${idx}`, generated: true, concepts: ["direct-proof"], difficulty: 2, context: "abstract",
+    prompt: `Claim: if $n$ is even, then $n^2 + ${c}n$ is even. Prove it directly.`,
+    steps: [
+      { instruction: `Write $n$ as an even number: $n = 2k$. Expand $n^2 + ${c}n$ in terms of $k$.`, answer: `4k^2+${2 * c}k`, accept: [], hint: `$(2k)^2 + ${c} \\cdot 2k$.` },
+      { instruction: `To exhibit the even form, rewrite $4k^2 + ${2 * c}k$ as $2m$. What is $m$ in terms of $k$?`, answer: `2k^2+${c}k`, accept: [], hint: "Pull one factor of 2 out of both terms." },
+      { instruction: `$n^2 + ${c}n = 2(2k^2 + ${c}k)$ is two times an integer. Is it even or odd? (Answer: even or odd)`, answer: "even", accept: [], hint: "$2 \\times (\\text{integer})$ is the definition of even." },
+    ],
+    finalAnswer: { value: "even", unit: "" },
+    solutionNarrative: `Let $n = 2k$. Then $n^2 + ${c}n = 4k^2 + ${2 * c}k = 2(2k^2 + ${c}k)$ — two times an integer, hence even. Exhibiting the form $2(\\text{integer})$ is the finishing move of every parity proof.`,
+  };
+};
+fill["dm-proof-dir-d3"] = (rng, idx) => {
+  const c = rng.pick([3, 5, 7]);
+  const h = (c - 1) / 2;
+  const s = rng.int(2, 9);
+  const mid = s + h;
+  const terms = Array.from({ length: c }, (_, i) => s + i);
+  return {
+    id: `gen.dm-proof-dir-d3.${idx}`, generated: true, concepts: ["direct-proof"], difficulty: 3, context: "applied",
+    prompt: `A metrics dashboard smooths a counter by summing ${c} consecutive readings, then dividing by ${c} — silently assuming the claim: the sum of ANY ${c} consecutive integers is divisible by ${c}. Prove the claim before it ships.`,
+    steps: [
+      { instruction: "The claim computes forward from its hypothesis with no negations in sight. Which technique fits best? (Answer with one of: direct, contrapositive, contradiction, counterexample)", answer: "direct", accept: ["direct proof"], hint: "Unfold what 'consecutive' means into algebra and compute." },
+      { instruction: `Name the MIDDLE integer $n$, so the ${c} consecutive integers run from $n - ${h}$ to $n + ${h}$. Each pair $(n-j) + (n+j)$ collapses to $2n$. What is the total sum, in terms of $n$?`, answer: `${c}n`, accept: [], hint: `The ${h} pairs give $${2 * h}n$, plus the middle $n$ itself.` },
+      { instruction: `The sum is $${c}n = ${c} \\cdot (\\text{integer})$ — divisible by ${c}, proved. Spot-check: compute $${terms.join(" + ")}$. (Give a number.)`, answer: `${c * mid}`, accept: [], hint: `The middle reading is ${mid}, and the proof says the sum is $${c} \\cdot ${mid}$.` },
+      { instruction: `Divide by ${c} — the quotient should be a whole number. What is it?`, answer: `${mid}`, accept: [], hint: `$${c * mid} / ${c}$.` },
+    ],
+    finalAnswer: { value: `${c * mid}`, unit: "" },
+    solutionNarrative: `Center the run on its middle integer $n$: offsets cancel in pairs, so the sum is exactly $${c}n$ — divisible by ${c} for EVERY run, no case checking needed. The spot check agrees: $${terms.join(" + ")} = ${c * mid} = ${c} \\cdot ${mid}$. Choosing the symmetric representation is what made the direct proof one line.`,
+  };
+};
+
+// --- contrapositive-proof ---
+fill["dm-proof-ctp-d1"] = (rng, idx) => {
+  const v = rng.pick([
+    { rule: "if a commit touches the payments module, CI runs the full test suite",
+      mirror: "If the full suite did NOT run, the commit did not touch payments",
+      swapOnly: "If the full suite ran, the commit touched payments",
+      why: "The full suite also runs on a nightly schedule — the converse has other causes." },
+    { rule: "if the disk is full, the writer logs a DISK_FULL error",
+      mirror: "If no DISK_FULL error was logged, the disk is not full",
+      swapOnly: "If a DISK_FULL error was logged, the disk is full",
+      why: "A flaky driver can emit the same error early — the converse is an unproven extra claim." },
+    { rule: "if a request has no auth token, the gateway rejects it",
+      mirror: "If a request was NOT rejected, it had an auth token",
+      swapOnly: "If a request was rejected, it had no auth token",
+      why: "Requests get rejected for many reasons (rate limits, bad routes) — the converse does not follow." },
+  ]);
+  return {
+    id: `gen.dm-proof-ctp-d1.${idx}`, generated: true, concepts: ["contrapositive-proof"], difficulty: 1, context: "applied",
+    prompt: `A system spec guarantees: '${v.rule}.'`,
+    steps: [
+      { instruction: `'${v.mirror}' swaps and negates both parts of the spec. Which form is it? (Answer with one of: converse, inverse, contrapositive)`, answer: "contrapositive", accept: ["the contrapositive"], hint: "Swap AND negate = contrapositive." },
+      { instruction: "Is that form guaranteed to have the same truth value as the original spec? (yes/no)", answer: "yes", accept: ["equivalent"], hint: "$p \\to q \\equiv \\lnot q \\to \\lnot p$ — the truth-table columns match in every row." },
+      { instruction: `'${v.swapOnly}' merely swaps the parts. Which form is that? (Answer with one of: converse, inverse, contrapositive)`, answer: "converse", accept: ["the converse"], hint: "Swap only, no negation." },
+      { instruction: "Can you rely on the converse without further proof? (yes/no)", answer: "no", accept: [], hint: v.why },
+    ],
+    finalAnswer: { value: "contrapositive", unit: "" },
+    solutionNarrative: `'${v.mirror}' is the contrapositive — swap and negate — so the spec guarantees it for free. '${v.swapOnly}' is the converse (swap only), an independent claim: ${v.why}`,
+  };
+};
+fill["dm-proof-ctp-d2"] = (rng, idx) => {
+  const a = rng.pick([3, 5, 7]);
+  const b = rng.pick([1, 3, 5, 7, 9]);
+  const s = a + b; // odd + odd = even, so s/2 is an integer
+  return {
+    id: `gen.dm-proof-ctp-d2.${idx}`, generated: true, concepts: ["contrapositive-proof"], difficulty: 2, context: "abstract",
+    prompt: `Claim: if $${a}n + ${b}$ is odd, then $n$ is even. The hypothesis '$${a}n + ${b}$ is odd' is clumsy raw material — flip the statement.`,
+    steps: [
+      { instruction: "The negated conclusion ('$n$ is odd') is far nicer to compute with than the original hypothesis. Which technique fits best? (Answer with one of: direct, contrapositive, contradiction, counterexample)", answer: "contrapositive", accept: ["the contrapositive", "contrapositive proof"], hint: "When the negations are simpler than the originals, prove the mirror image." },
+      { instruction: `Contrapositive: 'if $n$ is odd, then $${a}n + ${b}$ is even.' Write $n = 2k+1$ and express $${a}n + ${b}$ in terms of $k$.`, answer: `${2 * a}k+${s}`, accept: [], hint: `$${a}(2k+1) + ${b} = ${2 * a}k + ${a} + ${b}$.` },
+      { instruction: `$${2 * a}k + ${s} = 2(${a}k + ${s / 2})$ — two times an integer. When $n$ is odd, is $${a}n + ${b}$ even or odd? (Answer: even or odd)`, answer: "even", accept: [], hint: "The form $2m$ is the definition of even." },
+      { instruction: "The contrapositive is proved. Does that prove the original claim too? (yes/no)", answer: "yes", accept: ["equivalent"], hint: "$p \\to q \\equiv \\lnot q \\to \\lnot p$: proving either proves both." },
+    ],
+    finalAnswer: { value: "even", unit: "" },
+    solutionNarrative: `Contrapositive: if $n = 2k+1$, then $${a}n + ${b} = ${2 * a}k + ${s} = 2(${a}k + ${s / 2})$ — even. So an odd $n$ can never make $${a}n + ${b}$ odd, which is exactly the original claim in mirror form, and the mirror is equivalent to the original.`,
+  };
+};
+fill["dm-proof-ctp-d3"] = (rng, idx) => {
+  const m = rng.pick([3, 4, 5, 6, 7]);
+  const t = rng.int(2, 5);
+  const n = m * t;
+  return {
+    id: `gen.dm-proof-ctp-d3.${idx}`, generated: true, concepts: ["contrapositive-proof"], difficulty: 3, context: "abstract",
+    prompt: `Claim: if $n^2$ is NOT divisible by ${m * m}, then $n$ is NOT divisible by ${m}. Head-on, 'not divisible' is miserable raw material — prove the contrapositive instead.`,
+    steps: [
+      { instruction: `The contrapositive reads: 'if $n$ IS divisible by ${m}, then $n^2$ IS divisible by ${m * m}.' Is that formed by swapping AND negating both parts? (yes/no)`, answer: "yes", accept: [], hint: "Negating 'not divisible' gives 'divisible' on both sides, then the parts swap." },
+      { instruction: `Prove it: write $n = ${m}q$ and expand $n^2$ in terms of $q$.`, answer: `${m * m}q^2`, accept: [], hint: `$(${m}q)^2 = ${m}q \\cdot ${m}q$.` },
+      { instruction: `$n^2 = ${m * m}(q^2)$ — visibly divisible by ${m * m}. Spot-check at $n = ${n}$: compute $n^2$. (Give a number.)`, answer: `${n * n}`, accept: [], hint: `$${n} \\times ${n}$.` },
+      { instruction: `Divide $${n * n}$ by ${m * m} — the quotient should be a whole number. What is it?`, answer: `${t * t}`, accept: [], hint: `It should equal $q^2$ with $q = ${t}$.` },
+      { instruction: "The contrapositive is proved for every $n$. Does the original 'not divisible' claim come free? (yes/no)", answer: "yes", accept: ["equivalent"], hint: "$p \\to q \\equiv \\lnot q \\to \\lnot p$." },
+    ],
+    finalAnswer: { value: `${t * t}`, unit: "" },
+    solutionNarrative: `Contrapositive: $n = ${m}q$ gives $n^2 = ${m * m}q^2$, divisible by ${m * m} — one line. The spot check: $${n}^2 = ${n * n} = ${m * m} \\cdot ${t * t}$. Since the contrapositive is equivalent to the original, the awkward 'not divisible' claim is proved without ever touching a negation.`,
+  };
+};
+
+// --- proof-by-contradiction ---
+fill["dm-proof-con-d1"] = (rng, idx) => {
+  const m = rng.int(2, 9);
+  const t = rng.int(3, 9);
+  const N = m * t;
+  return {
+    id: `gen.dm-proof-con-d1.${idx}`, generated: true, concepts: ["proof-by-contradiction"], difficulty: 1, context: "abstract",
+    prompt: `Claim: there is no largest multiple of ${m}. Prove it.`,
+    steps: [
+      { instruction: "The claim says something does NOT exist. Which technique starts by assuming the claim is false and derives an impossibility? (Answer with one of: direct, contrapositive, contradiction, counterexample)", answer: "contradiction", accept: ["proof by contradiction", "a contradiction"], hint: "Non-existence claims are contradiction's home turf: assume the thing exists and break something." },
+      { instruction: `Assume some integer $N$ is the largest multiple of ${m}. Is $N + ${m}$ also a multiple of ${m}? (yes/no)`, answer: "yes", accept: ["yes it is"], hint: `If $N = ${m}q$, then $N + ${m} = ${m}(q+1)$.` },
+      { instruction: `For instance, if $N$ were $${N}$, compute $N + ${m}$. (Give a number.)`, answer: `${N + m}`, accept: [], hint: `$${N} + ${m}$.` },
+      { instruction: `$N + ${m}$ is a LARGER multiple of ${m}, so $N$ was never the largest — the assumption destroys itself. Can a largest multiple of ${m} exist? (yes/no)`, answer: "no", accept: ["it cannot"], hint: "The assumption was the only illegal input, so the assumption is false." },
+    ],
+    finalAnswer: { value: "no", unit: "" },
+    solutionNarrative: `Assume a largest multiple $N = ${m}q$ exists. Then $N + ${m} = ${m}(q+1)$ is a strictly larger multiple of ${m} — contradiction. The anatomy never changes: assume the negation, derive the impossible, conclude the claim.`,
+  };
+};
+fill["dm-proof-con-d2"] = (rng, idx) => {
+  const v = rng.pick([
+    { list: [2, 3], N: 7 },
+    { list: [2, 3, 5], N: 31 },
+    { list: [2, 3, 5, 7, 11], N: 2311 },
+  ]);
+  const prod = v.N - 1;
+  const listTex = v.list.join(" \\cdot ");
+  return {
+    id: `gen.dm-proof-con-d2.${idx}`, generated: true, concepts: ["proof-by-contradiction"], difficulty: 2, context: "abstract",
+    prompt: `A toy version of Euclid's argument. Assume, for contradiction, that ${v.list.join(", ")} are ALL the primes that exist. Build the number $N = ${listTex} + 1$ and hunt for the impossibility.`,
+    steps: [
+      { instruction: `Compute $N = ${listTex} + 1$. (Give a number.)`, answer: `${v.N}`, accept: [], hint: `$${listTex} = ${prod}$.` },
+      { instruction: "What remainder does $N$ leave when divided by any prime on the list? (Give a number.)", answer: "1", accept: ["one"], hint: `${prod} is divisible by each listed prime; $N$ is one more.` },
+      { instruction: "Every integer above 1 has a prime factor, yet no listed prime divides $N$. Was the list of primes complete after all? (yes/no)", answer: "no", accept: ["incomplete"], hint: "Some prime OFF the list must divide $N$ — contradicting 'ALL the primes'." },
+    ],
+    finalAnswer: { value: `${v.N}`, unit: "" },
+    solutionNarrative: `$N = ${prod} + 1 = ${v.N}$ leaves remainder 1 on division by every listed prime, so none of them divides it. But every integer above 1 has a prime factor — so a prime outside the 'complete' list exists. Contradiction: no finite list holds all the primes.`,
+  };
+};
+fill["dm-proof-con-d3"] = (rng, idx) => {
+  const p = rng.pick([3, 5, 7]);
+  return {
+    id: `gen.dm-proof-con-d3.${idx}`, generated: true, concepts: ["proof-by-contradiction"], difficulty: 3, context: "abstract",
+    prompt: `Prove $\\sqrt{${p}}$ is irrational. Assume the opposite — $\\sqrt{${p}} = a/b$, a fraction in lowest terms, so $a$ and $b$ share no common factor. Squaring both sides gives $a^2 = ${p}b^2$. (Take as a lemma: if $a^2$ is divisible by ${p}, so is $a$.)`,
+    steps: [
+      { instruction: `$a^2 = ${p}b^2$ is ${p} times an integer. Is $a^2$ divisible by ${p}? (yes/no)`, answer: "yes", accept: ["divisible"], hint: `It equals $${p} \\times b^2$.` },
+      { instruction: `The lemma then forces $a$ itself to be divisible by ${p}. Write $a = ${p}k$ and expand $a^2$ in terms of $k$.`, answer: `${p * p}k^2`, accept: [], hint: `$(${p}k)^2 = ${p}k \\cdot ${p}k$.` },
+      { instruction: `Substitute into $a^2 = ${p}b^2$: then $${p * p}k^2 = ${p}b^2$. Solve: $b^2$ equals what in terms of $k$?`, answer: `${p}k^2`, accept: [], hint: `Divide both sides of $${p * p}k^2 = ${p}b^2$ by ${p}.` },
+      { instruction: `So $b^2$ — and by the lemma $b$ — is divisible by ${p} too. Both parts of a lowest-terms fraction share the factor ${p}: impossible. Is $\\sqrt{${p}}$ rational or irrational? (Answer: rational or irrational)`, answer: "irrational", accept: ["it is irrational"], hint: `The assumption '$\\sqrt{${p}}$ is rational' was the only step that could be wrong.` },
+    ],
+    finalAnswer: { value: "irrational", unit: "" },
+    solutionNarrative: `From $a^2 = ${p}b^2$: $a^2$ is divisible by ${p}, so $a = ${p}k$; substituting, $${p * p}k^2 = ${p}b^2$ gives $b^2 = ${p}k^2$, forcing $b$ divisible by ${p} as well. A lowest-terms fraction with both parts divisible by ${p} cannot exist — so $\\sqrt{${p}}$ is irrational, by the same engine that handles $\\sqrt{2}$.`,
+  };
+};
+
+// --- counterexamples-and-quantifiers ---
+fill["dm-proof-cex-d1"] = (rng, idx) => {
+  const c = rng.pick([3, 5, 7, 9]);
+  const m = rng.pick([3, 5, 7]);
+  const t = rng.pick([3, 5]);
+  const v = rng.pick([
+    { claim: "'$n^2$ is even for every integer $n$'",
+      testI: `Test the claim at $n = ${c}$: compute $${c}^2$. (Give a number.)`,
+      testA: `${c * c}`, testH: `$${c} \\times ${c}$.`,
+      narrHead: `$${c}^2 = ${c * c}$ is odd` },
+    { claim: `'every multiple of ${m} is even'`,
+      testI: `Test the claim at the multiple $${m} \\cdot ${t}$: compute it. (Give a number.)`,
+      testA: `${m * t}`, testH: `$${m} \\times ${t}$.`,
+      narrHead: `$${m} \\cdot ${t} = ${m * t}$ is a multiple of ${m}, and it is odd` },
+  ]);
+  return {
+    id: `gen.dm-proof-cex-d1.${idx}`, generated: true, concepts: ["counterexamples-and-quantifiers"], difficulty: 1, context: "abstract",
+    prompt: `Universal claim: ${v.claim}. A 'for all' claim dies from a single failure — hunt one.`,
+    steps: [
+      { instruction: v.testI, answer: v.testA, accept: [], hint: v.testH },
+      { instruction: `Is $${v.testA}$ even or odd? (Answer: even or odd)`, answer: "odd", accept: ["it is odd"], hint: "An odd number times an odd number is odd." },
+      { instruction: "That number satisfies the claim's hypothesis but breaks its conclusion. What role does it play? (Answer with one of: witness, counterexample)", answer: "counterexample", accept: ["a counterexample"], hint: "One counterexample kills a $\\forall$ claim; a witness would PROVE an $\\exists$ claim." },
+      { instruction: "One counterexample is enough. Is the universal claim true or false? (Answer: true or false)", answer: "false", accept: ["the claim is false"], hint: "A 'for all' with one exception is simply false." },
+    ],
+    finalAnswer: { value: "false", unit: "" },
+    solutionNarrative: `${v.narrHead} — a counterexample, and one is all it takes: the universal claim is false. (The asymmetry runs the other way for existential claims, where one example — a witness — proves the claim outright.)`,
+  };
+};
+fill["dm-proof-cex-d2"] = (rng, idx) => {
+  const v = rng.pick([
+    { a: 2, goodTex: "$n = 1, 2, 3$ give 3, 5, 7 — all prime", failN: 4, val: 9, f: 3 },
+    { a: 4, goodTex: "$n = 1$ gives 5 — prime", failN: 2, val: 9, f: 3 },
+    { a: 6, goodTex: "$n = 1, 2, 3$ give 7, 13, 19 — all prime", failN: 4, val: 25, f: 5 },
+    { a: 10, goodTex: "$n = 1$ gives 11 — prime", failN: 2, val: 21, f: 3 },
+  ]);
+  return {
+    id: `gen.dm-proof-cex-d2.${idx}`, generated: true, concepts: ["counterexamples-and-quantifiers"], difficulty: 2, context: "abstract",
+    prompt: `Claim: '$${v.a}n + 1$ is prime for every positive integer $n$.' It starts strong: ${v.goodTex}.`,
+    steps: [
+      { instruction: `Evaluate $${v.a}n + 1$ at $n = ${v.failN}$. (Give a number.)`, answer: `${v.val}`, accept: [], hint: `$${v.a} \\cdot ${v.failN} + 1$.` },
+      { instruction: `${v.val} factors as $${v.f} \\times k$. Find $k$. (Give a number.)`, answer: `${v.val / v.f}`, accept: [], hint: `$${v.val} \\div ${v.f}$.` },
+      { instruction: `So ${v.val} is composite and the claim fails. What is the smallest positive integer $n$ that is a counterexample? (Give a number.)`, answer: `${v.failN}`, accept: [`n=${v.failN}`], hint: `Every smaller $n$ gave a prime; $n = ${v.failN}$ is the first failure.` },
+      { instruction: "Do the earlier confirming values rescue the universal claim? (yes/no)", answer: "no", accept: ["no they do not"], hint: "A $\\forall$ claim with one exception is false — confirmations count for nothing." },
+    ],
+    finalAnswer: { value: `${v.failN}`, unit: "" },
+    solutionNarrative: `$${v.a} \\cdot ${v.failN} + 1 = ${v.val} = ${v.f} \\times ${v.val / v.f}$ is composite, so $n = ${v.failN}$ is the smallest counterexample and the claim is false. The early primes were evidence, not proof — one exception ends a 'for all'.`,
+  };
+};
+fill["dm-proof-cex-d3"] = (rng, idx) => {
+  const v = rng.pick([
+    { L: 6, p: 7 },
+    { L: 12, p: 13 },
+    { L: 16, p: 17 },
+  ]);
+  const sq = v.p * v.p;
+  return {
+    id: `gen.dm-proof-cex-d3.${idx}`, generated: true, concepts: ["counterexamples-and-quantifiers"], difficulty: 3, context: "applied",
+    prompt: `A function \`isPrime(n)\` tests divisibility by the integers 2 through ${v.L} only, and its author claims it is 'correct for all n — it passed hundreds of random tests.' Find the smallest input that fools it.`,
+    steps: [
+      { instruction: `The cheapest way to fool trial division up to ${v.L} is a composite whose smallest prime factor exceeds ${v.L}. What is the smallest prime greater than ${v.L}? (Give a number.)`, answer: `${v.p}`, accept: [], hint: `Check the integers just above ${v.L} one by one.` },
+      { instruction: `Square it: compute $${v.p} \\times ${v.p}$. (Give a number.)`, answer: `${sq}`, accept: [], hint: `$${v.p}^2$.` },
+      { instruction: `Does any integer from 2 through ${v.L} divide ${sq}? (yes/no)`, answer: "no", accept: ["none"], hint: `${sq}'s only divisors are 1, ${v.p}, and ${sq}.` },
+      { instruction: `So \`isPrime(${sq})\` returns true. Is ${sq} actually prime? (yes/no)`, answer: "no", accept: ["composite", "not prime"], hint: `$${sq} = ${v.p} \\times ${v.p}$.` },
+      { instruction: `Every composite below ${sq} has a prime factor at most its square root, hence at most ${v.L} — so ${sq} is the SMALLEST counterexample. Did the passing tests prove the author's universal claim? (yes/no)`, answer: "no", accept: ["no they did not"], hint: "Passing tests never prove a $\\forall$; the one failing input disproves it." },
+    ],
+    finalAnswer: { value: `${sq}`, unit: "" },
+    solutionNarrative: `$${sq} = ${v.p}^2$ has no divisor between 2 and ${v.L}, so the function wrongly reports it prime — a concrete counterexample to 'correct for all n', and the smallest one: any composite below ${sq} has a prime factor less than ${v.p}, i.e. at most ${v.L}, and gets caught. Testing hunts counterexamples; only proof certifies the hunt must fail.`,
+  };
+};

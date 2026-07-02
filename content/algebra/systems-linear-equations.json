@@ -173,6 +173,102 @@
       ],
       "finalAnswer": { "value": "none", "unit": "" },
       "solutionNarrative": "Both grow at \\$2/mile but B starts \\$30 higher, so $0 = 30$ (false): they're never equal."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s10",
+      "concepts": ["setup-system", "elimination"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A theater sold 200 tickets for \\$1330. Adult tickets cost \\$8 and child tickets cost \\$5. Let $x$ = adult tickets and $y$ = child tickets. Set up the system, then solve for how many of each were sold.",
+      "steps": [
+        { "instruction": "Write the count equation (total tickets).", "answer": "x + y = 200", "accept": ["y + x = 200"], "hint": "Adult tickets plus child tickets equal 200." },
+        { "instruction": "Write the revenue equation (total dollars).", "answer": "8x + 5y = 1330", "accept": ["5y + 8x = 1330"], "hint": "Each adult ticket is \\$8, each child ticket \\$5." },
+        { "instruction": "Multiply the count equation by 5, then subtract it from the revenue equation to eliminate $y$. Write the resulting equation.", "answer": "3x = 330", "accept": ["330 = 3x"], "hint": "$5(x+y)=1000$; $(8x+5y)-(5x+5y)=1330-1000$." },
+        { "instruction": "Solve for $x$ (adult tickets).", "answer": "x = 110", "accept": ["110"], "hint": "Divide by 3." },
+        { "instruction": "Find $y$ (child tickets) using $x + y = 200$.", "answer": "y = 90", "accept": ["90"], "hint": "$200 - 110 = 90$." }
+      ],
+      "finalAnswer": { "value": "(110, 90)", "unit": "tickets" },
+      "solutionNarrative": "From $x + y = 200$ and $8x + 5y = 1330$: eliminating $y$ gives $3x = 330$, so $x = 110$ adult and $y = 90$ child tickets."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s11",
+      "concepts": ["substitution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "One equation already gives $y = 2x$. Substitute it into $3x + y = 15$ and simplify to the form $(\\text{number})x = (\\text{number})$.",
+      "steps": [
+        { "instruction": "Replace $y$ with $2x$ in $3x + y = 15$ and combine the $x$ terms. Write the resulting equation.", "answer": "5x = 15", "accept": ["15 = 5x"], "hint": "$3x + 2x = 5x$." }
+      ],
+      "finalAnswer": { "value": "5x = 15", "unit": "" },
+      "solutionNarrative": "Substituting $y = 2x$ gives $3x + 2x = 15$, i.e. $5x = 15$ (so $x = 3$, $y = 6$)."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s12",
+      "concepts": ["elimination"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The $y$ terms are already opposites. Add the two equations to eliminate $y$:  $\\begin{cases} x + y = 7 \\\\ x - y = 3 \\end{cases}$  Write the resulting equation in $x$.",
+      "steps": [
+        { "instruction": "Add the two equations. The $+y$ and $-y$ cancel. Write the resulting equation.", "answer": "2x = 10", "accept": ["10 = 2x"], "hint": "$x + x = 2x$ and $7 + 3 = 10$." }
+      ],
+      "finalAnswer": { "value": "2x = 10", "unit": "" },
+      "solutionNarrative": "Adding cancels $y$: $2x = 10$ (so $x = 5$, then $y = 2$)."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s13",
+      "concepts": ["substitution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve by substitution: $\\begin{cases} y = 2x - 1 \\\\ 3x + y = 14 \\end{cases}$",
+      "steps": [
+        { "instruction": "Substitute $y = 2x - 1$ into the second equation and combine to $(\\text{number})x = (\\text{number})$.", "answer": "5x = 15", "accept": ["15 = 5x"], "hint": "$3x + (2x - 1) = 14$; combine and move the constant." },
+        { "instruction": "Solve for $x$.", "answer": "x = 3", "accept": ["3"], "hint": "Divide by 5." },
+        { "instruction": "Find $y$ using $y = 2x - 1$.", "answer": "y = 5", "accept": ["5"], "hint": "$2(3) - 1$." },
+        { "instruction": "Write the solution as an ordered pair.", "answer": "(3, 5)", "accept": ["x=3, y=5", "3,5"], "hint": "(x, y)." }
+      ],
+      "finalAnswer": { "value": "(3, 5)", "unit": "" },
+      "solutionNarrative": "Substituting gives $5x = 15$, so $x = 3$ and $y = 5$. Solution: $(3, 5)$."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s14",
+      "concepts": ["elimination"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "At a snack stand, 2 hot dogs and 1 soda cost \\$7, while 1 hot dog and 1 soda cost \\$5. Let $x$ = price of a hot dog and $y$ = price of a soda. The system is $\\begin{cases} 2x + y = 7 \\\\ x + y = 5 \\end{cases}$. Find each price.",
+      "steps": [
+        { "instruction": "Subtract the second equation from the first to eliminate $y$. Write the resulting equation.", "answer": "x = 2", "accept": ["2"], "hint": "$(2x + y) - (x + y) = 7 - 5$." },
+        { "instruction": "Substitute $x = 2$ into $x + y = 5$ to find $y$.", "answer": "y = 3", "accept": ["3"], "hint": "$2 + y = 5$." },
+        { "instruction": "Write the solution as an ordered pair $(x, y)$.", "answer": "(2, 3)", "accept": ["x=2, y=3", "2,3"], "hint": "(hot dog price, soda price)." }
+      ],
+      "finalAnswer": { "value": "(2, 3)", "unit": "dollars" },
+      "solutionNarrative": "Subtracting cancels $y$: $x = 2$, then $y = 3$. A hot dog is \\$2 and a soda is \\$3."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s15",
+      "concepts": ["setup-system"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A rectangle's length $x$ and width $y$ satisfy: the length is twice the width, and the perimeter is 30. Write the equation for 'length is twice the width'.",
+      "steps": [
+        { "instruction": "Write an equation saying the length is twice the width.", "answer": "x = 2y", "accept": ["x - 2y = 0"], "hint": "Length equals 2 times width." }
+      ],
+      "finalAnswer": { "value": "x = 2y", "unit": "" },
+      "solutionNarrative": "'Length is twice the width' becomes $x = 2y$ (the second equation would be $2x + 2y = 30$)."
+    },
+    {
+      "id": "algebra.systems-linear-equations.s16",
+      "concepts": ["setup-system", "substitution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A boat travels 30 miles downstream in the same time; let $x$ = the boat's speed in still water and $y$ = the current's speed. Downstream speed is $x + y = 15$ mph and upstream speed is $x - y = 9$ mph. Set up is done — solve for the boat speed and current.",
+      "steps": [
+        { "instruction": "From $x + y = 15$, write $y$ in terms of $x$.", "answer": "y = 15 - x", "accept": ["y = -x + 15"], "hint": "Subtract $x$ from both sides." },
+        { "instruction": "Substitute into $x - y = 9$ and simplify to $(\\text{number})x = (\\text{number})$.", "answer": "2x = 24", "accept": ["24 = 2x"], "hint": "$x - (15 - x) = 9$ becomes $2x - 15 = 9$." },
+        { "instruction": "Solve for $x$ (boat speed in still water, mph).", "answer": "x = 12", "accept": ["12"], "hint": "Divide by 2." },
+        { "instruction": "Find $y$ (current speed) using $y = 15 - x$.", "answer": "y = 3", "accept": ["3"], "hint": "$15 - 12 = 3$." }
+      ],
+      "finalAnswer": { "value": "(12, 3)", "unit": "mph" },
+      "solutionNarrative": "From $x + y = 15$, $y = 15 - x$. Then $x - (15 - x) = 9$ gives $2x = 24$, so $x = 12$ mph boat speed and $y = 3$ mph current."
     }
   ]
 }
