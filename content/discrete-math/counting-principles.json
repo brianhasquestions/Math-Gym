@@ -42,7 +42,12 @@
       "**Scheduling:** assign 25 courses to 6 time slots and some slot carries at least $\\lceil 25/6 \\rceil = 5$ courses — pigeonhole bounds tell planners what no clever timetable can avoid."
     ]
   },
-  "generators": [],
+  "generators": [
+    "dm-cnt-prod-d1", "dm-cnt-prod-d2", "dm-cnt-prod-d3",
+    "dm-cnt-perm-d1", "dm-cnt-perm-d2", "dm-cnt-perm-d3",
+    "dm-cnt-comb-d1", "dm-cnt-comb-d2", "dm-cnt-comb-d3",
+    "dm-cnt-pig-d1", "dm-cnt-pig-d2", "dm-cnt-pig-d3"
+  ],
   "problems": [
     {
       "id": "discrete-math.counting-principles.s01",

@@ -42,7 +42,12 @@
       "**Version control:** a git history is a DAG of commits (merge commits have two parents); 'is this fix in that release?' is a reachability question — exactly the connectivity reading you practice here."
     ]
   },
-  "generators": [],
+  "generators": [
+    "dm-gr-deg-d1", "dm-gr-deg-d2", "dm-gr-deg-d3",
+    "dm-gr-path-d1", "dm-gr-path-d2", "dm-gr-path-d3",
+    "dm-gr-eul-d1", "dm-gr-eul-d2", "dm-gr-eul-d3",
+    "dm-gr-tree-d1", "dm-gr-tree-d2", "dm-gr-tree-d3"
+  ],
   "problems": [
     {
       "id": "discrete-math.graph-theory-basics.s01",

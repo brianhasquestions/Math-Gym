@@ -42,7 +42,12 @@
       "**Law and contracts:** 'unless', 'except when', and nested 'and/or' clauses are compound propositions; a drafting error in a negation is a De Morgan error with money attached."
     ]
   },
-  "generators": [],
+  "generators": [
+    "dm-log-conn-d1", "dm-log-conn-d2", "dm-log-conn-d3",
+    "dm-log-tt-d1", "dm-log-tt-d2", "dm-log-tt-d3",
+    "dm-log-imp-d1", "dm-log-imp-d2", "dm-log-imp-d3",
+    "dm-log-dem-d1", "dm-log-dem-d2", "dm-log-dem-d3"
+  ],
   "problems": [
     {
       "id": "discrete-math.logic-and-propositions.s01",

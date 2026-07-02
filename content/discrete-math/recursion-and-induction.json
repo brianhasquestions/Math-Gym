@@ -42,7 +42,12 @@
       "**Puzzles and games:** Tower of Hanoi's $2^n - 1$ is the canonical exponential blow-up — a 10-disk toy takes 1023 moves, and the legendary 64-disk version outlasts the universe."
     ]
   },
-  "generators": [],
+  "generators": [
+    "dm-rec-unroll-d1", "dm-rec-unroll-d2", "dm-rec-unroll-d3",
+    "dm-rec-cf-d1", "dm-rec-cf-d2", "dm-rec-cf-d3",
+    "dm-rec-ind-d1", "dm-rec-ind-d2", "dm-rec-ind-d3",
+    "dm-rec-cnt-d1", "dm-rec-cnt-d2", "dm-rec-cnt-d3"
+  ],
   "problems": [
     {
       "id": "discrete-math.recursion-and-induction.s01",

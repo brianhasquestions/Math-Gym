@@ -27,6 +27,7 @@ import { fill as crypto1Fill } from "./gen-crypto1-fill.js";        // cr1-
 import { fill as crypto2Fill } from "./gen-crypto2-fill.js";        // cr2-
 import { fill as crypto3Fill } from "./gen-crypto3-fill.js";        // cr3-
 import { fill as crypto4Fill } from "./gen-crypto4-fill.js";        // cr4- (weaknesses)
+import { fill as discreteFill } from "./gen-discrete-fill.js";      // dm-  (discrete math)
 
 // --- Seeded RNG (mulberry32) so sessions are reproducible/debuggable ---
 export function makeRng(seed) {
@@ -2639,7 +2640,8 @@ generators["simplify-rational-v1"] = (rng, idx) => {
 // here (there are none — fill packs use the def-*/laf-* prefixes).
 Object.assign(generators, deFill, linAlgFill,
   algGraphFill, calc1Fill, geoFill, deFill2, linAlgFill2, trigFill, trig2Fill,
-  geoProofFill, calc3ProofFill, crypto1Fill, crypto2Fill, crypto3Fill, crypto4Fill);
+  geoProofFill, calc3ProofFill, crypto1Fill, crypto2Fill, crypto3Fill, crypto4Fill,
+  discreteFill);
 
 export function hasGenerator(template) {
   return Object.prototype.hasOwnProperty.call(generators, template);

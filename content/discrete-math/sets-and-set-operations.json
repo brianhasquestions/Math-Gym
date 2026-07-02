@@ -42,7 +42,12 @@
       "**Configuration counting:** $n$ boolean feature flags give $2^n$ configurations (the power set of the flag set), and a form with independent choices multiplies out as a Cartesian product — 4 sizes $\\times$ 5 toppings $\\times$ 3 drinks $= 60$ orders."
     ]
   },
-  "generators": [],
+  "generators": [
+    "dm-set-mem-d1", "dm-set-mem-d2", "dm-set-mem-d3",
+    "dm-set-ops-d1", "dm-set-ops-d2", "dm-set-ops-d3",
+    "dm-set-ie-d1", "dm-set-ie-d2", "dm-set-ie-d3",
+    "dm-set-pp-d1", "dm-set-pp-d2", "dm-set-pp-d3"
+  ],
   "problems": [
     {
       "id": "discrete-math.sets-and-set-operations.s01",
