@@ -471,9 +471,11 @@ export class ProblemSource {
     this.genCounter = 0;
     this.lastId = null;
     this.lastPrompt = null;
-    // A per-session seed base derived from content length (no Date.* allowed in
-    // some contexts; here we use a fixed base offset by counter for variety).
-    this.seedBase = (topic.id || "t").length * 7919 + 13;
+    // Randomize the per-session seed base so two sessions (or reloads) that walk
+    // the same difficulty path don't replay the identical "random" sequence —
+    // and a problem missed earlier isn't re-served as the fresh prove-it problem.
+    // Falls back to a content-derived base if Math.random is somehow unavailable.
+    this.seedBase = (Math.floor(Math.random() * 0x7fffffff) || (topic.id || "t").length * 7919 + 13);
   }
 
   // Generate defensively: a buggy generator must never crash a live session.

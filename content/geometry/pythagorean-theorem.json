@@ -2,7 +2,7 @@
   "id": "geometry.pythagorean-theorem",
   "subject": "geometry",
   "title": "The Pythagorean Theorem",
-  "prerequisites": [],
+  "prerequisites": ["geometry.triangles"],
   "estimatedMinutes": 40,
   "keyConcepts": [
     {

@@ -101,7 +101,12 @@ export function grade(state, result) {
   const c = state.concepts[result.conceptId];
   if (!c) return { error: "unknown concept" };
 
-  const clean = result.hintsUsed === 0;
+  // "Clean" = solved with no hints AND no wrong attempts on the way. Wrong
+  // attempts are counted explicitly (result.wrongs) so within-problem struggle
+  // reduces credit and can't count toward a mastery streak, independent of the
+  // UI's auto-hint behavior.
+  const struggled = (result.wrongs || 0) > 0;
+  const clean = result.hintsUsed === 0 && !struggled;
   c.attempts += 1;
   state.totalAnswered += 1;
   c.recent.push(result.correct);

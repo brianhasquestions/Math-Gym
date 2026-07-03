@@ -2,7 +2,7 @@
   "id": "algebra-2.sequences-and-series",
   "subject": "algebra-2",
   "title": "Sequences and Series",
-  "prerequisites": [],
+  "prerequisites": ["algebra-2.functions"],
   "estimatedMinutes": 45,
   "keyConcepts": [
     {

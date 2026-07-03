@@ -49,6 +49,13 @@ a:hover { text-decoration: underline; }
   height: calc(100vh - 58px); overflow-y: auto;
 }
 .sidebar-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); padding: 4px 12px var(--space-2); }
+.sidebar-search {
+  width: calc(100% - 16px); margin: 0 8px var(--space-2); padding: 7px 10px;
+  background: var(--surface-2); color: var(--text); font-family: var(--font-ui); font-size: 0.85rem;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.sidebar-search::placeholder { color: var(--text-faint); }
+.sidebar-search:focus { outline: none; border-color: var(--border-bright); }
 .main { padding: var(--space-5) var(--space-4); max-width: var(--maxw); width: 100%; margin-inline: auto; }
 
 /* Sidebar nav (collapsible subjects -> topics) */
@@ -93,6 +100,29 @@ p { margin: 0 0 var(--space-3); }
 /* Cards */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-4); box-shadow: var(--shadow); }
 .card + .card { margin-top: var(--space-3); }
+
+/* Progress dashboard (home) */
+.dash-stats { display: flex; gap: var(--space-5); flex-wrap: wrap; margin-bottom: var(--space-3); }
+.dash-stat-num { font-size: 1.9rem; font-weight: 700; color: var(--accent); line-height: 1.1; }
+.dash-stat-label { font-size: 0.8rem; color: var(--text-dim); }
+.dash-bar { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+.dash-bar-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.4s ease; }
+.dash h4 { margin: var(--space-4) 0 var(--space-2); }
+.dash-continue, .dash-subjects { display: grid; gap: var(--space-2); }
+.dash-item, .dash-subject {
+  display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center;
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.dash-item:hover, .dash-subject:hover { background: var(--surface-2); text-decoration: none; }
+.dash-item .dash-bar, .dash-subject .dash-bar { grid-column: 1 / -1; }
+.dash-item-title, .dash-subject-name { color: var(--text); font-weight: 600; }
+.dash-item-sub, .dash-subject-count { color: var(--text-dim); font-size: 0.85rem; white-space: nowrap; }
+
+/* Placement quiz */
+.placement-q { margin-top: var(--space-3); }
+.placement-meta { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); margin-bottom: var(--space-2); }
+.placement-prompt { margin-bottom: var(--space-3); }
+.placement-answer .step-input { width: 100%; max-width: 320px; }
 
 /* Badges */
 .badge {

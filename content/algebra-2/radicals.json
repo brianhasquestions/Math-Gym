@@ -2,7 +2,7 @@
   "id": "algebra-2.radicals",
   "subject": "algebra-2",
   "title": "Radical Expressions and Equations",
-  "prerequisites": [],
+  "prerequisites": ["algebra.exponents"],
   "estimatedMinutes": 45,
   "keyConcepts": [
     {

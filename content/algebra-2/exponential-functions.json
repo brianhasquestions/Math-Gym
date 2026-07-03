@@ -2,7 +2,7 @@
   "id": "algebra-2.exponential-functions",
   "subject": "algebra-2",
   "title": "Exponential Functions",
-  "prerequisites": [],
+  "prerequisites": ["algebra.exponents", "algebra-2.functions"],
   "estimatedMinutes": 45,
   "keyConcepts": [
     {

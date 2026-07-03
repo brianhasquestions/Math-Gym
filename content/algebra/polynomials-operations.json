@@ -2,7 +2,7 @@
   "id": "algebra.polynomials-operations",
   "subject": "algebra",
   "title": "Polynomial Operations",
-  "prerequisites": [],
+  "prerequisites": ["algebra.exponents"],
   "estimatedMinutes": 40,
   "keyConcepts": [
     {

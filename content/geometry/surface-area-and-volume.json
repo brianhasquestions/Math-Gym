@@ -2,7 +2,7 @@
   "id": "geometry.surface-area-and-volume",
   "subject": "geometry",
   "title": "Surface Area and Volume",
-  "prerequisites": [],
+  "prerequisites": ["geometry.perimeter-and-area"],
   "estimatedMinutes": 45,
   "keyConcepts": [
     {

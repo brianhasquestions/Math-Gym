@@ -28,7 +28,8 @@
   <script type="module">
     import { applyTheme } from "./js/theme.js";
     import { buildShell } from "./js/shell.js";
-    import { exportProgress, importProgress, resetAll } from "./js/progress-store.js";
+    import { loadManifest } from "./js/content-loader.js";
+    import { exportProgress, importProgress, resetAll, getTopicState } from "./js/progress-store.js";
     import { el } from "./js/app.js";
     applyTheme();
 
@@ -39,6 +40,66 @@
       "Pick a subject in the sidebar, choose a topic, and master it for real — " +
       "every topic leads with where the math shows up in real life, then drills you " +
       "with fresh problems until each underlying skill is genuinely solid."));
+
+    main.appendChild(el("div", { style: "margin-top: var(--space-3)" },
+      el("a", { class: "btn", href: "placement.html" }, "Take the placement quiz →")));
+
+    // --- Progress dashboard (shown once there's any saved progress) ---
+    const bar = (pct) => el("div", { class: "dash-bar" }, el("div", { class: "dash-bar-fill", style: `width:${pct}%` }));
+    const dashStat = (big, label) => el("div", { class: "dash-stat" },
+      [el("div", { class: "dash-stat-num" }, big), el("div", { class: "dash-stat-label" }, label)]);
+    const conceptFrac = (state) => {
+      const cs = state && state.concepts ? Object.values(state.concepts) : [];
+      const done = cs.filter((c) => c.mastered).length;
+      const total = (state && state.conceptOrder && state.conceptOrder.length) || cs.length;
+      return { done, total, pct: total ? Math.round((100 * done) / total) : 0 };
+    };
+    try {
+      const manifest = await loadManifest();
+      const allTopics = manifest.subjects.flatMap((s) => s.topics.map((t) => ({ t, subject: s, state: getTopicState(t.id) })));
+      const masteredCount = allTopics.filter((x) => x.state && x.state.topicMastered).length;
+      const totalAnswered = allTopics.reduce((n, x) => n + ((x.state && x.state.totalAnswered) || 0), 0);
+      if (totalAnswered > 0) {
+        const overall = Math.round((100 * masteredCount) / allTopics.length);
+        const dash = el("section", { class: "card dash", style: "margin-top: var(--space-4)" }, [
+          el("h3", { style: "margin-top:0" }, "Your progress"),
+          el("div", { class: "dash-stats" }, [
+            dashStat(`${masteredCount} / ${allTopics.length}`, "topics mastered"),
+            dashStat(String(totalAnswered), "problems answered"),
+            dashStat(`${overall}%`, "of the catalog"),
+          ]),
+          bar(overall),
+        ]);
+        const inProgress = allTopics.filter((x) => x.state && x.state.totalAnswered > 0 && !x.state.topicMastered);
+        if (inProgress.length) {
+          dash.appendChild(el("h4", {}, "Continue where you left off"));
+          const list = el("div", { class: "dash-continue" });
+          for (const x of inProgress.slice(0, 6)) {
+            const f = conceptFrac(x.state);
+            list.appendChild(el("a", { class: "dash-item", href: `train.html?id=${encodeURIComponent(x.t.id)}` }, [
+              el("span", { class: "dash-item-title" }, x.t.title),
+              el("span", { class: "dash-item-sub" }, `${f.done}/${f.total} skills`),
+              bar(f.pct),
+            ]));
+          }
+          dash.appendChild(list);
+        }
+        dash.appendChild(el("h4", {}, "By subject"));
+        const subs = el("div", { class: "dash-subjects" });
+        for (const s of manifest.subjects) {
+          const states = s.topics.map((t) => getTopicState(t.id));
+          const m = states.filter((st) => st && st.topicMastered).length;
+          const pct = s.topics.length ? Math.round((100 * m) / s.topics.length) : 0;
+          subs.appendChild(el("a", { class: "dash-subject", href: `subject.html?id=${encodeURIComponent(s.id)}` }, [
+            el("span", { class: "dash-subject-name" }, s.title),
+            el("span", { class: "dash-subject-count" }, `${m}/${s.topics.length}`),
+            bar(pct),
+          ]));
+        }
+        dash.appendChild(subs);
+        main.appendChild(dash);
+      }
+    } catch (e) { /* dashboard is best-effort; the rest of the page still works */ }
 
     const start = el("div", { class: "card", style: "margin-top: var(--space-4)" }, [
       el("h3", { style: "margin-top:0" }, "How it works"),

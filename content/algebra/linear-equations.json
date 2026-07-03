@@ -2,7 +2,7 @@
   "id": "algebra.linear-equations",
   "subject": "algebra",
   "title": "Linear Equations in One Variable",
-  "prerequisites": [],
+  "prerequisites": ["algebra.variables-expressions"],
   "estimatedMinutes": 35,
   "keyConcepts": [
     {

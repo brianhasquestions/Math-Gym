@@ -257,6 +257,7 @@
         }
         pulse(stepEl, "error");
         current.stepWrongs += 1;
+        current.problemWrongs = (current.problemWrongs || 0) + 1;
         // After the first miss, surface the hint automatically (counts as help).
         if (current.stepWrongs === 1) showHint(stepEl, feedback);
         // After repeated misses, offer to reveal the worked solution and move on.
@@ -276,6 +277,7 @@
       renderSteps();
       const summary = grade(state, {
         correct: true, hintsUsed: current.hintsUsed, conceptId: current.conceptId,
+        wrongs: current.problemWrongs || 0,
       });
       setTopicState(topic.id, state);
       reactToGrade(summary, true);
@@ -287,6 +289,7 @@
       renderSteps();
       const summary = grade(state, {
         correct: false, hintsUsed: current.hintsUsed, conceptId: current.conceptId,
+        wrongs: current.problemWrongs || 0,
       });
       setTopicState(topic.id, state);
       // Always show the full worked solution when giving up.

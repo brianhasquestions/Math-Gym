@@ -1,0 +1,26 @@
+name: CI
+
+# Gate every push/PR on the engine tests and full content validation, so a
+# grading regression or a broken topic can't reach the deployed site.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Engine unit tests
+        run: node tools/test.mjs
+      - name: Validate all content (0 failing required)
+        run: node tools/validate.mjs --quiet-warnings
+      - name: Regenerate sitemap and check it is committed
+        run: |
+          node tools/gen-sitemap.mjs
+          git diff --exit-code sitemap.xml || (echo "sitemap.xml is stale — run 'node tools/gen-sitemap.mjs' and commit" && exit 1)

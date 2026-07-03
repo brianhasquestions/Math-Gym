@@ -22,7 +22,7 @@
   --border-bright: #1f7a32;
   --text: #2bdd5a;
   --text-dim: #1aa642;
-  --text-faint: #117a30;
+  --text-faint: #17933b;         /* brightened for WCAG AA on surface (was #117a30, 3.6:1) */
   --accent: #00ff41;
   --accent-2: #ffb000;
   --accent-fg: #000000;          /* text/icon color on an accent fill */
@@ -70,7 +70,7 @@
   --border-bright: #3b5279;
   --text: #e6edf6;
   --text-dim: #9fb0c8;
-  --text-faint: #6b7d99;
+  --text-faint: #8695ad;         /* brightened for WCAG AA on surface (was #6b7d99, 3.8:1) */
   --accent: #3b82f6;
   --accent-2: #22d3ee;
   --accent-fg: #ffffff;
