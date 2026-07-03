@@ -70,6 +70,9 @@
     <loc>https://mathgym.io/topic.html?id=algebra-2.sequences-and-series</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=algebra-2.conic-sections</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/subject.html?id=geometry</loc>
   </url>
   <url>
@@ -193,6 +196,9 @@
     <loc>https://mathgym.io/topic.html?id=calculus-2.taylor-series</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-2.parametric-polar-calculus</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/subject.html?id=calculus-3</loc>
   </url>
   <url>
@@ -221,6 +227,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=calculus-3.line-integrals</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-3.stokes-divergence</loc>
   </url>
   <url>
     <loc>https://mathgym.io/subject.html?id=differential-equations</loc>

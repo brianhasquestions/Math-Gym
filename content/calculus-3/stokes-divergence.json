@@ -1,0 +1,291 @@
+{
+  "id": "calculus-3.stokes-divergence",
+  "subject": "calculus-3",
+  "title": "Surface Integrals, Stokes' and Divergence Theorems",
+  "prerequisites": ["calculus-3.line-integrals", "calculus-3.multiple-integrals"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "divergence-and-curl",
+      "label": "Divergence and curl",
+      "microLesson": "The **divergence** $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$ is a *scalar* measuring source strength: positive means fluid is being created at the point, negative means absorbed, zero everywhere means **incompressible**. The **curl** $\\operatorname{curl}\\vec{F} = \\langle R_y - Q_z,\\; P_z - R_x,\\; Q_x - P_y \\rangle$ is a *vector* measuring local rotation; zero everywhere means **irrotational**. For $\\vec{F} = \\langle x^2,\\; 4xy,\\; 2yz \\rangle$: $\\operatorname{div}\\vec{F} = 2x + 4x + 2y = 6x + 2y$ and $\\operatorname{curl}\\vec{F} = \\langle 2z,\\; 0,\\; 4y \\rangle$, which at $(1,2,3)$ is $\\langle 6, 0, 8 \\rangle$."
+    },
+    {
+      "id": "surface-integrals",
+      "label": "Scalar surface integrals",
+      "microLesson": "$\\displaystyle\\iint_S f\\, dS$ adds up $f$ over a surface, weighted by surface area — the mass of a curved sheet with density $f$. On a **flat** piece of a coordinate-aligned plane (like $z = c$), $dS = dA$ and the surface integral is just a double integral. For a slanted graph $z = ax + by$ over a region $R$, the tilt stretches area by a constant: $dS = \\sqrt{1 + a^2 + b^2}\\, dA$. With $z = 2x + 2y$ the factor is $\\sqrt{1 + 4 + 4} = 3$, so $\\iint_S 5\\, dS = 5 \\cdot 3 \\cdot \\text{Area}(R)$ — pick slopes that make the square root exact."
+    },
+    {
+      "id": "divergence-theorem",
+      "label": "The divergence theorem (flux via a triple integral)",
+      "microLesson": "For a **closed** surface $S$ enclosing a solid $E$, with **outward** normal, the divergence theorem trades a flux integral for a volume integral: $\\displaystyle\\iint_S \\vec{F} \\cdot \\vec{n}\\, dS = \\iiint_E \\operatorname{div}\\vec{F}\\, dV$. When $\\operatorname{div}\\vec{F}$ is a **constant** $k$, the flux is just $k \\times \\text{Volume}$. For $\\vec{F} = \\langle 2x, 3y, z \\rangle$ through the box $[0,2]\\times[0,3]\\times[0,1]$: $\\operatorname{div}\\vec{F} = 6$, so flux $= 6 \\times 6 = 36$. Through a sphere of radius $R$, use volume $\\tfrac{4}{3}\\pi R^3$: the same field through the radius-3 sphere gives $6 \\times 36\\pi = 216\\pi$."
+    },
+    {
+      "id": "stokes-theorem",
+      "label": "Stokes' theorem (circulation via curl)",
+      "microLesson": "**Stokes' theorem** trades a loop integral for a surface integral of the curl: $\\displaystyle\\oint_{\\partial S} \\vec{F} \\cdot d\\vec{r} = \\iint_S (\\operatorname{curl}\\vec{F}) \\cdot \\vec{n}\\, dS$, with orientations paired by the right-hand rule. For a **flat** region in the plane $z = c$ oriented upward, $\\vec{n} = \\vec{k}$ and only $(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = Q_x - P_y$ matters — Green's theorem lifted off the floor. If $Q_x - P_y$ is a constant $k$, the circulation is $k \\times \\text{Area}$: for $\\vec{F} = \\langle -2y, 2x, 5z \\rangle$ around a radius-2 circle in $z = 3$, circulation $= 4 \\times 4\\pi = 16\\pi$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## One theorem in four costumes\n\nThe fundamental theorem of calculus says the total of a derivative over an interval equals boundary data: $\\int_a^b f'(x)\\,dx = f(b) - f(a)$. Multivariable calculus keeps re-telling this one story — **the total of a derivative over the interior equals the original quantity on the boundary** — at higher and higher dimensions:\n\n- **FTC**: interval $\\to$ two endpoints.\n- **Green's theorem**: plane region $\\to$ boundary loop.\n- **Stokes' theorem**: surface in space $\\to$ boundary curve.\n- **Divergence theorem**: solid $\\to$ boundary surface.\n\nThe two 'derivatives' that drive the 3D versions are the divergence and the curl. Learn to compute them fluently and both big theorems become bookkeeping.\n\n## Divergence: how strongly a point acts as a source\n\nFor $\\vec{F} = \\langle P, Q, R \\rangle$,\n\n$$\\operatorname{div}\\vec{F} = \\nabla \\cdot \\vec{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}.$$\n\nIt is a **scalar**. Think of $\\vec{F}$ as a fluid velocity field: $\\operatorname{div}\\vec{F} > 0$ at a point means fluid is being *created* there (a source, the flow expands), $< 0$ means *absorbed* (a sink), and $\\operatorname{div}\\vec{F} = 0$ everywhere means the fluid is **incompressible** — whatever flows in flows out.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-3,3],\"yRange\":[-3,3],\"segments\":[{\"from\":[1,0],\"to\":[2,0],\"arrow\":true,\"color\":\"accent\"},{\"from\":[0,1],\"to\":[0,2],\"arrow\":true,\"color\":\"accent\"},{\"from\":[-1,0],\"to\":[-2,0],\"arrow\":true,\"color\":\"accent\"},{\"from\":[0,-1],\"to\":[0,-2],\"arrow\":true,\"color\":\"accent\"},{\"from\":[1,1],\"to\":[1.8,1.8],\"arrow\":true,\"color\":\"warn\"},{\"from\":[-1,1],\"to\":[-1.8,1.8],\"arrow\":true,\"color\":\"warn\"},{\"from\":[-1,-1],\"to\":[-1.8,-1.8],\"arrow\":true,\"color\":\"warn\"},{\"from\":[1,-1],\"to\":[1.8,-1.8],\"arrow\":true,\"color\":\"warn\"}],\"caption\":\"A 2D slice of the source field F = <x, y, 0>: every arrow pushes outward. div F = 2 > 0 everywhere (a uniform source), while curl F = 0 — expansion with no rotation\"}\n```\n\n**Worked example.** $\\vec{F} = \\langle x^2,\\; 4xy,\\; 2yz \\rangle$:\n\n$$\\operatorname{div}\\vec{F} = \\underbrace{2x}_{P_x} + \\underbrace{4x}_{Q_y} + \\underbrace{2y}_{R_z} = 6x + 2y.$$\n\nAt $(1, 2, 3)$ this is $6 + 4 = 10$: the flow is expanding strongly there. Note the recipe — each component is differentiated by **its own** variable, then the three results are *added into a scalar*.\n\n## Curl: how strongly a point spins\n\n$$\\operatorname{curl}\\vec{F} = \\nabla \\times \\vec{F} = \\left\\langle R_y - Q_z,\\; P_z - R_x,\\; Q_x - P_y \\right\\rangle.$$\n\nIt is a **vector**: its direction is the axis a tiny paddle wheel would spin about (right-hand rule) and its magnitude is twice the rotation rate. A field with $\\operatorname{curl}\\vec{F} = \\vec{0}$ everywhere is **irrotational** — and every gradient field is irrotational, because mixed partials commute (Clairaut). That makes the curl the 3D version of the conservative test: for $\\vec{F} = \\langle P, Q \\rangle$ in the plane, $Q_x - P_y$ is exactly the $\\vec{k}$-component of the curl.\n\n**Worked example.** Same $\\vec{F} = \\langle x^2,\\; 4xy,\\; 2yz \\rangle$:\n\n- x-component: $R_y - Q_z = 2z - 0 = 2z$\n- y-component: $P_z - R_x = 0 - 0 = 0$\n- z-component: $Q_x - P_y = 4y - 0 = 4y$\n\nSo $\\operatorname{curl}\\vec{F} = \\langle 2z,\\; 0,\\; 4y \\rangle$, which at $(1,2,3)$ evaluates to $\\langle 6,\\; 0,\\; 8 \\rangle$.\n\n**Pitfalls**: the divergence is a scalar and the curl is a vector — never swap those; and each curl component subtracts *cross*-partials in a fixed order ($R_y - Q_z$, not $Q_z - R_y$).\n\n## Scalar surface integrals: adding up over a sheet\n\n$\\displaystyle\\iint_S f\\, dS$ totals $f$ over a surface weighted by area — mass of a curved sheet from its density. Two friendly cases cover a lot of ground:\n\n- **Flat, coordinate-aligned surfaces.** On a rectangle in the plane $z = c$ (or $x = c$, $y = c$), $dS = dA$: the surface integral *is* a double integral. Substitute the plane's equation into the integrand first. Example: $\\iint_S z\\, dS$ over $0 \\le x \\le 3$, $0 \\le y \\le 2$ in $z = 4$ is $4 \\times 6 = 24$.\n- **Slanted graph surfaces** $z = ax + by$ over a region $R$. The tilt stretches every patch of area by the same factor:\n\n$$dS = \\sqrt{1 + a^2 + b^2}\\; dA.$$\n\nChoose slopes so the root is exact: $(a,b) = (2,2)$ gives $\\sqrt{9} = 3$; $(4, 8)$ gives $\\sqrt{81} = 9$. **Worked example**: $\\iint_S 5\\, dS$ over the part of $z = 2x + 2y$ above $[0,2] \\times [0,3]$ is $5 \\cdot 3 \\cdot 6 = 90$. With a non-constant integrand, compute the plain double integral first, then multiply by the factor: $\\iint_S 6x\\, dS$ over $z = 4x + 8y$ above $[0,2]\\times[0,1]$ is $9 \\cdot \\int_0^2\\!\\int_0^1 6x\\, dy\\, dx = 9 \\cdot 12 = 108$.\n\n**Pitfall**: forgetting the $dS$ factor on a slanted surface — a tilted roof has more area than its floor plan.\n\n## The divergence theorem: flux without six face integrals\n\nFor a **closed** surface $S$ (it must fully enclose a solid $E$) with **outward** normal:\n\n$$\\iint_S \\vec{F} \\cdot \\vec{n}\\; dS = \\iiint_E \\operatorname{div}\\vec{F}\\; dV.$$\n\nThe left side is the net outflow through the boundary; the right side adds up the source strength inside. Two workflows:\n\n- **Constant divergence — the jackpot.** $\\vec{F} = \\langle 2x,\\; 3y,\\; z \\rangle$ through the box $[0,2]\\times[0,3]\\times[0,1]$: $\\operatorname{div}\\vec{F} = 2 + 3 + 1 = 6$, so flux $= 6 \\times \\text{Volume} = 6 \\times 6 = 36$. One multiplication instead of six face integrals. Spheres work the same way with $V = \\tfrac{4}{3}\\pi R^3$: the field $\\langle x,\\; 2y,\\; 3z \\rangle$ through the radius-3 sphere has flux $6 \\times 36\\pi = 216\\pi$.\n- **Polynomial divergence — one honest triple integral.** $\\vec{F} = \\langle x^2,\\; 2y,\\; 3z \\rangle$ through the box $[0,4]\\times[0,2]\\times[0,1]$: $\\operatorname{div}\\vec{F} = 2x + 5$, so the flux is $\\int_0^4 (2x + 5)\\, dx \\times (2)(1) = 36 \\times 2 = 72$ — the integrand only involves $x$, so the other two integrals just multiply by the box's cross-section.\n\n**Pitfalls**: the theorem needs a **closed** surface (a box with an open top does not qualify — close it or integrate the missing face separately); the normal must point **outward** (inward flips the sign); and if $\\operatorname{div}\\vec{F} = 0$ everywhere, the net flux through *every* closed surface is 0 — inflow exactly balances outflow.\n\n## Stokes' theorem: circulation via the curl\n\nFor a surface $S$ with boundary curve $\\partial S$, orientations paired by the right-hand rule:\n\n$$\\oint_{\\partial S} \\vec{F} \\cdot d\\vec{r} = \\iint_S (\\operatorname{curl}\\vec{F}) \\cdot \\vec{n}\\; dS.$$\n\nWalking the loop and totaling the spin inside give the same number. The friendliest surfaces are **flat regions in a plane $z = c$, oriented upward**: there $\\vec{n} = \\vec{k}$, so only the z-component of the curl survives,\n\n$$\\oint_C \\vec{F} \\cdot d\\vec{r} = \\iint_R (Q_x - P_y)\\; dA,$$\n\nwhich is Green's theorem lifted off the floor — and the field's $R$-component never matters (on a horizontal curve $dz = 0$, and $R$ does not enter $Q_x - P_y$).\n\n- **Constant $Q_x - P_y$**: for $\\vec{F} = \\langle -2y,\\; 2x,\\; 5z \\rangle$ around a radius-2 circle in the plane $z = 3$: $Q_x - P_y = 2 - (-2) = 4$, so circulation $= 4 \\times \\pi(2)^2 = 16\\pi$. The $5z$ came along for the ride.\n- **Linear $Q_x - P_y$**: for $\\vec{F} = \\langle 2y,\\; 3x^2,\\; 0 \\rangle$ around the rectangle $[0,2]\\times[0,3]$ in $z = 2$: $Q_x - P_y = 6x - 2$, and $\\int_0^2\\!\\int_0^3 (6x - 2)\\, dy\\, dx = \\int_0^2 (18x - 6)\\, dx = 36 - 12 = 24$.\n- **Zero curl**: if $\\operatorname{curl}\\vec{F} = \\vec{0}$ (the field passes the conservative test), the circulation around **every** closed loop is 0 — Stokes' theorem is why the conservative shortcut works.\n\n**Pitfalls**: orientation is a *pairing* — counterclockwise seen from above goes with the **upward** normal; flip either one alone and the sign flips. And keep the theorems straight: Stokes needs an **open** surface with a boundary curve; the divergence theorem needs a **closed** surface with no boundary at all."
+  },
+  "application": {
+    "summary": "Divergence, curl, and the two big theorems are the working language of flux and circulation: how much fluid leaves a region per second, how strongly a flow swirls, how electric fields relate to the charges inside them, and how much heat escapes a solid — each one a boundary measurement traded for an interior computation, or vice versa.",
+    "domains": ["fluid dynamics", "electromagnetics", "heat transfer", "aerospace"],
+    "workedExample": "**How much air leaves the test chamber?**\n\nAn HVAC engineer models airflow in a sealed test chamber occupying the box $[0,2] \\times [0,1] \\times [0,1]$ (meters) with velocity field $\\vec{v} = \\langle 2x,\\; y,\\; 3z \\rangle$ (m/s). The net volume of air escaping per second is the outward flux $\\iint_S \\vec{v} \\cdot \\vec{n}\\, dS$ through all six walls — six surface integrals, or one divergence theorem.\n\n**Compute the divergence**: $\\operatorname{div}\\vec{v} = 2 + 1 + 3 = 6$ per second, a constant.\n\n**Apply the theorem**: flux $= \\iiint_E 6\\, dV = 6 \\times \\text{Volume} = 6 \\times (2)(1)(1) = 12$ m³/s.\n\nTwelve cubic meters of air leave the chamber every second, so there must be a source inside pumping air in at exactly that rate — the divergence theorem turns 'measure the flow through every wall' into 'total the sources inside.' If the field had $\\operatorname{div}\\vec{v} = 0$ (incompressible flow, the standard model for water and slow air), the net flux through the walls would be exactly zero: whatever enters must leave. That single check — compute one divergence — is how engineers sanity-test a proposed flow field before running any simulation.",
+    "domainNotes": [
+      "**Fluid dynamics:** incompressible flow means $\\operatorname{div}\\vec{v} = 0$ — the first constraint in the Navier–Stokes equations; curl of the velocity field is the vorticity that tracks eddies and turbulence.",
+      "**Electromagnetics:** Gauss's law is the divergence theorem applied to the electric field (flux out of a closed surface = charge inside); Faraday's and Ampère's laws are Stokes' theorem applied to $\\vec{E}$ and $\\vec{B}$ — all four Maxwell equations are these two theorems in uniform.",
+      "**Heat transfer:** the heat flux vector $-k\\nabla T$ integrated over a closed surface gives the net heat leaving a solid; the divergence theorem converts it to a volume integral, which is where the heat equation comes from.",
+      "**Aerospace:** the circulation $\\oint \\vec{v} \\cdot d\\vec{r}$ around a wing cross-section determines lift (Kutta–Joukowski); Stokes' theorem relates it to the vorticity bound in the wing's boundary layer."
+    ]
+  },
+  "generators": [
+    "c3s-div-curl-1",
+    "c3s-div-curl-2",
+    "c3s-div-curl-3",
+    "c3s-surface-1",
+    "c3s-surface-2",
+    "c3s-surface-3",
+    "c3s-div-thm-1",
+    "c3s-div-thm-2",
+    "c3s-div-thm-3",
+    "c3s-stokes-1",
+    "c3s-stokes-2",
+    "c3s-stokes-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-3.stokes-divergence.s01",
+      "concepts": ["divergence-and-curl"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For the field $\\vec{F} = \\langle 2x,\\; 3y,\\; z \\rangle$, compute the divergence and the curl, and classify the field.",
+      "steps": [
+        { "instruction": "Compute $\\partial P/\\partial x$ for $P = 2x$.", "answer": "2", "accept": [], "hint": "Differentiate $2x$ with respect to $x$." },
+        { "instruction": "Compute $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$.", "answer": "6", "accept": [], "hint": "$2 + 3 + 1$." },
+        { "instruction": "Compute $\\operatorname{curl}\\vec{F}$ as a numeric vector. (Every cross-partial, like $\\partial P/\\partial y$, is zero here.)", "answer": "<0, 0, 0>", "accept": ["(0, 0, 0)"], "hint": "Each curl component is a difference of cross-partials, and all of them vanish." },
+        { "instruction": "The curl is $\\vec{0}$ everywhere but $\\operatorname{div}\\vec{F} = 6 \\neq 0$. Classify the field: type 'irrotational', 'incompressible', or 'neither'.", "answer": "irrotational", "accept": ["curl-free", "curl free"], "hint": "Zero curl everywhere means irrotational; incompressible would require zero divergence." }
+      ],
+      "finalAnswer": { "value": "irrotational", "unit": "" },
+      "solutionNarrative": "$\\operatorname{div}\\vec{F} = 2 + 3 + 1 = 6$ and every cross-partial vanishes, so $\\operatorname{curl}\\vec{F} = \\vec{0}$: the field is irrotational but not incompressible."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s02",
+      "concepts": ["divergence-and-curl"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $\\vec{F} = \\langle x^2,\\; 4xy,\\; 2yz \\rangle$, compute $\\operatorname{div}\\vec{F}$ as a polynomial, the nonzero curl components, and $\\operatorname{curl}\\vec{F}$ evaluated at $(1, 2, 3)$.",
+      "steps": [
+        { "instruction": "Compute $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$ as a polynomial in $x, y$.", "answer": "6x + 2y", "accept": ["2y + 6x", "6*x + 2*y"], "hint": "$P_x = 2x$, $Q_y = 4x$, $R_z = 2y$; collect the $x$ terms." },
+        { "instruction": "Compute the x-component of the curl, $R_y - Q_z$, for $R = 2yz$ and $Q = 4xy$.", "answer": "2z", "accept": ["2*z"], "hint": "$R_y = 2z$ and $Q_z = 0$." },
+        { "instruction": "Compute the z-component of the curl, $Q_x - P_y$, for $Q = 4xy$ and $P = x^2$.", "answer": "4y", "accept": ["4*y"], "hint": "$Q_x = 4y$ and $P_y = 0$." },
+        { "instruction": "The y-component $P_z - R_x$ is 0, so $\\operatorname{curl}\\vec{F} = \\langle 2z,\\; 0,\\; 4y \\rangle$. Evaluate it at $(1, 2, 3)$ as a numeric vector.", "answer": "<6, 0, 8>", "accept": ["(6, 0, 8)"], "hint": "Substitute $z = 3$ and $y = 2$." }
+      ],
+      "finalAnswer": { "value": "<6, 0, 8>", "unit": "" },
+      "solutionNarrative": "$\\operatorname{div}\\vec{F} = 2x + 4x + 2y = 6x + 2y$. The curl is $\\langle 2z, 0, 4y \\rangle$, which at $(1,2,3)$ evaluates to $\\langle 6, 0, 8 \\rangle$."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s03",
+      "concepts": ["divergence-and-curl"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify the field $\\vec{F} = \\langle 3y,\\; z,\\; 2x \\rangle$ as irrotational, incompressible, or neither, by computing its divergence and curl.",
+      "steps": [
+        { "instruction": "Compute $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$.", "answer": "0", "accept": [], "hint": "Each component is missing its own variable, so every partial in the sum is 0." },
+        { "instruction": "Compute the x-component of the curl, $R_y - Q_z$, for $R = 2x$ and $Q = z$.", "answer": "-1", "accept": [], "hint": "$R_y = 0$ and $Q_z = 1$." },
+        { "instruction": "The other components work the same way. Give $\\operatorname{curl}\\vec{F}$ as a numeric vector.", "answer": "<-1, -2, -3>", "accept": ["(-1, -2, -3)"], "hint": "$\\langle R_y - Q_z,\\; P_z - R_x,\\; Q_x - P_y \\rangle = \\langle 0 - 1,\\; 0 - 2,\\; 0 - 3 \\rangle$." },
+        { "instruction": "Classify the field: type 'irrotational', 'incompressible', or 'neither'.", "answer": "incompressible", "accept": ["divergence-free", "divergence free", "source-free"], "hint": "The divergence is 0 everywhere but the curl is not $\\vec{0}$." }
+      ],
+      "finalAnswer": { "value": "incompressible", "unit": "" },
+      "solutionNarrative": "$\\operatorname{div}\\vec{F} = 0 + 0 + 0 = 0$ everywhere — incompressible — but $\\operatorname{curl}\\vec{F} = \\langle -1, -2, -3 \\rangle \\neq \\vec{0}$, so the field is not irrotational."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s04",
+      "concepts": ["divergence-and-curl"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Classify the field $\\vec{F} = \\langle 2x + 3y,\\; x,\\; z \\rangle$ as irrotational, incompressible, or neither, by computing its divergence and curl.",
+      "steps": [
+        { "instruction": "Compute $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$.", "answer": "3", "accept": [], "hint": "$P_x = 2$, $Q_y = 0$, $R_z = 1$." },
+        { "instruction": "Compute the z-component of the curl, $Q_x - P_y$, for $Q = x$ and $P = 2x + 3y$.", "answer": "-2", "accept": [], "hint": "$Q_x = 1$ and $P_y = 3$." },
+        { "instruction": "The x- and y-components of the curl vanish. Give $\\operatorname{curl}\\vec{F}$ as a numeric vector.", "answer": "<0, 0, -2>", "accept": ["(0, 0, -2)"], "hint": "$R_y - Q_z = 0$, $P_z - R_x = 0$, $Q_x - P_y = -2$." },
+        { "instruction": "Classify the field: type 'irrotational', 'incompressible', or 'neither'.", "answer": "neither", "accept": ["none"], "hint": "The divergence is $3 \\neq 0$ AND the curl is not $\\vec{0}$." }
+      ],
+      "finalAnswer": { "value": "neither", "unit": "" },
+      "solutionNarrative": "$\\operatorname{div}\\vec{F} = 2 + 0 + 1 = 3 \\neq 0$ and $\\operatorname{curl}\\vec{F} = \\langle 0, 0, -2 \\rangle \\neq \\vec{0}$: the field expands AND rotates, so it is neither irrotational nor incompressible."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s05",
+      "concepts": ["surface-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the scalar surface integral $\\displaystyle\\iint_S z\\, dS$, where $S$ is the flat rectangle $0 \\le x \\le 3$, $0 \\le y \\le 2$ in the plane $z = 4$.",
+      "steps": [
+        { "instruction": "On the surface, $z = 4$. What constant does the integrand equal there?", "answer": "4", "accept": [], "hint": "Substitute the plane's equation into the integrand." },
+        { "instruction": "The surface is flat and horizontal, so $dS = dA$. Compute the area of the rectangle.", "answer": "6", "accept": [], "hint": "$3 \\times 2$." },
+        { "instruction": "Compute the surface integral (constant × area).", "answer": "24", "accept": [], "hint": "$4 \\times 6$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "On $z = 4$ the integrand is the constant 4 and $dS = dA$, so the integral is $4 \\times 6 = 24$."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s06",
+      "concepts": ["surface-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\displaystyle\\iint_S 5\\, dS$, where $S$ is the part of the plane $z = 2x + 2y$ above the rectangle $R = [0,2] \\times [0,3]$.",
+      "steps": [
+        { "instruction": "For a graph surface $z = ax + by$, $dS = \\sqrt{1 + a^2 + b^2}\\, dA$. Compute $1 + 2^2 + 2^2$.", "answer": "9", "accept": [], "hint": "$1 + 4 + 4$." },
+        { "instruction": "Compute the $dS$ factor $\\sqrt{9}$.", "answer": "3", "accept": [], "hint": "$9$ is a perfect square." },
+        { "instruction": "Compute $\\displaystyle\\iint_S 5\\, dS = 5 \\cdot 3 \\cdot \\text{Area}(R)$.", "answer": "90", "accept": [], "hint": "Area of $R$ is $2 \\times 3 = 6$." }
+      ],
+      "finalAnswer": { "value": "90", "unit": "" },
+      "solutionNarrative": "$dS = \\sqrt{1 + 4 + 4}\\, dA = 3\\, dA$, so the integral is $5 \\times 3 \\times 6 = 90$ — the slanted sheet has three times the area of its floor plan."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s07",
+      "concepts": ["surface-integrals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A flat metal plate occupies the vertical rectangle $0 \\le y \\le 4$, $0 \\le z \\le 2$ (cm) in the plane $x = 2$, with surface density $\\sigma(x,y,z) = 3y$ grams per cm². Find its total mass $\\displaystyle\\iint_S 3y\\, dS$.",
+      "steps": [
+        { "instruction": "The plate is flat and coordinate-aligned, so $dS = dA$ (with $dA = dy\\,dz$). What is the $dS$ stretch factor?", "answer": "1", "accept": [], "hint": "A flat piece of the plane $x = 2$ has no tilt relative to the $yz$-plane." },
+        { "instruction": "Compute the inner integral $\\displaystyle\\int_0^4 3y\\, dy$.", "answer": "24", "accept": [], "hint": "$\\left[3y^2/2\\right]_0^4 = 3 \\cdot 16 / 2$." },
+        { "instruction": "Compute the mass: multiply by the remaining $z$-extent, $\\displaystyle\\int_0^2 24\\, dz$.", "answer": "48", "accept": [], "hint": "$24 \\times 2$." }
+      ],
+      "finalAnswer": { "value": "48", "unit": "grams" },
+      "solutionNarrative": "On the flat plate $dS = dy\\,dz$, so the mass is $\\int_0^2\\!\\int_0^4 3y\\, dy\\, dz = 24 \\times 2 = 48$ grams — the plate is heavier toward large $y$."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s08",
+      "concepts": ["surface-integrals"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $\\displaystyle\\iint_S 6x\\, dS$, where $S$ is the part of the plane $z = 4x + 8y$ above the rectangle $R = [0,2] \\times [0,1]$.",
+      "steps": [
+        { "instruction": "Compute $1 + 4^2 + 8^2$ for the $dS$ factor.", "answer": "81", "accept": [], "hint": "$1 + 16 + 64$." },
+        { "instruction": "Compute the $dS$ factor $\\sqrt{81}$.", "answer": "9", "accept": [], "hint": "$81$ is a perfect square, engineered so $dS$ is exact." },
+        { "instruction": "Compute the plain double integral $\\displaystyle\\iint_R 6x\\, dA$ over the rectangle.", "answer": "12", "accept": [], "hint": "$\\int_0^2 6x\\, dx = 12$, then multiply by the height 1." },
+        { "instruction": "Multiply by the $dS$ factor to finish: $\\displaystyle\\iint_S 6x\\, dS = 9 \\cdot 12$.", "answer": "108", "accept": [], "hint": "$9 \\times 12$." }
+      ],
+      "finalAnswer": { "value": "108", "unit": "" },
+      "solutionNarrative": "$dS = \\sqrt{1 + 16 + 64}\\, dA = 9\\, dA$ exactly, and $\\iint_R 6x\\, dA = 12$, so the surface integral is $9 \\times 12 = 108$."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s09",
+      "concepts": ["divergence-theorem"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the divergence theorem to compute the outward flux of $\\vec{F} = \\langle 2x,\\; 3y,\\; z \\rangle$ through the closed surface of the box $[0,2] \\times [0,3] \\times [0,1]$.",
+      "steps": [
+        { "instruction": "Compute $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$.", "answer": "6", "accept": [], "hint": "$2 + 3 + 1$." },
+        { "instruction": "Compute the volume of the box.", "answer": "6", "accept": [], "hint": "$2 \\times 3 \\times 1$." },
+        { "instruction": "The divergence is constant, so flux $= 6 \\times \\text{Volume}$. Compute it.", "answer": "36", "accept": [], "hint": "$6 \\times 6$." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "" },
+      "solutionNarrative": "$\\operatorname{div}\\vec{F} = 6$, a constant, so the outward flux is $6 \\times 6 = 36$ — one multiplication instead of six face integrals."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s10",
+      "concepts": ["divergence-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the divergence theorem to compute the outward flux of $\\vec{F} = \\langle x,\\; 2y,\\; 3z \\rangle$ through the sphere of radius 3 centered at the origin. Give exact answers (multiples of $\\pi$).",
+      "steps": [
+        { "instruction": "Compute $\\operatorname{div}\\vec{F}$.", "answer": "6", "accept": [], "hint": "$1 + 2 + 3$." },
+        { "instruction": "Compute the volume of the ball, $\\tfrac{4}{3}\\pi (3)^3$ (exact, in terms of $\\pi$).", "answer": "36pi", "accept": ["36*pi", "113.1"], "hint": "$\\tfrac{4}{3} \\times 27 = 36$." },
+        { "instruction": "Compute the flux (exact, in terms of $\\pi$).", "answer": "216pi", "accept": ["216*pi", "678.58"], "hint": "$6 \\times 36\\pi$." }
+      ],
+      "finalAnswer": { "value": "216pi", "unit": "" },
+      "solutionNarrative": "$\\operatorname{div}\\vec{F} = 6$, constant, so the flux is $6 \\times \\tfrac{4}{3}\\pi(3)^3 = 216\\pi \\approx 678.6$."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s11",
+      "concepts": ["divergence-theorem"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Water flows through a tank occupying the box $[0,1] \\times [0,2] \\times [0,3]$ (meters) with velocity field $\\vec{v} = \\langle 4x,\\; y,\\; z \\rangle$ (m/s). Use the divergence theorem to find the net volume of water leaving the tank per second (the outward flux).",
+      "steps": [
+        { "instruction": "Compute $\\operatorname{div}\\vec{v}$.", "answer": "6", "accept": [], "hint": "$4 + 1 + 1$." },
+        { "instruction": "Compute the volume of the tank.", "answer": "6", "accept": [], "hint": "$1 \\times 2 \\times 3$." },
+        { "instruction": "Compute the outward flux (m³/s).", "answer": "36", "accept": [], "hint": "Constant divergence: $6 \\times 6$." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "m^3/s" },
+      "solutionNarrative": "$\\operatorname{div}\\vec{v} = 6$ per second, so the net outflow is $6 \\times 6 = 36$ m³/s. A positive answer means there must be a source inside the tank; a truly incompressible flow would give exactly 0."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s12",
+      "concepts": ["divergence-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use the divergence theorem to compute the outward flux of $\\vec{F} = \\langle x^2,\\; 2y,\\; 3z \\rangle$ through the closed surface of the box $[0,4] \\times [0,2] \\times [0,1]$.",
+      "steps": [
+        { "instruction": "Compute $\\operatorname{div}\\vec{F}$ as a polynomial in $x$.", "answer": "2x + 5", "accept": ["5 + 2x", "2*x + 5"], "hint": "$P_x = 2x$, $Q_y = 2$, $R_z = 3$." },
+        { "instruction": "The integrand only involves $x$, so integrate it first: compute $\\displaystyle\\int_0^4 (2x + 5)\\, dx$.", "answer": "36", "accept": [], "hint": "$\\left[x^2 + 5x\\right]_0^4 = 16 + 20$." },
+        { "instruction": "Multiply by the remaining cross-section $2 \\times 1$ to finish the triple integral.", "answer": "72", "accept": [], "hint": "$36 \\times 2$." }
+      ],
+      "finalAnswer": { "value": "72", "unit": "" },
+      "solutionNarrative": "$\\operatorname{div}\\vec{F} = 2x + 5$. Over the box, $\\iiint (2x + 5)\\, dV = \\left(\\int_0^4 (2x+5)\\, dx\\right)(2)(1) = 36 \\times 2 = 72$."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s13",
+      "concepts": ["stokes-theorem"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use Stokes' theorem to compute the circulation $\\oint_C \\vec{F} \\cdot d\\vec{r}$ of $\\vec{F} = \\langle y,\\; 3x,\\; 0 \\rangle$ around the boundary of the rectangle $[0,2] \\times [0,4]$ in the plane $z = 1$, oriented counterclockwise seen from above (upward normal).",
+      "steps": [
+        { "instruction": "Compute $\\partial Q/\\partial x$ for $Q = 3x$.", "answer": "3", "accept": [], "hint": "Differentiate $3x$." },
+        { "instruction": "Compute $\\partial P/\\partial y$ for $P = y$.", "answer": "1", "accept": [], "hint": "Differentiate $y$." },
+        { "instruction": "With the upward normal, only $(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = Q_x - P_y$ matters. Compute it.", "answer": "2", "accept": [], "hint": "$3 - 1$." },
+        { "instruction": "The integrand is constant, so circulation $= 2 \\times \\text{Area}$. Compute it.", "answer": "16", "accept": [], "hint": "Area of the rectangle is $2 \\times 4 = 8$." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "" },
+      "solutionNarrative": "$(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = 3 - 1 = 2$, constant, so the circulation is $2 \\times 8 = 16$ — Green's theorem lifted to the plane $z = 1$."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s14",
+      "concepts": ["stokes-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use Stokes' theorem to compute the circulation of $\\vec{F} = \\langle -2y,\\; 2x,\\; 5z \\rangle$ around the circle of radius 2 centered on the z-axis in the plane $z = 3$, oriented counterclockwise seen from above. Give exact answers (multiples of $\\pi$).",
+      "steps": [
+        { "instruction": "Compute $(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = Q_x - P_y$ for $Q = 2x$ and $P = -2y$. (The $5z$ component does not affect this.)", "answer": "4", "accept": [], "hint": "$2 - (-2)$." },
+        { "instruction": "Compute the area of the disk (exact, in terms of $\\pi$).", "answer": "4pi", "accept": ["4*pi", "12.57"], "hint": "$\\pi R^2$ with $R = 2$." },
+        { "instruction": "Compute the circulation (exact, in terms of $\\pi$).", "answer": "16pi", "accept": ["16*pi", "50.27"], "hint": "$4 \\times 4\\pi$." }
+      ],
+      "finalAnswer": { "value": "16pi", "unit": "" },
+      "solutionNarrative": "$(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = 2 - (-2) = 4$, constant, so the circulation is $4 \\times \\pi(2)^2 = 16\\pi \\approx 50.3$. The $5z$ component never mattered."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s15",
+      "concepts": ["stokes-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use Stokes' theorem with a NON-constant integrand: compute the circulation of $\\vec{F} = \\langle 2y,\\; 3x^2,\\; 0 \\rangle$ around the boundary of the rectangle $[0,2] \\times [0,3]$ in the plane $z = 2$, oriented counterclockwise seen from above.",
+      "steps": [
+        { "instruction": "Compute $(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = Q_x - P_y$ as a polynomial in $x$.", "answer": "6x - 2", "accept": ["6*x - 2", "-2 + 6x"], "hint": "$Q_x = 6x$ and $P_y = 2$." },
+        { "instruction": "Integrate over $y$ first: the inner integral $\\displaystyle\\int_0^3 (6x - 2)\\, dy$ equals what function of $x$?", "answer": "18x - 6", "accept": ["18*x - 6", "3(6x - 2)"], "hint": "The integrand has no $y$, so multiply by the height 3." },
+        { "instruction": "Compute $\\displaystyle\\int_0^2 (18x - 6)\\, dx$.", "answer": "24", "accept": [], "hint": "$\\left[9x^2 - 6x\\right]_0^2 = 36 - 12$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "$(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = 6x - 2$. Over the rectangle: $\\int_0^2\\!\\int_0^3 (6x-2)\\, dy\\, dx = \\int_0^2 (18x - 6)\\, dx = 36 - 12 = 24$."
+    },
+    {
+      "id": "calculus-3.stokes-divergence.s16",
+      "concepts": ["stokes-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A field with zero curl does no net circulating work. Compute the circulation of $\\vec{F} = \\langle y,\\; x,\\; 4z \\rangle$ around ANY closed curve in the plane $z = 2$ (oriented counterclockwise seen from above), using Stokes' theorem.",
+      "steps": [
+        { "instruction": "Compute $\\partial Q/\\partial x$ for $Q = x$.", "answer": "1", "accept": [], "hint": "Differentiate $x$." },
+        { "instruction": "Compute $\\partial P/\\partial y$ for $P = y$.", "answer": "1", "accept": [], "hint": "Differentiate $y$." },
+        { "instruction": "Compute $(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = Q_x - P_y$. (This is the conservative test in disguise.)", "answer": "0", "accept": [], "hint": "$1 - 1$." },
+        { "instruction": "By Stokes' theorem the circulation is the integral of this over the enclosed region. What is the circulation around every such closed curve?", "answer": "0", "accept": ["zero"], "hint": "Integrating the zero function over any region gives 0." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "$Q_x - P_y = 1 - 1 = 0$ (in fact $\\vec{F} = \\nabla(xy + 2z^2)$ is conservative), so by Stokes' theorem the circulation around every closed curve in the plane is exactly 0 — this is why the conservative shortcut works."
+    }
+  ]
+}

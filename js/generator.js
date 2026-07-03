@@ -39,6 +39,9 @@ import { fill as stats2Fill } from "./gen-stats2-fill.js";          // st2-  (in
 import { fill as geo2Fill } from "./gen-geo2-fill.js";              // geo2- (quadrilaterals, transformations)
 import { fill as discrete2Fill } from "./gen-discrete2-fill.js";    // dm2-  (relations and functions)
 import { fill as deFill3 } from "./gen-de-fill3.js";                // def3- (systems of ODEs)
+import { fill as alg2bFill } from "./gen-alg2b-fill.js";            // a2c-  (conic sections)
+import { fill as calc2bFill } from "./gen-calc2b-fill.js";          // c2p-  (parametric/polar calculus)
+import { fill as calc3sFill } from "./gen-calc3s-fill.js";          // c3s-  (Stokes, divergence)
 
 // --- Seeded RNG (mulberry32) so sessions are reproducible/debuggable ---
 export function makeRng(seed) {
@@ -2654,7 +2657,7 @@ Object.assign(generators, deFill, linAlgFill,
   geoProofFill, calc3ProofFill, crypto1Fill, crypto2Fill, crypto3Fill, crypto4Fill,
   discreteFill, statsFill,
   alg2Fill, trig3Fill, calc1bFill, calc2Fill, calc3vFill, lapGsFill, stats2Fill,
-  geo2Fill, discrete2Fill, deFill3);
+  geo2Fill, discrete2Fill, deFill3, alg2bFill, calc2bFill, calc3sFill);
 
 export function hasGenerator(template) {
   return Object.prototype.hasOwnProperty.call(generators, template);

@@ -1,0 +1,287 @@
+{
+  "id": "algebra-2.conic-sections",
+  "subject": "algebra-2",
+  "title": "Conic Sections",
+  "prerequisites": ["algebra.quadratic-equations", "algebra-2.functions", "geometry.circles"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "circles-and-completing-square",
+      "label": "Circles and completing the square",
+      "microLesson": "A circle is all points at distance $r$ from a center $(h, k)$, and the distance formula turns that sentence directly into the standard form $(x - h)^2 + (y - k)^2 = r^2$. Two sign traps: the coordinates of the center are the OPPOSITE of the signs inside the parentheses — $(x + 4)^2$ means $h = -4$ — and the right side is $r^2$, not $r$, so $= 36$ means radius 6. When a circle arrives in general form like $x^2 + y^2 - 6x + 4y - 12 = 0$, complete the square: half of $-6$ is $-3$ (add $9$), half of $4$ is $2$ (add $4$), giving $(x - 3)^2 + (y + 2)^2 = 12 + 9 + 4 = 25$ — center $(3, -2)$, radius 5."
+    },
+    {
+      "id": "parabolas-focus-directrix",
+      "label": "Parabolas: vertex, focus, directrix",
+      "microLesson": "A parabola is all points equidistant from a point (the **focus**) and a line (the **directrix**). In vertex form $y = a(x - h)^2 + k$ the vertex is $(h, k)$ and the sign of $a$ says up or down. The form $x^2 = 4py$ makes the geometry explicit: $p$ is the focal distance, the focus sits at $(0, p)$ inside the curve, and the directrix is the line $y = -p$ on the opposite side. The two forms connect through $a = \\frac{1}{4p}$: from $y = \\frac{1}{8}x^2$, $4p = 8$ gives $p = 2$, focus $(0, 2)$, directrix $y = -2$. The vertex is always exactly halfway between focus and directrix."
+    },
+    {
+      "id": "ellipses",
+      "label": "Ellipses",
+      "microLesson": "An ellipse is all points whose distances to two foci add to a constant $2a$. Standard form: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$, where $a^2$ is always the LARGER denominator — whichever variable carries it is the direction of the major axis. Vertices are $a$ units from the center along the major axis; foci are $c$ units along the same axis with $c^2 = a^2 - b^2$ (subtract: foci are INSIDE, closer to the center than the vertices). For $\\frac{x^2}{25} + \\frac{y^2}{9} = 1$: $a = 5$, $b = 3$, $c = \\sqrt{25 - 9} = 4$, so vertices $(\\pm 5, 0)$ and foci $(\\pm 4, 0)$."
+    },
+    {
+      "id": "hyperbolas",
+      "label": "Hyperbolas",
+      "microLesson": "Flip the plus to a minus and the ellipse breaks into two branches: $\\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1$ opens left-right, $\\frac{y^2}{a^2} - \\frac{x^2}{b^2} = 1$ opens up-down — the hyperbola opens along the POSITIVE term's variable. Vertices are $a$ units from the center; foci use $c^2 = a^2 + b^2$ (ADD, unlike the ellipse — foci sit OUTSIDE the vertices), and the branches hug the asymptotes $y = \\pm\\frac{b}{a}x$ (or $\\pm\\frac{a}{b}x$ when vertical). To classify a general equation $Ax^2 + Cy^2 + \\dots = 0$: equal coefficients — circle; same sign, different — ellipse; opposite signs — hyperbola; one square missing — parabola."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Four curves from one cone\n\nTake an ice-cream cone (a double one, tip to tip) and slice it with a flat plane. Depending only on the *angle* of your cut, the edge of the slice is one of exactly four curves:\n\n- Cut **straight across**: a **circle**.\n- **Tilt** the plane a little: an **ellipse** — a stretched circle.\n- Tilt until the plane is **parallel to the cone's side**: a **parabola** — the curve just barely fails to close.\n- Tilt **past** that, so the plane hits *both* halves of the double cone: a **hyperbola** — two mirror-image branches.\n\nThe Greeks studied these slices two thousand years before anyone needed them; then it turned out planets ride ellipses, thrown balls trace parabolas, and navigation systems draw hyperbolas. Algebraically, all four are the graphs of *second-degree* equations in $x$ and $y$ — quadratics grown up to two variables. This topic is about reading each curve's geometry (center, vertices, foci) straight off its equation.\n\n## The circle: distance formula in disguise\n\nA circle is every point at fixed distance $r$ from a center $(h, k)$. Write that with the distance formula and square both sides:\n\n$$(x - h)^2 + (y - k)^2 = r^2$$\n\nThat's the **standard form**, and it's a *sentence*, not just a formula: \"the distance from $(x, y)$ to $(h, k)$ is $r$.\"\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-7, 7], \"yRange\": [-7, 7], \"grid\": true, \"segments\": [ { \"from\": [0, 0], \"to\": [3, 4], \"color\": \"warn\", \"label\": \"r = 5\" } ], \"points\": [ { \"x\": 5, \"y\": 0, \"r\": 1.6 }, { \"x\": 4.94, \"y\": 0.78, \"r\": 1.6 }, { \"x\": 4.76, \"y\": 1.55, \"r\": 1.6 }, { \"x\": 4.46, \"y\": 2.27, \"r\": 1.6 }, { \"x\": 4.05, \"y\": 2.94, \"r\": 1.6 }, { \"x\": 3.54, \"y\": 3.54, \"r\": 1.6 }, { \"x\": 2.94, \"y\": 4.05, \"r\": 1.6 }, { \"x\": 2.27, \"y\": 4.46, \"r\": 1.6 }, { \"x\": 1.55, \"y\": 4.76, \"r\": 1.6 }, { \"x\": 0.78, \"y\": 4.94, \"r\": 1.6 }, { \"x\": 0, \"y\": 5, \"r\": 1.6 }, { \"x\": -0.78, \"y\": 4.94, \"r\": 1.6 }, { \"x\": -1.55, \"y\": 4.76, \"r\": 1.6 }, { \"x\": -2.27, \"y\": 4.46, \"r\": 1.6 }, { \"x\": -2.94, \"y\": 4.05, \"r\": 1.6 }, { \"x\": -3.54, \"y\": 3.54, \"r\": 1.6 }, { \"x\": -4.05, \"y\": 2.94, \"r\": 1.6 }, { \"x\": -4.46, \"y\": 2.27, \"r\": 1.6 }, { \"x\": -4.76, \"y\": 1.55, \"r\": 1.6 }, { \"x\": -4.94, \"y\": 0.78, \"r\": 1.6 }, { \"x\": -5, \"y\": 0, \"r\": 1.6 }, { \"x\": -4.94, \"y\": -0.78, \"r\": 1.6 }, { \"x\": -4.76, \"y\": -1.55, \"r\": 1.6 }, { \"x\": -4.46, \"y\": -2.27, \"r\": 1.6 }, { \"x\": -4.05, \"y\": -2.94, \"r\": 1.6 }, { \"x\": -3.54, \"y\": -3.54, \"r\": 1.6 }, { \"x\": -2.94, \"y\": -4.05, \"r\": 1.6 }, { \"x\": -2.27, \"y\": -4.46, \"r\": 1.6 }, { \"x\": -1.55, \"y\": -4.76, \"r\": 1.6 }, { \"x\": -0.78, \"y\": -4.94, \"r\": 1.6 }, { \"x\": 0, \"y\": -5, \"r\": 1.6 }, { \"x\": 0.78, \"y\": -4.94, \"r\": 1.6 }, { \"x\": 1.55, \"y\": -4.76, \"r\": 1.6 }, { \"x\": 2.27, \"y\": -4.46, \"r\": 1.6 }, { \"x\": 2.94, \"y\": -4.05, \"r\": 1.6 }, { \"x\": 3.54, \"y\": -3.54, \"r\": 1.6 }, { \"x\": 4.05, \"y\": -2.94, \"r\": 1.6 }, { \"x\": 4.46, \"y\": -2.27, \"r\": 1.6 }, { \"x\": 4.76, \"y\": -1.55, \"r\": 1.6 }, { \"x\": 4.94, \"y\": -0.78, \"r\": 1.6 }, { \"x\": 0, \"y\": 0, \"label\": \"(0, 0)\", \"color\": \"text\" } ], \"caption\": \"x² + y² = 25: every point sits exactly 5 units from the center\" }\n```\n\n**Two sign traps, right away.** First: the equation $(x + 4)^2 + (y - 1)^2 = 9$ has center $(-4, 1)$, *not* $(4, -1)$ — the standard form subtracts, so what you see inside the parentheses is the center with its signs flipped. Second: the right side is $r^2$. \"$= 9$\" means radius $3$. Answering $9$ for the radius is the single most common circle error.\n\n### Completing the square, end to end\n\nCircles rarely arrive gift-wrapped. Expand the standard form and you get the **general form** $x^2 + y^2 + Dx + Ey + F = 0$ — the geometry is hidden. Completing the square un-hides it. Take\n\n$$x^2 + y^2 - 6x + 4y - 12 = 0.$$\n\n1. **Group** the $x$'s and $y$'s, move the constant right: $(x^2 - 6x) + (y^2 + 4y) = 12$.\n2. **Complete each square**: half of $-6$ is $-3$, square it to get $9$; half of $4$ is $2$, square it to get $4$. Add BOTH to BOTH sides:\n$$(x^2 - 6x + 9) + (y^2 + 4y + 4) = 12 + 9 + 4$$\n3. **Factor** each perfect-square trinomial:\n$$(x - 3)^2 + (y + 2)^2 = 25$$\n\nCenter $(3, -2)$, radius $5$. Done. If the squared terms carry a coefficient — say $2x^2 + 2y^2 - 12x + 16y - 22 = 0$ — **divide the whole equation through first**, or every number that follows will be wrong.\n\n## The parabola: one focus, one mirror line\n\nYou know parabolas as graphs of quadratics. Their *geometric* definition is new: a parabola is every point equidistant from a fixed point (the **focus**) and a fixed line (the **directrix**). The **vertex** sits exactly halfway between them.\n\nThe cleanest algebraic home for this geometry is\n\n$$x^2 = 4py,$$\n\na parabola with vertex at the origin, focus at $(0, p)$, and directrix $y = -p$. The number $p$ — the **focal distance** — can be negative: then the parabola opens downward, focus below, directrix above.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-10, 10], \"yRange\": [-4, 10], \"grid\": true, \"segments\": [ { \"from\": [-9, -2], \"to\": [9, -2], \"dashed\": true, \"color\": \"dim\", \"label\": \"directrix y = -2\" } ], \"points\": [ { \"x\": -8.8, \"y\": 9.68, \"r\": 1.6 }, { \"x\": -8.21, \"y\": 8.43, \"r\": 1.6 }, { \"x\": -7.63, \"y\": 7.27, \"r\": 1.6 }, { \"x\": -7.04, \"y\": 6.2, \"r\": 1.6 }, { \"x\": -6.45, \"y\": 5.21, \"r\": 1.6 }, { \"x\": -5.87, \"y\": 4.3, \"r\": 1.6 }, { \"x\": -5.28, \"y\": 3.48, \"r\": 1.6 }, { \"x\": -4.69, \"y\": 2.75, \"r\": 1.6 }, { \"x\": -4.11, \"y\": 2.11, \"r\": 1.6 }, { \"x\": -3.52, \"y\": 1.55, \"r\": 1.6 }, { \"x\": -2.93, \"y\": 1.08, \"r\": 1.6 }, { \"x\": -2.35, \"y\": 0.69, \"r\": 1.6 }, { \"x\": -1.76, \"y\": 0.39, \"r\": 1.6 }, { \"x\": -1.17, \"y\": 0.17, \"r\": 1.6 }, { \"x\": -0.59, \"y\": 0.04, \"r\": 1.6 }, { \"x\": 0, \"y\": 0, \"r\": 1.6 }, { \"x\": 0.59, \"y\": 0.04, \"r\": 1.6 }, { \"x\": 1.17, \"y\": 0.17, \"r\": 1.6 }, { \"x\": 1.76, \"y\": 0.39, \"r\": 1.6 }, { \"x\": 2.35, \"y\": 0.69, \"r\": 1.6 }, { \"x\": 2.93, \"y\": 1.08, \"r\": 1.6 }, { \"x\": 3.52, \"y\": 1.55, \"r\": 1.6 }, { \"x\": 4.11, \"y\": 2.11, \"r\": 1.6 }, { \"x\": 4.69, \"y\": 2.75, \"r\": 1.6 }, { \"x\": 5.28, \"y\": 3.48, \"r\": 1.6 }, { \"x\": 5.87, \"y\": 4.3, \"r\": 1.6 }, { \"x\": 6.45, \"y\": 5.21, \"r\": 1.6 }, { \"x\": 7.04, \"y\": 6.2, \"r\": 1.6 }, { \"x\": 7.63, \"y\": 7.27, \"r\": 1.6 }, { \"x\": 8.21, \"y\": 8.43, \"r\": 1.6 }, { \"x\": 8.8, \"y\": 9.68, \"r\": 1.6 }, { \"x\": 0, \"y\": 2, \"label\": \"focus (0, 2)\", \"color\": \"warn\" }, { \"x\": 0, \"y\": 0, \"label\": \"vertex\", \"color\": \"success\" } ], \"caption\": \"x² = 8y: p = 2, focus (0, 2), directrix y = −2 — the vertex is halfway between\" }\n```\n\nThe familiar **vertex form** $y = a(x - h)^2 + k$ (vertex $(h, k)$, opens up if $a > 0$) connects to the focal picture through\n\n$$a = \\frac{1}{4p} \\qquad \\Longleftrightarrow \\qquad p = \\frac{1}{4a}.$$\n\nSo $y = \\frac{1}{8}(x - 2)^2 - 1$ has vertex $(2, -1)$, and $4p = 8$ gives $p = 2$: focus $(2, 1)$, directrix $y = -3$. A *small* $|a|$ (a wide, shallow parabola) means a *large* focal distance — that's why satellite dishes are shallow.\n\n## The ellipse: two foci, constant sum\n\nPin a loop of string at two points, pull it taut with a pencil, and trace: you draw an **ellipse** — all points whose distances to the two pins (the **foci**) add up to the same constant, $2a$. Standard form, centered at the origin:\n\n$$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$$\n\n**The one rule that governs everything: $a^2$ is the LARGER denominator.** Whichever variable sits over it is the direction of the **major axis**. The vertices are $a$ units from the center along that axis, the minor axis ends are $b$ units the other way, and the foci are $c$ units along the major axis, where\n\n$$c^2 = a^2 - b^2 \\qquad \\text{(ellipse: SUBTRACT — the foci are inside, } c < a\\text{)}.$$\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-7, 7], \"yRange\": [-6, 6], \"grid\": true, \"points\": [ { \"x\": 5, \"y\": 0, \"r\": 1.6 }, { \"x\": 4.94, \"y\": 0.47, \"r\": 1.6 }, { \"x\": 4.76, \"y\": 0.93, \"r\": 1.6 }, { \"x\": 4.46, \"y\": 1.36, \"r\": 1.6 }, { \"x\": 4.05, \"y\": 1.76, \"r\": 1.6 }, { \"x\": 3.54, \"y\": 2.12, \"r\": 1.6 }, { \"x\": 2.94, \"y\": 2.43, \"r\": 1.6 }, { \"x\": 2.27, \"y\": 2.67, \"r\": 1.6 }, { \"x\": 1.55, \"y\": 2.85, \"r\": 1.6 }, { \"x\": 0.78, \"y\": 2.96, \"r\": 1.6 }, { \"x\": 0, \"y\": 3, \"r\": 1.6 }, { \"x\": -0.78, \"y\": 2.96, \"r\": 1.6 }, { \"x\": -1.55, \"y\": 2.85, \"r\": 1.6 }, { \"x\": -2.27, \"y\": 2.67, \"r\": 1.6 }, { \"x\": -2.94, \"y\": 2.43, \"r\": 1.6 }, { \"x\": -3.54, \"y\": 2.12, \"r\": 1.6 }, { \"x\": -4.05, \"y\": 1.76, \"r\": 1.6 }, { \"x\": -4.46, \"y\": 1.36, \"r\": 1.6 }, { \"x\": -4.76, \"y\": 0.93, \"r\": 1.6 }, { \"x\": -4.94, \"y\": 0.47, \"r\": 1.6 }, { \"x\": -5, \"y\": 0, \"r\": 1.6 }, { \"x\": -4.94, \"y\": -0.47, \"r\": 1.6 }, { \"x\": -4.76, \"y\": -0.93, \"r\": 1.6 }, { \"x\": -4.46, \"y\": -1.36, \"r\": 1.6 }, { \"x\": -4.05, \"y\": -1.76, \"r\": 1.6 }, { \"x\": -3.54, \"y\": -2.12, \"r\": 1.6 }, { \"x\": -2.94, \"y\": -2.43, \"r\": 1.6 }, { \"x\": -2.27, \"y\": -2.67, \"r\": 1.6 }, { \"x\": -1.55, \"y\": -2.85, \"r\": 1.6 }, { \"x\": -0.78, \"y\": -2.96, \"r\": 1.6 }, { \"x\": 0, \"y\": -3, \"r\": 1.6 }, { \"x\": 0.78, \"y\": -2.96, \"r\": 1.6 }, { \"x\": 1.55, \"y\": -2.85, \"r\": 1.6 }, { \"x\": 2.27, \"y\": -2.67, \"r\": 1.6 }, { \"x\": 2.94, \"y\": -2.43, \"r\": 1.6 }, { \"x\": 3.54, \"y\": -2.12, \"r\": 1.6 }, { \"x\": 4.05, \"y\": -1.76, \"r\": 1.6 }, { \"x\": 4.46, \"y\": -1.36, \"r\": 1.6 }, { \"x\": 4.76, \"y\": -0.93, \"r\": 1.6 }, { \"x\": 4.94, \"y\": -0.47, \"r\": 1.6 }, { \"x\": 5, \"y\": 0, \"label\": \"vertex (5, 0)\", \"color\": \"success\" }, { \"x\": -5, \"y\": 0, \"color\": \"success\" }, { \"x\": 4, \"y\": 0, \"label\": \"focus (4, 0)\", \"color\": \"warn\" }, { \"x\": -4, \"y\": 0, \"color\": \"warn\" } ], \"caption\": \"x²/25 + y²/9 = 1: a = 5, b = 3, and c² = 25 − 9 = 16 puts the foci at (±4, 0)\" }\n```\n\nWorked read-off for $\\frac{x^2}{25} + \\frac{y^2}{9} = 1$: larger denominator $25$ under $x^2$, so the major axis is horizontal, $a = 5$, $b = 3$, $c = \\sqrt{25 - 9} = 4$. Vertices $(\\pm 5, 0)$, foci $(\\pm 4, 0)$. If the larger denominator had been under $y^2$, everything would rotate to the vertical — *which* denominator is larger, not the order they're written in, decides the orientation.\n\nShifted centers work exactly like circles: $\\frac{(x - 2)^2}{25} + \\frac{(y + 1)^2}{16} = 1$ is the same ellipse moved to center $(2, -1)$.\n\n## The hyperbola: two foci, constant difference\n\nChange the plus to a minus and the geometry flips from a constant *sum* of distances to a constant *difference*:\n\n$$\\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1 \\; \\text{(opens left-right)} \\qquad \\frac{y^2}{a^2} - \\frac{x^2}{b^2} = 1 \\; \\text{(opens up-down)}$$\n\nThe hyperbola opens along the variable of the **positive** term — and here $a^2$ is *always the positive term's denominator*, even if it's numerically smaller than $b^2$. Vertices are $a$ units from the center along that axis. Two things distinguish hyperbolas:\n\n1. **Foci OUTSIDE the curve**: $c^2 = a^2 + b^2$ — **add**, the exact opposite of the ellipse. A 3-4-5 triangle gives the classic example below.\n2. **Asymptotes**: far from the center, the branches hug the lines $y = \\pm\\frac{b}{a}x$ (horizontal case) or $y = \\pm\\frac{a}{b}x$ (vertical case). They're the diagonals of the $2a \\times 2b$ central box.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-8, 8], \"yRange\": [-8, 8], \"grid\": true, \"segments\": [ { \"from\": [-7.5, -10], \"to\": [7.5, 10], \"dashed\": true, \"color\": \"dim\" }, { \"from\": [-7.5, 10], \"to\": [7.5, -10], \"dashed\": true, \"color\": \"dim\" } ], \"points\": [ { \"x\": 6.38, \"y\": -7.5, \"r\": 1.6 }, { \"x\": -6.37, \"y\": -7.5, \"r\": 1.6 }, { \"x\": 5.76, \"y\": -6.56, \"r\": 1.6 }, { \"x\": -5.76, \"y\": -6.56, \"r\": 1.6 }, { \"x\": 5.18, \"y\": -5.62, \"r\": 1.6 }, { \"x\": -5.18, \"y\": -5.62, \"r\": 1.6 }, { \"x\": 4.62, \"y\": -4.69, \"r\": 1.6 }, { \"x\": -4.62, \"y\": -4.69, \"r\": 1.6 }, { \"x\": 4.11, \"y\": -3.75, \"r\": 1.6 }, { \"x\": -4.11, \"y\": -3.75, \"r\": 1.6 }, { \"x\": 3.67, \"y\": -2.81, \"r\": 1.6 }, { \"x\": -3.67, \"y\": -2.81, \"r\": 1.6 }, { \"x\": 3.31, \"y\": -1.87, \"r\": 1.6 }, { \"x\": -3.31, \"y\": -1.87, \"r\": 1.6 }, { \"x\": 3.08, \"y\": -0.94, \"r\": 1.6 }, { \"x\": -3.08, \"y\": -0.94, \"r\": 1.6 }, { \"x\": 3, \"y\": 0, \"r\": 1.6 }, { \"x\": -3, \"y\": 0, \"r\": 1.6 }, { \"x\": 3.08, \"y\": 0.94, \"r\": 1.6 }, { \"x\": -3.08, \"y\": 0.94, \"r\": 1.6 }, { \"x\": 3.31, \"y\": 1.88, \"r\": 1.6 }, { \"x\": -3.31, \"y\": 1.88, \"r\": 1.6 }, { \"x\": 3.67, \"y\": 2.81, \"r\": 1.6 }, { \"x\": -3.67, \"y\": 2.81, \"r\": 1.6 }, { \"x\": 4.11, \"y\": 3.75, \"r\": 1.6 }, { \"x\": -4.11, \"y\": 3.75, \"r\": 1.6 }, { \"x\": 4.62, \"y\": 4.69, \"r\": 1.6 }, { \"x\": -4.62, \"y\": 4.69, \"r\": 1.6 }, { \"x\": 5.18, \"y\": 5.63, \"r\": 1.6 }, { \"x\": -5.18, \"y\": 5.63, \"r\": 1.6 }, { \"x\": 5.76, \"y\": 6.56, \"r\": 1.6 }, { \"x\": -5.76, \"y\": 6.56, \"r\": 1.6 }, { \"x\": 6.38, \"y\": 7.5, \"r\": 1.6 }, { \"x\": -6.37, \"y\": 7.5, \"r\": 1.6 }, { \"x\": 3, \"y\": 0, \"label\": \"vertex (3, 0)\", \"color\": \"success\" }, { \"x\": -3, \"y\": 0, \"color\": \"success\" }, { \"x\": 5, \"y\": 0, \"label\": \"focus (5, 0)\", \"color\": \"warn\" }, { \"x\": -5, \"y\": 0, \"color\": \"warn\" } ], \"caption\": \"x²/9 − y²/16 = 1: a = 3, b = 4, c² = 9 + 16 = 25, asymptotes y = ±(4/3)x\" }\n```\n\nFor $\\frac{x^2}{9} - \\frac{y^2}{16} = 1$: positive $x^2$ term, so it opens left-right; $a = 3$, $b = 4$, $c = \\sqrt{9 + 16} = 5$. Vertices $(\\pm 3, 0)$, foci $(\\pm 5, 0)$, asymptote slopes $\\pm\\frac{4}{3}$.\n\n## Which conic is it?\n\nGiven a general second-degree equation $Ax^2 + Cy^2 + Dx + Ey + F = 0$, the squared-term coefficients alone classify it:\n\n| $A$ vs $C$ | Conic |\n|---|---|\n| $A = C$ (both present, equal) | circle |\n| same sign, different values | ellipse |\n| opposite signs | hyperbola |\n| one of them is zero | parabola |\n\nSo $9x^2 - 4y^2 + 18x - 8y - 31 = 0$ is a hyperbola at a glance ($9$ and $-4$: opposite signs) — no completing the square required just to *name* the curve.\n\n## Pitfalls, collected\n\n- **$r^2$ vs $r$**: the circle equation shows $r^2$. \"$= 49$\" is radius $7$.\n- **Sign flips at the parentheses**: $(x + 3)^2$ means $h = -3$; the center's coordinates are the opposite of the visible signs. This bites on every conic with a shifted center.\n- **Ellipse orientation**: $a^2$ is the LARGER denominator, wherever it appears. $\\frac{x^2}{9} + \\frac{y^2}{25} = 1$ is a *vertical* ellipse — the $25$ under $y^2$ wins.\n- **Ellipse vs hyperbola focus formula**: ellipse $c^2 = a^2 - b^2$ (foci inside), hyperbola $c^2 = a^2 + b^2$ (foci outside). Mixing these up is the most common foci error.\n- **Hyperbola's $a^2$**: it's the denominator of the *positive* term, not the bigger number.\n- **Coefficient on the squares**: if $x^2$ and $y^2$ carry a common coefficient, divide it out *before* completing the square.\n- **Completing the square**: whatever you add inside the squares must be added to the other side too — both numbers."
+  },
+  "application": {
+    "summary": "Conic sections are the shapes of physics and engineering: orbits are ellipses with the sun at a focus, satellite dishes and headlights are parabolas that funnel signals to (or from) their focus, whispering galleries exploit the ellipse's two-focus reflection, and LORAN navigation locates ships on hyperbolas of constant time-difference.",
+    "domains": ["astronomy", "engineering", "architecture", "navigation"],
+    "workedExample": "**Where do you mount a satellite dish's receiver?**\n\nA dish antenna is a parabola rotated about its axis: every incoming signal parallel to that axis reflects off the dish and passes through the focus. So the receiver must sit exactly at the focus — mount it wrong by an inch and the signal smears.\n\nA dish is 8 feet wide and 2 feet deep. Set the vertex at the origin, opening upward: the cross-section is $x^2 = 4py$, and the rim passes through the point $(4, 2)$ — half the width across, the full depth up.\n\nSubstitute the rim point: $4^2 = 4p(2)$, so $16 = 8p$ and $p = 2$.\n\n**The receiver goes on the axis, 2 feet above the vertex** — at the focus $(0, 2)$. Notice the focus sits above the rim height? That's normal for shallow dishes: small curvature ($a = \\frac{1}{4p} = \\frac{1}{8}$) means a long focal distance. The same computation, run in reverse, designs car headlights: put the bulb at the focus and the parabolic mirror throws every ray out parallel — a beam instead of a glow.",
+    "domainNotes": [
+      "**Astronomy:** planets and comets orbit the sun in ellipses with the sun at one focus (Kepler's first law); a comet on a hyperbolic path swings by once and never returns — the eccentricity of its conic decides its fate.",
+      "**Engineering:** satellite dishes, radio telescopes, headlights, and solar cookers are parabolic — everything parallel to the axis concentrates at the focus, and everything from the focus exits parallel.",
+      "**Architecture:** in an elliptical whispering gallery (like Statuary Hall in the U.S. Capitol), a whisper at one focus reflects off the walls and reassembles, clearly audible, at the other focus.",
+      "**Navigation:** LORAN measures the *difference* in arrival times of synchronized radio pulses from two stations — a constant difference of distances puts the ship on one branch of a hyperbola; a second station pair gives a second hyperbola, and the intersection is the fix."
+    ]
+  },
+  "generators": [
+    "a2c-circles-1", "a2c-circles-2", "a2c-circles-3",
+    "a2c-parabolas-1", "a2c-parabolas-2", "a2c-parabolas-3",
+    "a2c-ellipses-1", "a2c-ellipses-2", "a2c-ellipses-3",
+    "a2c-hyperbolas-1", "a2c-hyperbolas-2", "a2c-hyperbolas-3"
+  ],
+  "problems": [
+    {
+      "id": "algebra-2.conic-sections.s01",
+      "concepts": ["circles-and-completing-square"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A circle has equation $(x - 3)^2 + (y + 2)^2 = 36$. Read off its center and radius from the standard form $(x - h)^2 + (y - k)^2 = r^2$.",
+      "steps": [
+        { "instruction": "What is the x-coordinate of the center? (Give a number — watch the sign inside the parenthesis.)", "answer": "3", "accept": [], "hint": "Standard form has $(x - h)$, and here we see $(x - 3)$: $h = 3$." },
+        { "instruction": "What is the y-coordinate of the center? (Give a number.)", "answer": "-2", "accept": [], "hint": "$(y + 2)$ is $(y - (-2))$, so $k = -2$ — the sign flips coming out of the parenthesis." },
+        { "instruction": "The right side is $r^2 = 36$. What is the radius $r$? (Give a number.)", "answer": "6", "accept": [], "hint": "$\\sqrt{36} = 6$ — the equation shows $r^2$, not $r$." }
+      ],
+      "finalAnswer": { "value": "center (3, -2), radius 6", "unit": "" },
+      "solutionNarrative": "Match against $(x - h)^2 + (y - k)^2 = r^2$: the signs flip out of the parentheses, so the center is $(3, -2)$, and $r = \\sqrt{36} = 6$.",
+      "plot": { "type": "cartesian", "xRange": [-5, 11], "yRange": [-10, 6], "grid": true, "points": [ { "x": 9, "y": -2, "r": 1.6 }, { "x": 8.93, "y": -1.06, "r": 1.6 }, { "x": 8.71, "y": -0.15, "r": 1.6 }, { "x": 8.35, "y": 0.72, "r": 1.6 }, { "x": 7.85, "y": 1.53, "r": 1.6 }, { "x": 7.24, "y": 2.24, "r": 1.6 }, { "x": 6.53, "y": 2.85, "r": 1.6 }, { "x": 5.72, "y": 3.35, "r": 1.6 }, { "x": 4.85, "y": 3.71, "r": 1.6 }, { "x": 3.94, "y": 3.93, "r": 1.6 }, { "x": 3, "y": 4, "r": 1.6 }, { "x": 2.06, "y": 3.93, "r": 1.6 }, { "x": 1.15, "y": 3.71, "r": 1.6 }, { "x": 0.28, "y": 3.35, "r": 1.6 }, { "x": -0.53, "y": 2.85, "r": 1.6 }, { "x": -1.24, "y": 2.24, "r": 1.6 }, { "x": -1.85, "y": 1.53, "r": 1.6 }, { "x": -2.35, "y": 0.72, "r": 1.6 }, { "x": -2.71, "y": -0.15, "r": 1.6 }, { "x": -2.93, "y": -1.06, "r": 1.6 }, { "x": -3, "y": -2, "r": 1.6 }, { "x": -2.93, "y": -2.94, "r": 1.6 }, { "x": -2.71, "y": -3.85, "r": 1.6 }, { "x": -2.35, "y": -4.72, "r": 1.6 }, { "x": -1.85, "y": -5.53, "r": 1.6 }, { "x": -1.24, "y": -6.24, "r": 1.6 }, { "x": -0.53, "y": -6.85, "r": 1.6 }, { "x": 0.28, "y": -7.35, "r": 1.6 }, { "x": 1.15, "y": -7.71, "r": 1.6 }, { "x": 2.06, "y": -7.93, "r": 1.6 }, { "x": 3, "y": -8, "r": 1.6 }, { "x": 3.94, "y": -7.93, "r": 1.6 }, { "x": 4.85, "y": -7.71, "r": 1.6 }, { "x": 5.72, "y": -7.35, "r": 1.6 }, { "x": 6.53, "y": -6.85, "r": 1.6 }, { "x": 7.24, "y": -6.24, "r": 1.6 }, { "x": 7.85, "y": -5.53, "r": 1.6 }, { "x": 8.35, "y": -4.72, "r": 1.6 }, { "x": 8.71, "y": -3.85, "r": 1.6 }, { "x": 8.93, "y": -2.94, "r": 1.6 }, { "x": 3, "y": -2, "label": "(3, -2)", "color": "warn" } ], "caption": "(x − 3)² + (y + 2)² = 36: center (3, −2), radius 6" }
+    },
+    {
+      "id": "algebra-2.conic-sections.s02",
+      "concepts": ["circles-and-completing-square"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A radio tower at the origin broadcasts to a 5-mile radius. Write the equation of the coverage boundary, then decide whether a house at $(3, 4)$ can receive the signal.",
+      "steps": [
+        { "instruction": "Write the equation of the boundary circle (like x^2 + y^2 = 16).", "answer": "x^2 + y^2 = 25", "accept": ["y^2 + x^2 = 25"], "hint": "Center $(0, 0)$ and radius 5 — remember the right side is $r^2$." },
+        { "instruction": "Compute $3^2 + 4^2$ for the house's location. (Give a number.)", "answer": "25", "accept": [], "hint": "$9 + 16$." },
+        { "instruction": "So how far is the house from the tower, in miles? (Give a number.)", "answer": "5", "accept": [], "hint": "$\\sqrt{25} = 5$ — exactly on the boundary circle." }
+      ],
+      "finalAnswer": { "value": "x^2 + y^2 = 25", "unit": "" },
+      "solutionNarrative": "The boundary is $x^2 + y^2 = 25$ (radius 5, so $r^2 = 25$). The house at $(3, 4)$ sits at distance $\\sqrt{9 + 16} = 5$ — right on the edge of coverage, the 3-4-5 triangle in action."
+    },
+    {
+      "id": "algebra-2.conic-sections.s03",
+      "concepts": ["circles-and-completing-square"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The equation $x^2 + y^2 - 6x + 4y - 12 = 0$ describes a circle in general form. Complete the square in $x$ and in $y$ to find its center and radius.",
+      "steps": [
+        { "instruction": "Group the $x$ terms: $x^2 - 6x$. Half the coefficient of $x$, sign-flipped, is the center's x-coordinate $h$. What is $h$? (Give a number.)", "answer": "3", "accept": [], "hint": "$h = -\\tfrac{-6}{2} = 3$, and you will add $h^2 = 9$ to complete the square." },
+        { "instruction": "Do the same for the $y$ terms ($y^2 + 4y$): what is the center's y-coordinate $k$? (Give a number.)", "answer": "-2", "accept": [], "hint": "$k = -\\tfrac{4}{2} = -2$, adding $k^2 = 4$." },
+        { "instruction": "Move the $-12$ across and add both completing-the-square numbers: $12 + 9 + 4 = r^2$. What is $r^2$? (Give a number.)", "answer": "25", "accept": [], "hint": "$12 + 9 + 4 = 25$." },
+        { "instruction": "What is the radius $r$? (Give a number.)", "answer": "5", "accept": [], "hint": "$\\sqrt{25} = 5$." },
+        { "instruction": "Write the standard-form equation (like (x - 1)^2 + (y + 2)^2 = 9).", "answer": "(x - 3)^2 + (y + 2)^2 = 25", "accept": ["(y + 2)^2 + (x - 3)^2 = 25"], "hint": "Center $(3, -2)$: the signs inside the parentheses are the OPPOSITE of the center's coordinates." }
+      ],
+      "finalAnswer": { "value": "(x - 3)^2 + (y + 2)^2 = 25", "unit": "" },
+      "solutionNarrative": "Half of $-6$ is $-3$ (add 9); half of $4$ is $2$ (add 4). Then $(x - 3)^2 + (y + 2)^2 = 12 + 9 + 4 = 25$: center $(3, -2)$, radius 5."
+    },
+    {
+      "id": "algebra-2.conic-sections.s04",
+      "concepts": ["circles-and-completing-square"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The equation $2x^2 + 2y^2 - 12x + 16y - 22 = 0$ describes a circle, but the squared terms carry a coefficient of 2. Divide through first, then complete the square.",
+      "steps": [
+        { "instruction": "Divide every term by 2 and write the resulting equation (still equal to 0).", "answer": "x^2 + y^2 - 6x + 8y - 11 = 0", "accept": [], "hint": "Each coefficient halves: $2x^2 + 2y^2 - 12x + 16y - 22$ becomes $x^2 + y^2 - 6x + 8y - 11$." },
+        { "instruction": "Complete the square in $x$: what is the center's x-coordinate $h$? (Give a number.)", "answer": "3", "accept": [], "hint": "Half of $-6$, sign-flipped: $h = 3$ (add 9)." },
+        { "instruction": "Complete the square in $y$: what is the center's y-coordinate $k$? (Give a number.)", "answer": "-4", "accept": [], "hint": "Half of $8$, sign-flipped: $k = -4$ (add 16)." },
+        { "instruction": "The right side becomes $11 + 9 + 16$. What is the radius $r$? (Give a number.)", "answer": "6", "accept": [], "hint": "$11 + 9 + 16 = 36$ and $r = \\sqrt{36} = 6$." }
+      ],
+      "finalAnswer": { "value": "center (3, -4), radius 6", "unit": "" },
+      "solutionNarrative": "Divide by 2 first: $x^2 + y^2 - 6x + 8y - 11 = 0$. Completing both squares gives $(x - 3)^2 + (y + 4)^2 = 36$ — center $(3, -4)$, radius 6. Skipping the divide-through corrupts every number that follows."
+    },
+    {
+      "id": "algebra-2.conic-sections.s05",
+      "concepts": ["parabolas-focus-directrix"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A parabola has vertex form $y = 2(x - 1)^2 + 3$. Identify its vertex and which way it opens.",
+      "steps": [
+        { "instruction": "Give the vertex as an ordered pair (a, b).", "answer": "(1, 3)", "accept": [], "hint": "Vertex form is $y = a(x - h)^2 + k$ with vertex $(h, k)$: flip the sign inside the parenthesis, keep the constant's sign." },
+        { "instruction": "The leading coefficient is 2. Does the parabola open up or down? (Answer 'up' or 'down'.)", "answer": "up", "accept": ["upward", "opens up"], "hint": "Positive $a$ opens up." },
+        { "instruction": "Write the equation of the axis of symmetry (a vertical line, like x = 2).", "answer": "x = 1", "accept": [], "hint": "The axis passes through the vertex." }
+      ],
+      "finalAnswer": { "value": "(1, 3)", "unit": "" },
+      "solutionNarrative": "Matching $y = a(x - h)^2 + k$: vertex $(1, 3)$, opening up since $a = 2 > 0$, axis of symmetry $x = 1$."
+    },
+    {
+      "id": "algebra-2.conic-sections.s06",
+      "concepts": ["parabolas-focus-directrix"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The parabola $x^2 = 8y$ has its vertex at the origin. Use the form $x^2 = 4py$ to find its focus and directrix.",
+      "steps": [
+        { "instruction": "Match $x^2 = 8y$ to $x^2 = 4py$: what is $p$? (Give a number.)", "answer": "2", "accept": [], "hint": "$4p = 8$, so $p = 2$." },
+        { "instruction": "The focus sits at $(0, p)$, inside the curve. Give the focus as an ordered pair (a, b).", "answer": "(0, 2)", "accept": [], "hint": "The parabola opens up, so the focus is 2 units above the vertex." },
+        { "instruction": "The directrix is the horizontal line $y = -p$, on the opposite side of the vertex. Write its equation (like y = 3).", "answer": "y = -2", "accept": [], "hint": "Opposite side from the focus: $y = -2$." }
+      ],
+      "finalAnswer": { "value": "focus (0, 2), directrix y = -2", "unit": "" },
+      "solutionNarrative": "$4p = 8$ gives $p = 2$: focus $(0, 2)$, directrix $y = -2$. Every point of the parabola is equidistant from that point and that line — the vertex, at distance 2 from each, is the closest point.",
+      "plot": { "type": "cartesian", "xRange": [-10, 10], "yRange": [-4, 10], "grid": true, "segments": [ { "from": [-9, -2], "to": [9, -2], "dashed": true, "color": "dim", "label": "y = -2" } ], "points": [ { "x": -8.8, "y": 9.68, "r": 1.6 }, { "x": -8.21, "y": 8.43, "r": 1.6 }, { "x": -7.63, "y": 7.27, "r": 1.6 }, { "x": -7.04, "y": 6.2, "r": 1.6 }, { "x": -6.45, "y": 5.21, "r": 1.6 }, { "x": -5.87, "y": 4.3, "r": 1.6 }, { "x": -5.28, "y": 3.48, "r": 1.6 }, { "x": -4.69, "y": 2.75, "r": 1.6 }, { "x": -4.11, "y": 2.11, "r": 1.6 }, { "x": -3.52, "y": 1.55, "r": 1.6 }, { "x": -2.93, "y": 1.08, "r": 1.6 }, { "x": -2.35, "y": 0.69, "r": 1.6 }, { "x": -1.76, "y": 0.39, "r": 1.6 }, { "x": -1.17, "y": 0.17, "r": 1.6 }, { "x": -0.59, "y": 0.04, "r": 1.6 }, { "x": 0, "y": 0, "r": 1.6 }, { "x": 0.59, "y": 0.04, "r": 1.6 }, { "x": 1.17, "y": 0.17, "r": 1.6 }, { "x": 1.76, "y": 0.39, "r": 1.6 }, { "x": 2.35, "y": 0.69, "r": 1.6 }, { "x": 2.93, "y": 1.08, "r": 1.6 }, { "x": 3.52, "y": 1.55, "r": 1.6 }, { "x": 4.11, "y": 2.11, "r": 1.6 }, { "x": 4.69, "y": 2.75, "r": 1.6 }, { "x": 5.28, "y": 3.48, "r": 1.6 }, { "x": 5.87, "y": 4.3, "r": 1.6 }, { "x": 6.45, "y": 5.21, "r": 1.6 }, { "x": 7.04, "y": 6.2, "r": 1.6 }, { "x": 7.63, "y": 7.27, "r": 1.6 }, { "x": 8.21, "y": 8.43, "r": 1.6 }, { "x": 8.8, "y": 9.68, "r": 1.6 }, { "x": 0, "y": 2, "label": "focus (0, 2)", "color": "warn" }, { "x": 0, "y": 0, "label": "vertex", "color": "success" } ], "caption": "x² = 8y: focus (0, 2), directrix y = −2" }
+    },
+    {
+      "id": "algebra-2.conic-sections.s07",
+      "concepts": ["parabolas-focus-directrix"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A satellite dish is 8 feet wide and 2 feet deep. Its cross-section is the parabola $x^2 = 4py$ with vertex at the bottom center. The receiver must sit at the focus — how high above the vertex is that?",
+      "steps": [
+        { "instruction": "The rim of the dish passes through the point $(4, 2)$ — half the width across, the full depth up. Substitute it: $4^2 = 4p(2)$. What is the left side, $4^2$? (Give a number.)", "answer": "16", "accept": [], "hint": "$4 \\cdot 4 = 16$." },
+        { "instruction": "So $16 = 8p$. Solve for $p$. (Give a number.)", "answer": "2", "accept": [], "hint": "$16 \\div 8 = 2$." },
+        { "instruction": "The focus of $x^2 = 4py$ is at $(0, p)$. Give it as an ordered pair (a, b).", "answer": "(0, 2)", "accept": [], "hint": "$p = 2$, so the focus is 2 feet above the vertex on the axis." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "feet above the vertex" },
+      "solutionNarrative": "The rim point $(4, 2)$ gives $16 = 8p$, so $p = 2$: the receiver mounts at the focus $(0, 2)$, two feet above the vertex. Every signal arriving parallel to the axis reflects through that one point — which is the entire reason dishes are parabolic."
+    },
+    {
+      "id": "algebra-2.conic-sections.s08",
+      "concepts": ["parabolas-focus-directrix"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The parabola $y = \\frac{1}{8}(x - 2)^2 - 1$ is in vertex form $y = \\frac{1}{4p}(x - h)^2 + k$. Find its vertex, focus, and directrix.",
+      "steps": [
+        { "instruction": "Give the vertex as an ordered pair (a, b).", "answer": "(2, -1)", "accept": [], "hint": "Flip the sign inside $(x - 2)$; keep the constant $-1$ as is." },
+        { "instruction": "The leading coefficient equals $\\frac{1}{4p} = \\frac{1}{8}$. What is $p$? (Give a number.)", "answer": "2", "accept": [], "hint": "$4p = 8$, so $p = 2$." },
+        { "instruction": "The focus is $p$ units above the vertex. Give the focus as an ordered pair (a, b).", "answer": "(2, 1)", "accept": [], "hint": "Same x as the vertex; $y = -1 + 2 = 1$." },
+        { "instruction": "The directrix is the horizontal line $p$ units BELOW the vertex. Write its equation (like y = 3).", "answer": "y = -3", "accept": [], "hint": "$y = -1 - 2 = -3$." }
+      ],
+      "finalAnswer": { "value": "focus (2, 1), directrix y = -3", "unit": "" },
+      "solutionNarrative": "Vertex $(2, -1)$; $\\frac{1}{4p} = \\frac{1}{8}$ gives $p = 2$. Focus $(2, 1)$, directrix $y = -3$ — the vertex sits exactly halfway between them."
+    },
+    {
+      "id": "algebra-2.conic-sections.s09",
+      "concepts": ["ellipses"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "An ellipse centered at the origin has equation $\\dfrac{x^2}{25} + \\dfrac{y^2}{9} = 1$. Identify $a$, $b$, and the orientation of its major axis.",
+      "steps": [
+        { "instruction": "The larger denominator is 25. What is the semi-major axis length $a$? (Give a number.)", "answer": "5", "accept": [], "hint": "$a = \\sqrt{25} = 5$ — $a^2$ is always the LARGER denominator." },
+        { "instruction": "The smaller denominator is 9. What is the semi-minor axis length $b$? (Give a number.)", "answer": "3", "accept": [], "hint": "$b = \\sqrt{9} = 3$." },
+        { "instruction": "The larger denominator sits under the $x^2$ term. Is the major axis horizontal or vertical? (Answer 'horizontal' or 'vertical'.)", "answer": "horizontal", "accept": ["left-right"], "hint": "The major axis runs along whichever variable carries $a^2$." },
+        { "instruction": "The vertices are $a$ units from the center along the major axis. Give the vertex with a positive coordinate as an ordered pair (a, b).", "answer": "(5, 0)", "accept": [], "hint": "Along the x-axis: $(5, 0)$." }
+      ],
+      "finalAnswer": { "value": "a = 5, b = 3, horizontal", "unit": "" },
+      "solutionNarrative": "The larger denominator 25 gives $a = 5$ and sits under $x^2$, so the major axis is horizontal; $b = 3$, vertices $(\\pm 5, 0)$.",
+      "plot": { "type": "cartesian", "xRange": [-7, 7], "yRange": [-6, 6], "grid": true, "points": [ { "x": 5, "y": 0, "r": 1.6 }, { "x": 4.94, "y": 0.47, "r": 1.6 }, { "x": 4.76, "y": 0.93, "r": 1.6 }, { "x": 4.46, "y": 1.36, "r": 1.6 }, { "x": 4.05, "y": 1.76, "r": 1.6 }, { "x": 3.54, "y": 2.12, "r": 1.6 }, { "x": 2.94, "y": 2.43, "r": 1.6 }, { "x": 2.27, "y": 2.67, "r": 1.6 }, { "x": 1.55, "y": 2.85, "r": 1.6 }, { "x": 0.78, "y": 2.96, "r": 1.6 }, { "x": 0, "y": 3, "r": 1.6 }, { "x": -0.78, "y": 2.96, "r": 1.6 }, { "x": -1.55, "y": 2.85, "r": 1.6 }, { "x": -2.27, "y": 2.67, "r": 1.6 }, { "x": -2.94, "y": 2.43, "r": 1.6 }, { "x": -3.54, "y": 2.12, "r": 1.6 }, { "x": -4.05, "y": 1.76, "r": 1.6 }, { "x": -4.46, "y": 1.36, "r": 1.6 }, { "x": -4.76, "y": 0.93, "r": 1.6 }, { "x": -4.94, "y": 0.47, "r": 1.6 }, { "x": -5, "y": 0, "r": 1.6 }, { "x": -4.94, "y": -0.47, "r": 1.6 }, { "x": -4.76, "y": -0.93, "r": 1.6 }, { "x": -4.46, "y": -1.36, "r": 1.6 }, { "x": -4.05, "y": -1.76, "r": 1.6 }, { "x": -3.54, "y": -2.12, "r": 1.6 }, { "x": -2.94, "y": -2.43, "r": 1.6 }, { "x": -2.27, "y": -2.67, "r": 1.6 }, { "x": -1.55, "y": -2.85, "r": 1.6 }, { "x": -0.78, "y": -2.96, "r": 1.6 }, { "x": 0, "y": -3, "r": 1.6 }, { "x": 0.78, "y": -2.96, "r": 1.6 }, { "x": 1.55, "y": -2.85, "r": 1.6 }, { "x": 2.27, "y": -2.67, "r": 1.6 }, { "x": 2.94, "y": -2.43, "r": 1.6 }, { "x": 3.54, "y": -2.12, "r": 1.6 }, { "x": 4.05, "y": -1.76, "r": 1.6 }, { "x": 4.46, "y": -1.36, "r": 1.6 }, { "x": 4.76, "y": -0.93, "r": 1.6 }, { "x": 4.94, "y": -0.47, "r": 1.6 }, { "x": 5, "y": 0, "label": "(5, 0)", "color": "success" }, { "x": -5, "y": 0, "color": "success" } ], "caption": "x²/25 + y²/9 = 1: a horizontal ellipse with a = 5, b = 3" }
+    },
+    {
+      "id": "algebra-2.conic-sections.s10",
+      "concepts": ["ellipses"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the foci of the ellipse $\\dfrac{x^2}{169} + \\dfrac{y^2}{144} = 1$ using $c^2 = a^2 - b^2$.",
+      "steps": [
+        { "instruction": "What is $a^2$, the larger denominator? (Give a number.)", "answer": "169", "accept": [], "hint": "Compare 169 and 144: the bigger one is $a^2$." },
+        { "instruction": "Compute $c^2 = a^2 - b^2 = 169 - 144$. (Give a number.)", "answer": "25", "accept": [], "hint": "For an ellipse, SUBTRACT — the foci are inside the curve." },
+        { "instruction": "What is $c$? (Give a number.)", "answer": "5", "accept": [], "hint": "$\\sqrt{25} = 5$." },
+        { "instruction": "The foci lie on the major (x-) axis, $c$ units from the center. Give the focus with a positive coordinate as an ordered pair (a, b).", "answer": "(5, 0)", "accept": [], "hint": "The major axis is horizontal since 169 sits under $x^2$: $(5, 0)$." }
+      ],
+      "finalAnswer": { "value": "(±5, 0)", "unit": "" },
+      "solutionNarrative": "$a^2 = 169$ under $x^2$, so $c^2 = 169 - 144 = 25$ and $c = 5$: foci $(\\pm 5, 0)$ — the 5-12-13 triangle hiding inside the ellipse."
+    },
+    {
+      "id": "algebra-2.conic-sections.s11",
+      "concepts": ["ellipses"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A whispering gallery has an elliptical ceiling 50 feet long and 48 feet wide: a whisper at one focus is heard clearly at the other. Center the room at the origin with the long axis on the x-axis. Where should the two listeners stand?",
+      "steps": [
+        { "instruction": "The room is 50 feet long, so $2a = 50$, and 48 feet wide, so $2b = 48$. Write the ellipse's equation (like x^2/100 + y^2/81 = 1).", "answer": "x^2/625 + y^2/576 = 1", "accept": ["y^2/576 + x^2/625 = 1"], "hint": "$a = 25$ and $b = 24$, so the denominators are $a^2 = 625$ and $b^2 = 576$." },
+        { "instruction": "Compute $c^2 = a^2 - b^2 = 625 - 576$. (Give a number.)", "answer": "49", "accept": [], "hint": "$625 - 576 = 49$." },
+        { "instruction": "What is $c$, the distance from the center to each focus, in feet? (Give a number.)", "answer": "7", "accept": [], "hint": "$\\sqrt{49} = 7$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "feet from the center, on the long axis" },
+      "solutionNarrative": "With $a = 25$ and $b = 24$, the ellipse is $\\frac{x^2}{625} + \\frac{y^2}{576} = 1$ and $c = \\sqrt{625 - 576} = 7$: the two listeners stand at $(\\pm 7, 0)$, 7 feet either side of center. Sound leaving one focus reflects off the ellipse and reconverges at the other — that is the whole acoustic trick."
+    },
+    {
+      "id": "algebra-2.conic-sections.s12",
+      "concepts": ["ellipses"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The ellipse $\\dfrac{(x - 2)^2}{25} + \\dfrac{(y + 1)^2}{16} = 1$ has a shifted center. Find its center, semi-axes, and foci.",
+      "steps": [
+        { "instruction": "Give the center as an ordered pair (a, b).", "answer": "(2, -1)", "accept": [], "hint": "Flip the signs inside the parentheses: $(x - 2)$ gives 2, $(y + 1)$ gives $-1$." },
+        { "instruction": "What is $a$, from the larger denominator? (Give a number.)", "answer": "5", "accept": [], "hint": "$a = \\sqrt{25} = 5$, under the x-term: the major axis is horizontal." },
+        { "instruction": "Compute $c^2 = a^2 - b^2 = 25 - 16$, then give $c$. (Give a number.)", "answer": "3", "accept": [], "hint": "$c = \\sqrt{9} = 3$." },
+        { "instruction": "The foci are $c$ units left and right of the CENTER (not the origin). Give the focus with the larger x-coordinate as an ordered pair (a, b).", "answer": "(5, -1)", "accept": [], "hint": "$(2 + 3, -1) = (5, -1)$; the other focus is $(-1, -1)$." }
+      ],
+      "finalAnswer": { "value": "(5, -1) and (-1, -1)", "unit": "" },
+      "solutionNarrative": "Center $(2, -1)$; $a = 5$, $b = 4$, $c = \\sqrt{25 - 16} = 3$. Shifts move the foci with the center: $(2 \\pm 3, -1)$, i.e. $(5, -1)$ and $(-1, -1)$."
+    },
+    {
+      "id": "algebra-2.conic-sections.s13",
+      "concepts": ["hyperbolas"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Classify the conic $9x^2 - 4y^2 + 18x - 8y - 31 = 0$ by comparing the coefficients of the squared terms.",
+      "steps": [
+        { "instruction": "What is the coefficient of $x^2$? (Give a number.)", "answer": "9", "accept": [], "hint": "Read it straight off the $9x^2$ term." },
+        { "instruction": "What is the coefficient of $y^2$? (Give a number — include its sign.)", "answer": "-4", "accept": [], "hint": "The term is $-4y^2$." },
+        { "instruction": "Equal coefficients: circle. Same sign, different values: ellipse. Opposite signs: hyperbola. Only one square: parabola. Which is this? (Answer 'circle', 'ellipse', 'parabola', or 'hyperbola'.)", "answer": "hyperbola", "accept": [], "hint": "9 is positive, $-4$ is negative: opposite signs." }
+      ],
+      "finalAnswer": { "value": "hyperbola", "unit": "" },
+      "solutionNarrative": "The squared-term coefficients are 9 and $-4$ — opposite signs, so this is a hyperbola. The linear terms only shift the center; they never change which conic it is."
+    },
+    {
+      "id": "algebra-2.conic-sections.s14",
+      "concepts": ["hyperbolas"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Analyze the hyperbola $\\dfrac{x^2}{9} - \\dfrac{y^2}{16} = 1$: vertices, foci (via $c^2 = a^2 + b^2$), and asymptote slopes.",
+      "steps": [
+        { "instruction": "The positive term is the $x^2$ term, so the hyperbola opens left-right. The vertices are $a = \\sqrt{9}$ units from the center. Give the vertex with a positive coordinate as an ordered pair (a, b).", "answer": "(3, 0)", "accept": [], "hint": "$a = 3$, along the x-axis." },
+        { "instruction": "Compute $c^2 = a^2 + b^2 = 9 + 16$. (Give a number.)", "answer": "25", "accept": [], "hint": "For hyperbolas ADD — the foci sit OUTSIDE the vertices." },
+        { "instruction": "What is $c$? (Give a number.)", "answer": "5", "accept": [], "hint": "$\\sqrt{25} = 5$: foci at $(\\pm 5, 0)$." },
+        { "instruction": "The asymptotes are $y = \\pm\\frac{b}{a}x$. Give the positive slope as a fraction or decimal.", "answer": "4/3", "accept": ["1.3333"], "hint": "$b/a = 4/3$." }
+      ],
+      "finalAnswer": { "value": "vertices (±3, 0), foci (±5, 0), slopes ±4/3", "unit": "" },
+      "solutionNarrative": "$a = 3$, $b = 4$: vertices $(\\pm 3, 0)$, and $c^2 = 9 + 16 = 25$ puts the foci at $(\\pm 5, 0)$ — a 3-4-5 triangle. The branches hug the asymptotes $y = \\pm\\frac{4}{3}x$.",
+      "plot": { "type": "cartesian", "xRange": [-8, 8], "yRange": [-8, 8], "grid": true, "segments": [ { "from": [-7.5, -10], "to": [7.5, 10], "dashed": true, "color": "dim" }, { "from": [-7.5, 10], "to": [7.5, -10], "dashed": true, "color": "dim" } ], "points": [ { "x": 6.38, "y": -7.5, "r": 1.6 }, { "x": -6.37, "y": -7.5, "r": 1.6 }, { "x": 5.76, "y": -6.56, "r": 1.6 }, { "x": -5.76, "y": -6.56, "r": 1.6 }, { "x": 5.18, "y": -5.62, "r": 1.6 }, { "x": -5.18, "y": -5.62, "r": 1.6 }, { "x": 4.62, "y": -4.69, "r": 1.6 }, { "x": -4.62, "y": -4.69, "r": 1.6 }, { "x": 4.11, "y": -3.75, "r": 1.6 }, { "x": -4.11, "y": -3.75, "r": 1.6 }, { "x": 3.67, "y": -2.81, "r": 1.6 }, { "x": -3.67, "y": -2.81, "r": 1.6 }, { "x": 3.31, "y": -1.87, "r": 1.6 }, { "x": -3.31, "y": -1.87, "r": 1.6 }, { "x": 3.08, "y": -0.94, "r": 1.6 }, { "x": -3.08, "y": -0.94, "r": 1.6 }, { "x": 3, "y": 0, "r": 1.6 }, { "x": -3, "y": 0, "r": 1.6 }, { "x": 3.08, "y": 0.94, "r": 1.6 }, { "x": -3.08, "y": 0.94, "r": 1.6 }, { "x": 3.31, "y": 1.88, "r": 1.6 }, { "x": -3.31, "y": 1.88, "r": 1.6 }, { "x": 3.67, "y": 2.81, "r": 1.6 }, { "x": -3.67, "y": 2.81, "r": 1.6 }, { "x": 4.11, "y": 3.75, "r": 1.6 }, { "x": -4.11, "y": 3.75, "r": 1.6 }, { "x": 4.62, "y": 4.69, "r": 1.6 }, { "x": -4.62, "y": 4.69, "r": 1.6 }, { "x": 5.18, "y": 5.63, "r": 1.6 }, { "x": -5.18, "y": 5.63, "r": 1.6 }, { "x": 5.76, "y": 6.56, "r": 1.6 }, { "x": -5.76, "y": 6.56, "r": 1.6 }, { "x": 6.38, "y": 7.5, "r": 1.6 }, { "x": -6.37, "y": 7.5, "r": 1.6 }, { "x": 3, "y": 0, "label": "vertex", "color": "success" }, { "x": -3, "y": 0, "color": "success" }, { "x": 5, "y": 0, "label": "focus", "color": "warn" }, { "x": -5, "y": 0, "color": "warn" } ], "caption": "x²/9 − y²/16 = 1: vertices (±3, 0), foci (±5, 0), asymptotes y = ±(4/3)x" }
+    },
+    {
+      "id": "algebra-2.conic-sections.s15",
+      "concepts": ["hyperbolas"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two LORAN radio stations sit at $(-5, 0)$ and $(5, 0)$ (units: miles). A ship's receiver measures a constant difference of distances of 6 miles to the two stations, which places the ship on a hyperbola with those stations as foci. Write its equation.",
+      "steps": [
+        { "instruction": "The difference of distances equals $2a$. With $2a = 6$, what is $a$? (Give a number.)", "answer": "3", "accept": [], "hint": "$a = 6/2 = 3$ — the vertices are at $(\\pm 3, 0)$." },
+        { "instruction": "The stations are the foci, so $c = 5$. Compute $b^2 = c^2 - a^2$. (Give a number.)", "answer": "16", "accept": [], "hint": "$25 - 9 = 16$." },
+        { "instruction": "The foci are on the x-axis, so the $x$-term is positive. Write the equation (like x^2/4 - y^2/9 = 1).", "answer": "x^2/9 - y^2/16 = 1", "accept": ["-y^2/16 + x^2/9 = 1"], "hint": "$a^2 = 9$ under $x^2$, minus $y^2$ over $b^2 = 16$." }
+      ],
+      "finalAnswer": { "value": "x^2/9 - y^2/16 = 1", "unit": "" },
+      "solutionNarrative": "The 6-mile difference gives $a = 3$; the stations at $(\\pm 5, 0)$ give $c = 5$, so $b^2 = 25 - 9 = 16$ and the ship lies on $\\frac{x^2}{9} - \\frac{y^2}{16} = 1$. A second station pair pins down a second hyperbola, and their intersection is the ship's position."
+    },
+    {
+      "id": "algebra-2.conic-sections.s16",
+      "concepts": ["hyperbolas"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The hyperbola $\\dfrac{y^2}{4} - \\dfrac{x^2}{9} = 1$ has its POSITIVE term on $y^2$. Which way does it open, and where are its vertices?",
+      "steps": [
+        { "instruction": "Does the hyperbola open left-right (horizontal) or up-down (vertical)? (Answer 'horizontal' or 'vertical'.)", "answer": "vertical", "accept": ["up-down"], "hint": "It opens along the variable of the positive term — here $y^2$." },
+        { "instruction": "The vertices are $a = \\sqrt{4}$ units from the center along that axis. Give the vertex with a positive coordinate as an ordered pair (a, b).", "answer": "(0, 2)", "accept": [], "hint": "$a = 2$, along the y-axis: $(0, 2)$." }
+      ],
+      "finalAnswer": { "value": "vertical, vertices (0, ±2)", "unit": "" },
+      "solutionNarrative": "The positive term carries $y^2$, so the branches open up and down, with vertices $(0, \\pm 2)$. Note $a^2 = 4$ even though 9 is bigger — for hyperbolas, $a^2$ is the positive term's denominator, not the larger number."
+    }
+  ]
+}
