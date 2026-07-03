@@ -1,0 +1,279 @@
+{
+  "id": "geometry.transformations",
+  "subject": "geometry",
+  "title": "Transformations in the Plane",
+  "prerequisites": ["geometry.angles-and-lines", "algebra.graphing-linear-equations"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "translations-and-reflections",
+      "label": "Translations and reflections",
+      "microLesson": "A **translation** slides every point the same amounts: right/left changes $x$, up/down changes $y$, so a slide of 4 right and 5 up sends $(3, -2)$ to $(7, 3)$. A **reflection** flips across a mirror line: over the **x-axis**, $(x, y) \\to (x, -y)$; over the **y-axis**, $(x, y) \\to (-x, y)$; over the line **$y = x$**, the coordinates swap: $(x, y) \\to (y, x)$. The coordinate measured *across* the mirror flips sign; the one *along* the mirror is untouched."
+    },
+    {
+      "id": "rotations",
+      "label": "Rotations about the origin",
+      "microLesson": "Rotations about the origin by quarter-turns follow three rules worth memorizing. **$90^\\circ$ counterclockwise:** $(x, y) \\to (-y, x)$. **$180^\\circ$:** $(x, y) \\to (-x, -y)$ — both signs flip. **$270^\\circ$ counterclockwise** (the same as $90^\\circ$ clockwise): $(x, y) \\to (y, -x)$. So $(3, 5)$ rotated $90^\\circ$ CCW lands at $(-5, 3)$. Every rotated point stays exactly as far from the origin as it started — rotations are rigid motions."
+    },
+    {
+      "id": "dilations",
+      "label": "Dilations and scale factors",
+      "microLesson": "A **dilation** from the origin with scale factor $k$ multiplies both coordinates by $k$: $(x, y) \\to (kx, ky)$, so $k = 3$ sends $(2, -1)$ to $(6, -3)$. Find $k$ from a matched pair: $k = \\frac{\\text{image length}}{\\text{pre-image length}}$. Dilations are NOT rigid: every **length** is multiplied by $k$, but every **area** is multiplied by $k^2$ — double the lengths and the area quadruples. Angles never change, so the image is *similar* to the pre-image."
+    },
+    {
+      "id": "compositions-and-identify",
+      "label": "Compositions and identifying transformations",
+      "microLesson": "A **composition** applies transformations in sequence — and order matters: translate-then-reflect usually lands somewhere different from reflect-then-translate. Work one stage at a time. To **identify** an unknown transformation, compare coordinates: all points shifted by the same amounts → *translation*; exactly one coordinate flips sign → *reflection* over an axis; both flip → *rotation* of $180^\\circ$; both multiplied by the same factor → *dilation*. Two point pairs are enough to pin it down."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Moving shapes without breaking them\n\nEvery video game sprite, robot arm, phone-screen pinch-zoom, and CNC-cut part is run by the same four moves: **slide** (translation), **flip** (reflection), **turn** (rotation), and **resize** (dilation). Each one is just a rule that takes a point $(x, y)$ and outputs a new point — so once you know four small formulas, you can move anything anywhere.\n\nThe first three are **rigid motions**: they preserve every length and angle, so the image is congruent to the pre-image. The fourth, dilation, preserves *shape* but not *size* — the image is similar instead.\n\n## Translations: slide everything the same way\n\nA translation adds fixed amounts to every point: $a$ to $x$ (right if positive, left if negative) and $b$ to $y$ (up/down):\n\n$$(x, y) \\to (x + a, y + b).$$\n\nSlide $P(3, -2)$ by 4 right and 5 up: $P'(3 + 4, -2 + 5) = P'(7, 3)$. Every point of a shape moves along the same arrow, so the image is an identical copy in a new spot.\n\n## Reflections: flip across a mirror\n\nA reflection flips points across a **mirror line**. For the three mirrors that matter most:\n\n| Mirror | Rule | What happens |\n|---|---|---|\n| x-axis | $(x, y) \\to (x, -y)$ | $y$ flips sign |\n| y-axis | $(x, y) \\to (-x, y)$ | $x$ flips sign |\n| line $y = x$ | $(x, y) \\to (y, x)$ | coordinates swap |\n\nThe logic: the coordinate measured *across* the mirror reverses; the coordinate *along* the mirror can't tell anything happened. A point sitting ON the mirror line doesn't move at all — which is why interesting reflection problems keep points off the mirror.\n\n## Rotations about the origin: three quarter-turn rules\n\nCounterclockwise is the positive direction (like unscrewing a jar lid seen from above):\n\n$$90^\\circ:\\ (x, y) \\to (-y, x), \\qquad 180^\\circ:\\ (x, y) \\to (-x, -y), \\qquad 270^\\circ:\\ (x, y) \\to (y, -x).$$\n\nA $270^\\circ$ counterclockwise turn is the same as $90^\\circ$ clockwise — whenever a rotation looks awkward, convert it to the equivalent turn the other way ($360^\\circ$ minus the angle). Here is a triangle and its $90^\\circ$ counterclockwise image:\n\n```plot\n{ \"xRange\": [-5, 6], \"yRange\": [-2, 6], \"width\": 360, \"height\": 300, \"segments\": [ { \"from\": [1, 1], \"to\": [4, 1], \"color\": \"accent\" }, { \"from\": [4, 1], \"to\": [1, 3], \"color\": \"accent\" }, { \"from\": [1, 3], \"to\": [1, 1], \"color\": \"accent\" }, { \"from\": [-1, 1], \"to\": [-1, 4], \"color\": \"good\" }, { \"from\": [-1, 4], \"to\": [-3, 1], \"color\": \"good\" }, { \"from\": [-3, 1], \"to\": [-1, 1], \"color\": \"good\" } ], \"points\": [ { \"x\": 1, \"y\": 1, \"label\": \"A(1,1)\", \"color\": \"accent\" }, { \"x\": 4, \"y\": 1, \"label\": \"B(4,1)\", \"color\": \"accent\" }, { \"x\": 1, \"y\": 3, \"label\": \"C(1,3)\", \"color\": \"accent\" }, { \"x\": -1, \"y\": 1, \"label\": \"A'(-1,1)\", \"color\": \"good\" }, { \"x\": -1, \"y\": 4, \"label\": \"B'(-1,4)\", \"color\": \"good\" }, { \"x\": -3, \"y\": 1, \"label\": \"C'(-3,1)\", \"color\": \"good\" } ], \"caption\": \"Each vertex obeys (x, y) → (−y, x): A(1,1)→A'(−1,1), B(4,1)→B'(−1,4), C(1,3)→C'(−3,1). The triangle turns a quarter-turn counterclockwise about the origin.\" }\n```\n\nCheck any vertex against the rule and you've checked the whole shape — transformations act on every point identically.\n\n## Dilations: same shape, new size\n\nA dilation from the origin with scale factor $k$ stretches every point along its ray from the origin:\n\n$$(x, y) \\to (kx, ky).$$\n\nWith $k = 3$, $P(2, -1) \\to P'(6, -3)$: three times as far from the origin, same direction. To recover $k$, divide any image length by its pre-image length. Two facts matter constantly:\n\n- **Lengths** scale by $k$ — a segment of length 5 becomes $5k$.\n- **Areas** scale by $k^2$ — doubling lengths **quadruples** area. A logo scaled up by 3 uses $9\\times$ the ink.\n\nAngles are unchanged, so the image is *similar* to the pre-image ($k = 1$ would be the do-nothing dilation, and $0 < k < 1$ shrinks).\n\n## Compositions, and playing detective\n\nReal motions chain transformations: translate then reflect, rotate then dilate. **Work stage by stage** — feed the output of the first move into the second:\n\n$$P(1, 4) \\xrightarrow{\\ +3,\\ -1\\ } (4, 3) \\xrightarrow{\\ \\text{reflect over x-axis}\\ } (4, -3).$$\n\n**Order matters.** Reflecting $P(1, 4)$ first gives $(1, -4)$, then translating gives $(4, -5)$ — a different point. Never assume you can swap the stages.\n\nThe reverse skill — *given* a pre-image and image, name the transformation — is coordinate detective work:\n\n- Same shift added to every point? **Translation.**\n- Exactly one coordinate flips sign? **Reflection** over an axis (flip in $y$ → mirror is the x-axis).\n- Both coordinates flip sign? **Rotation** by $180^\\circ$.\n- Both coordinates multiplied by the same factor? **Dilation.**\n\n**Pitfall:** one point pair can be ambiguous — check a second pair before committing. And remember distance from the origin: unchanged for rotations and reflections, multiplied by $k$ for dilations. That single check separates the rigid motions from the resizers."
+  },
+  "application": {
+    "summary": "Transformations are the arithmetic of motion graphics and manufacturing: translations scroll sprites and position parts, reflections generate symmetric halves of logos and airframes, rotations run robot arms and gear layouts, and dilations power pinch-zoom, map scales, and print resizing — with the k² area rule deciding material and ink costs.",
+    "domains": ["game development", "design and printing", "robotics and manufacturing", "mapping"],
+    "workedExample": "**Placing a mirrored enemy sprite**\n\nA game artist has one spaceship sprite and needs its mirror-twin on the other side of the screen, then wants it nudged into position. The ship's nose sits at $(5, 2)$ in level coordinates (origin at screen center).\n\nStage 1 — mirror across the vertical center line (the y-axis): $(x, y) \\to (-x, y)$, so the nose maps to $(-5, 2)$.\n\nStage 2 — nudge 1 unit left and 3 units down: $(x, y) \\to (x - 1, y - 3)$, so $(-5, 2) \\to (-6, -1)$.\n\n**The mirrored nose lands at $(-6, -1)$** — and the engine applies the same two-stage composition to every pixel of the sprite. Doing the stages in the other order would park the ship at $(-4, -1)$ instead: the mirror would flip the already-nudged $x = 4$ to $-4$. Same two moves, different order, different spot — which is exactly why graphics code is fussy about transformation order.",
+    "domainNotes": [
+      "**Game development:** scrolling is translation, sprite mirroring is reflection, steering is rotation — engines compose these every frame.",
+      "**Design and printing:** enlarging a poster by scale factor k multiplies paper area and ink by k², which is why doubling a print's dimensions quadruples its cost.",
+      "**Robotics and manufacturing:** a robot arm's pose is a composition of rotations and translations; CNC software nests mirrored parts to cut fabric and sheet metal without waste.",
+      "**Mapping:** a map is a dilation of the ground with k far below 1; the same 'lengths scale by k, areas by k²' logic converts map measurements to real distances and acreage."
+    ]
+  },
+  "generators": [
+    "geo2-translate-reflect-1",
+    "geo2-translate-reflect-2",
+    "geo2-translate-reflect-3",
+    "geo2-rotations-1",
+    "geo2-rotations-2",
+    "geo2-rotations-3",
+    "geo2-dilations-1",
+    "geo2-dilations-2",
+    "geo2-dilations-3",
+    "geo2-compositions-1",
+    "geo2-compositions-2",
+    "geo2-compositions-3"
+  ],
+  "problems": [
+    {
+      "id": "geometry.transformations.s01",
+      "concepts": ["translations-and-reflections"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The point $P(3, -2)$ is translated 4 units right and 5 units up. Find the coordinates of the image $P'$.",
+      "plot": { "xRange": [-1, 9], "yRange": [-4, 5], "width": 320, "height": 300, "points": [ { "x": 3, "y": -2, "label": "P", "color": "accent" }, { "x": 7, "y": 3, "label": "P'", "color": "good" } ], "segments": [ { "from": [3, -2], "to": [7, 3], "color": "dim", "dashed": true, "arrow": true } ], "caption": "P(3, −2) slides 4 right and 5 up to P'." },
+      "steps": [
+        { "instruction": "Find the x-coordinate of the image.", "answer": "7", "accept": ["x=7"], "hint": "3 + 4." },
+        { "instruction": "Find the y-coordinate of the image.", "answer": "3", "accept": ["y=3"], "hint": "−2 + 5." },
+        { "instruction": "Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<7, 3>", "accept": ["(7, 3)", "7, 3", "x=7, y=3"], "hint": "Combine the two coordinates you found." }
+      ],
+      "finalAnswer": { "value": "(7, 3)", "unit": "" },
+      "solutionNarrative": "A translation adds the shifts: $P'(3 + 4, -2 + 5) = P'(7, 3)$."
+    },
+    {
+      "id": "geometry.transformations.s02",
+      "concepts": ["translations-and-reflections"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The point $P(5, 2)$ is reflected over the x-axis. Find the coordinates of the image $P'$.",
+      "steps": [
+        { "instruction": "Reflecting over the x-axis changes the sign of which coordinate — x or y?", "answer": "y", "accept": ["y-coordinate", "the y-coordinate"], "hint": "The coordinate measured ACROSS the mirror flips." },
+        { "instruction": "Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<5, -2>", "accept": ["(5, -2)", "5, -2"], "hint": "Keep x = 5; flip y." }
+      ],
+      "finalAnswer": { "value": "(5, -2)", "unit": "" },
+      "solutionNarrative": "Over the x-axis, $(x, y) \\to (x, -y)$: $P(5, 2) \\to P'(5, -2)$."
+    },
+    {
+      "id": "geometry.transformations.s03",
+      "concepts": ["translations-and-reflections"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The point $P(-3, 4)$ is reflected over the y-axis. Find the image $P'$, and state how far $P'$ is from the y-axis.",
+      "steps": [
+        { "instruction": "Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<3, 4>", "accept": ["(3, 4)", "3, 4"], "hint": "Over the y-axis, $(x, y) \\to (-x, y)$." },
+        { "instruction": "How many units is $P'$ from the y-axis?", "answer": "3", "accept": ["3 units"], "hint": "A reflection lands the image the SAME distance from the mirror as the pre-image: $|-3| = |3|$." }
+      ],
+      "finalAnswer": { "value": "(3, 4)", "unit": "" },
+      "solutionNarrative": "Over the y-axis the x-coordinate flips: $P(-3, 4) \\to P'(3, 4)$, still 3 units from the mirror — mirrors preserve distance to themselves."
+    },
+    {
+      "id": "geometry.transformations.s04",
+      "concepts": ["translations-and-reflections"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The point $P(-4, 6)$ is reflected over the line $y = x$. Find the image $P'$, and decide whether the reflection changed $P$'s distance from the origin.",
+      "plot": { "xRange": [-6, 8], "yRange": [-6, 8], "width": 320, "height": 320, "points": [ { "x": -4, "y": 6, "label": "P", "color": "accent" }, { "x": 6, "y": -4, "label": "P'", "color": "good" } ], "segments": [ { "from": [-5, -5], "to": [7, 7], "color": "warn", "dashed": true, "label": "y = x" }, { "from": [-4, 6], "to": [6, -4], "color": "dim", "dashed": true } ], "caption": "Reflecting P(−4, 6) over the line y = x swaps its coordinates." },
+      "steps": [
+        { "instruction": "Reflecting over $y = x$ swaps the coordinates. Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<6, -4>", "accept": ["(6, -4)", "6, -4"], "hint": "$(x, y) \\to (y, x)$." },
+        { "instruction": "Did the distance from the origin change? (yes or no)", "answer": "no", "accept": ["n"], "hint": "Reflections are rigid motions; both points satisfy $\\sqrt{x^2 + y^2} = \\sqrt{52}$." }
+      ],
+      "finalAnswer": { "value": "(6, -4)", "unit": "" },
+      "solutionNarrative": "Over $y = x$ the coordinates swap: $P(-4, 6) \\to P'(6, -4)$. Both are $\\sqrt{16 + 36} = \\sqrt{52}$ from the origin — reflections preserve distances."
+    },
+    {
+      "id": "geometry.transformations.s05",
+      "concepts": ["rotations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The point $P(4, 1)$ is rotated $180^\\circ$ about the origin. Find the coordinates of the image $P'$.",
+      "plot": { "xRange": [-6, 6], "yRange": [-3, 3], "width": 340, "height": 220, "points": [ { "x": 0, "y": 0, "label": "O", "color": "text" }, { "x": 4, "y": 1, "label": "P", "color": "accent" }, { "x": -4, "y": -1, "label": "P'", "color": "good" } ], "segments": [ { "from": [4, 1], "to": [-4, -1], "color": "dim", "dashed": true } ], "caption": "A 180° rotation about O sends P straight through the origin to P'." },
+      "steps": [
+        { "instruction": "A $180^\\circ$ rotation flips the sign of BOTH coordinates. Find the x-coordinate of the image.", "answer": "-4", "accept": ["x=-4"], "hint": "The opposite of 4." },
+        { "instruction": "Find the y-coordinate of the image.", "answer": "-1", "accept": ["y=-1"], "hint": "The opposite of 1." },
+        { "instruction": "Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<-4, -1>", "accept": ["(-4, -1)", "-4, -1"], "hint": "$(x, y) \\to (-x, -y)$." }
+      ],
+      "finalAnswer": { "value": "(-4, -1)", "unit": "" },
+      "solutionNarrative": "$180^\\circ$: $(x, y) \\to (-x, -y)$, so $P(4, 1) \\to P'(-4, -1)$."
+    },
+    {
+      "id": "geometry.transformations.s06",
+      "concepts": ["rotations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The point $P(3, 5)$ is rotated $90^\\circ$ counterclockwise about the origin, using the rule $(x, y) \\to (-y, x)$. Find the image $P'$.",
+      "steps": [
+        { "instruction": "Find the x-coordinate of the image (the opposite of the old y).", "answer": "-5", "accept": ["x=-5"], "hint": "$-(5)$." },
+        { "instruction": "Find the y-coordinate of the image (the old x).", "answer": "3", "accept": ["y=3"], "hint": "It is just the old x-coordinate." },
+        { "instruction": "Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<-5, 3>", "accept": ["(-5, 3)", "-5, 3"], "hint": "$(x, y) \\to (-y, x)$." }
+      ],
+      "finalAnswer": { "value": "(-5, 3)", "unit": "" },
+      "solutionNarrative": "$90^\\circ$ CCW: $(x, y) \\to (-y, x)$, so $P(3, 5) \\to P'(-5, 3)$."
+    },
+    {
+      "id": "geometry.transformations.s07",
+      "concepts": ["rotations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The point $P(-2, 6)$ is rotated $90^\\circ$ counterclockwise about the origin. Find the image $P'$, and state whether its distance from the origin changed.",
+      "steps": [
+        { "instruction": "Apply $(x, y) \\to (-y, x)$. Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<-6, -2>", "accept": ["(-6, -2)", "-6, -2"], "hint": "New x is $-(6)$; new y is $-2$." },
+        { "instruction": "Did the distance from the origin change? (yes or no)", "answer": "no", "accept": ["n"], "hint": "Rotations are rigid motions." }
+      ],
+      "finalAnswer": { "value": "(-6, -2)", "unit": "" },
+      "solutionNarrative": "$(x, y) \\to (-y, x)$ sends $P(-2, 6)$ to $P'(-6, -2)$; both sit $\\sqrt{40}$ from the origin, since rotations preserve distance."
+    },
+    {
+      "id": "geometry.transformations.s08",
+      "concepts": ["rotations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The point $P(5, -2)$ is rotated $270^\\circ$ counterclockwise about the origin. Find the image $P'$. (Hint: convert to the equivalent clockwise rotation first.)",
+      "steps": [
+        { "instruction": "A $270^\\circ$ counterclockwise rotation equals how many degrees CLOCKWISE?", "answer": "90", "accept": ["90 degrees"], "hint": "360 − 270." },
+        { "instruction": "That rotation uses the rule $(x, y) \\to (y, -x)$. Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<-2, -5>", "accept": ["(-2, -5)", "-2, -5"], "hint": "New x is the old y (−2); new y is the opposite of the old x." }
+      ],
+      "finalAnswer": { "value": "(-2, -5)", "unit": "" },
+      "solutionNarrative": "$270^\\circ$ CCW $= 90^\\circ$ CW: $(x, y) \\to (y, -x)$, so $P(5, -2) \\to P'(-2, -5)$."
+    },
+    {
+      "id": "geometry.transformations.s09",
+      "concepts": ["dilations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The point $P(2, -1)$ is dilated from the origin with scale factor 3. Find the coordinates of the image $P'$.",
+      "plot": { "xRange": [-2, 8], "yRange": [-5, 2], "width": 340, "height": 240, "points": [ { "x": 0, "y": 0, "label": "O", "color": "text" }, { "x": 2, "y": -1, "label": "P", "color": "accent" }, { "x": 6, "y": -3, "label": "P'", "color": "good" } ], "segments": [ { "from": [0, 0], "to": [6, -3], "color": "dim", "dashed": true } ], "caption": "The dilation stretches P along the ray from O to three times the distance, landing at P'." },
+      "steps": [
+        { "instruction": "Multiply the x-coordinate by the scale factor.", "answer": "6", "accept": ["x=6"], "hint": "3 × 2." },
+        { "instruction": "Multiply the y-coordinate by the scale factor.", "answer": "-3", "accept": ["y=-3"], "hint": "3 × (−1)." },
+        { "instruction": "Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<6, -3>", "accept": ["(6, -3)", "6, -3"], "hint": "$(x, y) \\to (3x, 3y)$." }
+      ],
+      "finalAnswer": { "value": "(6, -3)", "unit": "" },
+      "solutionNarrative": "A dilation from the origin multiplies both coordinates by $k = 3$: $P(2, -1) \\to P'(6, -3)$."
+    },
+    {
+      "id": "geometry.transformations.s10",
+      "concepts": ["dilations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A designer enlarges a logo. A segment measuring 6 mm in the original maps to 15 mm in the enlargement. Find the scale factor, then the enlarged length of a segment measuring 8 mm.",
+      "steps": [
+        { "instruction": "Scale factor = image length ÷ pre-image length. Find it (a decimal is fine).", "answer": "2.5", "accept": ["15/6", "5/2", "k=2.5"], "hint": "15 ÷ 6." },
+        { "instruction": "Multiply the 8 mm segment by the scale factor (mm).", "answer": "20", "accept": ["20 mm"], "hint": "8 × 2.5." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "mm" },
+      "solutionNarrative": "$k = 15/6 = 2.5$, so the 8 mm segment enlarges to $8 \\times 2.5 = 20$ mm."
+    },
+    {
+      "id": "geometry.transformations.s11",
+      "concepts": ["dilations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A dilation centered at the origin maps $A(2, 3)$ to $A'(8, 12)$. Find the scale factor, then the image of $B(5, -1)$ under the same dilation.",
+      "steps": [
+        { "instruction": "Find the scale factor.", "answer": "4", "accept": ["k=4", "8/2"], "hint": "8 ÷ 2 (or 12 ÷ 3 — both must agree)." },
+        { "instruction": "Apply it to $B(5, -1)$. Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<20, -4>", "accept": ["(20, -4)", "20, -4"], "hint": "$(4 \\cdot 5, 4 \\cdot (-1))$." }
+      ],
+      "finalAnswer": { "value": "(20, -4)", "unit": "" },
+      "solutionNarrative": "$k = 8/2 = 12/3 = 4$, so $B(5, -1) \\to B'(20, -4)$."
+    },
+    {
+      "id": "geometry.transformations.s12",
+      "concepts": ["dilations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A pennant flag design with perimeter 12 in and area 7 in² is scaled up with factor 3 for a banner. Find the banner's perimeter, the factor by which the area grows, and the banner's area.",
+      "steps": [
+        { "instruction": "Perimeter is a length, so it scales by $k$. Find the banner's perimeter (inches).", "answer": "36", "accept": ["36 in"], "hint": "12 × 3." },
+        { "instruction": "By what factor does the AREA grow?", "answer": "9", "accept": ["k^2=9", "3^2"], "hint": "$k^2 = 3^2$." },
+        { "instruction": "Find the banner's area (square inches).", "answer": "63", "accept": ["63 in^2"], "hint": "7 × 9." }
+      ],
+      "finalAnswer": { "value": "63", "unit": "square inches" },
+      "solutionNarrative": "Lengths scale by 3 (perimeter 36 in), but area scales by $3^2 = 9$: the banner covers $7 \\times 9 = 63$ in² — not 21."
+    },
+    {
+      "id": "geometry.transformations.s13",
+      "concepts": ["compositions-and-identify"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A transformation follows the rule $(x, y) \\to (x + 6, y - 2)$. Apply it to $P(1, 3)$, then identify the type of transformation.",
+      "steps": [
+        { "instruction": "Apply the rule to $P(1, 3)$. Write the image as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<7, 1>", "accept": ["(7, 1)", "7, 1"], "hint": "$(1 + 6, 3 - 2)$." },
+        { "instruction": "Which single transformation is this? Answer with one of: translation, reflection, rotation, dilation.", "answer": "translation", "accept": ["a translation", "translate", "slide"], "hint": "Every point slides 6 right and 2 down." }
+      ],
+      "finalAnswer": { "value": "translation", "unit": "" },
+      "solutionNarrative": "$P(1, 3) \\to (7, 1)$; adding fixed amounts to both coordinates is a translation."
+    },
+    {
+      "id": "geometry.transformations.s14",
+      "concepts": ["compositions-and-identify"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The point $P(1, 4)$ is first translated 3 units right and 1 unit down, and the result is then reflected over the x-axis. Find the intermediate point $P'$ and the final image $P''$.",
+      "plot": { "xRange": [-1, 7], "yRange": [-5, 6], "width": 320, "height": 320, "points": [ { "x": 1, "y": 4, "label": "P", "color": "accent" }, { "x": 4, "y": 3, "label": "P'", "color": "warn" }, { "x": 4, "y": -3, "label": "P''", "color": "good" } ], "segments": [ { "from": [1, 4], "to": [4, 3], "color": "dim", "dashed": true, "arrow": true }, { "from": [4, 3], "to": [4, -3], "color": "dim", "dashed": true, "arrow": true } ], "caption": "P slides to P'(4, 3), then flips across the x-axis to P''(4, −3)." },
+      "steps": [
+        { "instruction": "First the translation. Write $P'$ as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<4, 3>", "accept": ["(4, 3)", "4, 3"], "hint": "$(1 + 3, 4 - 1)$." },
+        { "instruction": "Now reflect $P'$ over the x-axis. Write $P''$ as a vector in the form <x, y>.", "answer": "<4, -3>", "accept": ["(4, -3)", "4, -3"], "hint": "Keep x; flip the sign of y." }
+      ],
+      "finalAnswer": { "value": "(4, -3)", "unit": "" },
+      "solutionNarrative": "Translation: $(1 + 3, 4 - 1) = (4, 3)$. Reflection over the x-axis: $(4, -3)$. Reflecting first would have ended at $(4, -5)$ — order matters."
+    },
+    {
+      "id": "geometry.transformations.s15",
+      "concepts": ["compositions-and-identify"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A single transformation maps $A(3, 1) \\to A'(-3, -1)$ and $B(2, 4) \\to B'(-2, -4)$. Identify it.",
+      "plot": { "xRange": [-5, 5], "yRange": [-6, 6], "width": 320, "height": 320, "points": [ { "x": 3, "y": 1, "label": "A", "color": "accent" }, { "x": 2, "y": 4, "label": "B", "color": "accent" }, { "x": -3, "y": -1, "label": "A'", "color": "good" }, { "x": -2, "y": -4, "label": "B'", "color": "good" } ], "segments": [ { "from": [3, 1], "to": [-3, -1], "color": "dim", "dashed": true }, { "from": [2, 4], "to": [-2, -4], "color": "dim", "dashed": true } ], "caption": "Both pre-image points map straight through the origin to their images." },
+      "steps": [
+        { "instruction": "Both coordinates of each point change sign. A rotation about the origin by how many degrees does that?", "answer": "180", "accept": ["180 degrees"], "hint": "A half-turn: $(x, y) \\to (-x, -y)$." },
+        { "instruction": "Which single transformation maps the pre-image to the image? Answer with one of: translation, reflection, rotation, dilation.", "answer": "rotation", "accept": ["a rotation", "rotate", "turn"], "hint": "The points kept their distance from the origin and turned a half-turn." }
+      ],
+      "finalAnswer": { "value": "rotation", "unit": "" },
+      "solutionNarrative": "Both coordinates flip sign in both pairs — the rule $(x, y) \\to (-x, -y)$ — a $180^\\circ$ rotation about the origin."
+    },
+    {
+      "id": "geometry.transformations.s16",
+      "concepts": ["compositions-and-identify"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The point $P(2, 5)$ is first rotated $90^\\circ$ counterclockwise about the origin, and the result is then dilated from the origin with scale factor 2. Find the intermediate point $P'$ and the final image $P''$.",
+      "steps": [
+        { "instruction": "First the rotation, using $(x, y) \\to (-y, x)$. Write $P'$ as a vector in the form <x, y> (e.g. <3, -2>).", "answer": "<-5, 2>", "accept": ["(-5, 2)", "-5, 2"], "hint": "New x is $-(5)$; new y is 2." },
+        { "instruction": "Now dilate $P'$ with factor 2. Write $P''$ as a vector in the form <x, y>.", "answer": "<-10, 4>", "accept": ["(-10, 4)", "-10, 4"], "hint": "Double both coordinates of $P'$." }
+      ],
+      "finalAnswer": { "value": "(-10, 4)", "unit": "" },
+      "solutionNarrative": "Rotation: $P(2, 5) \\to P'(-5, 2)$. Dilation by 2: $P'' = (-10, 4)$. The composition is a 'rotate and enlarge' — a spiral similarity."
+    }
+  ]
+}

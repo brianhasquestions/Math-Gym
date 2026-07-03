@@ -1,0 +1,286 @@
+{
+  "id": "discrete-math.relations-and-functions",
+  "subject": "discrete-math",
+  "title": "Relations and Functions",
+  "prerequisites": ["discrete-math.sets-and-set-operations", "discrete-math.logic-and-propositions"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "relation-properties",
+      "label": "Reflexive, symmetric, transitive",
+      "microLesson": "A relation on a set $S$ is just a set of ordered pairs $R \\subseteq S \\times S$ — write $x\\,R\\,y$ when $(x, y) \\in R$. Three properties, each a universal claim: **reflexive** means $\\forall x: (x, x) \\in R$ (every diagonal pair present), **symmetric** means $\\forall x, y: (x, y) \\in R \\Rightarrow (y, x) \\in R$ (every pair returned), **transitive** means $\\forall x, y, z: (x, y) \\in R \\text{ and } (y, z) \\in R \\Rightarrow (x, z) \\in R$ (every chain gets its shortcut). On a finite set you check by exhaustion, and ONE counterexample sinks a property. Micro-example: $R = \\{(1,1), (2,2), (1,2), (2,1)\\}$ on $\\{1, 2, 3\\}$ is symmetric, but not reflexive — $(3,3)$ is missing, so exactly 1 pair must be added."
+    },
+    {
+      "id": "equivalence-relations",
+      "label": "Equivalence relations and classes",
+      "microLesson": "A relation that is reflexive AND symmetric AND transitive is an **equivalence relation** — a rigorous version of 'is the same kind of thing as'. It carves the set into **equivalence classes**: disjoint groups that cover everything, i.e. a partition. The canonical example is congruence mod $n$: $x \\equiv y \\pmod{n}$ when $x$ and $y$ leave the same remainder on division by $n$. There are exactly $n$ classes, one per remainder $0, 1, \\ldots, n-1$. Micro-example: mod 3, the class of 17 is its remainder $17 = 3 \\cdot 5 + 2$, so 17 sits in class 2 — together with 2, 5, 8, 11, and every other integer of the form $3k + 2$."
+    },
+    {
+      "id": "functions-and-counting",
+      "label": "Injective, surjective, and counting functions",
+      "microLesson": "A function $f: A \\to B$ assigns EVERY input exactly one output. It is **injective** (one-to-one) when different inputs never share an output, **surjective** (onto) when every element of $B$ gets hit, and **bijective** when both hold — a perfect pairing. Counting: with $|A| = m$ and $|B| = n$ there are $n^m$ functions (each input independently picks among $n$ outputs) and $n(n-1)\\cdots(n-m+1)$ injective ones (used outputs retire); if $m > n$, injections number 0 by pigeonhole. Micro-example: $m = 2, n = 5$ gives $5^2 = 25$ functions, $5 \\cdot 4 = 20$ of them injective."
+    },
+    {
+      "id": "composition-and-inverse",
+      "label": "Composition and inverse functions",
+      "microLesson": "Composition chains functions: $(f \\circ g)(x) = f(g(x))$ — the INNER function $g$ runs first. With formulas, substitute: $f(x) = 2x + 3$ and $g(x) = 4x + 1$ give $(f \\circ g)(x) = 2(4x + 1) + 3 = 8x + 5$, while $(g \\circ f)(x) = 4(2x + 3) + 1 = 8x + 13$ — same slope, different constant, so order matters. A bijection $f$ has an **inverse** $f^{-1}$ that undoes it: solve $y = ax + b$ for $x$ to get $f^{-1}(x) = \\frac{x - b}{a}$ (needs $a \\ne 0$), and the round trip $f^{-1}(f(x)) = x$ is your built-in check."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## 'Is related to' — made precise enough to compute with\n\n'Alice follows Bob.' 'Task 3 must run before task 7.' 'These two files have the same checksum.' 'This user id maps to that shard.' Every one of those is a **relation** or a **function**, and the difference between vague arrows on a whiteboard and a system you can reason about is exactly the three-property vocabulary this topic drills. When Java's documentation demands that `equals()` be *reflexive, symmetric, and transitive*, it is quoting this lecture.\n\n## Relations: sets of ordered pairs\n\nA **relation** $R$ on a set $S$ is any subset of the Cartesian product: $R \\subseteq S \\times S$. That's it — a relation is a *set of ordered pairs*, and $x\\,R\\,y$ is just notation for $(x, y) \\in R$. Because it is a set of pairs, you can draw it as a **directed graph**: one node per element of $S$, one arrow per pair.\n\n```plot\n{ \"type\": \"graph\", \"nodes\": [ { \"id\": \"1\", \"x\": 0, \"y\": 0 }, { \"id\": \"2\", \"x\": 2, \"y\": 2.5 }, { \"id\": \"3\", \"x\": 4, \"y\": 0 } ], \"edges\": [ { \"from\": \"1\", \"to\": \"2\", \"directed\": true }, { \"from\": \"2\", \"to\": \"3\", \"directed\": true }, { \"from\": \"1\", \"to\": \"3\", \"directed\": true } ], \"caption\": \"The relation R = {(1,2), (2,3), (1,3)} on {1,2,3} drawn as a digraph: an arrow x → y for each pair (x, y). The chain 1 → 2 → 3 has its shortcut 1 → 3, so R is transitive.\" }\n```\n\nThree properties do most of the work, and each is a **universal** claim — a $\\forall$ statement, so a single counterexample kills it and no pile of confirming pairs can save it:\n\n- **Reflexive:** $\\forall x \\in S: (x, x) \\in R$. Every element relates to itself — in the digraph, every node would carry a self-loop. Checking is a roll call of the *diagonal pairs* $(x, x)$; the count of missing ones is exactly how many pairs you must add to repair it.\n- **Symmetric:** $\\forall x, y: (x, y) \\in R \\Rightarrow (y, x) \\in R$. Every arrow is returned. Note the fine print: symmetry does NOT demand that any pairs exist — it only says *if* $(x,y)$ is in, its reversal must be too. A relation with no off-diagonal pairs at all is symmetric **vacuously**, the same vacuous truth you met with the empty set.\n- **Transitive:** $\\forall x, y, z: (x, y) \\in R \\text{ and } (y, z) \\in R \\Rightarrow (x, z) \\in R$. Every two-link *chain* through a shared middle element demands its one-hop *shortcut*.\n\n### Worked check, all three properties\n\nTake $R = \\{(1,1), (2,2), (1,2), (2,1)\\}$ on $S = \\{1, 2, 3\\}$.\n\n*Reflexive?* Roll call: $(1,1)$ ✓, $(2,2)$ ✓, $(3,3)$ — missing. **Not reflexive**, and exactly $1$ pair would fix it.\n\n*Symmetric?* $(1,2)$ has $(2,1)$ ✓, $(2,1)$ has $(1,2)$ ✓, and diagonal pairs are their own reversals. **Symmetric.**\n\n*Transitive?* Chase the chains through shared middles: $(1,2), (2,1) \\Rightarrow (1,1)$ ✓; $(2,1), (1,2) \\Rightarrow (2,2)$ ✓; every other chain lands on a pair already present. **Transitive.**\n\nTwo pitfalls account for most wrong verdicts. First, symmetry does not mean 'all pairs go both ways *somewhere*' — it means *each* pair present is returned; one unreturned arrow is fatal. Second, transitivity failures hide in chains: in $\\{(1,2), (2,3)\\}$ nothing looks wrong until you notice the chain $1 \\to 2 \\to 3$ demands $(1,3)$. And repairing transitivity can cascade — adding $(1,3)$ may create *new* chains needing new shortcuts, which is why computing a transitive closure takes repeated rounds.\n\n## Equivalence relations: 'same-ness', certified\n\nA relation with **all three** properties is an **equivalence relation** — the mathematical certification of the phrase 'is the same kind of thing as'. The three axioms are exactly what same-ness needs: everything is the same as itself; if $x$ is the same as $y$ then $y$ is the same as $x$; same-ness chains.\n\nThe payoff is structural: an equivalence relation on $S$ carves $S$ into **equivalence classes** — disjoint blocks whose union is all of $S$, i.e. a **partition**. Every element belongs to exactly one class, and $x\\,R\\,y$ holds precisely when $x$ and $y$ share a block. The correspondence runs both ways: hand me a partition and 'shares a block with' is an equivalence relation; hand me an equivalence relation and its classes form a partition. Delete even one pair from such a relation and an axiom snaps — the structure is all-or-nothing.\n\nThe canonical example is **congruence mod $n$**: $x \\equiv y \\pmod{n}$ when $x$ and $y$ leave the same remainder on division by $n$. It inherits all three properties from '=' on remainders, and its classes are the $n$ remainder classes $0, 1, \\ldots, n - 1$. Which class does 45 occupy mod 7? Divide: $45 = 7 \\cdot 6 + 3$, remainder $3$ — class 3, alongside $3, 10, 17, \\ldots$ Every hash table, sharded database, and round-robin scheduler that routes by `id % n` is using these classes as buckets: the equivalence axioms are what guarantee each id lands in exactly one bucket, every time.\n\n## Functions: the relations you can rely on\n\nA **function** $f: A \\to B$ is the special relation where every input appears in *exactly one* pair: one output per input, no exceptions and no ambiguity. Two quality grades matter constantly:\n\n- **Injective** (one-to-one): different inputs never collide on an output. $\\forall x_1 \\ne x_2: f(x_1) \\ne f(x_2)$. Picture $B$ as pigeonholes: injective means no hole holds two pigeons.\n- **Surjective** (onto): no element of $B$ is left un-hit — the outputs *cover* the codomain.\n- **Bijective**: both at once — a perfect one-to-one pairing of $A$ with $B$, which is exactly what makes a function reversible.\n\nFor an explicit finite function, both checks are scans: list the outputs; a repeat kills injectivity, a missed codomain element kills surjectivity. Sizes give instant verdicts too: $|A| > |B|$ forbids injectivity (pigeonhole), $|A| < |B|$ forbids surjectivity, and when $|A| = |B|$ is finite the two properties stand or fall **together** — a collision wastes an output, so something goes un-hit.\n\n### Counting functions\n\nWith $|A| = m$ and $|B| = n$, each of the $m$ inputs independently picks one of $n$ outputs, so there are\n\n$$n^m \\text{ functions from } A \\text{ to } B.$$\n\nInjective ones retire each used output: $n$ choices for the first input, $n-1$ for the next, giving the falling factorial $n(n-1)\\cdots(n-m+1)$ — and $0$ outright when $m > n$. When $m = n$ the injections are the **bijections**, and the count collapses to $n!$. Concretely: $m = 3, n = 5$ gives $5^3 = 125$ functions, $5 \\cdot 4 \\cdot 3 = 60$ injective; a 4-element set has $4! = 24$ bijections to itself.\n\n## Composition and inverses\n\nFunctions chain: **composition** $(f \\circ g)(x) = f(g(x))$ runs the inner function $g$ first and feeds its output to $f$. With formulas it is substitution. Take $f(x) = 2x + 3$ and $g(x) = 4x + 1$:\n\n$$(f \\circ g)(x) = f(4x + 1) = 2(4x + 1) + 3 = 8x + 5,$$\n$$(g \\circ f)(x) = g(2x + 3) = 4(2x + 3) + 1 = 8x + 13.$$\n\nSame slope, different constants — composition is **not commutative**, and the two answers differ at almost every input. On finite sets, composition is table-lookup twice: if $g(1) = 3$ and $f(3) = 1$, then $(f \\circ g)(1) = 1$.\n\nA **bijection** can be undone: its **inverse** $f^{-1}$ sends each output back to the unique input that produced it, so $f^{-1}(f(x)) = x$ and $f(f^{-1}(y)) = y$. For a linear $f(x) = ax + b$ with $a \\ne 0$, solve $y = ax + b$ for $x$ — subtract $b$, then divide by $a$:\n\n$$f^{-1}(x) = \\frac{x - b}{a}.$$\n\nMind the classic error: the WHOLE numerator is divided, so $f(x) = 3x + 6$ inverts to $\\frac{x - 6}{3} = \\frac{x}{3} - 2$, not $\\frac{x}{3} - 6$. And $a = 0$ has no inverse at all: $f(x) = b$ crushes every input to one output — maximally non-injective, nothing to undo. Always run the round trip as a check: $f(4) = 18$ and $\\frac{18 - 6}{3} = 4$. ✓\n\n## The takeaway\n\nRelations are sets of pairs; three universal properties classify them; the relations with all three are equivalence relations, which are partitions in disguise; functions are the single-valued relations, graded by injective/surjective; and bijections are the ones you can chain forwards with composition and backwards with inverses. Every problem ahead is finite and explicit — every property verdict can be settled by an honest exhaustive check."
+  },
+  "application": {
+    "summary": "Relations and functions are the contracts underneath real systems: equals()/hashCode() must satisfy the equivalence axioms, id % n sharding works because congruence classes partition the ids, database keys are injective functions, encode/decode pairs are bijections verified by round-tripping, and n^m / falling-factorial counts size configuration and assignment spaces.",
+    "domains": ["databases and keys", "equality testing and deduplication", "hashing and sharding", "encodings and serialization", "combinatorics of assignments"],
+    "workedExample": "**Sharding a user table with `id % 4` — and why the equivalence axioms are load-bearing.**\n\nA service stores users on 4 shards, routing user id $x$ to shard $x \\bmod 4$. The routing relation 'lands on the same shard as' is congruence mod 4 — an equivalence relation — and the shards are its 4 equivalence classes.\n\n*Step 1 — route some ids.* User 45: $45 = 4 \\cdot 11 + 1$, remainder 1 → shard 1. User 77: $77 = 4 \\cdot 19 + 1$ → also shard 1. User 30: $30 = 4 \\cdot 7 + 2$ → shard 2.\n\n*Step 2 — the axioms at work.* Reflexive: an id always routes with itself — re-running the router on the same id can never send it elsewhere. Symmetric and transitive: 'same shard' agreements chain, so shard membership is consistent no matter which pair you compare first. Because the classes PARTITION the ids, every user is on exactly one shard: no user is lost, none is duplicated.\n\n*Step 3 — count a class.* How many of the live ids $1$ to $100$ sit on shard 1? They are $1, 5, 9, \\ldots, 97$ — one every 4, so $25$ ids. Capacity planning for a shard is literally counting an equivalence class.\n\n*Step 4 — the function view.* The router itself is a function $r: \\text{ids} \\to \\{0, 1, 2, 3\\}$. It is surjective (every shard gets traffic) but massively non-injective — collisions are the point. Contrast the user-record lookup $\\text{id} \\mapsto \\text{row}$, which the primary-key constraint forces to be injective, or the session-token codec, where encode and decode must be mutually inverse bijections: $\\text{decode}(\\text{encode}(x)) = x$ for every $x$, checked by round-trip tests.\n\nOne small system, and every concept in this topic showed up with a job title.",
+    "domainNotes": [
+      "**Databases:** a foreign key is a function from child rows to parent rows (every child has exactly one parent); a UNIQUE index makes a column injective; 'same normalized email' dedup groups rows by an equivalence relation and keeps one representative per class.",
+      "**Equality contracts:** Java's `equals()` / Python's `__eq__` are REQUIRED to be reflexive, symmetric, and transitive — violate one and hash-based sets silently corrupt, because bucketing assumes the equivalence axioms.",
+      "**Hashing and sharding:** `id % n` routing uses the n congruence classes as buckets; the partition property is what guarantees exactly-one-shard placement, and class counting is capacity planning.",
+      "**Encodings:** serialize/deserialize, encrypt/decrypt, and unit conversions must be bijections — invertibility IS correctness, and the round-trip test $f^{-1}(f(x)) = x$ is the standard way to verify it.",
+      "**Combinatorics:** $n^m$ counts assignments of $m$ items to $n$ slots (feature flags, DNS choices, test matrices); the falling factorial counts collision-free assignments; $n!$ counts orderings — the backbone of scheduling and permutation counts."
+    ]
+  },
+  "generators": [
+    "dm2-rel-props-1", "dm2-rel-props-2", "dm2-rel-props-3",
+    "dm2-equiv-1", "dm2-equiv-2", "dm2-equiv-3",
+    "dm2-func-count-1", "dm2-func-count-2", "dm2-func-count-3",
+    "dm2-comp-inv-1", "dm2-comp-inv-2", "dm2-comp-inv-3"
+  ],
+  "problems": [
+    {
+      "id": "discrete-math.relations-and-functions.s01",
+      "concepts": ["relation-properties"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $R = \\{(1,1),\\ (2,2),\\ (1,2),\\ (2,1)\\}$ be a relation on the set $S = \\{1, 2, 3\\}$.",
+      "steps": [
+        { "instruction": "Is $R$ reflexive — is $(x, x) \\in R$ for EVERY element $x$ of $S$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Roll call on the diagonal pairs: $(1,1)$, $(2,2)$, $(3,3)$. Is one missing?" },
+        { "instruction": "Is $R$ symmetric — does every pair have its reversal in $R$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$(1,2)$ and $(2,1)$ are both listed, and diagonal pairs are their own reversals." },
+        { "instruction": "How many ordered pairs must be ADDED to $R$ to make it reflexive? (Whole number.)", "answer": "1", "accept": [], "hint": "Reflexivity on $\\{1,2,3\\}$ needs all three diagonal pairs; count the absent ones." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "pair" },
+      "solutionNarrative": "The element 3 never relates to itself — $(3,3) \\notin R$ — so $R$ is not reflexive, and adding that single pair would fix it. Symmetry holds: each off-diagonal pair $(1,2), (2,1)$ is returned. Note that reflexivity quantifies over the SET $S$, not just the elements mentioned in $R$ — that's why the unmentioned 3 matters."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s02",
+      "concepts": ["relation-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $R = \\{(1,1),\\ (2,2),\\ (3,3),\\ (4,4),\\ (1,2),\\ (2,3)\\}$ on $S = \\{1, 2, 3, 4\\}$. Two properties are quick; the third hides in a chain.",
+      "steps": [
+        { "instruction": "Is $R$ reflexive? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "All four diagonal pairs are on the list." },
+        { "instruction": "Is $R$ symmetric? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$(1,2) \\in R$ — is $(2,1)$?" },
+        { "instruction": "Is $R$ transitive? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Follow the chain $(1,2), (2,3)$ through the shared middle element 2." },
+        { "instruction": "Transitivity fails because exactly one shortcut pair is missing. Which pair? Give it as $(x, z)$.", "answer": "(1, 3)", "accept": ["1,3", "(1,3)"], "hint": "The chain $1 \\to 2 \\to 3$ demands the direct pair." }
+      ],
+      "finalAnswer": { "value": "(1, 3)", "unit": "" },
+      "solutionNarrative": "Reflexive: yes, the full diagonal is present. Symmetric: no — $(1,2)$ is never returned. Transitive: no — the chain $(1,2), (2,3)$ demands $(1,3)$, which is absent; every other chain runs through a diagonal pair and is harmless. Adding $(1,3)$ (and checking the new chains it creates — they all land on existing pairs) makes $R$ transitive."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s03",
+      "concepts": ["relation-properties"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $R = \\{(1,1),\\ (1,2),\\ (2,1),\\ (3,4)\\}$ on $S = \\{1, 2, 3, 4\\}$. Audit all three properties, then count the repairs.",
+      "steps": [
+        { "instruction": "Is $R$ symmetric? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$(1,2)$ and $(2,1)$ return each other — but check $(3,4)$." },
+        { "instruction": "Is $R$ transitive? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Chase the chain $(2,1), (1,2)$ through the middle element 1: which shortcut does it demand?" },
+        { "instruction": "Count the DISTINCT missing shortcuts: pairs $(x, z) \\notin R$ where some $y$ has $(x, y) \\in R$ and $(y, z) \\in R$. (Whole number.)", "answer": "1", "accept": [], "hint": "$(1,2),(2,1) \\Rightarrow (1,1)$ ✓ already there; $(2,1),(1,2) \\Rightarrow (2,2)$ — present or not? $(3,4)$ starts no chain." },
+        { "instruction": "Independently: how many pairs must be added to make $R$ reflexive? (Whole number.)", "answer": "3", "accept": [], "hint": "Only $(1,1)$ of the four diagonal pairs is present." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "pairs" },
+      "solutionNarrative": "Symmetry fails on the single unreturned pair $(3,4)$. Transitivity fails on the chain $(2,1), (1,2)$, which demands $(2,2)$ — the only missing shortcut, so the repair count is 1. Reflexivity is a separate roll call: $(2,2), (3,3), (4,4)$ are all absent, so 3 pairs are needed. Each property gets its own audit; fixing one does not fix the others."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s04",
+      "concepts": ["relation-properties"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A build pipeline records the relation 'must run before' among three tasks: $R = \\{(1,2),\\ (2,3),\\ (1,3)\\}$ on $\\{1, 2, 3\\}$, drawn below as a digraph — an arrow $x \\to y$ for each pair.",
+      "plot": { "type": "graph", "nodes": [ { "id": "1", "x": 0, "y": 0 }, { "id": "2", "x": 2, "y": 2.5 }, { "id": "3", "x": 4, "y": 0 } ], "edges": [ { "from": "1", "to": "2", "directed": true }, { "from": "2", "to": "3", "directed": true }, { "from": "1", "to": "3", "directed": true } ], "caption": "The 'must run before' relation: 1 → 2 → 3, with the shortcut 1 → 3" },
+      "steps": [
+        { "instruction": "Is $R$ reflexive? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "No task must run before itself — no node has a self-loop, i.e. no diagonal pair is present." },
+        { "instruction": "Is $R$ symmetric? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Task 1 runs before task 2; does task 2 run before task 1? Scheduling would be impossible if it did." },
+        { "instruction": "Is $R$ transitive? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The only chain is $(1,2), (2,3)$ — and its shortcut $(1,3)$ is drawn right there." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "'Must run before' is a strict ordering: irreflexive (nothing precedes itself), asymmetric (precedence can't run both ways), but transitive — the chain $1 \\to 2 \\to 3$ carries its shortcut $1 \\to 3$, and that is the whole chain inventory. Transitivity is exactly what lets a scheduler derive indirect precedences from direct ones."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s05",
+      "concepts": ["equivalence-relations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Congruence mod 3 ($x \\equiv y \\pmod{3}$ when $x$ and $y$ leave the same remainder on division by 3) is an equivalence relation on the integers.",
+      "steps": [
+        { "instruction": "Which equivalence class does 17 belong to — what is the remainder of 17 on division by 3? (Give 0, 1, or 2.)", "answer": "2", "accept": [], "hint": "$17 = 3 \\cdot 5 + 2$." },
+        { "instruction": "Is $17 \\equiv 5 \\pmod{3}$ — are 17 and 5 in the same class? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$5 = 3 \\cdot 1 + 2$ — compare the remainders." },
+        { "instruction": "How many distinct equivalence classes does congruence mod 3 have? (Whole number.)", "answer": "3", "accept": [], "hint": "One class per possible remainder." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "classes" },
+      "solutionNarrative": "$17 = 3 \\cdot 5 + 2$ puts 17 in class 2, and $5$ leaves the same remainder, so $17 \\equiv 5 \\pmod 3$. The classes are exactly the possible remainders $0, 1, 2$ — three of them — and they partition the integers: every integer lands in exactly one."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s06",
+      "concepts": ["equivalence-relations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $R = \\{(1,1),\\ (2,2),\\ (3,3),\\ (1,2),\\ (2,1)\\}$ on $S = \\{1, 2, 3\\}$. Decide whether $R$ is an equivalence relation.",
+      "steps": [
+        { "instruction": "Is $R$ reflexive? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "All three diagonal pairs are listed." },
+        { "instruction": "Is $R$ symmetric? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$(1,2)$ and $(2,1)$ return each other; diagonals mirror themselves." },
+        { "instruction": "Is $R$ transitive? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Chains: $(1,2),(2,1) \\Rightarrow (1,1)$ ✓ and $(2,1),(1,2) \\Rightarrow (2,2)$ ✓ — everything else runs through a diagonal." },
+        { "instruction": "Verdict: is $R$ an 'equivalence relation' or 'not an equivalence relation'? (Type one of those two phrases.)", "answer": "equivalence relation", "accept": ["equivalence"], "hint": "All three properties passed." }
+      ],
+      "finalAnswer": { "value": "equivalence relation", "unit": "" },
+      "solutionNarrative": "All three axioms check out, so $R$ is an equivalence relation. Its classes are visible in the pairs: $\\{1, 2\\}$ (related to each other and themselves) and $\\{3\\}$ (related only to itself) — the partition $\\{1,2\\},\\ \\{3\\}$ of $S$, worn as a set of ordered pairs."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s07",
+      "concepts": ["equivalence-relations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Work inside congruence mod 7. The equivalence class of an integer is its remainder on division by 7.",
+      "steps": [
+        { "instruction": "Which class does 45 belong to — what is 45 mod 7? (Give a number from 0 to 6.)", "answer": "3", "accept": [], "hint": "$45 = 7 \\cdot 6 + 3$." },
+        { "instruction": "Is $45 \\equiv 3 \\pmod{7}$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "3 leaves remainder 3 — same class?" },
+        { "instruction": "How many integers in $\\{1, 2, \\ldots, 100\\}$ belong to the class of 45? (Whole number.)", "answer": "14", "accept": [], "hint": "They are $3, 10, 17, \\ldots$ — an arithmetic march in steps of 7. The largest one at or below 100 is 94." },
+        { "instruction": "How many distinct classes does congruence mod 7 have? (Whole number.)", "answer": "7", "accept": [], "hint": "One per remainder $0$ through $6$." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "integers" },
+      "solutionNarrative": "$45 = 7 \\cdot 6 + 3$, so 45 is in class 3, together with 3 itself. Within $\\{1, \\ldots, 100\\}$ the class members are $3, 10, 17, \\ldots, 94$: from $3 + 7k \\le 100$ we get $k \\le 13$, so $k = 0, \\ldots, 13$ gives 14 members. The 7 classes together tile $\\{1, \\ldots, 100\\}$ — a partition, as every equivalence relation guarantees."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s08",
+      "concepts": ["equivalence-relations"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A hash table routes each key to bucket $k \\bmod 8$. 'Lands in the same bucket' is congruence mod 8 — an equivalence relation — and the buckets are its classes.",
+      "steps": [
+        { "instruction": "Which bucket does key 45 land in — what is 45 mod 8? (Give a number from 0 to 7.)", "answer": "5", "accept": [], "hint": "$45 = 8 \\cdot 5 + 5$." },
+        { "instruction": "Which bucket does key 77 land in?", "answer": "5", "accept": [], "hint": "$77 = 8 \\cdot 9 + 5$." },
+        { "instruction": "Do keys 45 and 77 collide — same bucket? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare the two remainders you just computed." },
+        { "instruction": "How many buckets (equivalence classes) does the table have? (Whole number.)", "answer": "8", "accept": [], "hint": "One per remainder mod 8." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "buckets" },
+      "solutionNarrative": "$45 = 8 \\cdot 5 + 5$ and $77 = 8 \\cdot 9 + 5$: both leave remainder 5, so $45 \\equiv 77 \\pmod 8$ and the keys collide in bucket 5. The 8 remainder classes are the buckets, and because congruence is an equivalence relation, every key lands in exactly one — no key is lost, none is double-stored."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s09",
+      "concepts": ["functions-and-counting"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Define $f: \\{1, 2, 3\\} \\to \\{1, 2, 3, 4\\}$ by $f(1) = 2$, $f(2) = 4$, $f(3) = 1$.",
+      "steps": [
+        { "instruction": "Is $f$ injective — do different inputs always get different outputs? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The outputs are 2, 4, 1 — any repeats?" },
+        { "instruction": "Is $f$ surjective — is every element of $\\{1, 2, 3, 4\\}$ hit? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Which codomain element never appears as an output?" },
+        { "instruction": "Classify $f$: type 'injective', 'surjective', 'bijective', or 'neither'.", "answer": "injective", "accept": [], "hint": "One property holds and one fails." }
+      ],
+      "finalAnswer": { "value": "injective", "unit": "" },
+      "solutionNarrative": "Outputs 2, 4, 1 are all distinct, so $f$ is injective. But 3 is never hit, so $f$ is not surjective — with only 3 inputs and 4 targets, surjectivity was impossible from the start. Verdict: injective (only)."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s10",
+      "concepts": ["functions-and-counting"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $|A| = 2$ and $|B| = 5$. Count the functions from $A$ to $B$.",
+      "steps": [
+        { "instruction": "How many functions $f: A \\to B$ are there in total? (Whole number: $5^2$.)", "answer": "25", "accept": [], "hint": "Each of the 2 inputs independently picks one of 5 outputs." },
+        { "instruction": "How many of them are injective? (Whole number.)", "answer": "20", "accept": [], "hint": "$5 \\cdot 4$: the second input must avoid the first input's output." },
+        { "instruction": "How many are NOT injective? (Whole number.)", "answer": "5", "accept": [], "hint": "Total minus injective — or directly: both inputs share an output, 5 ways." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "functions" },
+      "solutionNarrative": "Total: $5^2 = 25$ (independent choices multiply). Injective: $5 \\cdot 4 = 20$ — the falling factorial, since a used output retires. The non-injective remainder is $25 - 20 = 5$: exactly the 5 constant-style collisions where both inputs pick the same output."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s11",
+      "concepts": ["functions-and-counting"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Define $g: \\{1, 2, 3, 4\\} \\to \\{1, 2, 3, 4\\}$ by $g(1) = 3$, $g(2) = 1$, $g(3) = 3$, $g(4) = 2$. Domain and codomain have the SAME size — that links the two properties.",
+      "steps": [
+        { "instruction": "Is $g$ injective? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Scan the outputs 3, 1, 3, 2 for a repeat." },
+        { "instruction": "Is $g$ surjective? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Which of 1, 2, 3, 4 is never an output?" },
+        { "instruction": "Classify $g$: type 'injective', 'surjective', 'bijective', or 'neither'.", "answer": "neither", "accept": [], "hint": "With equal finite sizes the two properties stand or fall together." },
+        { "instruction": "How many bijections are there from a 4-element set to itself? (Whole number: $4!$.)", "answer": "24", "accept": [], "hint": "$4 \\cdot 3 \\cdot 2 \\cdot 1$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "Inputs 1 and 3 collide on output 3, so $g$ is not injective — and with $|A| = |B| = 4$ finite, that wasted output forces a miss: 4 is never hit, so $g$ is not surjective either. Neither. The perfect assignments are the $4! = 24$ permutations, exactly the bijections of the set."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s12",
+      "concepts": ["functions-and-counting"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Three employees are assigned parking spots from $\\{1, 2, 3\\}$: Ann gets spot 2, Bob gets spot 2, Cam gets spot 3. The assignment is a function from people to spots.",
+      "steps": [
+        { "instruction": "Is the assignment injective — does everyone get their own spot? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Ann and Bob were both assigned spot 2." },
+        { "instruction": "Is it surjective — is every spot used? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Nobody was assigned spot 1." },
+        { "instruction": "Classify the assignment: type 'injective', 'surjective', 'bijective', or 'neither'.", "answer": "neither", "accept": [], "hint": "A collision AND an unused spot." }
+      ],
+      "finalAnswer": { "value": "neither", "unit": "" },
+      "solutionNarrative": "Ann and Bob collide on spot 2 (not injective) and spot 1 sits empty (not surjective) — with 3 people and 3 spots, one failure forces the other. A working one-car-per-spot assignment would be a bijection, and there are $3! = 6$ of those."
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s13",
+      "concepts": ["composition-and-inverse"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $f(x) = 2x + 3$ and $g(x) = 4x + 1$. Composition runs the INNER function first: $(f \\circ g)(x) = f(g(x))$.",
+      "steps": [
+        { "instruction": "Evaluate the inner function: $g(2) = {}$? (Give a number.)", "answer": "9", "accept": [], "hint": "$4 \\cdot 2 + 1$." },
+        { "instruction": "Now the outer: $(f \\circ g)(2) = f(9) = {}$? (Give a number.)", "answer": "21", "accept": [], "hint": "$2 \\cdot 9 + 3$." },
+        { "instruction": "Find the general formula $(f \\circ g)(x)$ as an expression in $x$ (of the form $px + q$).", "answer": "8x + 5", "accept": ["y = 8x + 5", "2(4x + 1) + 3"], "hint": "Substitute: $f(4x + 1) = 2(4x + 1) + 3$, then expand." }
+      ],
+      "finalAnswer": { "value": "8x + 5", "unit": "" },
+      "solutionNarrative": "$g(2) = 9$, then $f(9) = 21$. In general $(f \\circ g)(x) = 2(4x + 1) + 3 = 8x + 5$ — and the formula agrees with the numeric run: $8 \\cdot 2 + 5 = 21$. ✓"
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s14",
+      "concepts": ["composition-and-inverse"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $f(x) = 3x + 6$. Since the slope $3 \\ne 0$, $f$ is a bijection on the reals and has an inverse.",
+      "steps": [
+        { "instruction": "First a forward value: $f(4) = {}$? (Give a number.)", "answer": "18", "accept": [], "hint": "$3 \\cdot 4 + 6$." },
+        { "instruction": "Solve $y = 3x + 6$ for $x$, then swap the letters: give $f^{-1}(x)$ as an expression in $x$.", "answer": "(x - 6)/3", "accept": ["x/3 - 2", "(x/3) - 2"], "hint": "Undo in reverse order: subtract 6 FIRST, then divide the whole thing by 3." },
+        { "instruction": "Verify the round trip: $f^{-1}(18) = {}$? (Give a number.)", "answer": "4", "accept": [], "hint": "$(18 - 6)/3$ — you should land back on the input you started with." }
+      ],
+      "finalAnswer": { "value": "(x - 6)/3", "unit": "" },
+      "solutionNarrative": "$f(4) = 18$. Solving $y = 3x + 6$: subtract 6, divide by 3, so $f^{-1}(x) = \\frac{x - 6}{3} = \\frac{x}{3} - 2$ (the WHOLE numerator is divided — $\\frac{x}{3} - 6$ is the classic wrong answer). Round trip: $f^{-1}(18) = 4$. ✓"
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s15",
+      "concepts": ["composition-and-inverse"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "On the finite set $\\{1, 2, 3\\}$ define $f$ by $f(1) = 2,\\ f(2) = 3,\\ f(3) = 1$ and $g$ by $g(1) = 3,\\ g(2) = 1,\\ g(3) = 3$. Composition is table lookup twice — inner function first.",
+      "steps": [
+        { "instruction": "Evaluate $(f \\circ g)(1) = f(g(1))$. (Give a number.)", "answer": "1", "accept": [], "hint": "$g(1) = 3$, then apply $f$ to that." },
+        { "instruction": "Evaluate $(g \\circ f)(1) = g(f(1))$. (Give a number.)", "answer": "1", "accept": [], "hint": "$f(1) = 2$, then apply $g$." },
+        { "instruction": "Evaluate $(f \\circ g)(3)$. (Give a number.)", "answer": "1", "accept": [], "hint": "$g(3) = 3$, then $f(3)$." },
+        { "instruction": "Evaluate $(g \\circ f)(3)$. (Give a number.)", "answer": "3", "accept": [], "hint": "$f(3) = 1$, then $g(1)$." },
+        { "instruction": "Are $f \\circ g$ and $g \\circ f$ the same function? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Two functions are equal only if they agree at EVERY input — compare your values at $x = 3$." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$(f \\circ g)(1) = f(3) = 1$ and $(g \\circ f)(1) = g(2) = 1$ — an agreement, but agreements prove nothing. At 3 the orders split: $(f \\circ g)(3) = f(3) = 1$ while $(g \\circ f)(3) = g(1) = 3$. One disagreement settles it: composition is not commutative. (Note $f$ is a bijection of the set, but $g$ — with 3 hit twice and 2 never — is not, so $g$ has no inverse.)"
+    },
+    {
+      "id": "discrete-math.relations-and-functions.s16",
+      "concepts": ["composition-and-inverse"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A toy cipher encodes a numeric code $x$ as $e(x) = 3x + 7$. To decrypt, the receiver needs the inverse function — encoding is only useful because it can be undone.",
+      "steps": [
+        { "instruction": "Encode the code 5: $e(5) = {}$? (Give a number.)", "answer": "22", "accept": [], "hint": "$3 \\cdot 5 + 7$." },
+        { "instruction": "Find the decoder: give $e^{-1}(x)$ as an expression in $x$.", "answer": "(x - 7)/3", "accept": ["x/3 - 7/3", "(x/3) - (7/3)"], "hint": "Undo the encoding in reverse order: subtract 7, then divide everything by 3." },
+        { "instruction": "Decrypt the transmission: $e^{-1}(22) = {}$? (Give a number.)", "answer": "5", "accept": [], "hint": "$(22 - 7)/3$ — the original code should come back." }
+      ],
+      "finalAnswer": { "value": "(x - 7)/3", "unit": "" },
+      "solutionNarrative": "$e(5) = 22$. The decoder solves $y = 3x + 7$ for $x$: $e^{-1}(x) = \\frac{x - 7}{3}$, and the round trip $e^{-1}(22) = 5$ recovers the message. Every serializer, cipher, and unit conversion is exactly this pattern: a bijection paired with its inverse, verified by round-tripping."
+    }
+  ]
+}

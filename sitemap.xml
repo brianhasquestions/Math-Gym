@@ -79,6 +79,9 @@
     <loc>https://mathgym.io/topic.html?id=geometry.triangles</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=geometry.quadrilaterals-and-polygons</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=geometry.similarity</loc>
   </url>
   <url>
@@ -98,6 +101,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=geometry.surface-area-and-volume</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=geometry.transformations</loc>
   </url>
   <url>
     <loc>https://mathgym.io/subject.html?id=trigonometry</loc>
@@ -241,6 +247,9 @@
     <loc>https://mathgym.io/topic.html?id=differential-equations.laplace-transforms</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=differential-equations.systems-of-odes</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=differential-equations.numerical-methods</loc>
   </url>
   <url>
@@ -332,6 +341,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=discrete-math.sets-and-set-operations</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=discrete-math.relations-and-functions</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=discrete-math.counting-principles</loc>

@@ -1,0 +1,278 @@
+{
+  "id": "geometry.quadrilaterals-and-polygons",
+  "subject": "geometry",
+  "title": "Quadrilaterals and Polygons",
+  "prerequisites": ["geometry.angles-and-lines", "geometry.triangles"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "polygon-angle-sums",
+      "label": "Polygon angle sums",
+      "microLesson": "Any polygon with $n$ sides splits into $n - 2$ triangles by drawing diagonals from one vertex, so its interior angles sum to $(n - 2) \\times 180^\\circ$: a quadrilateral has $360^\\circ$, a pentagon $540^\\circ$, a hexagon $720^\\circ$. The **exterior** angles (one per vertex) always total $360^\\circ$, no matter how many sides. In a **regular** polygon all angles are equal, so each interior angle is $\\frac{(n-2) \\cdot 180}{n}$ and each exterior angle is $\\frac{360}{n}$ — and you can run that backwards to solve for $n$."
+    },
+    {
+      "id": "parallelogram-properties",
+      "label": "Parallelogram properties",
+      "microLesson": "A **parallelogram** has both pairs of opposite sides parallel, and three facts follow: (1) opposite sides are **equal**, (2) opposite angles are **equal** while consecutive angles are **supplementary** (sum to $180^\\circ$), and (3) the diagonals **bisect each other** — each cuts the other exactly in half. Each fact is an equation in disguise: if $AB = 3x + 4$ and the opposite side is $19$, then $3x + 4 = 19$ and $x = 5$."
+    },
+    {
+      "id": "special-quadrilaterals",
+      "label": "Rectangles, rhombi, squares, kites",
+      "microLesson": "Special parallelograms add diagonal superpowers. A **rectangle**'s diagonals are *equal* (and still bisect each other). A **rhombus**'s diagonals are *perpendicular* bisectors of each other — they cross at $90^\\circ$ and cut the shape into four right triangles, so the Pythagorean theorem finds the side: half-diagonals $6$ and $8$ give side $\\sqrt{6^2 + 8^2} = 10$. A **square** has both features. A **kite** (two pairs of *adjacent* equal sides) has perpendicular diagonals and one pair of equal opposite angles."
+    },
+    {
+      "id": "trapezoids-and-midsegments",
+      "label": "Trapezoids and midsegments",
+      "microLesson": "A **trapezoid** has exactly one pair of parallel sides, the **bases**. The **midsegment** joins the midpoints of the two legs and is always the *average* of the bases: $m = \\frac{b_1 + b_2}{2}$. Bases $8$ and $14$ give a midsegment of $11$. Run it backwards to find a missing base: $b_2 = 2m - b_1$. In an **isosceles** trapezoid the legs are equal, the two angles along each base are equal, and each base angle is supplementary to the angle above it on the same leg."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Beyond the triangle\n\nFloors get tiled with hexagons, decks are framed as trapezoids, gates fold as parallelograms, and every screen you own is a rectangle. Once you leave triangles, shapes gain sides — but they don't gain mystery, because **every polygon is secretly a stack of triangles**. That one idea powers this whole topic.\n\n## Angle sums: count the triangles\n\nPick one vertex of an $n$-sided polygon and draw every diagonal from it. The polygon splits into exactly $n - 2$ triangles, and each contributes $180^\\circ$:\n\n$$\\text{interior angle sum} = (n - 2) \\times 180^\\circ.$$\n\nA quadrilateral ($n=4$) has $360^\\circ$, a pentagon $540^\\circ$, a hexagon $720^\\circ$. Meanwhile the **exterior** angles — one per vertex, each supplementary to its interior angle — always total exactly $360^\\circ$: walk around the polygon and you make one full turn, period.\n\nFor a **regular** polygon (all sides and angles equal), divide evenly:\n\n$$\\text{each interior angle} = \\frac{(n-2) \\cdot 180}{n}, \\qquad \\text{each exterior angle} = \\frac{360}{n}.$$\n\n**Worked example (solving for $n$):** each interior angle of a regular polygon is $150^\\circ$. Then each exterior angle is $180 - 150 = 30^\\circ$, and since exterior angles total $360^\\circ$, $n = 360/30 = 12$ sides. The exterior-angle route is almost always the fastest way to find $n$.\n\n## Parallelograms: three facts, three kinds of equations\n\nA **parallelogram** has both pairs of opposite sides parallel. Three properties follow, and each one hands you an equation:\n\n1. **Opposite sides are equal:** $AB = CD$ and $BC = AD$.\n2. **Opposite angles are equal; consecutive angles are supplementary:** $\\angle A = \\angle C$ and $\\angle A + \\angle B = 180^\\circ$.\n3. **Diagonals bisect each other:** they cross at each other's midpoint.\n\n```plot\n{ \"xRange\": [-1, 9], \"yRange\": [-1, 4.5], \"width\": 380, \"height\": 240, \"grid\": false, \"segments\": [ { \"from\": [0, 0], \"to\": [6, 0], \"color\": \"accent\" }, { \"from\": [6, 0], \"to\": [8, 3], \"color\": \"accent\" }, { \"from\": [8, 3], \"to\": [2, 3], \"color\": \"accent\" }, { \"from\": [2, 3], \"to\": [0, 0], \"color\": \"accent\" }, { \"from\": [0, 0], \"to\": [8, 3], \"color\": \"warn\", \"dashed\": true }, { \"from\": [6, 0], \"to\": [2, 3], \"color\": \"warn\", \"dashed\": true } ], \"points\": [ { \"x\": 0, \"y\": 0, \"label\": \"A\", \"color\": \"text\" }, { \"x\": 6, \"y\": 0, \"label\": \"B\", \"color\": \"text\" }, { \"x\": 8, \"y\": 3, \"label\": \"C\", \"color\": \"text\" }, { \"x\": 2, \"y\": 3, \"label\": \"D\", \"color\": \"text\" }, { \"x\": 4, \"y\": 1.5, \"label\": \"E\", \"color\": \"good\" } ], \"caption\": \"Parallelogram ABCD with diagonals AC and BD crossing at E — E is the midpoint of BOTH diagonals.\" }\n```\n\n**Worked example:** in parallelogram $ABCD$, $\\angle A = 65^\\circ$. Then $\\angle C = 65^\\circ$ (opposite) and $\\angle B = \\angle D = 180 - 65 = 115^\\circ$ (consecutive). Check: $65 + 115 + 65 + 115 = 360^\\circ$. ✓\n\nWhen sides or diagonal pieces carry expressions like $2x + 3$, set the equal parts equal and solve — the geometry writes the algebra for you.\n\n## The special quadrilaterals: diagonals tell them apart\n\nAdd constraints to a parallelogram and you get the celebrity quadrilaterals. The fastest way to tell them apart is to look at their **diagonals**:\n\n| Shape | Sides/angles | Diagonals |\n|---|---|---|\n| Rectangle | four right angles | **equal**, bisect each other |\n| Rhombus | four equal sides | **perpendicular**, bisect each other |\n| Square | both of the above | equal AND perpendicular |\n| Kite | two pairs of *adjacent* equal sides | perpendicular; one bisects the other |\n\nThe rhombus fact is the workhorse: its diagonals cut it into **four congruent right triangles**, each with legs equal to the half-diagonals. So a rhombus with diagonals $12$ and $16$ has half-diagonals $6$ and $8$, and every side is $\\sqrt{6^2 + 8^2} = \\sqrt{100} = 10$. A rectangle's equal diagonals are what carpenters check when squaring a frame: measure both diagonals, and the frame is a true rectangle only when they match.\n\nA **kite** isn't a parallelogram at all, but it still obeys the quadrilateral angle sum: its two 'wingtip' angles (the pair its symmetry axis doesn't pass through) are equal, so vertex angles of $110^\\circ$ and $40^\\circ$ leave $\\frac{360 - 110 - 40}{2} = 105^\\circ$ for each wingtip.\n\n**Common pitfall:** *equal diagonals* is a rectangle thing; *perpendicular diagonals* is a rhombus/kite thing. Mixing them up is the classic error — a rhombus's diagonals are usually NOT equal, and a rectangle's are usually NOT perpendicular. Only the square gets both.\n\n## Trapezoids and the midsegment\n\nA **trapezoid** keeps just one pair of parallel sides — the **bases** $b_1$ and $b_2$. Join the midpoints of the two non-parallel legs and you get the **midsegment**, which is parallel to both bases and exactly their average:\n\n$$m = \\frac{b_1 + b_2}{2}.$$\n\n```plot\n{ \"xRange\": [-1, 11], \"yRange\": [-1, 5], \"width\": 380, \"height\": 240, \"grid\": false, \"segments\": [ { \"from\": [0, 0], \"to\": [10, 0], \"color\": \"accent\", \"label\": \"b1 = 10\" }, { \"from\": [10, 0], \"to\": [7, 4], \"color\": \"accent\" }, { \"from\": [7, 4], \"to\": [3, 4], \"color\": \"accent\", \"label\": \"b2 = 4\" }, { \"from\": [3, 4], \"to\": [0, 0], \"color\": \"accent\" }, { \"from\": [1.5, 2], \"to\": [8.5, 2], \"color\": \"good\", \"dashed\": true, \"label\": \"m = 7\" } ], \"points\": [ { \"x\": 1.5, \"y\": 2, \"label\": \"midpoint\", \"color\": \"good\" }, { \"x\": 8.5, \"y\": 2, \"label\": \"midpoint\", \"color\": \"good\" } ], \"caption\": \"The midsegment joins the midpoints of the legs: m = (10 + 4)/2 = 7, the average of the bases.\" }\n```\n\nRun the formula backwards to recover a missing base: if the midsegment is $15$ and one base is $12$, the bases sum to $2(15) = 30$, so the other base is $30 - 12 = 18$.\n\nAn **isosceles trapezoid** (equal legs) is the symmetric kind you see in bridges and lampshades: the two angles along each base are equal, and each base angle pairs with the angle above it on the same leg to make $180^\\circ$. So a $70^\\circ$ base angle means the other base angle is also $70^\\circ$ and both top angles are $110^\\circ$.\n\n**Pitfall to dodge:** the midsegment is the average of the *bases* (the parallel sides), never of the legs. Identify the parallel pair first."
+  },
+  "application": {
+    "summary": "Polygon angle sums set the miter angles for frames, tiles, and gazebo floors; parallelogram properties drive folding gates and adjustable linkages; diagonal tests square up framing and size rhombus braces; and the trapezoid midsegment locates support beams and averages out sloped structures.",
+    "domains": ["carpentry and framing", "construction", "design and tiling", "everyday life"],
+    "workedExample": "**Mitering a hexagonal gazebo floor**\n\nA carpenter frames a regular hexagonal gazebo floor from six identical boards and needs the angle to cut at each corner.\n\nStep 1 — the interior angle sum: $(6 - 2) \\times 180 = 720^\\circ$.\n\nStep 2 — each corner of a regular hexagon: $720 / 6 = 120^\\circ$.\n\nStep 3 — the miter cut: each corner is formed by two boards meeting, so each board is cut at half the corner angle, $120/2 = 60^\\circ$.\n\n**Each board gets a $60^\\circ$ end cut.** The same three moves set the cuts for a pentagonal planter ($108^\\circ$ corners, $54^\\circ$ cuts) or a stop-sign-shaped frame ($135^\\circ$ corners, $67.5^\\circ$ cuts). And before screwing anything down, the carpenter checks the deck frame is a true rectangle the quadrilateral way: measure both diagonals — equal diagonals mean right angles, no protractor required.",
+    "domainNotes": [
+      "**Carpentry:** miter angles come straight from regular-polygon interior angles; equal-diagonal checks square up rectangular frames and foundations.",
+      "**Construction:** trapezoidal decks, ramps, and roof cross-sections use the midsegment to place center beams; isosceles trapezoid base angles keep them symmetric.",
+      "**Design and tiling:** only shapes whose interior angles divide 360° evenly can tile a floor around a point — that's why equilateral triangles, squares, and hexagons dominate tiling.",
+      "**Mechanisms:** folding gates, pantographs, and adjustable easels rely on parallelogram linkages — opposite sides stay equal and parallel through the whole motion."
+    ]
+  },
+  "generators": [
+    "geo2-angle-sums-1",
+    "geo2-angle-sums-2",
+    "geo2-angle-sums-3",
+    "geo2-parallelogram-1",
+    "geo2-parallelogram-2",
+    "geo2-parallelogram-3",
+    "geo2-special-quads-1",
+    "geo2-special-quads-2",
+    "geo2-special-quads-3",
+    "geo2-trapezoids-1",
+    "geo2-trapezoids-2",
+    "geo2-trapezoids-3"
+  ],
+  "problems": [
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s01",
+      "concepts": ["polygon-angle-sums"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A patio is tiled with hexagonal (6-sided) pavers. Find the sum of the interior angles of one hexagonal paver. (Answer in degrees.)",
+      "steps": [
+        { "instruction": "How many triangles does a hexagon split into when you draw diagonals from one vertex? (That is $n - 2$.)", "answer": "4", "accept": ["4 triangles"], "hint": "$n - 2 = 6 - 2$." },
+        { "instruction": "Each triangle contributes $180^\\circ$. Find the interior angle sum (degrees).", "answer": "720", "accept": ["720 degrees"], "hint": "4 × 180." }
+      ],
+      "finalAnswer": { "value": "720", "unit": "degrees" },
+      "solutionNarrative": "A hexagon splits into $6 - 2 = 4$ triangles, so its interior angles sum to $4 \\times 180 = 720^\\circ$."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s02",
+      "concepts": ["polygon-angle-sums"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A stop sign is a regular octagon (8 sides). What do its exterior angles sum to, and what is each exterior angle?",
+      "steps": [
+        { "instruction": "What is the sum of the exterior angles of ANY convex polygon (degrees)?", "answer": "360", "accept": ["360 degrees"], "hint": "Walking the boundary makes one full turn." },
+        { "instruction": "The 8 equal exterior angles share that total. Find each one (degrees).", "answer": "45", "accept": ["45 degrees"], "hint": "360 ÷ 8." }
+      ],
+      "finalAnswer": { "value": "45", "unit": "degrees" },
+      "solutionNarrative": "Exterior angles always total $360^\\circ$; a regular octagon splits that into $360/8 = 45^\\circ$ apiece."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s03",
+      "concepts": ["polygon-angle-sums"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A garden planter is a regular pentagon. Find the interior angle sum, then the measure of each interior angle — the angle the carpenter must build at every corner.",
+      "steps": [
+        { "instruction": "Find the interior angle sum of a pentagon (degrees).", "answer": "540", "accept": ["540 degrees"], "hint": "$(5 - 2) \\times 180$." },
+        { "instruction": "Divide equally among the 5 corners (degrees).", "answer": "108", "accept": ["108 degrees"], "hint": "540 ÷ 5." }
+      ],
+      "finalAnswer": { "value": "108", "unit": "degrees" },
+      "solutionNarrative": "$(5-2) \\times 180 = 540^\\circ$ shared by 5 equal corners gives $108^\\circ$ each."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s04",
+      "concepts": ["polygon-angle-sums"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each interior angle of a regular polygon measures $144^\\circ$. How many sides does the polygon have?",
+      "steps": [
+        { "instruction": "Find each exterior angle, supplementary to the interior angle (degrees).", "answer": "36", "accept": ["36 degrees"], "hint": "180 − 144." },
+        { "instruction": "Exterior angles total $360^\\circ$. Solve $36n = 360$ for $n$.", "answer": "10", "accept": ["n=10", "10 sides"], "hint": "360 ÷ 36." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "sides" },
+      "solutionNarrative": "Each exterior angle is $180 - 144 = 36^\\circ$, and $360/36 = 10$, so the polygon is a decagon."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s05",
+      "concepts": ["parallelogram-properties"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A folding gate is built from parallelogram panels. In parallelogram $ABCD$, $\\angle A = 65^\\circ$. Find $\\angle C$ (opposite) and $\\angle B$ (consecutive). (Answers in degrees.)",
+      "steps": [
+        { "instruction": "Opposite angles of a parallelogram are equal. Find $\\angle C$ (degrees).", "answer": "65", "accept": ["65 degrees"], "hint": "$\\angle C = \\angle A$." },
+        { "instruction": "Consecutive angles are supplementary. Find $\\angle B$ (degrees).", "answer": "115", "accept": ["115 degrees"], "hint": "180 − 65." }
+      ],
+      "finalAnswer": { "value": "115", "unit": "degrees" },
+      "solutionNarrative": "$\\angle C = \\angle A = 65^\\circ$; $\\angle B = 180 - 65 = 115^\\circ$. Check: $65 + 115 + 65 + 115 = 360^\\circ$."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s06",
+      "concepts": ["parallelogram-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "In parallelogram $ABCD$, side $AB = 3x + 4$ and the opposite side $CD = 19$. Solve for $x$, then find $AB$.",
+      "steps": [
+        { "instruction": "Opposite sides are equal. Set $3x + 4 = 19$ and subtract 4 from both sides.", "answer": "3x = 15", "accept": ["3x=15"], "hint": "19 − 4." },
+        { "instruction": "Solve for $x$.", "answer": "5", "accept": ["x=5"], "hint": "15 ÷ 3." },
+        { "instruction": "Find $AB$.", "answer": "19", "accept": ["ab=19"], "hint": "$3(5) + 4$ — it must equal $CD$." }
+      ],
+      "finalAnswer": { "value": "19", "unit": "" },
+      "solutionNarrative": "$3x + 4 = 19$ gives $3x = 15$, so $x = 5$ and $AB = 19$, matching $CD$ as opposite sides must."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s07",
+      "concepts": ["parallelogram-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Two consecutive angles of a parallelogram measure $(2x + 30)^\\circ$ and $x^\\circ$. Find $x$ and both angles.",
+      "steps": [
+        { "instruction": "Consecutive angles are supplementary. Write the equation and combine like terms.", "answer": "3x + 30 = 180", "accept": ["3x+30=180", "2x+30+x=180"], "hint": "$(2x + 30) + x = 180$." },
+        { "instruction": "Solve for $x$ (degrees).", "answer": "50", "accept": ["x=50"], "hint": "Subtract 30, then divide by 3." },
+        { "instruction": "Find the larger angle, $2x + 30$ (degrees).", "answer": "130", "accept": ["130 degrees"], "hint": "$2(50) + 30$." }
+      ],
+      "finalAnswer": { "value": "130", "unit": "degrees" },
+      "solutionNarrative": "$(2x + 30) + x = 180$ gives $3x = 150$, so $x = 50$: the angles are $50^\\circ$ and $130^\\circ$."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s08",
+      "concepts": ["parallelogram-properties"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The diagonals of parallelogram $ABCD$ meet at $E$. Along diagonal $AC$, $AE = 2x + 3$ and $EC = 4x - 7$. Solve for $x$, then find $AE$ and the full diagonal $AC$.",
+      "plot": { "xRange": [-1, 9], "yRange": [-1, 4.5], "width": 380, "height": 240, "grid": false, "segments": [ { "from": [0, 0], "to": [6, 0], "color": "accent" }, { "from": [6, 0], "to": [8, 3], "color": "accent" }, { "from": [8, 3], "to": [2, 3], "color": "accent" }, { "from": [2, 3], "to": [0, 0], "color": "accent" }, { "from": [0, 0], "to": [8, 3], "color": "warn", "dashed": true }, { "from": [6, 0], "to": [2, 3], "color": "dim", "dashed": true } ], "points": [ { "x": 0, "y": 0, "label": "A", "color": "text" }, { "x": 8, "y": 3, "label": "C", "color": "text" }, { "x": 6, "y": 0, "label": "B", "color": "text" }, { "x": 2, "y": 3, "label": "D", "color": "text" }, { "x": 4, "y": 1.5, "label": "E", "color": "good" } ], "caption": "Diagonal AC is split by E into AE = 2x + 3 and EC = 4x − 7; the diagonals bisect each other, so the two pieces are equal." },
+      "steps": [
+        { "instruction": "The diagonals bisect each other, so $AE = EC$. Gather the $x$ terms on one side.", "answer": "2x = 10", "accept": ["2x=10", "10=2x"], "hint": "From $2x + 3 = 4x - 7$, subtract $2x$ and add 7 — or subtract $4x$ and 3." },
+        { "instruction": "Solve for $x$.", "answer": "5", "accept": ["x=5"], "hint": "10 ÷ 2." },
+        { "instruction": "Find $AE$.", "answer": "13", "accept": ["ae=13"], "hint": "$2(5) + 3$." },
+        { "instruction": "Find the full diagonal $AC$.", "answer": "26", "accept": ["ac=26"], "hint": "$E$ is the midpoint, so double $AE$." }
+      ],
+      "finalAnswer": { "value": "26", "unit": "" },
+      "solutionNarrative": "Bisecting diagonals force $2x + 3 = 4x - 7$, so $2x = 10$ and $x = 5$. Then $AE = 13$, $EC = 4(5) - 7 = 13$ ✓, and $AC = 26$."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s09",
+      "concepts": ["special-quadrilaterals"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A rectangular picture frame $ABCD$ has diagonals meeting at $E$, and diagonal $AC = 18$ inches. Find the other diagonal $BD$ and the half-diagonal $AE$.",
+      "steps": [
+        { "instruction": "A rectangle's diagonals are equal. Find $BD$ (inches).", "answer": "18", "accept": ["18 in", "bd=18"], "hint": "$BD = AC$." },
+        { "instruction": "The diagonals bisect each other. Find $AE$ (inches).", "answer": "9", "accept": ["9 in", "ae=9"], "hint": "Half of 18." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "inches" },
+      "solutionNarrative": "Equal diagonals give $BD = 18$ in; bisection gives $AE = 18/2 = 9$ in. Matching diagonals are exactly how a framer checks the corners are square."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s10",
+      "concepts": ["special-quadrilaterals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rhombus-shaped mosaic tile has diagonals of 12 cm and 16 cm. Its diagonals are perpendicular bisectors of each other. Find the two half-diagonals, then the side length of the tile.",
+      "steps": [
+        { "instruction": "Find half of the 12 cm diagonal (cm).", "answer": "6", "accept": ["6 cm"], "hint": "12 ÷ 2." },
+        { "instruction": "Find half of the 16 cm diagonal (cm).", "answer": "8", "accept": ["8 cm"], "hint": "16 ÷ 2." },
+        { "instruction": "The half-diagonals meet at $90^\\circ$ and form the legs of a right triangle whose hypotenuse is a side. Find the side (cm).", "answer": "10", "accept": ["10 cm"], "hint": "$\\sqrt{6^2 + 8^2} = \\sqrt{100}$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "cm" },
+      "solutionNarrative": "Half-diagonals 6 and 8 meet at a right angle, so each side is $\\sqrt{6^2 + 8^2} = \\sqrt{100} = 10$ cm."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s11",
+      "concepts": ["special-quadrilaterals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A square coaster has a perimeter of 36 cm. Find its side length, then the exact length of its diagonal.",
+      "steps": [
+        { "instruction": "Find the side length (cm).", "answer": "9", "accept": ["9 cm"], "hint": "A square's four equal sides share the perimeter: 36 ÷ 4." },
+        { "instruction": "The diagonal of a square is side × $\\sqrt{2}$. Give the exact diagonal (cm).", "answer": "9sqrt(2)", "accept": ["9*sqrt(2)", "sqrt(162)", "12.727922"], "hint": "$\\sqrt{9^2 + 9^2} = 9\\sqrt{2}$." }
+      ],
+      "finalAnswer": { "value": "9√2", "unit": "cm" },
+      "solutionNarrative": "Side $= 36/4 = 9$ cm; the diagonal is the hypotenuse of a 9–9 right triangle, $9\\sqrt{2} \\approx 12.7$ cm."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s12",
+      "concepts": ["special-quadrilaterals"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A kite-shaped stunt kite has vertex angles of $110^\\circ$ and $40^\\circ$ along its axis of symmetry. The other two angles — the pair the axis does not pass through — are equal. Find each of them.",
+      "steps": [
+        { "instruction": "What do the four interior angles of any quadrilateral sum to (degrees)?", "answer": "360", "accept": ["360 degrees"], "hint": "Two triangles: $2 \\times 180$." },
+        { "instruction": "How many degrees remain for the two equal angles together?", "answer": "210", "accept": ["210 degrees"], "hint": "$360 - 110 - 40$." },
+        { "instruction": "Find each of the two equal angles (degrees).", "answer": "105", "accept": ["105 degrees"], "hint": "210 ÷ 2." }
+      ],
+      "finalAnswer": { "value": "105", "unit": "degrees" },
+      "solutionNarrative": "The angles total $360^\\circ$; the vertex angles use $150^\\circ$, leaving $210^\\circ$ split equally: $105^\\circ$ per wingtip."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s13",
+      "concepts": ["trapezoids-and-midsegments"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A trapezoid-shaped deck has parallel sides of 8 ft and 14 ft. A center support beam runs along the midsegment. How long is the beam?",
+      "steps": [
+        { "instruction": "Add the two bases (feet).", "answer": "22", "accept": ["22 ft"], "hint": "8 + 14." },
+        { "instruction": "The midsegment is the average of the bases. Find its length (feet).", "answer": "11", "accept": ["11 ft"], "hint": "22 ÷ 2." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "feet" },
+      "solutionNarrative": "Midsegment $= \\frac{8 + 14}{2} = 11$ ft."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s14",
+      "concepts": ["trapezoids-and-midsegments"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The midsegment of a trapezoidal awning measures 15 m and one base measures 12 m. Find the other base.",
+      "steps": [
+        { "instruction": "The bases sum to twice the midsegment. Find that sum (meters).", "answer": "30", "accept": ["30 m"], "hint": "2 × 15." },
+        { "instruction": "Subtract the known base (meters).", "answer": "18", "accept": ["18 m"], "hint": "30 − 12." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "meters" },
+      "solutionNarrative": "From $\\frac{b_1 + b_2}{2} = 15$, the bases total 30 m, so the other base is $30 - 12 = 18$ m."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s15",
+      "concepts": ["trapezoids-and-midsegments"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A bridge girder is an isosceles trapezoid. One base angle measures $70^\\circ$. Find the other angle along the same base, and each angle along the top base. (Answers in degrees.)",
+      "steps": [
+        { "instruction": "In an isosceles trapezoid, the two angles along a base are equal. Find the other base angle (degrees).", "answer": "70", "accept": ["70 degrees"], "hint": "Same-base angles match by symmetry." },
+        { "instruction": "Each top angle is supplementary to the base angle on the same leg. Find each top angle (degrees).", "answer": "110", "accept": ["110 degrees"], "hint": "180 − 70." },
+        { "instruction": "Check: what do all four angles sum to (degrees)?", "answer": "360", "accept": ["360 degrees"], "hint": "70 + 70 + 110 + 110." }
+      ],
+      "finalAnswer": { "value": "110", "unit": "degrees" },
+      "solutionNarrative": "Symmetry makes both base angles $70^\\circ$; the co-leg angles are $180 - 70 = 110^\\circ$ each, and $70 + 70 + 110 + 110 = 360^\\circ$ ✓."
+    },
+    {
+      "id": "geometry.quadrilaterals-and-polygons.s16",
+      "concepts": ["trapezoids-and-midsegments"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A trapezoid's shorter base is $x$ and its longer base is $x + 6$. Its midsegment measures 17. Solve for $x$, then give both bases.",
+      "steps": [
+        { "instruction": "The bases sum to twice the midsegment. Write the equation in $x$.", "answer": "2x + 6 = 34", "accept": ["2x+6=34", "x + x + 6 = 34"], "hint": "$x + (x + 6) = 2(17)$." },
+        { "instruction": "Subtract 6 from both sides.", "answer": "2x = 28", "accept": ["2x=28"], "hint": "34 − 6." },
+        { "instruction": "Solve for $x$ (the shorter base).", "answer": "14", "accept": ["x=14"], "hint": "28 ÷ 2." },
+        { "instruction": "Find the longer base.", "answer": "20", "accept": [], "hint": "$x + 6 = 14 + 6$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "" },
+      "solutionNarrative": "$x + (x + 6) = 34$ gives $2x = 28$, so $x = 14$: bases 14 and 20, whose average is 17 ✓."
+    }
+  ]
+}

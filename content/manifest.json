@@ -41,13 +41,15 @@
       "topics": [
         { "id": "geometry.angles-and-lines", "title": "Lines and Angles", "file": "content/geometry/angles-and-lines.json", "status": "ready" },
         { "id": "geometry.triangles", "title": "Triangles", "file": "content/geometry/triangles.json", "status": "ready" },
+        { "id": "geometry.quadrilaterals-and-polygons", "title": "Quadrilaterals and Polygons", "file": "content/geometry/quadrilaterals-and-polygons.json", "status": "ready" },
         { "id": "geometry.similarity", "title": "Similarity and Scale", "file": "content/geometry/similarity.json", "status": "ready" },
         { "id": "geometry.intro-to-proof", "title": "Introduction to Proof and Logical Reasoning", "file": "content/geometry/intro-to-proof.json", "status": "ready" },
         { "id": "geometry.pythagorean-theorem", "title": "The Pythagorean Theorem", "file": "content/geometry/pythagorean-theorem.json", "status": "ready" },
         { "id": "geometry.right-triangle-trigonometry", "title": "Right-Triangle Trigonometry", "file": "content/geometry/right-triangle-trigonometry.json", "status": "ready" },
         { "id": "geometry.perimeter-and-area", "title": "Perimeter and Area", "file": "content/geometry/perimeter-and-area.json", "status": "ready" },
         { "id": "geometry.circles", "title": "Circles: Arcs, Angles, and Sectors", "file": "content/geometry/circles.json", "status": "ready" },
-        { "id": "geometry.surface-area-and-volume", "title": "Surface Area and Volume", "file": "content/geometry/surface-area-and-volume.json", "status": "ready" }
+        { "id": "geometry.surface-area-and-volume", "title": "Surface Area and Volume", "file": "content/geometry/surface-area-and-volume.json", "status": "ready" },
+        { "id": "geometry.transformations", "title": "Transformations in the Plane", "file": "content/geometry/transformations.json", "status": "ready" }
       ]
     },
     {
@@ -125,6 +127,7 @@
         { "id": "differential-equations.second-order-linear", "title": "Second-Order Linear Equations", "file": "content/differential-equations/second-order-linear.json", "status": "ready" },
         { "id": "differential-equations.nonhomogeneous-second-order", "title": "Nonhomogeneous Second-Order Equations", "file": "content/differential-equations/nonhomogeneous-second-order.json", "status": "ready" },
         { "id": "differential-equations.laplace-transforms", "title": "Laplace Transforms", "file": "content/differential-equations/laplace-transforms.json", "status": "ready" },
+        { "id": "differential-equations.systems-of-odes", "title": "Systems of Linear Differential Equations", "file": "content/differential-equations/systems-of-odes.json", "status": "ready" },
         { "id": "differential-equations.numerical-methods", "title": "Numerical Methods (Euler's Method)", "file": "content/differential-equations/numerical-methods.json", "status": "ready" }
       ]
     },
@@ -180,6 +183,7 @@
         { "id": "discrete-math.logic-and-propositions", "title": "Propositional Logic and Truth Tables", "file": "content/discrete-math/logic-and-propositions.json", "status": "ready" },
         { "id": "discrete-math.proof-techniques", "title": "Proof Techniques: Direct, Contrapositive, and Contradiction", "file": "content/discrete-math/proof-techniques.json", "status": "ready" },
         { "id": "discrete-math.sets-and-set-operations", "title": "Sets and Set Operations", "file": "content/discrete-math/sets-and-set-operations.json", "status": "ready" },
+        { "id": "discrete-math.relations-and-functions", "title": "Relations and Functions", "file": "content/discrete-math/relations-and-functions.json", "status": "ready" },
         { "id": "discrete-math.counting-principles", "title": "Counting: Permutations and Combinations", "file": "content/discrete-math/counting-principles.json", "status": "ready" },
         { "id": "discrete-math.graph-theory-basics", "title": "Graph Theory: Networks, Paths, and Trees", "file": "content/discrete-math/graph-theory-basics.json", "status": "ready" },
         { "id": "discrete-math.recursion-and-induction", "title": "Recursion, Recurrences, and Induction", "file": "content/discrete-math/recursion-and-induction.json", "status": "ready" }

@@ -1,0 +1,277 @@
+{
+  "id": "differential-equations.systems-of-odes",
+  "subject": "differential-equations",
+  "title": "Systems of Linear Differential Equations",
+  "prerequisites": ["differential-equations.second-order-linear", "linear-algebra.eigenvalues-and-eigenvectors"],
+  "estimatedMinutes": 60,
+  "keyConcepts": [
+    {
+      "id": "matrix-form-and-verify",
+      "label": "Matrix form and verifying solutions",
+      "microLesson": "A coupled pair $x' = ax + by$, $y' = cx + dy$ packs into one matrix equation $\\mathbf{x}' = A\\mathbf{x}$ with $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ — each row copies one equation's coefficients. To **verify** a proposed solution, substitute it into both sides: compute $A\\mathbf{x}$ and compare with $\\mathbf{x}'$ component by component. Any second-order equation $y'' + py' + qy = 0$ also becomes a system via $x_1 = y$, $x_2 = y'$: the companion matrix is $\\begin{bmatrix} 0 & 1 \\\\ -q & -p \\end{bmatrix}$."
+    },
+    {
+      "id": "eigenvalue-method",
+      "label": "The eigenvalue method",
+      "microLesson": "Guess a straight-line solution $\\mathbf{x}(t) = e^{\\lambda t}\\mathbf{v}$. Substituting into $\\mathbf{x}' = A\\mathbf{x}$ and cancelling $e^{\\lambda t}$ leaves $A\\mathbf{v} = \\lambda\\mathbf{v}$ — the eigenvalue problem. So: solve $\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$ for the eigenvalues, then solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for each eigenvector. Because any scalar multiple of an eigenvector works, we normalize — usually 'first component 1' or smallest positive integers."
+    },
+    {
+      "id": "general-solutions-and-ivp",
+      "label": "General solutions and initial conditions",
+      "microLesson": "With distinct real eigenvalues, every solution is a mix of the two straight-line solutions: $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$. An initial condition pins down the mix: at $t = 0$ every exponential equals 1, so $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{x}(0)$ — a plain 2×2 linear system for $c_1, c_2$. Match first components, match second components, eliminate, solve."
+    },
+    {
+      "id": "phase-portraits-and-applications",
+      "label": "Phase portraits and stability",
+      "microLesson": "The eigenvalues classify the equilibrium at the origin without solving anything. Compute the trace $T$, determinant $D$, and discriminant $T^2 - 4D$. Then: $D < 0$ → **saddle** (one direction in, one out); $D > 0$ with $T^2 - 4D > 0$ → **node**, stable if $T < 0$, unstable if $T > 0$; $T^2 - 4D < 0$ → complex eigenvalues, a **spiral**. Coupled tanks, circuits, and linearized predator-prey models all read their fate off this table."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When two quantities feed each other\n\nA single differential equation tracks one quantity. But salt flowing between two tanks, two populations competing, or current sloshing between loops of a circuit need **two coupled equations** — each rate depends on *both* unknowns:\n\n$$x' = ax + by, \\qquad y' = cx + dy.$$\n\nYou cannot solve the first without knowing $y$, or the second without knowing $x$. The way out is to treat the pair as **one vector equation**:\n\n$$\\mathbf{x}' = A\\mathbf{x}, \\qquad A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}, \\qquad \\mathbf{x}(t) = \\begin{bmatrix} x(t) \\\\ y(t) \\end{bmatrix}.$$\n\nEach row of $A$ copies one equation's coefficients, in order. (Any second-order equation converts too: with $x_1 = y$, $x_2 = y'$, the equation $y'' + py' + qy = 0$ becomes $\\mathbf{x}' = \\begin{bmatrix} 0 & 1 \\\\ -q & -p \\end{bmatrix}\\mathbf{x}$ — the **companion matrix**. Second-order equations and 2×2 systems are the same subject in different clothes.)\n\n## Why eigenvalues decouple the system\n\nFor one equation $y' = ky$ the answer is $y = Ce^{kt}$. So for the system, try a **straight-line solution**: a fixed direction $\\mathbf{v}$, scaled by a growing or decaying exponential:\n\n$$\\mathbf{x}(t) = e^{\\lambda t}\\mathbf{v}.$$\n\nSubstitute: the left side is $\\lambda e^{\\lambda t}\\mathbf{v}$, the right side is $e^{\\lambda t}A\\mathbf{v}$. Cancel the (never-zero) exponential:\n\n$$A\\mathbf{v} = \\lambda\\mathbf{v}.$$\n\nThat is *exactly* the eigenvalue equation from linear algebra. Along an eigenvector, the coupled system behaves like a single one-variable equation — the coupling vanishes. That is the whole trick: **eigenvectors are the directions along which the system decouples**, and the eigenvalues are the growth rates there.\n\nThe recipe you already own does the work:\n\n1. Solve $\\lambda^2 - (\\operatorname{trace} A)\\,\\lambda + \\det A = 0$ for the eigenvalues. *(Sign warning: the trace term carries a minus.)*\n2. For each $\\lambda$, solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for an eigenvector.\n\n## The general solution\n\nWith two **distinct real eigenvalues** $\\lambda_1 \\neq \\lambda_2$ and eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$, superposition gives every solution:\n\n$$\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2.$$\n\nAn initial condition fixes $c_1, c_2$: at $t = 0$ the exponentials are 1, so\n\n$$c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{x}(0)$$\n\nis just a 2×2 linear system — no calculus left.\n\n### Worked example, end to end\n\nSolve $\\mathbf{x}' = A\\mathbf{x}$, $\\mathbf{x}(0) = \\langle 4, 1 \\rangle$, for $A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}$.\n\n**Eigenvalues.** Trace $= 7$, $\\det = 12 - 2 = 10$, so $\\lambda^2 - 7\\lambda + 10 = (\\lambda - 2)(\\lambda - 5) = 0$: $\\lambda = 5$ and $\\lambda = 2$.\n\n**Eigenvectors.** For $\\lambda = 5$: $A - 5I = \\begin{bmatrix} -1 & 1 \\\\ 2 & -2 \\end{bmatrix}$, so $-v_1 + v_2 = 0$ and $\\mathbf{v}_1 = \\langle 1, 1 \\rangle$. For $\\lambda = 2$: $2v_1 + v_2 = 0$ gives $\\mathbf{v}_2 = \\langle 1, -2 \\rangle$.\n\n**Constants.** $c_1\\langle 1,1 \\rangle + c_2\\langle 1,-2 \\rangle = \\langle 4, 1 \\rangle$ means $c_1 + c_2 = 4$ and $c_1 - 2c_2 = 1$. Subtracting: $3c_2 = 3$, so $c_2 = 1$, $c_1 = 3$.\n\n$$\\mathbf{x}(t) = 3e^{5t}\\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix} + e^{2t}\\begin{bmatrix} 1 \\\\ -2 \\end{bmatrix}.$$\n\nCheck at $t=0$: $\\langle 3+1,\\; 3-2 \\rangle = \\langle 4, 1 \\rangle$. ✓ As $t \\to \\infty$ the $e^{5t}$ mode dominates, so trajectories swing toward the $\\langle 1, 1 \\rangle$ eigenline.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-5,5],\"yRange\":[-5,5],\"grid\":true,\"segments\":[{\"from\":[-4,-4],\"to\":[4,4],\"dashed\":true,\"color\":\"faint\"},{\"from\":[-2,4],\"to\":[2,-4],\"dashed\":true,\"color\":\"faint\"},{\"from\":[0,0],\"to\":[3,3],\"arrow\":true,\"label\":\"v1 = <1,1>, λ = 5\",\"color\":\"accent\"},{\"from\":[0,0],\"to\":[1.5,-3],\"arrow\":true,\"label\":\"v2 = <1,-2>, λ = 2\",\"color\":\"warn\"}],\"caption\":\"Phase plane for A = [[4,1],[2,3]]: straight-line eigen-solutions run along the dashed eigenlines; both eigenvalues are positive, so motion points away from the origin (an unstable node), faster along <1,1>\"}\n```\n\n## Classifying the equilibrium: trace, determinant, discriminant\n\nThe origin is always an equilibrium of $\\mathbf{x}' = A\\mathbf{x}$. Its character is decided by three numbers you can compute in seconds — $T = \\operatorname{trace} A$, $D = \\det A$, and the discriminant $T^2 - 4D$:\n\n| Condition | Eigenvalues | Type | Behavior |\n|---|---|---|---|\n| $D < 0$ | real, opposite signs | **saddle** | in along one eigenline, out along the other — almost every trajectory eventually escapes |\n| $D > 0$, $T^2 - 4D > 0$, $T < 0$ | real, both negative | **stable node** | everything decays to the origin |\n| $D > 0$, $T^2 - 4D > 0$, $T > 0$ | real, both positive | **unstable node** | everything grows away |\n| $T^2 - 4D < 0$ | complex pair | **spiral** | trajectories rotate; $T < 0$ spirals in, $T > 0$ spirals out |\n\nThe logic: $D = \\lambda_1\\lambda_2$ and $T = \\lambda_1 + \\lambda_2$. A negative product means opposite signs (saddle). A positive product means same signs, and the trace's sign tells you which. A negative discriminant means the quadratic formula's square root goes imaginary — complex eigenvalues, rotation.\n\n## Common pitfalls\n\n- **Scalar-multiple confusion.** If $\\langle 1, 2 \\rangle$ is an eigenvector, so are $\\langle 2, 4 \\rangle$, $\\langle -1, -2 \\rangle$, and every other multiple. Don't panic when your answer differs from the book's by a factor — but when a problem asks for 'first component 1' or 'smallest positive integers', report exactly that representative.\n- **Sign error in the characteristic polynomial.** It is $\\lambda^2 - T\\lambda + D$, with a **minus** on the trace. Writing $\\lambda^2 + T\\lambda + D$ silently flips both eigenvalues' signs and turns a stable node into an unstable one.\n- **Saddle vs. node.** Check $\\det A$ *first*. If $D < 0$ it is a saddle no matter what the trace says; the trace only breaks the tie when $D > 0$.\n- **Constants from initial conditions.** $c_1$ and $c_2$ are NOT the components of $\\mathbf{x}(0)$ — they solve $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{x}(0)$. Only when the eigenvectors happen to be $\\langle 1,0 \\rangle, \\langle 0,1 \\rangle$ do they coincide.\n- **Zero is not allowed as an eigenvector.** $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ always has $\\mathbf{v} = \\mathbf{0}$; the eigenvector is a *nonzero* solution, which exists exactly because you chose $\\lambda$ to make the matrix singular."
+  },
+  "application": {
+    "summary": "Coupled linear systems are the native language of compartment models: salt exchanging between tanks, drug concentrations moving between blood and tissue, currents in multi-loop circuits, two-mass spring chains, and populations interacting near equilibrium. The eigenvalues give each mode's decay or growth rate, the eigenvectors give the shape of each mode, and the trace-determinant classification predicts long-run behavior before anything is solved.",
+    "domains": ["chemical engineering", "ecology", "electrical engineering", "pharmacokinetics"],
+    "workedExample": "**Two brine tanks, connected both ways.**\n\nTanks 1 and 2 exchange brine; with the given flow rates the salt amounts $x, y$ (kg) obey\n\n$$x' = -3x + y, \\qquad y' = x - 3y, \\qquad A = \\begin{bmatrix} -3 & 1 \\\\ 1 & -3 \\end{bmatrix}.$$\n\nTrace $-6$, determinant $9 - 1 = 8$: $\\lambda^2 + 6\\lambda + 8 = (\\lambda + 2)(\\lambda + 4) = 0$, so $\\lambda = -2$ with eigenvector $\\langle 1, 1 \\rangle$ and $\\lambda = -4$ with $\\langle 1, -1 \\rangle$.\n\nThe eigenvectors are the story. The $\\langle 1, -1 \\rangle$ mode is the **difference** between the tanks — it dies like $e^{-4t}$, so any imbalance equalizes fast. The $\\langle 1, 1 \\rangle$ mode is the **total** salt — it drains more slowly, like $e^{-2t}$. Starting from $x(0) = 5$, $y(0) = 1$: $c_1 + c_2 = 5$, $c_1 - c_2 = 1$ gives $c_1 = 3$, $c_2 = 2$, so\n\n$$\\mathbf{x}(t) = 3e^{-2t}\\langle 1, 1 \\rangle + 2e^{-4t}\\langle 1, -1 \\rangle.$$\n\nWithin a couple of time units the tanks hold nearly equal amounts (the fast mode is gone), and then both drain together at the slow rate. Both eigenvalues negative → stable node → all the salt eventually washes out, from any start. An engineer reads all of that from two eigenvalues.",
+    "domainNotes": [
+      "**Chemical/process engineering:** compartment and mixing models — the slowest eigenvalue sets the flush-out time of the whole plant.",
+      "**Ecology:** linearizing predator-prey or competition models near equilibrium; a spiral means population cycles, a saddle means coexistence is fragile.",
+      "**Electrical:** two-loop RLC networks give 2×2 systems; eigenvalues are the natural response rates, complex pairs are ringing.",
+      "**Pharmacokinetics:** drug exchange between blood and tissue is a two-compartment linear system; dosing schedules are designed around its eigenvalues."
+    ]
+  },
+  "generators": [
+    "def3-matrix-form-1", "def3-matrix-form-2", "def3-matrix-form-3",
+    "def3-eigenvalue-method-1", "def3-eigenvalue-method-2", "def3-eigenvalue-method-3",
+    "def3-general-ivp-1", "def3-general-ivp-2", "def3-general-ivp-3",
+    "def3-phase-portrait-1", "def3-phase-portrait-2", "def3-phase-portrait-3"
+  ],
+  "problems": [
+    {
+      "id": "differential-equations.systems-of-odes.s01",
+      "concepts": ["matrix-form-and-verify"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Write the system $x' = 3x + 4y$, $y' = 2x + y$ in matrix form $\\mathbf{x}' = A\\mathbf{x}$.",
+      "steps": [
+        { "instruction": "Row 1 of $A$ holds the coefficients of the $x'$ equation, in the order $x$ then $y$. What entry goes in row 1, column 2?", "answer": "4", "accept": [], "hint": "The coefficient of $y$ in $x' = 3x + 4y$." },
+        { "instruction": "Write the full coefficient matrix as [[row 1], [row 2]].", "answer": "[[3, 4], [2, 1]]", "accept": ["[[3,4],[2,1]]"], "hint": "Row 1 from the $x'$ equation, row 2 from the $y'$ equation." }
+      ],
+      "finalAnswer": { "value": "[[3, 4], [2, 1]]", "unit": "" },
+      "solutionNarrative": "Each row copies one equation's coefficients: $A = \\begin{bmatrix} 3 & 4 \\\\ 2 & 1 \\end{bmatrix}$."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s02",
+      "concepts": ["matrix-form-and-verify"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Verify that $\\mathbf{x}(t) = e^{5t}\\langle 1, 1 \\rangle$ solves $\\mathbf{x}' = A\\mathbf{x}$ for $A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}$ by checking both sides at $t = 0$.",
+      "steps": [
+        { "instruction": "At $t = 0$ the exponential is 1, so $\\mathbf{x}(0) = \\langle 1, 1 \\rangle$. Compute the right side $A\\mathbf{x}(0)$ as a vector.", "answer": "<5, 5>", "accept": ["(5, 5)", "5, 5"], "hint": "First component: $4(1) + 1(1)$. Second: $2(1) + 3(1)$." },
+        { "instruction": "Now the left side: $\\mathbf{x}'(t) = 5e^{5t}\\langle 1, 1 \\rangle$, so $\\mathbf{x}'(0) = 5\\langle 1, 1 \\rangle$. Compute it.", "answer": "<5, 5>", "accept": ["(5, 5)", "5, 5"], "hint": "Multiply each component by 5." },
+        { "instruction": "Both sides match. Is $\\mathbf{x}(t)$ a solution of the system? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "$A\\mathbf{x}(0) = \\mathbf{x}'(0)$, and the same cancellation works at every $t$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$A\\langle 1,1 \\rangle = \\langle 5,5 \\rangle = 5\\langle 1,1 \\rangle = \\mathbf{x}'(0)$: the proposal is a straight-line eigen-solution with $\\lambda = 5$."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s03",
+      "concepts": ["matrix-form-and-verify"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Convert $y'' + 5y' + 6y = 0$ into a first-order system $\\mathbf{x}' = A\\mathbf{x}$ using $x_1 = y$, $x_2 = y'$.",
+      "steps": [
+        { "instruction": "Then $x_1' = x_2$, and solving for $y''$ gives $x_2' = -6x_1 - 5x_2$. What is the coefficient of $x_1$ in the $x_2'$ equation?", "answer": "-6", "accept": [], "hint": "Move $6y$ across: $y'' = -6y - 5y'$." },
+        { "instruction": "What is the coefficient of $x_2$?", "answer": "-5", "accept": [], "hint": "The $y'$ term also crosses with its sign flipped." },
+        { "instruction": "Write the companion matrix $A$ as [[row 1], [row 2]].", "answer": "[[0, 1], [-6, -5]]", "accept": ["[[0,1],[-6,-5]]"], "hint": "Row 1 encodes $x_1' = x_2$: it is $[0, 1]$." }
+      ],
+      "finalAnswer": { "value": "[[0, 1], [-6, -5]]", "unit": "" },
+      "solutionNarrative": "$A = \\begin{bmatrix} 0 & 1 \\\\ -6 & -5 \\end{bmatrix}$. Its characteristic polynomial $\\lambda^2 + 5\\lambda + 6$ is exactly the old characteristic equation — the two formulations agree."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s04",
+      "concepts": ["matrix-form-and-verify"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Salt flows between two tanks: tank 1 obeys $x' = -2x + y$ and tank 2 obeys $y' = 2x - 3y$ (kg per minute). Write the system in matrix form $\\mathbf{x}' = A\\mathbf{x}$.",
+      "steps": [
+        { "instruction": "What entry goes in row 2, column 1 of $A$?", "answer": "2", "accept": [], "hint": "The coefficient of $x$ in the $y'$ equation." },
+        { "instruction": "Write the full coefficient matrix as [[row 1], [row 2]].", "answer": "[[-2, 1], [2, -3]]", "accept": ["[[-2,1],[2,-3]]"], "hint": "Row 1 from $x' = -2x + y$, row 2 from $y' = 2x - 3y$." }
+      ],
+      "finalAnswer": { "value": "[[-2, 1], [2, -3]]", "unit": "" },
+      "solutionNarrative": "$A = \\begin{bmatrix} -2 & 1 \\\\ 2 & -3 \\end{bmatrix}$ — negative diagonal entries are each tank's own drainage, positive off-diagonals are the exchange."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s05",
+      "concepts": ["eigenvalue-method"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the eigenvalues of the coefficient matrix $A = \\begin{bmatrix} 1 & 2 \\\\ 2 & 1 \\end{bmatrix}$ of the system $\\mathbf{x}' = A\\mathbf{x}$.",
+      "steps": [
+        { "instruction": "Compute the trace of $A$.", "answer": "2", "accept": [], "hint": "$1 + 1$." },
+        { "instruction": "Compute the determinant $ad - bc$.", "answer": "-3", "accept": [], "hint": "$1 \\cdot 1 - 2 \\cdot 2$." },
+        { "instruction": "Write the characteristic equation $\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$.", "answer": "lambda^2 - 2lambda - 3 = 0", "accept": ["lambda^2-2lambda-3=0"], "hint": "Substitute trace 2 and determinant $-3$ — mind the minus sign on the trace." },
+        { "instruction": "Solve for both eigenvalues. Separate them with 'or' or a comma.", "form": "solutions", "answer": "lambda = 3 or lambda = -1", "accept": ["3, -1", "-1, 3"], "hint": "$(\\lambda - 3)(\\lambda + 1) = 0$." }
+      ],
+      "finalAnswer": { "value": "lambda = 3, lambda = -1", "unit": "" },
+      "solutionNarrative": "Trace 2, determinant $-3$: $\\lambda^2 - 2\\lambda - 3 = (\\lambda - 3)(\\lambda + 1) = 0$, so $\\lambda = 3$ or $\\lambda = -1$."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s06",
+      "concepts": ["eigenvalue-method"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "One eigenvalue of $A = \\begin{bmatrix} 2 & 1 \\\\ 1 & 2 \\end{bmatrix}$ is $\\lambda = 3$. Find the eigenvector for $\\lambda = 3$ with first component 1.",
+      "steps": [
+        { "instruction": "Form $A - 3I$ and write the equation its first row gives for $v_1, v_2$.", "answer": "-v1 + v2 = 0", "accept": ["-v1+v2=0", "v2 = v1", "v2=v1", "v1 = v2", "v1=v2"], "hint": "$A - 3I = \\begin{bmatrix} -1 & 1 \\\\ 1 & -1 \\end{bmatrix}$; the top row reads $-v_1 + v_2 = 0$." },
+        { "instruction": "Set $v_1 = 1$ and give the eigenvector as $\\langle v_1, v_2 \\rangle$.", "answer": "<1, 1>", "accept": ["(1, 1)", "1, 1"], "hint": "$v_2 = v_1 = 1$." }
+      ],
+      "finalAnswer": { "value": "<1, 1>", "unit": "" },
+      "solutionNarrative": "$(A - 3I)\\mathbf{v} = \\mathbf{0}$ gives $v_2 = v_1$, so the normalized eigenvector is $\\langle 1, 1 \\rangle$. The straight-line solution $e^{3t}\\langle 1, 1 \\rangle$ rides that direction."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s07",
+      "concepts": ["eigenvalue-method"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For the system $\\mathbf{x}' = A\\mathbf{x}$ with $A = \\begin{bmatrix} 1 & 1 \\\\ 2 & 0 \\end{bmatrix}$: find both eigenvalues, the eigenvector for the larger one with first component 1, and verify it.",
+      "steps": [
+        { "instruction": "Write the characteristic equation (trace 1, determinant $-2$).", "answer": "lambda^2 - lambda - 2 = 0", "accept": ["lambda^2-lambda-2=0", "lambda^2 - 1lambda - 2 = 0"], "hint": "$\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$." },
+        { "instruction": "Solve for both eigenvalues.", "form": "solutions", "answer": "lambda = 2 or lambda = -1", "accept": ["2, -1", "-1, 2"], "hint": "$(\\lambda - 2)(\\lambda + 1) = 0$." },
+        { "instruction": "For $\\lambda = 2$: row 1 of $(A - 2I)\\mathbf{v} = \\mathbf{0}$ is $-v_1 + v_2 = 0$. Give the eigenvector with first component 1.", "answer": "<1, 1>", "accept": ["(1, 1)", "1, 1"], "hint": "Set $v_1 = 1$, so $v_2 = 1$." },
+        { "instruction": "Verify: compute $A\\langle 1, 1 \\rangle$ as a vector (it should equal $2\\langle 1, 1 \\rangle$).", "answer": "<2, 2>", "accept": ["(2, 2)", "2, 2"], "hint": "First component $1 + 1$, second $2 + 0$." }
+      ],
+      "finalAnswer": { "value": "<1, 1>", "unit": "" },
+      "solutionNarrative": "$\\lambda^2 - \\lambda - 2 = 0$ gives $\\lambda = 2, -1$. For $\\lambda = 2$ the eigenvector is $\\langle 1, 1 \\rangle$, and $A\\langle 1,1 \\rangle = \\langle 2,2 \\rangle = 2\\langle 1,1 \\rangle$ confirms it."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s08",
+      "concepts": ["eigenvalue-method"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The system $\\mathbf{x}' = A\\mathbf{x}$ has the upper-triangular matrix $A = \\begin{bmatrix} 4 & 2 \\\\ 0 & 1 \\end{bmatrix}$. Find the eigenvalues (the growth rates of the two straight-line solutions).",
+      "steps": [
+        { "instruction": "A triangular matrix shows its eigenvalues on the diagonal. Give both.", "form": "solutions", "answer": "lambda = 4 or lambda = 1", "accept": ["4, 1", "1, 4"], "hint": "Read the diagonal entries." }
+      ],
+      "finalAnswer": { "value": "lambda = 4, lambda = 1", "unit": "" },
+      "solutionNarrative": "For a triangular matrix, $\\det(A - \\lambda I) = (4 - \\lambda)(1 - \\lambda)$, so $\\lambda = 4$ and $\\lambda = 1$: both modes grow, one much faster."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s09",
+      "concepts": ["general-solutions-and-ivp"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A system has general solution $\\mathbf{x}(t) = c_1 e^{-t}\\langle 1, 1 \\rangle + c_2 e^{-3t}\\langle 1, -1 \\rangle$ with $\\mathbf{x}(0) = \\langle 5, 1 \\rangle$. Find $c_1$ and $c_2$.",
+      "steps": [
+        { "instruction": "At $t = 0$: $c_1\\langle 1,1 \\rangle + c_2\\langle 1,-1 \\rangle = \\langle 5, 1 \\rangle$, so $c_1 + c_2 = 5$ and $c_1 - c_2 = 1$. Add the equations: $2c_1 = ?$", "answer": "6", "accept": [], "hint": "$5 + 1$ — the $c_2$ terms cancel." },
+        { "instruction": "Solve for $c_1$.", "answer": "3", "accept": ["c1 = 3", "c1=3"], "hint": "Divide 6 by 2." },
+        { "instruction": "Now find $c_2$.", "answer": "2", "accept": ["c2 = 2", "c2=2"], "hint": "$c_2 = 5 - c_1$." }
+      ],
+      "finalAnswer": { "value": "c1 = 3, c2 = 2", "unit": "" },
+      "solutionNarrative": "The initial condition gives $c_1 + c_2 = 5$, $c_1 - c_2 = 1$; adding yields $c_1 = 3$, so $c_2 = 2$."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s10",
+      "concepts": ["general-solutions-and-ivp"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The matrix $A = \\begin{bmatrix} 4 & 1 \\\\ 2 & 3 \\end{bmatrix}$ has eigen-pairs $\\lambda_1 = 5$, $\\mathbf{v}_1 = \\langle 1, 1 \\rangle$ and $\\lambda_2 = 2$, $\\mathbf{v}_2 = \\langle 1, -2 \\rangle$. Solve $\\mathbf{x}' = A\\mathbf{x}$ with $\\mathbf{x}(0) = \\langle 4, 1 \\rangle$: find $c_1, c_2$ in $\\mathbf{x}(t) = c_1 e^{5t}\\mathbf{v}_1 + c_2 e^{2t}\\mathbf{v}_2$.",
+      "steps": [
+        { "instruction": "First components at $t = 0$: $c_1 + c_2 = ?$", "answer": "4", "accept": ["c1 + c2 = 4", "c1+c2=4"], "hint": "Both eigenvectors have first component 1, and $x_1(0) = 4$." },
+        { "instruction": "Second components give $c_1 - 2c_2 = 1$. Subtract it from the first equation: $3c_2 = ?$", "answer": "3", "accept": [], "hint": "$(c_1 + c_2) - (c_1 - 2c_2) = 3c_2 = 4 - 1$." },
+        { "instruction": "Solve for $c_2$.", "answer": "1", "accept": ["c2 = 1", "c2=1"], "hint": "Divide 3 by 3." },
+        { "instruction": "Now find $c_1$.", "answer": "3", "accept": ["c1 = 3", "c1=3"], "hint": "$c_1 = 4 - c_2$." }
+      ],
+      "finalAnswer": { "value": "c1 = 3, c2 = 1", "unit": "" },
+      "solutionNarrative": "$c_1 + c_2 = 4$ and $c_1 - 2c_2 = 1$ give $c_2 = 1$, $c_1 = 3$: $\\mathbf{x}(t) = 3e^{5t}\\langle 1,1 \\rangle + e^{2t}\\langle 1,-2 \\rangle$."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s11",
+      "concepts": ["general-solutions-and-ivp"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve the initial value problem $\\mathbf{x}' = A\\mathbf{x}$, $\\mathbf{x}(0) = \\langle 3, 0 \\rangle$, for $A = \\begin{bmatrix} 0 & 1 \\\\ 2 & 1 \\end{bmatrix}$ (trace 1, determinant $-2$), ending with the first component $x_1(t)$.",
+      "steps": [
+        { "instruction": "Solve the characteristic equation $\\lambda^2 - \\lambda - 2 = 0$ for both eigenvalues.", "form": "solutions", "answer": "lambda = 2 or lambda = -1", "accept": ["2, -1", "-1, 2"], "hint": "$(\\lambda - 2)(\\lambda + 1) = 0$." },
+        { "instruction": "For $\\lambda = 2$: row 1 of $(A - 2I)\\mathbf{v} = \\mathbf{0}$ is $-2v_1 + v_2 = 0$. Give the eigenvector with first component 1.", "answer": "<1, 2>", "accept": ["(1, 2)", "1, 2"], "hint": "$v_2 = 2v_1 = 2$." },
+        { "instruction": "For $\\lambda = -1$: row 1 of $(A + I)\\mathbf{v} = \\mathbf{0}$ is $v_1 + v_2 = 0$. Give the eigenvector with first component 1.", "answer": "<1, -1>", "accept": ["(1, -1)", "1, -1"], "hint": "$v_2 = -v_1 = -1$." },
+        { "instruction": "Apply $\\mathbf{x}(0) = \\langle 3, 0 \\rangle$: $c_1 + c_2 = 3$ and $2c_1 - c_2 = 0$. Add the equations and solve for $c_1$.", "answer": "1", "accept": ["c1 = 1", "c1=1"], "hint": "$3c_1 = 3$." },
+        { "instruction": "Now find $c_2$.", "answer": "2", "accept": ["c2 = 2", "c2=2"], "hint": "$c_2 = 3 - c_1$." },
+        { "instruction": "Both eigenvectors have first component 1, so $x_1(t) = c_1 e^{2t} + c_2 e^{-t}$. Write $x_1(t)$ with your constants (e.g. \"3e^(2t) + 4e^(-t)\").", "answer": "e^(2t) + 2e^(-t)", "accept": ["e^{2t} + 2e^{-t}", "2e^(-t) + e^(2t)", "2e^{-t} + e^{2t}", "1e^(2t) + 2e^(-t)"], "hint": "$c_1 = 1$, $c_2 = 2$." }
+      ],
+      "finalAnswer": { "value": "e^(2t) + 2e^(-t)", "unit": "" },
+      "solutionNarrative": "Eigen-pairs: $\\lambda = 2$ with $\\langle 1, 2 \\rangle$, $\\lambda = -1$ with $\\langle 1, -1 \\rangle$. Fitting $\\mathbf{x}(0)$: $c_1 = 1$, $c_2 = 2$, so $x_1(t) = e^{2t} + 2e^{-t}$; the $e^{2t}$ mode eventually dominates."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s12",
+      "concepts": ["general-solutions-and-ivp"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two interacting populations (measured as deviations from a reference level) follow $\\mathbf{x}(t) = 2e^{3t}\\langle 1, 1 \\rangle + e^{-t}\\langle 1, -2 \\rangle$. Evaluate the state at $t = 0$ and identify the long-run growth rate.",
+      "steps": [
+        { "instruction": "At $t = 0$ both exponentials equal 1. Compute $\\mathbf{x}(0)$ as a vector.", "answer": "<3, 0>", "accept": ["(3, 0)", "3, 0"], "hint": "$2\\langle 1,1 \\rangle + \\langle 1,-2 \\rangle$ component by component." },
+        { "instruction": "As $t \\to \\infty$ the $e^{-t}$ term dies. Which eigenvalue sets the long-run growth rate? Type a number.", "answer": "3", "accept": ["lambda = 3", "lambda=3"], "hint": "The surviving term is $2e^{3t}\\langle 1, 1 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<3, 0>", "unit": "" },
+      "solutionNarrative": "$\\mathbf{x}(0) = \\langle 2+1, 2-2 \\rangle = \\langle 3, 0 \\rangle$. For large $t$ only the $e^{3t}$ mode matters, so both populations grow at rate 3 along the direction $\\langle 1, 1 \\rangle$."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s13",
+      "concepts": ["phase-portraits-and-applications"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A linear system $\\mathbf{x}' = A\\mathbf{x}$ has real eigenvalues $\\lambda_1 = -2$ and $\\lambda_2 = -5$. Classify the equilibrium at the origin.",
+      "steps": [
+        { "instruction": "How many of the eigenvalues are positive? Type a number.", "answer": "0", "accept": ["zero", "none"], "hint": "Both $-2$ and $-5$ are negative." },
+        { "instruction": "Classify the origin. Type exactly one of: saddle, stable node, unstable node, spiral.", "answer": "stable node", "accept": ["stable", "sink", "nodal sink"], "hint": "Real, distinct, both negative → every trajectory decays to the origin." }
+      ],
+      "finalAnswer": { "value": "stable node", "unit": "" },
+      "solutionNarrative": "Two real negative eigenvalues mean both modes decay: a stable node. Trajectories approach the origin, tangent to the slow ($\\lambda = -2$) eigenline."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s14",
+      "concepts": ["phase-portraits-and-applications"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify the equilibrium at the origin for $\\mathbf{x}' = A\\mathbf{x}$ with $A = \\begin{bmatrix} 1 & 2 \\\\ 2 & 1 \\end{bmatrix}$, using the trace and determinant.",
+      "steps": [
+        { "instruction": "Compute the trace $T$.", "answer": "2", "accept": [], "hint": "$1 + 1$." },
+        { "instruction": "Compute the determinant $D$.", "answer": "-3", "accept": [], "hint": "$1 \\cdot 1 - 2 \\cdot 2$." },
+        { "instruction": "$D < 0$ forces one positive and one negative eigenvalue. Classify the origin. Type exactly one of: saddle, stable node, unstable node, spiral.", "answer": "saddle", "accept": ["saddle point"], "hint": "Opposite-sign eigenvalues: in along one eigenline, out along the other." }
+      ],
+      "finalAnswer": { "value": "saddle", "unit": "" },
+      "solutionNarrative": "$T = 2$, $D = -3 < 0$: the eigenvalues (3 and $-1$) have opposite signs, so the origin is a saddle — a negative determinant settles it before you even find the eigenvalues."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s15",
+      "concepts": ["phase-portraits-and-applications"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Classify the equilibrium at the origin for $\\mathbf{x}' = A\\mathbf{x}$ with $A = \\begin{bmatrix} 1 & -2 \\\\ 2 & 1 \\end{bmatrix}$, using the trace, determinant, and discriminant.",
+      "steps": [
+        { "instruction": "Compute the trace $T$.", "answer": "2", "accept": [], "hint": "$1 + 1$." },
+        { "instruction": "Compute the determinant $D$.", "answer": "5", "accept": [], "hint": "$1 \\cdot 1 - (-2)(2)$." },
+        { "instruction": "Compute the discriminant $T^2 - 4D$.", "answer": "-16", "accept": [], "hint": "$4 - 20$." },
+        { "instruction": "A negative discriminant means complex eigenvalues — trajectories rotate. Classify the origin. Type exactly one of: saddle, stable node, unstable node, spiral.", "answer": "spiral", "accept": ["spiral point", "focus"], "hint": "Complex eigenvalues always spiral; here $T > 0$, so it spirals outward." }
+      ],
+      "finalAnswer": { "value": "spiral", "unit": "" },
+      "solutionNarrative": "$T = 2$, $D = 5$, $T^2 - 4D = -16 < 0$: complex eigenvalues $1 \\pm 2i$. The positive real part makes trajectories spiral outward — classification: spiral."
+    },
+    {
+      "id": "differential-equations.systems-of-odes.s16",
+      "concepts": ["phase-portraits-and-applications", "eigenvalue-method"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two connected brine tanks obey $x' = -3x + y$, $y' = x - 3y$, where $x, y$ are kg of salt. Find the eigenvalues of $A = \\begin{bmatrix} -3 & 1 \\\\ 1 & -3 \\end{bmatrix}$, classify the equilibrium, and predict the long-run salt amounts.",
+      "steps": [
+        { "instruction": "Write the characteristic equation (trace $-6$, determinant $9 - 1 = 8$).", "answer": "lambda^2 + 6lambda + 8 = 0", "accept": ["lambda^2+6lambda+8=0"], "hint": "$\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$ with trace $-6$: minus a negative is plus." },
+        { "instruction": "Solve for both eigenvalues.", "form": "solutions", "answer": "lambda = -2 or lambda = -4", "accept": ["-2, -4", "-4, -2"], "hint": "$(\\lambda + 2)(\\lambda + 4) = 0$." },
+        { "instruction": "Classify the equilibrium. Type exactly one of: saddle, stable node, unstable node, spiral.", "answer": "stable node", "accept": ["stable", "sink", "nodal sink"], "hint": "Both eigenvalues are real, distinct, and negative." },
+        { "instruction": "What amount of salt does each tank approach as $t \\to \\infty$? Type a number.", "answer": "0", "accept": ["zero", "0 kg"], "hint": "Every mode decays, so the system flushes out completely." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "kg" },
+      "solutionNarrative": "$\\lambda^2 + 6\\lambda + 8 = (\\lambda + 2)(\\lambda + 4) = 0$ gives $\\lambda = -2, -4$: a stable node. The fast $\\langle 1, -1 \\rangle$ mode equalizes the tanks, then the slow $\\langle 1, 1 \\rangle$ mode drains them together — all salt washes out to 0."
+    }
+  ]
+}
