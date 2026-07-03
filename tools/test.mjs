@@ -151,6 +151,21 @@ ok("zero-span range does not emit NaN", !plotToSvg({ xRange: [2, 2], yRange: [0,
 ok("caption becomes aria-label", plotToSvg({ curves: [{ fn: "x" }], caption: "hi" }).includes('aria-label="hi"'));
 ok("bad spec degrades, never throws", typeof plotToSvg(null) === "string");
 
+group("plot renderer — binary operators in fn (compileFn self-capture regression)");
+{
+  // The parser builds each binary node as a closure over its left operand. It
+  // once captured the reassigned variable instead of a snapshot, so ANY fn
+  // with an explicit + - * / recursed into itself, evaluated to NaN, and the
+  // curve silently rendered as an empty <path d="">.
+  const drawsCurve = (fn) => !plotToSvg({ xRange: [-6, 6], yRange: [-6, 6], curves: [{ fn }] }).includes('d=""');
+  ok('"x + 1" draws a curve', drawsCurve("x + 1"));
+  ok('"x^3-3*x" draws a curve', drawsCurve("x^3-3*x"));
+  ok('"3*sin(2*x)+1" draws a curve', drawsCurve("3*sin(2*x)+1"));
+  ok('"exp(0.4*x)" draws a curve', drawsCurve("exp(0.4*x)"));
+  ok('"sqrt(25 - x^2)" draws a curve', drawsCurve("sqrt(25 - x^2)"));
+  ok('"x/2 - 1" draws a curve', drawsCurve("x/2 - 1"));
+}
+
 // ---------------------------------------------------------------- report
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

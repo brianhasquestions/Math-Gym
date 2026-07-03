@@ -43,7 +43,8 @@ function compileFn(src) {
     while (peek() === "+" || peek() === "-") {
       const op = eat();
       const r = term();
-      v = op === "+" ? (x) => v(x) + r(x) : (x) => v(x) - r(x);
+      const L = v; // snapshot: the closure must capture the old left operand, not itself
+      v = op === "+" ? (x) => L(x) + r(x) : (x) => L(x) - r(x);
     }
     return v;
   }
@@ -53,7 +54,8 @@ function compileFn(src) {
     while (peek() === "*" || peek() === "/") {
       const op = eat();
       const r = power();
-      v = op === "*" ? (x) => v(x) * r(x) : (x) => v(x) / r(x);
+      const L = v; // snapshot: the closure must capture the old left operand, not itself
+      v = op === "*" ? (x) => L(x) * r(x) : (x) => L(x) / r(x);
     }
     return v;
   }
