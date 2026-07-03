@@ -23,7 +23,7 @@ const xmlEscape = (s) =>
 // Build a query-page URL: base?id=<encoded>, then XML-escaped for the document.
 const pageUrl = (base, id) => xmlEscape(`${ORIGIN}/${base}?id=${encodeURIComponent(id)}`);
 
-const urls = [`${ORIGIN}/`];
+const urls = [`${ORIGIN}/`, `${ORIGIN}/placement.html`];
 for (const subject of manifest.subjects) {
   urls.push(pageUrl("subject.html", subject.id));
   for (const t of subject.topics) {
@@ -40,4 +40,4 @@ const xml =
 
 const out = path.join(REPO, "sitemap.xml");
 writeFileSync(out, xml, "utf8");
-console.log(`Wrote ${out} — ${urls.length} URLs (1 home + ${manifest.subjects.length} subjects + ${urls.length - 1 - manifest.subjects.length} topics).`);
+console.log(`Wrote ${out} — ${urls.length} URLs (2 base + ${manifest.subjects.length} subjects + ${urls.length - 2 - manifest.subjects.length} topics).`);

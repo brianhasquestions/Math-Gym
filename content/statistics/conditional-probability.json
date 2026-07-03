@@ -1,0 +1,279 @@
+{
+  "id": "statistics.conditional-probability",
+  "subject": "statistics",
+  "title": "Conditional Probability and Bayes' Theorem",
+  "prerequisites": ["statistics.probability-basics"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "conditional-probability",
+      "label": "Conditional probability",
+      "microLesson": "The conditional probability of $A$ given that $B$ has occurred is $P(A \\mid B) = \\frac{P(A \\text{ and } B)}{P(B)}$ — you restrict attention to the world where $B$ is true and ask what fraction of it also has $A$. Learning $B$ shrinks the sample space to just the $B$-outcomes. On a fair die, $P(\\text{roll} > 3 \\mid \\text{even})$ uses the reduced space $\\{2,4,6\\}$; the outcomes above 3 are $\\{4,6\\}$, so the answer is $\\frac{2}{3}$, not the unconditional $\\frac{3}{6}$. The condition rewrites the denominator from 'everything' to 'everything consistent with $B$'."
+    },
+    {
+      "id": "general-multiplication",
+      "label": "General multiplication rule",
+      "microLesson": "Rearranging the conditional formula gives the general product rule that works even for dependent events: $P(A \\text{ and } B) = P(A)\\,P(B \\mid A)$. This is the tool for draws **without replacement**, where each pick changes the odds of the next. Drawing two aces from a 52-card deck: the first is an ace with probability $\\frac{4}{52}$, and *given that*, the second is an ace with probability $\\frac{3}{51}$ (one ace and one card gone), so $P(\\text{two aces}) = \\frac{4}{52} \\cdot \\frac{3}{51} = \\frac{1}{221}$. The second factor is conditional — that is exactly what makes dependence work."
+    },
+    {
+      "id": "independence-test",
+      "label": "Testing for independence",
+      "microLesson": "Events $A$ and $B$ are **independent** precisely when conditioning changes nothing: $P(A \\mid B) = P(A)$ (equivalently $P(A \\text{ and } B) = P(A)P(B)$). To test independence, compute $P(A \\mid B)$ and compare it to $P(A)$; if they differ, the events are dependent. On a die, is 'even' independent of 'greater than 3'? Here $P(\\text{even}) = \\frac{1}{2}$ but $P(\\text{even} \\mid >3) = \\frac{|\\{4,6\\}|}{|\\{4,5,6\\}|} = \\frac{2}{3} \\ne \\frac{1}{2}$ — so they are **dependent**. Independence is a numerical fact you verify, not a feeling."
+    },
+    {
+      "id": "bayes-theorem",
+      "label": "Bayes' theorem",
+      "microLesson": "Bayes' theorem reverses a conditional: it turns $P(\\text{test}^+ \\mid \\text{disease})$ into the thing you actually want, $P(\\text{disease} \\mid \\text{test}^+)$, via $P(A \\mid B) = \\frac{P(B \\mid A)\\,P(A)}{P(B)}$, where the denominator is expanded by total probability: $P(B) = P(B \\mid A)P(A) + P(B \\mid A^c)P(A^c)$. The famous shock: with a disease at $1\\%$ prevalence, a test that is $99\\%$ sensitive and $95\\%$ specific, a positive result means only $P(\\text{disease} \\mid +) = \\frac{0.99 \\cdot 0.01}{0.99 \\cdot 0.01 + 0.05 \\cdot 0.99} = \\frac{1}{6} \\approx 16.7\\%$. A tree diagram makes it visual: the rare-disease branch is tiny, so the false positives from the huge healthy branch dominate."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The positive test that probably isn't\n\nYou take a screening test for a rare disease. The test is excellent — it catches $99\\%$ of true cases and correctly clears $95\\%$ of healthy people. Your result comes back **positive**. How worried should you be? Most people — including, in surveys, most doctors — guess around $90\\%$. The correct answer is about $17\\%$. That gulf between intuition and truth is what conditional probability exists to fix, and Bayes' theorem is the machine that computes it.\n\n## Conditional probability: shrinking the world\n\nWhen you learn that an event $B$ has happened, you should throw away every outcome inconsistent with $B$ and re-normalize over what's left. That is the **conditional probability**:\n\n$$P(A \\mid B) = \\frac{P(A \\text{ and } B)}{P(B)}, \\qquad P(B) > 0.$$\n\nRead it as: of the world where $B$ is true, what fraction also has $A$? Roll a fair die and ask $P(\\text{greater than 3} \\mid \\text{even})$. The condition 'even' collapses the sample space from $\\{1,2,3,4,5,6\\}$ to just $\\{2,4,6\\}$; within that reduced world, the outcomes above 3 are $\\{4,6\\}$, so the probability is $\\frac{2}{3}$ — noticeably different from the unconditional $P(>3) = \\frac{3}{6} = \\frac{1}{2}$. Conditioning is literally changing the denominator.\n\n## The general multiplication rule: dependence, handled\n\nMultiply both sides of the definition by $P(B)$ and you get a product rule that, unlike the independent version from the last topic, works when events influence each other:\n\n$$P(A \\text{ and } B) = P(A)\\,P(B \\mid A).$$\n\nThe payoff is **sampling without replacement**, where each draw reshapes the deck. Two aces in a row from a full deck: the first card is an ace with probability $\\frac{4}{52}$; *given* that, only 3 aces remain among 51 cards, so the second is an ace with probability $\\frac{3}{51}$. Multiply:\n\n$$P(\\text{two aces}) = \\frac{4}{52} \\cdot \\frac{3}{51} = \\frac{12}{2652} = \\frac{1}{221}.$$\n\nThe conditional second factor is what encodes the dependence. Draws *with* replacement would give $\\frac{4}{52} \\cdot \\frac{4}{52}$ — independent, and slightly larger. This is the same counting-with-shrinking-supply you saw in permutations, now written in the language of probability.\n\n## Testing for independence: check, don't guess\n\nThe last topic called two events independent when $P(A \\text{ and } B) = P(A)P(B)$. Conditional probability gives the crisper, equivalent test:\n\n$$A \\text{ and } B \\text{ are independent} \\iff P(A \\mid B) = P(A).$$\n\nIndependence means conditioning on $B$ tells you *nothing* new about $A$. To check, compute both sides. Is 'even' independent of 'greater than 3' on a die? We found $P(\\text{even} \\mid >3) = \\frac{2}{3}$, but $P(\\text{even}) = \\frac{1}{2}$. They disagree, so the events are **dependent** — knowing the roll exceeds 3 does shift the odds of evenness. Contrast a coin flip and a die roll: $P(\\text{heads} \\mid \\text{six}) = \\frac{1}{2} = P(\\text{heads})$, genuinely independent. The verdict is arithmetic, never vibes.\n\n## Bayes' theorem: reversing the arrow\n\nTests and evidence usually give you the conditional in the *wrong* direction. A lab knows $P(\\text{positive} \\mid \\text{disease})$ — its sensitivity — but a patient needs $P(\\text{disease} \\mid \\text{positive})$. **Bayes' theorem** flips it:\n\n$$P(A \\mid B) = \\frac{P(B \\mid A)\\,P(A)}{P(B)}, \\qquad P(B) = P(B \\mid A)P(A) + P(B \\mid A^c)P(A^c).$$\n\nThat denominator is the **law of total probability**: the overall chance of a positive test is the positives from sick people plus the false positives from healthy people. Plug in the opening numbers — prevalence $P(D) = 0.01$, sensitivity $P(+ \\mid D) = 0.99$, specificity $P(- \\mid D^c) = 0.95$ so false-positive rate $P(+ \\mid D^c) = 0.05$:\n\n$$P(D \\mid +) = \\frac{0.99 \\cdot 0.01}{0.99 \\cdot 0.01 + 0.05 \\cdot 0.99} = \\frac{0.0099}{0.0099 + 0.0495} = \\frac{0.0099}{0.0594} = \\frac{1}{6} \\approx 16.7\\%.$$\n\nWhy so low? Because the disease is rare. Out of 10,000 people, about 100 are sick (99 test positive) and 9,900 are healthy (about 495 falsely test positive). Among the $99 + 495 = 594$ positives, only 99 are truly sick: $\\frac{99}{594} = \\frac{1}{6}$. A **tree diagram** makes it unmistakable — the disease branch is a sliver, so its true positives are swamped by the false positives pouring off the enormous healthy branch. The **base rate** is not a footnote; it's the whole story.\n\n## One formula, many arrows reversed\n\nConditional probability shrinks the sample space; the general product rule chains dependent events; the independence test is a two-number comparison; and Bayes' theorem reverses a conditional by weighting it against the base rate. Master the last one and you can read a medical test, a spam score, or a fault alarm for what it actually says — not what it seems to."
+  },
+  "application": {
+    "summary": "Conditional probability and Bayes' theorem are the mathematics of updating a belief when evidence arrives: they price draws without replacement, test whether two events truly move together, and — most importantly — convert a test's sensitivity and specificity into the answer a patient actually needs, correctly weighting a positive result against how rare the disease is.",
+    "domains": ["medical diagnostic testing", "spam and content classification", "fault diagnosis and alarms", "A/B test attribution", "forensics and evidence"],
+    "workedExample": "**The rare-disease test, worked end to end.**\n\nA disease affects $1\\%$ of the population, so the **base rate** (prevalence) is $P(D) = 0.01$ and $P(D^c) = 0.99$. A screening test has **sensitivity** $P(+ \\mid D) = 0.99$ (it catches $99\\%$ of true cases) and **specificity** $P(- \\mid D^c) = 0.95$, which means its false-positive rate is $P(+ \\mid D^c) = 1 - 0.95 = 0.05$. You test positive. What is $P(D \\mid +)$?\n\n*Step 1 — the two ways to test positive (law of total probability).* A positive can come from a sick person testing correctly or a healthy person testing falsely:\n\n$$P(+) = P(+ \\mid D)P(D) + P(+ \\mid D^c)P(D^c) = 0.99 \\cdot 0.01 + 0.05 \\cdot 0.99 = 0.0099 + 0.0495 = 0.0594.$$\n\n*Step 2 — Bayes' theorem.* Keep only the true-positive slice of that total:\n\n$$P(D \\mid +) = \\frac{P(+ \\mid D)P(D)}{P(+)} = \\frac{0.0099}{0.0594} = \\frac{1}{6} \\approx 0.167.$$\n\n*Step 3 — sanity check with counts.* Imagine 10,000 people. About $100$ are sick and $99$ of them test positive. About $9{,}900$ are healthy and $5\\%$, or $495$, falsely test positive. Total positives: $99 + 495 = 594$, of whom only $99$ are truly sick. $\\frac{99}{594} = \\frac{1}{6}$ — the tree diagram and the algebra agree.\n\n*The lesson.* Even a superb test gives a positive predictive value of just $16.7\\%$ when the disease is rare, because the false positives from the vast healthy majority outnumber the true positives from the tiny sick minority. This is exactly why doctors confirm a positive screen with a second, independent test: a second positive updates the base rate again, and the posterior climbs sharply.",
+    "domainNotes": [
+      "**Medical testing:** the number a patient needs is the positive predictive value $P(\\text{disease} \\mid +)$, which Bayes builds from sensitivity, specificity, and prevalence — a test's advertised $99\\%$ accuracy says almost nothing without the base rate.",
+      "**Spam classification:** a Bayesian filter estimates $P(\\text{spam} \\mid \\text{words})$ from $P(\\text{words} \\mid \\text{spam})$ and the base rate of spam, updating word by word — the same arrow-reversal as the medical test.",
+      "**Fault diagnosis:** an alarm that fires reliably on real faults can still be mostly false alarms if faults are rare; Bayes tells operators the true $P(\\text{fault} \\mid \\text{alarm})$ and calibrates how much to trust it.",
+      "**A/B attribution:** conditional probability separates $P(\\text{purchase} \\mid \\text{saw variant B})$ from the raw purchase rate, and testing whether $P(\\text{purchase} \\mid B) = P(\\text{purchase})$ is exactly the independence test that decides whether a change did anything.",
+      "**Forensics:** the 'prosecutor's fallacy' is confusing $P(\\text{evidence} \\mid \\text{innocent})$ with $P(\\text{innocent} \\mid \\text{evidence})$ — Bayes, with the base rate of guilt, is the antidote to a classic miscarriage of justice."
+    ]
+  },
+  "generators": [
+    "stat-cond-cp-d1", "stat-cond-cp-d2", "stat-cond-cp-d3",
+    "stat-cond-gm-d1", "stat-cond-gm-d2", "stat-cond-gm-d3",
+    "stat-cond-ind-d1", "stat-cond-ind-d2", "stat-cond-ind-d3",
+    "stat-cond-bayes-d1", "stat-cond-bayes-d2", "stat-cond-bayes-d3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.conditional-probability.s01",
+      "concepts": ["conditional-probability"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A fair die is rolled. Given that the result is even, what is the probability it is greater than 3? Use the reduced sample space. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "Conditioning on 'even' reduces the sample space to $\\{2,4,6\\}$. How many outcomes are in this reduced space? (Give a number.)", "answer": "3", "accept": [], "hint": "Count the even faces." },
+        { "instruction": "Within $\\{2,4,6\\}$, how many are greater than 3? (Give a number.)", "answer": "2", "accept": [], "hint": "4 and 6." },
+        { "instruction": "Compute $P(>3 \\mid \\text{even}) = \\frac{2}{3}$. Give it as a fraction. (It is already in lowest terms.)", "answer": "2/3", "accept": ["0.667"], "hint": "Favorable over the reduced total." }
+      ],
+      "finalAnswer": { "value": "2/3", "unit": "" },
+      "solutionNarrative": "Conditioning on 'even' shrinks the world to $\\{2,4,6\\}$; two of those three exceed 3, so $P(>3 \\mid \\text{even}) = \\frac{2}{3}$ — larger than the unconditional $\\frac{1}{2}$."
+    },
+    {
+      "id": "statistics.conditional-probability.s02",
+      "concepts": ["conditional-probability"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "One card is drawn from a 52-card deck. Given that it is a face card (J, Q, K), what is the probability it is a king? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "How many face cards are there (J, Q, K in 4 suits)? This is the reduced sample space. (Give a number.)", "answer": "12", "accept": [], "hint": "Three ranks times four suits." },
+        { "instruction": "How many of those face cards are kings? (Give a number.)", "answer": "4", "accept": [], "hint": "One king per suit." },
+        { "instruction": "Compute $P(\\text{king} \\mid \\text{face}) = \\frac{4}{12}$ in lowest terms.", "answer": "1/3", "accept": ["0.333"], "hint": "Divide top and bottom by 4." }
+      ],
+      "finalAnswer": { "value": "1/3", "unit": "" },
+      "solutionNarrative": "Given a face card, the sample space is the 12 face cards; 4 are kings, so $P(\\text{king} \\mid \\text{face}) = \\frac{4}{12} = \\frac{1}{3}$."
+    },
+    {
+      "id": "statistics.conditional-probability.s03",
+      "concepts": ["conditional-probability"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "In a class, $P(\\text{plays soccer and tennis}) = 0.12$ and $P(\\text{plays tennis}) = 0.30$. Given a student plays tennis, what is the probability they also play soccer? Use $P(A \\mid B) = \\frac{P(A \\text{ and } B)}{P(B)}$. Give your answer as a decimal.",
+      "steps": [
+        { "instruction": "Identify the numerator $P(\\text{soccer and tennis})$. (Give a decimal.)", "answer": "0.12", "accept": [], "hint": "The joint probability of both." },
+        { "instruction": "Identify the denominator $P(\\text{tennis})$, the condition. (Give a decimal.)", "answer": "0.3", "accept": ["0.30"], "hint": "The event you are conditioning on." },
+        { "instruction": "Compute $P(\\text{soccer} \\mid \\text{tennis}) = \\frac{0.12}{0.30}$. (Give a decimal.)", "answer": "0.4", "accept": ["2/5"], "hint": "$0.12 / 0.30$." }
+      ],
+      "finalAnswer": { "value": "0.4", "unit": "" },
+      "solutionNarrative": "The conditional formula gives $\\frac{0.12}{0.30} = 0.4$: among tennis players, $40\\%$ also play soccer, versus a possibly different fraction in the class overall."
+    },
+    {
+      "id": "statistics.conditional-probability.s04",
+      "concepts": ["conditional-probability"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "One card is drawn from a 52-card deck. Given that it is black (spades or clubs), what is the probability it is a spade? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "How many black cards are there (spades and clubs)? This is the reduced sample space. (Give a number.)", "answer": "26", "accept": [], "hint": "Two suits of 13." },
+        { "instruction": "How many of those black cards are spades? (Give a number.)", "answer": "13", "accept": [], "hint": "One full suit." },
+        { "instruction": "Compute $P(\\text{spade} \\mid \\text{black}) = \\frac{13}{26}$ in lowest terms.", "answer": "1/2", "accept": ["0.5"], "hint": "Divide top and bottom by 13." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Given a black card, half of the 26 black cards are spades, so $P(\\text{spade} \\mid \\text{black}) = \\frac{13}{26} = \\frac{1}{2}$. The condition halved the sample space from 52 to 26."
+    },
+    {
+      "id": "statistics.conditional-probability.s05",
+      "concepts": ["general-multiplication"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two cards are drawn from a 52-card deck WITHOUT replacement. What is the probability that BOTH are aces? Use $P(A \\text{ and } B) = P(A)\\,P(B \\mid A)$. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "What is the probability the FIRST card is an ace, as a fraction in lowest terms?", "answer": "1/13", "accept": ["4/52", "0.077"], "hint": "4 aces out of 52 cards." },
+        { "instruction": "Given the first was an ace, what is the probability the SECOND is an ace? (3 aces remain among 51 cards.) Give it as a fraction in lowest terms.", "answer": "1/17", "accept": ["3/51", "0.059"], "hint": "$\\frac{3}{51}$." },
+        { "instruction": "Multiply: $\\frac{4}{52} \\cdot \\frac{3}{51} = \\frac{12}{2652}$. Give the product in lowest terms.", "answer": "1/221", "accept": ["0.0045"], "hint": "$\\frac{1}{13} \\cdot \\frac{1}{17}$." }
+      ],
+      "finalAnswer": { "value": "1/221", "unit": "" },
+      "solutionNarrative": "Without replacement the draws are dependent: $P(\\text{two aces}) = \\frac{4}{52} \\cdot \\frac{3}{51} = \\frac{1}{221}$. The conditional second factor $\\frac{3}{51}$ is what encodes the shrinking deck."
+    },
+    {
+      "id": "statistics.conditional-probability.s06",
+      "concepts": ["general-multiplication"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An urn holds 5 red and 3 blue marbles. Two are drawn WITHOUT replacement. What is the probability BOTH are red? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "What is the probability the first marble is red? There are 5 red of 8 total. Give it as a fraction in lowest terms.", "answer": "5/8", "accept": ["0.625"], "hint": "Reds over total." },
+        { "instruction": "Given the first was red, what is the probability the second is red? (4 red remain among 7 marbles.) Give it as a fraction.", "answer": "4/7", "accept": ["0.571"], "hint": "One red and one marble are gone." },
+        { "instruction": "Multiply: $\\frac{5}{8} \\cdot \\frac{4}{7} = \\frac{20}{56}$. Give the product in lowest terms.", "answer": "5/14", "accept": ["0.357"], "hint": "Divide top and bottom by 4." }
+      ],
+      "finalAnswer": { "value": "5/14", "unit": "" },
+      "solutionNarrative": "$P(\\text{two red}) = \\frac{5}{8} \\cdot \\frac{4}{7} = \\frac{20}{56} = \\frac{5}{14}$. The second factor drops from $\\frac{5}{8}$ to $\\frac{4}{7}$ because removing a red changes the composition."
+    },
+    {
+      "id": "statistics.conditional-probability.s07",
+      "concepts": ["general-multiplication"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two cards are drawn from a 52-card deck WITHOUT replacement. What is the probability BOTH are hearts? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "Probability the first card is a heart? 13 hearts of 52. Give it as a fraction in lowest terms.", "answer": "1/4", "accept": ["13/52", "0.25"], "hint": "One suit of four." },
+        { "instruction": "Given the first was a heart, probability the second is a heart? (12 hearts remain among 51 cards.) Give it as a fraction in lowest terms.", "answer": "4/17", "accept": ["12/51", "0.235"], "hint": "$\\frac{12}{51}$ reduces by 3." },
+        { "instruction": "Multiply: $\\frac{13}{52} \\cdot \\frac{12}{51} = \\frac{156}{2652}$. Give the product in lowest terms.", "answer": "1/17", "accept": ["0.059"], "hint": "$\\frac{1}{4} \\cdot \\frac{4}{17}$." }
+      ],
+      "finalAnswer": { "value": "1/17", "unit": "" },
+      "solutionNarrative": "$P(\\text{two hearts}) = \\frac{13}{52} \\cdot \\frac{12}{51} = \\frac{156}{2652} = \\frac{1}{17}$. The conditioning factor $\\frac{12}{51}$ carries the without-replacement dependence."
+    },
+    {
+      "id": "statistics.conditional-probability.s08",
+      "concepts": ["general-multiplication"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A box has 10 fuses, 2 of them defective. Two fuses are drawn WITHOUT replacement. What is the probability BOTH are defective? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "Probability the first fuse is defective? 2 defective of 10. Give it as a fraction in lowest terms.", "answer": "1/5", "accept": ["2/10", "0.2"], "hint": "Defectives over total." },
+        { "instruction": "Given the first was defective, probability the second is defective? (1 defective remains among 9 fuses.) Give it as a fraction.", "answer": "1/9", "accept": ["0.111"], "hint": "One defective and one fuse gone." },
+        { "instruction": "Multiply: $\\frac{1}{5} \\cdot \\frac{1}{9}$. Give the product as a fraction.", "answer": "1/45", "accept": ["0.022"], "hint": "Multiply the fractions." }
+      ],
+      "finalAnswer": { "value": "1/45", "unit": "" },
+      "solutionNarrative": "$P(\\text{both defective}) = \\frac{2}{10} \\cdot \\frac{1}{9} = \\frac{1}{45}$. Pulling one defective fuse leaves only one among nine, sharply lowering the second factor."
+    },
+    {
+      "id": "statistics.conditional-probability.s09",
+      "concepts": ["independence-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A fair die is rolled. Let A = 'even' and B = 'greater than 3'. Test whether A and B are independent by comparing $P(A \\mid B)$ with $P(A)$. Answer 'independent' or 'dependent'.",
+      "steps": [
+        { "instruction": "What is $P(A) = P(\\text{even})$ as a fraction in lowest terms?", "answer": "1/2", "accept": ["0.5"], "hint": "Three even faces of six." },
+        { "instruction": "Condition on B = 'greater than 3', i.e. $\\{4,5,6\\}$. Of those, the even ones are $\\{4,6\\}$. Compute $P(A \\mid B) = \\frac{2}{3}$ as a fraction.", "answer": "2/3", "accept": ["0.667"], "hint": "Two even outcomes among three." },
+        { "instruction": "Since $\\frac{2}{3} \\ne \\frac{1}{2}$, are A and B independent or dependent? Type 'independent' or 'dependent'.", "answer": "dependent", "accept": [], "hint": "Conditioning changed the probability." }
+      ],
+      "finalAnswer": { "value": "dependent", "unit": "" },
+      "solutionNarrative": "$P(A) = \\frac{1}{2}$ but $P(A \\mid B) = \\frac{2}{3}$; the two differ, so 'even' and 'greater than 3' are dependent — knowing the roll exceeds 3 raises the odds of it being even."
+    },
+    {
+      "id": "statistics.conditional-probability.s10",
+      "concepts": ["independence-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A fair die is rolled and a fair coin is flipped. Let A = 'coin shows heads' and B = 'die shows 6'. Test whether A and B are independent by comparing $P(A \\mid B)$ with $P(A)$. Answer 'independent' or 'dependent'.",
+      "steps": [
+        { "instruction": "What is $P(A) = P(\\text{heads})$ as a fraction?", "answer": "1/2", "accept": ["0.5"], "hint": "Fair coin." },
+        { "instruction": "Does knowing the die shows 6 change the coin's chance of heads? So $P(A \\mid B)$ equals what fraction?", "answer": "1/2", "accept": ["0.5"], "hint": "The coin doesn't know the die's result." },
+        { "instruction": "Since $P(A \\mid B) = P(A)$, are A and B independent or dependent? Type 'independent' or 'dependent'.", "answer": "independent", "accept": [], "hint": "Conditioning changed nothing." }
+      ],
+      "finalAnswer": { "value": "independent", "unit": "" },
+      "solutionNarrative": "$P(A \\mid B) = \\frac{1}{2} = P(A)$: the coin and die share no mechanism, so they are independent. Independence is confirmed by the two numbers matching."
+    },
+    {
+      "id": "statistics.conditional-probability.s11",
+      "concepts": ["independence-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Among 100 surveyed people, $P(\\text{owns a car}) = 0.6$, $P(\\text{owns a bike}) = 0.5$, and $P(\\text{owns both}) = 0.3$. Test whether car ownership and bike ownership are independent by comparing $P(\\text{both})$ with $P(\\text{car}) \\cdot P(\\text{bike})$. Answer 'independent' or 'dependent'.",
+      "steps": [
+        { "instruction": "Compute the product $P(\\text{car}) \\cdot P(\\text{bike}) = 0.6 \\cdot 0.5$. (Give a decimal.)", "answer": "0.3", "accept": ["0.30", "3/10"], "hint": "Multiply the two." },
+        { "instruction": "Compare with $P(\\text{both}) = 0.3$. Do they match? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$0.3$ versus $0.3$." },
+        { "instruction": "Since $P(\\text{both}) = P(\\text{car})P(\\text{bike})$, are the two events independent or dependent? Type 'independent' or 'dependent'.", "answer": "independent", "accept": [], "hint": "The joint equals the product of marginals." }
+      ],
+      "finalAnswer": { "value": "independent", "unit": "" },
+      "solutionNarrative": "$P(\\text{car})P(\\text{bike}) = 0.6 \\cdot 0.5 = 0.3 = P(\\text{both})$, so the events are independent — owning a car tells you nothing about owning a bike here. Only the numbers can reveal this; the topics feel related but aren't statistically."
+    },
+    {
+      "id": "statistics.conditional-probability.s12",
+      "concepts": ["independence-test"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A study finds $P(\\text{clicks ad}) = 0.10$ overall, but $P(\\text{clicks ad} \\mid \\text{saw variant B}) = 0.15$. Test whether clicking is independent of seeing variant B. Answer 'independent' or 'dependent'.",
+      "steps": [
+        { "instruction": "What is the unconditional $P(\\text{clicks ad})$? (Give a decimal.)", "answer": "0.1", "accept": ["0.10", "1/10"], "hint": "The overall click rate." },
+        { "instruction": "What is $P(\\text{clicks ad} \\mid \\text{saw variant B})$? (Give a decimal.)", "answer": "0.15", "accept": ["3/20"], "hint": "The conditional rate stated." },
+        { "instruction": "Since $0.15 \\ne 0.10$, is clicking independent of seeing variant B? Type 'independent' or 'dependent'.", "answer": "dependent", "accept": [], "hint": "Conditioning raised the click rate." }
+      ],
+      "finalAnswer": { "value": "dependent", "unit": "" },
+      "solutionNarrative": "$P(\\text{click} \\mid B) = 0.15 \\ne 0.10 = P(\\text{click})$, so clicking depends on the variant — variant B lifts clicks. This inequality is exactly the signal an A/B test is built to detect."
+    },
+    {
+      "id": "statistics.conditional-probability.s13",
+      "concepts": ["bayes-theorem"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A test's advertised '99% accuracy' is its sensitivity: $P(\\text{positive} \\mid \\text{disease}) = 0.99$. Bayes' theorem is needed because a patient wants the REVERSED conditional. Which probability does a patient actually need?",
+      "steps": [
+        { "instruction": "A test with specificity $0.95$ has what false-positive rate $P(\\text{positive} \\mid \\text{no disease}) = 1 - 0.95$? (Give a decimal.)", "answer": "0.05", "accept": ["1/20"], "hint": "Specificity is the true-negative rate; subtract from 1." },
+        { "instruction": "The patient needs $P(\\text{disease} \\mid \\text{positive})$, not $P(\\text{positive} \\mid \\text{disease})$. Are these two conditionals the same quantity? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Bayes reverses the conditioning; the values differ." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Sensitivity $P(+ \\mid D)$ and the patient's target $P(D \\mid +)$ are different conditionals; a $0.95$ specificity means a $0.05$ false-positive rate, and Bayes' theorem is precisely the tool that reverses the arrow."
+    },
+    {
+      "id": "statistics.conditional-probability.s14",
+      "concepts": ["bayes-theorem"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The flagship example. A disease has prevalence $P(D) = 0.01$. A test has sensitivity $P(+ \\mid D) = 0.99$ and specificity $0.95$ (so false-positive rate $P(+ \\mid D^c) = 0.05$). You test positive. Compute $P(D \\mid +)$ using Bayes' theorem. Give your answer as a decimal rounded to 3 places.",
+      "steps": [
+        { "instruction": "Compute the true-positive term $P(+ \\mid D)\\,P(D) = 0.99 \\cdot 0.01$. (Give a decimal.)", "answer": "0.0099", "accept": [], "hint": "$0.99 \\cdot 0.01$." },
+        { "instruction": "Compute the false-positive term $P(+ \\mid D^c)\\,P(D^c) = 0.05 \\cdot 0.99$. (Give a decimal.)", "answer": "0.0495", "accept": [], "hint": "$0.05 \\cdot 0.99$." },
+        { "instruction": "Total probability of a positive: $P(+) = 0.0099 + 0.0495$. (Give a decimal.)", "answer": "0.0594", "accept": [], "hint": "Add the two terms." },
+        { "instruction": "Bayes: $P(D \\mid +) = \\frac{0.0099}{0.0594}$, rounded to 3 decimal places.", "answer": "0.167", "accept": ["1/6", "0.1667"], "hint": "$\\frac{0.0099}{0.0594} = \\frac{1}{6}$." }
+      ],
+      "finalAnswer": { "value": "0.167", "unit": "" },
+      "solutionNarrative": "$P(D \\mid +) = \\frac{0.99 \\cdot 0.01}{0.99 \\cdot 0.01 + 0.05 \\cdot 0.99} = \\frac{0.0099}{0.0594} = \\frac{1}{6} \\approx 0.167$. Despite a superb test, a positive means only a $16.7\\%$ chance of disease — the rare base rate lets false positives dominate."
+    },
+    {
+      "id": "statistics.conditional-probability.s15",
+      "concepts": ["bayes-theorem"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A disease has prevalence $P(D) = 0.05$. A test has sensitivity $P(+ \\mid D) = 0.95$ and false-positive rate $P(+ \\mid D^c) = 0.10$. Compute $P(D \\mid +)$ with Bayes' theorem. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "True-positive term: $0.95 \\cdot 0.05$. (Give a decimal.)", "answer": "0.0475", "accept": [], "hint": "$0.95 \\cdot 0.05$." },
+        { "instruction": "False-positive term: $0.10 \\cdot 0.95$ (since $P(D^c) = 0.95$). (Give a decimal.)", "answer": "0.095", "accept": [], "hint": "$0.10 \\cdot 0.95$." },
+        { "instruction": "Total $P(+) = 0.0475 + 0.095$. (Give a decimal.)", "answer": "0.1425", "accept": [], "hint": "Add them." },
+        { "instruction": "Bayes: $P(D \\mid +) = \\frac{0.0475}{0.1425}$. Give it as a fraction in lowest terms.", "answer": "1/3", "accept": ["0.333"], "hint": "$0.0475$ is one third of $0.1425$." }
+      ],
+      "finalAnswer": { "value": "1/3", "unit": "" },
+      "solutionNarrative": "$P(D \\mid +) = \\frac{0.0475}{0.1425} = \\frac{1}{3}$. A higher base rate ($5\\%$ vs $1\\%$) and this test push the posterior to $33\\%$ — still far below the $95\\%$ sensitivity, because base rate governs the result."
+    },
+    {
+      "id": "statistics.conditional-probability.s16",
+      "concepts": ["bayes-theorem"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A spam filter: base rate $P(\\text{spam}) = 0.10$. A given word appears in $P(\\text{word} \\mid \\text{spam}) = 0.80$ of spam and $P(\\text{word} \\mid \\text{ham}) = 0.10$ of legitimate mail. An email contains the word. Compute $P(\\text{spam} \\mid \\text{word})$ with Bayes' theorem. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "Spam term: $P(\\text{word} \\mid \\text{spam})\\,P(\\text{spam}) = 0.80 \\cdot 0.10$. (Give a decimal.)", "answer": "0.08", "accept": [], "hint": "$0.80 \\cdot 0.10$." },
+        { "instruction": "Ham term: $P(\\text{word} \\mid \\text{ham})\\,P(\\text{ham}) = 0.10 \\cdot 0.90$. (Give a decimal.)", "answer": "0.09", "accept": [], "hint": "$P(\\text{ham}) = 0.90$." },
+        { "instruction": "Total $P(\\text{word}) = 0.08 + 0.09$. (Give a decimal.)", "answer": "0.17", "accept": [], "hint": "Add the two terms." },
+        { "instruction": "Bayes: $P(\\text{spam} \\mid \\text{word}) = \\frac{0.08}{0.17}$. Give it as a fraction in lowest terms.", "answer": "8/17", "accept": ["0.471"], "hint": "$\\frac{0.08}{0.17} = \\frac{8}{17}$." }
+      ],
+      "finalAnswer": { "value": "8/17", "unit": "" },
+      "solutionNarrative": "$P(\\text{spam} \\mid \\text{word}) = \\frac{0.08}{0.08 + 0.09} = \\frac{8}{17} \\approx 0.47$. One suggestive word only lifts the spam probability to $47\\%$ because most mail is ham; real filters multiply many such words together to push the posterior toward certainty."
+    }
+  ]
+}

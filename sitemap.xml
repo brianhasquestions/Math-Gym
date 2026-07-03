@@ -4,6 +4,9 @@
     <loc>https://mathgym.io/</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/placement.html</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/subject.html?id=algebra</loc>
   </url>
   <url>
@@ -248,6 +251,27 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=linear-algebra.orthogonality-and-least-squares</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/subject.html?id=statistics</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.descriptive-statistics</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.data-displays</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.probability-basics</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.conditional-probability</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.random-variables</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.normal-and-sampling</loc>
   </url>
   <url>
     <loc>https://mathgym.io/subject.html?id=discrete-math</loc>

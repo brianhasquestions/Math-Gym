@@ -1,0 +1,280 @@
+{
+  "id": "statistics.random-variables",
+  "subject": "statistics",
+  "title": "Random Variables and Expected Value",
+  "prerequisites": ["statistics.probability-basics"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "expected-value",
+      "label": "Expected value",
+      "microLesson": "A random variable $X$ attaches a number to each outcome of a random experiment, and its **expected value** is the probability-weighted average $E[X] = \\sum x \\cdot P(x)$ — the long-run average if you repeated the experiment forever. For one roll of a fair die, $E[X] = 1(\\tfrac16) + 2(\\tfrac16) + \\cdots + 6(\\tfrac16) = 3.5$, even though 3.5 is never a single result. Read $E[X]$ as the fair price of a bet: if a game pays you \\$10 with probability $0.2$ and costs you \\$5 otherwise, $E[X] = 10(0.2) - 5(0.8) = -\\$2$, so a rational player skips it. The expectation is a balance point, not a most-likely value."
+    },
+    {
+      "id": "variance-of-rv",
+      "label": "Variance and standard deviation",
+      "microLesson": "Expected value tells you the center; **variance** tells you the spread. With mean $\\mu = E[X]$, the variance is $\\mathrm{Var}(X) = \\sum (x - \\mu)^2 P(x)$ — the average squared distance from the mean — and the **standard deviation** is $\\sigma = \\sqrt{\\mathrm{Var}(X)}$, back in the original units. If $X$ is 0 or 2 each with probability $0.5$, then $\\mu = 1$ and $\\mathrm{Var}(X) = 0.5(0-1)^2 + 0.5(2-1)^2 = 1$, so $\\sigma = 1$. Two bets can share an expected value yet differ wildly in risk, and variance is how you see that difference."
+    },
+    {
+      "id": "binomial-distribution",
+      "label": "The binomial distribution",
+      "microLesson": "When you run $n$ independent trials that each succeed with probability $p$, the number of successes $X$ is **binomial**: $P(X = k) = \\binom{n}{k} p^k (1-p)^{n-k}$, where $\\binom{n}{k}$ counts the ways to place $k$ successes among $n$ trials. For $n = 3$ fair coin flips, $P(X = 2) = \\binom{3}{2}(0.5)^2(0.5)^1 = 3 \\cdot 0.125 = 0.375$. Its mean is the tidy $E[X] = np$ — three flips average $3(0.5) = 1.5$ heads. This one formula models defects in a batch, conversions in a test, and hits in a sample."
+    },
+    {
+      "id": "decisions-with-ev",
+      "label": "Decisions with expected value",
+      "microLesson": "Expected value turns 'should I?' into arithmetic: compute $E[X]$ for each option and compare. A bet is **fair** when $E[X] = 0$, favorable when $E[X] > 0$, and a losing proposition when $E[X] < 0$ — every casino game and lottery is engineered so the player's $E[X]$ is negative (the house edge). Insurance flips the sign: you accept a small negative $E[X]$ (the premium exceeds your expected loss) to remove a rare catastrophic outcome. If a \\$1 lottery ticket returns an average of \\$0.60, its $E[X] = 0.60 - 1 = -\\$0.40$ per ticket, and that 40-cent gap, multiplied by millions of tickets, is the prize fund and profit."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The number that prices every bet\n\nA casino does not know whether the next spin of the roulette wheel wins or loses — nobody does. Yet it can predict its profit for the year to within a rounding error, build a billion-dollar tower on that prediction, and be right. The tool that lets it do this is the same one an insurance actuary uses to set your premium and an engineer uses to decide how many spare parts to stock: the **expected value** of a random variable. Once you can compute it, a surprising amount of the world's risk stops being mysterious and starts being arithmetic.\n\n## Random variables: turning outcomes into numbers\n\nA **random variable** $X$ is just a rule that assigns a number to each outcome of a random experiment. Flip three coins and let $X$ be the number of heads; $X$ can be 0, 1, 2, or 3, each with its own probability. List those numbers next to their probabilities and you have the variable's **distribution** — a complete map of what can happen and how often.\n\nThe single most useful summary of that map is its center of mass. The **expected value** (or mean) is the probability-weighted average\n\n$$E[X] = \\sum_x x \\cdot P(x).$$\n\nFor a fair die, $E[X] = 1(\\tfrac16) + 2(\\tfrac16) + \\cdots + 6(\\tfrac16) = 3.5$. Notice that 3.5 is never an actual roll — the expectation is not the most likely outcome, it is the *long-run average*. Roll ten thousand dice and the mean of your results will hug 3.5 tightly. That is the whole promise of expectation: it is the number reality converges to when you repeat.\n\n## Expectation as a fair price\n\nAttach dollars instead of pips and $E[X]$ becomes a price tag. Suppose a game pays you \\$10 with probability $0.2$ and costs you \\$5 the other $80\\%$ of the time. Then\n\n$$E[X] = (10)(0.2) + (-5)(0.8) = 2 - 4 = -\\$2.$$\n\nOn average you lose two dollars a play. A fair game has $E[X] = 0$; a favorable game has $E[X] > 0$; anything negative is a slow leak. This is exactly how casinos and lotteries are designed — the player's expected value is engineered to be a small negative number, and that number, multiplied by millions of plays, is the house's paycheck.\n\n## Variance: the spread the mean hides\n\nTwo bets can share an expected value and yet feel completely different. Winning \\$1 for sure has $E[X] = 1$; a coin flip that pays \\$2 or \\$0 also has $E[X] = 1$ — but one is certain and the other is a gamble. **Variance** measures that difference. With $\\mu = E[X]$,\n\n$$\\mathrm{Var}(X) = \\sum_x (x - \\mu)^2 \\, P(x),$$\n\nthe average squared distance from the mean. Squaring keeps the misses positive and punishes big deviations hardest. The **standard deviation** $\\sigma = \\sqrt{\\mathrm{Var}(X)}$ pulls the answer back into the original units. For the \\$2-or-\\$0 flip, $\\mu = 1$ and $\\mathrm{Var}(X) = 0.5(0-1)^2 + 0.5(2-1)^2 = 1$, so $\\sigma = 1$: a full dollar of typical swing around the mean. The sure \\$1 has $\\sigma = 0$. Same expectation, opposite risk — and variance is how you see it.\n\n## The binomial: counting successes\n\nOne pattern shows up everywhere: run the same trial $n$ times, independently, each succeeding with probability $p$, and count the successes. Defective chips in a batch of 50. Conversions among 200 website visitors. Heads in 10 flips. The count $X$ follows the **binomial distribution**:\n\n$$P(X = k) = \\binom{n}{k} p^k (1-p)^{n-k}.$$\n\nThe $\\binom{n}{k}$ counts *which* trials succeeded; the $p^k(1-p)^{n-k}$ gives the probability of any one such arrangement. For $n = 5$ items each defective with probability $p = 0.2$, the chance of exactly one defect is $\\binom{5}{1}(0.2)^1(0.8)^4 = 5 \\cdot 0.2 \\cdot 0.4096 \\approx 0.41$. And the mean collapses to a formula worth memorizing: $E[X] = np$. Five items at a $20\\%$ defect rate average $5(0.2) = 1$ defect — exactly what intuition wants, now provable.\n\n## Deciding with expectation\n\nPut these together and 'should I?' becomes a calculation. Compute $E[X]$ for each choice and take the better one. Should you buy the extended warranty? Compare its price to your expected repair cost. Is the insurance worth it? You *knowingly* accept a slightly negative $E[X]$ — the premium is set above your average loss — to erase a rare outcome that would wipe you out. That is not irrational; it is buying the removal of variance. The quality-control engineer runs the binomial in reverse: if a shipment of 100 parts is expected to carry $np = 2$ defects, how many should trigger a reject? Expected value does not tell you what *will* happen on the next trial — nothing can. It tells you what to bet on, and over enough trials, the bettor who computes it wins."
+  },
+  "application": {
+    "summary": "Expected value and the binomial distribution are the working math of anyone who must price uncertainty in bulk: insurers setting premiums, casinos and lotteries engineering a house edge, quality-control teams deciding when a batch is too defective to ship, and product teams reading A/B-test conversions.",
+    "domains": ["insurance and actuarial pricing", "casinos and lotteries", "quality control and manufacturing", "A/B testing and conversion analytics", "gambling and game design"],
+    "workedExample": "**Pricing a one-year insurance policy.**\n\nAn insurer sells a \\$200 policy covering a gadget. From claims history, in a year the gadget is lost (payout \\$1000) with probability $0.05$, damaged (payout \\$300) with probability $0.10$, and fine (payout \\$0) the rest of the time.\n\n*Step 1 — the insurer's expected payout.* Let $X$ be what they pay out:\n$$E[X] = 1000(0.05) + 300(0.10) + 0(0.85) = 50 + 30 + 0 = \\$80.$$\nOn average they pay \\$80 per policy.\n\n*Step 2 — the insurer's expected profit.* They collect the \\$200 premium and pay out \\$80 on average, so their expected profit per policy is $200 - 80 = \\$120$. Sell 100,000 policies and the law of large numbers turns that \\$120 average into a near-certain \\$12 million.\n\n*Step 3 — the customer's view.* Your expected value is the mirror image: you pay \\$200 to receive an expected \\$80 back, an $E[X] = 80 - 200 = -\\$120$. So why buy it? Because the \\$1000 loss, though rare, is one you cannot absorb. You pay \\$120 of expected value to delete the catastrophic tail — you are buying away **variance**, not chasing a positive expectation.\n\n*Step 4 — the binomial sanity check.* Of 100,000 policies, the number of total losses is binomial with $n = 100{,}000$, $p = 0.05$, so the insurer expects $np = 5000$ full payouts. That predictability — not luck on any single policy — is what makes the business bankable.",
+    "domainNotes": [
+      "**Insurance:** premiums are set as (expected payout) + (expenses) + (profit margin); your negative $E[X]$ as a policyholder is the price of removing ruinous variance.",
+      "**Casinos & lotteries:** every game fixes a small negative player $E[X]$ (the house edge — about $-5.3\\%$ per dollar on American roulette); volume converts that edge into steady revenue.",
+      "**Quality control:** defects in a batch are binomial with mean $np$; acceptance-sampling plans set a reject threshold from that distribution so bad lots are caught without inspecting every unit.",
+      "**A/B testing:** conversions among $n$ visitors are binomial with success rate $p$; comparing observed rates against $np$ and its spread is how you tell a real lift from random noise.",
+      "**Decision-making:** warranties, deductibles, and hedges are all $E[X]$ comparisons — accept a known cost to trade a wide distribution for a narrow one."
+    ]
+  },
+  "generators": [
+    "stat-rv-ev-d1", "stat-rv-ev-d2", "stat-rv-ev-d3",
+    "stat-rv-var-d1", "stat-rv-var-d2", "stat-rv-var-d3",
+    "stat-rv-binom-d1", "stat-rv-binom-d2", "stat-rv-binom-d3",
+    "stat-rv-dec-d1", "stat-rv-dec-d2", "stat-rv-dec-d3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.random-variables.s01",
+      "concepts": ["expected-value"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A random variable $X$ takes value 0 with probability $0.5$ and value 4 with probability $0.5$. Find its expected value $E[X]$.",
+      "steps": [
+        { "instruction": "Weight the first value: $0 \\times 0.5$.", "answer": "0", "accept": [], "hint": "Anything times 0 is 0." },
+        { "instruction": "Weight the second value: $4 \\times 0.5$.", "answer": "2", "accept": [], "hint": "Half of 4." },
+        { "instruction": "Add the weighted values to get $E[X]$.", "answer": "2", "accept": [], "hint": "$0 + 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$E[X] = 0(0.5) + 4(0.5) = 0 + 2 = 2$. The expectation sits halfway between the two equally likely values."
+    },
+    {
+      "id": "statistics.random-variables.s02",
+      "concepts": ["expected-value"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A random variable $X$ has the distribution $P(1) = 0.2$, $P(2) = 0.3$, $P(3) = 0.5$. Find $E[X]$.",
+      "steps": [
+        { "instruction": "Compute the weighted term for $x = 1$: $1 \\times 0.2$.", "answer": "0.2", "accept": [], "hint": "$1 \\times 0.2 = 0.2$." },
+        { "instruction": "Compute the weighted term for $x = 2$: $2 \\times 0.3$.", "answer": "0.6", "accept": [], "hint": "$2 \\times 0.3 = 0.6$." },
+        { "instruction": "Compute the weighted term for $x = 3$: $3 \\times 0.5$.", "answer": "1.5", "accept": [], "hint": "$3 \\times 0.5 = 1.5$." },
+        { "instruction": "Add the three terms to get $E[X]$.", "answer": "2.3", "accept": [], "hint": "$0.2 + 0.6 + 1.5$." }
+      ],
+      "finalAnswer": { "value": "2.3", "unit": "" },
+      "solutionNarrative": "$E[X] = 1(0.2) + 2(0.3) + 3(0.5) = 0.2 + 0.6 + 1.5 = 2.3$. The mean is pulled toward 3 because that value carries half the probability."
+    },
+    {
+      "id": "statistics.random-variables.s03",
+      "concepts": ["expected-value"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A game pays $+6$ with probability $0.25$, pays $+2$ with probability $0.25$, and pays $-4$ with probability $0.5$. Find the expected payout $E[X]$.",
+      "steps": [
+        { "instruction": "Weighted term for $+6$: $6 \\times 0.25$.", "answer": "1.5", "accept": [], "hint": "A quarter of 6." },
+        { "instruction": "Weighted term for $+2$: $2 \\times 0.25$.", "answer": "0.5", "accept": [], "hint": "A quarter of 2." },
+        { "instruction": "Weighted term for $-4$: $-4 \\times 0.5$.", "answer": "-2", "accept": [], "hint": "Half of $-4$." },
+        { "instruction": "Add all three terms to get $E[X]$.", "answer": "0", "accept": [], "hint": "$1.5 + 0.5 - 2$." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "$E[X] = 6(0.25) + 2(0.25) + (-4)(0.5) = 1.5 + 0.5 - 2 = 0$. The positive and negative contributions cancel exactly, so this is a fair game."
+    },
+    {
+      "id": "statistics.random-variables.s04",
+      "concepts": ["expected-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A carnival wheel pays you \\$9 with probability $0.1$ and \\$0 with probability $0.9$. It costs \\$2 to spin. First find the expected winnings $E[X]$ (ignoring the cost), then subtract the cost.",
+      "steps": [
+        { "instruction": "Expected winnings: $9 \\times 0.1 + 0 \\times 0.9$.", "answer": "0.9", "accept": [], "hint": "$0.9 + 0$." },
+        { "instruction": "Net expected value after the \\$2 cost: $0.9 - 2$.", "answer": "-1.1", "accept": [], "hint": "Subtract the cost from the expected winnings." }
+      ],
+      "finalAnswer": { "value": "-1.1", "unit": "dollars" },
+      "solutionNarrative": "Expected winnings are $9(0.1) = \\$0.90$; after the \\$2 cost the net $E[X] = 0.90 - 2 = -\\$1.10$ per spin — a losing game for the player."
+    },
+    {
+      "id": "statistics.random-variables.s05",
+      "concepts": ["variance-of-rv"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A random variable $X$ takes value 1 with probability $0.5$ and value 3 with probability $0.5$. Its mean is $\\mu = 2$. Find the variance $\\mathrm{Var}(X)$.",
+      "steps": [
+        { "instruction": "Squared deviation of the value 1: $(1 - 2)^2$.", "answer": "1", "accept": [], "hint": "$(-1)^2 = 1$." },
+        { "instruction": "Squared deviation of the value 3: $(3 - 2)^2$.", "answer": "1", "accept": [], "hint": "$(1)^2 = 1$." },
+        { "instruction": "Weight and add: $0.5 \\times 1 + 0.5 \\times 1$.", "answer": "1", "accept": [], "hint": "$0.5 + 0.5$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\mathrm{Var}(X) = 0.5(1-2)^2 + 0.5(3-2)^2 = 0.5(1) + 0.5(1) = 1$. Each value sits one unit from the mean, so the average squared distance is 1."
+    },
+    {
+      "id": "statistics.random-variables.s06",
+      "concepts": ["variance-of-rv"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A random variable $X$ takes value 0 with probability $0.5$ and value 3 with probability $0.5$. Find first the mean, then the variance, then the standard deviation.",
+      "steps": [
+        { "instruction": "Mean: $0 \\times 0.5 + 3 \\times 0.5$.", "answer": "1.5", "accept": [], "hint": "Halfway between 0 and 3." },
+        { "instruction": "Squared deviation of 0: $(0 - 1.5)^2$.", "answer": "2.25", "accept": [], "hint": "$(-1.5)^2 = 2.25$." },
+        { "instruction": "Squared deviation of 3: $(3 - 1.5)^2$.", "answer": "2.25", "accept": [], "hint": "$(1.5)^2 = 2.25$." },
+        { "instruction": "Variance: $0.5 \\times 2.25 + 0.5 \\times 2.25$.", "answer": "2.25", "accept": [], "hint": "The average of two equal numbers is that number." },
+        { "instruction": "Standard deviation: $\\sqrt{2.25}$.", "answer": "1.5", "accept": ["sqrt(2.25)"], "hint": "What squares to 2.25?" }
+      ],
+      "finalAnswer": { "value": "1.5", "unit": "" },
+      "solutionNarrative": "$\\mu = 1.5$; $\\mathrm{Var}(X) = 0.5(1.5)^2 + 0.5(1.5)^2 = 2.25$; $\\sigma = \\sqrt{2.25} = 1.5$. Both values lie 1.5 from the mean, which is exactly the standard deviation."
+    },
+    {
+      "id": "statistics.random-variables.s07",
+      "concepts": ["variance-of-rv"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A random variable $X$ has $P(0) = 0.5$, $P(1) = 0.3$, $P(4) = 0.2$. Find the mean, then the variance.",
+      "steps": [
+        { "instruction": "Mean: $0(0.5) + 1(0.3) + 4(0.2)$.", "answer": "1.1", "accept": [], "hint": "$0 + 0.3 + 0.8$." },
+        { "instruction": "Weighted squared deviation of 0: $0.5 \\times (0 - 1.1)^2$.", "answer": "0.605", "accept": [], "hint": "$(-1.1)^2 = 1.21$, then times $0.5$." },
+        { "instruction": "Weighted squared deviation of 1: $0.3 \\times (1 - 1.1)^2$.", "answer": "0.003", "accept": [], "hint": "$(-0.1)^2 = 0.01$, then times $0.3$." },
+        { "instruction": "Weighted squared deviation of 4: $0.2 \\times (4 - 1.1)^2$.", "answer": "1.682", "accept": [], "hint": "$(2.9)^2 = 8.41$, then times $0.2$." },
+        { "instruction": "Add the three weighted terms to get the variance.", "answer": "2.29", "accept": [], "hint": "$0.605 + 0.003 + 1.682$." }
+      ],
+      "finalAnswer": { "value": "2.29", "unit": "" },
+      "solutionNarrative": "$\\mu = 0.3 + 0.8 = 1.1$; $\\mathrm{Var}(X) = 0.5(1.21) + 0.3(0.01) + 0.2(8.41) = 0.605 + 0.003 + 1.682 = 2.29$. The far-off value 4 dominates the spread despite carrying only $20\\%$ of the probability."
+    },
+    {
+      "id": "statistics.random-variables.s08",
+      "concepts": ["variance-of-rv"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A stock's daily return is modeled as $+2\\%$ with probability $0.5$ and $-2\\%$ with probability $0.5$. The mean return is $0\\%$. Working in percentage-point units, find the variance and then the standard deviation.",
+      "steps": [
+        { "instruction": "Squared deviation of $+2$: $(2 - 0)^2$.", "answer": "4", "accept": [], "hint": "$2^2$." },
+        { "instruction": "Variance: $0.5 \\times 4 + 0.5 \\times 4$.", "answer": "4", "accept": [], "hint": "Both deviations are 4." },
+        { "instruction": "Standard deviation: $\\sqrt{4}$.", "answer": "2", "accept": ["sqrt(4)"], "hint": "$\\sqrt{4} = 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "percentage points" },
+      "solutionNarrative": "$\\mathrm{Var}(X) = 0.5(2)^2 + 0.5(-2)^2 = 4$, so $\\sigma = 2$ percentage points — the typical daily swing, and a plain measure of this stock's risk."
+    },
+    {
+      "id": "statistics.random-variables.s09",
+      "concepts": ["binomial-distribution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Flip a fair coin 3 times. The number of heads $X$ is binomial with $n = 3$, $p = 0.5$. Find $P(X = 2)$ using $P(X=k) = \\binom{n}{k} p^k (1-p)^{n-k}$.",
+      "steps": [
+        { "instruction": "Count the arrangements: $\\binom{3}{2}$.", "answer": "3", "accept": [], "hint": "Ways to choose 2 of 3 positions." },
+        { "instruction": "Compute $p^k (1-p)^{n-k} = (0.5)^2 (0.5)^1$.", "answer": "0.125", "accept": [], "hint": "$(0.5)^3 = 0.125$." },
+        { "instruction": "Multiply: $3 \\times 0.125$.", "answer": "0.375", "accept": [], "hint": "$3 \\times 0.125$." }
+      ],
+      "finalAnswer": { "value": "0.375", "unit": "" },
+      "solutionNarrative": "$P(X=2) = \\binom{3}{2}(0.5)^2(0.5)^1 = 3 \\cdot 0.125 = 0.375$. Two heads is one of the two most likely results for three fair flips."
+    },
+    {
+      "id": "statistics.random-variables.s10",
+      "concepts": ["binomial-distribution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For a binomial with $n = 5$ and $p = 0.2$, find $P(X = 1)$ using $P(X=k) = \\binom{n}{k} p^k (1-p)^{n-k}$. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $\\binom{5}{1}$.", "answer": "5", "accept": [], "hint": "Choosing 1 of 5." },
+        { "instruction": "Compute $p^1 = (0.2)^1$.", "answer": "0.2", "accept": [], "hint": "Just $p$." },
+        { "instruction": "Compute $(1-p)^{4} = (0.8)^4$. Round to 4 decimals.", "answer": "0.4096", "accept": [], "hint": "$0.8^2 = 0.64$, then square that." },
+        { "instruction": "Multiply $5 \\times 0.2 \\times 0.4096$. Round to 4 decimals.", "answer": "0.4096", "accept": [], "hint": "$5 \\times 0.2 = 1$, times $0.4096$." }
+      ],
+      "finalAnswer": { "value": "0.4096", "unit": "" },
+      "solutionNarrative": "$P(X=1) = \\binom{5}{1}(0.2)^1(0.8)^4 = 5(0.2)(0.4096) = 0.4096$. Exactly one success is the single most likely outcome when the success rate is low."
+    },
+    {
+      "id": "statistics.random-variables.s11",
+      "concepts": ["binomial-distribution"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For a binomial with $n = 5$ and $p = 0.2$, find the probability of AT LEAST one success, $P(X \\ge 1)$. Use the complement $P(X \\ge 1) = 1 - P(X = 0)$. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $\\binom{5}{0}$.", "answer": "1", "accept": [], "hint": "There is one way to choose none." },
+        { "instruction": "Compute $P(X=0) = 1 \\times (0.2)^0 (0.8)^5$. Round to 4 decimals.", "answer": "0.3277", "accept": ["0.32768"], "hint": "$(0.8)^5 = 0.32768$." },
+        { "instruction": "Apply the complement: $1 - 0.32768$. Round to 4 decimals.", "answer": "0.6723", "accept": ["0.67232"], "hint": "$1 - 0.32768$." }
+      ],
+      "finalAnswer": { "value": "0.6723", "unit": "" },
+      "solutionNarrative": "$P(X=0) = (0.8)^5 = 0.32768$, so $P(X \\ge 1) = 1 - 0.32768 = 0.67232 \\approx 0.6723$. The complement trick beats summing $P(1)+P(2)+\\cdots+P(5)$."
+    },
+    {
+      "id": "statistics.random-variables.s12",
+      "concepts": ["binomial-distribution"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A factory line produces items that are each defective with probability $p = 0.05$, independently. In a box of $n = 40$ items, the number of defects is binomial. Find the expected number of defects using $E[X] = np$.",
+      "steps": [
+        { "instruction": "Identify $n$ and multiply by $p$: $40 \\times 0.05$.", "answer": "2", "accept": [], "hint": "$5\\%$ of 40." },
+        { "instruction": "So on average how many defects per box?", "answer": "2", "accept": [], "hint": "It equals $np$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "defects" },
+      "solutionNarrative": "$E[X] = np = 40(0.05) = 2$ defects per box on average. Acceptance-sampling plans set their reject threshold relative to this expected count."
+    },
+    {
+      "id": "statistics.random-variables.s13",
+      "concepts": ["decisions-with-ev"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A \\$1 lottery ticket returns an average of \\$0.60 in prizes. Find the net expected value per ticket (winnings minus cost), and decide whether the bet is favorable.",
+      "steps": [
+        { "instruction": "Net expected value: $0.60 - 1$.", "answer": "-0.4", "accept": [], "hint": "Average prize minus the \\$1 cost." },
+        { "instruction": "Is the bet favorable to the player? Answer 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "A negative $E[X]$ favors the house." }
+      ],
+      "finalAnswer": { "value": "-0.4", "unit": "dollars" },
+      "solutionNarrative": "$E[X] = 0.60 - 1 = -\\$0.40$ per ticket. It is negative, so the bet is unfavorable — that 40-cent gap per ticket funds the jackpot and the profit."
+    },
+    {
+      "id": "statistics.random-variables.s14",
+      "concepts": ["decisions-with-ev"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You may pay \\$30 for an extended warranty. Without it, a repair costing \\$400 happens with probability $0.05$; otherwise you pay nothing. Compare your expected repair cost to the warranty price to decide whether to buy.",
+      "steps": [
+        { "instruction": "Expected repair cost without the warranty: $400 \\times 0.05$.", "answer": "20", "accept": [], "hint": "$5\\%$ of \\$400." },
+        { "instruction": "The warranty costs \\$30. On pure expected value, is buying it worth it? Answer 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Compare \\$30 to the \\$20 expected cost." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "dollars" },
+      "solutionNarrative": "Expected repair cost is $400(0.05) = \\$20$, below the \\$30 warranty. On expected value alone you skip it — though a buyer who could not absorb a \\$400 hit might still pay the \\$10 premium to remove that variance."
+    },
+    {
+      "id": "statistics.random-variables.s15",
+      "concepts": ["decisions-with-ev"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "On an American roulette wheel a \\$1 bet on red pays a \\$1 profit with probability $\\tfrac{18}{38}$ and loses the \\$1 with probability $\\tfrac{20}{38}$. Find the expected profit per \\$1 bet, rounded to 4 decimals, then give the house edge as a percent.",
+      "steps": [
+        { "instruction": "Weighted win term: $1 \\times \\tfrac{18}{38}$. Round to 4 decimals.", "answer": "0.4737", "accept": ["18/38"], "hint": "$18 \\div 38 \\approx 0.4737$." },
+        { "instruction": "Weighted loss term: $-1 \\times \\tfrac{20}{38}$. Round to 4 decimals.", "answer": "-0.5263", "accept": ["-20/38"], "hint": "$-20 \\div 38 \\approx -0.5263$." },
+        { "instruction": "Add them for $E[X]$. Round to 4 decimals.", "answer": "-0.0526", "accept": ["-2/38"], "hint": "$0.4737 - 0.5263$." },
+        { "instruction": "The house edge is $|E[X]|$ as a percent of the \\$1 bet. Give it to 2 decimals.", "answer": "5.26", "accept": [], "hint": "Multiply the magnitude by 100." }
+      ],
+      "finalAnswer": { "value": "-0.0526", "unit": "dollars" },
+      "solutionNarrative": "$E[X] = 1(\\tfrac{18}{38}) - 1(\\tfrac{20}{38}) = -\\tfrac{2}{38} \\approx -0.0526$, a house edge of about $5.26\\%$. That fixed negative edge, applied to millions of spins, is the casino's guaranteed income."
+    },
+    {
+      "id": "statistics.random-variables.s16",
+      "concepts": ["decisions-with-ev"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A coin-flip bet pays $+\\$5$ with probability $0.5$ and $-\\$5$ with probability $0.5$. Find the expected value and classify the bet as fair, favorable, or unfavorable.",
+      "steps": [
+        { "instruction": "Expected value: $5(0.5) + (-5)(0.5)$.", "answer": "0", "accept": [], "hint": "The two terms cancel." },
+        { "instruction": "With $E[X] = 0$, is the bet fair, favorable, or unfavorable? Give the single word.", "answer": "fair", "accept": [], "hint": "$E[X] = 0$ has a name." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "dollars" },
+      "solutionNarrative": "$E[X] = 5(0.5) - 5(0.5) = 0$, so the bet is fair — neither side has an edge, which is exactly why casinos never offer it."
+    }
+  ]
+}

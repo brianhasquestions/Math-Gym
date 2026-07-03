@@ -144,6 +144,19 @@
       ]
     },
     {
+      "id": "statistics",
+      "title": "Statistics & Probability",
+      "blurb": "Making sense of data and chance — the most applied math there is, from A/B tests to medical odds.",
+      "topics": [
+        { "id": "statistics.descriptive-statistics", "title": "Descriptive Statistics: Center and Spread", "file": "content/statistics/descriptive-statistics.json", "status": "ready" },
+        { "id": "statistics.data-displays", "title": "Data Displays and Distributions", "file": "content/statistics/data-displays.json", "status": "ready" },
+        { "id": "statistics.probability-basics", "title": "Probability: Rules and Sample Spaces", "file": "content/statistics/probability-basics.json", "status": "ready" },
+        { "id": "statistics.conditional-probability", "title": "Conditional Probability and Bayes' Theorem", "file": "content/statistics/conditional-probability.json", "status": "ready" },
+        { "id": "statistics.random-variables", "title": "Random Variables and Expected Value", "file": "content/statistics/random-variables.json", "status": "ready" },
+        { "id": "statistics.normal-and-sampling", "title": "The Normal Distribution and Sampling", "file": "content/statistics/normal-and-sampling.json", "status": "ready" }
+      ]
+    },
+    {
       "id": "discrete-math",
       "title": "Discrete Math",
       "blurb": "Logic, sets, counting, and networks — the math beneath algorithms and computer science.",

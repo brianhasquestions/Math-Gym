@@ -1,0 +1,258 @@
+{
+  "id": "statistics.normal-and-sampling",
+  "subject": "statistics",
+  "title": "The Normal Distribution and Sampling",
+  "prerequisites": ["statistics.random-variables"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "zscores",
+      "label": "Z-scores and standardizing",
+      "microLesson": "A **z-score** rewrites a raw value as the number of standard deviations it sits above or below the mean: $z = \\dfrac{x - \\mu}{\\sigma}$. This 'standardizing' strips away the units so scores on different scales become comparable. An SAT of 620 with $\\mu = 500$, $\\sigma = 100$ gives $z = \\tfrac{620 - 500}{100} = 1.2$ — a bit above average. A negative $z$ means below the mean; $z = 0$ is exactly average. To go back, invert it: $x = \\mu + z\\sigma$, so $z = 2$ on the SAT is a raw score of $500 + 2(100) = 700$."
+    },
+    {
+      "id": "empirical-rule",
+      "label": "The 68-95-99.7 rule",
+      "microLesson": "For a normal (bell-shaped) distribution, the **empirical rule** says about $68\\%$ of values fall within $1$ standard deviation of the mean, about $95\\%$ within $2$, and about $99.7\\%$ within $3$. Because the bell is symmetric, you can halve these: $34\\%$ lie between the mean and $+1\\sigma$, and only $2.5\\%$ lie beyond $+2\\sigma$ (half of the leftover $5\\%$). For adult IQ ($\\mu = 100$, $\\sigma = 15$), about $95\\%$ of people score between $70$ and $130$, and roughly $2.5\\%$ score above $130$. These three numbers let you read off interval probabilities with no table at all."
+    },
+    {
+      "id": "normal-probabilities",
+      "label": "Probabilities and percentiles",
+      "microLesson": "To find the probability a normal value lands below some $x$, standardize to a z-score and read the area to its left. The empirical rule hands you the round cases directly: since $50\\%$ sits below the mean and $34\\%$ between the mean and $+1\\sigma$, the fraction below $+1\\sigma$ is $50\\% + 34\\% = 84\\%$ — so $+1\\sigma$ is the $84$th **percentile**. For less-round cases you are given the area: if $P(Z < 1.5) = 0.933$, then $P(Z > 1.5) = 1 - 0.933 = 0.067$, and by symmetry $P(-1.5 < Z < 1.5) = 0.933 - 0.067 = 0.866$. Combine halves, tails, and any supplied areas — no external table needed."
+    },
+    {
+      "id": "sampling-and-clt",
+      "label": "Sampling and the CLT",
+      "microLesson": "Averaging a sample tames randomness. If individual values have mean $\\mu$ and standard deviation $\\sigma$, then the **sample mean** $\\bar{X}$ of $n$ values still centers on $\\mu$, but its spread — the **standard error** — shrinks to $\\dfrac{\\sigma}{\\sqrt{n}}$. Quadruple the sample and you halve the error. The **Central Limit Theorem** adds the magic: for large $n$, the distribution of $\\bar{X}$ is approximately normal *even when the individual values are not*. So with $\\sigma = 20$ and $n = 100$, sample means scatter with standard error $\\tfrac{20}{\\sqrt{100}} = 2$ around $\\mu$ in a bell shape — the foundation of polling and quality control."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## One bell to rule them all\n\nHeights, blood pressures, measurement errors, test scores, the total of many small independent effects — an astonishing range of things pile up into the same symmetric, bell-shaped curve. That curve is the **normal distribution**, and it is so universal that a single set of tricks lets you answer questions about SAT percentiles, factory tolerances, and the margin of error on a poll with the same arithmetic. This is the capstone: the point where 'the average of a bunch of random things' becomes something you can predict precisely.\n\n## Standardizing: the z-score\n\nA normal distribution is pinned down by two numbers: its mean $\\mu$ (the center of the bell) and its standard deviation $\\sigma$ (its width). To compare a value across different bells, you convert it to a **z-score** — how many standard deviations it lands from the mean:\n\n$$z = \\frac{x - \\mu}{\\sigma}.$$\n\nAn SAT section score of 620, with $\\mu = 500$ and $\\sigma = 100$, becomes $z = \\tfrac{620 - 500}{100} = 1.2$: just over one standard deviation above average. An ACT of 25 on its own scale might standardize to $z = 0.7$ — now you can say the SAT score is the stronger one, even though the raw numbers share nothing. Standardizing erases the units. And it reverses cleanly: $x = \\mu + z\\sigma$, so a z-score of $-1$ on IQ ($\\mu = 100$, $\\sigma = 15$) is a raw score of $100 - 15 = 85$.\n\n## The 68-95-99.7 rule\n\nHere is what makes the bell so usable. For *any* normal distribution, the fraction of values within a given number of standard deviations of the mean is fixed:\n\n- about **68%** fall within $\\pm 1\\sigma$,\n- about **95%** fall within $\\pm 2\\sigma$,\n- about **99.7%** fall within $\\pm 3\\sigma$.\n\nThis is the **empirical rule**, and because the bell is symmetric you can slice it in half. Between the mean and $+1\\sigma$ sits $34\\%$ (half of $68\\%$). Beyond $+2\\sigma$ sits just $2.5\\%$ (half of the $5\\%$ left outside two standard deviations). For adult IQ, that means roughly $95\\%$ of people fall between 70 and 130, and only about $2.5\\%$ clear 130. Three memorized numbers, and you can carve up the whole distribution.\n\n## From z-scores to probabilities and percentiles\n\nProbability under a normal curve is *area*. To find the chance a value lands below some $x$, standardize and read the area to the left of that z-score. The empirical rule gives you the round cases for free. Half the area ($50\\%$) sits below the mean; add the $34\\%$ between the mean and $+1\\sigma$ and you get $84\\%$ below $+1\\sigma$ — so a z-score of $+1$ is the **84th percentile**. Symmetrically, only $16\\%$ lie below $-1\\sigma$.\n\nFor scores that do not land on a whole standard deviation, you are simply handed the area. Suppose you are told $P(Z < 1.5) = 0.933$. Then the upper tail is $P(Z > 1.5) = 1 - 0.933 = 0.067$, and by symmetry the middle band is\n\n$$P(-1.5 < Z < 1.5) = 0.933 - 0.067 = 0.866.$$\n\nEvery normal probability question reduces to this: standardize, then add and subtract areas — halves, tails, and any value you are given.\n\n## Sampling: why averages are trustworthy\n\nNow the payoff. Individual measurements are noisy, but their **average** is not. Take a sample of $n$ values from a population with mean $\\mu$ and standard deviation $\\sigma$. The **sample mean** $\\bar{X}$ still centers on $\\mu$ — averaging does not introduce bias — but its spread collapses. The standard deviation of $\\bar{X}$, called the **standard error**, is\n\n$$\\mathrm{SE} = \\frac{\\sigma}{\\sqrt{n}}.$$\n\nThe $\\sqrt{n}$ is the whole story of why bigger samples are better: with $\\sigma = 20$, a single value scatters with spread 20, but the mean of $n = 100$ scatters with spread only $\\tfrac{20}{\\sqrt{100}} = 2$. To halve your error you must *quadruple* your sample — diminishing returns baked into the math.\n\n## The Central Limit Theorem\n\nThe final piece is the deepest. The **Central Limit Theorem** says that for a large enough sample, the distribution of $\\bar{X}$ is approximately **normal — no matter what shape the individual values have**. Roll a single die and the outcomes are flat, not bell-shaped; average 50 dice and those averages trace a crisp bell centered at 3.5. This is why the normal distribution is everywhere and why it is the capstone: any quantity that is secretly an average or a sum of many small independent pieces inherits the bell, and with it the entire toolkit above. Polling relies on it (the margin of error is essentially $2 \\times \\mathrm{SE}$), quality control relies on it, and every confidence interval you will ever meet is built on it."
+  },
+  "application": {
+    "summary": "The normal distribution and the Central Limit Theorem are the backbone of standardized testing, manufacturing tolerances, and survey polling: z-scores turn raw values into percentiles, the empirical rule reads off interval probabilities without a table, and the standard error $\\sigma/\\sqrt{n}$ sets the margin of error on any average.",
+    "domains": ["standardized testing (SAT, IQ)", "manufacturing tolerances and quality control", "political and market polling", "biometrics (height, weight, blood pressure)", "measurement and instrument error"],
+    "workedExample": "**Reading a poll's margin of error.**\n\nA pollster wants to estimate the fraction of voters favoring a measure. Individual yes/no answers are as spread out as data gets, but the *sample proportion* is an average, so the Central Limit Theorem applies.\n\n*Step 1 — the standard error.* For a proportion near $50\\%$, the standard error of the sample proportion is close to $\\tfrac{1}{2\\sqrt{n}}$. With a sample of $n = 2500$ voters, $\\sqrt{n} = 50$, so $\\mathrm{SE} = \\tfrac{1}{2 \\cdot 50} = 0.01$, or $1$ percentage point.\n\n*Step 2 — the margin of error.* The reported margin is about $2 \\times \\mathrm{SE}$, because $95\\%$ of sample results land within $2$ standard errors of the truth (the empirical rule again). So the margin is $2 \\times 1\\% = 2\\%$. A poll reporting $\\text{'}52\\% \\pm 2\\%\\text{'}$ is really saying: we are about $95\\%$ confident the true figure is between $50\\%$ and $54\\%$.\n\n*Step 3 — the cost of precision.* Want to halve the margin to $1\\%$? You need $\\mathrm{SE} = 0.5\\%$, which means $\\sqrt{n} = 100$, i.e. $n = 10{,}000$ voters — four times the sample for twice the precision. That $\\sqrt{n}$ wall is why national polls rarely bother going past a few thousand respondents.\n\n*Step 4 — standardizing a result.* Suppose the true support is $50\\%$ and a poll comes back at $54\\%$. Standardize: $z = \\tfrac{0.54 - 0.50}{0.01} = 4$. A z-score of 4 is far beyond $3\\sigma$ (past the $99.7\\%$ band), so such a gap would be extraordinarily unlikely by chance alone — strong evidence the sample was biased or support really shifted.",
+    "domainNotes": [
+      "**Standardized testing:** SAT sections are scaled to $\\mu = 500$, $\\sigma = 100$ and IQ to $\\mu = 100$, $\\sigma = 15$ precisely so a z-score converts instantly to a percentile via the empirical rule.",
+      "**Manufacturing:** a part is 'in spec' if it falls within a tolerance band around the target; setting limits at $\\pm 3\\sigma$ means only about $0.3\\%$ of output is rejected, the origin of 'six sigma' quality goals.",
+      "**Polling:** the headline margin of error is $\\approx 2 \\times \\sigma/\\sqrt{n}$; because of the square root, precision is expensive and sample sizes plateau in the low thousands.",
+      "**Biometrics:** adult heights and weights are famously near-normal, so growth charts and clothing-size distributions are drawn straight from the bell.",
+      "**Central Limit Theorem:** it is why the normal appears even for non-normal data — any measurement that is a sum or average of many small effects inherits the bell, making $\\sigma/\\sqrt{n}$ nearly universal."
+    ]
+  },
+  "generators": [
+    "stat-norm-z-d1", "stat-norm-z-d2", "stat-norm-z-d3",
+    "stat-norm-emp-d1", "stat-norm-emp-d2", "stat-norm-emp-d3",
+    "stat-norm-prob-d1", "stat-norm-prob-d2", "stat-norm-prob-d3",
+    "stat-norm-clt-d1", "stat-norm-clt-d2", "stat-norm-clt-d3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.normal-and-sampling.s01",
+      "concepts": ["zscores"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A distribution has mean $\\mu = 50$ and standard deviation $\\sigma = 10$. Find the z-score of the value $x = 70$ using $z = \\dfrac{x - \\mu}{\\sigma}$.",
+      "steps": [
+        { "instruction": "Compute the numerator $x - \\mu = 70 - 50$.", "answer": "20", "accept": [], "hint": "$70 - 50$." },
+        { "instruction": "Divide by $\\sigma = 10$.", "answer": "2", "accept": [], "hint": "$20 / 10$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$z = \\tfrac{70 - 50}{10} = \\tfrac{20}{10} = 2$: the value sits exactly two standard deviations above the mean."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s02",
+      "concepts": ["zscores"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "SAT section scores have mean $\\mu = 500$ and standard deviation $\\sigma = 100$. Find the z-score of a 620, then interpret its sign.",
+      "steps": [
+        { "instruction": "Numerator: $620 - 500$.", "answer": "120", "accept": [], "hint": "$620 - 500$." },
+        { "instruction": "Divide by $100$ to get the z-score.", "answer": "1.2", "accept": [], "hint": "$120 / 100$." },
+        { "instruction": "Is a positive z-score above or below the mean? Give one word.", "answer": "above", "accept": [], "hint": "Positive means to the right of center." }
+      ],
+      "finalAnswer": { "value": "1.2", "unit": "" },
+      "solutionNarrative": "$z = \\tfrac{620 - 500}{100} = 1.2$, a positive score, so the 620 is $1.2$ standard deviations above the mean."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s03",
+      "concepts": ["zscores"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "IQ scores have mean $\\mu = 100$ and standard deviation $\\sigma = 15$. A percentile corresponds to a z-score of $z = 2$. Use the inverse formula $x = \\mu + z\\sigma$ to find the raw IQ score.",
+      "steps": [
+        { "instruction": "Compute $z\\sigma = 2 \\times 15$.", "answer": "30", "accept": [], "hint": "$2 \\times 15$." },
+        { "instruction": "Add the mean: $x = 100 + 30$.", "answer": "130", "accept": [], "hint": "$\\mu + z\\sigma$." }
+      ],
+      "finalAnswer": { "value": "130", "unit": "" },
+      "solutionNarrative": "$x = \\mu + z\\sigma = 100 + 2(15) = 130$. A z-score of 2 on the IQ scale is a raw score of 130."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s04",
+      "concepts": ["zscores"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A distribution has $\\mu = 60$ and $\\sigma = 8$. Find the z-score of the value $x = 44$.",
+      "steps": [
+        { "instruction": "Numerator: $44 - 60$.", "answer": "-16", "accept": [], "hint": "$44 - 60$ is negative." },
+        { "instruction": "Divide by $8$.", "answer": "-2", "accept": [], "hint": "$-16 / 8$." }
+      ],
+      "finalAnswer": { "value": "-2", "unit": "" },
+      "solutionNarrative": "$z = \\tfrac{44 - 60}{8} = \\tfrac{-16}{8} = -2$: the value lies two standard deviations below the mean."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s05",
+      "concepts": ["empirical-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For a normal distribution, the empirical rule gives the percentage of values within $1$, $2$, and $3$ standard deviations of the mean. What percentage lies within $\\pm 2$ standard deviations?",
+      "steps": [
+        { "instruction": "Recall the 68-95-99.7 rule. Give the percentage within $\\pm 2\\sigma$ (a number only).", "answer": "95", "accept": [], "hint": "It is the middle number of the three." }
+      ],
+      "finalAnswer": { "value": "95", "unit": "percent" },
+      "solutionNarrative": "The empirical rule states about $95\\%$ of values fall within $\\pm 2$ standard deviations of the mean."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s06",
+      "concepts": ["empirical-rule"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Adult IQ is normal with $\\mu = 100$, $\\sigma = 15$. By the empirical rule, about $95\\%$ of people fall within $\\pm 2\\sigma$. Find the IQ interval that captures that middle $95\\%$.",
+      "steps": [
+        { "instruction": "Lower bound: $\\mu - 2\\sigma = 100 - 2(15)$.", "answer": "70", "accept": [], "hint": "$100 - 30$." },
+        { "instruction": "Upper bound: $\\mu + 2\\sigma = 100 + 2(15)$.", "answer": "130", "accept": [], "hint": "$100 + 30$." }
+      ],
+      "finalAnswer": { "value": "130", "unit": "" },
+      "solutionNarrative": "$\\pm 2\\sigma$ spans $100 \\pm 30$, i.e. IQ 70 to 130 — the range holding about $95\\%$ of the population."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s07",
+      "concepts": ["empirical-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Heights are normal with $\\mu = 69$ in, $\\sigma = 3$ in. Using the empirical rule, what percentage of people are TALLER than $75$ inches? (Note $75 = \\mu + 2\\sigma$.)",
+      "steps": [
+        { "instruction": "How many standard deviations above the mean is 75? Compute $\\tfrac{75 - 69}{3}$.", "answer": "2", "accept": [], "hint": "$6 / 3$." },
+        { "instruction": "About $95\\%$ lie within $\\pm 2\\sigma$, leaving $5\\%$ in the two tails. The upper tail is half of that. Give the percentage above $+2\\sigma$.", "answer": "2.5", "accept": [], "hint": "Half of the leftover $5\\%$." }
+      ],
+      "finalAnswer": { "value": "2.5", "unit": "percent" },
+      "solutionNarrative": "75 in is $+2\\sigma$. Outside $\\pm 2\\sigma$ is $100\\% - 95\\% = 5\\%$, split evenly between the tails, so about $2.5\\%$ of people are taller than 75 inches."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s08",
+      "concepts": ["empirical-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For a normal distribution the empirical rule says about $68\\%$ of values lie within $\\pm 1\\sigma$. Because the bell is symmetric, what percentage lies between the mean and $+1\\sigma$?",
+      "steps": [
+        { "instruction": "Halve the $68\\%$ that lies within $\\pm 1\\sigma$.", "answer": "34", "accept": [], "hint": "$68 / 2$." }
+      ],
+      "finalAnswer": { "value": "34", "unit": "percent" },
+      "solutionNarrative": "The $68\\%$ inside $\\pm 1\\sigma$ splits evenly, so about $34\\%$ lies between the mean and $+1\\sigma$."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s09",
+      "concepts": ["normal-probabilities"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a normal distribution, $50\\%$ of values lie below the mean and about $34\\%$ lie between the mean and $+1\\sigma$. What percentage of values lies BELOW $+1\\sigma$ (i.e. what percentile is $z = 1$)?",
+      "steps": [
+        { "instruction": "Add the area below the mean to the area between the mean and $+1\\sigma$: $50 + 34$.", "answer": "84", "accept": [], "hint": "$50\\% + 34\\%$." }
+      ],
+      "finalAnswer": { "value": "84", "unit": "percent" },
+      "solutionNarrative": "Below $+1\\sigma$ is $50\\% + 34\\% = 84\\%$, so a z-score of $+1$ marks the 84th percentile."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s10",
+      "concepts": ["normal-probabilities"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "You are given the area $P(Z < 1.5) = 0.933$ for the standard normal. Find $P(Z > 1.5)$, the probability a value exceeds $z = 1.5$.",
+      "steps": [
+        { "instruction": "The total area is 1. Compute $1 - 0.933$.", "answer": "0.067", "accept": [], "hint": "Subtract the given area from 1." }
+      ],
+      "finalAnswer": { "value": "0.067", "unit": "" },
+      "solutionNarrative": "$P(Z > 1.5) = 1 - P(Z < 1.5) = 1 - 0.933 = 0.067$: the upper tail beyond $z = 1.5$."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s11",
+      "concepts": ["normal-probabilities"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "SAT scores are normal with $\\mu = 500$, $\\sigma = 100$. You are given $P(Z < 1.5) = 0.933$. Find the probability a score falls between 350 and 650. (Standardize both bounds; note $650 = \\mu + 1.5\\sigma$ and $350 = \\mu - 1.5\\sigma$.)",
+      "steps": [
+        { "instruction": "Standardize 650: $z = \\tfrac{650 - 500}{100}$.", "answer": "1.5", "accept": [], "hint": "$150 / 100$." },
+        { "instruction": "By symmetry $P(-1.5 < Z < 1.5) = P(Z<1.5) - P(Z>1.5)$. First find the upper tail $P(Z > 1.5) = 1 - 0.933$.", "answer": "0.067", "accept": [], "hint": "$1 - 0.933$." },
+        { "instruction": "Now the middle band: $0.933 - 0.067$.", "answer": "0.866", "accept": [], "hint": "$0.933 - 0.067$." }
+      ],
+      "finalAnswer": { "value": "0.866", "unit": "" },
+      "solutionNarrative": "Both bounds standardize to $z = \\pm 1.5$. With $P(Z < 1.5) = 0.933$ the upper tail is $0.067$, so $P(-1.5 < Z < 1.5) = 0.933 - 0.067 = 0.866$ — about an $86.6\\%$ chance."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s12",
+      "concepts": ["normal-probabilities"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "IQ is normal with $\\mu = 100$, $\\sigma = 15$. Using the empirical rule, what percentage of people score BELOW 85? (Note $85 = \\mu - 1\\sigma$, and recall $34\\%$ lies between the mean and $1\\sigma$.)",
+      "steps": [
+        { "instruction": "Below the mean is $50\\%$. The band from $-1\\sigma$ to the mean holds $34\\%$. Subtract to get the area below $-1\\sigma$: $50 - 34$.", "answer": "16", "accept": [], "hint": "$50\\% - 34\\%$." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "percent" },
+      "solutionNarrative": "Below $-1\\sigma$ is $50\\% - 34\\% = 16\\%$, so about $16\\%$ of people score below an IQ of 85."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s13",
+      "concepts": ["sampling-and-clt"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A population has standard deviation $\\sigma = 20$. You take samples of size $n = 100$. Find the standard error of the sample mean, $\\mathrm{SE} = \\dfrac{\\sigma}{\\sqrt{n}}$.",
+      "steps": [
+        { "instruction": "Compute $\\sqrt{n} = \\sqrt{100}$.", "answer": "10", "accept": ["sqrt(100)"], "hint": "$\\sqrt{100} = 10$." },
+        { "instruction": "Divide: $\\tfrac{20}{10}$.", "answer": "2", "accept": [], "hint": "$20 / 10$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = \\tfrac{\\sigma}{\\sqrt{n}} = \\tfrac{20}{\\sqrt{100}} = \\tfrac{20}{10} = 2$: sample means scatter far tighter than the original values."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s14",
+      "concepts": ["sampling-and-clt"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A machine fills bottles with mean $\\mu = 500$ mL and standard deviation $\\sigma = 12$ mL. A quality tech averages $n = 36$ bottles. Find the standard error of that sample mean.",
+      "steps": [
+        { "instruction": "Compute $\\sqrt{n} = \\sqrt{36}$.", "answer": "6", "accept": ["sqrt(36)"], "hint": "$\\sqrt{36} = 6$." },
+        { "instruction": "Divide: $\\tfrac{12}{6}$.", "answer": "2", "accept": [], "hint": "$12 / 6$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "mL" },
+      "solutionNarrative": "$\\mathrm{SE} = \\tfrac{12}{\\sqrt{36}} = \\tfrac{12}{6} = 2$ mL. Averaging 36 bottles cuts the scatter of the estimate from 12 mL to 2 mL."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s15",
+      "concepts": ["sampling-and-clt"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A pollster's sample proportion has standard error $\\mathrm{SE} = \\tfrac{1}{2\\sqrt{n}}$. With $n = 2500$ respondents, find the SE, then the margin of error (about $2 \\times \\mathrm{SE}$), as decimals.",
+      "steps": [
+        { "instruction": "Compute $\\sqrt{n} = \\sqrt{2500}$.", "answer": "50", "accept": ["sqrt(2500)"], "hint": "$50^2 = 2500$." },
+        { "instruction": "Standard error: $\\tfrac{1}{2 \\times 50}$.", "answer": "0.01", "accept": ["1/100"], "hint": "$\\tfrac{1}{100}$." },
+        { "instruction": "Margin of error: $2 \\times 0.01$.", "answer": "0.02", "accept": [], "hint": "Twice the SE." }
+      ],
+      "finalAnswer": { "value": "0.02", "unit": "" },
+      "solutionNarrative": "$\\sqrt{2500} = 50$, so $\\mathrm{SE} = \\tfrac{1}{100} = 0.01$ and the margin of error is $2(0.01) = 0.02$, i.e. $\\pm 2$ percentage points."
+    },
+    {
+      "id": "statistics.normal-and-sampling.s16",
+      "concepts": ["sampling-and-clt"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The Central Limit Theorem says the distribution of the sample mean $\\bar{X}$ becomes approximately what shape as the sample size grows large, even when the individual values are not that shape?",
+      "steps": [
+        { "instruction": "Name the shape (one word).", "answer": "normal", "accept": ["bell"], "hint": "The bell curve." }
+      ],
+      "finalAnswer": { "value": "normal", "unit": "" },
+      "solutionNarrative": "The Central Limit Theorem guarantees the sample mean is approximately normally distributed for large $n$, regardless of the population's shape — the reason the bell curve is everywhere."
+    }
+  ]
+}

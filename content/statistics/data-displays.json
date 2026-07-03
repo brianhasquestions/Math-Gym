@@ -1,0 +1,268 @@
+{
+  "id": "statistics.data-displays",
+  "subject": "statistics",
+  "title": "Data Displays and Distributions",
+  "prerequisites": ["statistics.descriptive-statistics"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "histograms-and-shape",
+      "label": "Histograms and shape",
+      "microLesson": "A **histogram** groups data into equal-width bins and draws a bar whose height is the count in each bin — the *shape* of those bars tells the story. A distribution is **symmetric** if the left and right halves mirror each other, **skewed right** if a long thin tail stretches toward high values (most data bunched low), and **skewed left** if the tail points toward low values. Income is the classic right-skew: a tall stack of ordinary earners with a thin tail of millionaires. The number of distinct peaks names the modality: one peak is *unimodal*, two peaks *bimodal* (often a sign of two mixed groups)."
+    },
+    {
+      "id": "quartiles-and-boxplots",
+      "label": "Quartiles and box plots",
+      "microLesson": "The **five-number summary** — minimum, $Q_1$, median, $Q_3$, maximum — compresses any data set into five landmarks, and a **box plot** draws them: a box from $Q_1$ to $Q_3$ with a line at the median, and whiskers out to the extremes. Find quartiles by the *median-of-halves* method: sort the data, split at the median (excluding it when $n$ is odd), and take $Q_1$ and $Q_3$ as the medians of the lower and upper halves. For $\\{4, 7, 8, 11, 13, 15, 18\\}$ ($n = 7$): median 11, lower half $\\{4,7,8\\}$ gives $Q_1 = 7$, upper half $\\{13,15,18\\}$ gives $Q_3 = 15$, so the summary is $4, 7, 11, 15, 18$."
+    },
+    {
+      "id": "percentiles",
+      "label": "Percentiles and percentile rank",
+      "microLesson": "The **percentile rank** of a value is the percentage of the data lying below it: $\\text{rank} = \\frac{\\#\\text{ below}}{n} \\times 100$. If 15 of 20 test scores fall below yours, you are at the 75th percentile — you beat 75% of the group. Going the other way, the **value at the $p$-th percentile** (nearest-rank method) sits at sorted position $\\lceil \\frac{p}{100}\\, n \\rceil$. The median is just the 50th percentile, and $Q_1$ and $Q_3$ are the 25th and 75th. Percentiles let you compare across differently-scaled tests: 'top 10%' means the same thing whether the raw score was 88 or 880."
+    },
+    {
+      "id": "comparing-distributions",
+      "label": "Comparing distributions",
+      "microLesson": "To compare two data sets, hold up three lenses in order: **center** (which typically runs higher — compare medians or means), **spread** (which is more consistent — compare IQR or standard deviation), and **shape** (skew and peaks). Two data sets can share a center yet differ sharply in spread: $\\{70, 72, 74, 76, 78\\}$ and $\\{60, 68, 74, 80, 88\\}$ both have median 74, but the first has IQR 6 and the second IQR 20 — same typical value, very different consistency. Always report all three; a single number never tells the whole comparison."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The picture a spreadsheet can't show\n\nYou can stare at a column of ten thousand numbers forever and see nothing. Turn it into a **histogram** and the shape jumps out in a second: a bell, a long right tail, two humps hinting at two hidden groups. Descriptive statistics gave us single numbers for center and spread; data displays give us the *distribution* — the full shape those numbers came from. This is where the famous p50/p95/p99 of a latency dashboard live, and where 'you scored in the 90th percentile' finally means something precise.\n\n## Histograms and the language of shape\n\nA histogram slices the number line into equal-width **bins** and stacks a bar for how many values land in each. Unlike a bar chart of categories, the bars touch, because the axis is continuous. What matters is the silhouette.\n\nA **symmetric** distribution has a left half that mirrors its right — the idealized bell curve of heights or measurement errors. A **right-skewed** (positively skewed) distribution piles most of its data at low values and trails a long thin tail toward the high end; income, house prices, and web response times all look like this, because there is a floor at zero but no ceiling. A **left-skewed** distribution is the mirror image, tail pointing low — think exam scores on an easy test, bunched near 100 with a few stragglers. A quick rule of thumb: in a skewed distribution the mean is dragged toward the tail, so mean $>$ median signals right skew and mean $<$ median signals left skew.\n\nCount the peaks, too. One peak is **unimodal**; two clear peaks is **bimodal** and is often a tell that two different populations got mixed together — the bimodal histogram of, say, commute times might be city drivers and highway drivers stacked in one chart.\n\n## The five-number summary and the box plot\n\nA histogram needs many data points to look like anything. For a compact, robust summary that works even for small samples, use the **five-number summary**: minimum, first quartile $Q_1$, median, third quartile $Q_3$, and maximum. These five landmarks cut the data into four quarters, each holding about 25% of the values.\n\nFinding the quartiles takes one consistent rule — the **median-of-halves** method. Sort the data. The median splits it in two; when $n$ is odd, exclude the median itself from both halves. Then $Q_1$ is the median of the lower half and $Q_3$ is the median of the upper half. Take $\\{4, 7, 8, 11, 13, 15, 18\\}$ with $n = 7$: the median is 11, the lower half $\\{4, 7, 8\\}$ has median $Q_1 = 7$, the upper half $\\{13, 15, 18\\}$ has median $Q_3 = 15$. The five-number summary is $4, 7, 11, 15, 18$.\n\nDrawing it gives a **box plot**: a box spanning $Q_1$ to $Q_3$ (its width is the IQR), a line inside at the median, and whiskers reaching to the minimum and maximum. In one glance you read the center (the median line), the spread of the middle half (the box width), and any lopsidedness (a median shoved toward one end of its box, or one whisker much longer than the other, reveals skew). Box plots shine for *comparison*: line up several side by side and differences in center and spread are immediately visible.\n\n## Percentiles: your rank in the crowd\n\nA raw score of 82 means nothing until you know the crowd. A **percentile** fixes that. The **percentile rank** of a value is the percentage of the data below it:\n\n$$\\text{percentile rank} = \\frac{\\text{number of values below it}}{n} \\times 100.$$\n\nIf 15 of 20 classmates scored below you, your percentile rank is $\\frac{15}{20}\\times 100 = 75$ — you are in the 75th percentile, ahead of three-quarters of the class. Run it backward with the **nearest-rank** method to find *which value* sits at the $p$-th percentile: it is the sorted value at position $\\lceil \\frac{p}{100}\\, n \\rceil$. The median is nothing but the 50th percentile, and $Q_1$, $Q_3$ are the 25th and 75th. Percentiles are scale-free, which is their superpower: 'top 10%' compares a spelling bee and a marathon on equal footing, no matter how differently they are scored.\n\nThis is exactly the vocabulary of a **latency dashboard**. Engineers rarely quote the mean response time — one 10-second stall would poison it. Instead they report **p50** (the median: half of requests are faster), **p95** (95% of requests are faster than this), and **p99** (the slow tail that still hits 1 in 100 users). A service can have a lovely 40 ms p50 and a horrifying 3-second p99, and only the percentiles reveal it.\n\n## Comparing two distributions\n\nPut it all together to compare data sets. Use three lenses, always in this order: **center** — which is typically higher? **Spread** — which is more consistent? **Shape** — symmetric or skewed, one peak or two? The trap is comparing only centers. The sets $\\{70, 72, 74, 76, 78\\}$ and $\\{60, 68, 74, 80, 88\\}$ share a median of 74, so on center alone they look identical — yet the first has IQR 6 and the second IQR 20. Same typical score, wildly different consistency. Report all three lenses and you describe a distribution honestly; report one and you invite the same dishonesty the company salary boast pulled in the last topic. Displays are how you make the whole shape visible — so the summary and the reality finally agree."
+  },
+  "application": {
+    "summary": "Distributions and their displays are how real systems get read: latency dashboards report p50/p95/p99 instead of a misleading mean, test-score reports hand students percentile ranks, salary surveys publish bands as box plots, and income data is the textbook right-skew that forces the median over the mean.",
+    "domains": ["site reliability and latency monitoring", "standardized testing and score reports", "compensation and salary bands", "economics and income distribution", "product analytics and dashboards"],
+    "workedExample": "**Why your latency dashboard shows p50, p95, and p99 — never the mean.**\n\nTen requests to a service return these response times (ms), sorted: $\\{10, 12, 15, 20, 50, 80, 120, 300, 900, 1500\\}$.\n\n*The mean lies.* Its average is $\\frac{3007}{10} = 300.7$ ms — but eight of the ten requests finished in under 300 ms. The two slow requests (900 and 1500) dragged the mean above almost every actual value. Reporting 'average latency 300 ms' would badly misdescribe the typical user's experience.\n\n*Percentiles tell the truth.* The median (p50) is the average of the 5th and 6th values, $\\frac{50 + 80}{2} = 65$ ms — half of all requests beat 65 ms, the honest 'typical' latency. For p95, the nearest-rank position is $\\lceil 0.95 \\times 10 \\rceil = \\lceil 9.5 \\rceil = 10$, the 10th value: **1500 ms**. For p99 on this tiny sample the position is $\\lceil 0.99 \\times 10 \\rceil = 10$ as well, again 1500 ms. So this service is snappy for most users (p50 = 65 ms) but has an ugly tail: 1 in 20 requests takes a full 1.5 seconds.\n\n*The decision.* A team watching only the mean might chase the wrong fix. The percentile view says the median is fine — the work is in the tail, the p95/p99, where a slow database query or a cold cache is stalling a small but real slice of traffic. Every serious monitoring tool (Prometheus, Datadog, CloudWatch) is built to compute exactly these percentiles, because the shape of the tail is the whole game.",
+    "domainNotes": [
+      "**Latency monitoring:** p50/p95/p99 are the median, 95th, and 99th percentiles of response time; SLOs are written against p95 or p99 precisely because the mean hides the slow tail that angers users.",
+      "**Testing:** a score report's 'percentile rank' says what fraction of test-takers you outscored, letting the SAT and a state exam be compared on the same 0–100 scale despite different raw points.",
+      "**Compensation:** salary surveys publish 25th/50th/75th percentile bands (a box plot in disguise), so a role's pay range is described by quartiles rather than one misleading average.",
+      "**Economics:** income is the archetypal right-skewed distribution — a tall stack of ordinary earners with a thin high-income tail — which is why the median household income, not the mean, is the headline statistic.",
+      "**Analytics dashboards:** histograms of session length or purchase amount reveal bimodality (e.g., browsers vs. buyers) that a single average would blur into a meaningless middle."
+    ]
+  },
+  "generators": [
+    "stat-disp-shape-d1", "stat-disp-shape-d2", "stat-disp-shape-d3",
+    "stat-disp-box-d1", "stat-disp-box-d2", "stat-disp-box-d3",
+    "stat-disp-pct-d1", "stat-disp-pct-d2", "stat-disp-pct-d3",
+    "stat-disp-cmp-d1", "stat-disp-cmp-d2", "stat-disp-cmp-d3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.data-displays.s01",
+      "concepts": ["histograms-and-shape"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A histogram has most of its bars piled up on the LEFT, with a long thin tail stretching to the RIGHT toward the high values. What is the shape of this distribution? Answer: left, right, or symmetric (naming the skew direction).",
+      "steps": [
+        { "instruction": "The tail points toward the high (right) values. Name the skew. Answer: left, right, or symmetric.", "answer": "right", "accept": [], "hint": "Skew is named for the direction the long tail points." }
+      ],
+      "finalAnswer": { "value": "right", "unit": "" },
+      "solutionNarrative": "The distribution is skewed **right** (positively skewed): the bulk of the data sits low and a long tail reaches toward high values, exactly like income or response-time data."
+    },
+    {
+      "id": "statistics.data-displays.s02",
+      "concepts": ["histograms-and-shape"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A histogram is a mirror image about its center — the left half looks just like the right half, with a single central peak. What is the shape of this distribution? Answer: left, right, or symmetric.",
+      "steps": [
+        { "instruction": "The two halves mirror each other with no long tail on either side. Name the shape. Answer: left, right, or symmetric.", "answer": "symmetric", "accept": [], "hint": "Neither tail is longer than the other." }
+      ],
+      "finalAnswer": { "value": "symmetric", "unit": "" },
+      "solutionNarrative": "With mirror-image halves and a single central peak, the distribution is **symmetric** — the idealized shape of the bell curve."
+    },
+    {
+      "id": "statistics.data-displays.s03",
+      "concepts": ["histograms-and-shape"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For a data set, the mean is 62 and the median is 70. A skewed distribution has its mean pulled toward the tail. Which way is this distribution skewed? Answer: left, right, or symmetric.",
+      "steps": [
+        { "instruction": "Is the mean greater than or less than the median here? Answer: greater or less.", "answer": "less", "accept": [], "hint": "$62 < 70$." },
+        { "instruction": "The mean is dragged toward the tail. Since the mean sits below the median, the tail points toward the low values. Name the skew. Answer: left, right, or symmetric.", "answer": "left", "accept": [], "hint": "Mean below median means the tail points left (toward low values)." }
+      ],
+      "finalAnswer": { "value": "left", "unit": "" },
+      "solutionNarrative": "The mean (62) is less than the median (70), so the mean is pulled toward low values — the tail points left. The distribution is skewed **left**."
+    },
+    {
+      "id": "statistics.data-displays.s04",
+      "concepts": ["histograms-and-shape"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A histogram of daily commute times shows two distinct, well-separated peaks — a cluster near 15 minutes and another near 45 minutes — suggesting two kinds of commuters mixed together. How many modes does this distribution have? (Give a number.)",
+      "steps": [
+        { "instruction": "Count the number of distinct peaks in the histogram. (Give a number.)", "answer": "2", "accept": [], "hint": "There is one cluster near 15 min and one near 45 min." },
+        { "instruction": "A distribution with exactly two peaks is called bimodal. Confirm the number of peaks. (Give a number.)", "answer": "2", "accept": [], "hint": "Bimodal means two modes." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Two distinct peaks make the distribution **bimodal**. Two separated humps usually signal two subpopulations mixed in one chart — here, likely short-trip city commuters and longer-trip suburban commuters."
+    },
+    {
+      "id": "statistics.data-displays.s05",
+      "concepts": ["quartiles-and-boxplots"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Give the five-number summary of the data $\\{1, 3, 5, 7, 9\\}$ (already sorted, $n = 5$). Use the median-of-halves method: exclude the median (5) from each half. Report as five values in order: min, Q1, median, Q3, max.",
+      "steps": [
+        { "instruction": "The median is the middle value. What is it? (Give a number.)", "answer": "5", "accept": [], "hint": "The 3rd of five sorted values." },
+        { "instruction": "The lower half (below the median) is $\\{1, 3\\}$; its median is Q1 $= (1+3)/2$. (Give a number.)", "answer": "2", "accept": [], "hint": "Average of 1 and 3." },
+        { "instruction": "The upper half is $\\{7, 9\\}$; its median is Q3 $= (7+9)/2$. (Give a number.)", "answer": "8", "accept": [], "hint": "Average of 7 and 9." },
+        { "instruction": "Now write the full five-number summary as: min, Q1, median, Q3, max (comma-separated, in that order).", "answer": "1,2,5,8,9", "accept": [], "hint": "Min 1, Q1 2, median 5, Q3 8, max 9." }
+      ],
+      "finalAnswer": { "value": "1,2,5,8,9", "unit": "" },
+      "solutionNarrative": "Median 5; lower half $\\{1,3\\}$ gives Q1 $= 2$; upper half $\\{7,9\\}$ gives Q3 $= 8$. Five-number summary: $1, 2, 5, 8, 9$."
+    },
+    {
+      "id": "statistics.data-displays.s06",
+      "concepts": ["quartiles-and-boxplots"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the sorted data $\\{4, 7, 8, 11, 13, 15, 18\\}$ ($n = 7$, odd), find the quartiles by the median-of-halves method (exclude the median from each half).",
+      "steps": [
+        { "instruction": "The median is the middle (4th) value. What is it? (Give a number.)", "answer": "11", "accept": [], "hint": "The 4th of seven sorted values." },
+        { "instruction": "Excluding the median, the lower half is $\\{4, 7, 8\\}$; Q1 is its median. (Give a number.)", "answer": "7", "accept": [], "hint": "The middle of $4, 7, 8$." },
+        { "instruction": "The upper half is $\\{13, 15, 18\\}$; Q3 is its median. (Give a number.)", "answer": "15", "accept": [], "hint": "The middle of $13, 15, 18$." },
+        { "instruction": "State the five-number summary as: min, Q1, median, Q3, max (comma-separated).", "answer": "4,7,11,15,18", "accept": [], "hint": "Min 4, max 18, plus the three you found." }
+      ],
+      "finalAnswer": { "value": "4,7,11,15,18", "unit": "" },
+      "solutionNarrative": "Median 11; lower half $\\{4,7,8\\}$ gives Q1 $= 7$; upper half $\\{13,15,18\\}$ gives Q3 $= 15$. Five-number summary: $4, 7, 11, 15, 18$."
+    },
+    {
+      "id": "statistics.data-displays.s07",
+      "concepts": ["quartiles-and-boxplots"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For the sorted data $\\{2, 5, 6, 8, 9, 12, 14, 20\\}$ ($n = 8$, even), find the five-number summary. With an even count, the lower half is the smallest 4 values and the upper half is the largest 4.",
+      "steps": [
+        { "instruction": "The median is the average of the two middle (4th and 5th) values, $8$ and $9$. Compute it. (Give a number.)", "answer": "8.5", "accept": [], "hint": "$(8 + 9)/2$." },
+        { "instruction": "Q1 is the median of the lower half $\\{2, 5, 6, 8\\}$: average the two middle values $5$ and $6$. (Give a number.)", "answer": "5.5", "accept": [], "hint": "$(5 + 6)/2$." },
+        { "instruction": "Q3 is the median of the upper half $\\{9, 12, 14, 20\\}$: average $12$ and $14$. (Give a number.)", "answer": "13", "accept": [], "hint": "$(12 + 14)/2$." },
+        { "instruction": "State the five-number summary as: min, Q1, median, Q3, max (comma-separated).", "answer": "2,5.5,8.5,13,20", "accept": [], "hint": "Min 2, max 20, plus your Q1, median, Q3." }
+      ],
+      "finalAnswer": { "value": "2,5.5,8.5,13,20", "unit": "" },
+      "solutionNarrative": "Median $(8+9)/2 = 8.5$; lower half $\\{2,5,6,8\\}$ gives Q1 $= 5.5$; upper half $\\{9,12,14,20\\}$ gives Q3 $= 13$. Five-number summary: $2, 5.5, 8.5, 13, 20$."
+    },
+    {
+      "id": "statistics.data-displays.s08",
+      "concepts": ["percentiles"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Among 10 sorted values, exactly 3 values fall below yours. Using percentile rank $= \\frac{\\#\\text{ below}}{n} \\times 100$, what is your percentile rank?",
+      "steps": [
+        { "instruction": "Compute $\\frac{3}{10} \\times 100$. (Give a number.)", "answer": "30", "accept": [], "hint": "$0.3 \\times 100$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "" },
+      "solutionNarrative": "Percentile rank $= \\frac{3}{10} \\times 100 = 30$: your value is at the 30th percentile, higher than 30% of the data."
+    },
+    {
+      "id": "statistics.data-displays.s09",
+      "concepts": ["percentiles"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A class of 20 test scores is sorted. Your score has exactly 15 classmates' scores below it. Using percentile rank $= \\frac{\\#\\text{ below}}{n} \\times 100$, find your percentile rank.",
+      "steps": [
+        { "instruction": "How many scores are below yours? (Give a number.)", "answer": "15", "accept": [], "hint": "Stated in the problem." },
+        { "instruction": "Compute the percentile rank $\\frac{15}{20} \\times 100$. (Give a number.)", "answer": "75", "accept": [], "hint": "$0.75 \\times 100$." }
+      ],
+      "finalAnswer": { "value": "75", "unit": "" },
+      "solutionNarrative": "Percentile rank $= \\frac{15}{20} \\times 100 = 75$: you are at the 75th percentile, outscoring three-quarters of the class."
+    },
+    {
+      "id": "statistics.data-displays.s10",
+      "concepts": ["percentiles"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Ten request latencies (ms), sorted, are $\\{10, 12, 15, 20, 50, 80, 120, 300, 900, 1500\\}$. Find the p95 latency using the nearest-rank method: the value at sorted position $\\lceil \\frac{p}{100} \\times n \\rceil$.",
+      "steps": [
+        { "instruction": "Compute the raw position $\\frac{95}{100} \\times 10$. (Give a number.)", "answer": "9.5", "accept": [], "hint": "$0.95 \\times 10$." },
+        { "instruction": "Round UP to the nearest whole number (the ceiling) to get the sorted position. (Give a number.)", "answer": "10", "accept": [], "hint": "$\\lceil 9.5 \\rceil = 10$." },
+        { "instruction": "Read the value at sorted position 10 (the 10th value). (Give a number in ms.)", "answer": "1500", "accept": [], "hint": "The 10th value in the sorted list is the maximum." }
+      ],
+      "finalAnswer": { "value": "1500", "unit": "ms" },
+      "solutionNarrative": "Position $\\lceil 0.95 \\times 10 \\rceil = \\lceil 9.5 \\rceil = 10$, so p95 is the 10th sorted value, 1500 ms. The median (p50 = 65 ms) is snappy, but the p95 tail exposes that 1 in 20 requests stalls for 1.5 seconds — exactly why dashboards track the tail."
+    },
+    {
+      "id": "statistics.data-displays.s11",
+      "concepts": ["comparing-distributions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Data set A has median 50; data set B has median 65. Comparing only their centers, which data set is typically higher? Answer: a or b.",
+      "steps": [
+        { "instruction": "Compare the two medians: which is larger, A's 50 or B's 65? Answer: a or b.", "answer": "b", "accept": [], "hint": "$65 > 50$." }
+      ],
+      "finalAnswer": { "value": "b", "unit": "" },
+      "solutionNarrative": "B's median (65) exceeds A's (50), so by center, data set B runs typically higher."
+    },
+    {
+      "id": "statistics.data-displays.s12",
+      "concepts": ["comparing-distributions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Two data sets have the SAME median of 74. Set A is $\\{70, 72, 74, 76, 78\\}$ with IQR 6; set B is $\\{60, 68, 74, 80, 88\\}$ with IQR 20. Since their centers match, which set is MORE consistent (smaller spread)? Answer: a or b.",
+      "steps": [
+        { "instruction": "Compare the two IQRs: which is smaller, A's 6 or B's 20? Answer: a or b.", "answer": "a", "accept": [], "hint": "Smaller IQR means less spread." },
+        { "instruction": "The set with the smaller IQR is more consistent. Which set is more consistent? Answer: a or b.", "answer": "a", "accept": [], "hint": "A has IQR 6, the smaller spread." }
+      ],
+      "finalAnswer": { "value": "a", "unit": "" },
+      "solutionNarrative": "Both sets center at 74, so center alone can't tell them apart — but A's IQR (6) is far smaller than B's (20), so A is the more consistent distribution. Always compare spread, not just center."
+    },
+    {
+      "id": "statistics.data-displays.s13",
+      "concepts": ["comparing-distributions"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two servers are benchmarked. Server A's response times (ms) are $\\{70, 72, 74, 76, 78\\}$; Server B's are $\\{60, 68, 74, 80, 88\\}$. Compare their spread using the range to decide which server is more predictable.",
+      "steps": [
+        { "instruction": "Compute Server A's range (max $-$ min). (Give a number.)", "answer": "8", "accept": [], "hint": "$78 - 70$." },
+        { "instruction": "Compute Server B's range (max $-$ min). (Give a number.)", "answer": "28", "accept": [], "hint": "$88 - 60$." },
+        { "instruction": "The smaller range is more predictable. Which server is more predictable? Answer: a or b.", "answer": "a", "accept": [], "hint": "A's range 8 is much smaller than B's 28." }
+      ],
+      "finalAnswer": { "value": "a", "unit": "" },
+      "solutionNarrative": "Both servers average the same, but Server A's range (8 ms) is far tighter than Server B's (28 ms). Equal center, unequal spread — Server A delivers more predictable latency, which is what an SLO cares about."
+    },
+    {
+      "id": "statistics.data-displays.s14",
+      "concepts": ["percentiles"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "For the same 10 sorted latencies $\\{10, 12, 15, 20, 50, 80, 120, 300, 900, 1500\\}$, find the p50 latency (the median). With $n = 10$, average the 5th and 6th sorted values.",
+      "steps": [
+        { "instruction": "Identify the 5th and 6th sorted values. Their sum is $50 + 80$. (Give a number.)", "answer": "130", "accept": [], "hint": "$50 + 80$." },
+        { "instruction": "Divide by 2 for the median (p50). (Give a number in ms.)", "answer": "65", "accept": [], "hint": "$130 / 2$." }
+      ],
+      "finalAnswer": { "value": "65", "unit": "ms" },
+      "solutionNarrative": "With 10 values the median is the average of the 5th and 6th: $\\frac{50 + 80}{2} = 65$ ms. This p50 is the honest 'typical' latency — half of all requests finish faster — and it is far below the outlier-inflated mean of 300.7 ms."
+    },
+    {
+      "id": "statistics.data-displays.s15",
+      "concepts": ["quartiles-and-boxplots"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A salary survey (in thousands) reports the sorted values $\\{50, 55, 60, 68, 72, 80, 95\\}$ ($n = 7$) as a box plot. Find Q1 and Q3 (median-of-halves method, excluding the median) so the box can be drawn.",
+      "steps": [
+        { "instruction": "The median is the 4th value. What is it? (Give a number in thousands.)", "answer": "68", "accept": [], "hint": "The middle of seven sorted values." },
+        { "instruction": "Lower half is $\\{50, 55, 60\\}$; Q1 is its median. (Give a number in thousands.)", "answer": "55", "accept": [], "hint": "The middle of $50, 55, 60$." },
+        { "instruction": "Upper half is $\\{72, 80, 95\\}$; Q3 is its median. (Give a number in thousands.)", "answer": "80", "accept": [], "hint": "The middle of $72, 80, 95$." }
+      ],
+      "finalAnswer": { "value": "80", "unit": "thousand" },
+      "solutionNarrative": "Median 68; lower half $\\{50,55,60\\}$ gives Q1 $= 55$; upper half $\\{72,80,95\\}$ gives Q3 $= 80$. The box runs from 55 to 80 (the middle-half salary band) with the median line at 68 — exactly how compensation bands are published."
+    },
+    {
+      "id": "statistics.data-displays.s16",
+      "concepts": ["histograms-and-shape",
+        "comparing-distributions"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A histogram of household incomes shows a tall stack of ordinary earners on the left and a long thin tail of high earners stretching right. Because of this shape, reporters choose between the mean and the median for the headline. First name the skew, then pick the statistic that resists the tail.",
+      "steps": [
+        { "instruction": "The long tail points toward high (right) values. Name the skew. Answer: left, right, or symmetric.", "answer": "right", "accept": [], "hint": "Tail toward high values = right skew." },
+        { "instruction": "Which statistic is dragged upward by the high-income tail — the mean or the median? Answer: mean or median.", "answer": "mean", "accept": [], "hint": "The mean chases the tail; the median resists it." },
+        { "instruction": "So which statistic should the headline use to describe a typical household? Answer: mean or median.", "answer": "median", "accept": [], "hint": "Use the resistant statistic." }
+      ],
+      "finalAnswer": { "value": "median", "unit": "" },
+      "solutionNarrative": "Income is skewed **right**, so the mean is pulled up by the wealthy tail and overstates the typical household. The resistant **median** is the honest headline — which is why 'median household income' is the standard economic statistic."
+    }
+  ]
+}

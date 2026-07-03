@@ -1,0 +1,272 @@
+{
+  "id": "statistics.descriptive-statistics",
+  "subject": "statistics",
+  "title": "Descriptive Statistics: Center and Spread",
+  "prerequisites": [],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "measures-of-center",
+      "label": "Mean, median, and mode",
+      "microLesson": "Three numbers claim to be 'the average.' The **mean** $\\bar{x} = \\frac{1}{n}\\sum x_i$ balances the data like a seesaw; the **median** is the middle value once the data are sorted; the **mode** is the most frequent value. For $\\{2, 4, 5, 6, 8\\}$ all three agree at 5, but they part ways under skew: the incomes $\\{10, 11, 12, 13, 54\\}$ have median 12 yet mean 20, because one large value drags the mean upward. Use the mean for symmetric data, the median when a few extreme values would mislead, and the mode for categories or 'most common' questions."
+    },
+    {
+      "id": "measures-of-spread",
+      "label": "Range, variance, and standard deviation",
+      "microLesson": "Center alone hides how scattered the data are. The **range** (max minus min) is the crudest measure; the **standard deviation** is the workhorse. Compute the sample variance $s^2 = \\frac{1}{n-1}\\sum (x_i - \\bar{x})^2$ — the *average squared distance from the mean*, using $n-1$ so a sample doesn't understate the spread — then take the square root for $s$. For $\\{4, 6, 8\\}$: mean 6, squared deviations $4 + 0 + 4 = 8$, so $s^2 = 8/2 = 4$ and $s = 2$. Standard deviation shares the data's units, which is why it, not variance, gets reported."
+    },
+    {
+      "id": "outliers-and-resistance",
+      "label": "Outliers and resistant statistics",
+      "microLesson": "A statistic is **resistant** if a single extreme value barely moves it. The median and the interquartile range $\\text{IQR} = Q_3 - Q_1$ are resistant; the mean and standard deviation are not — one outlier can swing them wildly. The standard **1.5·IQR rule** flags a point as an outlier if it falls below $Q_1 - 1.5\\,\\text{IQR}$ or above $Q_3 + 1.5\\,\\text{IQR}$. For $\\{3,5,6,7,8,9,10,25\\}$, $Q_1 = 5.5$, $Q_3 = 9.5$, $\\text{IQR} = 4$, so the upper fence is $9.5 + 6 = 15.5$ and the value 25 is a genuine outlier."
+    },
+    {
+      "id": "weighted-and-grouped",
+      "label": "Weighted and grouped means",
+      "microLesson": "When values carry different importance, use a **weighted mean** $\\bar{x} = \\frac{\\sum w_i x_i}{\\sum w_i}$. A course grade of exams (weight 0.40), homework (0.35), and a project (0.25) scoring 88, 72, 95 is $0.40(88) + 0.35(72) + 0.25(95) = 84.15$ — not the plain average 85. The same idea reads a **frequency table**: treat each frequency as a weight. If the values 1, 2, 3, 4 occur with frequencies 2, 3, 4, 1, the mean is $\\frac{1(2)+2(3)+3(4)+4(1)}{2+3+4+1} = \\frac{24}{10} = 2.4$. Multiply each value by how often (or how heavily) it counts, then divide by the total weight."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The one number that hides a thousand stories\n\nA company brags that its *average* salary is \\$95,000. True — and useless, because the CEO earns \\$2 million and everyone else earns \\$45,000. 'The average' is not one idea but several, and choosing the wrong one is how statistics lies without saying anything false. Descriptive statistics is the craft of summarizing a pile of numbers honestly: one number for the **center**, one for the **spread**, and a rule for spotting the values that wreck both.\n\n## Three averages, three jobs\n\nThe **mean** is the familiar one: add everything up and divide by the count, $\\bar{x} = \\frac{1}{n}\\sum x_i$. Physically it is the balance point — the value where deviations above and below cancel exactly. The **median** is the middle value of the sorted data (average the two middle ones if $n$ is even). The **mode** is simply the most frequent value.\n\nOn tidy, symmetric data they nearly coincide: $\\{2, 4, 5, 6, 8\\}$ has mean, median, and mode-free center all near 5. The drama starts with **skew**. Consider five household incomes (in thousands): $\\{10, 11, 12, 13, 54\\}$. The median is 12 — a typical household. The mean is $100/5 = 20$, pulled up by one wealthy outlier toward a value *nobody actually earns*. This is exactly why news reports quote **median** household income, not mean: the median refuses to be bullied by the tail. Reach for the mean on symmetric data, the median when a few extremes would distort the picture, and the mode when you care about the single most common outcome.\n\n## Spread: how much do the data disagree?\n\nTwo classes can both average 75 while one is full of 74s and 76s and the other is half 50s and half 100s. Center says nothing about that difference — you need **spread**.\n\nThe **range** (max minus min) is a one-glance measure but throws away everything in between and is at the mercy of a single extreme point. The real workhorse is the **standard deviation**. Build it in stages: find the mean, take each value's deviation from it, *square* the deviations (so positives and negatives don't cancel), average them, and square-root back to the original units. For a sample we divide by $n-1$ rather than $n$:\n\n$$s^2 = \\frac{1}{n-1}\\sum_{i=1}^{n}(x_i - \\bar{x})^2, \\qquad s = \\sqrt{s^2}.$$\n\nThe $n-1$ (Bessel's correction) compensates for the fact that a sample hugs its own mean a little too tightly and would otherwise underestimate the true spread. Worked example on $\\{4, 6, 8\\}$: the mean is 6; deviations are $-2, 0, 2$; squared they are $4, 0, 4$ summing to 8; the sample variance is $8/(3-1) = 4$, so $s = 2$. Standard deviation carries the same units as the data — dollars, milliseconds, points — which is why reports quote $s$ and quietly leave $s^2$ (in *squared* units) in the algebra.\n\n## Outliers, and which statistics survive them\n\nAn **outlier** is a value far from the bulk of the data. Some statistics shrug them off — they are **resistant** — and some collapse. Swap the 54 back into our incomes: the median barely twitches, but the mean leaps from 12 to 20. The median and the **interquartile range** $\\text{IQR} = Q_3 - Q_1$ (the spread of the middle half) are resistant; the mean and standard deviation are not.\n\nTo decide *objectively* whether a point is an outlier, statisticians use the **1.5·IQR rule**: anything below $Q_1 - 1.5\\,\\text{IQR}$ or above $Q_3 + 1.5\\,\\text{IQR}$ is flagged. Take $\\{3, 5, 6, 7, 8, 9, 10, 25\\}$: the quartiles are $Q_1 = 5.5$ and $Q_3 = 9.5$, so $\\text{IQR} = 4$, and the upper fence sits at $9.5 + 1.5(4) = 15.5$. The value 25 sails past it — a real outlier, not just a big number. That single rule turns a vague hunch into a defensible cutoff, and it is exactly what quality-control charts and fraud detectors compute in bulk.\n\n## When some values count more\n\nNot every value deserves equal say. A **weighted mean** scales each value by an importance weight before averaging:\n\n$$\\bar{x} = \\frac{\\sum w_i x_i}{\\sum w_i}.$$\n\nA syllabus weighting exams 0.40, homework 0.35, and a project 0.25, with scores 88, 72, 95, gives $0.40(88) + 0.35(72) + 0.25(95) = 84.15$ — noticeably below the naive average of 85, because the weakest score carries the heaviest weight. The same machinery reads a **frequency table**: a frequency *is* a weight. If the values 1, 2, 3, 4 appear 2, 3, 4, 1 times, the mean is $\\frac{1(2)+2(3)+3(4)+4(1)}{10} = \\frac{24}{10} = 2.4$ — you never wrote out all ten numbers, you just let the counts do the work.\n\n## Why this is the whole foundation\n\nEvery richer tool — histograms, box plots, confidence intervals, hypothesis tests — is built on center and spread. An A/B test compares two means and asks whether their difference is large *relative to the spread*. A sensor smooths noise by averaging. A grading curve shifts and stretches scores using the mean and standard deviation. Master these five moves — pick the right center, quantify the spread, respect the outliers, and weight what deserves weighting — and you can summarize any dataset without letting it summarize you dishonestly."
+  },
+  "application": {
+    "summary": "Center and spread turn raw measurements into decisions: A/B tests compare means against their variability, economists report median income to dodge the pull of the ultra-rich, teachers curve grades with the mean and standard deviation, and quality-control lines flag defects with the 1.5·IQR rule.",
+    "domains": ["A/B testing and product analytics", "economics and income reporting", "education and grading curves", "sensor and signal averaging", "manufacturing quality control"],
+    "workedExample": "**Reading an A/B test the honest way.**\n\nA team ships two checkout buttons and records daily conversions for five days each.\n\n*Variant A:* $\\{12, 15, 9, 14, 10\\}$. Mean $= \\frac{60}{5} = 12$ conversions/day.\n\n*Variant B:* $\\{18, 22, 15, 20, 25\\}$. Mean $= \\frac{100}{5} = 20$ conversions/day.\n\nB averages 8 more per day — but is that signal or noise? Compute the spread. For A, deviations from 12 are $0, 3, -3, 2, -2$; squares $0, 9, 9, 4, 4$ sum to 26, so $s_A^2 = 26/4 = 6.5$ and $s_A = \\sqrt{6.5} \\approx 2.55$. For B, deviations from 20 are $-2, 2, -5, 0, 5$; squares $4, 4, 25, 0, 25$ sum to 58, so $s_B^2 = 58/4 = 14.5$ and $s_B \\approx 3.81$. The 8-conversion gap is roughly three of A's standard deviations wide — a difference far larger than the day-to-day wobble, which is what makes it believable.\n\n**Now the outlier trap.** Suppose day 5 of A was a glitch that logged 90 instead of 10. The mean rockets to $\\frac{140}{5} = 28$, making A look like the *winner* — a lie manufactured by one bad row. The median of A, however, moves only from 12 to 14. The 1.5·IQR rule catches the culprit: with the glitch, A's quartiles put the upper fence well below 90, flagging it for removal before it poisons the comparison. Resistant statistics are not academic niceties; they are the difference between shipping the right button and the wrong one.",
+    "domainNotes": [
+      "**A/B testing:** a difference in means only matters relative to the standard deviation — an 8-point lift means little if daily spread is 20, and everything if it is 3; this ratio is the seed of the t-test.",
+      "**Economics:** governments report *median* household income precisely because a handful of billionaires would inflate the mean into a number no real family recognizes.",
+      "**Education:** curving on a normal model shifts every score by the class mean and rescales by the standard deviation, so 'one standard deviation above the mean' becomes a fixed letter grade.",
+      "**Sensors:** averaging $k$ noisy readings cuts the standard deviation of the estimate by $\\sqrt{k}$, which is why a thermostat samples many times and reports the mean rather than any single tick.",
+      "**Quality control:** production lines flag a part as defective when a measurement crosses a 1.5·IQR (or 3-sigma) fence — the same outlier rule, run automatically thousands of times a shift."
+    ]
+  },
+  "generators": [
+    "stat-desc-center-d1", "stat-desc-center-d2", "stat-desc-center-d3",
+    "stat-desc-spread-d1", "stat-desc-spread-d2", "stat-desc-spread-d3",
+    "stat-desc-out-d1", "stat-desc-out-d2", "stat-desc-out-d3",
+    "stat-desc-wt-d1", "stat-desc-wt-d2", "stat-desc-wt-d3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.descriptive-statistics.s01",
+      "concepts": ["measures-of-center"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the mean of the data set $\\{4, 8, 6, 2, 5\\}$.",
+      "steps": [
+        { "instruction": "Add all five values. (Give a number.)", "answer": "25", "accept": [], "hint": "$4 + 8 + 6 + 2 + 5$." },
+        { "instruction": "Divide the sum by the count $n = 5$ to get the mean. (Give a number.)", "answer": "5", "accept": [], "hint": "$25 / 5$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "The mean is $\\bar{x} = \\frac{4+8+6+2+5}{5} = \\frac{25}{5} = 5$ — the balance point of the data."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s02",
+      "concepts": ["measures-of-center"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the median of the data set $\\{7, 3, 9, 3, 5\\}$.",
+      "steps": [
+        { "instruction": "Sort the data from smallest to largest, then give the middle (3rd) value. With $n = 5$ the median is the single middle number. (Give a number.)", "answer": "5", "accept": [], "hint": "Sorted: $3, 3, 5, 7, 9$ — the middle one." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Sorted the data is $3, 3, 5, 7, 9$; with five values the median is the 3rd, which is 5."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s03",
+      "concepts": ["measures-of-center"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the data set $\\{2, 4, 4, 4, 7, 9\\}$, the mean, median, and mode are three different numbers. Find the mode (the most frequently occurring value).",
+      "steps": [
+        { "instruction": "Which value appears most often? (Give a number.)", "answer": "4", "accept": [], "hint": "Count how many times each value occurs; 4 appears three times." },
+        { "instruction": "As a check, find the mean: sum is 30, divided by $n = 6$. (Give a number.)", "answer": "5", "accept": [], "hint": "$30 / 6$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "The value 4 occurs three times, more than any other, so the mode is 4. (Here the mode 4, the median 4, and the mean 5 nearly agree, but the mode is defined by frequency alone.)"
+    },
+    {
+      "id": "statistics.descriptive-statistics.s04",
+      "concepts": ["measures-of-center"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Five households report incomes (in thousands of dollars): $\\{10, 11, 12, 13, 54\\}$. Compute both the mean and the median, and decide which better represents a typical household.",
+      "steps": [
+        { "instruction": "Compute the mean: the sum is 100, divided by $n = 5$. (Give a number in thousands.)", "answer": "20", "accept": [], "hint": "$100 / 5$." },
+        { "instruction": "Find the median (the middle value of the sorted data). (Give a number in thousands.)", "answer": "12", "accept": [], "hint": "Sorted: $10, 11, 12, 13, 54$ — the 3rd value." },
+        { "instruction": "Which statistic better represents a typical household here — the one that resists the large value? Answer: mean or median.", "answer": "median", "accept": [], "hint": "One value, 54, drags the mean far above what most households earn." }
+      ],
+      "finalAnswer": { "value": "median", "unit": "" },
+      "solutionNarrative": "The mean is $100/5 = 20$, but four of the five households earn 13 or less — the mean is inflated by the outlier 54. The median 12 sits among the actual data, which is why median income is the honest summary here."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s05",
+      "concepts": ["measures-of-spread"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the range of the data set $\\{8, 11, 15, 19, 22\\}$.",
+      "steps": [
+        { "instruction": "Identify the maximum and minimum, then compute range $=$ max $-$ min. (Give a number.)", "answer": "14", "accept": [], "hint": "$22 - 8$." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "" },
+      "solutionNarrative": "The range is the largest minus the smallest value: $22 - 8 = 14$."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s06",
+      "concepts": ["measures-of-spread"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the sample standard deviation of $\\{4, 6, 8\\}$.",
+      "steps": [
+        { "instruction": "Compute the mean of the three values. (Give a number.)", "answer": "6", "accept": [], "hint": "$(4+6+8)/3$." },
+        { "instruction": "Compute the sum of squared deviations from the mean: $(4-6)^2 + (6-6)^2 + (8-6)^2$. (Give a number.)", "answer": "8", "accept": [], "hint": "$4 + 0 + 4$." },
+        { "instruction": "Divide by $n - 1 = 2$ to get the sample variance $s^2$. (Give a number.)", "answer": "4", "accept": [], "hint": "$8 / 2$." },
+        { "instruction": "Take the square root to get the sample standard deviation $s$. (Give a number.)", "answer": "2", "accept": ["sqrt(4)"], "hint": "$\\sqrt{4}$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Mean 6; squared deviations $4, 0, 4$ sum to 8; sample variance $s^2 = 8/2 = 4$; so $s = \\sqrt{4} = 2$."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s07",
+      "concepts": ["measures-of-spread"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the sample standard deviation of $\\{2, 4, 6, 8, 10\\}$ (round to 2 decimals).",
+      "steps": [
+        { "instruction": "Compute the mean. (Give a number.)", "answer": "6", "accept": [], "hint": "$(2+4+6+8+10)/5 = 30/5$." },
+        { "instruction": "Sum the squared deviations: $(2-6)^2 + (4-6)^2 + (6-6)^2 + (8-6)^2 + (10-6)^2$. (Give a number.)", "answer": "40", "accept": [], "hint": "$16 + 4 + 0 + 4 + 16$." },
+        { "instruction": "Divide by $n - 1 = 4$ to get the sample variance. (Give a number.)", "answer": "10", "accept": [], "hint": "$40 / 4$." },
+        { "instruction": "Take the square root for $s$ (round to 2 decimals).", "answer": "3.16", "accept": ["sqrt(10)"], "hint": "$\\sqrt{10} \\approx 3.16$." }
+      ],
+      "finalAnswer": { "value": "3.16", "unit": "" },
+      "solutionNarrative": "Mean 6; squared deviations sum to 40; $s^2 = 40/4 = 10$; $s = \\sqrt{10} \\approx 3.16$."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s08",
+      "concepts": ["measures-of-spread"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For the data $\\{1, 3, 5, 7, 9\\}$, compute BOTH the population standard deviation (divide by $n$) and the sample standard deviation (divide by $n - 1$), and see how they differ. Round each to 2 decimals.",
+      "steps": [
+        { "instruction": "Compute the mean. (Give a number.)", "answer": "5", "accept": [], "hint": "$25 / 5$." },
+        { "instruction": "Sum the squared deviations from the mean: $16 + 4 + 0 + 4 + 16$. (Give a number.)", "answer": "40", "accept": [], "hint": "Deviations are $-4, -2, 0, 2, 4$." },
+        { "instruction": "Population variance divides by $n = 5$: compute $40/5$, then take its square root for the population SD (round to 2 decimals).", "answer": "2.83", "accept": ["sqrt(8)"], "hint": "$40/5 = 8$, and $\\sqrt{8} \\approx 2.83$." },
+        { "instruction": "Sample variance divides by $n - 1 = 4$: compute $40/4$, then take its square root for the sample SD (round to 2 decimals).", "answer": "3.16", "accept": ["sqrt(10)"], "hint": "$40/4 = 10$, and $\\sqrt{10} \\approx 3.16$." }
+      ],
+      "finalAnswer": { "value": "3.16", "unit": "" },
+      "solutionNarrative": "Squared deviations sum to 40. Population SD $= \\sqrt{40/5} = \\sqrt{8} \\approx 2.83$; sample SD $= \\sqrt{40/4} = \\sqrt{10} \\approx 3.16$. Dividing by the smaller $n-1$ makes the sample SD larger — Bessel's correction, which keeps a sample from understating the spread."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s09",
+      "concepts": ["outliers-and-resistance"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A data set has $Q_1 = 20$ and $Q_3 = 30$. Compute the interquartile range (IQR).",
+      "steps": [
+        { "instruction": "IQR $= Q_3 - Q_1$. Compute it. (Give a number.)", "answer": "10", "accept": [], "hint": "$30 - 20$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "The IQR is the spread of the middle half: $Q_3 - Q_1 = 30 - 20 = 10$. Unlike the range, it ignores the extreme tails, so outliers don't affect it."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s10",
+      "concepts": ["outliers-and-resistance"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A data set has $Q_1 = 40$ and $Q_3 = 60$. Using the 1.5·IQR rule, find the upper fence above which a value is flagged as an outlier.",
+      "steps": [
+        { "instruction": "Compute the IQR $= Q_3 - Q_1$. (Give a number.)", "answer": "20", "accept": [], "hint": "$60 - 40$." },
+        { "instruction": "Compute $1.5 \\times \\text{IQR}$. (Give a number.)", "answer": "30", "accept": [], "hint": "$1.5 \\times 20$." },
+        { "instruction": "Upper fence $= Q_3 + 1.5\\,\\text{IQR}$. Compute it. (Give a number.)", "answer": "90", "accept": [], "hint": "$60 + 30$." }
+      ],
+      "finalAnswer": { "value": "90", "unit": "" },
+      "solutionNarrative": "IQR $= 20$, so $1.5\\,\\text{IQR} = 30$ and the upper fence is $Q_3 + 30 = 90$. Any value above 90 is flagged as a high outlier."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s11",
+      "concepts": ["outliers-and-resistance"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Server response times (ms) for eight requests are $\\{3, 5, 6, 7, 8, 9, 10, 25\\}$ (already sorted). Use the 1.5·IQR rule to decide whether 25 is an outlier. Use the median-of-halves method: with $n = 8$, the lower half is the smallest 4 values and the upper half is the largest 4.",
+      "steps": [
+        { "instruction": "$Q_1$ is the median of the lower half $\\{3, 5, 6, 7\\}$: average the two middle values. (Give a number.)", "answer": "5.5", "accept": [], "hint": "$(5 + 6)/2$." },
+        { "instruction": "$Q_3$ is the median of the upper half $\\{8, 9, 10, 25\\}$: average the two middle values. (Give a number.)", "answer": "9.5", "accept": [], "hint": "$(9 + 10)/2$." },
+        { "instruction": "Compute the IQR $= Q_3 - Q_1$. (Give a number.)", "answer": "4", "accept": [], "hint": "$9.5 - 5.5$." },
+        { "instruction": "Compute the upper fence $Q_3 + 1.5\\,\\text{IQR}$, then answer: is 25 above it, making it an outlier? Answer yes or no.", "answer": "yes", "accept": [], "hint": "Upper fence $= 9.5 + 1.5(4) = 15.5$; 25 exceeds it." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$Q_1 = 5.5$, $Q_3 = 9.5$, IQR $= 4$, so the upper fence is $9.5 + 1.5(4) = 15.5$. Since $25 > 15.5$, the 25 ms request is a genuine outlier — the kind of slow tail a latency dashboard would flag."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s12",
+      "concepts": ["weighted-and-grouped"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A grade is 40% exam and 60% homework. A student scores 80 on the exam and 90 on homework. Compute the weighted mean grade.",
+      "steps": [
+        { "instruction": "Multiply each score by its weight and add: $0.40 \\times 80 + 0.60 \\times 90$. (Give a number.)", "answer": "86", "accept": [], "hint": "$32 + 54$." }
+      ],
+      "finalAnswer": { "value": "86", "unit": "" },
+      "solutionNarrative": "The weights sum to 1, so the weighted mean is $0.40(80) + 0.60(90) = 32 + 54 = 86$ — pulled toward the more heavily weighted homework score."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s13",
+      "concepts": ["weighted-and-grouped"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A course weights exams 0.40, homework 0.35, and a project 0.25. A student scores 88, 72, and 95 respectively. Compute the weighted mean grade (round to 2 decimals).",
+      "steps": [
+        { "instruction": "Exam contribution: $0.40 \\times 88$. (Give a number.)", "answer": "35.2", "accept": [], "hint": "$0.4 \\times 88$." },
+        { "instruction": "Homework contribution: $0.35 \\times 72$. (Give a number.)", "answer": "25.2", "accept": [], "hint": "$0.35 \\times 72$." },
+        { "instruction": "Project contribution: $0.25 \\times 95$. (Give a number.)", "answer": "23.75", "accept": [], "hint": "$0.25 \\times 95$." },
+        { "instruction": "Add the three contributions for the weighted mean. (Give a number.)", "answer": "84.15", "accept": [], "hint": "$35.2 + 25.2 + 23.75$." }
+      ],
+      "finalAnswer": { "value": "84.15", "unit": "" },
+      "solutionNarrative": "The weights already sum to 1, so the weighted mean is $0.40(88) + 0.35(72) + 0.25(95) = 35.2 + 25.2 + 23.75 = 84.15$ — below the plain average 85, because the low homework score carries the second-heaviest weight."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s14",
+      "concepts": ["weighted-and-grouped"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A frequency table lists the values 1, 2, 3, 4 occurring with frequencies 2, 3, 4, 1. Compute the mean of the data described by the table.",
+      "steps": [
+        { "instruction": "Compute the weighted sum $\\sum (\\text{value} \\times \\text{frequency}) = 1(2) + 2(3) + 3(4) + 4(1)$. (Give a number.)", "answer": "24", "accept": [], "hint": "$2 + 6 + 12 + 4$." },
+        { "instruction": "Compute the total count $\\sum \\text{frequency} = 2 + 3 + 4 + 1$. (Give a number.)", "answer": "10", "accept": [], "hint": "Add the frequencies." },
+        { "instruction": "Divide the weighted sum by the total count for the mean. (Give a number.)", "answer": "2.4", "accept": [], "hint": "$24 / 10$." }
+      ],
+      "finalAnswer": { "value": "2.4", "unit": "" },
+      "solutionNarrative": "Treating each frequency as a weight, the mean is $\\frac{1(2)+2(3)+3(4)+4(1)}{2+3+4+1} = \\frac{24}{10} = 2.4$ — computed without ever writing out all ten individual values."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s15",
+      "concepts": ["measures-of-center"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A temperature sensor takes five readings (°C): $\\{21, 23, 22, 24, 20\\}$. To reduce noise, the system reports the mean. Compute it.",
+      "steps": [
+        { "instruction": "Add the five readings. (Give a number.)", "answer": "110", "accept": [], "hint": "$21 + 23 + 22 + 24 + 20$." },
+        { "instruction": "Divide by $n = 5$ for the mean. (Give a number.)", "answer": "22", "accept": [], "hint": "$110 / 5$." }
+      ],
+      "finalAnswer": { "value": "22", "unit": "°C" },
+      "solutionNarrative": "The reported temperature is the mean $\\frac{21+23+22+24+20}{5} = \\frac{110}{5} = 22$°C. Averaging many readings cancels random sensor noise around the true value."
+    },
+    {
+      "id": "statistics.descriptive-statistics.s16",
+      "concepts": ["measures-of-spread"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two production lines both average 50 mm on a part. Line A's five parts are $\\{48, 49, 50, 51, 52\\}$ and Line B's are $\\{40, 45, 50, 55, 60\\}$. Compute the sample standard deviation of Line A (round to 2 decimals) to confirm it is the more consistent line.",
+      "steps": [
+        { "instruction": "Confirm the mean of Line A. (Give a number.)", "answer": "50", "accept": [], "hint": "$(48+49+50+51+52)/5 = 250/5$." },
+        { "instruction": "Sum the squared deviations from 50: $(48-50)^2 + (49-50)^2 + (50-50)^2 + (51-50)^2 + (52-50)^2$. (Give a number.)", "answer": "10", "accept": [], "hint": "$4 + 1 + 0 + 1 + 4$." },
+        { "instruction": "Divide by $n - 1 = 4$ for the sample variance. (Give a number.)", "answer": "2.5", "accept": [], "hint": "$10 / 4$." },
+        { "instruction": "Take the square root for the sample standard deviation (round to 2 decimals).", "answer": "1.58", "accept": ["sqrt(2.5)"], "hint": "$\\sqrt{2.5} \\approx 1.58$." }
+      ],
+      "finalAnswer": { "value": "1.58", "unit": "mm" },
+      "solutionNarrative": "Line A: squared deviations sum to 10, so $s^2 = 10/4 = 2.5$ and $s = \\sqrt{2.5} \\approx 1.58$ mm. Line B, with the same mean but parts spread from 40 to 60, has a far larger SD — same center, very different quality. Standard deviation is what tells the consistent line from the sloppy one."
+    }
+  ]
+}

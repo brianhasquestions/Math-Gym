@@ -1,0 +1,270 @@
+{
+  "id": "statistics.probability-basics",
+  "subject": "statistics",
+  "title": "Probability: Rules and Sample Spaces",
+  "prerequisites": ["discrete-math.counting-principles"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "sample-spaces-and-events",
+      "label": "Sample spaces and events",
+      "microLesson": "The sample space $S$ is the set of every outcome an experiment can produce; an event is any subset of $S$. When the outcomes are equally likely, probability is pure counting: $P(A) = \\frac{|A|}{|S|}$, the number of favorable outcomes over the total. Rolling one fair die has $S = \\{1,2,3,4,5,6\\}$, so $P(\\text{even}) = \\frac{3}{6} = \\frac{1}{2}$. Every probability lands in $[0,1]$: $P(\\varnothing) = 0$ (impossible) and $P(S) = 1$ (certain), and the counting you learned for permutations and combinations is exactly how you size $|A|$ and $|S|$."
+    },
+    {
+      "id": "addition-rule",
+      "label": "Addition rule (OR)",
+      "microLesson": "For any two events, $P(A \\text{ or } B) = P(A) + P(B) - P(A \\text{ and } B)$ — you add the two chances but subtract the overlap you counted twice. Drawing one card, $P(\\text{heart or king}) = \\frac{13}{52} + \\frac{4}{52} - \\frac{1}{52} = \\frac{16}{52} = \\frac{4}{13}$; the lone king of hearts is the overlap. When $A$ and $B$ are **mutually exclusive** (they can't both happen, so $P(A \\text{ and } B) = 0$), the rule collapses to plain addition: $P(A \\text{ or } B) = P(A) + P(B)$. Rolling a 2 or a 5 on one die is $\\frac{1}{6} + \\frac{1}{6} = \\frac{1}{3}$."
+    },
+    {
+      "id": "complement-rule",
+      "label": "Complement rule",
+      "microLesson": "The complement $A^c$ is 'A does not happen', and since one of them must occur, $P(A^c) = 1 - P(A)$. This is the shortcut for messy 'at least one' questions: the opposite of 'at least one success' is 'zero successes', which is usually far easier to count. The chance of at least one 6 in two rolls is not a tangle of cases but $1 - P(\\text{no 6}) = 1 - \\left(\\frac{5}{6}\\right)^2 = 1 - \\frac{25}{36} = \\frac{11}{36}$. Whenever a problem says 'at least one', reach for the complement first."
+    },
+    {
+      "id": "multiplication-independent",
+      "label": "Multiplication rule (independent AND)",
+      "microLesson": "Two events are **independent** when one happening tells you nothing about the other; then the chance of both is the product: $P(A \\text{ and } B) = P(A)\\,P(B)$. Two fair coins both landing heads is $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$; a die showing even AND a coin showing heads is $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$. This extends to chains: three independent components each working with probability $0.99$ all work with probability $0.99^3 \\approx 0.970$. Independence is an assumption you must justify — separate physical mechanisms (a die and a coin) are the safe case."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The math casinos bet the house on\n\nEvery slot machine, insurance premium, weather forecast, and spam filter runs on one idea: attach a number between 0 and 1 to an uncertain event, then combine those numbers with a handful of rules. A casino doesn't *hope* to win — it computes that the house edge on roulette is exactly $\\frac{2}{38}$ and lets the law of large numbers do the rest. The good news is that when outcomes are equally likely, probability is just the counting you already know, dressed up as a fraction.\n\n## Sample spaces: list the world, then count\n\nThe **sample space** $S$ is the set of all possible outcomes of an experiment; an **event** is any subset of $S$. Roll one fair die and $S = \\{1,2,3,4,5,6\\}$. Flip two coins and $S = \\{HH, HT, TH, TT\\}$ — four outcomes, and the product rule you met in counting tells you why: two independent stages of 2 choices each give $2 \\cdot 2 = 4$.\n\nWhen every outcome is **equally likely**, probability is a ratio of sizes:\n\n$$P(A) = \\frac{|A|}{|S|} = \\frac{\\text{favorable outcomes}}{\\text{total outcomes}}.$$\n\nSo $P(\\text{even on a die}) = \\frac{|\\{2,4,6\\}|}{6} = \\frac{1}{2}$, and drawing one card from a shuffled deck, $P(\\text{king}) = \\frac{4}{52} = \\frac{1}{13}$. Two laws bracket everything that follows: every probability satisfies $0 \\le P(A) \\le 1$, the impossible event has $P(\\varnothing) = 0$, and the certain event has $P(S) = 1$. Sizing $|A|$ and $|S|$ for richer questions — a full house, a winning lottery ticket — is exactly the permutation-and-combination work from the counting topic, which is why that is a prerequisite here.\n\n## The addition rule: OR, minus the double-count\n\nHow likely is $A$ **or** $B$? Adding $P(A)$ and $P(B)$ tempts you, but any outcome in both events gets counted twice. Subtract the overlap:\n\n$$P(A \\text{ or } B) = P(A) + P(B) - P(A \\text{ and } B).$$\n\nDraw one card: $P(\\text{heart or king}) = \\frac{13}{52} + \\frac{4}{52} - \\frac{1}{52} = \\frac{16}{52} = \\frac{4}{13}$. The subtracted $\\frac{1}{52}$ is the king of hearts, the single card in both events. This is the inclusion–exclusion principle from set counting, transplanted onto probabilities.\n\nWhen $A$ and $B$ **cannot both happen** — they are **mutually exclusive** — the overlap is empty, $P(A \\text{ and } B) = 0$, and the rule simplifies to $P(A \\text{ or } B) = P(A) + P(B)$. A single die can't be both a 2 and a 5, so $P(2 \\text{ or } 5) = \\frac{1}{6} + \\frac{1}{6} = \\frac{1}{3}$. Confusing 'mutually exclusive' with 'independent' is the classic beginner trap: exclusive events are maximally *dependent* (one happening rules the other out), while independent events happily co-occur.\n\n## The complement rule: count the opposite\n\nSometimes the event you want is a nightmare to count but its opposite is trivial. The **complement** $A^c$ means '$A$ does not happen', and because exactly one of $A$, $A^c$ occurs,\n\n$$P(A^c) = 1 - P(A).$$\n\nThe killer application is any question phrased 'at least one'. The opposite of 'at least one success' is the tidy 'zero successes'. What's the chance of at least one 6 in two rolls? Cases are messy, but the complement is clean: $P(\\text{no 6}) = \\frac{5}{6} \\cdot \\frac{5}{6} = \\frac{25}{36}$, so $P(\\text{at least one 6}) = 1 - \\frac{25}{36} = \\frac{11}{36}$. The same move powers 'will *any* of my backups fail?' and 'does *at least one* customer click?'.\n\n## The multiplication rule: AND, when events don't talk\n\nTwo events are **independent** when knowing one occurred doesn't change the odds of the other. For independent events, the chance of both is the product:\n\n$$P(A \\text{ and } B) = P(A)\\,P(B).$$\n\nTwo fair coins both heads: $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$. A die even and a coin heads: $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$, because the die and the coin share no mechanism. Chains multiply cleanly: three independent server components, each up with probability $0.99$, are all up with probability $0.99^3 \\approx 0.970$ — and combined with the complement rule, the chance that *at least one* fails is $1 - 0.99^3 \\approx 0.030$. That single line is the backbone of reliability engineering.\n\nIndependence is a modeling *assumption*, not a default. Two draws from a deck *without* replacement are **not** independent — the first card changes what's left — and handling that dependence is exactly where the next topic, conditional probability, begins.\n\n## Four rules, endless reach\n\nSize the sample space by counting, turn OR into add-minus-overlap, turn 'at least one' into one-minus-the-opposite, and turn independent ANDs into products. Those four moves price a lottery ticket, a spam score, a genetic cross, and a redundant power supply — and they are the entire vocabulary the rest of probability is built from."
+  },
+  "application": {
+    "summary": "The four rules of probability put exact numbers on games of chance, system reliability, spam scoring, and genetics: sample-space counting prices a dice roll or a card draw, the addition rule handles 'A or B', the complement rule cracks every 'at least one' question, and the multiplication rule chains independent events into reliability estimates.",
+    "domains": ["games of chance (dice, cards, lotteries)", "reliability engineering", "spam and content filtering", "genetics and inheritance", "insurance and risk"],
+    "workedExample": "**Will this three-component system survive the night — and how do the rules stack up?**\n\nA server needs three independent parts — a disk, a power supply, and a network card — to all keep working. Each part works through the night with probability $0.99$ (equivalently, each fails with probability $0.01$), and the parts fail independently.\n\n*Everything works (multiplication rule).* Because the parts are independent, the chance all three survive is the product:\n\n$$P(\\text{all work}) = 0.99 \\cdot 0.99 \\cdot 0.99 = 0.99^3 = 0.970299 \\approx 0.970.$$\n\n*At least one fails (complement rule).* 'At least one failure' is the opposite of 'everything works', so don't enumerate the seven failure patterns — subtract:\n\n$$P(\\text{at least one fails}) = 1 - P(\\text{all work}) = 1 - 0.970299 = 0.029701 \\approx 0.030.$$\n\nRoughly a 3% chance of an incident per night — about one bad night per month.\n\n*Exactly one specific part fails (multiplication again).* The chance the disk fails while the other two survive is $0.01 \\cdot 0.99 \\cdot 0.99 = 0.009801$.\n\n*The engineer's fix.* Add a redundant power supply so the system only needs *one* of two supplies. A single supply fails with probability $0.01$; two independent supplies both failing is $0.01 \\cdot 0.01 = 0.0001$, so the power subsystem now works with probability $1 - 0.0001 = 0.9999$. The whole-system survival climbs to $0.99 \\cdot 0.9999 \\cdot 0.99 \\approx 0.980$, nearly halving the nightly incident rate. Every step was one of the four rules — and this is precisely how data centers reason about redundancy.",
+    "domainNotes": [
+      "**Games of chance:** a fair-die or fair-deck probability is a count $\\frac{|A|}{|S|}$; two dice have $|S| = 36$, so $P(\\text{sum} = 7) = \\frac{6}{36} = \\frac{1}{6}$ — the single most likely total, which is why 7 is the pivot of craps.",
+      "**Reliability:** for parts in series (all must work) multiply survival probabilities; for parts in parallel (one must work) use the complement of 'all fail', which is why redundancy multiplies tiny failure chances into negligibility.",
+      "**Spam filtering:** a naive filter treats word appearances as independent and multiplies their spam-likelihoods; the independence assumption is wrong but useful, and the next topic's conditional probability is what makes it principled.",
+      "**Genetics:** crossing two $Aa$ carriers, each parent independently passes $a$ with probability $\\frac{1}{2}$, so an $aa$ child has probability $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$ — the multiplication rule is the whole of a Punnett square.",
+      "**Insurance:** premiums are expected payouts, $P(\\text{claim}) \\times \\text{payout}$; pooling many *independent* policyholders lets the law of large numbers turn individual uncertainty into a predictable aggregate cost."
+    ]
+  },
+  "generators": [
+    "stat-prob-ss-d1", "stat-prob-ss-d2", "stat-prob-ss-d3",
+    "stat-prob-add-d1", "stat-prob-add-d2", "stat-prob-add-d3",
+    "stat-prob-comp-d1", "stat-prob-comp-d2", "stat-prob-comp-d3",
+    "stat-prob-mult-d1", "stat-prob-mult-d2", "stat-prob-mult-d3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.probability-basics.s01",
+      "concepts": ["sample-spaces-and-events"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A fair six-sided die is rolled once. What is the probability of rolling an even number? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "How many outcomes are in the sample space $S = \\{1,2,3,4,5,6\\}$? (Give a number.)", "answer": "6", "accept": [], "hint": "Count the faces of the die." },
+        { "instruction": "How many favorable outcomes are even (2, 4, 6)? (Give a number.)", "answer": "3", "accept": [], "hint": "List the even faces." },
+        { "instruction": "Compute $P(\\text{even}) = \\frac{3}{6}$ as a fraction in lowest terms.", "answer": "1/2", "accept": ["0.5"], "hint": "Divide numerator and denominator by 3." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "The sample space has 6 equally likely outcomes and 3 are even, so $P(\\text{even}) = \\frac{3}{6} = \\frac{1}{2}$ — a direct favorable-over-total count."
+    },
+    {
+      "id": "statistics.probability-basics.s02",
+      "concepts": ["sample-spaces-and-events"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "One card is drawn from a standard 52-card deck. What is the probability it is a king? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "How many cards are in the deck (the sample space)? (Give a number.)", "answer": "52", "accept": [], "hint": "A standard deck size." },
+        { "instruction": "How many kings are in the deck? (Give a number.)", "answer": "4", "accept": [], "hint": "One per suit." },
+        { "instruction": "Compute $P(\\text{king}) = \\frac{4}{52}$ in lowest terms.", "answer": "1/13", "accept": ["0.077"], "hint": "Divide top and bottom by 4." }
+      ],
+      "finalAnswer": { "value": "1/13", "unit": "" },
+      "solutionNarrative": "There are 4 favorable kings among 52 equally likely cards: $P(\\text{king}) = \\frac{4}{52} = \\frac{1}{13}$."
+    },
+    {
+      "id": "statistics.probability-basics.s03",
+      "concepts": ["sample-spaces-and-events"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two fair dice are rolled and their values are added. What is the probability the sum equals 7? Give your answer as a fraction in lowest terms. (The 36 ordered outcomes are equally likely — this is the product rule from counting: $6 \\cdot 6$.)",
+      "steps": [
+        { "instruction": "How many equally likely ordered outcomes are there for two dice? Compute $6 \\cdot 6$. (Give a number.)", "answer": "36", "accept": [], "hint": "Product rule: 6 choices for each die." },
+        { "instruction": "How many ordered pairs sum to 7? They are (1,6),(2,5),(3,4),(4,3),(5,2),(6,1). (Give a number.)", "answer": "6", "accept": [], "hint": "Count the listed pairs." },
+        { "instruction": "Compute $P(\\text{sum}=7) = \\frac{6}{36}$ in lowest terms.", "answer": "1/6", "accept": ["0.167"], "hint": "Divide top and bottom by 6." }
+      ],
+      "finalAnswer": { "value": "1/6", "unit": "" },
+      "solutionNarrative": "Of the $6 \\cdot 6 = 36$ equally likely ordered rolls, 6 sum to 7, so $P = \\frac{6}{36} = \\frac{1}{6}$ — the most probable total, which is why 7 anchors the game of craps."
+    },
+    {
+      "id": "statistics.probability-basics.s04",
+      "concepts": ["sample-spaces-and-events"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two fair dice are rolled. What is the probability the sum is 8? Give your answer as a fraction in lowest terms. (Careful: not every sum has 6 ways — you must count the actual pairs.)",
+      "steps": [
+        { "instruction": "List and count the ordered pairs summing to 8: (2,6),(3,5),(4,4),(5,3),(6,2). How many are there? (Give a number.)", "answer": "5", "accept": [], "hint": "Note (4,4) is a single ordered outcome, not two." },
+        { "instruction": "The sample space still has 36 ordered outcomes. Compute $P(\\text{sum}=8) = \\frac{5}{36}$ as a fraction. (It is already in lowest terms.)", "answer": "5/36", "accept": ["0.139"], "hint": "5 and 36 share no common factor." }
+      ],
+      "finalAnswer": { "value": "5/36", "unit": "" },
+      "solutionNarrative": "Only 5 ordered pairs sum to 8 — one fewer than for 7 because 8 is one step off-center — so $P = \\frac{5}{36}$. The lesson: never assume 6 favorable outcomes; enumerate them."
+    },
+    {
+      "id": "statistics.probability-basics.s05",
+      "concepts": ["addition-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A fair die is rolled once. What is the probability of rolling a 2 or a 5? These outcomes are mutually exclusive (a single roll can't be both). Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "Are rolling a 2 and rolling a 5 mutually exclusive on one die? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "One die shows only one face." },
+        { "instruction": "Since they're mutually exclusive, add: $\\frac{1}{6} + \\frac{1}{6}$. Give the sum as a fraction in lowest terms.", "answer": "1/3", "accept": ["0.333"], "hint": "$\\frac{2}{6}$ reduces." }
+      ],
+      "finalAnswer": { "value": "1/3", "unit": "" },
+      "solutionNarrative": "Mutually exclusive events have no overlap, so the addition rule reduces to $P(2) + P(5) = \\frac{1}{6} + \\frac{1}{6} = \\frac{2}{6} = \\frac{1}{3}$."
+    },
+    {
+      "id": "statistics.probability-basics.s06",
+      "concepts": ["addition-rule"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "One card is drawn from a 52-card deck. What is the probability it is a heart OR a king? Use the addition rule and subtract the overlap. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "How many hearts are there? (Give a number.)", "answer": "13", "accept": [], "hint": "One suit." },
+        { "instruction": "How many kings are there? (Give a number.)", "answer": "4", "accept": [], "hint": "One per suit." },
+        { "instruction": "How many cards are BOTH a heart and a king (the overlap)? (Give a number.)", "answer": "1", "accept": [], "hint": "The king of hearts." },
+        { "instruction": "Apply the addition rule: $\\frac{13 + 4 - 1}{52} = \\frac{16}{52}$. Give it in lowest terms.", "answer": "4/13", "accept": ["0.308"], "hint": "Divide top and bottom by 4." }
+      ],
+      "finalAnswer": { "value": "4/13", "unit": "" },
+      "solutionNarrative": "$P(\\text{heart or king}) = \\frac{13}{52} + \\frac{4}{52} - \\frac{1}{52} = \\frac{16}{52} = \\frac{4}{13}$. The subtracted card is the king of hearts, counted once in each event."
+    },
+    {
+      "id": "statistics.probability-basics.s07",
+      "concepts": ["addition-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "One card is drawn from a 52-card deck. What is the probability it is a face card (J, Q, K) OR a red card? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "How many face cards are there (J, Q, K in each of 4 suits)? Compute $3 \\cdot 4$. (Give a number.)", "answer": "12", "accept": [], "hint": "Three ranks times four suits." },
+        { "instruction": "How many red cards are there (hearts and diamonds)? (Give a number.)", "answer": "26", "accept": [], "hint": "Two suits of 13." },
+        { "instruction": "How many cards are BOTH face and red (red J, Q, K)? Compute $3 \\cdot 2$. (Give a number.)", "answer": "6", "accept": [], "hint": "Three face ranks in two red suits." },
+        { "instruction": "Apply the addition rule: $\\frac{12 + 26 - 6}{52} = \\frac{32}{52}$. Give it in lowest terms.", "answer": "8/13", "accept": ["0.615"], "hint": "Divide top and bottom by 4." }
+      ],
+      "finalAnswer": { "value": "8/13", "unit": "" },
+      "solutionNarrative": "$P(\\text{face or red}) = \\frac{12}{52} + \\frac{26}{52} - \\frac{6}{52} = \\frac{32}{52} = \\frac{8}{13}$. Forgetting to subtract the 6 red face cards would double-count them and inflate the answer."
+    },
+    {
+      "id": "statistics.probability-basics.s08",
+      "concepts": ["addition-rule"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "In a raffle, events are mutually exclusive: winning first prize has probability 0.05 and winning second prize has probability 0.12 (you can't win both). What is the probability of winning first OR second prize? Give your answer as a decimal.",
+      "steps": [
+        { "instruction": "Can you win both first and second prize? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The prizes are mutually exclusive." },
+        { "instruction": "Since the events are mutually exclusive, add the probabilities: $0.05 + 0.12$. (Give a decimal.)", "answer": "0.17", "accept": [], "hint": "No overlap to subtract." }
+      ],
+      "finalAnswer": { "value": "0.17", "unit": "" },
+      "solutionNarrative": "With no overlap, the addition rule is plain addition: $0.05 + 0.12 = 0.17$. Mutually exclusive events are the one case where you never subtract."
+    },
+    {
+      "id": "statistics.probability-basics.s09",
+      "concepts": ["complement-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A fair die is rolled once. What is the probability of NOT rolling a 6? Use the complement rule. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "What is $P(\\text{rolling a 6})$ as a fraction? ", "answer": "1/6", "accept": ["0.167"], "hint": "One favorable face of six." },
+        { "instruction": "Apply the complement rule: $1 - \\frac{1}{6}$. Give the result as a fraction in lowest terms.", "answer": "5/6", "accept": ["0.833"], "hint": "$\\frac{6}{6} - \\frac{1}{6}$." }
+      ],
+      "finalAnswer": { "value": "5/6", "unit": "" },
+      "solutionNarrative": "$P(\\text{not }6) = 1 - P(6) = 1 - \\frac{1}{6} = \\frac{5}{6}$. Counting the 5 non-6 faces directly gives the same answer."
+    },
+    {
+      "id": "statistics.probability-basics.s10",
+      "concepts": ["complement-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Two fair dice are rolled. What is the probability of getting AT LEAST ONE 6? Use the complement rule (the opposite of 'at least one 6' is 'no 6 on either die'). Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "The chance a single die is NOT a 6 is $\\frac{5}{6}$. For two independent dice, the chance NEITHER is a 6 is $\\left(\\frac{5}{6}\\right)^2 = \\frac{25}{36}$. Confirm that product's numerator over 36 — enter $\\frac{25}{36}$.", "answer": "25/36", "accept": ["0.694"], "hint": "$5 \\cdot 5 = 25$ over $6 \\cdot 6 = 36$." },
+        { "instruction": "Apply the complement rule: $1 - \\frac{25}{36}$. Give the result as a fraction.", "answer": "11/36", "accept": ["0.306"], "hint": "$\\frac{36}{36} - \\frac{25}{36}$." }
+      ],
+      "finalAnswer": { "value": "11/36", "unit": "" },
+      "solutionNarrative": "'At least one 6' is the complement of 'no 6 at all': $1 - \\left(\\frac{5}{6}\\right)^2 = 1 - \\frac{25}{36} = \\frac{11}{36}$. The complement dodges a messy case-by-case count."
+    },
+    {
+      "id": "statistics.probability-basics.s11",
+      "concepts": ["complement-rule"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A fair coin is flipped 3 times. What is the probability of getting AT LEAST ONE head? Use the complement rule. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "The opposite of 'at least one head' is 'all three flips are tails'. What is $P(\\text{all tails}) = \\left(\\frac{1}{2}\\right)^3$? Give it as a fraction.", "answer": "1/8", "accept": ["0.125"], "hint": "$\\frac{1}{2} \\cdot \\frac{1}{2} \\cdot \\frac{1}{2}$." },
+        { "instruction": "Apply the complement rule: $1 - \\frac{1}{8}$. Give the result as a fraction in lowest terms.", "answer": "7/8", "accept": ["0.875"], "hint": "$\\frac{8}{8} - \\frac{1}{8}$." }
+      ],
+      "finalAnswer": { "value": "7/8", "unit": "" },
+      "solutionNarrative": "Only 1 of the 8 equally likely outcomes (TTT) has no head, so $P(\\text{at least one head}) = 1 - \\frac{1}{8} = \\frac{7}{8}$. The complement replaces enumerating 7 favorable cases with subtracting 1."
+    },
+    {
+      "id": "statistics.probability-basics.s12",
+      "concepts": ["complement-rule"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A weather app says there is a 30% chance of rain tomorrow. Assuming the day is either rainy or dry, what is the probability it does NOT rain? Give your answer as a decimal.",
+      "steps": [
+        { "instruction": "Write the probability of rain as a decimal.", "answer": "0.3", "accept": ["0.30", "3/10"], "hint": "30% as a decimal." },
+        { "instruction": "Apply the complement rule: $1 - 0.3$. (Give a decimal.)", "answer": "0.7", "accept": ["7/10"], "hint": "The two probabilities must sum to 1." }
+      ],
+      "finalAnswer": { "value": "0.7", "unit": "" },
+      "solutionNarrative": "Rain and no-rain are complementary, so $P(\\text{no rain}) = 1 - 0.3 = 0.7$. Every forecast percentage silently carries its complement."
+    },
+    {
+      "id": "statistics.probability-basics.s13",
+      "concepts": ["multiplication-independent"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two fair coins are flipped. What is the probability that BOTH land heads? The flips are independent. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "What is the probability a single fair coin lands heads? Give it as a fraction.", "answer": "1/2", "accept": ["0.5"], "hint": "Heads or tails, equally likely." },
+        { "instruction": "For independent events, multiply: $\\frac{1}{2} \\cdot \\frac{1}{2}$. Give the product as a fraction.", "answer": "1/4", "accept": ["0.25"], "hint": "Multiply numerators and denominators." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "Independent events multiply: $P(\\text{HH}) = \\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$. This matches the 4-outcome sample space $\\{HH, HT, TH, TT\\}$ with 1 favorable."
+    },
+    {
+      "id": "statistics.probability-basics.s14",
+      "concepts": ["multiplication-independent"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A fair die is rolled and a fair coin is flipped. What is the probability of getting an even number AND heads? These are independent. Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "What is $P(\\text{even on the die})$ as a fraction in lowest terms?", "answer": "1/2", "accept": ["0.5"], "hint": "Three even faces out of six." },
+        { "instruction": "What is $P(\\text{heads on the coin})$ as a fraction?", "answer": "1/2", "accept": ["0.5"], "hint": "Fair coin." },
+        { "instruction": "The die and coin are independent, so multiply: $\\frac{1}{2} \\cdot \\frac{1}{2}$. Give the product as a fraction.", "answer": "1/4", "accept": ["0.25"], "hint": "Separate physical mechanisms are independent." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "The die and coin share no mechanism, so $P(\\text{even and heads}) = \\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$."
+    },
+    {
+      "id": "statistics.probability-basics.s15",
+      "concepts": ["multiplication-independent"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A server has three independent components, each of which works with probability 0.99. What is the probability that ALL three work? Give your answer as a decimal rounded to 3 places.",
+      "steps": [
+        { "instruction": "What is the probability a single component works? (Give a decimal.)", "answer": "0.99", "accept": [], "hint": "Stated directly." },
+        { "instruction": "For three independent components, multiply: $0.99 \\cdot 0.99 = 0.99^2$. (Give a decimal.)", "answer": "0.9801", "accept": [], "hint": "$0.99 \\cdot 0.99$." },
+        { "instruction": "Multiply once more by 0.99 to get $0.99^3$, rounded to 3 decimal places.", "answer": "0.970", "accept": ["0.9703"], "hint": "$0.9801 \\cdot 0.99 = 0.970299$." }
+      ],
+      "finalAnswer": { "value": "0.970", "unit": "" },
+      "solutionNarrative": "Independent survival probabilities multiply: $0.99^3 = 0.970299 \\approx 0.970$. Series systems get less reliable as you add parts — each factor is below 1."
+    },
+    {
+      "id": "statistics.probability-basics.s16",
+      "concepts": ["multiplication-independent"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two carriers of a recessive gene each independently pass the recessive allele $a$ to a child with probability $\\frac{1}{2}$. What is the probability the child inherits $a$ from BOTH parents (genotype $aa$)? Give your answer as a fraction in lowest terms.",
+      "steps": [
+        { "instruction": "What is the probability one parent passes the $a$ allele? Give it as a fraction.", "answer": "1/2", "accept": ["0.5"], "hint": "Each carrier is $Aa$." },
+        { "instruction": "The two parents pass alleles independently, so multiply: $\\frac{1}{2} \\cdot \\frac{1}{2}$. Give the product as a fraction.", "answer": "1/4", "accept": ["0.25"], "hint": "This is the classic Punnett-square result." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "Independent transmission gives $P(aa) = \\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$ — the $\\frac{1}{4}$ that a Punnett square encodes as one of four equally likely cells."
+    }
+  ]
+}
