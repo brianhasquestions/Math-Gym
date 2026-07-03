@@ -29,6 +29,13 @@ import { fill as crypto3Fill } from "./gen-crypto3-fill.js";        // cr3-
 import { fill as crypto4Fill } from "./gen-crypto4-fill.js";        // cr4- (weaknesses)
 import { fill as discreteFill } from "./gen-discrete-fill.js";      // dm-  (discrete math)
 import { fill as statsFill } from "./gen-stats-fill.js";            // stat- (statistics)
+import { fill as alg2Fill } from "./gen-alg2-fill.js";              // a2f-  (algebra-2 complex/polynomial)
+import { fill as trig3Fill } from "./gen-trig3-fill.js";            // trg3- (inverse trig, polar)
+import { fill as calc1bFill } from "./gen-calc1b-fill.js";          // c1b-  (L'Hopital, linearization)
+import { fill as calc2Fill } from "./gen-calc2-fill.js";            // c2f-  (partial fractions, improper, Taylor)
+import { fill as calc3vFill } from "./gen-calc3v-fill.js";          // c3v-  (vector-valued, line integrals)
+import { fill as lapGsFill } from "./gen-lap-gs-fill.js";           // lap-/gsq- (Laplace, Gram-Schmidt)
+import { fill as stats2Fill } from "./gen-stats2-fill.js";          // st2-  (inference, regression)
 
 // --- Seeded RNG (mulberry32) so sessions are reproducible/debuggable ---
 export function makeRng(seed) {
@@ -2642,7 +2649,8 @@ generators["simplify-rational-v1"] = (rng, idx) => {
 Object.assign(generators, deFill, linAlgFill,
   algGraphFill, calc1Fill, geoFill, deFill2, linAlgFill2, trigFill, trig2Fill,
   geoProofFill, calc3ProofFill, crypto1Fill, crypto2Fill, crypto3Fill, crypto4Fill,
-  discreteFill, statsFill);
+  discreteFill, statsFill,
+  alg2Fill, trig3Fill, calc1bFill, calc2Fill, calc3vFill, lapGsFill, stats2Fill);
 
 export function hasGenerator(template) {
   return Object.prototype.hasOwnProperty.call(generators, template);

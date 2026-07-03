@@ -1,0 +1,286 @@
+{
+  "id": "calculus-3.line-integrals",
+  "subject": "calculus-3",
+  "title": "Line Integrals, Vector Fields, and Green's Theorem",
+  "prerequisites": ["calculus-3.partial-derivatives", "calculus-3.multiple-integrals", "calculus-3.dot-and-cross-products"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "vector-fields-and-potentials",
+      "label": "Vector fields, the conservative test, and potentials",
+      "microLesson": "A **vector field** $\\vec{F}(x,y) = \\langle P(x,y),\\, Q(x,y) \\rangle$ attaches an arrow to every point — wind, gravity, current. The field is **conservative** exactly when it is a gradient, $\\vec{F} = \\nabla f$, and the quick test is $\\dfrac{\\partial P}{\\partial y} = \\dfrac{\\partial Q}{\\partial x}$. For $\\vec{F} = \\langle 2xy,\\; x^2 + 3y^2 \\rangle$: $P_y = 2x = Q_x$ ✓, so a **potential** $f$ exists; integrate $P$ in $x$ to get $x^2y + g(y)$, then match $f_y = x^2 + g'(y)$ against $Q$ to find $g(y) = y^3$, so $f = x^2y + y^3$. Always check by taking $\\nabla f$."
+    },
+    {
+      "id": "scalar-line-integrals",
+      "label": "Scalar line integrals (integrating over a curve)",
+      "microLesson": "$\\displaystyle\\int_C f\\, ds$ adds up the values of $f$ along a curve $C$, weighted by arc length — think of the mass of a wire with density $f$. Recipe: parametrize $C$ as $\\vec{r}(t)$, $a \\le t \\le b$; then $ds = |\\vec{r}\\,'(t)|\\,dt$ and $\\int_C f\\, ds = \\int_a^b f(\\vec{r}(t))\\, |\\vec{r}\\,'(t)|\\, dt$. On the straight segment from $(0,0)$ to $(3,4)$: $\\vec{r}(t) = \\langle 3t, 4t \\rangle$, $|\\vec{r}\\,'| = 5$, so $\\int_C (x+y)\\, ds = \\int_0^1 (7t)(5)\\, dt = 35/2$. Straight segments keep $|\\vec{r}\\,'|$ constant — the friendly case."
+    },
+    {
+      "id": "work-integrals",
+      "label": "Work integrals ∫ F · dr",
+      "microLesson": "The **work** a force field does along a path is $\\displaystyle W = \\int_C \\vec{F} \\cdot d\\vec{r} = \\int_a^b \\vec{F}(\\vec{r}(t)) \\cdot \\vec{r}\\,'(t)\\, dt$: evaluate the field *on* the path, dot with the velocity, integrate. For $\\vec{F} = \\langle y, x \\rangle$ along $\\vec{r}(t) = \\langle 2t, 3t \\rangle$, $0 \\le t \\le 1$: $\\vec{F}(\\vec{r}(t)) = \\langle 3t, 2t \\rangle$, dot $\\langle 2, 3 \\rangle$ gives $12t$, so $W = \\int_0^1 12t\\, dt = 6$. If $\\vec{F} = \\nabla f$ is conservative, skip the integral entirely: $W = f(\\text{end}) - f(\\text{start})$, path irrelevant."
+    },
+    {
+      "id": "greens-theorem",
+      "label": "Green's theorem (circulation via a double integral)",
+      "microLesson": "**Green's theorem** trades a loop integral for an area integral: for a counterclockwise closed curve $C$ enclosing region $R$, $\\displaystyle\\oint_C \\vec{F} \\cdot d\\vec{r} = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$. When $Q_x - P_y$ is a **constant** $k$, the circulation is just $k \\times \\text{Area}(R)$ — no integration needed. For $\\vec{F} = \\langle -y, x \\rangle$ around the rectangle $[0,3]\\times[0,2]$: $Q_x - P_y = 1 - (-1) = 2$, so circulation $= 2 \\times 6 = 12$. For a disk of radius $R$, use area $\\pi R^2$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Integrals that follow a path\n\nOrdinary integrals live on the number line. But work is done *along a route*, a wire's mass accumulates *along its shape*, and a current circulates *around a loop*. This topic builds the integrals that live on curves — and the shortcuts (potentials, Green's theorem) that let you skip most of the labor.\n\n## Vector fields, and the fields that are secretly gradients\n\nA **vector field** assigns an arrow to every point of the plane:\n\n$$\\vec{F}(x, y) = \\langle P(x,y),\\; Q(x,y) \\rangle.$$\n\nWind maps, gravity, electric fields, water currents — all vector fields. Here is the rotation field $\\vec{F} = \\langle -y,\\, x \\rangle$, whose arrows circle the origin:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-3,3],\"yRange\":[-3,3],\"segments\":[{\"from\":[2,0],\"to\":[2,1],\"arrow\":true,\"color\":\"accent\"},{\"from\":[0,2],\"to\":[-1,2],\"arrow\":true,\"color\":\"accent\"},{\"from\":[-2,0],\"to\":[-2,-1],\"arrow\":true,\"color\":\"accent\"},{\"from\":[0,-2],\"to\":[1,-2],\"arrow\":true,\"color\":\"accent\"},{\"from\":[1,0],\"to\":[1,0.5],\"arrow\":true,\"color\":\"warn\"},{\"from\":[0,1],\"to\":[-0.5,1],\"arrow\":true,\"color\":\"warn\"},{\"from\":[-1,0],\"to\":[-1,-0.5],\"arrow\":true,\"color\":\"warn\"},{\"from\":[0,-1],\"to\":[0.5,-1],\"arrow\":true,\"color\":\"warn\"}],\"caption\":\"The rotation field F = <−y, x>: arrows circle the origin counterclockwise. It has genuine circulation — and indeed Qx − Py = 2 everywhere\"}\n```\n\nThe most important question you can ask about a field: **is it a gradient?** A field with $\\vec{F} = \\nabla f$ for some scalar **potential** $f$ is called **conservative**, and it obeys dramatically simpler physics. The test is one line:\n\n$$\\vec{F} = \\langle P, Q \\rangle \\text{ is conservative} \\iff \\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x} \\quad (\\text{on a simply connected region}).$$\n\nWhy: if $\\vec{F} = \\nabla f$ then $P_y = f_{xy} = f_{yx} = Q_x$ by Clairaut's theorem — mixed partials commute.\n\n### Finding the potential\n\nFor $\\vec{F} = \\langle 2xy,\\; x^2 + 3y^2 \\rangle$: first the test, $P_y = 2x$ and $Q_x = 2x$ ✓. Now reverse-engineer $f$:\n\n1. **Integrate $P$ with respect to $x$**: $f = \\int 2xy\\, dx = x^2 y + g(y)$. The 'constant' of integration can depend on $y$.\n2. **Differentiate in $y$ and match $Q$**: $f_y = x^2 + g'(y) \\stackrel{!}{=} x^2 + 3y^2$, so $g'(y) = 3y^2$ and $g(y) = y^3$.\n3. **Assemble and check**: $f = x^2y + y^3$; indeed $\\nabla f = \\langle 2xy,\\; x^2 + 3y^2 \\rangle$. ✓\n\n**Pitfall**: skipping the test. If $P_y \\neq Q_x$, no potential exists and step 2 will produce a contradiction (a $g'(y)$ that depends on $x$).\n\n## Scalar line integrals: mass of a wire\n\nTo integrate a scalar $f$ along a curve $C$ (density → mass, height → area of a fence), weight by arc length:\n\n$$\\int_C f\\, ds = \\int_a^b f(\\vec{r}(t))\\; |\\vec{r}\\,'(t)|\\; dt.$$\n\nThe recipe: **parametrize, substitute, multiply by the speed, integrate**. On a straight segment the speed is a constant, which keeps everything clean.\n\n**Worked example.** $\\int_C (x + y)\\, ds$ where $C$ runs from $(0,0)$ to $(3,4)$. Parametrize $\\vec{r}(t) = \\langle 3t,\\, 4t \\rangle$, $0 \\le t \\le 1$; then $|\\vec{r}\\,'| = |\\langle 3,4 \\rangle| = 5$ and $f(\\vec{r}(t)) = 3t + 4t = 7t$:\n\n$$\\int_C (x+y)\\, ds = \\int_0^1 (7t)(5)\\, dt = 35\\int_0^1 t\\, dt = \\frac{35}{2}.$$\n\n**Pitfall**: forgetting the $|\\vec{r}\\,'|$ factor. $ds$ is *arc length*, not $dt$ — a segment traversed at speed 5 accumulates length 5 times as fast.\n\n## Work integrals: force dotted with motion\n\nA force field does work only through the component of force *along* the motion — that's a dot product:\n\n$$W = \\int_C \\vec{F} \\cdot d\\vec{r} = \\int_a^b \\vec{F}(\\vec{r}(t)) \\cdot \\vec{r}\\,'(t)\\; dt.$$\n\nThree moves: evaluate the field **on the path** (substitute $x(t), y(t)$ into $P$ and $Q$), dot with $\\vec{r}\\,'(t)$, integrate the resulting scalar.\n\n**Worked example.** $\\vec{F} = \\langle y,\\, x \\rangle$ along the segment $\\vec{r}(t) = \\langle 2t,\\, 3t \\rangle$, $0 \\le t \\le 1$. On the path, $\\vec{F}(\\vec{r}(t)) = \\langle 3t,\\, 2t \\rangle$; the velocity is $\\langle 2, 3 \\rangle$; the dot product is $6t + 6t = 12t$. So $W = \\int_0^1 12t\\, dt = 6$.\n\n### The conservative shortcut (fundamental theorem for line integrals)\n\nIf $\\vec{F} = \\nabla f$, then for ANY path from $A$ to $B$:\n\n$$\\int_C \\vec{F} \\cdot d\\vec{r} = f(B) - f(A).$$\n\nNo parametrization, no integral — just the potential at the endpoints. The example above: $\\vec{F} = \\langle y, x \\rangle = \\nabla(xy)$, and $f(2,3) - f(0,0) = 6 - 0 = 6$. ✓ Same answer, zero integration. This is why physicists define potential energy: for conservative forces, only endpoints matter, and around any closed loop the work is exactly **zero**.\n\n## Green's theorem: circulation without walking the loop\n\nFor a **closed** counterclockwise curve $C$ enclosing a region $R$, Green's theorem converts the loop integral into a double integral over the inside:\n\n$$\\oint_C \\vec{F} \\cdot d\\vec{r} = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.$$\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-1,4],\"yRange\":[-1,3],\"grid\":true,\"segments\":[{\"from\":[0,0],\"to\":[3,0],\"arrow\":true,\"color\":\"accent\"},{\"from\":[3,0],\"to\":[3,2],\"arrow\":true,\"color\":\"accent\"},{\"from\":[3,2],\"to\":[0,2],\"arrow\":true,\"color\":\"accent\"},{\"from\":[0,2],\"to\":[0,0],\"arrow\":true,\"color\":\"accent\"}],\"points\":[{\"x\":1.5,\"y\":1,\"label\":\"∬ (Qx − Py) dA\",\"color\":\"warn\"}],\"caption\":\"Green's theorem: the counterclockwise circulation around the boundary equals the double integral of Qx − Py over the enclosed region — four path integrals traded for one area computation\"}\n```\n\nThe quantity $Q_x - P_y$ is the field's local *spin* (the 2D curl). Two workflows:\n\n- **Constant integrand** — the jackpot. For $\\vec{F} = \\langle -y,\\, x \\rangle$ around the rectangle $[0,3] \\times [0,2]$: $Q_x - P_y = 1 - (-1) = 2$, so the circulation is $2 \\times \\text{Area} = 2 \\times 6 = 12$. Same trick for triangles (area $= \\tfrac{1}{2}bh$) and disks (area $= \\pi R^2$): $\\vec{F} = \\langle -2y,\\, 2x \\rangle$ around a circle of radius 3 gives $4 \\times 9\\pi = 36\\pi$.\n- **Non-constant integrand** — do the double integral, which is usually still faster than four separate edge integrals. For $\\vec{F} = \\langle y,\\, x^2 \\rangle$ on $[0,2] \\times [0,3]$: $Q_x - P_y = 2x - 1$, and $\\iint_R (2x-1)\\, dA = \\int_0^2 (2x-1) \\cdot 3\\, dx = 3(4 - 2) = 6$.\n\n**Pitfalls**: orientation must be **counterclockwise** (clockwise flips the sign); the curve must be **closed**; and note the order — it is $Q_x - P_y$, not $P_y - Q_x$. Sanity check: a conservative field has $Q_x - P_y = 0$, so its circulation around every closed loop is 0, matching the shortcut."
+  },
+  "application": {
+    "summary": "Line integrals are how physics and engineering measure accumulated effect along a route: work done by a force field, energy from wind or current along a flight path, mass of a cable, and circulation of a fluid — with potentials and Green's theorem serving as the great labor-saving devices.",
+    "domains": ["physics & energy", "fluid dynamics", "electromagnetics", "aerospace & sailing"],
+    "workedExample": "**How much work does the field do — the long way and the short way?**\n\nA charged particle moves through the force field $\\vec{F} = \\langle 2xy,\\; x^2 \\rangle$ (newtons) from $A = (1, 1)$ to $B = (2, 3)$ (meters). The path is a complicated curve. Do we care?\n\n**Test the field**: $P_y = 2x$ and $Q_x = 2x$ — equal, so $\\vec{F}$ is conservative and only the endpoints matter.\n\n**Find the potential**: $f = \\int 2xy\\, dx = x^2y + g(y)$; matching $f_y = x^2 + g'(y) = x^2$ gives $g'(y) = 0$, so $f = x^2 y$.\n\n**Apply the fundamental theorem**: $W = f(2,3) - f(1,1) = (4)(3) - (1)(1) = 12 - 1 = 11$ joules.\n\nEleven joules, no parametrization, no integral — and the answer is the same for *every* path from $A$ to $B$. If the particle later returns to $A$ by any route, the round-trip work is exactly 0. That is what 'conservative' buys you, and it is why the first thing an engineer does with a new field is run the $P_y = Q_x$ test.",
+    "domainNotes": [
+      "**Physics/energy:** work–energy bookkeeping uses $\\int \\vec{F} \\cdot d\\vec{r}$; conservative forces (gravity, springs, electrostatics) get potential energy functions so only endpoints matter.",
+      "**Fluid dynamics:** circulation $\\oint \\vec{v} \\cdot d\\vec{r}$ measures the swirl of a flow around a loop; Green's theorem converts it to a vorticity integral — the 2D curl $Q_x - P_y$.",
+      "**Electromagnetics:** Faraday's law and Ampère's law are loop integrals of fields; Green's/Stokes' theorems convert them to surface integrals — the backbone of Maxwell's equations.",
+      "**Aerospace/sailing:** energy gained from wind along a route is a work integral; route planners compare $\\int \\vec{F} \\cdot d\\vec{r}$ across candidate paths."
+    ]
+  },
+  "generators": [
+    "c3v-field-potential-1",
+    "c3v-field-potential-2",
+    "c3v-field-potential-3",
+    "c3v-scalar-line-1",
+    "c3v-scalar-line-2",
+    "c3v-scalar-line-3",
+    "c3v-work-1",
+    "c3v-work-2",
+    "c3v-work-3",
+    "c3v-greens-1",
+    "c3v-greens-2",
+    "c3v-greens-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-3.line-integrals.s01",
+      "concepts": ["vector-fields-and-potentials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Test whether $\\vec{F} = \\langle 2y,\\; 2x \\rangle$ is conservative, and if so find a potential function $f$ with $\\nabla f = \\vec{F}$ (take the constant to be 0).",
+      "steps": [
+        { "instruction": "Compute $\\partial P/\\partial y$ for $P = 2y$.", "answer": "2", "accept": [], "hint": "Differentiate $2y$ with respect to $y$." },
+        { "instruction": "Compute $\\partial Q/\\partial x$ for $Q = 2x$.", "answer": "2", "accept": [], "hint": "Differentiate $2x$ with respect to $x$." },
+        { "instruction": "The two match. Is the field conservative? Type 'conservative' or 'not conservative'.", "answer": "conservative", "accept": ["yes"], "hint": "$P_y = Q_x$ means conservative." },
+        { "instruction": "Find the potential $f(x,y)$.", "answer": "2xy", "accept": ["2yx", "2xy + c"], "hint": "Integrate $P = 2y$ in $x$: $2xy + g(y)$; matching $f_y = 2x$ forces $g' = 0$." }
+      ],
+      "finalAnswer": { "value": "2xy", "unit": "" },
+      "solutionNarrative": "$P_y = 2 = Q_x$, so the field is conservative. Integrating $P$ in $x$ gives $f = 2xy + g(y)$; matching $f_y = 2x = Q$ gives $g' = 0$, so $f = 2xy$."
+    },
+    {
+      "id": "calculus-3.line-integrals.s02",
+      "concepts": ["vector-fields-and-potentials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Test whether $\\vec{F} = \\langle 3y,\\; 5x \\rangle$ is conservative.",
+      "steps": [
+        { "instruction": "Compute $\\partial P/\\partial y$ for $P = 3y$.", "answer": "3", "accept": [], "hint": "Differentiate $3y$ with respect to $y$." },
+        { "instruction": "Compute $\\partial Q/\\partial x$ for $Q = 5x$.", "answer": "5", "accept": [], "hint": "Differentiate $5x$ with respect to $x$." },
+        { "instruction": "Is the field conservative? Type 'conservative' or 'not conservative'.", "answer": "not conservative", "accept": ["not", "no"], "hint": "$3 \\neq 5$, so the test fails." }
+      ],
+      "finalAnswer": { "value": "not conservative", "unit": "" },
+      "solutionNarrative": "$P_y = 3$ but $Q_x = 5$. Since $3 \\neq 5$, no potential exists — the field is not conservative, and its work integrals depend on the path taken."
+    },
+    {
+      "id": "calculus-3.line-integrals.s03",
+      "concepts": ["vector-fields-and-potentials"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Test whether $\\vec{F} = \\langle 2xy,\\; x^2 + 3y^2 \\rangle$ is conservative, and find its potential $f$ (constant 0).",
+      "steps": [
+        { "instruction": "Compute $\\partial P/\\partial y$ for $P = 2xy$.", "answer": "2x", "accept": ["2*x"], "hint": "Treat $x$ as a constant." },
+        { "instruction": "Compute $\\partial Q/\\partial x$ for $Q = x^2 + 3y^2$.", "answer": "2x", "accept": ["2*x"], "hint": "The $3y^2$ term has no $x$." },
+        { "instruction": "Is the field conservative? Type 'conservative' or 'not conservative'.", "answer": "conservative", "accept": ["yes"], "hint": "Both partials equal $2x$." },
+        { "instruction": "Find the potential $f(x,y)$.", "answer": "x^2y + y^3", "accept": ["x^2*y + y^3", "x^2y + y^3 + c", "y^3 + x^2y"], "hint": "Integrate $P$ in $x$: $x^2y + g(y)$; match $f_y = x^2 + g'(y)$ with $Q$ to get $g'(y) = 3y^2$." }
+      ],
+      "finalAnswer": { "value": "x^2y + y^3", "unit": "" },
+      "solutionNarrative": "$P_y = 2x = Q_x$ ✓. Then $f = \\int 2xy\\,dx = x^2y + g(y)$; matching $f_y = x^2 + g'(y) = x^2 + 3y^2$ gives $g(y) = y^3$, so $f = x^2y + y^3$."
+    },
+    {
+      "id": "calculus-3.line-integrals.s04",
+      "concepts": ["vector-fields-and-potentials"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Test whether $\\vec{F} = \\langle y^2 + 2x,\\; 2xy + 4 \\rangle$ is conservative, and find its potential $f$ (constant 0).",
+      "steps": [
+        { "instruction": "Compute $\\partial P/\\partial y$ for $P = y^2 + 2x$.", "answer": "2y", "accept": ["2*y"], "hint": "The $2x$ term has no $y$." },
+        { "instruction": "Compute $\\partial Q/\\partial x$ for $Q = 2xy + 4$.", "answer": "2y", "accept": ["2*y"], "hint": "The constant 4 vanishes." },
+        { "instruction": "Is the field conservative? Type 'conservative' or 'not conservative'.", "answer": "conservative", "accept": ["yes"], "hint": "Both partials equal $2y$." },
+        { "instruction": "Find the potential $f(x,y)$.", "answer": "xy^2 + x^2 + 4y", "accept": ["x*y^2 + x^2 + 4y", "xy^2 + x^2 + 4y + c", "x^2 + xy^2 + 4y"], "hint": "Integrate $P$ in $x$: $xy^2 + x^2 + g(y)$; match $f_y = 2xy + g'(y)$ with $Q = 2xy + 4$." }
+      ],
+      "finalAnswer": { "value": "xy^2 + x^2 + 4y", "unit": "" },
+      "solutionNarrative": "$P_y = 2y = Q_x$ ✓. Integrating $P$ in $x$: $f = xy^2 + x^2 + g(y)$; matching $f_y = 2xy + g'(y) = 2xy + 4$ gives $g(y) = 4y$. So $f = xy^2 + x^2 + 4y$; check $\\nabla f = \\langle y^2 + 2x,\\; 2xy + 4 \\rangle$. ✓"
+    },
+    {
+      "id": "calculus-3.line-integrals.s05",
+      "concepts": ["scalar-line-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\displaystyle\\int_C x\\, ds$, where $C$ is the segment of the x-axis from $(0,0)$ to $(4,0)$.",
+      "steps": [
+        { "instruction": "Parametrize $C$ as $\\vec{r}(t) = \\langle t, 0 \\rangle$, $0 \\le t \\le 4$. What is the speed $|\\vec{r}\\,'(t)|$?", "answer": "1", "accept": [], "hint": "$\\vec{r}\\,'(t) = \\langle 1, 0 \\rangle$." },
+        { "instruction": "Compute $\\displaystyle\\int_0^4 t \\cdot 1\\, dt$.", "answer": "8", "accept": [], "hint": "$\\left[t^2/2\\right]_0^4 = 16/2$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "Along the x-axis, $ds = dt$ with $x = t$, so $\\int_C x\\, ds = \\int_0^4 t\\, dt = 8$."
+    },
+    {
+      "id": "calculus-3.line-integrals.s06",
+      "concepts": ["scalar-line-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\displaystyle\\int_C (x + y)\\, ds$, where $C$ is the straight segment from $(0,0)$ to $(3,4)$, parametrized as $\\vec{r}(t) = \\langle 3t,\\; 4t \\rangle$, $0 \\le t \\le 1$.",
+      "steps": [
+        { "instruction": "Compute the speed $|\\vec{r}\\,'(t)|$ (the segment's length, since $t$ runs over $[0,1]$).", "answer": "5", "accept": [], "hint": "$|\\langle 3, 4 \\rangle| = \\sqrt{9 + 16}$." },
+        { "instruction": "Substitute the path into the integrand: write $f(\\vec{r}(t)) = 3t + 4t$ as a polynomial in $t$.", "answer": "7t", "accept": ["7*t"], "hint": "$x + y$ on the path is $3t + 4t$." },
+        { "instruction": "Compute $\\displaystyle\\int_0^1 (7t)(5)\\, dt$.", "answer": "35/2", "accept": ["17.5"], "hint": "$35 \\left[t^2/2\\right]_0^1$." }
+      ],
+      "finalAnswer": { "value": "35/2", "unit": "" },
+      "solutionNarrative": "$ds = 5\\,dt$ and $x + y = 7t$ on the path, so the integral is $\\int_0^1 35t\\, dt = 35/2 = 17.5$."
+    },
+    {
+      "id": "calculus-3.line-integrals.s07",
+      "concepts": ["scalar-line-integrals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A straight wire runs along the y-axis from $(0,0)$ to $(0,6)$ (cm), with linear density $\\rho(x,y) = 1 + y$ grams per cm. Find its total mass $\\displaystyle\\int_C (1+y)\\, ds$.",
+      "steps": [
+        { "instruction": "Parametrize as $\\vec{r}(t) = \\langle 0, t \\rangle$, $0 \\le t \\le 6$. What is the speed $|\\vec{r}\\,'(t)|$?", "answer": "1", "accept": [], "hint": "$\\vec{r}\\,'(t) = \\langle 0, 1 \\rangle$." },
+        { "instruction": "Compute the mass $\\displaystyle\\int_0^6 (1 + t)\\, dt$.", "answer": "24", "accept": [], "hint": "$\\left[t + t^2/2\\right]_0^6 = 6 + 18$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "grams" },
+      "solutionNarrative": "Along the y-axis $ds = dt$ and $\\rho = 1 + t$, so the mass is $\\int_0^6 (1+t)\\,dt = 6 + 18 = 24$ grams — the wire is heavier toward its top."
+    },
+    {
+      "id": "calculus-3.line-integrals.s08",
+      "concepts": ["scalar-line-integrals"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $\\displaystyle\\int_C (x + y + z)\\, ds$, where $C$ is the straight segment from $(0,0,0)$ to $(1,2,2)$, parametrized as $\\vec{r}(t) = \\langle t,\\; 2t,\\; 2t \\rangle$, $0 \\le t \\le 1$.",
+      "steps": [
+        { "instruction": "Compute the speed $|\\vec{r}\\,'(t)|$.", "answer": "3", "accept": [], "hint": "$|\\langle 1, 2, 2 \\rangle| = \\sqrt{1 + 4 + 4}$." },
+        { "instruction": "Write $f(\\vec{r}(t)) = t + 2t + 2t$ as a polynomial in $t$.", "answer": "5t", "accept": ["5*t"], "hint": "Add the three components on the path." },
+        { "instruction": "Compute $\\displaystyle\\int_0^1 (5t)(3)\\, dt$.", "answer": "15/2", "accept": ["7.5"], "hint": "$15\\left[t^2/2\\right]_0^1$." }
+      ],
+      "finalAnswer": { "value": "15/2", "unit": "" },
+      "solutionNarrative": "The direction $\\langle 1,2,2 \\rangle$ has magnitude 3, so $ds = 3\\,dt$; the integrand on the path is $5t$, giving $\\int_0^1 15t\\, dt = 15/2$."
+    },
+    {
+      "id": "calculus-3.line-integrals.s09",
+      "concepts": ["work-integrals"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A constant force $\\vec{F} = \\langle 3,\\; 4 \\rangle$ N pushes an object in a straight line from $(0,0)$ to $(5,2)$ (meters). Compute the work $W = \\vec{F} \\cdot \\vec{d}$.",
+      "steps": [
+        { "instruction": "Write the displacement vector $\\vec{d}$.", "answer": "<5, 2>", "accept": ["(5, 2)"], "hint": "End minus start." },
+        { "instruction": "Compute the work $W = \\vec{F} \\cdot \\vec{d}$.", "answer": "23", "accept": [], "hint": "$3(5) + 4(2)$." }
+      ],
+      "finalAnswer": { "value": "23", "unit": "joules" },
+      "solutionNarrative": "For a constant force along a straight path the work integral collapses to a dot product: $W = \\langle 3,4 \\rangle \\cdot \\langle 5,2 \\rangle = 15 + 8 = 23$ J."
+    },
+    {
+      "id": "calculus-3.line-integrals.s10",
+      "concepts": ["work-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\displaystyle\\int_C \\vec{F} \\cdot d\\vec{r}$ for $\\vec{F} = \\langle y,\\; x \\rangle$ along the segment $\\vec{r}(t) = \\langle 2t,\\; 3t \\rangle$, $0 \\le t \\le 1$.",
+      "steps": [
+        { "instruction": "Write the velocity $\\vec{r}\\,'(t)$ as a numeric vector.", "answer": "<2, 3>", "accept": ["(2, 3)"], "hint": "Differentiate each component." },
+        { "instruction": "Evaluate the field on the path and dot with the velocity: write $\\vec{F}(\\vec{r}(t)) \\cdot \\vec{r}\\,'(t)$ as a polynomial in $t$.", "answer": "12t", "accept": ["12*t"], "hint": "$\\vec{F}(\\vec{r}(t)) = \\langle 3t, 2t \\rangle$; dot with $\\langle 2, 3 \\rangle$: $6t + 6t$." },
+        { "instruction": "Compute $W = \\displaystyle\\int_0^1 12t\\, dt$.", "answer": "6", "accept": [], "hint": "$12\\left[t^2/2\\right]_0^1$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "On the path $\\vec{F} = \\langle 3t, 2t \\rangle$; dotting with $\\vec{r}\\,' = \\langle 2,3 \\rangle$ gives $12t$, so $W = \\int_0^1 12t\\,dt = 6$. (Check: $\\vec{F} = \\nabla(xy)$ and $f(2,3) - f(0,0) = 6$.)"
+    },
+    {
+      "id": "calculus-3.line-integrals.s11",
+      "concepts": ["work-integrals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A force field $\\vec{F} = \\langle 2x,\\; 3 \\rangle$ N acts on a cart moving along the straight path $\\vec{r}(t) = \\langle 1 + 2t,\\; 4t \\rangle$ (meters), $0 \\le t \\le 1$. Compute the work done.",
+      "steps": [
+        { "instruction": "Write the velocity $\\vec{r}\\,'(t)$ as a numeric vector.", "answer": "<2, 4>", "accept": ["(2, 4)"], "hint": "Differentiate each component." },
+        { "instruction": "Write the integrand $\\vec{F}(\\vec{r}(t)) \\cdot \\vec{r}\\,'(t)$ as a polynomial in $t$.", "answer": "16 + 8t", "accept": ["8t + 16"], "hint": "$\\vec{F}(\\vec{r}(t)) = \\langle 2 + 4t,\\; 3 \\rangle$; dot with $\\langle 2, 4 \\rangle$: $(2+4t)(2) + 12$." },
+        { "instruction": "Compute $W = \\displaystyle\\int_0^1 (16 + 8t)\\, dt$.", "answer": "20", "accept": [], "hint": "$16 + 8/2$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "joules" },
+      "solutionNarrative": "On the path the integrand is $(2 + 4t)(2) + (3)(4) = 16 + 8t$, so $W = \\int_0^1 (16+8t)\\,dt = 16 + 4 = 20$ J. (Check via potential $f = x^2 + 3y$: $f(3,4) - f(1,0) = 21 - 1 = 20$.)"
+    },
+    {
+      "id": "calculus-3.line-integrals.s12",
+      "concepts": ["work-integrals", "vector-fields-and-potentials"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $\\displaystyle\\int_C \\vec{F} \\cdot d\\vec{r}$ for $\\vec{F} = \\langle 2xy,\\; x^2 \\rangle$, where $C$ is ANY path from $(1,1)$ to $(2,3)$ — use the conservative shortcut.",
+      "steps": [
+        { "instruction": "Compute $\\partial P/\\partial y$ for $P = 2xy$.", "answer": "2x", "accept": ["2*x"], "hint": "Treat $x$ as constant." },
+        { "instruction": "Compute $\\partial Q/\\partial x$ for $Q = x^2$.", "answer": "2x", "accept": ["2*x"], "hint": "Differentiate $x^2$." },
+        { "instruction": "The field is conservative. Find the potential $f(x,y)$ (constant 0).", "answer": "x^2y", "accept": ["x^2*y", "yx^2", "x^2y + c"], "hint": "Integrate $2xy$ in $x$; matching $f_y = x^2$ against $Q$ adds nothing." },
+        { "instruction": "Apply the fundamental theorem: $W = f(2,3) - f(1,1)$.", "answer": "11", "accept": [], "hint": "$(4)(3) - (1)(1)$." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "" },
+      "solutionNarrative": "$P_y = Q_x = 2x$, so $\\vec{F} = \\nabla(x^2y)$ and $W = f(2,3) - f(1,1) = 12 - 1 = 11$ for every path from $(1,1)$ to $(2,3)$ — no parametrization needed."
+    },
+    {
+      "id": "calculus-3.line-integrals.s13",
+      "concepts": ["greens-theorem"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use Green's theorem to compute the counterclockwise circulation $\\oint_C \\vec{F} \\cdot d\\vec{r}$ of $\\vec{F} = \\langle -y,\\; x \\rangle$ around the rectangle $[0,3] \\times [0,2]$.",
+      "steps": [
+        { "instruction": "Compute $\\partial Q/\\partial x$ for $Q = x$.", "answer": "1", "accept": [], "hint": "Differentiate $x$." },
+        { "instruction": "Compute $\\partial P/\\partial y$ for $P = -y$.", "answer": "-1", "accept": [], "hint": "Differentiate $-y$." },
+        { "instruction": "Compute the integrand $Q_x - P_y$.", "answer": "2", "accept": [], "hint": "$1 - (-1)$." },
+        { "instruction": "The integrand is constant, so circulation $= 2 \\times \\text{Area}$. Compute it.", "answer": "12", "accept": [], "hint": "Area of the rectangle is $3 \\times 2 = 6$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$Q_x - P_y = 1 - (-1) = 2$, a constant, so the circulation is $2 \\times \\text{Area} = 2 \\times 6 = 12$ — one multiplication instead of four edge integrals."
+    },
+    {
+      "id": "calculus-3.line-integrals.s14",
+      "concepts": ["greens-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use Green's theorem to compute the counterclockwise circulation of $\\vec{F} = \\langle 2y,\\; 5x \\rangle$ around the triangle with vertices $(0,0)$, $(4,0)$, $(0,6)$.",
+      "steps": [
+        { "instruction": "Compute the integrand $Q_x - P_y$.", "answer": "3", "accept": [], "hint": "$Q_x = 5$ and $P_y = 2$." },
+        { "instruction": "Compute the area of the triangle.", "answer": "12", "accept": [], "hint": "$\\tfrac{1}{2}(4)(6)$." },
+        { "instruction": "Compute the circulation.", "answer": "36", "accept": [], "hint": "Constant integrand: $3 \\times 12$." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "" },
+      "solutionNarrative": "$Q_x - P_y = 5 - 2 = 3$ everywhere, so the circulation is $3 \\times \\tfrac{1}{2}(4)(6) = 36$."
+    },
+    {
+      "id": "calculus-3.line-integrals.s15",
+      "concepts": ["greens-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use Green's theorem to compute the counterclockwise circulation of $\\vec{F} = \\langle -2y,\\; 2x \\rangle$ around the circle of radius 3 centered at the origin. Give exact answers (multiples of $\\pi$).",
+      "steps": [
+        { "instruction": "Compute the integrand $Q_x - P_y$.", "answer": "4", "accept": [], "hint": "$Q_x = 2$ and $P_y = -2$." },
+        { "instruction": "Compute the area of the disk (exact, in terms of $\\pi$).", "answer": "9pi", "accept": ["9*pi", "28.27"], "hint": "$\\pi R^2$ with $R = 3$." },
+        { "instruction": "Compute the circulation (exact, in terms of $\\pi$).", "answer": "36pi", "accept": ["36*pi", "113.10"], "hint": "$4 \\times 9\\pi$." }
+      ],
+      "finalAnswer": { "value": "36pi", "unit": "" },
+      "solutionNarrative": "$Q_x - P_y = 2 - (-2) = 4$, constant, so the circulation is $4 \\times \\pi(3)^2 = 36\\pi \\approx 113.1$."
+    },
+    {
+      "id": "calculus-3.line-integrals.s16",
+      "concepts": ["greens-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use Green's theorem with a NON-constant integrand: compute the counterclockwise circulation of $\\vec{F} = \\langle y,\\; x^2 \\rangle$ around the rectangle $[0,2] \\times [0,3]$.",
+      "steps": [
+        { "instruction": "Compute the integrand $Q_x - P_y$ (a function of $x$).", "answer": "2x - 1", "accept": ["2*x - 1", "-1 + 2x"], "hint": "$Q_x = 2x$ and $P_y = 1$." },
+        { "instruction": "Integrate over $y$ first: the inner integral $\\int_0^3 (2x - 1)\\, dy$ equals what function of $x$?", "answer": "6x - 3", "accept": ["6*x - 3", "3(2x - 1)"], "hint": "The integrand has no $y$, so multiply by the height 3." },
+        { "instruction": "Compute $\\displaystyle\\int_0^2 (6x - 3)\\, dx$.", "answer": "6", "accept": [], "hint": "$\\left[3x^2 - 3x\\right]_0^2 = 12 - 6$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$Q_x - P_y = 2x - 1$. Integrating over the rectangle: $\\int_0^2\\int_0^3 (2x-1)\\,dy\\,dx = \\int_0^2 3(2x-1)\\,dx = 12 - 6 = 6$."
+    }
+  ]
+}

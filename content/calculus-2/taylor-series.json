@@ -1,0 +1,265 @@
+{
+  "id": "calculus-2.taylor-series",
+  "subject": "calculus-2",
+  "title": "Taylor and Maclaurin Series",
+  "prerequisites": ["calculus-2.series-and-convergence", "calculus-1.transcendental-derivatives"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "taylor-polynomials",
+      "label": "Building Taylor polynomials",
+      "microLesson": "The degree-$n$ Taylor polynomial of $f$ centered at $a$ copies $f$'s value AND its first $n$ derivatives at $a$: $$T_n(x) = f(a) + f'(a)(x-a) + \\frac{f''(a)}{2!}(x-a)^2 + \\cdots + \\frac{f^{(n)}(a)}{n!}(x-a)^n.$$ The recipe: compute derivatives, evaluate each at the center, divide the $k$-th one by $k!$, attach $(x-a)^k$. Centered at $a = 0$ it's called a **Maclaurin polynomial**. Example: for $e^x$ at 0, every derivative is 1, so $T_2(x) = 1 + x + \\tfrac{x^2}{2}$."
+    },
+    {
+      "id": "maclaurin-coefficients",
+      "label": "Coefficients and the classic series",
+      "microLesson": "The coefficient of $x^n$ in a Maclaurin series is $c_n = \\dfrac{f^{(n)}(0)}{n!}$ — and it works both ways: $f^{(n)}(0) = c_n \\cdot n!$. Four series to memorize: $e^x = \\sum \\tfrac{x^n}{n!}$; $\\sin x = x - \\tfrac{x^3}{3!} + \\tfrac{x^5}{5!} - \\cdots$ (odd powers, alternating); $\\cos x = 1 - \\tfrac{x^2}{2!} + \\tfrac{x^4}{4!} - \\cdots$ (even powers, alternating); $\\tfrac{1}{1-x} = \\sum x^n$ for $|x| < 1$. Substitution mints new series free: $\\tfrac{1}{1-2x} = \\sum 2^n x^n$, so the $x^3$ coefficient is $8$."
+    },
+    {
+      "id": "series-approximation",
+      "label": "Approximating with polynomials",
+      "microLesson": "Taylor polynomials turn hard functions into arithmetic: $e^{0.2} \\approx 1 + 0.2 + \\tfrac{0.2^2}{2} = 1.22$, accurate to about the first omitted term $\\tfrac{0.2^3}{6} \\approx 0.0013$. That's the working error rule: **the error is roughly the size of the first term you dropped** (exactly a bound, for alternating series). Small $|x - a|$ means fast accuracy; this is literally how calculators and computers evaluate $e^x$, $\\sin x$, and friends."
+    },
+    {
+      "id": "radius-and-interval",
+      "label": "Radius and interval of convergence",
+      "microLesson": "A power series $\\sum c_n (x-a)^n$ converges on an interval centered at $a$. Apply the **ratio test** to the terms: if the limit of $\\left|\\tfrac{\\text{term}_{n+1}}{\\text{term}_n}\\right|$ is $\\tfrac{|x-a|}{R}$, the series converges for $|x - a| < R$ — radius $R$, open interval $(a - R,\\, a + R)$. Factorials in the denominator drive the ratio to 0 for every $x$: **infinite radius** (like $e^x$). Example: $\\sum \\tfrac{(x-2)^n}{3^n}$ has $R = 3$ and interval $(-1, 5)$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## How does a calculator compute $\\sin(0.3)$?\n\nIt doesn't have a tiny protractor inside. It computes something like\n\n$$0.3 - \\frac{0.3^3}{6} = 0.2955,$$\n\nwhich is $\\sin(0.3)$ correct to four decimal places — using nothing but multiplication and subtraction. The idea behind that trick is the single most-used tool in applied mathematics: **replace a complicated function with a polynomial that matches it near a point.** Polynomials are the functions computers (and humans) can actually evaluate; Taylor series are the bridge from everything else to polynomials.\n\n## Matching derivatives: the Taylor polynomial\n\nTo imitate $f$ near a center $a$, build the polynomial that agrees with $f$'s value, slope, concavity, and so on, at $a$:\n\n$$T_n(x) = f(a) + f'(a)(x-a) + \\frac{f''(a)}{2!}(x-a)^2 + \\cdots + \\frac{f^{(n)}(a)}{n!}(x-a)^n.$$\n\nThe $k!$ divisors are exactly what make the $k$-th derivative of $T_n$ at $a$ equal $f^{(k)}(a)$ — differentiate $(x-a)^k$ $k$ times and a $k!$ pops out.\n\nWhen the center is $a = 0$, the polynomial (or series) is called a **Maclaurin** polynomial (or series).\n\n### Worked example: $T_2$ for $e^x$ at $0$\n\nEvery derivative of $e^x$ is $e^x$, which equals 1 at the center:\n\n$$T_2(x) = 1 + x + \\frac{x^2}{2}.$$\n\n### Worked example: $T_3$ for $\\ln x$ at $a = 1$\n\n$f(1) = 0$, $f'(x) = \\tfrac{1}{x}$ so $f'(1) = 1$, $f''(x) = -\\tfrac{1}{x^2}$ so $f''(1) = -1$, $f'''(x) = \\tfrac{2}{x^3}$ so $f'''(1) = 2$. Divide by factorials:\n\n$$T_3(x) = (x-1) - \\frac{(x-1)^2}{2} + \\frac{(x-1)^3}{3}.$$\n\nNotice the pattern of the center: everything is written in powers of $(x - a)$, not $x$.\n\n## The coefficient dictionary\n\nLetting the degree run to infinity gives the **Taylor series**, $\\sum_{n=0}^\\infty c_n (x-a)^n$ with\n\n$$c_n = \\frac{f^{(n)}(a)}{n!} \\qquad\\Longleftrightarrow\\qquad f^{(n)}(a) = c_n \\cdot n!.$$\n\nThat two-way dictionary is worth exam points on its own: read a coefficient, recover a derivative, or vice versa. Four Maclaurin series cover most of practice:\n\n- $e^x = 1 + x + \\tfrac{x^2}{2!} + \\tfrac{x^3}{3!} + \\cdots$\n- $\\sin x = x - \\tfrac{x^3}{3!} + \\tfrac{x^5}{5!} - \\cdots$ (odd powers, alternating signs)\n- $\\cos x = 1 - \\tfrac{x^2}{2!} + \\tfrac{x^4}{4!} - \\cdots$ (even powers, alternating signs)\n- $\\dfrac{1}{1-x} = 1 + x + x^2 + \\cdots$ for $|x| < 1$ (the geometric series)\n\n**Substitution mints new series for free.** Replace $x$ by $2x$ in the geometric series: $\\tfrac{1}{1-2x} = \\sum 2^n x^n$, so the coefficient of $x^3$ is $2^3 = 8$ — no derivatives computed.\n\n## Approximation and the error\n\nEvaluate a Taylor polynomial at a nearby point and you get a controlled approximation:\n\n$$e^{0.2} \\approx T_2(0.2) = 1 + 0.2 + \\frac{0.04}{2} = 1.22 \\qquad (\\text{true value } 1.2214\\ldots).$$\n\nHow wrong can it be? The practical rule: **about the size of the first omitted term** — here $\\tfrac{0.2^3}{3!} \\approx 0.0013$. For alternating series (like $\\sin$ and $\\cos$), the first omitted term is an outright *bound* on the error, and its sign tells you whether you're under or over.\n\n```plot\n{ \"xRange\": [-4.5, 4.5], \"yRange\": [-2.5, 2.5], \"curves\": [ { \"fn\": \"sin(x)\", \"label\": \"sin x\", \"labelAt\": -3.9, \"color\": \"accent\" }, { \"fn\": \"x - x^3/6\", \"label\": \"T₃ = x - x³/6\", \"labelAt\": 2.4, \"color\": \"warn\" } ], \"caption\": \"sin x and its cubic Taylor polynomial hug each other near the center 0, then peel apart — Taylor accuracy is local.\" }\n```\n\nThe picture is the whole story: near the center the polynomial is indistinguishable from the function; far away it's garbage. \"Near\" is quantified by the radius of convergence.\n\n## Radius and interval of convergence\n\nFor which $x$ does the full series make sense? Apply the **ratio test** to the series' terms. For $\\sum \\tfrac{(x-a)^n}{k^n}$:\n\n$$L = \\lim_{n\\to\\infty}\\left|\\frac{(x-a)^{n+1}/k^{n+1}}{(x-a)^n/k^n}\\right| = \\frac{|x-a|}{k} < 1 \\iff |x - a| < k.$$\n\nSo the **radius** is $R = k$ and the open **interval of convergence** is $(a - k,\\, a + k)$.\n\nTwo extreme behaviors to recognize on sight:\n\n- **Factorials in the denominator** ($e^x$, $\\sin$, $\\cos$): the ratio limit is 0 for every $x$ — **infinite radius**, the series works everywhere.\n- **Factorials in the numerator** ($\\sum n! x^n$): the ratio blows up for any $x \\neq 0$ — radius 0, useless except at the center.\n\n## Common pitfalls\n\n- **Forgetting the factorial**: the coefficient is $\\tfrac{f^{(n)}(a)}{n!}$, not $f^{(n)}(a)$.\n- **Writing powers of $x$ for a centered series** — center at $a$ means powers of $(x-a)$.\n- **Series soup**: $\\sin$ has only odd powers, $\\cos$ only even; a stray even term in a sine series is always an error.\n- **Quoting an approximation without its error term** — the first omitted term is your accuracy label."
+  },
+  "application": {
+    "summary": "Taylor series are how the continuous world gets computed: calculators evaluate sin/cos/e^x from a few polynomial terms, physicists replace hard laws with their leading terms (the pendulum's sin θ ≈ θ), engineers linearize systems around an operating point, and financiers approximate bond price changes with duration and convexity — the first two Taylor terms of price versus yield.",
+    "domains": ["computing", "physics", "engineering", "finance"],
+    "workedExample": "**The pendulum equation every physicist actually solves**\n\nA pendulum's exact equation of motion involves $\\sin\\theta$, which makes it unsolvable in closed form. Physics's oldest trick: for small angles, replace $\\sin\\theta$ by its Taylor polynomial.\n\n$$\\sin\\theta = \\theta - \\frac{\\theta^3}{6} + \\cdots \\approx \\theta.$$\n\nHow good is that? At $\\theta = 0.2$ rad (about $11.5°$), the first omitted term is $\\tfrac{0.2^3}{6} \\approx 0.0013$ — an error of about **0.1%**. The linearized equation predicts the classic period $T = 2\\pi\\sqrt{L/g}$, and the Taylor error term tells you exactly when to trust it: swing amplitudes past ~$30°$ need the $\\theta^3$ correction.\n\nThe same maneuver — keep the first term or two, bound the rest — linearizes control systems around an operating point, prices a bond's response to rate moves (duration = first derivative term, convexity = second), and lets a $2 chip compute $e^x$ to machine precision.",
+    "domainNotes": [
+      "**Computing:** math libraries evaluate $e^x$, $\\sin$, $\\cos$, $\\ln$ with a handful of Taylor (or Taylor-derived) terms — polynomials are all the hardware can do.",
+      "**Physics:** the small-angle pendulum, relativistic corrections ($\\sqrt{1+v} \\approx 1 + \\tfrac{v}{2}$), and virtually every 'first-order approximation' are truncated Taylor series.",
+      "**Engineering:** linearization about an operating point (the first Taylor term) is the foundation of control theory and circuit small-signal analysis.",
+      "**Finance:** bond duration and convexity are the first- and second-order Taylor terms of price as a function of yield."
+    ]
+  },
+  "generators": [
+    "c2f-taylor-poly-1", "c2f-taylor-poly-2", "c2f-taylor-poly-3",
+    "c2f-maclaurin-coef-1", "c2f-maclaurin-coef-2", "c2f-maclaurin-coef-3",
+    "c2f-taylor-approx-1", "c2f-taylor-approx-2", "c2f-taylor-approx-3",
+    "c2f-taylor-radius-1", "c2f-taylor-radius-2", "c2f-taylor-radius-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-2.taylor-series.s01",
+      "concepts": ["taylor-polynomials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Build the degree-2 Maclaurin polynomial $T_2(x)$ of $f(x) = e^x$ using $T_2(x) = f(0) + f'(0)x + \\tfrac{f''(0)}{2}x^2$.",
+      "steps": [
+        { "instruction": "Every derivative of $e^x$ is $e^x$. What is $f(0)$ (and $f'(0)$, and $f''(0)$)?", "answer": "1", "accept": [], "hint": "$e^0 = 1$." },
+        { "instruction": "Assemble $T_2(x)$. (Type it like 1 + x + x^2/2.)", "answer": "1 + x + x^2/2", "accept": ["1+x+x^2/2", "1 + x + (1/2)x^2", "1 + x + 0.5x^2"], "hint": "Coefficients $1$, $1$, and $\\tfrac{1}{2}$ (that's $\\tfrac{f''(0)}{2!}$)." }
+      ],
+      "finalAnswer": { "value": "1 + x + x^2/2", "unit": "" },
+      "solutionNarrative": "All derivatives equal 1 at the center, so $T_2(x) = 1 + x + \\tfrac{x^2}{2}$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s02",
+      "concepts": ["taylor-polynomials"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Build the degree-3 Maclaurin polynomial of $f(x) = \\sin x$, given $f(0) = 0$, $f'(0) = 1$, $f''(0) = 0$, $f'''(0) = -1$.",
+      "steps": [
+        { "instruction": "Which power of $x$ carries a ZERO coefficient here?", "answer": "2", "accept": ["x^2"], "hint": "$f''(0) = 0$ kills the quadratic term — sine's series has only odd powers." },
+        { "instruction": "Assemble $T_3(x)$, remembering to divide $f'''(0)$ by $3! = 6$. (Type it like x - x^3/6.)", "answer": "x - x^3/6", "accept": ["x-x^3/6", "x - (1/6)x^3"], "hint": "$0 + 1\\cdot x + 0 \\cdot x^2 + \\tfrac{-1}{6}x^3$." }
+      ],
+      "finalAnswer": { "value": "x - x^3/6", "unit": "" },
+      "solutionNarrative": "$T_3(x) = x - \\tfrac{x^3}{6}$ — the polynomial behind every calculator's sine key."
+    },
+    {
+      "id": "calculus-2.taylor-series.s03",
+      "concepts": ["taylor-polynomials"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Build the degree-2 Taylor polynomial of $f(x) = \\dfrac{1}{x}$ centered at $a = 1$.",
+      "steps": [
+        { "instruction": "With $f'(x) = -\\dfrac{1}{x^2}$, find $f'(1)$.", "answer": "-1", "accept": [], "hint": "$-\\tfrac{1}{1^2}$." },
+        { "instruction": "With $f''(x) = \\dfrac{2}{x^3}$, find $f''(1)$.", "answer": "2", "accept": [], "hint": "$\\tfrac{2}{1^3}$." },
+        { "instruction": "Assemble $T_2(x) = f(1) + f'(1)(x-1) + \\tfrac{f''(1)}{2}(x-1)^2$. (Type it like 1 - (x - 1) + (x - 1)^2.)", "answer": "1 - (x - 1) + (x - 1)^2", "accept": ["1-(x-1)+(x-1)^2", "1 - (x-1) + (x-1)^2", "3 - 3x + x^2"], "hint": "$f(1) = 1$, $f'(1) = -1$, $\\tfrac{f''(1)}{2} = 1$." }
+      ],
+      "finalAnswer": { "value": "1 - (x - 1) + (x - 1)^2", "unit": "" },
+      "solutionNarrative": "$f(1) = 1$, $f'(1) = -1$, $f''(1) = 2$: $T_2(x) = 1 - (x-1) + (x-1)^2$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s04",
+      "concepts": ["maclaurin-coefficients"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Using $e^x = \\sum_{n=0}^{\\infty} \\dfrac{x^n}{n!}$, find the coefficient of $x^3$.",
+      "steps": [
+        { "instruction": "Compute $3!$.", "answer": "6", "accept": [], "hint": "$3 \\cdot 2 \\cdot 1$." },
+        { "instruction": "So the coefficient of $x^3$ is?", "answer": "1/6", "accept": ["0.1667"], "hint": "The general term is $\\tfrac{x^n}{n!}$." }
+      ],
+      "finalAnswer": { "value": "1/6", "unit": "" },
+      "solutionNarrative": "The $x^3$ term of $e^x$ is $\\tfrac{x^3}{3!} = \\tfrac{x^3}{6}$: coefficient $\\tfrac{1}{6}$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s05",
+      "concepts": ["maclaurin-coefficients"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the coefficient of $x^4$ in the Maclaurin series of $\\cos x = 1 - \\tfrac{x^2}{2!} + \\tfrac{x^4}{4!} - \\cdots$, and the coefficient of $x^3$.",
+      "steps": [
+        { "instruction": "Compute $4!$, then give the coefficient of $x^4$.", "answer": "1/24", "accept": ["0.0417"], "hint": "$4! = 24$, and the $x^4$ term is $+\\tfrac{x^4}{4!}$." },
+        { "instruction": "What is the coefficient of $x^3$ in the cosine series?", "answer": "0", "accept": [], "hint": "Cosine's series contains only EVEN powers." }
+      ],
+      "finalAnswer": { "value": "1/24", "unit": "" },
+      "solutionNarrative": "The $x^4$ coefficient is $\\tfrac{1}{24}$; odd powers like $x^3$ never appear in cosine, so that coefficient is 0."
+    },
+    {
+      "id": "calculus-2.taylor-series.s06",
+      "concepts": ["maclaurin-coefficients"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A function's Maclaurin series is $\\sum c_n x^n$ with $c_5 = \\tfrac{2}{15}$. Use the coefficient formula $c_n = \\dfrac{f^{(n)}(0)}{n!}$ to recover $f^{(5)}(0)$.",
+      "steps": [
+        { "instruction": "Compute $5!$.", "answer": "120", "accept": [], "hint": "$5 \\cdot 4 \\cdot 3 \\cdot 2 \\cdot 1$." },
+        { "instruction": "Then $f^{(5)}(0) = c_5 \\cdot 5! = \\tfrac{2}{15} \\cdot 120$. Compute it.", "answer": "16", "accept": [], "hint": "$\\tfrac{2 \\cdot 120}{15}$." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "" },
+      "solutionNarrative": "The dictionary runs both ways: $f^{(5)}(0) = c_5 \\cdot 5! = \\tfrac{2}{15}(120) = 16$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s07",
+      "concepts": ["maclaurin-coefficients"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Using the geometric series $\\dfrac{1}{1-u} = \\sum u^n$, find the coefficient of $x^3$ in the Maclaurin series of $\\dfrac{1}{1 - 3x}$.",
+      "steps": [
+        { "instruction": "Substitute $u = 3x$: the $n = 3$ term is $(3x)^3$. Expand it. (Type it like 27x^3.)", "answer": "27x^3", "accept": ["27 x^3", "3^3x^3"], "hint": "$3^3 = 27$." },
+        { "instruction": "So the coefficient of $x^3$ is?", "answer": "27", "accept": ["3^3"], "hint": "Read it off the term." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "" },
+      "solutionNarrative": "$\\tfrac{1}{1-3x} = \\sum (3x)^n = \\sum 3^n x^n$: the $x^3$ coefficient is $27$ — no derivatives needed."
+    },
+    {
+      "id": "calculus-2.taylor-series.s08",
+      "concepts": ["series-approximation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use $T_2(x) = 1 + x + \\tfrac{x^2}{2}$ to approximate $e^{0.2}$.",
+      "steps": [
+        { "instruction": "Compute the quadratic term $\\tfrac{0.2^2}{2}$.", "answer": "0.02", "accept": ["0.020", ".02"], "hint": "$0.04 \\div 2$." },
+        { "instruction": "Add up $1 + 0.2 + 0.02$.", "answer": "1.22", "accept": ["1.220"], "hint": "Just add the three terms." }
+      ],
+      "finalAnswer": { "value": "1.22", "unit": "" },
+      "solutionNarrative": "$T_2(0.2) = 1 + 0.2 + 0.02 = 1.22$; the true value is $1.2214$, so the polynomial is off by about 0.0014."
+    },
+    {
+      "id": "calculus-2.taylor-series.s09",
+      "concepts": ["series-approximation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A calculator chip approximates $\\sin(0.3)$ (radians) with $T_3(x) = x - \\tfrac{x^3}{6}$. Reproduce its computation, rounding to 4 decimal places.",
+      "steps": [
+        { "instruction": "Compute the correction term $\\tfrac{0.3^3}{6}$. Round to 4 decimal places.", "answer": "0.0045", "accept": ["0.00450", "0.0044"], "hint": "$0.027 \\div 6$." },
+        { "instruction": "Compute $0.3 - 0.0045$.", "answer": "0.2955", "accept": ["0.29550", "0.2956", "0.2954"], "hint": "Subtract the correction from the angle." }
+      ],
+      "finalAnswer": { "value": "0.2955", "unit": "" },
+      "solutionNarrative": "$\\sin(0.3) \\approx 0.3 - \\tfrac{0.027}{6} = 0.2955$ — correct to 4 decimals; the next term is only $\\tfrac{0.3^5}{120} \\approx 0.00002$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s10",
+      "concepts": ["series-approximation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A physicist replaces $\\sin\\theta$ by $\\theta$ (the small-angle approximation) for a pendulum swinging at $\\theta = 0.2$ rad. Bound the error using the first omitted term $\\tfrac{\\theta^3}{6}$ and judge the approximation.",
+      "steps": [
+        { "instruction": "Compute the error bound $\\tfrac{0.2^3}{6}$. Round to 4 decimal places.", "answer": "0.0013", "accept": ["0.00133", "0.0014", "0.0013333"], "hint": "$0.008 \\div 6$." },
+        { "instruction": "The approximation itself is $0.2$. Is the relative error under 1%? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "$0.0013 / 0.2 \\approx 0.67\\%$." },
+        { "instruction": "Since the omitted term $-\\tfrac{\\theta^3}{6}$ is negative, is $\\theta$ an overestimate or underestimate of $\\sin\\theta$?", "answer": "overestimate", "accept": ["over", "too high", "an overestimate"], "hint": "Adding the next (negative) term would LOWER the value toward the truth." }
+      ],
+      "finalAnswer": { "value": "0.0013", "unit": "" },
+      "solutionNarrative": "The error is at most $\\tfrac{0.2^3}{6} \\approx 0.0013$ — under 1% — and since the dropped term is negative, $\\theta$ slightly overestimates $\\sin\\theta$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s11",
+      "concepts": ["radius-and-interval"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the radius of convergence of $\\sum_{n=0}^{\\infty} \\dfrac{x^n}{2^n}$.",
+      "steps": [
+        { "instruction": "The ratio test gives $L = \\dfrac{|x|}{2}$. The series converges when $|x|$ is less than what?", "answer": "2", "accept": [], "hint": "Solve $\\tfrac{|x|}{2} < 1$." },
+        { "instruction": "So the radius of convergence is $R = $ ?", "answer": "2", "accept": ["R=2", "R = 2"], "hint": "The bound on $|x|$ IS the radius." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$L = \\tfrac{|x|}{2} < 1$ exactly when $|x| < 2$: radius $R = 2$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s12",
+      "concepts": ["radius-and-interval"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the radius and open interval of convergence of $\\sum_{n=0}^{\\infty} \\dfrac{(x - 2)^n}{3^n}$.",
+      "steps": [
+        { "instruction": "The ratio test gives $L = \\dfrac{|x - 2|}{3}$. What is the radius $R$?", "answer": "3", "accept": ["R=3"], "hint": "$L < 1$ means $|x - 2| < 3$." },
+        { "instruction": "The center is $x = 2$. Give the open interval of convergence as (left, right).", "answer": "(-1, 5)", "accept": ["-1, 5", "(-1,5)"], "hint": "Center minus/plus the radius: $2 \\pm 3$." }
+      ],
+      "finalAnswer": { "value": "(-1, 5)", "unit": "" },
+      "solutionNarrative": "$R = 3$ around center 2: the series converges on $(-1, 5)$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s13",
+      "concepts": ["radius-and-interval"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the radius of convergence of $\\sum_{n=0}^{\\infty} \\dfrac{x^n}{n!}$ (the exponential series) using the ratio test.",
+      "steps": [
+        { "instruction": "Simplify the term ratio $\\left|\\dfrac{x^{n+1}/(n+1)!}{x^n/n!}\\right|$. (Type it like |x|/(n + 1).)", "answer": "|x|/(n + 1)", "accept": ["|x|/(n+1)", "x/(n+1)", "abs(x)/(n+1)"], "hint": "$\\tfrac{n!}{(n+1)!} = \\tfrac{1}{n+1}$." },
+        { "instruction": "For fixed $x$, what is $\\displaystyle\\lim_{n\\to\\infty} \\frac{|x|}{n+1}$?", "answer": "0", "accept": [], "hint": "The numerator is frozen; the denominator grows forever." },
+        { "instruction": "Since $L = 0 < 1$ for EVERY $x$, the radius of convergence is: (type infinite)", "answer": "infinite", "accept": ["infinity", "inf", "r=infinity", "r = infinity"], "hint": "Convergence everywhere means infinite radius." }
+      ],
+      "finalAnswer": { "value": "infinite", "unit": "" },
+      "solutionNarrative": "The factorial swamps the geometric growth: $L = 0$ for all $x$, so $e^x$'s series converges everywhere — infinite radius."
+    },
+    {
+      "id": "calculus-2.taylor-series.s14",
+      "concepts": ["taylor-polynomials", "series-approximation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An engineer linearizes $f(x) = \\sqrt{1 + x}$ near $x = 0$ for a stress calculation, using $T_1(x) = f(0) + f'(0)x$.",
+      "steps": [
+        { "instruction": "With $f'(x) = \\dfrac{1}{2\\sqrt{1+x}}$, find $f'(0)$.", "answer": "1/2", "accept": ["0.5"], "hint": "$\\tfrac{1}{2\\sqrt{1}}$." },
+        { "instruction": "Write $T_1(x)$. (Type it like 1 + x/2.)", "answer": "1 + x/2", "accept": ["1+x/2", "1 + 0.5x", "1 + (1/2)x"], "hint": "$f(0) = 1$ plus slope $\\tfrac{1}{2}$ times $x$." },
+        { "instruction": "Use it to approximate $\\sqrt{1.1}$ (that is, $x = 0.1$).", "answer": "1.05", "accept": ["1.050"], "hint": "$1 + \\tfrac{0.1}{2}$." }
+      ],
+      "finalAnswer": { "value": "1.05", "unit": "" },
+      "solutionNarrative": "$T_1(x) = 1 + \\tfrac{x}{2}$, giving $\\sqrt{1.1} \\approx 1.05$ (true value 1.0488) — the physicist's favorite shortcut $\\sqrt{1+x} \\approx 1 + \\tfrac{x}{2}$."
+    },
+    {
+      "id": "calculus-2.taylor-series.s15",
+      "concepts": ["maclaurin-coefficients", "taylor-polynomials"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Sine or cosine? A Maclaurin series starts $1 - \\tfrac{x^2}{2} + \\cdots$ — identify the function and the next nonzero term's power.",
+      "steps": [
+        { "instruction": "Even powers with alternating signs starting at 1: which function is this? (Type sine or cosine.)", "answer": "cosine", "accept": ["cos", "cos x", "cosx"], "hint": "Cosine is the EVEN one (it starts at $\\cos 0 = 1$)." },
+        { "instruction": "What is the power of $x$ in the next nonzero term?", "answer": "4", "accept": ["x^4"], "hint": "Even powers: $0, 2, 4, \\ldots$" }
+      ],
+      "finalAnswer": { "value": "cosine", "unit": "" },
+      "solutionNarrative": "Even powers and alternating signs mark cosine; after $x^2$ the next nonzero power is $x^4$ (with coefficient $+\\tfrac{1}{24}$)."
+    },
+    {
+      "id": "calculus-2.taylor-series.s16",
+      "concepts": ["radius-and-interval", "maclaurin-coefficients"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The series $\\sum_{n=0}^{\\infty} 4^n x^n$ comes from substituting into the geometric series. Find its sum-function's form and its radius of convergence.",
+      "steps": [
+        { "instruction": "This is geometric with ratio $4x$. It converges when $|4x| < 1$, i.e. $|x|$ less than what? Give a fraction.", "answer": "1/4", "accept": ["0.25"], "hint": "Solve $4|x| < 1$." },
+        { "instruction": "So the radius of convergence is $R = $ ?", "answer": "1/4", "accept": ["0.25", "R=1/4"], "hint": "The bound on $|x|$ is the radius." },
+        { "instruction": "What is the coefficient of $x^2$ in the series?", "answer": "16", "accept": ["4^2"], "hint": "$4^n$ with $n = 2$." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "$\\sum (4x)^n = \\tfrac{1}{1-4x}$ for $|x| < \\tfrac{1}{4}$: radius $\\tfrac{1}{4}$, and the $x^2$ coefficient is $4^2 = 16$."
+    }
+  ]
+}

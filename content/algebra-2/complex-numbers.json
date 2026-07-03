@@ -1,0 +1,270 @@
+{
+  "id": "algebra-2.complex-numbers",
+  "subject": "algebra-2",
+  "title": "Complex Numbers",
+  "prerequisites": ["algebra.quadratic-equations", "algebra-2.radicals"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "imaginary-unit-and-powers",
+      "label": "The imaginary unit and powers of i",
+      "microLesson": "The imaginary unit $i$ is defined by $i^2 = -1$, which finally gives $\\sqrt{-1}$ a meaning: $\\sqrt{-25} = \\sqrt{25}\\,\\sqrt{-1} = 5i$. Always pull the negative out FIRST — the rule $\\sqrt{x}\\sqrt{y} = \\sqrt{xy}$ fails for two negatives. Powers of $i$ cycle with period 4: $i^1 = i$, $i^2 = -1$, $i^3 = -i$, $i^4 = 1$, then repeat. To evaluate $i^{n}$, use the remainder of $n \\div 4$: $i^{15} = i^{3} = -i$ because $15 = 4(3) + 3$."
+    },
+    {
+      "id": "complex-arithmetic",
+      "label": "Adding, subtracting, and multiplying",
+      "microLesson": "A complex number $a + bi$ has a real part $a$ and an imaginary part $bi$. Add and subtract by combining like parts, exactly like like terms: $(3 + 4i) + (2 - 7i) = 5 - 3i$. When subtracting, distribute the minus to BOTH parts. Multiply by FOILing, then replace $i^2$ with $-1$: $(2 + 3i)(4 - i) = 8 - 2i + 12i - 3i^2 = 8 + 10i + 3 = 11 + 10i$. Every answer should end up back in $a + bi$ form with no $i^2$ left."
+    },
+    {
+      "id": "conjugates-and-division",
+      "label": "Conjugates and division",
+      "microLesson": "The conjugate of $a + bi$ is $a - bi$ — flip only the sign of the imaginary part. Their product is always real: $(a+bi)(a-bi) = a^2 + b^2$. That's the whole trick for division: to simplify $\\dfrac{10 + 5i}{1 + 2i}$, multiply top and bottom by the conjugate $1 - 2i$. The denominator becomes $1^2 + 2^2 = 5$, the numerator becomes $20 - 15i$, and the quotient is $4 - 3i$. Division is just 'make the denominator real, then split.'"
+    },
+    {
+      "id": "complex-plane-and-quadratics",
+      "label": "The complex plane and complex roots",
+      "microLesson": "Plot $a + bi$ as the point $(a, b)$: real part horizontal, imaginary part vertical. Its modulus $|a + bi| = \\sqrt{a^2 + b^2}$ is the distance from the origin — plain Pythagoras. Quadratics with a negative discriminant have no real roots, but they always have two complex ones: for $x^2 - 4x + 13 = 0$, the discriminant is $-36$, so $\\sqrt{-36} = 6i$ and $x = \\dfrac{4 \\pm 6i}{2} = 2 \\pm 3i$. Complex roots of real polynomials always come in conjugate pairs."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The number that shouldn't exist (but runs your electronics)\n\nFor centuries, $x^2 = -1$ was simply *impossible* — no real number squares to a negative. Then algebraists noticed something strange: if you just *pretend* there's a number $i$ with $i^2 = -1$ and push on, the math never breaks. Formulas that pass through this 'impossible' territory land on correct real answers. Today complex numbers aren't a trick; they're the native language of alternating current, signal processing, and quantum mechanics.\n\nThe definition is one line:\n\n$$i^2 = -1, \\qquad \\text{so} \\qquad \\sqrt{-1} = i.$$\n\nA **complex number** has the form $a + bi$: a **real part** $a$ and an **imaginary part** $bi$. Real numbers are just complex numbers with $b = 0$, so nothing you know is lost — the number system got *bigger*, not different.\n\n## Square roots of negatives: pull the negative out first\n\n$$\\sqrt{-N} = \\sqrt{N}\\,\\sqrt{-1} = \\sqrt{N}\\,i \\qquad \\text{e.g.} \\qquad \\sqrt{-25} = 5i.$$\n\n**Pitfall (the classic one):** the product rule $\\sqrt{x}\\sqrt{y} = \\sqrt{xy}$ only holds when at most one of $x, y$ is negative. Convert to $i$ form *before* multiplying:\n\n$$\\sqrt{-9} \\cdot \\sqrt{-16} = (3i)(4i) = 12i^2 = -12 \\qquad \\text{NOT} \\qquad \\sqrt{144} = 12.$$\n\n## Powers of i: a four-step cycle\n\nMultiplying by $i$ again and again cycles through four values:\n\n$$i^1 = i, \\quad i^2 = -1, \\quad i^3 = -i, \\quad i^4 = 1, \\quad i^5 = i, \\; \\dots$$\n\nSo $i^n$ depends only on the remainder of $n \\div 4$. For $i^{15}$: $15 = 4(3) + 3$, so $i^{15} = i^3 = -i$. Huge exponents collapse to one of four answers.\n\n## Arithmetic: like terms, then $i^2 = -1$\n\n**Add/subtract** by combining real parts with real parts and imaginary with imaginary:\n\n$$(3 + 4i) + (2 - 7i) = 5 - 3i.$$\n\nWhen subtracting, the minus sign hits *both* parts of the second number: $(8 - 3i) - (2 + 5i) = 6 - 8i$.\n\n**Multiply** by FOILing as if $i$ were a variable, then simplify the $i^2$:\n\n$$(2 + 3i)(4 - i) = 8 - 2i + 12i - 3i^2 = 8 + 10i + 3 = 11 + 10i.$$\n\nThe $i^2$ term always folds back into the **real** part with a sign flip. Every final answer should be back in clean $a + bi$ form — leaving an $i^2$ in an answer means the job isn't finished.\n\n## Conjugates: the tool that makes denominators real\n\nThe **conjugate** of $z = a + bi$ is $\\bar{z} = a - bi$. Multiply them and the middle terms cancel:\n\n$$z\\bar{z} = (a + bi)(a - bi) = a^2 + b^2,$$\n\nalways a nonnegative *real* number. That's the key to **division**: multiply numerator and denominator by the conjugate of the denominator.\n\n$$\\frac{10 + 5i}{1 + 2i} = \\frac{(10 + 5i)(1 - 2i)}{(1 + 2i)(1 - 2i)} = \\frac{20 - 15i}{5} = 4 - 3i.$$\n\nAlways check by multiplying back: $(4 - 3i)(1 + 2i) = 4 + 8i - 3i - 6i^2 = 10 + 5i$. ✓\n\n## The complex plane\n\nA complex number is a *point*: $a + bi$ sits at $(a, b)$, with the real axis horizontal and the imaginary axis vertical. Its **modulus** is its distance from the origin — Pythagoras in disguise:\n\n$$|a + bi| = \\sqrt{a^2 + b^2}, \\qquad |3 + 4i| = \\sqrt{9 + 16} = 5.$$\n\nConjugates are mirror images across the real axis.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-6, 6], \"yRange\": [-6, 6], \"grid\": true, \"segments\": [ { \"from\": [0, 0], \"to\": [3, 4], \"arrow\": true, \"color\": \"accent\", \"label\": \"|z| = 5\" } ], \"points\": [ { \"x\": 3, \"y\": 4, \"label\": \"3+4i\", \"color\": \"accent\" }, { \"x\": 3, \"y\": -4, \"label\": \"3-4i (conjugate)\", \"color\": \"warn\" }, { \"x\": -4, \"y\": 2, \"label\": \"-4+2i\", \"color\": \"success\" }, { \"x\": -2, \"y\": -5, \"label\": \"-2-5i\", \"color\": \"dim\" } ], \"caption\": \"The complex plane: real axis horizontal, imaginary axis vertical; a conjugate mirrors across the real axis\" }\n```\n\n## Quadratics with no real roots — but two complex ones\n\nWhen the discriminant $b^2 - 4ac$ is negative, the parabola misses the x-axis and the quadratic formula asks for the square root of a negative. Complex numbers answer it. Solve $x^2 - 4x + 13 = 0$:\n\n1. Discriminant: $(-4)^2 - 4(1)(13) = 16 - 52 = -36$.\n2. Its square root: $\\sqrt{-36} = 6i$.\n3. Formula: $x = \\dfrac{4 \\pm 6i}{2} = 2 \\pm 3i$.\n\nThe two roots $2 + 3i$ and $2 - 3i$ are a **conjugate pair** — for polynomials with real coefficients, complex roots *always* arrive in conjugate pairs. So the count of roots never lies: every quadratic has exactly two roots, once you let them be complex.\n\n**Common pitfalls, collected:** (1) multiplying $\\sqrt{-a}\\sqrt{-b}$ without converting to $i$ first; (2) forgetting to distribute the minus over both parts when subtracting; (3) leaving $i^2$ in a 'final' answer; (4) flipping the sign of the *real* part when conjugating — only the imaginary part flips."
+  },
+  "application": {
+    "summary": "Complex numbers are the working arithmetic of alternating current circuits, where resistance and reactance combine into one impedance $Z = R + Xi$; they also underpin signal processing (Fourier analysis), control theory, and computer graphics rotations. Conjugate division computes real currents from complex impedances, and the modulus turns a complex quantity back into a measurable magnitude.",
+    "domains": ["electrical engineering", "signal processing", "physics", "computer graphics"],
+    "workedExample": "**How much current flows in this AC circuit?**\n\nIn an AC circuit, a resistor and an inductor together have impedance $Z = 3 + 4i$ ohms (the real part is resistance, the imaginary part is reactance). A $25$-volt source drives the circuit, and Ohm's law still holds with complex numbers: $I = \\dfrac{V}{Z}$.\n\n$$I = \\frac{25}{3 + 4i} = \\frac{25(3 - 4i)}{(3 + 4i)(3 - 4i)} = \\frac{25(3 - 4i)}{9 + 16} = \\frac{25(3 - 4i)}{25} = 3 - 4i \\text{ amps.}$$\n\nThe conjugate made the denominator real ($3^2 + 4^2 = 25$), and the division came out exact. The **magnitude** of the current — what an ammeter actually reads — is the modulus:\n\n$$|I| = \\sqrt{3^2 + (-4)^2} = 5 \\text{ amps},$$\n\nand the negative imaginary part says the current *lags* the voltage, which tells the engineer the circuit is inductive. One complex division replaced a page of trigonometry — that is exactly why electrical engineers compute in complex numbers all day.",
+    "domainNotes": [
+      "**Electrical engineering:** impedance of AC circuits is a single complex number $R + Xi$; series impedances add, and Ohm's law becomes complex division.",
+      "**Signal processing:** Fourier analysis represents every signal as a sum of complex exponentials; filters are designed by placing complex zeros and poles.",
+      "**Physics:** quantum states are complex-valued; the modulus squared of an amplitude is a probability.",
+      "**Graphics/robotics:** multiplying by a unit complex number rotates the plane — the 2D ancestor of the quaternions used in 3D game engines."
+    ]
+  },
+  "generators": [
+    "a2f-imaginary-unit-1", "a2f-imaginary-unit-2", "a2f-imaginary-unit-3",
+    "a2f-complex-arith-1", "a2f-complex-arith-2", "a2f-complex-arith-3",
+    "a2f-conjugate-div-1", "a2f-conjugate-div-2", "a2f-conjugate-div-3",
+    "a2f-complex-plane-1", "a2f-complex-plane-2", "a2f-complex-plane-3"
+  ],
+  "problems": [
+    {
+      "id": "algebra-2.complex-numbers.s01",
+      "concepts": ["imaginary-unit-and-powers"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Simplify $\\sqrt{-25}$ using the imaginary unit $i$.",
+      "steps": [
+        { "instruction": "What is $\\sqrt{25}$?", "answer": "5", "accept": [], "hint": "$5 \\cdot 5 = 25$." },
+        { "instruction": "So $\\sqrt{-25} = \\sqrt{25} \\cdot \\sqrt{-1}$. Write the simplified result using $i$.", "answer": "5i", "accept": ["5*i"], "hint": "$\\sqrt{-1} = i$." }
+      ],
+      "finalAnswer": { "value": "5i", "unit": "" },
+      "solutionNarrative": "Pull the negative out first: $\\sqrt{-25} = \\sqrt{25}\\sqrt{-1} = 5i$."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s02",
+      "concepts": ["imaginary-unit-and-powers"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "What is the value of $i^2$? This single fact is the definition everything else builds on.",
+      "steps": [
+        { "instruction": "By definition of the imaginary unit, $i^2$ equals what number?", "answer": "-1", "accept": [], "hint": "$i$ was invented precisely so that its square is negative." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$i^2 = -1$ by definition — the one new rule the whole topic rests on."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s03",
+      "concepts": ["imaginary-unit-and-powers"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $i^{15}$ using the fact that powers of $i$ cycle with period 4.",
+      "steps": [
+        { "instruction": "Divide 15 by 4. What is the remainder?", "answer": "3", "accept": [], "hint": "$15 = 4 \\cdot 3 + 3$." },
+        { "instruction": "So $i^{15} = i^3$. What is its value? (Answer one of: 1, i, -1, -i.)", "answer": "-i", "accept": [], "hint": "$i^3 = i^2 \\cdot i = -i$." }
+      ],
+      "finalAnswer": { "value": "-i", "unit": "" },
+      "solutionNarrative": "Since $15 \\equiv 3 \\pmod 4$, $i^{15} = i^3 = -i$."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s04",
+      "concepts": ["imaginary-unit-and-powers"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Simplify $\\sqrt{-9} \\cdot \\sqrt{-16}$. (Careful — the answer is NOT $\\sqrt{144}$.)",
+      "steps": [
+        { "instruction": "Rewrite $\\sqrt{-9}$ using $i$.", "answer": "3i", "accept": ["3*i"], "hint": "$\\sqrt{-9} = \\sqrt{9}\\,i$." },
+        { "instruction": "Rewrite $\\sqrt{-16}$ using $i$.", "answer": "4i", "accept": ["4*i"], "hint": "$\\sqrt{-16} = \\sqrt{16}\\,i$." },
+        { "instruction": "Multiply: $(3i)(4i) = 12i^2$. Using $i^2 = -1$, what real number is this?", "answer": "-12", "accept": [], "hint": "$12 \\cdot (-1)$." }
+      ],
+      "finalAnswer": { "value": "-12", "unit": "" },
+      "solutionNarrative": "Convert each radical to $i$ form first: $(3i)(4i) = 12i^2 = -12$. Multiplying the radicands directly would give $+12$ — the product rule for radicals fails when both are negative."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s05",
+      "concepts": ["complex-arithmetic"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two AC circuit components in series have impedances $3 + 4i$ ohms and $2 - 7i$ ohms. Series impedances add. Find the total impedance in $a + bi$ form.",
+      "steps": [
+        { "instruction": "Add the real parts: $3 + 2$.", "answer": "5", "accept": [], "hint": "Real with real." },
+        { "instruction": "Add the imaginary coefficients: $4 + (-7)$.", "answer": "-3", "accept": [], "hint": "Imaginary with imaginary." },
+        { "instruction": "Combine into $a + bi$ form.", "answer": "5 - 3i", "accept": [], "hint": "Real part 5, imaginary coefficient $-3$." }
+      ],
+      "finalAnswer": { "value": "5 - 3i", "unit": "ohms" },
+      "solutionNarrative": "Combine like parts: $(3 + 2) + (4 - 7)i = 5 - 3i$ ohms — the resistances add and the reactances add, separately."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s06",
+      "concepts": ["complex-arithmetic"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Subtract: $(8 - 3i) - (2 + 5i)$. Give the result in $a + bi$ form.",
+      "steps": [
+        { "instruction": "Subtract the real parts: $8 - 2$.", "answer": "6", "accept": [], "hint": "Real with real." },
+        { "instruction": "Subtract the imaginary coefficients: $-3 - 5$.", "answer": "-8", "accept": [], "hint": "The minus distributes onto the $+5i$." },
+        { "instruction": "Combine into $a + bi$ form.", "answer": "6 - 8i", "accept": [], "hint": "Real part 6, imaginary coefficient $-8$." }
+      ],
+      "finalAnswer": { "value": "6 - 8i", "unit": "" },
+      "solutionNarrative": "Distribute the minus over both parts: $(8 - 2) + (-3 - 5)i = 6 - 8i$."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s07",
+      "concepts": ["complex-arithmetic"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Multiply: $2i(4 - 5i)$. Give the result in $a + bi$ form.",
+      "steps": [
+        { "instruction": "Distribute: $2i \\cdot 4 = 8i$ and $2i \\cdot (-5i) = -10i^2$. Using $i^2 = -1$, what real number is $-10i^2$?", "answer": "10", "accept": [], "hint": "$-10 \\cdot (-1)$." },
+        { "instruction": "Combine into $a + bi$ form.", "answer": "10 + 8i", "accept": [], "hint": "The real part came from the $i^2$ term; the $8i$ stays imaginary." }
+      ],
+      "finalAnswer": { "value": "10 + 8i", "unit": "" },
+      "solutionNarrative": "$2i(4 - 5i) = 8i - 10i^2 = 8i + 10 = 10 + 8i$. The $i^2$ term flips sign and lands in the real part."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s08",
+      "concepts": ["complex-arithmetic"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Multiply: $(2 + 3i)(4 - i)$. FOIL, then use $i^2 = -1$. Give the result in $a + bi$ form.",
+      "steps": [
+        { "instruction": "Compute the imaginary coefficient from the Outer and Inner products: $(2)(-1) + (3)(4)$.", "answer": "10", "accept": [], "hint": "$-2 + 12$." },
+        { "instruction": "The First product is $8$; the Last product is $-3i^2 = 3$. Add them for the real part.", "answer": "11", "accept": [], "hint": "$8 + 3$." },
+        { "instruction": "Combine into $a + bi$ form.", "answer": "11 + 10i", "accept": [], "hint": "Real part 11, imaginary coefficient 10." }
+      ],
+      "finalAnswer": { "value": "11 + 10i", "unit": "" },
+      "solutionNarrative": "$(2 + 3i)(4 - i) = 8 - 2i + 12i - 3i^2 = 8 + 10i + 3 = 11 + 10i$."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s09",
+      "concepts": ["conjugates-and-division"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $z = 5 - 2i$. Find the conjugate $\\bar{z}$ and the product $z\\bar{z}$.",
+      "steps": [
+        { "instruction": "Write the conjugate $\\bar{z}$ (flip only the sign of the imaginary part).", "answer": "5 + 2i", "accept": [], "hint": "The real part 5 stays put." },
+        { "instruction": "Compute $z\\bar{z} = (5 - 2i)(5 + 2i)$. It equals $a^2 + b^2$.", "answer": "29", "accept": [], "hint": "$5^2 + 2^2 = 25 + 4$." }
+      ],
+      "finalAnswer": { "value": "29", "unit": "" },
+      "solutionNarrative": "$\\bar{z} = 5 + 2i$, and $z\\bar{z} = 5^2 + 2^2 = 29$ — a real number, which is why conjugates clear $i$ from denominators."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s10",
+      "concepts": ["conjugates-and-division"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Simplify $\\dfrac{10 + 5i}{1 + 2i}$ by multiplying numerator and denominator by the conjugate of the denominator. Give the result in $a + bi$ form.",
+      "steps": [
+        { "instruction": "What is the conjugate of the denominator $1 + 2i$?", "answer": "1 - 2i", "accept": [], "hint": "Flip only the sign of the $i$ term." },
+        { "instruction": "Multiply the denominator by its conjugate: $(1 + 2i)(1 - 2i)$.", "answer": "5", "accept": [], "hint": "$1^2 + 2^2$." },
+        { "instruction": "Multiply the numerator by the conjugate: $(10 + 5i)(1 - 2i)$, simplified to $a + bi$ form.", "answer": "20 - 15i", "accept": [], "hint": "$10 - 20i + 5i - 10i^2 = 10 - 15i + 10$." },
+        { "instruction": "Divide each part by 5 to finish. Give the result in $a + bi$ form.", "answer": "4 - 3i", "accept": [], "hint": "$20/5 = 4$ and $-15/5 = -3$." }
+      ],
+      "finalAnswer": { "value": "4 - 3i", "unit": "" },
+      "solutionNarrative": "Multiplying top and bottom by $1 - 2i$ makes the denominator $5$ and the numerator $20 - 15i$, so the quotient is $4 - 3i$."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s11",
+      "concepts": ["conjugates-and-division"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Simplify $\\dfrac{8 - i}{3 - 2i}$, then check your result by multiplying it back by the denominator. Give complex answers in $a + bi$ form.",
+      "steps": [
+        { "instruction": "Multiply the denominator $3 - 2i$ by its conjugate $3 + 2i$.", "answer": "13", "accept": [], "hint": "$3^2 + 2^2$." },
+        { "instruction": "Multiply the numerator: $(8 - i)(3 + 2i)$ in $a + bi$ form.", "answer": "26 + 13i", "accept": [], "hint": "$24 + 16i - 3i - 2i^2 = 24 + 13i + 2$." },
+        { "instruction": "Divide both parts by 13. Give the simplified quotient in $a + bi$ form.", "answer": "2 + i", "accept": ["2 + 1i"], "hint": "$26/13 = 2$ and $13/13 = 1$." },
+        { "instruction": "Check: compute $(2 + i)(3 - 2i)$ in $a + bi$ form — it should reproduce the original numerator.", "answer": "8 - i", "accept": ["8 - 1i"], "hint": "$6 - 4i + 3i - 2i^2 = 6 - i + 2$." }
+      ],
+      "finalAnswer": { "value": "2 + i", "unit": "" },
+      "solutionNarrative": "The conjugate trick gives $\\dfrac{26 + 13i}{13} = 2 + i$, and the check $(2 + i)(3 - 2i) = 8 - i$ recovers the numerator, confirming the quotient."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s12",
+      "concepts": ["complex-plane-and-quadratics"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Plot $z = 3 - 4i$ on the complex plane (real axis horizontal, imaginary axis vertical).",
+      "steps": [
+        { "instruction": "Give the point's coordinates as an ordered pair (real, imaginary).", "answer": "(3, -4)", "accept": [], "hint": "Real part 3 goes horizontally; imaginary coefficient $-4$ goes vertically." },
+        { "instruction": "Which quadrant is the point in? (Answer: first, second, third, or fourth.)", "answer": "fourth", "accept": ["4", "quadrant 4", "q4"], "hint": "The signs are $(+, -)$." }
+      ],
+      "finalAnswer": { "value": "fourth", "unit": "quadrant" },
+      "solutionNarrative": "$3 - 4i$ sits at $(3, -4)$: right 3, down 4 — the fourth quadrant."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s13",
+      "concepts": ["complex-plane-and-quadratics"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An AC current is $I = 6 - 8i$ amps in complex form. An ammeter reads the modulus $|I|$. What does the ammeter show?",
+      "steps": [
+        { "instruction": "Compute $a^2 + b^2 = 6^2 + (-8)^2$.", "answer": "100", "accept": [], "hint": "$36 + 64$." },
+        { "instruction": "Take the square root: $|I| = \\sqrt{100}$.", "answer": "10", "accept": [], "hint": "$10 \\cdot 10 = 100$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "amps" },
+      "solutionNarrative": "$|6 - 8i| = \\sqrt{36 + 64} = \\sqrt{100} = 10$ amps — the Pythagorean length of the arrow from the origin to $(6, -8)$."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s14",
+      "concepts": ["complex-plane-and-quadratics"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the modulus $|z|$ of $z = 2 + 3i$. The answer is not a whole number — give the exact value.",
+      "steps": [
+        { "instruction": "Compute $a^2 + b^2 = 2^2 + 3^2$.", "answer": "13", "accept": [], "hint": "$4 + 9$." },
+        { "instruction": "Take the square root: $|z| = \\sqrt{13}$. (Give the exact value, e.g. sqrt(13), or a decimal.)", "answer": "sqrt(13)", "accept": ["3.6056", "3.61"], "hint": "13 is not a perfect square — leave it under the radical." }
+      ],
+      "finalAnswer": { "value": "sqrt(13)", "unit": "" },
+      "solutionNarrative": "$|2 + 3i| = \\sqrt{2^2 + 3^2} = \\sqrt{13} \\approx 3.61$."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s15",
+      "concepts": ["complex-plane-and-quadratics"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $x^2 - 4x + 13 = 0$ using the quadratic formula. The solutions are complex.",
+      "steps": [
+        { "instruction": "Compute the discriminant $b^2 - 4ac = (-4)^2 - 4(1)(13)$.", "answer": "-36", "accept": [], "hint": "$16 - 52$." },
+        { "instruction": "Write $\\sqrt{-36}$ using $i$.", "answer": "6i", "accept": ["6*i"], "hint": "$\\sqrt{36} = 6$, and the negative contributes $i$." },
+        { "instruction": "Apply the formula with the plus sign: $x = \\dfrac{4 + 6i}{2}$. Give this root in $a + bi$ form.", "answer": "2 + 3i", "accept": [], "hint": "$4/2 = 2$ and $6/2 = 3$." },
+        { "instruction": "The other root is its complex conjugate. Write it in $a + bi$ form.", "answer": "2 - 3i", "accept": [], "hint": "Flip the sign of the imaginary part." }
+      ],
+      "finalAnswer": { "value": "2 + 3i and 2 - 3i", "unit": "" },
+      "solutionNarrative": "The discriminant is $-36 < 0$, so the roots are complex: $x = \\dfrac{4 \\pm 6i}{2} = 2 \\pm 3i$ — a conjugate pair, as real coefficients always produce."
+    },
+    {
+      "id": "algebra-2.complex-numbers.s16",
+      "concepts": ["complex-arithmetic"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Add: $(6 - 2i) + (-4 + 7i)$. Give the result in $a + bi$ form.",
+      "steps": [
+        { "instruction": "Add the real parts: $6 + (-4)$.", "answer": "2", "accept": [], "hint": "Real with real." },
+        { "instruction": "Add the imaginary coefficients: $-2 + 7$.", "answer": "5", "accept": [], "hint": "Imaginary with imaginary." },
+        { "instruction": "Combine into $a + bi$ form.", "answer": "2 + 5i", "accept": [], "hint": "Real part 2, imaginary coefficient 5." }
+      ],
+      "finalAnswer": { "value": "2 + 5i", "unit": "" },
+      "solutionNarrative": "Combine like parts: $(6 - 4) + (-2 + 7)i = 2 + 5i$."
+    }
+  ]
+}

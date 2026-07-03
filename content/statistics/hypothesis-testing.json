@@ -1,0 +1,271 @@
+{
+  "id": "statistics.hypothesis-testing",
+  "subject": "statistics",
+  "title": "Hypothesis Testing",
+  "prerequisites": ["statistics.normal-and-sampling", "statistics.conditional-probability"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "hypotheses-and-tails",
+      "label": "Hypotheses and tails",
+      "microLesson": "A hypothesis test is a structured argument. The **null hypothesis** $H_0$ states the boring default with equality ($\\mu = 500$: the machine is honest), and the **alternative** $H_a$ states what you suspect ($\\mu > 500$, $\\mu < 500$, or $\\mu \\ne 500$). The direction of $H_a$ sets the **tail**: 'increased' $\\to$ right-tailed, 'decreased' $\\to$ left-tailed, 'changed' $\\to$ two-tailed. The burden of proof always sits on $H_a$ — the data must actively contradict $H_0$ before you abandon it."
+    },
+    {
+      "id": "test-statistics",
+      "label": "Test statistics",
+      "microLesson": "The test statistic measures how far the data landed from what $H_0$ predicted, in standard-error units: for a mean, $z = \\dfrac{\\bar{x} - \\mu_0}{\\sigma/\\sqrt{n}}$; for a proportion, $z = \\dfrac{\\hat{p} - p_0}{\\sqrt{p_0(1-p_0)/n}}$ (note the SE uses the CLAIMED $p_0$). With $\\mu_0 = 100$, $\\sigma = 20$, $n = 25$, and $\\bar{x} = 108$: $\\mathrm{SE} = 4$ and $z = \\tfrac{8}{4} = 2$ — the sample mean is 2 standard errors above the claim. Large $|z|$ means the data would be surprising if $H_0$ were true."
+    },
+    {
+      "id": "decisions-and-critical-values",
+      "label": "Decisions and critical values",
+      "microLesson": "A **critical value** $z^*$ draws the line for 'too surprising': reject $H_0$ when $z$ falls beyond it ($z > 1.645$ for a right-tailed test at $\\alpha = 0.05$; $|z| > 1.96$ for a two-tailed test). Equivalently, reject when the **p-value** — the probability, under $H_0$, of data at least this extreme — is less than $\\alpha$. The verdicts are exactly two: **reject $H_0$** (significant) or **fail to reject $H_0$**. You never 'accept' $H_0$: absence of evidence is not evidence of absence."
+    },
+    {
+      "id": "errors-and-significance",
+      "label": "Errors and significance",
+      "microLesson": "Two ways to be wrong: a **Type I error** rejects a true $H_0$ (false alarm), and a **Type II error** fails to reject a false $H_0$ (a miss). The significance level $\\alpha$ is precisely the probability of a Type I error — testing at $\\alpha = 0.05$ means accepting a 5% false-alarm rate. Tightening $\\alpha$ (0.05 $\\to$ 0.01) makes false alarms rarer but misses more likely; only more data reduces both. Choose $\\alpha$ by asking which mistake costs more: a false cancer diagnosis or a missed one?"
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A courtroom for claims\n\nA bottling plant claims its machines fill 500 mL on average. Your sample averages 504. Is the machine dishonest — or did you just draw a slightly heavy sample? A **hypothesis test** settles the question the way a court does: presume innocence ($H_0$), demand evidence beyond reasonable doubt (the significance level), and convict only when the data would be too surprising under innocence.\n\n## Step 1: state the hypotheses\n\nThe **null hypothesis** $H_0$ is the default — no change, no effect, the claim is true — and it is always written with equality:\n\n$$H_0: \\mu = 500.$$\n\nThe **alternative hypothesis** $H_a$ is what the challenger is trying to demonstrate, and its direction determines the *tail* of the test:\n\n| Suspicion | $H_a$ | Test |\n|---|---|---|\n| mean increased | $\\mu > 500$ | right-tailed |\n| mean decreased | $\\mu < 500$ | left-tailed |\n| mean changed | $\\mu \\ne 500$ | two-tailed |\n\nWording is everything. A claim of \"at least 8 hours of battery\" is violated downward, so the consumer group tests $H_a: \\mu < 8$ — left-tailed. \"At most 30 minutes delivery\" is violated upward: $H_a: \\mu > 30$. The burden of proof sits on $H_a$; the test never proves $H_0$, it only fails to dethrone it.\n\n## Step 2: the test statistic\n\nHow far did the data land from $H_0$'s prediction? Measure in standard errors. For a mean with known $\\sigma$:\n\n$$z = \\frac{\\bar{x} - \\mu_0}{\\sigma/\\sqrt{n}},$$\n\nand for a proportion:\n\n$$z = \\frac{\\hat{p} - p_0}{\\sqrt{p_0(1-p_0)/n}}.$$\n\nNote the proportion's standard error is built from the **claimed** $p_0$, not from $\\hat{p}$: under the courtroom presumption, we compute how the world looks if $H_0$ is true.\n\n**Worked example.** The plant claims $\\mu_0 = 500$ mL, the process has $\\sigma = 12$, and a sample of $n = 36$ bottles gives $\\bar{x} = 504.4$. Then $\\mathrm{SE} = \\tfrac{12}{6} = 2$ and\n\n$$z = \\frac{504.4 - 500}{2} = 2.2.$$\n\nThe sample mean is 2.2 standard errors above the claim — the kind of gap that random sampling produces rarely.\n\n## Step 3: decide with a critical value or a p-value\n\nChoose a **significance level** $\\alpha$ — the false-alarm rate you can live with — *before* looking at results. The normal curve converts $\\alpha$ into **critical values**:\n\n| $\\alpha$ | one-tailed $z^*$ | two-tailed $z^*$ |\n|---|---|---|\n| 0.10 | 1.282 | 1.645 |\n| 0.05 | 1.645 | 1.960 |\n| 0.01 | 2.326 | 2.576 |\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-4, 4], \"yRange\": [0, 0.45], \"grid\": false, \"curves\": [ { \"fn\": \"0.3989*exp(-x*x/2)\", \"color\": \"accent\" }, { \"fn\": \"0.3989*exp(-x*x/2)\", \"color\": \"warn\", \"fillRange\": [1.645, 4] } ], \"segments\": [ { \"from\": [1.645, 0], \"to\": [1.645, 0.28], \"dashed\": true, \"color\": \"warn\", \"label\": \"z* = 1.645\" }, { \"from\": [2.2, 0], \"to\": [2.2, 0.11], \"color\": \"error\", \"label\": \"z = 2.2\" } ], \"caption\": \"Right-tailed test at alpha = 0.05: the shaded rejection region starts at 1.645. A statistic of z = 2.2 lands inside it, so H0 is rejected.\" }\n```\n\n**Critical-value rule.** Right-tailed at $\\alpha = 0.05$: reject when $z > 1.645$. Two-tailed: reject when $|z| > 1.96$. Our $z = 2.2 > 1.645$: **reject $H_0$** — the machine appears to overfill.\n\n**p-value rule.** The **p-value** is the probability, computed as if $H_0$ were true, of a result at least as extreme as the one observed. Reject when $\\text{p-value} < \\alpha$. A p-value of 0.014 beats $\\alpha = 0.05$ but not $\\alpha = 0.01$ — the same data can be 'significant' at one level and not another, which is why $\\alpha$ is fixed in advance.\n\nThe two rules always agree; they are the same boundary described in different units.\n\n### Say the verdict carefully\n\n- **Reject $H_0$**: the data are statistically significant evidence for $H_a$.\n- **Fail to reject $H_0$**: the data are compatible with $H_0$. This is *not* proof that $H_0$ is true — perhaps the effect is real but the sample was too small to see it.\n\n## Step 4: know your errors\n\nEvery verdict can be wrong in exactly one of two ways:\n\n| | $H_0$ true | $H_0$ false |\n|---|---|---|\n| **Reject $H_0$** | Type I error (false alarm), prob. $\\alpha$ | correct |\n| **Fail to reject** | correct | Type II error (miss) |\n\nThe significance level is not a mystical threshold: $\\alpha$ **is** $P(\\text{Type I error})$, the false-alarm rate you signed up for. Lowering $\\alpha$ from 0.05 to 0.01 makes false alarms rarer — and, with the same data, makes misses (Type II) more common. The only way to shrink both is a larger sample.\n\nWhich error matters more depends on stakes. A smoke alarm tuned for zero false alarms will sleep through real fires; a medical screen tuned for zero misses will terrify healthy patients. Choosing $\\alpha$ is an engineering decision, not a ritual.\n\n### Common pitfalls\n\n- **\"Accepting\" $H_0$:** failing to reject is a shrug, not an endorsement. Small samples fail to reject almost everything.\n- **Significant $\\ne$ important:** with $n = 10{,}000$, a trivially tiny drift of 0.1 mL can produce a huge $z$. Statistical significance measures *detectability*, not *magnitude* — always report the effect size alongside the verdict.\n- **p-hacking:** testing twenty outcomes at $\\alpha = 0.05$ and reporting the one that 'worked' guarantees about one false alarm on average ($20 \\times 0.05 = 1$). Choosing hypotheses and $\\alpha$ *after* peeking at data silently inflates the Type I rate — the cardinal sin behind many unreproducible findings.\n- **Conditional confusion:** the p-value is $P(\\text{data this extreme} \\mid H_0)$, NOT $P(H_0 \\mid \\text{data})$. Flipping that conditional is the same trap Bayes' theorem warns about with medical tests."
+  },
+  "application": {
+    "summary": "Hypothesis testing is the decision engine behind A/B tests, clinical trials, and quality control: state the default, measure the data's surprise in standard errors, and reject the default only when the surprise beats a pre-chosen false-alarm rate $\\alpha$.",
+    "domains": ["A/B testing and product analytics", "clinical trials and medicine", "manufacturing quality control", "scientific research"],
+    "workedExample": "**An A/B test on a checkout button.**\n\nA site's historical checkout conversion rate is $p_0 = 0.20$. A redesigned button is shown to $n = 400$ random visitors, and 100 of them convert: $\\hat{p} = 0.25$. Marketing wants to ship the redesign — do the data actually support it?\n\n*Step 1 — hypotheses.* $H_0: p = 0.20$ (the button changes nothing), $H_a: p > 0.20$ (it improves conversion). Right-tailed, $\\alpha = 0.05$, critical value $z^* = 1.645$.\n\n*Step 2 — standard error under $H_0$.* $\\mathrm{SE} = \\sqrt{\\tfrac{0.2 \\times 0.8}{400}} = \\sqrt{0.0004} = 0.02$.\n\n*Step 3 — test statistic.* $z = \\tfrac{0.25 - 0.20}{0.02} = 2.5$.\n\n*Step 4 — decision.* $2.5 > 1.645$: reject $H_0$. The improvement is statistically significant at the 5% level; a jump this large would happen by luck only rarely if the button truly changed nothing.\n\n*Step 5 — the honest caveats.* The effect size (5 points of conversion) matters commercially, so report it with a confidence interval, not just the verdict. And if the team quietly tested ten button designs and shipped the one that hit significance, the real false-alarm risk is far above 5% — pre-registering ONE comparison is what makes the 5% honest.",
+    "domainNotes": [
+      "**A/B testing:** every 'variant B wins' banner is a two-proportion z-test; disciplined teams fix $\\alpha$, sample size, and the metric before launch to avoid p-hacking.",
+      "**Medicine:** regulators require trials to pre-register endpoints and test at $\\alpha = 0.05$ or stricter; a Type I error ships a useless drug, a Type II error shelves a working one.",
+      "**Manufacturing:** control charts are running hypothesis tests of 'the process is on target'; alarm thresholds at $\\pm 3\\sigma$ correspond to a tiny $\\alpha$ so lines are not stopped by noise.",
+      "**Research at large:** the replication crisis traces largely to Type I inflation — many comparisons, flexible analyses, and publication of only the significant results."
+    ]
+  },
+  "generators": [
+    "st2-hyp-1", "st2-hyp-2", "st2-hyp-3",
+    "st2-teststat-1", "st2-teststat-2", "st2-teststat-3",
+    "st2-decide-1", "st2-decide-2", "st2-decide-3",
+    "st2-error-1", "st2-error-2", "st2-error-3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.hypothesis-testing.s01",
+      "concepts": ["hypotheses-and-tails"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bottling plant claims its machines fill a mean of 500 mL. An inspector suspects the mean has CHANGED (either direction). Set up the test.",
+      "steps": [
+        { "instruction": "State the null hypothesis $H_0$ using 'mu' for the population mean (e.g. mu = 10).", "answer": "mu = 500", "accept": ["500"], "hint": "$H_0$ asserts the claimed value with equality." },
+        { "instruction": "Is this test left-tailed, right-tailed, or two-tailed? Type one.", "answer": "two-tailed", "accept": ["two tailed", "two-sided", "two"], "hint": "\"Changed\" allows either direction." }
+      ],
+      "finalAnswer": { "value": "two-tailed", "unit": "" },
+      "solutionNarrative": "$H_0: \\mu = 500$; suspecting a change in either direction makes $H_a: \\mu \\ne 500$, a two-tailed test."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s02",
+      "concepts": ["hypotheses-and-tails"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A clinic tests whether a new drug LOWERS mean systolic blood pressure from the current 120. Set up the hypotheses using 'mu'.",
+      "steps": [
+        { "instruction": "State $H_0$ (e.g. mu = 10).", "answer": "mu = 120", "accept": ["120"], "hint": "The no-effect default, with equality." },
+        { "instruction": "State $H_a$ as an inequality (e.g. mu < 10).", "answer": "mu < 120", "accept": ["mu<120"], "hint": "\"Lowers\" points the inequality down." },
+        { "instruction": "Is this test left-tailed, right-tailed, or two-tailed? Type one.", "answer": "left-tailed", "accept": ["left tailed", "left"], "hint": "The rejection region follows $H_a$." }
+      ],
+      "finalAnswer": { "value": "left-tailed", "unit": "" },
+      "solutionNarrative": "$H_0: \\mu = 120$, $H_a: \\mu < 120$ — a left-tailed test, because only a decrease would support the drug's claim."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s03",
+      "concepts": ["hypotheses-and-tails"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A manufacturer claims its laptop battery lasts AT LEAST 8 hours on average. A consumer group tests whether the claim fails, at a significance level of 5%. Set up the test. (The burden of proof sits on the alternative.)",
+      "steps": [
+        { "instruction": "State $H_a$ as an inequality using 'mu' (e.g. mu < 10).", "answer": "mu < 8", "accept": ["mu<8"], "hint": "\"At least 8\" fails only in the downward direction." },
+        { "instruction": "Is this test left-tailed, right-tailed, or two-tailed? Type one.", "answer": "left-tailed", "accept": ["left tailed", "left"], "hint": "Follow the direction of $H_a$." },
+        { "instruction": "Write the significance level $\\alpha$ as a decimal.", "answer": "0.05", "accept": ["5%", ".05"], "hint": "5% as a decimal." }
+      ],
+      "finalAnswer": { "value": "left-tailed", "unit": "" },
+      "solutionNarrative": "The claim \"at least 8\" is violated when $\\mu < 8$, so $H_a: \\mu < 8$: a left-tailed test at $\\alpha = 0.05$. The group must find strong downward evidence, not merely a sample mean a hair under 8."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s04",
+      "concepts": ["hypotheses-and-tails"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A site's baseline conversion rate is 10%. The growth team suspects a redesign INCREASED it. Set up the test using 'p' for the population proportion.",
+      "steps": [
+        { "instruction": "State $H_0$ (e.g. p = 0.5).", "answer": "p = 0.1", "accept": ["0.1", "p=0.10"], "hint": "The claimed baseline, with equality." },
+        { "instruction": "Is this test left-tailed, right-tailed, or two-tailed? Type one.", "answer": "right-tailed", "accept": ["right tailed", "right"], "hint": "\"Increased\" points right." }
+      ],
+      "finalAnswer": { "value": "right-tailed", "unit": "" },
+      "solutionNarrative": "$H_0: p = 0.1$ and $H_a: p > 0.1$ — a right-tailed test: only an increase would support the team's suspicion."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s05",
+      "concepts": ["test-statistics"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Test $H_0: \\mu = 100$ with a sample of $n = 25$: $\\bar{x} = 108$, population $\\sigma = 20$. Compute $z = \\dfrac{\\bar{x} - \\mu_0}{\\sigma/\\sqrt{n}}$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{20}{\\sqrt{25}}$. (Give a whole number.)", "answer": "4", "accept": [], "hint": "$\\sqrt{25} = 5$." },
+        { "instruction": "Numerator: $108 - 100$.", "answer": "8", "accept": [], "hint": "Sample mean minus claimed mean." },
+        { "instruction": "Divide: $z = \\dfrac{8}{4}$.", "answer": "2", "accept": [], "hint": "$8 / 4$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 4$, so $z = \\tfrac{108 - 100}{4} = 2$: the sample mean sits two standard errors above the claim."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s06",
+      "concepts": ["test-statistics"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cereal line claims $\\mu = 500$ g. A sample of $n = 36$ boxes gives $\\bar{x} = 504.4$ g; the process has $\\sigma = 12$ g. Compute the test statistic.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{12}{\\sqrt{36}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{36} = 6$." },
+        { "instruction": "Numerator: $504.4 - 500$. (Give a decimal.)", "answer": "4.4", "accept": [], "hint": "Keep one decimal." },
+        { "instruction": "Divide: $z = \\dfrac{4.4}{2}$. (Give a decimal.)", "answer": "2.2", "accept": [], "hint": "$4.4 / 2$." }
+      ],
+      "finalAnswer": { "value": "2.2", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$ and the gap is 4.4 g, so $z = 2.2$ — a sample mean 2.2 standard errors above the claim, suspicious at the usual 5% level."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s07",
+      "concepts": ["test-statistics"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Test $H_0: p = 0.5$ (a coin-flip election) with a poll of $n = 100$ voters in which $\\hat{p} = 0.41$ support the measure. Compute $z = \\dfrac{\\hat{p} - p_0}{\\sqrt{p_0(1-p_0)/n}}$ (the SE uses $p_0$).",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{p_0(1-p_0)}{n} = \\dfrac{0.5 \\times 0.5}{100}$. (Give a decimal.)", "answer": "0.0025", "accept": [], "hint": "$0.25 / 100$." },
+        { "instruction": "Standard error: the square root of that. (Give a decimal.)", "answer": "0.05", "accept": ["sqrt(0.0025)", "0.050"], "hint": "$0.05^2 = 0.0025$." },
+        { "instruction": "Numerator: $0.41 - 0.5$. (Give a decimal, sign included.)", "answer": "-0.09", "accept": [], "hint": "It is negative." },
+        { "instruction": "Divide: $z = \\dfrac{-0.09}{0.05}$. (Give a decimal.)", "answer": "-1.8", "accept": [], "hint": "$-0.09 / 0.05$." }
+      ],
+      "finalAnswer": { "value": "-1.8", "unit": "" },
+      "solutionNarrative": "Under $H_0$ the SE is $0.05$, so $z = \\tfrac{-0.09}{0.05} = -1.8$: support runs 1.8 standard errors below an even split."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s08",
+      "concepts": ["test-statistics"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A logistics firm claims mean delivery weight $\\mu = 250$ kg. A sample of $n = 64$ gives $\\bar{x} = 241$ kg with $\\sigma = 40$ kg. Compute the test statistic.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{40}{\\sqrt{64}}$. (Give a whole number.)", "answer": "5", "accept": [], "hint": "$\\sqrt{64} = 8$." },
+        { "instruction": "Numerator: $241 - 250$. (Give a number, sign included.)", "answer": "-9", "accept": [], "hint": "It is negative." },
+        { "instruction": "Divide: $z = \\dfrac{-9}{5}$. (Give a decimal.)", "answer": "-1.8", "accept": [], "hint": "$-9 / 5$." }
+      ],
+      "finalAnswer": { "value": "-1.8", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 5$, so $z = \\tfrac{-9}{5} = -1.8$: the sample runs 1.8 standard errors light."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s09",
+      "concepts": ["decisions-and-critical-values"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A RIGHT-tailed test at $\\alpha = 0.05$ has critical value $z^* = 1.645$: reject $H_0$ when $z > 1.645$. Your test statistic is $z = 2.1$. Decide.",
+      "steps": [
+        { "instruction": "Is $2.1 > 1.645$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare the two numbers." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Beyond the critical value means significant." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "$z = 2.1 > 1.645$, so the result lands in the rejection region: reject $H_0$ at the 5% level."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s10",
+      "concepts": ["decisions-and-critical-values"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An A/B test is TWO-tailed at $\\alpha = 0.05$ (critical values $\\pm 1.96$): reject when $|z| > 1.96$. The computed statistic is $z = -1.4$. Decide.",
+      "steps": [
+        { "instruction": "Compute $|z|$.", "answer": "1.4", "accept": [], "hint": "Drop the sign." },
+        { "instruction": "Is $1.4 > 1.96$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Compare with the critical value." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "fail to reject", "accept": ["do not reject", "fail"], "hint": "Inside $\\pm 1.96$ is compatible with $H_0$." }
+      ],
+      "finalAnswer": { "value": "fail to reject", "unit": "" },
+      "solutionNarrative": "$|z| = 1.4 \\le 1.96$: the observed difference is within normal sampling noise, so we fail to reject $H_0$ — which is not the same as proving the variants are equal."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s11",
+      "concepts": ["decisions-and-critical-values"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A trial reports a p-value of 0.032. Make the decision at $\\alpha = 0.05$, and then at $\\alpha = 0.01$.",
+      "steps": [
+        { "instruction": "We reject $H_0$ when the p-value is ___ than $\\alpha$. Type 'less' or 'greater'.", "answer": "less", "accept": ["smaller", "less than"], "hint": "Small p-values mean the data would be rare under $H_0$." },
+        { "instruction": "At $\\alpha = 0.05$: is $0.032 < 0.05$? So the decision is: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "$0.032 < 0.05$." },
+        { "instruction": "At $\\alpha = 0.01$: is $0.032 < 0.01$? So the decision is: type 'reject' or 'fail to reject'.", "answer": "fail to reject", "accept": ["do not reject", "fail"], "hint": "$0.032 > 0.01$." }
+      ],
+      "finalAnswer": { "value": "fail to reject", "unit": "" },
+      "solutionNarrative": "The same p-value of 0.032 rejects at $\\alpha = 0.05$ but not at $\\alpha = 0.01$. 'Significance' depends on the pre-chosen bar — which is exactly why $\\alpha$ must be fixed before the data are seen."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s12",
+      "concepts": ["decisions-and-critical-values"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A LEFT-tailed test at $\\alpha = 0.05$ rejects $H_0$ when $z < -1.645$. Your test statistic is $z = -2.3$. Decide.",
+      "steps": [
+        { "instruction": "Is $-2.3 < -1.645$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "More negative means further left." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "The statistic is inside the left rejection region." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "$-2.3$ lies beyond the critical value $-1.645$ in the left tail, so we reject $H_0$."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s13",
+      "concepts": ["errors-and-significance"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A test is run at significance level $\\alpha = 0.05$. Identify the error types.",
+      "steps": [
+        { "instruction": "Rejecting $H_0$ when $H_0$ is actually TRUE is which error? Type 'Type I' or 'Type II'.", "answer": "Type I", "accept": ["type 1", "I", "1"], "hint": "A false alarm." },
+        { "instruction": "What is the probability of that error for this test? (Give a decimal.)", "answer": "0.05", "accept": ["5%", ".05"], "hint": "That is exactly what $\\alpha$ means." }
+      ],
+      "finalAnswer": { "value": "0.05", "unit": "" },
+      "solutionNarrative": "Rejecting a true null is a Type I error, and its probability is the significance level itself: $P(\\text{Type I}) = \\alpha = 0.05$."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s14",
+      "concepts": ["errors-and-significance"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A medical screening test uses $H_0$: \"the patient does NOT have the disease\". Classify each mistake. (Type I = rejecting a true $H_0$; Type II = failing to reject a false $H_0$.)",
+      "steps": [
+        { "instruction": "Telling a healthy patient they have the disease is which error? Type 'Type I' or 'Type II'.", "answer": "Type I", "accept": ["type 1", "I", "1"], "hint": "$H_0$ was true, but we rejected it." },
+        { "instruction": "Missing the disease in a patient who has it is which error? Type 'Type I' or 'Type II'.", "answer": "Type II", "accept": ["type 2", "II", "2"], "hint": "$H_0$ was false, but we failed to reject it." }
+      ],
+      "finalAnswer": { "value": "Type II", "unit": "" },
+      "solutionNarrative": "A false positive rejects the true null (Type I); a missed diagnosis fails to reject a false null (Type II). Screening programs usually tolerate more Type I to keep Type II low — a follow-up test can fix a false alarm, but not a missed cancer."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s15",
+      "concepts": ["errors-and-significance"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A team tightens its significance level from $\\alpha = 0.05$ to $\\alpha = 0.01$ with the same sample size. Reason about the consequences.",
+      "steps": [
+        { "instruction": "Type I errors become MORE or LESS likely? Type 'more' or 'less'.", "answer": "less", "accept": ["less likely", "lower"], "hint": "$P(\\text{Type I}) = \\alpha$, which just went down." },
+        { "instruction": "With everything else fixed, Type II errors become MORE or LESS likely? Type 'more' or 'less'.", "answer": "more", "accept": ["more likely", "higher"], "hint": "A stricter bar for rejecting makes misses easier." },
+        { "instruction": "Which error probability do you control DIRECTLY by choosing $\\alpha$? Type 'Type I' or 'Type II'.", "answer": "Type I", "accept": ["type 1", "I", "1"], "hint": "$\\alpha$ IS that probability." }
+      ],
+      "finalAnswer": { "value": "Type I", "unit": "" },
+      "solutionNarrative": "Lowering $\\alpha$ trades false alarms for misses: Type I down, Type II up. Only more data reduces both simultaneously."
+    },
+    {
+      "id": "statistics.hypothesis-testing.s16",
+      "concepts": ["errors-and-significance"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "In a courtroom, take $H_0$: \"the defendant is innocent\". Classify each judicial mistake.",
+      "steps": [
+        { "instruction": "Convicting an innocent person is which error? Type 'Type I' or 'Type II'.", "answer": "Type I", "accept": ["type 1", "I", "1"], "hint": "Rejecting a true presumption of innocence." },
+        { "instruction": "Acquitting a guilty person is which error? Type 'Type I' or 'Type II'.", "answer": "Type II", "accept": ["type 2", "II", "2"], "hint": "Failing to reject a false $H_0$." },
+        { "instruction": "\"Beyond reasonable doubt\" corresponds to choosing a very SMALL or very LARGE $\\alpha$? Type 'small' or 'large'.", "answer": "small", "accept": ["very small", "low"], "hint": "The system fears convicting the innocent most." }
+      ],
+      "finalAnswer": { "value": "Type II", "unit": "" },
+      "solutionNarrative": "Convicting the innocent is Type I; acquitting the guilty is Type II. Courts set a very small $\\alpha$ (\"beyond reasonable doubt\"), consciously accepting more Type II errors in exchange."
+    }
+  ]
+}

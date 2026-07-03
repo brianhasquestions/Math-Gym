@@ -1,0 +1,274 @@
+{
+  "id": "calculus-2.partial-fractions",
+  "subject": "calculus-2",
+  "title": "Integration by Partial Fractions",
+  "prerequisites": ["calculus-2.integration-by-substitution", "algebra-2.rational-expressions"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "decompose-distinct-linear",
+      "label": "Decomposing over distinct linear factors",
+      "microLesson": "A proper rational function whose denominator factors into distinct linear pieces splits into simple fractions: $\\dfrac{px+q}{(x-a)(x-b)} = \\dfrac{A}{x-a} + \\dfrac{B}{x-b}$. To find $A$ and $B$, clear denominators to get $px + q = A(x-b) + B(x-a)$, then substitute $x = a$ (which kills the $B$ term) and $x = b$ (which kills the $A$ term). This shortcut is the **cover-up method**: cover the factor, plug in its root, and read off the constant. Example: $\\dfrac{5x+1}{(x-1)(x+2)}$ gives $A = \\dfrac{5(1)+1}{1+2} = 2$ and $B = \\dfrac{5(-2)+1}{-2-1} = 3$."
+    },
+    {
+      "id": "decompose-repeated-and-improper",
+      "label": "Repeated factors and improper fractions",
+      "microLesson": "Two complications. **Repeated factor**: $(x-a)^2$ in the denominator needs BOTH powers: $\\dfrac{px+q}{(x-a)^2} = \\dfrac{A}{x-a} + \\dfrac{B}{(x-a)^2}$; match $x$-coefficients for $A$, substitute $x=a$ for $B$. **Improper fraction**: if the numerator's degree is $\\geq$ the denominator's, decomposition doesn't apply yet — do polynomial long division FIRST, producing a polynomial plus a proper remainder fraction, and decompose only the remainder. Example: $\\dfrac{x^2+3}{x-1} = x + 1 + \\dfrac{4}{x-1}$."
+    },
+    {
+      "id": "integrate-with-partial-fractions",
+      "label": "Integrating the decomposition",
+      "microLesson": "Once decomposed, every piece is easy. Constant over linear gives a logarithm: $\\displaystyle\\int \\frac{A}{x-a}\\,dx = A\\ln|x-a| + C$. Constant over a squared factor uses the power rule, NOT a log: $\\displaystyle\\int \\frac{B}{(x-a)^2}\\,dx = -\\frac{B}{x-a} + C$. So $\\displaystyle\\int \\frac{5x+1}{(x-1)(x+2)}dx = 2\\ln|x-1| + 3\\ln|x+2| + C$. The hard integral was really an algebra problem in disguise."
+    },
+    {
+      "id": "definite-integrals-and-applications",
+      "label": "Definite integrals and applications",
+      "microLesson": "Definite integrals of rational functions turn into differences of logarithms, and log rules compress the answer: $\\displaystyle\\int_1^2 \\frac{1}{x}dx = \\ln 2 - \\ln 1 = \\ln 2 \\approx 0.6931$. Rates of the form $\\dfrac{c}{(t+1)(t+2)}$ show up in mixing, drug absorption, and logistic-style models; partial fractions converts their accumulated totals into clean log expressions you can evaluate with $\\ln 2 \\approx 0.6931$ and $\\ln 3 \\approx 1.0986$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## An integral that is secretly an algebra problem\n\nHow do you integrate $\\dfrac{5x+1}{x^2+x-2}$? Substitution fails: the numerator isn't the derivative of the denominator. Parts fails: there's no useful product. But watch what happens if someone hands you the same function written differently:\n\n$$\\frac{5x+1}{x^2+x-2} = \\frac{2}{x-1} + \\frac{3}{x+2}.$$\n\nSuddenly the integral is trivial — each piece is a constant over a linear term, and $\\int \\frac{k}{x-a}dx = k\\ln|x-a| + C$. **Partial fractions** is the technique for producing that rewrite: it un-does the 'combine over a common denominator' step you learned in algebra. Integration by partial fractions is 90% algebra, 10% calculus.\n\n## Distinct linear factors: the cover-up method\n\nSuppose the denominator factors into **distinct** linear pieces:\n\n$$\\frac{px+q}{(x-a)(x-b)} = \\frac{A}{x-a} + \\frac{B}{x-b}.$$\n\nMultiply both sides by the denominator to clear fractions:\n\n$$px + q = A(x-b) + B(x-a).$$\n\nThis must hold for **every** $x$ — so choose the two $x$-values that make life easiest:\n\n- At $x = a$: the $B$ term dies, leaving $pa + q = A(a - b)$, so $A = \\dfrac{pa+q}{a-b}$.\n- At $x = b$: the $A$ term dies, leaving $B = \\dfrac{pb+q}{b-a}$.\n\nThe shortcut version is the **cover-up method**: to find the constant over $(x-a)$, cover that factor in the original fraction and evaluate what's left at $x = a$.\n\n### Worked example\n\n$$\\frac{5x+1}{(x-1)(x+2)}: \\quad A = \\frac{5(1)+1}{1+2} = 2, \\qquad B = \\frac{5(-2)+1}{-2-1} = 3.$$\n\nSo the fraction is $\\dfrac{2}{x-1} + \\dfrac{3}{x+2}$ — check by re-combining if you're suspicious.\n\n## Complication 1: repeated factors\n\nIf a linear factor appears **squared**, you need a term for each power:\n\n$$\\frac{px+q}{(x-a)^2} = \\frac{A}{x-a} + \\frac{B}{(x-a)^2}.$$\n\nClearing denominators gives $px + q = A(x-a) + B$. Now only one root is available, so mix strategies: substituting $x = a$ gives $B = pa + q$, and **matching the coefficients of $x$** on both sides gives $A = p$.\n\n## Complication 2: improper fractions — divide first\n\nDecomposition only works on **proper** fractions (numerator degree strictly below denominator degree). If the top is as big as the bottom, do **polynomial long division first**:\n\n$$\\frac{x^2+3}{x-1} = x + 1 + \\frac{4}{x-1}.$$\n\nThe polynomial part integrates with the power rule; only the remainder fraction needs decomposition. Skipping this step is the single most common partial-fractions error.\n\n## Integrating the pieces\n\nAfter decomposition, exactly two integral shapes appear:\n\n$$\\int \\frac{A}{x-a}\\,dx = A\\ln|x-a| + C \\qquad\\text{and}\\qquad \\int \\frac{B}{(x-a)^2}\\,dx = -\\frac{B}{x-a} + C.$$\n\nNote the second one: a **squared** factor integrates by the power rule ($u^{-2} \\to -u^{-1}$) and produces **no logarithm**. Writing $B\\ln|x-a|^2$ there is the classic sign that the power rule was forgotten.\n\nSo, in full:\n\n$$\\int \\frac{5x+1}{x^2+x-2}\\,dx = 2\\ln|x-1| + 3\\ln|x+2| + C.$$\n\n## Definite integrals: logs of clean ratios\n\nDefinite integrals collapse via $\\ln b - \\ln a = \\ln\\tfrac{b}{a}$:\n\n$$\\int_2^4 \\frac{3}{x}\\,dx = 3(\\ln 4 - \\ln 2) = 3\\ln 2 \\approx 2.08.$$\n\n```plot\n{ \"xRange\": [1.2, 6], \"yRange\": [0, 1.4], \"curves\": [ { \"fn\": \"5/((x-1)*(x+2))\", \"label\": \"y = 5/((x-1)(x+2))\", \"labelAt\": 4.2, \"color\": \"accent\", \"fillRange\": [2, 4] } ], \"caption\": \"The shaded area under 5/((x-1)(x+2)) from 2 to 4 — partial fractions turns it into ln terms: ln|x-1| - ln|x+2| pieces evaluated at the ends.\" }\n```\n\nUse $\\ln 2 \\approx 0.6931$ and $\\ln 3 \\approx 1.0986$ and round at the end.\n\n## Common pitfalls\n\n- **Forgetting to divide first** when the fraction is improper — always compare degrees before decomposing.\n- **Missing the second term** for a repeated factor: $(x-a)^2$ needs both $\\tfrac{A}{x-a}$ and $\\tfrac{B}{(x-a)^2}$.\n- **Logging the squared piece**: $\\int (x-a)^{-2}dx$ is a power-rule integral, not a log.\n- **Dropping absolute values**: write $\\ln|x-a|$, since the factor can be negative on part of the domain."
+  },
+  "application": {
+    "summary": "Partial fractions is how you integrate any rational rate — and rational rates are everywhere: mixing problems, drug absorption, reaction kinetics, and the logistic model all produce rates like c/((t+1)(t+2)) whose accumulated totals become clean differences of logarithms.",
+    "domains": ["pharmacology", "chemistry", "population modeling", "engineering"],
+    "workedExample": "**How much drug is absorbed in total?**\n\nA drug enters the bloodstream at a rate of $r(t) = \\dfrac{6}{(t+1)(t+2)}$ mg per hour, $t$ hours after ingestion. How much is absorbed during the first 2 hours?\n\n$$\\text{Total} = \\int_0^2 \\frac{6}{(t+1)(t+2)}\\,dt.$$\n\nDecompose: $\\dfrac{6}{(t+1)(t+2)} = \\dfrac{6}{t+1} - \\dfrac{6}{t+2}$ (cover-up: $A = \\tfrac{6}{-1+2} = 6$, $B = \\tfrac{6}{-2+1} = -6$). Integrate:\n\n$$\\Big[6\\ln(t+1) - 6\\ln(t+2)\\Big]_0^2 = 6(\\ln 3 - \\ln 1) - 6(\\ln 4 - \\ln 2) = 6(\\ln 3 - \\ln 2) \\approx 6(0.4055) \\approx 2.43 \\text{ mg}.$$\n\nThe same telescoping-log structure prices chemical produced in a second-order reaction and time-to-threshold in the logistic population model — the algebra of splitting the fraction IS the solving step.",
+    "domainNotes": [
+      "**Pharmacology:** absorption/elimination rates with two compartments produce rational rates; totals are log differences.",
+      "**Chemistry:** second-order reaction kinetics integrate $\\tfrac{dx}{(a-x)(b-x)}$ — the textbook partial-fractions integral.",
+      "**Population modeling:** solving the logistic equation $\\tfrac{dP}{P(K-P)}$ requires splitting into $\\tfrac{1}{P}$ and $\\tfrac{1}{K-P}$ pieces.",
+      "**Engineering:** inverse Laplace transforms in control theory are computed almost entirely by partial-fraction decomposition."
+    ]
+  },
+  "generators": [
+    "c2f-decompose-linear-1", "c2f-decompose-linear-2", "c2f-decompose-linear-3",
+    "c2f-decompose-repeated-1", "c2f-decompose-repeated-2", "c2f-decompose-repeated-3",
+    "c2f-pf-integrate-1", "c2f-pf-integrate-2", "c2f-pf-integrate-3",
+    "c2f-pf-definite-1", "c2f-pf-definite-2", "c2f-pf-definite-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-2.partial-fractions.s01",
+      "concepts": ["decompose-distinct-linear"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Decompose $\\dfrac{5x+1}{(x-1)(x+2)} = \\dfrac{A}{x-1} + \\dfrac{B}{x+2}$. Find $A$ and $B$.",
+      "steps": [
+        { "instruction": "Clear denominators: $5x + 1 = A(x+2) + B(x-1)$. Substitute $x = 1$ to find $A$.", "answer": "2", "accept": ["A=2", "A = 2"], "hint": "At $x=1$ the $B$ term vanishes: $6 = 3A$." },
+        { "instruction": "Substitute $x = -2$ to find $B$.", "answer": "3", "accept": ["B=3", "B = 3"], "hint": "At $x=-2$: $-9 = -3B$." }
+      ],
+      "finalAnswer": { "value": "A = 2, B = 3", "unit": "" },
+      "solutionNarrative": "Substituting the two roots: $x=1$ gives $6 = 3A$ so $A = 2$; $x=-2$ gives $-9 = -3B$ so $B = 3$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s02",
+      "concepts": ["decompose-distinct-linear"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the cover-up method on $\\dfrac{7}{(x-3)(x+4)} = \\dfrac{A}{x-3} + \\dfrac{B}{x+4}$.",
+      "steps": [
+        { "instruction": "Cover $(x-3)$ and evaluate $\\dfrac{7}{x+4}$ at $x = 3$ to find $A$.", "answer": "1", "accept": ["A=1", "7/7"], "hint": "$\\dfrac{7}{3+4}$." },
+        { "instruction": "Cover $(x+4)$ and evaluate $\\dfrac{7}{x-3}$ at $x = -4$ to find $B$.", "answer": "-1", "accept": ["B=-1", "-7/7"], "hint": "$\\dfrac{7}{-4-3}$." }
+      ],
+      "finalAnswer": { "value": "A = 1, B = -1", "unit": "" },
+      "solutionNarrative": "Cover-up gives $A = \\tfrac{7}{7} = 1$ and $B = \\tfrac{7}{-7} = -1$, so the fraction is $\\tfrac{1}{x-3} - \\tfrac{1}{x+4}$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s03",
+      "concepts": ["decompose-distinct-linear"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Decompose $\\dfrac{x+7}{x^2 - x - 6}$ into partial fractions.",
+      "steps": [
+        { "instruction": "Factor the denominator $x^2 - x - 6$.", "answer": "(x - 3)(x + 2)", "accept": ["(x+2)(x-3)", "(x-3)(x+2)"], "form": "factored", "hint": "Two numbers that multiply to $-6$ and add to $-1$: $-3$ and $2$." },
+        { "instruction": "With $\\dfrac{A}{x-3} + \\dfrac{B}{x+2}$, substitute $x = 3$ to find $A$.", "answer": "2", "accept": ["A=2"], "hint": "$3 + 7 = A(3+2)$." },
+        { "instruction": "Substitute $x = -2$ to find $B$.", "answer": "-1", "accept": ["B=-1"], "hint": "$-2 + 7 = B(-2-3)$." }
+      ],
+      "finalAnswer": { "value": "A = 2, B = -1", "unit": "" },
+      "solutionNarrative": "$x^2 - x - 6 = (x-3)(x+2)$; cover-up gives $A = \\tfrac{10}{5} = 2$ and $B = \\tfrac{5}{-5} = -1$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s04",
+      "concepts": ["decompose-distinct-linear"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Fully decompose $\\dfrac{9x - 8}{x^2 - 4x + 3}$ and write the result.",
+      "steps": [
+        { "instruction": "Factor the denominator.", "answer": "(x - 1)(x - 3)", "accept": ["(x-3)(x-1)"], "form": "factored", "hint": "Roots at $x = 1$ and $x = 3$." },
+        { "instruction": "Find $A$ (over $x-1$) by cover-up at $x = 1$.", "answer": "-1/2", "accept": ["-0.5", "A=-1/2"], "hint": "$\\dfrac{9(1)-8}{1-3} = \\dfrac{1}{-2}$." },
+        { "instruction": "Find $B$ (over $x-3$) by cover-up at $x = 3$.", "answer": "19/2", "accept": ["9.5", "B=19/2"], "hint": "$\\dfrac{9(3)-8}{3-1} = \\dfrac{19}{2}$." },
+        { "instruction": "Write the decomposition. (Type it like -1/2/(x - 1) + 19/2/(x - 3).)", "answer": "-1/2/(x - 1) + 19/2/(x - 3)", "accept": ["-1/(2(x-1)) + 19/(2(x-3))", "-1/2/(x-1)+19/2/(x-3)", "19/2/(x - 3) - 1/2/(x - 1)"], "hint": "Place each constant over its factor." }
+      ],
+      "finalAnswer": { "value": "-1/2/(x - 1) + 19/2/(x - 3)", "unit": "" },
+      "solutionNarrative": "Factoring gives roots 1 and 3; cover-up yields $A = -\\tfrac{1}{2}$ and $B = \\tfrac{19}{2}$, so the fraction is $-\\tfrac{1}{2(x-1)} + \\tfrac{19}{2(x-3)}$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s05",
+      "concepts": ["decompose-repeated-and-improper"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Decompose $\\dfrac{3x + 5}{(x-2)^2} = \\dfrac{A}{x-2} + \\dfrac{B}{(x-2)^2}$.",
+      "steps": [
+        { "instruction": "Clear denominators: $3x + 5 = A(x-2) + B$. Match the coefficients of $x$ to find $A$.", "answer": "3", "accept": ["A=3"], "hint": "The only $x$ on the right comes from $Ax$." },
+        { "instruction": "Substitute $x = 2$ to find $B$.", "answer": "11", "accept": ["B=11"], "hint": "$3(2) + 5 = B$." }
+      ],
+      "finalAnswer": { "value": "A = 3, B = 11", "unit": "" },
+      "solutionNarrative": "Matching $x$-coefficients gives $A = 3$; setting $x = 2$ gives $B = 11$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s06",
+      "concepts": ["decompose-repeated-and-improper"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The fraction $\\dfrac{x^2 + 3}{x - 1}$ is improper. Divide first and rewrite it as polynomial + proper fraction.",
+      "steps": [
+        { "instruction": "Divide $x^2 + 3$ by $x - 1$. What is the quotient?", "answer": "x + 1", "accept": ["x+1"], "hint": "$x^2 \\div x = x$; multiply back and subtract to continue." },
+        { "instruction": "What is the remainder?", "answer": "4", "accept": [], "hint": "Remainder theorem: evaluate $x^2 + 3$ at $x = 1$." },
+        { "instruction": "Write the rewritten form. (Type it like x + 1 + 4/(x - 1).)", "answer": "x + 1 + 4/(x - 1)", "accept": ["x+1+4/(x-1)", "(x + 1) + 4/(x - 1)"], "hint": "quotient + remainder/(divisor)." }
+      ],
+      "finalAnswer": { "value": "x + 1 + 4/(x - 1)", "unit": "" },
+      "solutionNarrative": "Division gives quotient $x + 1$ and remainder $4$: $\\tfrac{x^2+3}{x-1} = x + 1 + \\tfrac{4}{x-1}$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s07",
+      "concepts": ["decompose-repeated-and-improper"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Write $\\dfrac{x^2 + 2x - 1}{(x-1)(x+2)}$ as (constant) $+ \\dfrac{A}{x-1} + \\dfrac{B}{x+2}$.",
+      "steps": [
+        { "instruction": "Top and bottom are both degree 2, so the quotient is a constant. What is it?", "answer": "1", "accept": [], "hint": "Leading terms: $x^2 / x^2 = 1$." },
+        { "instruction": "Subtracting $(x-1)(x+2) = x^2 + x - 2$ from the numerator leaves the remainder. What is it? (A linear expression.)", "answer": "x + 1", "accept": ["x+1"], "hint": "$(x^2 + 2x - 1) - (x^2 + x - 2)$." },
+        { "instruction": "Decompose $\\dfrac{x+1}{(x-1)(x+2)}$: substitute $x = 1$ to find $A$.", "answer": "2/3", "accept": ["A=2/3", "0.6667"], "hint": "$1 + 1 = A(1+2)$." },
+        { "instruction": "Substitute $x = -2$ to find $B$.", "answer": "1/3", "accept": ["B=1/3", "0.3333"], "hint": "$-2 + 1 = B(-2-1)$." }
+      ],
+      "finalAnswer": { "value": "1 + 2/3/(x - 1) + 1/3/(x + 2)", "unit": "" },
+      "solutionNarrative": "Division peels off 1, leaving $\\tfrac{x+1}{(x-1)(x+2)}$, which splits with $A = \\tfrac{2}{3}$, $B = \\tfrac{1}{3}$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s08",
+      "concepts": ["integrate-with-partial-fractions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int \\left( \\frac{2}{x-1} + \\frac{3}{x+2} \\right) dx$.",
+      "steps": [
+        { "instruction": "Integrate the first term. (Type it like 2ln|x - 1|.)", "answer": "2ln|x - 1|", "accept": ["2ln(x - 1)", "2ln|x-1|", "2ln(x-1)"], "hint": "$\\int \\frac{k}{x-a}dx = k\\ln|x-a| + C$." },
+        { "instruction": "Write the full antiderivative. (Type it like 2ln|x - 1| + 3ln|x + 2| + C.)", "answer": "2ln|x - 1| + 3ln|x + 2| + C", "accept": ["2ln(x - 1) + 3ln(x + 2) + C", "2ln|x-1|+3ln|x+2|+C", "2ln|x - 1| + 3ln|x + 2|", "2ln(x-1)+3ln(x+2)"], "hint": "Each piece becomes a log; add $+C$ once." }
+      ],
+      "finalAnswer": { "value": "2ln|x - 1| + 3ln|x + 2| + C", "unit": "" },
+      "solutionNarrative": "Each constant-over-linear term integrates to a log: $2\\ln|x-1| + 3\\ln|x+2| + C$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s09",
+      "concepts": ["integrate-with-partial-fractions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int \\frac{5x+1}{(x-1)(x+2)}\\,dx$ by partial fractions.",
+      "steps": [
+        { "instruction": "Decompose: substitute $x = 1$ into $5x+1 = A(x+2) + B(x-1)$ to find $A$.", "answer": "2", "accept": ["A=2"], "hint": "$6 = 3A$." },
+        { "instruction": "Substitute $x = -2$ to find $B$.", "answer": "3", "accept": ["B=3"], "hint": "$-9 = -3B$." },
+        { "instruction": "Integrate the decomposition. (Type it like 2ln|x - 1| + 3ln|x + 2| + C.)", "answer": "2ln|x - 1| + 3ln|x + 2| + C", "accept": ["2ln(x - 1) + 3ln(x + 2) + C", "2ln|x-1|+3ln|x+2|+C", "2ln|x - 1| + 3ln|x + 2|"], "hint": "$\\int\\frac{2}{x-1}dx + \\int\\frac{3}{x+2}dx$." }
+      ],
+      "finalAnswer": { "value": "2ln|x - 1| + 3ln|x + 2| + C", "unit": "" },
+      "solutionNarrative": "Cover-up gives $A = 2$, $B = 3$; integrating yields $2\\ln|x-1| + 3\\ln|x+2| + C$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s10",
+      "concepts": ["integrate-with-partial-fractions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int \\frac{2x + 7}{(x+1)^2}\\,dx$. Watch the squared factor — it does NOT produce a log.",
+      "steps": [
+        { "instruction": "Decompose as $\\dfrac{A}{x+1} + \\dfrac{B}{(x+1)^2}$: match $x$-coefficients in $2x + 7 = A(x+1) + B$ to find $A$.", "answer": "2", "accept": ["A=2"], "hint": "Only $Ax$ supplies an $x$." },
+        { "instruction": "Substitute $x = -1$ to find $B$.", "answer": "5", "accept": ["B=5"], "hint": "$2(-1) + 7 = B$." },
+        { "instruction": "Integrate both pieces. (Type it like 2ln|x + 1| - 5/(x + 1) + C.)", "answer": "2ln|x + 1| - 5/(x + 1) + C", "accept": ["2ln(x + 1) - 5/(x + 1) + C", "2ln|x+1|-5/(x+1)+C", "2ln|x + 1| - 5/(x + 1)"], "hint": "$\\int 5(x+1)^{-2}dx = -5(x+1)^{-1}$ by the power rule." }
+      ],
+      "finalAnswer": { "value": "2ln|x + 1| - 5/(x + 1) + C", "unit": "" },
+      "solutionNarrative": "$A = 2$, $B = 5$. The linear piece gives $2\\ln|x+1|$; the squared piece gives $-\\tfrac{5}{x+1}$ by the power rule."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s11",
+      "concepts": ["definite-integrals-and-applications"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_{2}^{4} \\frac{3}{x}\\,dx$. Use $\\ln 2 \\approx 0.6931$.",
+      "steps": [
+        { "instruction": "The value is $3(\\ln 4 - \\ln 2) = 3\\ln\\tfrac{4}{2}$. The log of what number appears?", "answer": "2", "accept": [], "hint": "$\\ln 4 - \\ln 2 = \\ln\\tfrac{4}{2}$." },
+        { "instruction": "Compute $3\\ln 2$. Round to 2 decimal places.", "answer": "2.08", "accept": ["2.079", "2.0794", "2.07"], "hint": "$3 \\times 0.6931$." }
+      ],
+      "finalAnswer": { "value": "2.08", "unit": "" },
+      "solutionNarrative": "$3(\\ln 4 - \\ln 2) = 3\\ln 2 \\approx 3(0.6931) = 2.0794 \\approx 2.08$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s12",
+      "concepts": ["definite-integrals-and-applications"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_{1}^{2} \\frac{1}{x(x+1)}\\,dx$. Use $\\ln 2 \\approx 0.6931$ and $\\ln 3 \\approx 1.0986$.",
+      "steps": [
+        { "instruction": "Decompose $\\dfrac{1}{x(x+1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1}$: substitute $x = 0$ to find $A$.", "answer": "1", "accept": ["A=1"], "hint": "$1 = A(0+1)$." },
+        { "instruction": "Substitute $x = -1$ to find $B$.", "answer": "-1", "accept": ["B=-1"], "hint": "$1 = B(-1)$." },
+        { "instruction": "So the integral is $\\big[\\ln x - \\ln(x+1)\\big]_1^2 = (\\ln 2 - \\ln 3) - (\\ln 1 - \\ln 2) = 2\\ln 2 - \\ln 3$. Compute it; round to 3 decimal places.", "answer": "0.288", "accept": ["0.287", "0.2877", "0.29"], "hint": "$2(0.6931) - 1.0986$." }
+      ],
+      "finalAnswer": { "value": "0.288", "unit": "" },
+      "solutionNarrative": "$A = 1$, $B = -1$; the integral telescopes to $2\\ln 2 - \\ln 3 \\approx 1.3863 - 1.0986 = 0.2877 \\approx 0.288$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s13",
+      "concepts": ["definite-integrals-and-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A drug is absorbed into the bloodstream at a rate $r(t) = \\dfrac{6}{(t+1)(t+2)}$ mg per hour, $t$ hours after ingestion. Find the total absorbed in the first 2 hours: $\\displaystyle\\int_0^2 \\frac{6}{(t+1)(t+2)}\\,dt$. Use $\\ln 2 \\approx 0.6931$ and $\\ln 3 \\approx 1.0986$.",
+      "steps": [
+        { "instruction": "Decompose $\\dfrac{6}{(t+1)(t+2)} = \\dfrac{A}{t+1} + \\dfrac{B}{t+2}$: substitute $t = -1$ to find $A$.", "answer": "6", "accept": ["A=6"], "hint": "$6 = A(-1+2)$." },
+        { "instruction": "Substitute $t = -2$ to find $B$.", "answer": "-6", "accept": ["B=-6"], "hint": "$6 = B(-2+1)$." },
+        { "instruction": "The integral is $6(\\ln 3 - \\ln 1) - 6(\\ln 4 - \\ln 2) = 6(\\ln 3 - \\ln 2)$. Compute it; round to 2 decimal places.", "answer": "2.43", "accept": ["2.433", "2.4328", "2.44", "2.42"], "hint": "$6 \\times (1.0986 - 0.6931) = 6 \\times 0.4055$." }
+      ],
+      "finalAnswer": { "value": "2.43", "unit": "mg" },
+      "solutionNarrative": "$A = 6$, $B = -6$; the logs telescope to $6\\ln\\tfrac{3}{2} \\approx 2.43$ mg absorbed."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s14",
+      "concepts": ["definite-integrals-and-applications", "integrate-with-partial-fractions"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "In a second-order chemical reaction, product forms at a rate proportional to $\\dfrac{1}{(x+1)(x+3)}$ where $x$ is grams already formed. A chemist needs $\\displaystyle\\int_0^1 \\frac{2}{(x+1)(x+3)}\\,dx$. Use $\\ln 2 \\approx 0.6931$ and $\\ln 3 \\approx 1.0986$.",
+      "steps": [
+        { "instruction": "Decompose $\\dfrac{2}{(x+1)(x+3)} = \\dfrac{A}{x+1} + \\dfrac{B}{x+3}$: substitute $x = -1$ to find $A$.", "answer": "1", "accept": ["A=1"], "hint": "$2 = A(-1+3)$." },
+        { "instruction": "Substitute $x = -3$ to find $B$.", "answer": "-1", "accept": ["B=-1"], "hint": "$2 = B(-3+1)$." },
+        { "instruction": "The integral is $\\big[\\ln(x+1) - \\ln(x+3)\\big]_0^1 = (\\ln 2 - \\ln 4) - (\\ln 1 - \\ln 3) = \\ln 3 - \\ln 2$. Compute it; round to 3 decimal places.", "answer": "0.406", "accept": ["0.405", "0.4055", "0.41"], "hint": "$1.0986 - 0.6931$." }
+      ],
+      "finalAnswer": { "value": "0.406", "unit": "" },
+      "solutionNarrative": "$A = 1$, $B = -1$; the value collapses to $\\ln 3 - \\ln 2 = \\ln\\tfrac{3}{2} \\approx 0.406$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s15",
+      "concepts": ["decompose-distinct-linear", "integrate-with-partial-fractions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int \\frac{4}{x^2 - 4}\\,dx$.",
+      "steps": [
+        { "instruction": "Factor the denominator $x^2 - 4$.", "answer": "(x - 2)(x + 2)", "accept": ["(x+2)(x-2)"], "form": "factored", "hint": "Difference of squares." },
+        { "instruction": "Decompose $\\dfrac{4}{(x-2)(x+2)}$: cover-up at $x = 2$ gives $A = $ ?", "answer": "1", "accept": ["A=1"], "hint": "$\\dfrac{4}{2+2}$." },
+        { "instruction": "Cover-up at $x = -2$ gives $B = $ ?", "answer": "-1", "accept": ["B=-1"], "hint": "$\\dfrac{4}{-2-2}$." },
+        { "instruction": "Integrate. (Type it like ln|x - 2| - ln|x + 2| + C.)", "answer": "ln|x - 2| - ln|x + 2| + C", "accept": ["ln(x - 2) - ln(x + 2) + C", "ln|x-2|-ln|x+2|+C", "ln|x - 2| - ln|x + 2|"], "hint": "Each piece is a log with coefficient $\\pm 1$." }
+      ],
+      "finalAnswer": { "value": "ln|x - 2| - ln|x + 2| + C", "unit": "" },
+      "solutionNarrative": "$x^2 - 4 = (x-2)(x+2)$, splitting into $\\tfrac{1}{x-2} - \\tfrac{1}{x+2}$; integration gives $\\ln|x-2| - \\ln|x+2| + C$."
+    },
+    {
+      "id": "calculus-2.partial-fractions.s16",
+      "concepts": ["decompose-repeated-and-improper", "integrate-with-partial-fractions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int \\frac{x^2 + 1}{x - 2}\\,dx$: divide first, then integrate every piece.",
+      "steps": [
+        { "instruction": "Divide $x^2 + 1$ by $x - 2$. What is the quotient?", "answer": "x + 2", "accept": ["x+2"], "hint": "$x^2 \\div x = x$, then bring down: $2x \\div x = 2$." },
+        { "instruction": "What is the remainder?", "answer": "5", "accept": [], "hint": "Evaluate $x^2 + 1$ at $x = 2$." },
+        { "instruction": "Integrate $x + 2 + \\dfrac{5}{x-2}$. (Type it like x^2/2 + 2x + 5ln|x - 2| + C.)", "answer": "x^2/2 + 2x + 5ln|x - 2| + C", "accept": ["x^2/2 + 2x + 5ln(x - 2) + C", "x^2/2+2x+5ln|x-2|+C", "x^2/2 + 2x + 5ln|x - 2|", "(1/2)x^2 + 2x + 5ln|x - 2| + C"], "hint": "Power rule on the polynomial part, log on the fraction." }
+      ],
+      "finalAnswer": { "value": "x^2/2 + 2x + 5ln|x - 2| + C", "unit": "" },
+      "solutionNarrative": "Division: quotient $x + 2$, remainder 5. Integrating gives $\\tfrac{x^2}{2} + 2x + 5\\ln|x-2| + C$."
+    }
+  ]
+}

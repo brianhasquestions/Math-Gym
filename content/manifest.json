@@ -25,7 +25,9 @@
       "blurb": "Functions, exponentials, logarithms, and the math of growth.",
       "topics": [
         { "id": "algebra-2.functions", "title": "Functions: Notation, Domain, and Range", "file": "content/algebra-2/functions.json", "status": "ready" },
+        { "id": "algebra-2.polynomial-functions", "title": "Polynomial Functions and Their Graphs", "file": "content/algebra-2/polynomial-functions.json", "status": "ready" },
         { "id": "algebra-2.radicals", "title": "Radical Expressions and Equations", "file": "content/algebra-2/radicals.json", "status": "ready" },
+        { "id": "algebra-2.complex-numbers", "title": "Complex Numbers", "file": "content/algebra-2/complex-numbers.json", "status": "ready" },
         { "id": "algebra-2.rational-expressions", "title": "Rational Expressions and Equations", "file": "content/algebra-2/rational-expressions.json", "status": "ready" },
         { "id": "algebra-2.exponential-functions", "title": "Exponential Functions", "file": "content/algebra-2/exponential-functions.json", "status": "ready" },
         { "id": "algebra-2.logarithms", "title": "Logarithms", "file": "content/algebra-2/logarithms.json", "status": "ready" },
@@ -56,8 +58,10 @@
         { "id": "trigonometry.radians-and-unit-circle", "title": "Radians and the Unit Circle", "file": "content/trigonometry/radians-and-unit-circle.json", "status": "ready" },
         { "id": "trigonometry.sine-cosine-graphs", "title": "Graphs of Sine and Cosine", "file": "content/trigonometry/sine-cosine-graphs.json", "status": "ready" },
         { "id": "trigonometry.trig-identities", "title": "Trigonometric Identities", "file": "content/trigonometry/trig-identities.json", "status": "ready" },
+        { "id": "trigonometry.inverse-trig-functions", "title": "Inverse Trigonometric Functions", "file": "content/trigonometry/inverse-trig-functions.json", "status": "ready" },
         { "id": "trigonometry.law-of-sines-and-cosines", "title": "The Law of Sines and Cosines", "file": "content/trigonometry/law-of-sines-and-cosines.json", "status": "ready" },
-        { "id": "trigonometry.trig-equations", "title": "Solving Trigonometric Equations", "file": "content/trigonometry/trig-equations.json", "status": "ready" }
+        { "id": "trigonometry.trig-equations", "title": "Solving Trigonometric Equations", "file": "content/trigonometry/trig-equations.json", "status": "ready" },
+        { "id": "trigonometry.polar-coordinates", "title": "Polar Coordinates", "file": "content/trigonometry/polar-coordinates.json", "status": "ready" }
       ]
     },
     {
@@ -71,8 +75,10 @@
         { "id": "calculus-1.transcendental-derivatives", "title": "Derivatives of Exponential, Log, and Trig Functions", "file": "content/calculus-1/transcendental-derivatives.json", "status": "ready" },
         { "id": "calculus-1.implicit-differentiation", "title": "Implicit Differentiation", "file": "content/calculus-1/implicit-differentiation.json", "status": "ready" },
         { "id": "calculus-1.analyzing-functions", "title": "Analyzing Functions with Derivatives", "file": "content/calculus-1/analyzing-functions.json", "status": "ready" },
+        { "id": "calculus-1.linearization-and-differentials", "title": "Linearization and Differentials", "file": "content/calculus-1/linearization-and-differentials.json", "status": "ready" },
         { "id": "calculus-1.related-rates", "title": "Related Rates", "file": "content/calculus-1/related-rates.json", "status": "ready" },
-        { "id": "calculus-1.optimization", "title": "Optimization", "file": "content/calculus-1/optimization.json", "status": "ready" }
+        { "id": "calculus-1.optimization", "title": "Optimization", "file": "content/calculus-1/optimization.json", "status": "ready" },
+        { "id": "calculus-1.lhopital-rule", "title": "L'Hôpital's Rule and Indeterminate Forms", "file": "content/calculus-1/lhopital-rule.json", "status": "ready" }
       ]
     },
     {
@@ -84,8 +90,11 @@
         { "id": "calculus-2.definite-integrals", "title": "The Definite Integral and the FTC", "file": "content/calculus-2/definite-integrals.json", "status": "ready" },
         { "id": "calculus-2.integration-by-substitution", "title": "Integration by Substitution", "file": "content/calculus-2/integration-by-substitution.json", "status": "ready" },
         { "id": "calculus-2.integration-by-parts", "title": "Integration by Parts", "file": "content/calculus-2/integration-by-parts.json", "status": "ready" },
+        { "id": "calculus-2.partial-fractions", "title": "Integration by Partial Fractions", "file": "content/calculus-2/partial-fractions.json", "status": "ready" },
+        { "id": "calculus-2.improper-integrals", "title": "Improper Integrals", "file": "content/calculus-2/improper-integrals.json", "status": "ready" },
         { "id": "calculus-2.applications-of-integration", "title": "Applications of Integration", "file": "content/calculus-2/applications-of-integration.json", "status": "ready" },
-        { "id": "calculus-2.series-and-convergence", "title": "Series and Convergence", "file": "content/calculus-2/series-and-convergence.json", "status": "ready" }
+        { "id": "calculus-2.series-and-convergence", "title": "Series and Convergence", "file": "content/calculus-2/series-and-convergence.json", "status": "ready" },
+        { "id": "calculus-2.taylor-series", "title": "Taylor and Maclaurin Series", "file": "content/calculus-2/taylor-series.json", "status": "ready" }
       ]
     },
     {
@@ -96,10 +105,12 @@
         { "id": "calculus-3.vectors-in-space", "title": "Vectors in Space", "file": "content/calculus-3/vectors-in-space.json", "status": "ready" },
         { "id": "calculus-3.dot-and-cross-products", "title": "The Dot and Cross Products", "file": "content/calculus-3/dot-and-cross-products.json", "status": "ready" },
         { "id": "calculus-3.vector-proofs", "title": "Vector Proofs and Identities", "file": "content/calculus-3/vector-proofs.json", "status": "ready" },
+        { "id": "calculus-3.vector-valued-functions", "title": "Vector-Valued Functions and Motion", "file": "content/calculus-3/vector-valued-functions.json", "status": "ready" },
         { "id": "calculus-3.partial-derivatives", "title": "Partial Derivatives", "file": "content/calculus-3/partial-derivatives.json", "status": "ready" },
         { "id": "calculus-3.gradient-and-directional-derivatives", "title": "The Gradient and Directional Derivatives", "file": "content/calculus-3/gradient-and-directional-derivatives.json", "status": "ready" },
         { "id": "calculus-3.multivariable-optimization", "title": "Multivariable Optimization", "file": "content/calculus-3/multivariable-optimization.json", "status": "ready" },
-        { "id": "calculus-3.multiple-integrals", "title": "Double and Triple Integrals", "file": "content/calculus-3/multiple-integrals.json", "status": "ready" }
+        { "id": "calculus-3.multiple-integrals", "title": "Double and Triple Integrals", "file": "content/calculus-3/multiple-integrals.json", "status": "ready" },
+        { "id": "calculus-3.line-integrals", "title": "Line Integrals, Vector Fields, and Green's Theorem", "file": "content/calculus-3/line-integrals.json", "status": "ready" }
       ]
     },
     {
@@ -113,6 +124,7 @@
         { "id": "differential-equations.growth-decay-cooling", "title": "Growth, Decay, and Cooling Models", "file": "content/differential-equations/growth-decay-cooling.json", "status": "ready" },
         { "id": "differential-equations.second-order-linear", "title": "Second-Order Linear Equations", "file": "content/differential-equations/second-order-linear.json", "status": "ready" },
         { "id": "differential-equations.nonhomogeneous-second-order", "title": "Nonhomogeneous Second-Order Equations", "file": "content/differential-equations/nonhomogeneous-second-order.json", "status": "ready" },
+        { "id": "differential-equations.laplace-transforms", "title": "Laplace Transforms", "file": "content/differential-equations/laplace-transforms.json", "status": "ready" },
         { "id": "differential-equations.numerical-methods", "title": "Numerical Methods (Euler's Method)", "file": "content/differential-equations/numerical-methods.json", "status": "ready" }
       ]
     },
@@ -140,7 +152,8 @@
         { "id": "linear-algebra.linear-transformations", "title": "Linear Transformations", "file": "content/linear-algebra/linear-transformations.json", "status": "ready" },
         { "id": "linear-algebra.eigenvalues-and-eigenvectors", "title": "Eigenvalues and Eigenvectors", "file": "content/linear-algebra/eigenvalues-and-eigenvectors.json", "status": "ready" },
         { "id": "linear-algebra.diagonalization", "title": "Diagonalization and Matrix Powers", "file": "content/linear-algebra/diagonalization.json", "status": "ready" },
-        { "id": "linear-algebra.orthogonality-and-least-squares", "title": "Orthogonality and Least Squares", "file": "content/linear-algebra/orthogonality-and-least-squares.json", "status": "ready" }
+        { "id": "linear-algebra.orthogonality-and-least-squares", "title": "Orthogonality and Least Squares", "file": "content/linear-algebra/orthogonality-and-least-squares.json", "status": "ready" },
+        { "id": "linear-algebra.gram-schmidt", "title": "The Gram–Schmidt Process", "file": "content/linear-algebra/gram-schmidt.json", "status": "ready" }
       ]
     },
     {
@@ -153,7 +166,10 @@
         { "id": "statistics.probability-basics", "title": "Probability: Rules and Sample Spaces", "file": "content/statistics/probability-basics.json", "status": "ready" },
         { "id": "statistics.conditional-probability", "title": "Conditional Probability and Bayes' Theorem", "file": "content/statistics/conditional-probability.json", "status": "ready" },
         { "id": "statistics.random-variables", "title": "Random Variables and Expected Value", "file": "content/statistics/random-variables.json", "status": "ready" },
-        { "id": "statistics.normal-and-sampling", "title": "The Normal Distribution and Sampling", "file": "content/statistics/normal-and-sampling.json", "status": "ready" }
+        { "id": "statistics.normal-and-sampling", "title": "The Normal Distribution and Sampling", "file": "content/statistics/normal-and-sampling.json", "status": "ready" },
+        { "id": "statistics.confidence-intervals", "title": "Confidence Intervals", "file": "content/statistics/confidence-intervals.json", "status": "ready" },
+        { "id": "statistics.hypothesis-testing", "title": "Hypothesis Testing", "file": "content/statistics/hypothesis-testing.json", "status": "ready" },
+        { "id": "statistics.regression-correlation", "title": "Correlation and Linear Regression", "file": "content/statistics/regression-correlation.json", "status": "ready" }
       ]
     },
     {

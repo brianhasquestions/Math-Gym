@@ -1,0 +1,270 @@
+{
+  "id": "calculus-2.improper-integrals",
+  "subject": "calculus-2",
+  "title": "Improper Integrals",
+  "prerequisites": ["calculus-2.definite-integrals", "calculus-1.limits-and-continuity"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "infinite-limits-of-integration",
+      "label": "Infinite limits of integration",
+      "microLesson": "An integral to $\\infty$ is defined by a limit: $\\displaystyle\\int_a^\\infty f(x)\\,dx = \\lim_{b\\to\\infty}\\int_a^b f(x)\\,dx$. Compute the definite integral to a stand-in bound $b$, then let $b \\to \\infty$. If the limit is a finite number, the integral **converges** to it; if it grows without bound, it **diverges**. Example: $\\displaystyle\\int_1^\\infty \\frac{dx}{x^2} = \\lim_{b\\to\\infty}\\left(1 - \\frac{1}{b}\\right) = 1$ — infinite region, finite area."
+    },
+    {
+      "id": "discontinuous-integrands",
+      "label": "Discontinuous integrands",
+      "microLesson": "An integral is also improper when the integrand **blows up inside or at an endpoint** of the interval, like $\\dfrac{1}{\\sqrt{x}}$ at $x = 0$. Handle it with a one-sided limit: $\\displaystyle\\int_0^4 \\frac{dx}{\\sqrt{x}} = \\lim_{t\\to 0^+}\\int_t^4 x^{-1/2}dx = \\lim_{t\\to 0^+}(4 - 2\\sqrt{t}) = 4$. Always locate the blow-up point FIRST — integrating straight across a hidden discontinuity gives nonsense."
+    },
+    {
+      "id": "convergence-p-test",
+      "label": "The p-test",
+      "microLesson": "For power integrands the whole story is the exponent. **At infinity**: $\\displaystyle\\int_1^\\infty \\frac{dx}{x^p}$ converges exactly when $p > 1$ (value $\\tfrac{1}{p-1}$) and diverges when $p \\leq 1$. **At a blow-up point** like 0, the rule **flips**: $\\displaystyle\\int_0^1 \\frac{dx}{x^p}$ converges exactly when $p < 1$ (value $\\tfrac{1}{1-p}$). The borderline $p = 1$ fails on both sides — $\\tfrac{1}{x}$ has too much tail AND too much spike."
+    },
+    {
+      "id": "comparison-and-applications",
+      "label": "Comparison and applications",
+      "microLesson": "When an improper integral can't be evaluated directly, **compare** it to one that can: if $0 \\leq f(x) \\leq g(x)$ and $\\int g$ converges, then $\\int f$ converges too (smaller than finite is finite); if $f(x) \\geq g(x) \\geq 0$ and $\\int g$ diverges, so does $\\int f$. Typical move: $\\dfrac{1}{x^2 + 5} \\leq \\dfrac{1}{x^2}$. Applications: total drug ever absorbed, total energy ever radiated, escape velocity, and perpetuity-style totals are all $\\int_0^\\infty$ of a decaying rate."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Can an infinite region have finite area?\n\nTake the curve $y = \\tfrac{1}{x^2}$ from $x = 1$ onward — it stretches to infinity. Paint the region under it. Do you need infinite paint? Surprisingly, no: the area is exactly $1$. Regions that go on forever can still enclose a **finite** area, provided the curve dies off fast enough. Deciding *when* that happens — and finding the finite total when it does — is the subject of improper integrals. It's also how we make sense of \"the total amount of drug the body will *ever* absorb\" or \"the energy a machine part radiates over its whole lifetime.\"\n\n```plot\n{ \"xRange\": [0.5, 7], \"yRange\": [0, 1.6], \"curves\": [ { \"fn\": \"1/x^2\", \"label\": \"y = 1/x²\", \"labelAt\": 2.2, \"color\": \"accent\", \"fillRange\": [1, 7] } ], \"caption\": \"The tail of 1/x² from x = 1 onward: an infinitely long region whose total area is exactly 1.\" }\n```\n\n## Type 1: an infinite limit of integration\n\nThe definition replaces $\\infty$ with a stand-in bound and takes a limit:\n\n$$\\int_a^{\\infty} f(x)\\,dx = \\lim_{b\\to\\infty} \\int_a^b f(x)\\,dx.$$\n\nIf the limit is a finite number, the integral **converges** to that number. If it grows without bound (or oscillates), it **diverges**.\n\n### Worked example: $\\displaystyle\\int_1^\\infty \\frac{dx}{x^2}$\n\n$$\\int_1^b x^{-2}\\,dx = \\left[-\\frac{1}{x}\\right]_1^b = 1 - \\frac{1}{b} \\;\\xrightarrow{\\,b\\to\\infty\\,}\\; 1.$$\n\nConverges, value $1$.\n\n### Worked example: $\\displaystyle\\int_1^\\infty \\frac{dx}{x}$ — the great impostor\n\n$$\\int_1^b \\frac{dx}{x} = \\ln b \\;\\xrightarrow{\\,b\\to\\infty\\,}\\; \\infty.$$\n\n**Diverges.** The curve $\\tfrac{1}{x}$ *looks* just as tail-thin as $\\tfrac{1}{x^2}$, but its tail carries infinite area. The gap between $\\tfrac{1}{x}$ and $\\tfrac{1}{x^2}$ is where all the interesting behavior lives.\n\n## Type 2: the integrand blows up\n\nAn integral is also improper if the **function** goes infinite at an endpoint (or inside the interval), even when the interval is finite. Same medicine, one-sided limit:\n\n$$\\int_0^4 \\frac{dx}{\\sqrt{x}} = \\lim_{t\\to 0^+} \\int_t^4 x^{-1/2}dx = \\lim_{t\\to 0^+}\\Big[2\\sqrt{x}\\Big]_t^4 = 4 - 0 = 4.$$\n\nConverges: the spike at $0$ is thin enough. But $\\displaystyle\\int_0^1 \\frac{dx}{x}$ diverges — as $t \\to 0^+$, $\\ln t \\to -\\infty$. **Always locate the blow-up first**: an exam-classic trap is to integrate $\\tfrac{1}{x^2}$ straight across $x = 0$ and get a negative \"area\" from a positive function.\n\n## The p-test: one exponent decides everything\n\nFor pure powers, memorize this table — it powers everything else:\n\n- **At infinity**: $\\displaystyle\\int_1^\\infty \\frac{dx}{x^p}$ **converges iff $p > 1$**, with value $\\dfrac{1}{p-1}$. (Big exponents thin the tail.)\n- **At a blow-up point**: $\\displaystyle\\int_0^1 \\frac{dx}{x^p}$ **converges iff $p < 1$**, with value $\\dfrac{1}{1-p}$. (Small exponents soften the spike.)\n\nThe rules point in **opposite directions**, and the harmonic case $p = 1$ diverges at both ends. A quick mental check: $\\int_1^\\infty x^{-2}dx = 1$ (converges), $\\int_0^1 x^{-1/2}dx = 2$ (converges), and $\\tfrac1x$ fails everywhere.\n\n## When you can't integrate: compare\n\nMany integrands have no elementary antiderivative ($e^{-x^2}$, famously). The **comparison test** sidesteps the antiderivative entirely:\n\n- If $0 \\leq f(x) \\leq g(x)$ on the interval and $\\int g$ **converges**, then $\\int f$ converges. *(Smaller than finite is finite.)*\n- If $f(x) \\geq g(x) \\geq 0$ and $\\int g$ **diverges**, then $\\int f$ diverges. *(Bigger than infinite is infinite.)*\n\n### Worked example\n\nDoes $\\displaystyle\\int_1^\\infty \\frac{2 + \\sin x}{x^2}\\,dx$ converge? The numerator wobbles but never exceeds $3$, so the integrand is trapped: $0 \\leq \\frac{2+\\sin x}{x^2} \\leq \\frac{3}{x^2}$, and $\\int_1^\\infty \\frac{3}{x^2}dx = 3$ converges. Therefore the original **converges** — no antiderivative needed.\n\n## Common pitfalls\n\n- **Writing $\\infty$ into the antiderivative** instead of taking a limit — always introduce $b$ (or $t$) and let it move.\n- **Missing an interior blow-up** and integrating straight across it.\n- **Using the wrong p-rule**: at infinity you want $p > 1$; at a spike you want $p < 1$. They flip.\n- **Comparing in the useless direction**: showing $f$ is *bigger* than a convergent integrand proves nothing."
+  },
+  "application": {
+    "summary": "Improper integrals answer 'what is the total, ever?' — total drug absorbed over a lifetime, total energy radiated as a machine cools, total probability under a bell curve, escape velocity from a planet's gravity well. Convergence tells you whether the endless process settles to a finite total; the value tells you what that total is.",
+    "domains": ["pharmacology", "physics", "probability", "finance"],
+    "workedExample": "**Total drug exposure (AUC)**\n\nPharmacologists measure a drug's total exposure as the *area under the concentration curve* — for a drug eliminated exponentially, concentration is $c(t) = 8e^{-2t}$ mg/L after $t$ hours, and the exposure over all time is\n\n$$AUC = \\int_0^{\\infty} 8e^{-2t}\\,dt = \\lim_{b\\to\\infty}\\Big[-4e^{-2t}\\Big]_0^b = 0 - (-4) = 4 \\text{ mg·h/L}.$$\n\nThe body processes the drug forever, in principle — yet the total exposure is a hard, finite number that determines dosing. The same $\\int_0^\\infty$ structure computes the total energy a cooling part radiates, the present value of an income stream discounted forever, and the fact that the standard normal curve encloses total probability 1 (which is exactly why it can BE a probability distribution).",
+    "domainNotes": [
+      "**Pharmacology:** AUC (area under the curve) $= \\int_0^\\infty c(t)\\,dt$ is the standard measure of total drug exposure.",
+      "**Physics:** escape velocity comes from $\\int_R^\\infty \\frac{GMm}{r^2}dr$ being finite — gravity's tail is a convergent $p = 2$ integral.",
+      "**Probability:** every continuous distribution needs $\\int_{-\\infty}^\\infty f(x)\\,dx = 1$; tails must converge or the model is meaningless.",
+      "**Finance:** a perpetuity's present value $\\int_0^\\infty R e^{-rt}dt = \\tfrac{R}{r}$ is finite because discounting beats time."
+    ]
+  },
+  "generators": [
+    "c2f-improper-infinite-1", "c2f-improper-infinite-2", "c2f-improper-infinite-3",
+    "c2f-improper-discont-1", "c2f-improper-discont-2", "c2f-improper-discont-3",
+    "c2f-improper-ptest-1", "c2f-improper-ptest-2", "c2f-improper-ptest-3",
+    "c2f-improper-compare-1", "c2f-improper-compare-2", "c2f-improper-compare-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-2.improper-integrals.s01",
+      "concepts": ["infinite-limits-of-integration"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_{1}^{\\infty} \\frac{1}{x^2}\\,dx$ by replacing $\\infty$ with $b$ and taking a limit.",
+      "steps": [
+        { "instruction": "The antiderivative gives $\\displaystyle\\lim_{b\\to\\infty}\\left[-\\frac{1}{x}\\right]_1^b$. What is $\\displaystyle\\lim_{b\\to\\infty}\\frac{1}{b}$?", "answer": "0", "accept": [], "hint": "The denominator grows without bound." },
+        { "instruction": "Since the limit is finite, does the integral converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "Finite limit = convergence." },
+        { "instruction": "Compute the value: $0 - (-1)$.", "answer": "1", "accept": [], "hint": "$-\\tfrac{1}{b} \\to 0$ and the lower end contributes $-(-1)$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\int_1^b x^{-2}dx = 1 - \\tfrac{1}{b} \\to 1$: the infinite region under $1/x^2$ has area exactly 1."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s02",
+      "concepts": ["infinite-limits-of-integration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Show that $\\displaystyle\\int_{1}^{\\infty} \\frac{1}{x}\\,dx$ diverges, even though $\\tfrac{1}{x} \\to 0$.",
+      "steps": [
+        { "instruction": "Compute $\\displaystyle\\int_1^b \\frac{1}{x}dx$ in terms of $b$. (Type it like ln b.)", "answer": "ln b", "accept": ["ln(b)", "lnb"], "hint": "The antiderivative of $\\tfrac{1}{x}$ is $\\ln x$, and $\\ln 1 = 0$." },
+        { "instruction": "What happens to $\\ln b$ as $b \\to \\infty$: does it approach a finite number? (yes/no)", "answer": "no", "accept": ["it diverges", "goes to infinity"], "hint": "The log grows without bound — slowly, but without bound." },
+        { "instruction": "So the integral converges or diverges?", "answer": "diverges", "accept": ["divergent"], "hint": "No finite limit means divergence." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "$\\int_1^b \\tfrac{dx}{x} = \\ln b \\to \\infty$: the tail of $1/x$ carries infinite area, so the integral diverges."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s03",
+      "concepts": ["infinite-limits-of-integration"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_{0}^{\\infty} 6e^{-3x}\\,dx$.",
+      "steps": [
+        { "instruction": "Find the antiderivative of $6e^{-3x}$. (Type it like -2e^(-3x).)", "answer": "-2e^(-3x)", "accept": ["-2e^{-3x}", "-2*e^(-3x)", "-2e^-3x"], "hint": "$\\int e^{-3x}dx = -\\tfrac{1}{3}e^{-3x}$, times 6." },
+        { "instruction": "What is $\\displaystyle\\lim_{b\\to\\infty} e^{-3b}$?", "answer": "0", "accept": [], "hint": "Exponential decay dies to zero." },
+        { "instruction": "Evaluate $\\displaystyle\\lim_{b\\to\\infty}\\big[-2e^{-3x}\\big]_0^b$.", "answer": "2", "accept": [], "hint": "$0 - (-2e^0) = 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "The antiderivative $-2e^{-3x}$ vanishes at infinity, leaving $0 - (-2) = 2$."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s04",
+      "concepts": ["discontinuous-integrands"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_{0}^{9} \\frac{1}{\\sqrt{x}}\\,dx$, minding the blow-up.",
+      "steps": [
+        { "instruction": "At what $x$-value does $\\tfrac{1}{\\sqrt{x}}$ blow up?", "answer": "0", "accept": ["x=0", "x = 0"], "hint": "Where is the denominator zero?" },
+        { "instruction": "The antiderivative is $2\\sqrt{x}$. Evaluate $\\displaystyle\\lim_{t\\to 0^+}\\big[2\\sqrt{x}\\big]_t^9$.", "answer": "6", "accept": ["2sqrt(9)", "2sqrt9"], "hint": "$2\\sqrt{9} - 2\\sqrt{t} \\to 6 - 0$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "The spike at $x = 0$ is integrable: $\\lim_{t\\to 0^+}(2\\sqrt{9} - 2\\sqrt{t}) = 6$."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s05",
+      "concepts": ["discontinuous-integrands"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_{0}^{4} \\frac{1}{\\sqrt{4 - x}}\\,dx$. The blow-up is NOT at zero this time.",
+      "steps": [
+        { "instruction": "At what $x$-value is the integrand discontinuous?", "answer": "4", "accept": ["x=4", "x = 4"], "hint": "$\\sqrt{4-x} = 0$ when $x = 4$ — the upper endpoint." },
+        { "instruction": "The antiderivative is $-2\\sqrt{4-x}$. Does the one-sided limit exist — converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "$-2\\sqrt{4-x}$ approaches $0$ smoothly as $x \\to 4^-$." },
+        { "instruction": "Evaluate $\\displaystyle\\lim_{t\\to 4^-}\\big[-2\\sqrt{4 - x}\\big]_0^{t}$.", "answer": "4", "accept": ["2sqrt(4)"], "hint": "$0 - (-2\\sqrt{4}) = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "The discontinuity sits at the upper endpoint $x = 4$; the limit gives $0 + 2\\sqrt{4} = 4$."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s06",
+      "concepts": ["discontinuous-integrands"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Explain why $\\displaystyle\\int_{0}^{1} \\frac{1}{x^2}\\,dx$ diverges — and why integrating straight across would give a wrong (finite) answer.",
+      "steps": [
+        { "instruction": "Where does $\\tfrac{1}{x^2}$ blow up?", "answer": "0", "accept": ["x=0", "x = 0"], "hint": "The denominator vanishes at 0." },
+        { "instruction": "The limit is $\\displaystyle\\lim_{t\\to 0^+}\\left[-\\frac{1}{x}\\right]_t^1 = \\lim_{t\\to 0^+}\\left(\\frac{1}{t} - 1\\right)$. Does this converge or diverge?", "answer": "diverges", "accept": ["divergent"], "hint": "$\\tfrac{1}{t}$ blows up as $t \\to 0^+$." },
+        { "instruction": "Near a blow-up at 0, $\\int_0^1 x^{-p}dx$ converges only when $p$ satisfies which inequality? (Type it like p < 1.)", "answer": "p < 1", "accept": ["p<1", "1 > p", "1>p"], "hint": "The spike rule: small exponents converge; here $p = 2$ fails." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "The area near the spike at 0 is unbounded ($p = 2 \\geq 1$), so the integral diverges; naively plugging in the endpoints would silently ignore the infinite spike."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s07",
+      "concepts": ["convergence-p-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the p-test to classify $\\displaystyle\\int_{1}^{\\infty} \\frac{1}{x^3}\\,dx$.",
+      "steps": [
+        { "instruction": "For $\\int_1^\\infty x^{-p}dx$, convergence requires $p$ greater than what number?", "answer": "1", "accept": [], "hint": "The borderline $1/x$ integral already diverges." },
+        { "instruction": "Here $p = 3$. Converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "$3 > 1$." }
+      ],
+      "finalAnswer": { "value": "converges", "unit": "" },
+      "solutionNarrative": "$p = 3 > 1$, so the tail integral converges (to $\\tfrac{1}{2}$, in fact)."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s08",
+      "concepts": ["convergence-p-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify $\\displaystyle\\int_{1}^{\\infty} \\frac{1}{\\sqrt{x}}\\,dx$ using the p-test, writing $\\tfrac{1}{\\sqrt{x}} = x^{-p}$ first.",
+      "steps": [
+        { "instruction": "What is $p$ here?", "answer": "1/2", "accept": ["0.5", "p=1/2"], "hint": "$\\sqrt{x} = x^{1/2}$." },
+        { "instruction": "Is $p > 1$? Converge or diverge?", "answer": "diverges", "accept": ["divergent"], "hint": "$\\tfrac{1}{2} \\leq 1$: the tail is too fat." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "$p = \\tfrac{1}{2} \\leq 1$, so the integral diverges — $\\sqrt{x}$ grows too slowly to thin the tail."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s09",
+      "concepts": ["convergence-p-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify and evaluate $\\displaystyle\\int_{1}^{\\infty} \\frac{1}{x^4}\\,dx$.",
+      "steps": [
+        { "instruction": "Converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "$p = 4 > 1$." },
+        { "instruction": "Use $\\int_1^\\infty x^{-p}dx = \\tfrac{1}{p-1}$ to find the value. Give a fraction.", "answer": "1/3", "accept": ["0.333", "0.3333"], "hint": "$\\tfrac{1}{4-1}$." }
+      ],
+      "finalAnswer": { "value": "1/3", "unit": "" },
+      "solutionNarrative": "$p = 4 > 1$: converges with value $\\tfrac{1}{p-1} = \\tfrac{1}{3}$."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s10",
+      "concepts": ["convergence-p-test"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Classify and evaluate $\\displaystyle\\int_{0}^{1} \\frac{1}{\\sqrt{x}}\\,dx$ — note the blow-up is at 0, where the p-rule flips.",
+      "steps": [
+        { "instruction": "Near 0, $\\int_0^1 x^{-p}dx$ converges when $p < 1$. Here $p = \\tfrac{1}{2}$. Converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "$\\tfrac{1}{2} < 1$ — small exponents soften the spike." },
+        { "instruction": "The value is $\\dfrac{1}{1 - p}$. Compute it for $p = \\tfrac{1}{2}$.", "answer": "2", "accept": [], "hint": "$\\dfrac{1}{1 - 1/2} = \\dfrac{1}{1/2}$." },
+        { "instruction": "Contrast: at infinity the same integrand diverges. Which region is 'safe' for $p = \\tfrac{1}{2}$: near zero or near infinity? (Type near zero or near infinity.)", "answer": "near zero", "accept": ["near 0", "zero", "nearzero"], "hint": "Small $p$ handles spikes; big $p$ handles tails." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "At a spike the rule is $p < 1$: with $p = \\tfrac{1}{2}$ the integral converges to $\\tfrac{1}{1 - 1/2} = 2$."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s11",
+      "concepts": ["comparison-and-applications"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use comparison to decide whether $\\displaystyle\\int_{1}^{\\infty} \\frac{1}{x^2 + 7}\\,dx$ converges.",
+      "steps": [
+        { "instruction": "For $x \\geq 1$, which is larger: $\\dfrac{1}{x^2+7}$ or $\\dfrac{1}{x^2}$? (Type the larger one.)", "answer": "1/x^2", "accept": ["1/(x^2)", "the second"], "hint": "Bigger denominator, smaller fraction." },
+        { "instruction": "Does $\\int_1^\\infty \\tfrac{1}{x^2}dx$ converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "p-test, $p = 2$." },
+        { "instruction": "Conclusion for the original integral?", "answer": "converges", "accept": ["convergent"], "hint": "Trapped below a finite area." }
+      ],
+      "finalAnswer": { "value": "converges", "unit": "" },
+      "solutionNarrative": "$0 \\leq \\tfrac{1}{x^2+7} \\leq \\tfrac{1}{x^2}$ and the bound converges, so the original converges by comparison."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s12",
+      "concepts": ["comparison-and-applications"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Show that $\\displaystyle\\int_{1}^{\\infty} \\frac{2 + \\sin x}{x^2}\\,dx$ converges by bounding the numerator.",
+      "steps": [
+        { "instruction": "Since $\\sin x \\leq 1$, the numerator $2 + \\sin x$ is at most what number?", "answer": "3", "accept": [], "hint": "$2 + 1$." },
+        { "instruction": "So the integrand is at most $\\tfrac{3}{x^2}$. What is $\\int_1^\\infty \\tfrac{3}{x^2}dx$?", "answer": "3", "accept": [], "hint": "$3 \\times \\int_1^\\infty x^{-2}dx = 3 \\times 1$." },
+        { "instruction": "The integrand is nonnegative (numerator $\\geq 1$) and bounded by a convergent integral. Conclusion?", "answer": "converges", "accept": ["convergent"], "hint": "Comparison test, convergent direction." }
+      ],
+      "finalAnswer": { "value": "converges", "unit": "" },
+      "solutionNarrative": "$0 \\leq \\tfrac{2+\\sin x}{x^2} \\leq \\tfrac{3}{x^2}$, whose integral is 3 — finite. The original converges."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s13",
+      "concepts": ["comparison-and-applications"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use comparison in the DIVERGENT direction: classify $\\displaystyle\\int_{2}^{\\infty} \\frac{x + 1}{x^2}\\,dx$.",
+      "steps": [
+        { "instruction": "For $x \\geq 2$, $\\dfrac{x+1}{x^2} > \\dfrac{x}{x^2}$. Simplify $\\dfrac{x}{x^2}$.", "answer": "1/x", "accept": ["1/(x)"], "hint": "Cancel one power of $x$." },
+        { "instruction": "Does $\\int_2^\\infty \\tfrac{1}{x}dx$ converge or diverge?", "answer": "diverges", "accept": ["divergent"], "hint": "The harmonic integrand: $p = 1$." },
+        { "instruction": "Our integrand is LARGER than a divergent one. Conclusion?", "answer": "diverges", "accept": ["divergent"], "hint": "Bigger than infinite is infinite." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "$\\tfrac{x+1}{x^2} > \\tfrac{1}{x}$ and $\\int_2^\\infty \\tfrac{dx}{x}$ diverges, so the original diverges by comparison."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s14",
+      "concepts": ["comparison-and-applications", "infinite-limits-of-integration"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A drug's blood concentration is $c(t) = 8e^{-2t}$ mg/L after $t$ hours. Total exposure (AUC) is $\\displaystyle\\int_0^\\infty 8e^{-2t}\\,dt$. Compute it.",
+      "steps": [
+        { "instruction": "Find the antiderivative of $8e^{-2t}$. (Type it like -4e^(-2t).)", "answer": "-4e^(-2t)", "accept": ["-4e^{-2t}", "-4*e^(-2t)", "-4e^-2t"], "hint": "$\\int e^{-2t}dt = -\\tfrac{1}{2}e^{-2t}$, times 8." },
+        { "instruction": "Evaluate $\\displaystyle\\lim_{b\\to\\infty}\\big[-4e^{-2t}\\big]_0^b$.", "answer": "4", "accept": [], "hint": "$0 - (-4e^0) = 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "mg·h/L" },
+      "solutionNarrative": "AUC $= \\int_0^\\infty 8e^{-2t}dt = 4$ mg·h/L: the body processes the drug forever, but total exposure is finite."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s15",
+      "concepts": ["comparison-and-applications", "infinite-limits-of-integration"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "To escape Earth's gravity, a rocket must supply the total work $W = \\displaystyle\\int_R^\\infty \\frac{k}{r^2}\\,dr$ where $k$ bundles the physical constants and $R$ is Earth's radius. With $k = 12$ and $R = 3$ (scaled units), compute the total work — and note why a finite escape energy exists at all.",
+      "steps": [
+        { "instruction": "Find the antiderivative of $\\dfrac{12}{r^2}$. (Type it like -12/r.)", "answer": "-12/r", "accept": ["-12/(r)", "-(12/r)"], "hint": "$\\int 12 r^{-2}dr = -12 r^{-1}$." },
+        { "instruction": "Evaluate $\\displaystyle\\lim_{b\\to\\infty}\\left[-\\frac{12}{r}\\right]_3^b$.", "answer": "4", "accept": [], "hint": "$0 - (-\\tfrac{12}{3})$." },
+        { "instruction": "Gravity follows an inverse-square law ($p = 2$). Is $p > 1$ — is that why escape is possible with finite energy? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "If gravity decayed like $1/r$, the work integral would diverge and NOTHING could escape." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$W = [-12/r]_3^\\infty = 4$. Because $p = 2 > 1$, the gravity tail integral converges — which is exactly why escape velocity exists."
+    },
+    {
+      "id": "calculus-2.improper-integrals.s16",
+      "concepts": ["infinite-limits-of-integration", "convergence-p-test"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A machine part radiates heat at a rate $r(t) = \\dfrac{5}{t^2}$ joules per minute for $t \\geq 1$. Will the TOTAL energy ever radiated be finite, and what is it?",
+      "steps": [
+        { "instruction": "The rate is a $p$-power with $p = 2$. Does $\\int_1^\\infty \\tfrac{5}{t^2}dt$ converge or diverge?", "answer": "converges", "accept": ["convergent"], "hint": "$p = 2 > 1$." },
+        { "instruction": "Compute the total: $5 \\times \\int_1^\\infty t^{-2}dt$.", "answer": "5", "accept": [], "hint": "$\\int_1^\\infty t^{-2}dt = 1$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "joules" },
+      "solutionNarrative": "The tail converges ($p = 2 > 1$), and the total energy is $5 \\cdot 1 = 5$ joules."
+    }
+  ]
+}

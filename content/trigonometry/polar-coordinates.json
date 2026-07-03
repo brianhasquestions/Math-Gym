@@ -1,0 +1,276 @@
+{
+  "id": "trigonometry.polar-coordinates",
+  "subject": "trigonometry",
+  "title": "Polar Coordinates",
+  "prerequisites": ["trigonometry.radians-and-unit-circle", "geometry.pythagorean-theorem"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "polar-to-rectangular",
+      "label": "Polar to rectangular: x = r cos θ, y = r sin θ",
+      "microLesson": "A polar point $(r, \\theta)$ names a location by distance from the origin (the **pole**) and direction from the positive $x$-axis. Dropping a perpendicular makes a right triangle with hypotenuse $r$, so $x = r\\cos\\theta$ and $y = r\\sin\\theta$ — the unit-circle coordinates scaled by $r$. Example: $(4, 60^\\circ)$ gives $x = 4 \\cdot \\frac{1}{2} = 2$ and $y = 4 \\cdot \\frac{\\sqrt{3}}{2} = 2\\sqrt{3}$. The formulas carry the signs automatically in every quadrant."
+    },
+    {
+      "id": "rectangular-to-polar",
+      "label": "Rectangular to polar: r and the quadrant-aware angle",
+      "microLesson": "Going the other way: $r = \\sqrt{x^2 + y^2}$ (that's just the Pythagorean theorem) and $\\tan\\theta = \\frac{y}{x}$. But $\\arctan\\frac{y}{x}$ alone only gives a reference-style angle — you must PLACE it using the point's quadrant: QII is $180^\\circ -$ ref, QIII is $180^\\circ +$ ref, QIV is $360^\\circ -$ ref. Example: $(-3, 3)$ has $r = 3\\sqrt{2}$ and reference angle $45^\\circ$ in QII, so $\\theta = 135^\\circ$."
+    },
+    {
+      "id": "polar-equations-conversion",
+      "label": "Converting equations between forms",
+      "microLesson": "Three substitutions translate any equation: $r^2 = x^2 + y^2$, $r\\cos\\theta = x$, $r\\sin\\theta = y$. The classic trick: given $r = 2\\cos\\theta$, multiply BOTH sides by $r$ first, getting $r^2 = 2r\\cos\\theta$, so every piece substitutes cleanly: $x^2 + y^2 = 2x$ — a circle. Going the other way, $x^2 + y^2 = 4y$ becomes $r^2 = 4r\\sin\\theta$, and dividing by $r$ gives $r = 4\\sin\\theta$."
+    },
+    {
+      "id": "polar-curves-recognition",
+      "label": "Recognizing circles, cardioids, roses, and lines",
+      "microLesson": "Four templates cover the standard polar curves: $r = k$ is a **circle** of radius $k$ at the pole (and $r = 2a\\cos\\theta$ is a circle through the pole); $\\theta = c$ is a **line** through the pole; $r = a \\pm a\\cos\\theta$ (constant = coefficient) is a **cardioid**, max $r = 2a$, touching the pole at its cusp; $r = a\\cos(n\\theta)$ or $a\\sin(n\\theta)$ is a **rose** with $n$ petals if $n$ is odd, $2n$ if even, each petal of length $a$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Distance and direction\n\nAsk a radar operator where the contact is and you will not hear \"$x = 34.6$, $y = 20$.\" You'll hear **\"40 kilometers out, bearing 30 degrees.\"** Distance and direction is how radar, sonar, lidar, microphones, and orbiting bodies naturally describe position — and **polar coordinates** are that idea made precise.\n\nA polar point is a pair $(r, \\theta)$: $r$ is the distance from a fixed origin called the **pole**, and $\\theta$ is the angle measured counterclockwise from the positive $x$-axis (the **polar axis**). The same location has many polar names ($\\theta$ can gain full turns), but one standard choice: $r \\ge 0$ and $0^\\circ \\le \\theta < 360^\\circ$.\n\n## Polar → rectangular: one right triangle\n\nDrop a perpendicular from the point to the $x$-axis and you get a right triangle with hypotenuse $r$ and angle $\\theta$ — so the legs are exactly the unit-circle coordinates scaled by $r$:\n\n$$x = r\\cos\\theta, \\qquad y = r\\sin\\theta.$$\n\n**Example.** $(r, \\theta) = (4, 60^\\circ)$:\n\n$$x = 4\\cos 60^\\circ = 4 \\cdot \\tfrac{1}{2} = 2, \\qquad y = 4\\sin 60^\\circ = 4 \\cdot \\tfrac{\\sqrt{3}}{2} = 2\\sqrt{3}.$$\n\nThe formulas need no quadrant babysitting: at $\\theta = 150^\\circ$, cosine is already negative, so $x$ comes out negative on its own. This direction of conversion is the easy one — plug in and multiply.\n\n## Rectangular → polar: Pythagoras plus care\n\nThe distance is the Pythagorean theorem in disguise:\n\n$$r = \\sqrt{x^2 + y^2},$$\n\nand the direction satisfies $\\tan\\theta = \\frac{y}{x}$. Here is the one genuine trap in this topic: your calculator's $\\tan^{-1}$ only ever answers between $-90^\\circ$ and $90^\\circ$, so it CANNOT tell $(3, 4)$ apart from $(-3, -4)$ — both have $\\frac{y}{x} = \\frac{4}{3}$. The fix is a two-step habit:\n\n1. Compute the **reference angle** $\\arctan\\frac{|y|}{|x|}$.\n2. **Place it by quadrant**: QI keeps it; QII uses $180^\\circ -$ ref; QIII uses $180^\\circ +$ ref; QIV uses $360^\\circ -$ ref.\n\n**Example.** $(-3, 3)$: $r = \\sqrt{9 + 9} = 3\\sqrt{2}$; reference angle $\\arctan 1 = 45^\\circ$; the point is in QII, so $\\theta = 180^\\circ - 45^\\circ = 135^\\circ$.\n\n## Translating equations: the three-entry dictionary\n\nWhole curves convert with just three substitutions:\n\n$$r^2 = x^2 + y^2, \\qquad r\\cos\\theta = x, \\qquad r\\sin\\theta = y.$$\n\n**The multiply-by-$r$ trick.** Take $r = 2\\cos\\theta$. As written, neither side substitutes — $r$ alone and $\\cos\\theta$ alone aren't in the dictionary. Multiply both sides by $r$:\n\n$$r^2 = 2r\\cos\\theta \\;\\Rightarrow\\; x^2 + y^2 = 2x.$$\n\nComplete the square and the mystery curve has a name: $(x-1)^2 + y^2 = 1$, a circle of radius 1 centered at $(1, 0)$, passing through the pole.\n\n```plot\n{ \"xRange\": [-0.4, 2.4], \"yRange\": [-1.3, 1.3], \"width\": 360, \"height\": 300, \"curves\": [ { \"fn\": \"sqrt(1-(x-1)^2)\", \"color\": \"accent\" }, { \"fn\": \"-sqrt(1-(x-1)^2)\", \"color\": \"accent\" } ], \"points\": [ { \"x\": 0, \"y\": 0, \"label\": \"pole\", \"color\": \"warn\" }, { \"x\": 1, \"y\": 0, \"label\": \"(1, 0)\", \"color\": \"warn\" } ], \"caption\": \"r = 2cos θ in rectangular clothes: the circle (x-1)² + y² = 1, tangent to the pole\" }\n```\n\nGoing rectangular → polar is the same dictionary read right-to-left: $x^2 + y^2 = 4y$ becomes $r^2 = 4r\\sin\\theta$, and dividing by $r$ leaves $r = 4\\sin\\theta$. (Dividing by $r$ only discards the single point $r = 0$ — harmless here, because the curve still passes through the pole at $\\theta = 0$.)\n\n## The curve gallery\n\nPolar form makes some famous shapes almost embarrassingly short to write:\n\n- **Circle at the pole:** $r = k$. Every direction, same distance — radius $k$.\n- **Circle through the pole:** $r = 2a\\cos\\theta$ (center $(a, 0)$) or $r = 2a\\sin\\theta$ (center $(0, a)$), radius $a$ — as the conversion above showed.\n- **Line through the pole:** $\\theta = c$, with $r$ free to be any real number.\n- **Cardioid:** $r = a \\pm a\\cos\\theta$ or $r = a \\pm a\\sin\\theta$ — the giveaway is the constant term EQUAL to the coefficient. $r$ swings from $0$ (a sharp cusp at the pole) up to $2a$. The heart shape below is $r = 1 + \\cos\\theta$.\n- **Rose:** $r = a\\cos(n\\theta)$ or $r = a\\sin(n\\theta)$ with $n \\ge 2$ — the giveaway is the multiplied angle. Petal count: $n$ petals when $n$ is odd, $2n$ when $n$ is even; every petal has length $a$.\n\n```plot\n{ \"xRange\": [-0.6, 2.3], \"yRange\": [-1.5, 1.5], \"width\": 360, \"height\": 320, \"grid\": false, \"points\": [ { \"x\": 2, \"y\": 0, \"color\": \"accent\" }, { \"x\": 1.82, \"y\": 0.66, \"color\": \"accent\" }, { \"x\": 1.35, \"y\": 1.14, \"color\": \"accent\" }, { \"x\": 0.75, \"y\": 1.3, \"color\": \"accent\" }, { \"x\": 0.2, \"y\": 1.16, \"color\": \"accent\" }, { \"x\": -0.14, \"y\": 0.81, \"color\": \"accent\" }, { \"x\": -0.25, \"y\": 0.43, \"color\": \"accent\" }, { \"x\": -0.18, \"y\": 0.15, \"color\": \"accent\" }, { \"x\": -0.06, \"y\": 0.02, \"color\": \"accent\" }, { \"x\": 0, \"y\": 0, \"label\": \"cusp\", \"color\": \"warn\" }, { \"x\": -0.06, \"y\": -0.02, \"color\": \"accent\" }, { \"x\": -0.18, \"y\": -0.15, \"color\": \"accent\" }, { \"x\": -0.25, \"y\": -0.43, \"color\": \"accent\" }, { \"x\": -0.14, \"y\": -0.81, \"color\": \"accent\" }, { \"x\": 0.2, \"y\": -1.16, \"color\": \"accent\" }, { \"x\": 0.75, \"y\": -1.3, \"color\": \"accent\" }, { \"x\": 1.35, \"y\": -1.14, \"color\": \"accent\" }, { \"x\": 1.82, \"y\": -0.66, \"color\": \"accent\" } ], \"caption\": \"The cardioid r = 1 + cos θ, sampled every 20°: max r = 2 on the right, cusp at the pole on the left\" }\n```\n\n## Pitfalls worth naming\n\n1. **The arctangent quadrant trap** — always place the reference angle by the point's quadrant; never trust a bare $\\tan^{-1}\\frac{y}{x}$.\n2. **Degree/radian mode** — a conversion done in the wrong mode is silently, completely wrong.\n3. **The pole is degenerate** — $(0, \\theta)$ is the same point for every $\\theta$, so \"convert the origin to polar\" has no unique angle. Conversions in this topic always start from $r > 0$.\n4. **Exact vs. rounded** — special angles ($30^\\circ, 45^\\circ, 60^\\circ, \\ldots$) deserve exact answers like $2\\sqrt{3}$; everything else gets a stated rounding."
+  },
+  "application": {
+    "summary": "Polar coordinates are the native language of anything that senses by distance-and-direction: radar and sonar contacts, lidar scans, microphone pickup patterns (cardioids!), antenna radiation lobes (roses), and orbital motion — with the conversion formulas as the bridge to x-y mapping software.",
+    "domains": ["radar and sonar", "robotics", "audio engineering", "antenna design"],
+    "workedExample": "**From radar blip to map grid.**\n\nA harbor radar reports a vessel at range 40 km, bearing $30^\\circ$ counterclockwise from east — the polar point $(40, 30^\\circ)$. The collision-avoidance software, however, works on an $x$-$y$ grid. Convert:\n\n$$x = 40\\cos 30^\\circ = 40 \\cdot \\tfrac{\\sqrt{3}}{2} = 20\\sqrt{3} \\approx 34.6 \\text{ km}, \\qquad y = 40\\sin 30^\\circ = 40 \\cdot \\tfrac{1}{2} = 20 \\text{ km}.$$\n\n**The vessel plots at $(34.6, 20)$ on the grid.** Every sweep of the antenna produces hundreds of these conversions per second; the same two multiplications turn a lidar scan into a robot's obstacle map, and running them in reverse ($r = \\sqrt{x^2+y^2}$, quadrant-aware $\\theta$) tells a ship's radio operator the range and bearing of a distress position reported in grid coordinates.",
+    "domainNotes": [
+      "**Radar/sonar:** contacts arrive as (range, bearing) and are converted to x-y for tracking, then back to polar for the helm — both directions of this topic, thousands of times a minute.",
+      "**Robotics:** lidar scanners return polar distance sweeps; SLAM mapping converts them to rectangular occupancy grids with $x = r\\cos\\theta$, $y = r\\sin\\theta$.",
+      "**Audio engineering:** a cardioid microphone's sensitivity pattern IS the curve $r = a + a\\cos\\theta$ — full pickup in front, the cusp's null at the rear, which is why stage monitors point at the null.",
+      "**Antenna design:** radiation patterns are plotted in polar form, and multi-lobe patterns are rose curves; petal count and length translate directly to beam directions and gain."
+    ]
+  },
+  "generators": [
+    "trg3-polar-torect-1",
+    "trg3-polar-torect-2",
+    "trg3-polar-torect-3",
+    "trg3-polar-topolar-1",
+    "trg3-polar-topolar-2",
+    "trg3-polar-topolar-3",
+    "trg3-polar-eqconv-1",
+    "trg3-polar-eqconv-2",
+    "trg3-polar-eqconv-3",
+    "trg3-polar-curves-1",
+    "trg3-polar-curves-2",
+    "trg3-polar-curves-3"
+  ],
+  "problems": [
+    {
+      "id": "trigonometry.polar-coordinates.s01",
+      "concepts": ["polar-to-rectangular"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Convert the polar point $(r, \\theta) = (4, 60^\\circ)$ to rectangular coordinates $(x, y)$. Give exact values.",
+      "steps": [
+        { "instruction": "What is $\\cos 60^\\circ$? (Exact.)", "answer": "1/2", "accept": ["0.5"], "hint": "A special value from the unit circle." },
+        { "instruction": "Compute $x = r\\cos\\theta = 4 \\cdot \\frac{1}{2}$.", "answer": "2", "accept": [], "hint": "Half of 4." },
+        { "instruction": "Compute $y = r\\sin\\theta$, using $\\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$. (Exact.)", "answer": "2sqrt(3)", "accept": ["2√3", "2*sqrt(3)"], "hint": "$4 \\cdot \\frac{\\sqrt{3}}{2} = 2\\sqrt{3}$." }
+      ],
+      "finalAnswer": { "value": "(2, 2sqrt(3))", "unit": "" },
+      "solutionNarrative": "$x = 4\\cos 60^\\circ = 2$ and $y = 4\\sin 60^\\circ = 2\\sqrt{3}$, so the point is $(2, 2\\sqrt{3})$."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s02",
+      "concepts": ["polar-to-rectangular"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert the polar point $(6, 150^\\circ)$ to rectangular coordinates. Give exact values — signs matter.",
+      "steps": [
+        { "instruction": "Which quadrant does the angle $150^\\circ$ put the point in? (Roman numeral.)", "answer": "II", "accept": ["2", "two", "quadrant 2", "quadrant ii", "q2"], "hint": "Between $90^\\circ$ and $180^\\circ$." },
+        { "instruction": "Compute $x = 6\\cos 150^\\circ$. (Exact; $\\cos 150^\\circ = -\\frac{\\sqrt{3}}{2}$.)", "answer": "-3sqrt(3)", "accept": ["-3√3", "-3*sqrt(3)"], "hint": "$6 \\cdot \\left(-\\frac{\\sqrt{3}}{2}\\right)$." },
+        { "instruction": "Compute $y = 6\\sin 150^\\circ$. (Exact; $\\sin 150^\\circ = \\frac{1}{2}$.)", "answer": "3", "accept": [], "hint": "$6 \\cdot \\frac{1}{2}$." }
+      ],
+      "finalAnswer": { "value": "(-3sqrt(3), 3)", "unit": "" },
+      "solutionNarrative": "In QII cosine is negative and sine positive: $x = -3\\sqrt{3}$, $y = 3$. The formulas carry the signs automatically."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s03",
+      "concepts": ["polar-to-rectangular"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A radar blip sits at range 5 km, bearing $200^\\circ$ counterclockwise from east — the polar point $(5, 200^\\circ)$. Convert to rectangular coordinates for the mapping software. Round each coordinate to 2 decimal places.",
+      "steps": [
+        { "instruction": "Compute $x = 5\\cos 200^\\circ$, rounded to 2 decimal places.", "answer": "-4.70", "accept": ["-4.7"], "hint": "$\\cos 200^\\circ \\approx -0.9397$; multiply by 5." },
+        { "instruction": "Compute $y = 5\\sin 200^\\circ$, rounded to 2 decimal places.", "answer": "-1.71", "accept": [], "hint": "$\\sin 200^\\circ \\approx -0.3420$; multiply by 5." }
+      ],
+      "finalAnswer": { "value": "(-4.70, -1.71)", "unit": "km" },
+      "solutionNarrative": "$x = 5\\cos 200^\\circ \\approx -4.70$ and $y = 5\\sin 200^\\circ \\approx -1.71$ km — QIII, southwest of the antenna, exactly where a $200^\\circ$ bearing points."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s04",
+      "concepts": ["polar-to-rectangular"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Convert the polar point $(3, 90^\\circ)$ to rectangular coordinates.",
+      "steps": [
+        { "instruction": "Compute $x = 3\\cos 90^\\circ$.", "answer": "0", "accept": [], "hint": "$\\cos 90^\\circ = 0$." },
+        { "instruction": "Compute $y = 3\\sin 90^\\circ$.", "answer": "3", "accept": [], "hint": "$\\sin 90^\\circ = 1$." }
+      ],
+      "finalAnswer": { "value": "(0, 3)", "unit": "" },
+      "solutionNarrative": "At $90^\\circ$ the point sits straight up the $y$-axis: $(0, 3)$."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s05",
+      "concepts": ["rectangular-to-polar"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Convert the rectangular point $(3, 4)$ to polar coordinates $(r, \\theta)$, with $\\theta$ rounded to the nearest degree.",
+      "steps": [
+        { "instruction": "Compute $r = \\sqrt{x^2 + y^2} = \\sqrt{3^2 + 4^2}$.", "answer": "5", "accept": [], "hint": "$9 + 16 = 25$ — a Pythagorean triple." },
+        { "instruction": "What ratio does $\\tan\\theta$ equal?", "answer": "4/3", "accept": [], "hint": "$\\tan\\theta = \\frac{y}{x}$." },
+        { "instruction": "The point is in QI, so $\\theta = \\arctan\\frac{4}{3}$ directly. Round to the nearest degree.", "answer": "53", "accept": ["53 degrees"], "hint": "$\\frac{4}{3} \\approx 1.3333$; take $\\tan^{-1}$ in degree mode." }
+      ],
+      "finalAnswer": { "value": "(5, 53°)", "unit": "" },
+      "solutionNarrative": "$r = \\sqrt{9+16} = 5$ and $\\theta = \\arctan\\frac{4}{3} \\approx 53^\\circ$, so the polar form is $(5, 53^\\circ)$."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s06",
+      "concepts": ["rectangular-to-polar"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert the rectangular point $(1, \\sqrt{3})$ to polar coordinates exactly, with $0^\\circ \\le \\theta < 360^\\circ$.",
+      "steps": [
+        { "instruction": "Compute $r = \\sqrt{x^2 + y^2}$. (Exact.)", "answer": "2", "accept": [], "hint": "$1 + 3 = 4$." },
+        { "instruction": "Find $\\theta$ in degrees — this is a special angle.", "answer": "60", "accept": ["60 degrees"], "hint": "$\\tan\\theta = \\sqrt{3}$, and the point is in QI." }
+      ],
+      "finalAnswer": { "value": "(2, 60°)", "unit": "" },
+      "solutionNarrative": "$r = \\sqrt{1 + 3} = 2$ and $\\tan\\theta = \\sqrt{3}$ in QI gives $\\theta = 60^\\circ$: the polar point is $(2, 60^\\circ)$."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s07",
+      "concepts": ["rectangular-to-polar"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Convert the rectangular point $(-6, 8)$ to polar coordinates $(r, \\theta)$, $0^\\circ \\le \\theta < 360^\\circ$, $\\theta$ to the nearest degree. A bare $\\arctan\\frac{y}{x}$ will NOT give the right angle here.",
+      "steps": [
+        { "instruction": "Compute $r = \\sqrt{(-6)^2 + 8^2}$.", "answer": "10", "accept": [], "hint": "$36 + 64 = 100$." },
+        { "instruction": "Which quadrant is $(-6, 8)$ in? (Roman numeral.)", "answer": "II", "accept": ["2", "two", "quadrant 2", "quadrant ii", "q2"], "hint": "$x < 0$, $y > 0$." },
+        { "instruction": "Find the reference angle $\\arctan\\frac{|y|}{|x|} = \\arctan\\frac{8}{6}$, to the nearest degree.", "answer": "53", "accept": ["53 degrees"], "hint": "$\\frac{8}{6} \\approx 1.3333$." },
+        { "instruction": "Place it in QII: $\\theta = 180^\\circ - 53^\\circ$.", "answer": "127", "accept": ["127 degrees"], "hint": "QII angles are $180^\\circ$ minus the reference angle." }
+      ],
+      "finalAnswer": { "value": "(10, 127°)", "unit": "" },
+      "solutionNarrative": "$r = 10$ from the 6-8-10 triple; the reference angle is $53^\\circ$ and the point is in QII, so $\\theta = 180 - 53 = 127^\\circ$ — the quadrant adjustment a calculator's $\\tan^{-1}$ skips."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s08",
+      "concepts": ["rectangular-to-polar"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert the rectangular point $(-2, 2)$ to polar coordinates exactly, with $0^\\circ \\le \\theta < 360^\\circ$.",
+      "steps": [
+        { "instruction": "Compute $r = \\sqrt{(-2)^2 + 2^2}$. (Exact.)", "answer": "2sqrt(2)", "accept": ["2√2", "sqrt(8)", "2.83"], "hint": "$\\sqrt{8}$ simplifies." },
+        { "instruction": "The reference angle is $45^\\circ$ and the point is in QII. What is $\\theta$ in degrees?", "answer": "135", "accept": ["135 degrees"], "hint": "$180^\\circ - 45^\\circ$." }
+      ],
+      "finalAnswer": { "value": "(2sqrt(2), 135°)", "unit": "" },
+      "solutionNarrative": "$r = \\sqrt{8} = 2\\sqrt{2}$; equal legs give a $45^\\circ$ reference angle, placed in QII as $\\theta = 135^\\circ$."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s09",
+      "concepts": ["polar-equations-conversion"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Convert the polar equation $r = 5$ to rectangular coordinates.",
+      "steps": [
+        { "instruction": "What expression in $x$ and $y$ equals $r^2$?", "answer": "x^2 + y^2", "accept": [], "hint": "$r = \\sqrt{x^2 + y^2}$, so $r^2 = x^2 + y^2$." },
+        { "instruction": "Square both sides of $r = 5$ and substitute. Write the rectangular equation.", "answer": "x^2 + y^2 = 25", "accept": ["x^2 + y^2 - 25 = 0"], "hint": "$r^2 = 25$." }
+      ],
+      "finalAnswer": { "value": "x^2 + y^2 = 25", "unit": "" },
+      "solutionNarrative": "Squaring gives $r^2 = 25$, and $r^2 = x^2 + y^2$ turns it into $x^2 + y^2 = 25$: the circle of radius 5 at the origin, as expected for \"all points 5 from the pole.\""
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s10",
+      "concepts": ["polar-equations-conversion"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert the polar equation $r = 2\\cos\\theta$ to rectangular coordinates.",
+      "steps": [
+        { "instruction": "Neither $r$ nor $\\cos\\theta$ substitutes alone — but $r^2$ and $r\\cos\\theta$ both do. Multiply BOTH sides by $r$ and write the result (type theta for $\\theta$).", "answer": "r^2 = 2rcos(theta)", "accept": ["r^2 = 2rcosθ", "2rcos(theta) = r^2", "r^2 = 2r cos(theta)"], "hint": "$r \\cdot r = r^2$; $r \\cdot 2\\cos\\theta = 2r\\cos\\theta$." },
+        { "instruction": "Substitute $r^2 = x^2 + y^2$ and $r\\cos\\theta = x$. Write the rectangular equation.", "answer": "x^2 + y^2 = 2x", "accept": ["x^2 + y^2 - 2x = 0"], "hint": "Both pieces are in the conversion dictionary." }
+      ],
+      "finalAnswer": { "value": "x^2 + y^2 = 2x", "unit": "" },
+      "solutionNarrative": "Multiplying by $r$ gives $r^2 = 2r\\cos\\theta$, which substitutes to $x^2 + y^2 = 2x$ — completing the square reveals the circle $(x-1)^2 + y^2 = 1$."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s11",
+      "concepts": ["polar-equations-conversion"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The polar equation $r = 6\\sin\\theta$ is a circle in disguise. Convert it to rectangular form, then find the circle's center and radius.",
+      "steps": [
+        { "instruction": "Multiply both sides by $r$, then substitute $r^2 = x^2 + y^2$ and $r\\sin\\theta = y$. Write the rectangular equation.", "answer": "x^2 + y^2 = 6y", "accept": ["x^2 + y^2 - 6y = 0"], "hint": "$r^2 = 6r\\sin\\theta$ becomes $x^2 + y^2 = 6y$." },
+        { "instruction": "Complete the square in $y$: $x^2 + (y - 3)^2 = 9$. What is the center $(x, y)$?", "answer": "(0, 3)", "accept": ["(0,3)"], "hint": "Move $6y$ left and add 9 to both sides." },
+        { "instruction": "What is the radius?", "answer": "3", "accept": [], "hint": "The right side is $9 = 3^2$." }
+      ],
+      "finalAnswer": { "value": "circle, center (0, 3), radius 3", "unit": "" },
+      "solutionNarrative": "Multiplying by $r$ and substituting gives $x^2 + y^2 = 6y$; completing the square yields $x^2 + (y-3)^2 = 9$ — a circle centered at $(0, 3)$ with radius 3, tangent to the pole."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s12",
+      "concepts": ["polar-equations-conversion"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert the rectangular equation $x^2 + y^2 = 4y$ to a polar equation solved for $r$.",
+      "steps": [
+        { "instruction": "Substitute $x^2 + y^2 = r^2$ and $y = r\\sin\\theta$. Write the resulting polar equation (type theta for $\\theta$).", "answer": "r^2 = 4rsin(theta)", "accept": ["r^2 = 4rsinθ", "4rsin(theta) = r^2", "r^2 = 4r sin(theta)"], "hint": "The left side collapses to $r^2$; the $y$ becomes $r\\sin\\theta$." },
+        { "instruction": "Divide both sides by $r$ and write the equation solved for $r$.", "answer": "r = 4sin(theta)", "accept": ["4sin(theta)", "4sintheta", "r = 4sinθ", "r = 4sintheta"], "hint": "$\\frac{r^2}{r} = r$; dividing by $r$ only drops the pole point, which the curve still passes through." }
+      ],
+      "finalAnswer": { "value": "r = 4sin(theta)", "unit": "" },
+      "solutionNarrative": "Substituting gives $r^2 = 4r\\sin\\theta$; dividing by $r$ leaves the compact polar form $r = 4\\sin\\theta$."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s13",
+      "concepts": ["polar-curves-recognition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the polar equation $r = 4$.",
+      "steps": [
+        { "instruction": "Identify the curve: type circle, cardioid, rose, or line.", "answer": "circle", "accept": ["a circle"], "hint": "Every point at distance 4 from the pole, in every direction." },
+        { "instruction": "What is its radius?", "answer": "4", "accept": [], "hint": "$r$ is constant at 4." }
+      ],
+      "finalAnswer": { "value": "circle of radius 4", "unit": "" },
+      "solutionNarrative": "$r = 4$ for every $\\theta$ is the set of all points at distance 4 from the pole — a circle of radius 4 centered at the origin."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s14",
+      "concepts": ["polar-curves-recognition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Consider the polar equation $r = 3 + 3\\cos\\theta$.",
+      "steps": [
+        { "instruction": "The constant term (3) equals the coefficient of $\\cos\\theta$ (3). Identify the curve: type circle, cardioid, rose, or line.", "answer": "cardioid", "accept": ["a cardioid"], "hint": "Constant = coefficient is the heart-curve signature." },
+        { "instruction": "What is the maximum value of $r$ (at $\\theta = 0^\\circ$)?", "answer": "6", "accept": [], "hint": "$3 + 3(1)$." },
+        { "instruction": "What is $r$ at $\\theta = 180^\\circ$?", "answer": "0", "accept": [], "hint": "$3 + 3(-1)$ — the cusp touches the pole." }
+      ],
+      "finalAnswer": { "value": "cardioid (max r = 6, cusp at the pole)", "unit": "" },
+      "solutionNarrative": "Constant equal to coefficient marks a cardioid: $r$ swings from 6 at $\\theta = 0^\\circ$ down to 0 at $180^\\circ$, where the signature cusp touches the pole."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s15",
+      "concepts": ["polar-curves-recognition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Consider the polar equation $r = 2\\cos(3\\theta)$.",
+      "steps": [
+        { "instruction": "The angle is multiplied by 3 inside the cosine. Identify the curve: type circle, cardioid, rose, or line.", "answer": "rose", "accept": ["a rose", "rose curve"], "hint": "A multiplied angle is the rose signature." },
+        { "instruction": "How many petals? (Rule: $n$ petals if $n$ is odd, $2n$ if even.)", "answer": "3", "accept": [], "hint": "$n = 3$ is odd." },
+        { "instruction": "How long is each petal (the maximum $|r|$)?", "answer": "2", "accept": [], "hint": "$\\cos(3\\theta)$ peaks at 1, so $r$ peaks at the coefficient." }
+      ],
+      "finalAnswer": { "value": "rose with 3 petals of length 2", "unit": "" },
+      "solutionNarrative": "$r = 2\\cos(3\\theta)$ is a rose; $n = 3$ is odd so it has 3 petals, each reaching $|r| = 2$."
+    },
+    {
+      "id": "trigonometry.polar-coordinates.s16",
+      "concepts": ["polar-curves-recognition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider the polar equation $\\theta = 45^\\circ$ (with $r$ allowed to be any real number).",
+      "steps": [
+        { "instruction": "Identify the curve: type circle, cardioid, rose, or line.", "answer": "line", "accept": ["a line"], "hint": "The direction is fixed; only the distance varies." },
+        { "instruction": "Write its rectangular equation.", "answer": "y = x", "accept": ["x = y", "y - x = 0"], "hint": "Every point on the $45^\\circ$ direction has equal $x$ and $y$." }
+      ],
+      "finalAnswer": { "value": "line y = x", "unit": "" },
+      "solutionNarrative": "Fixing $\\theta = 45^\\circ$ while $r$ runs over all reals traces the line through the pole at $45^\\circ$ — rectangular equation $y = x$."
+    }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "id": "linear-algebra.gram-schmidt",
+  "subject": "linear-algebra",
+  "title": "The Gram–Schmidt Process",
+  "prerequisites": ["linear-algebra.orthogonality-and-least-squares", "linear-algebra.subspaces-and-basis"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "projection-review",
+      "label": "Projection: the one tool Gram–Schmidt uses",
+      "microLesson": "Everything in Gram–Schmidt is built from one formula: $\\text{proj}_{\\vec u}(\\vec v) = \\dfrac{\\vec v \\cdot \\vec u}{\\vec u \\cdot \\vec u}\\,\\vec u$ — the part of $\\vec v$ that points along $\\vec u$. What's left over, $\\vec v - \\text{proj}_{\\vec u}(\\vec v)$, is exactly perpendicular to $\\vec u$. Example: for $\\vec v = \\langle 4, 3 \\rangle$, $\\vec u = \\langle 1, 2 \\rangle$: the scalar is $\\dfrac{10}{5} = 2$, so the projection is $\\langle 2, 4 \\rangle$ and the leftover $\\langle 2, -1 \\rangle$ satisfies $\\langle 2, -1 \\rangle \\cdot \\langle 1, 2 \\rangle = 0$."
+    },
+    {
+      "id": "orthogonalize-two-vectors",
+      "label": "Orthogonalizing two vectors",
+      "microLesson": "Given independent $\\vec v_1, \\vec v_2$, keep the first one ($\\vec u_1 = \\vec v_1$) and fix the second by subtracting its shadow on $\\vec u_1$: $\\vec u_2 = \\vec v_2 - \\dfrac{\\vec v_2 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}\\,\\vec u_1$. Now $\\vec u_2 \\perp \\vec u_1$ while $\\text{span}\\{\\vec u_1, \\vec u_2\\} = \\text{span}\\{\\vec v_1, \\vec v_2\\}$. Fractions are normal here — and since only the *direction* of $\\vec u_2$ matters, you may rescale it (e.g. clear denominators) before continuing."
+    },
+    {
+      "id": "orthogonalize-three-vectors",
+      "label": "The full process in R³",
+      "microLesson": "For three vectors, each new $\\vec u_k$ subtracts one projection per **previously built** $\\vec u$: $\\vec u_3 = \\vec v_3 - \\dfrac{\\vec v_3 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}\\vec u_1 - \\dfrac{\\vec v_3 \\cdot \\vec u_2}{\\vec u_2 \\cdot \\vec u_2}\\vec u_2$. Crucial: project onto the already-orthogonalized $\\vec u_1, \\vec u_2$, never onto the original $\\vec v$'s. If some $\\vec u_k$ comes out as the zero vector, the input $\\vec v_k$ was a combination of the earlier vectors — the inputs were linearly dependent."
+    },
+    {
+      "id": "orthonormal-basis-and-qr",
+      "label": "Orthonormal bases and QR",
+      "microLesson": "After orthogonalizing, **normalize**: $\\vec q_k = \\vec u_k / \\lVert \\vec u_k \\rVert$ gives an orthonormal basis — mutually perpendicular unit vectors, the nicest coordinates possible. Vectors like $\\langle 3, 4 \\rangle$ (norm 5) or $\\langle 1, 2, 2 \\rangle$ (norm 3) normalize to clean fractions. Packing the $\\vec q_k$ as columns of $Q$ gives the **QR factorization** $A = QR$: $Q$ has orthonormal columns and upper-triangular $R$ records the norms and projection coefficients Gram–Schmidt used along the way."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Why fix a basis?\n\nA basis tells you the axes you measure along. But most bases you meet in the wild are **crooked** — the vectors lean into each other, so coordinates interfere: change one coordinate and you drift along the others too. Orthogonal bases have none of that; with unit lengths (orthonormal), finding a coordinate is a single dot product.\n\nThe **Gram–Schmidt process** takes any independent set $\\{\\vec v_1, \\vec v_2, \\dots\\}$ and straightens it into an orthogonal set $\\{\\vec u_1, \\vec u_2, \\dots\\}$ spanning the same space. It is the workhorse behind QR factorization — which is how computers actually solve least-squares problems.\n\n## The only tool: projection\n\nRecall the projection of $\\vec v$ onto $\\vec u$:\n\n$$\\text{proj}_{\\vec u}(\\vec v) = \\frac{\\vec v \\cdot \\vec u}{\\vec u \\cdot \\vec u}\\,\\vec u,$$\n\nthe shadow of $\\vec v$ along $\\vec u$'s direction. The remainder $\\vec v - \\text{proj}_{\\vec u}(\\vec v)$ is **exactly perpendicular** to $\\vec u$ — that perpendicular leftover is the whole engine of Gram–Schmidt: *to make a vector orthogonal to $\\vec u$, subtract its shadow on $\\vec u$.*\n\n## Two vectors\n\nGiven independent $\\vec v_1, \\vec v_2$:\n\n1. Keep the first: $\\vec u_1 = \\vec v_1$.\n2. Subtract the shadow: $\\vec u_2 = \\vec v_2 - \\dfrac{\\vec v_2 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}\\,\\vec u_1$.\n\n**Worked example.** $\\vec v_1 = \\langle 1, 1 \\rangle$, $\\vec v_2 = \\langle 3, 1 \\rangle$. Then $\\vec v_2 \\cdot \\vec u_1 = 4$ and $\\vec u_1 \\cdot \\vec u_1 = 2$, so the coefficient is 2 and\n\n$$\\vec u_2 = \\langle 3, 1 \\rangle - 2\\langle 1, 1 \\rangle = \\langle 1, -1 \\rangle.$$\n\nCheck: $\\langle 1, -1 \\rangle \\cdot \\langle 1, 1 \\rangle = 0$. ✓ The picture is always the same:\n\n```plot\n{ \"xRange\": [-1, 4], \"yRange\": [-1, 3], \"width\": 340, \"height\": 280, \"segments\": [ { \"from\": [0, 0], \"to\": [3, 0], \"arrow\": true, \"color\": \"accent\", \"label\": \"u1 = v1\" }, { \"from\": [0, 0], \"to\": [2, 2], \"arrow\": true, \"color\": \"dim\", \"label\": \"v2\" }, { \"from\": [0, 0], \"to\": [2, 0], \"arrow\": true, \"color\": \"warn\", \"label\": \"proj\" }, { \"from\": [2, 0], \"to\": [2, 2], \"dashed\": true, \"color\": \"accent\" }, { \"from\": [0, 0], \"to\": [0, 2], \"arrow\": true, \"color\": \"accent\", \"label\": \"u2\" } ], \"caption\": \"Subtracting v2's shadow (warn) on u1 leaves u2, perpendicular to u1 (here v1 = <3,0>, v2 = <2,2>).\" }\n```\n\nFractions often appear — that's fine. And since only $\\vec u_2$'s **direction** matters for what comes next, you may rescale it to clear denominators: $\\langle -1/2, 3/2 \\rangle$ works exactly as well as $\\langle -1, 3 \\rangle$.\n\n## Three vectors: one shadow per finished axis\n\nEach new vector subtracts its shadow on **every previously built $\\vec u$**:\n\n$$\\vec u_3 = \\vec v_3 - \\frac{\\vec v_3 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}\\vec u_1 - \\frac{\\vec v_3 \\cdot \\vec u_2}{\\vec u_2 \\cdot \\vec u_2}\\vec u_2.$$\n\n**Worked example.** $\\vec v_1 = \\langle 1, 1, 0 \\rangle$, $\\vec v_2 = \\langle 3, 1, 0 \\rangle$, $\\vec v_3 = \\langle 1, 3, 2 \\rangle$.\n\n- $\\vec u_1 = \\langle 1, 1, 0 \\rangle$.\n- $\\vec v_2 \\cdot \\vec u_1 = 4$, $\\vec u_1 \\cdot \\vec u_1 = 2$: $\\vec u_2 = \\vec v_2 - 2\\vec u_1 = \\langle 1, -1, 0 \\rangle$.\n- $\\vec v_3 \\cdot \\vec u_1 = 4 \\Rightarrow c_1 = 2$; $\\vec v_3 \\cdot \\vec u_2 = -2 \\Rightarrow c_2 = -1$. So $\\vec u_3 = \\vec v_3 - 2\\vec u_1 + \\vec u_2 = \\langle 0, 0, 2 \\rangle$.\n\nAll three dot products between $\\vec u_1, \\vec u_2, \\vec u_3$ are zero. Two warnings:\n\n- **Project onto the $\\vec u$'s, not the $\\vec v$'s.** Using the original $\\vec v_2$ instead of $\\vec u_2$ in the third step is the classic error — the result won't be orthogonal.\n- **A zero $\\vec u_k$ is a diagnosis, not a bug:** it means $\\vec v_k$ depended on the earlier vectors, so the input set wasn't a basis at all.\n\n## From orthogonal to orthonormal — and QR\n\nNormalize each finished vector:\n\n$$\\vec q_k = \\frac{\\vec u_k}{\\lVert \\vec u_k \\rVert}.$$\n\nEngineered examples keep norms clean — $\\langle 3, 4 \\rangle$ has norm 5, $\\langle 1, 2, 2 \\rangle$ has norm 3, $\\langle 2, 6, 9 \\rangle$ has norm 11. When a norm is ugly, **rescale first**: normalize $\\langle -1/2, 3/2 \\rangle$ by normalizing $\\langle -1, 3 \\rangle$ instead — same direction, easier arithmetic.\n\nStacking the original vectors as columns of $A$ and the $\\vec q_k$ as columns of $Q$ gives the **QR factorization**\n\n$$A = QR,$$\n\nwhere $R$ is upper triangular: $r_{kk} = \\lVert \\vec u_k \\rVert$ on the diagonal, and above it $r_{jk} = \\vec q_j \\cdot \\vec v_k$ — the projection coefficients Gram–Schmidt computed anyway. Nothing is wasted: the process **is** the factorization.\n\n## Common pitfalls\n\n- **Skipping the norm-squared:** the projection coefficient divides by $\\vec u \\cdot \\vec u$ (norm *squared*), not $\\lVert \\vec u \\rVert$.\n- **Projecting onto original vectors:** always subtract shadows on the already-orthogonalized $\\vec u_1, \\dots, \\vec u_{k-1}$.\n- **Normalizing too early:** orthogonalize everything first with integer-friendly vectors, then normalize at the end.\n- **Forgetting the check:** every finished pair should give $\\vec u_i \\cdot \\vec u_j = 0$ — a ten-second verification that catches nearly every slip."
+  },
+  "application": {
+    "summary": "Gram–Schmidt turns any basis into an orthogonal one, and that single trick powers QR factorization — the standard stable way computers solve least-squares regression — plus orthogonal signal design in communications and orthogonal polynomial bases in approximation. Whenever data, forces, or signals need to be split into non-interfering components, Gram–Schmidt builds the axes.",
+    "domains": ["numerical computing", "data science", "communications", "computer graphics"],
+    "workedExample": "**QR and least squares.**\n\nFitting a line to data means solving $A\\vec x \\approx \\vec b$ where $A$'s columns are the model's ingredient vectors — say $\\vec v_1 = \\langle 1, 1 \\rangle$ (intercept) and $\\vec v_2 = \\langle 3, 1 \\rangle$. Solving the normal equations $A^TA\\vec x = A^T\\vec b$ directly squares the rounding error, so real software orthogonalizes first.\n\nGram–Schmidt on the columns: $\\vec u_1 = \\langle 1, 1 \\rangle$; the coefficient is $4/2 = 2$, so $\\vec u_2 = \\langle 3, 1 \\rangle - 2\\langle 1, 1 \\rangle = \\langle 1, -1 \\rangle$. Norms: $\\sqrt 2$ and $\\sqrt 2$, giving orthonormal columns $\\vec q_1, \\vec q_2$ and\n\n$$A = QR, \\qquad R = \\begin{bmatrix} \\sqrt 2 & 2\\sqrt 2 \\\\ 0 & \\sqrt 2 \\end{bmatrix},$$\n\nwhere $r_{12} = \\vec q_1 \\cdot \\vec v_2 = 2\\sqrt 2$ is just the projection coefficient (2) scaled by the norm. Now $A\\vec x \\approx \\vec b$ becomes $R\\vec x = Q^T\\vec b$ — an upper-triangular system solved by back-substitution, no matrix squaring, no amplified error. Every `lstsq` call in NumPy/MATLAB walks through exactly this door.",
+    "domainNotes": [
+      "**Numerical computing:** QR factorization solves least-squares problems stably; Gram–Schmidt (in its 'modified' ordering) is how QR is taught and prototyped.",
+      "**Data science:** orthogonalizing feature vectors removes correlation between predictors; principal components are an orthonormal basis for data.",
+      "**Communications:** signal constellations use orthogonal waveforms so simultaneous channels don't interfere — Gram–Schmidt builds them from raw pulse shapes.",
+      "**Graphics/robotics:** re-orthogonalizing a drifting camera or joint frame (making axes truly perpendicular again) is a two-step Gram–Schmidt."
+    ]
+  },
+  "generators": ["gsq-proj-1", "gsq-proj-2", "gsq-proj-3", "gsq-two-1", "gsq-two-2", "gsq-two-3", "gsq-three-1", "gsq-three-2", "gsq-three-3", "gsq-qr-1", "gsq-qr-2", "gsq-qr-3"],
+  "problems": [
+    {
+      "id": "linear-algebra.gram-schmidt.s01",
+      "concepts": ["projection-review"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\text{proj}_{\\vec u}(\\vec v)$ for $\\vec v = \\langle 4, 3 \\rangle$ and $\\vec u = \\langle 1, 2 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute $\\vec v \\cdot \\vec u$.", "answer": "10", "accept": [], "hint": "$(4)(1) + (3)(2)$." },
+        { "instruction": "Compute $\\vec u \\cdot \\vec u$.", "answer": "5", "accept": [], "hint": "$1^2 + 2^2$." },
+        { "instruction": "The scalar is $10/5 = 2$. Multiply it by $\\vec u$ to get the projection as $\\langle x, y \\rangle$.", "answer": "<2, 4>", "accept": ["(2, 4)"], "hint": "$2\\langle 1, 2 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<2, 4>", "unit": "" },
+      "solutionNarrative": "$\\vec v \\cdot \\vec u = 10$, $\\vec u \\cdot \\vec u = 5$, so the scalar is 2 and $\\text{proj}_{\\vec u}(\\vec v) = \\langle 2, 4 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s02",
+      "concepts": ["projection-review"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\text{proj}_{\\vec u}(\\vec v)$ for $\\vec v = \\langle 2, 2 \\rangle$ and $\\vec u = \\langle 1, 3 \\rangle$. Give exact fractions.",
+      "steps": [
+        { "instruction": "Compute $\\vec v \\cdot \\vec u$.", "answer": "8", "accept": [], "hint": "$(2)(1) + (2)(3)$." },
+        { "instruction": "Compute the scalar $\\dfrac{\\vec v \\cdot \\vec u}{\\vec u \\cdot \\vec u}$ as an exact fraction.", "answer": "4/5", "accept": ["8/10", "0.8"], "hint": "$\\vec u \\cdot \\vec u = 10$." },
+        { "instruction": "Multiply the scalar by $\\vec u$ to get the projection as $\\langle x, y \\rangle$ with fractions.", "answer": "<4/5, 12/5>", "accept": ["<8/10, 24/10>", "(4/5, 12/5)"], "hint": "$\\tfrac{4}{5}\\langle 1, 3 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<4/5, 12/5>", "unit": "" },
+      "solutionNarrative": "$\\vec v \\cdot \\vec u = 8$, $\\vec u \\cdot \\vec u = 10$, scalar $\\tfrac{4}{5}$: the projection is $\\langle \\tfrac{4}{5}, \\tfrac{12}{5} \\rangle$."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s03",
+      "concepts": ["projection-review"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "In $\\mathbb{R}^3$, decompose $\\vec v = \\langle 4, 5, 2 \\rangle$ into a part along $\\vec u = \\langle 1, 2, 2 \\rangle$ and a part orthogonal to it.",
+      "steps": [
+        { "instruction": "Compute $\\vec v \\cdot \\vec u$.", "answer": "18", "accept": [], "hint": "$4 + 10 + 4$." },
+        { "instruction": "Compute the scalar $\\dfrac{\\vec v \\cdot \\vec u}{\\vec u \\cdot \\vec u}$ (note $\\vec u \\cdot \\vec u = 9$).", "answer": "2", "accept": ["18/9"], "hint": "$18/9$." },
+        { "instruction": "Write $\\text{proj}_{\\vec u}(\\vec v)$ as $\\langle x, y, z \\rangle$.", "answer": "<2, 4, 4>", "accept": ["(2, 4, 4)"], "hint": "$2\\langle 1, 2, 2 \\rangle$." },
+        { "instruction": "Write the orthogonal remainder $\\vec v - \\text{proj}_{\\vec u}(\\vec v)$.", "answer": "<2, 1, -2>", "accept": ["(2, 1, -2)"], "hint": "Subtract component-wise." },
+        { "instruction": "Check: $(\\vec v - \\text{proj}_{\\vec u}\\vec v) \\cdot \\vec u = ?$", "answer": "0", "accept": [], "hint": "$2 + 2 - 4$." }
+      ],
+      "finalAnswer": { "value": "<2, 1, -2>", "unit": "" },
+      "solutionNarrative": "Scalar $18/9 = 2$ gives projection $\\langle 2, 4, 4 \\rangle$ and remainder $\\langle 2, 1, -2 \\rangle$, whose dot with $\\vec u$ is 0."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s04",
+      "concepts": ["orthogonalize-two-vectors"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Run Gram–Schmidt on $\\vec v_1 = \\langle 1, 1 \\rangle$, $\\vec v_2 = \\langle 3, 1 \\rangle$: keep $\\vec u_1 = \\vec v_1$ and compute $\\vec u_2$.",
+      "steps": [
+        { "instruction": "Compute $\\vec v_2 \\cdot \\vec u_1$.", "answer": "4", "accept": [], "hint": "$3 + 1$." },
+        { "instruction": "Compute the coefficient $\\dfrac{\\vec v_2 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}$.", "answer": "2", "accept": ["4/2"], "hint": "$\\vec u_1 \\cdot \\vec u_1 = 2$." },
+        { "instruction": "Compute $\\vec u_2 = \\vec v_2 - 2\\vec u_1$ as $\\langle x, y \\rangle$.", "answer": "<1, -1>", "accept": ["(1, -1)"], "hint": "$\\langle 3 - 2, 1 - 2 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<1, -1>", "unit": "" },
+      "solutionNarrative": "Coefficient $4/2 = 2$, so $\\vec u_2 = \\langle 3, 1 \\rangle - 2\\langle 1, 1 \\rangle = \\langle 1, -1 \\rangle$; check $\\vec u_2 \\cdot \\vec u_1 = 0$."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s05",
+      "concepts": ["orthogonalize-two-vectors"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Orthogonalize $\\vec v_1 = \\langle 3, 1 \\rangle$, $\\vec v_2 = \\langle 1, 2 \\rangle$ with Gram–Schmidt ($\\vec u_1 = \\vec v_1$). Fraction entries are expected.",
+      "steps": [
+        { "instruction": "Compute $\\vec v_2 \\cdot \\vec u_1$.", "answer": "5", "accept": [], "hint": "$3 + 2$." },
+        { "instruction": "Compute the coefficient $\\dfrac{\\vec v_2 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}$ as an exact fraction.", "answer": "1/2", "accept": ["5/10", "0.5"], "hint": "$\\vec u_1 \\cdot \\vec u_1 = 10$." },
+        { "instruction": "Compute $\\vec u_2 = \\vec v_2 - \\tfrac{1}{2}\\vec u_1$ as $\\langle x, y \\rangle$ with exact fractions.", "answer": "<-1/2, 3/2>", "accept": ["(-1/2, 3/2)", "<-0.5, 1.5>"], "hint": "$\\langle 1 - \\tfrac{3}{2}, 2 - \\tfrac{1}{2} \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<-1/2, 3/2>", "unit": "" },
+      "solutionNarrative": "Coefficient $5/10 = \\tfrac{1}{2}$, so $\\vec u_2 = \\langle -\\tfrac{1}{2}, \\tfrac{3}{2} \\rangle$ — orthogonal to $\\vec v_1$, and rescalable to $\\langle -1, 3 \\rangle$ if you prefer integers."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s06",
+      "concepts": ["orthogonalize-two-vectors"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Run Gram–Schmidt in $\\mathbb{R}^3$ on $\\vec v_1 = \\langle 1, 1, 1 \\rangle$, $\\vec v_2 = \\langle 2, 0, 1 \\rangle$ (take $\\vec u_1 = \\vec v_1$).",
+      "steps": [
+        { "instruction": "Compute $\\vec v_2 \\cdot \\vec u_1$.", "answer": "3", "accept": [], "hint": "$2 + 0 + 1$." },
+        { "instruction": "Compute the coefficient $\\dfrac{\\vec v_2 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}$.", "answer": "1", "accept": ["3/3"], "hint": "$\\vec u_1 \\cdot \\vec u_1 = 3$." },
+        { "instruction": "Compute $\\vec u_2 = \\vec v_2 - \\vec u_1$ as $\\langle x, y, z \\rangle$.", "answer": "<1, -1, 0>", "accept": ["(1, -1, 0)"], "hint": "Subtract component-wise." },
+        { "instruction": "Verify: $\\vec u_2 \\cdot \\vec u_1 = ?$", "answer": "0", "accept": [], "hint": "$1 - 1 + 0$." }
+      ],
+      "finalAnswer": { "value": "<1, -1, 0>", "unit": "" },
+      "solutionNarrative": "Coefficient $3/3 = 1$, so $\\vec u_2 = \\langle 1, -1, 0 \\rangle$ and the pair is orthogonal."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s07",
+      "concepts": ["orthogonalize-two-vectors"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two sensor signals are recorded as $\\vec v_1 = \\langle 2, 2 \\rangle$ and $\\vec v_2 = \\langle 4, 1 \\rangle$. To remove the correlated part, orthogonalize: $\\vec u_1 = \\vec v_1$, then subtract $\\vec v_2$'s projection.",
+      "steps": [
+        { "instruction": "Compute $\\vec v_2 \\cdot \\vec u_1$.", "answer": "10", "accept": [], "hint": "$8 + 2$." },
+        { "instruction": "Compute the coefficient $\\dfrac{\\vec v_2 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}$ as an exact fraction.", "answer": "5/4", "accept": ["10/8", "1.25"], "hint": "$\\vec u_1 \\cdot \\vec u_1 = 8$." },
+        { "instruction": "Compute $\\vec u_2 = \\vec v_2 - \\tfrac{5}{4}\\vec u_1$ — the decorrelated signal — as $\\langle x, y \\rangle$.", "answer": "<3/2, -3/2>", "accept": ["(3/2, -3/2)", "<1.5, -1.5>"], "hint": "$\\langle 4 - \\tfrac{10}{4}, 1 - \\tfrac{10}{4} \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<3/2, -3/2>", "unit": "" },
+      "solutionNarrative": "Coefficient $10/8 = \\tfrac{5}{4}$, so $\\vec u_2 = \\langle \\tfrac{3}{2}, -\\tfrac{3}{2} \\rangle$: the part of signal 2 carrying new, uncorrelated information."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s08",
+      "concepts": ["orthogonalize-three-vectors"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The orthogonal vectors $\\vec u_1 = \\langle 1, 1, 0 \\rangle$ and $\\vec u_2 = \\langle 1, -1, 0 \\rangle$ are already built. Extend Gram–Schmidt to $\\vec v_3 = \\langle 2, 4, 5 \\rangle$.",
+      "steps": [
+        { "instruction": "Compute $c_1 = \\dfrac{\\vec v_3 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}$ (note $\\vec u_1 \\cdot \\vec u_1 = 2$).", "answer": "3", "accept": ["6/2"], "hint": "$\\vec v_3 \\cdot \\vec u_1 = 2 + 4 = 6$." },
+        { "instruction": "Compute $c_2 = \\dfrac{\\vec v_3 \\cdot \\vec u_2}{\\vec u_2 \\cdot \\vec u_2}$ (note $\\vec u_2 \\cdot \\vec u_2 = 2$).", "answer": "-1", "accept": ["-2/2"], "hint": "$\\vec v_3 \\cdot \\vec u_2 = 2 - 4 = -2$." },
+        { "instruction": "Compute $\\vec u_3 = \\vec v_3 - 3\\vec u_1 + \\vec u_2$ as $\\langle x, y, z \\rangle$.", "answer": "<0, 0, 5>", "accept": ["(0, 0, 5)"], "hint": "The first two components cancel completely." }
+      ],
+      "finalAnswer": { "value": "<0, 0, 5>", "unit": "" },
+      "solutionNarrative": "$c_1 = 3$, $c_2 = -1$, so $\\vec u_3 = \\langle 2, 4, 5 \\rangle - 3\\langle 1, 1, 0 \\rangle + \\langle 1, -1, 0 \\rangle = \\langle 0, 0, 5 \\rangle$ — orthogonal to both."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s09",
+      "concepts": ["orthogonalize-three-vectors"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Run the full Gram–Schmidt process on $\\vec v_1 = \\langle 1, 1, 0 \\rangle$, $\\vec v_2 = \\langle 3, 1, 0 \\rangle$, $\\vec v_3 = \\langle 1, 3, 2 \\rangle$ (take $\\vec u_1 = \\vec v_1$).",
+      "steps": [
+        { "instruction": "Compute $\\vec v_2 \\cdot \\vec u_1$.", "answer": "4", "accept": [], "hint": "$3 + 1$." },
+        { "instruction": "With $\\vec u_1 \\cdot \\vec u_1 = 2$ the coefficient is 2. Compute $\\vec u_2 = \\vec v_2 - 2\\vec u_1$.", "answer": "<1, -1, 0>", "accept": ["(1, -1, 0)"], "hint": "$\\langle 3-2, 1-2, 0 \\rangle$." },
+        { "instruction": "Compute $c_1 = \\dfrac{\\vec v_3 \\cdot \\vec u_1}{2}$.", "answer": "2", "accept": ["4/2"], "hint": "$\\vec v_3 \\cdot \\vec u_1 = 1 + 3 = 4$." },
+        { "instruction": "Compute $c_2 = \\dfrac{\\vec v_3 \\cdot \\vec u_2}{2}$.", "answer": "-1", "accept": ["-2/2"], "hint": "$\\vec v_3 \\cdot \\vec u_2 = 1 - 3 = -2$." },
+        { "instruction": "Compute $\\vec u_3 = \\vec v_3 - 2\\vec u_1 + \\vec u_2$ as $\\langle x, y, z \\rangle$.", "answer": "<0, 0, 2>", "accept": ["(0, 0, 2)"], "hint": "Only the third component survives." }
+      ],
+      "finalAnswer": { "value": "<0, 0, 2>", "unit": "" },
+      "solutionNarrative": "$\\vec u_2 = \\langle 1, -1, 0 \\rangle$; then $c_1 = 2$, $c_2 = -1$ give $\\vec u_3 = \\langle 0, 0, 2 \\rangle$. All three are mutually orthogonal."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s10",
+      "concepts": ["orthogonalize-three-vectors"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Run Gram–Schmidt on $\\vec v_1 = \\langle 1, 1, 1 \\rangle$, $\\vec v_2 = \\langle 3, 1, 2 \\rangle$, $\\vec v_3 = \\langle 3, 1, -1 \\rangle$ (take $\\vec u_1 = \\vec v_1$; note $\\vec u_1 \\cdot \\vec u_1 = 3$).",
+      "steps": [
+        { "instruction": "Compute $\\vec v_2 \\cdot \\vec u_1$, then the coefficient over 3.", "answer": "2", "accept": ["6/3"], "hint": "$3 + 1 + 2 = 6$, then $6/3$." },
+        { "instruction": "Compute $\\vec u_2 = \\vec v_2 - 2\\vec u_1$ as $\\langle x, y, z \\rangle$.", "answer": "<1, -1, 0>", "accept": ["(1, -1, 0)"], "hint": "$\\langle 3-2, 1-2, 2-2 \\rangle$." },
+        { "instruction": "Compute $c_1 = \\dfrac{\\vec v_3 \\cdot \\vec u_1}{3}$.", "answer": "1", "accept": ["3/3"], "hint": "$\\vec v_3 \\cdot \\vec u_1 = 3 + 1 - 1 = 3$." },
+        { "instruction": "Compute $c_2 = \\dfrac{\\vec v_3 \\cdot \\vec u_2}{\\vec u_2 \\cdot \\vec u_2}$ (note $\\vec u_2 \\cdot \\vec u_2 = 2$).", "answer": "1", "accept": ["2/2"], "hint": "$\\vec v_3 \\cdot \\vec u_2 = 3 - 1 + 0 = 2$." },
+        { "instruction": "Compute $\\vec u_3 = \\vec v_3 - \\vec u_1 - \\vec u_2$ as $\\langle x, y, z \\rangle$.", "answer": "<1, 1, -2>", "accept": ["(1, 1, -2)"], "hint": "$\\langle 3-1-1, 1-1+1, -1-1-0 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<1, 1, -2>", "unit": "" },
+      "solutionNarrative": "Coefficients: 2 for $\\vec u_2$, then 1 and 1 for $\\vec u_3$, giving the orthogonal set $\\langle 1,1,1 \\rangle$, $\\langle 1,-1,0 \\rangle$, $\\langle 1,1,-2 \\rangle$ — check any pair's dot product: 0."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s11",
+      "concepts": ["orthogonalize-three-vectors"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A data pipeline has decorrelated two feature vectors into $\\vec u_1 = \\langle 1, 1, 0 \\rangle$ and $\\vec u_2 = \\langle 1, -1, 0 \\rangle$. A third feature arrives: $\\vec v_3 = \\langle 4, 2, 3 \\rangle$. Extract the genuinely new component $\\vec u_3$.",
+      "steps": [
+        { "instruction": "Compute $c_1 = \\dfrac{\\vec v_3 \\cdot \\vec u_1}{2}$.", "answer": "3", "accept": ["6/2"], "hint": "$\\vec v_3 \\cdot \\vec u_1 = 4 + 2 = 6$." },
+        { "instruction": "Compute $c_2 = \\dfrac{\\vec v_3 \\cdot \\vec u_2}{2}$.", "answer": "1", "accept": ["2/2"], "hint": "$\\vec v_3 \\cdot \\vec u_2 = 4 - 2 = 2$." },
+        { "instruction": "Compute $\\vec u_3 = \\vec v_3 - 3\\vec u_1 - \\vec u_2$ as $\\langle x, y, z \\rangle$.", "answer": "<0, 0, 3>", "accept": ["(0, 0, 3)"], "hint": "The first two components cancel." }
+      ],
+      "finalAnswer": { "value": "<0, 0, 3>", "unit": "" },
+      "solutionNarrative": "$c_1 = 3$, $c_2 = 1$, so $\\vec u_3 = \\langle 0, 0, 3 \\rangle$: only the third component of the new feature carries information the first two didn't already have."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s12",
+      "concepts": ["orthonormal-basis-and-qr"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Normalize $\\vec v = \\langle 3, 4 \\rangle$ to a unit vector.",
+      "steps": [
+        { "instruction": "Compute $\\lVert \\vec v \\rVert$.", "answer": "5", "accept": [], "hint": "$\\sqrt{9 + 16}$." },
+        { "instruction": "Divide each component by the norm. Give the unit vector with exact fractions.", "answer": "<3/5, 4/5>", "accept": ["(3/5, 4/5)", "<0.6, 0.8>"], "hint": "$\\tfrac{1}{5}\\langle 3, 4 \\rangle$." }
+      ],
+      "finalAnswer": { "value": "<3/5, 4/5>", "unit": "" },
+      "solutionNarrative": "$\\lVert \\vec v \\rVert = 5$, so the unit vector is $\\langle 3/5, 4/5 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s13",
+      "concepts": ["orthonormal-basis-and-qr"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Gram–Schmidt produced the orthogonal pair $\\vec u_1 = \\langle 5, 12 \\rangle$, $\\vec u_2 = \\langle -12, 5 \\rangle$. Normalize both to get the columns $\\vec q_1, \\vec q_2$ of the orthogonal matrix $Q$.",
+      "steps": [
+        { "instruction": "Confirm orthogonality: $\\vec u_1 \\cdot \\vec u_2 = ?$", "answer": "0", "accept": [], "hint": "$-60 + 60$." },
+        { "instruction": "Both have the same norm. Compute it, then give $\\vec q_1$ with exact fractions.", "answer": "<5/13, 12/13>", "accept": ["(5/13, 12/13)"], "hint": "$\\sqrt{25 + 144} = 13$." },
+        { "instruction": "Give $\\vec q_2$ with exact fractions.", "answer": "<-12/13, 5/13>", "accept": ["(-12/13, 5/13)"], "hint": "Divide $\\langle -12, 5 \\rangle$ by 13." }
+      ],
+      "finalAnswer": { "value": "<-12/13, 5/13>", "unit": "" },
+      "solutionNarrative": "The pair is orthogonal and both norms are 13, so $Q$ has columns $\\langle 5/13, 12/13 \\rangle$ and $\\langle -12/13, 5/13 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s14",
+      "concepts": ["orthonormal-basis-and-qr"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Gram–Schmidt in $\\mathbb{R}^3$ produced $\\vec u_1 = \\langle 1, 2, 2 \\rangle$ and $\\vec u_2 = \\langle 2, 1, -2 \\rangle$. Build the orthonormal columns of $Q$ and the first diagonal entry of $R$.",
+      "steps": [
+        { "instruction": "Confirm orthogonality: $\\vec u_1 \\cdot \\vec u_2 = ?$", "answer": "0", "accept": [], "hint": "$2 + 2 - 4$." },
+        { "instruction": "Compute $\\lVert \\vec u_1 \\rVert$.", "answer": "3", "accept": [], "hint": "$\\sqrt{1 + 4 + 4} = \\sqrt{9}$." },
+        { "instruction": "Give $\\vec q_1 = \\vec u_1/\\lVert \\vec u_1 \\rVert$ with exact fractions.", "answer": "<1/3, 2/3, 2/3>", "accept": ["(1/3, 2/3, 2/3)"], "hint": "Divide each component by 3." },
+        { "instruction": "Give $\\vec q_2$ with exact fractions (its norm is also 3).", "answer": "<2/3, 1/3, -2/3>", "accept": ["(2/3, 1/3, -2/3)"], "hint": "Divide $\\langle 2, 1, -2 \\rangle$ by 3." },
+        { "instruction": "In $A = QR$, the diagonal entry $r_{11}$ equals $\\lVert \\vec u_1 \\rVert$. State $r_{11}$.", "answer": "3", "accept": [], "hint": "Computed above." }
+      ],
+      "finalAnswer": { "value": "<2/3, 1/3, -2/3>", "unit": "" },
+      "solutionNarrative": "The pair is orthogonal with norms 3, so $\\vec q_1 = \\langle 1/3, 2/3, 2/3 \\rangle$, $\\vec q_2 = \\langle 2/3, 1/3, -2/3 \\rangle$, and $r_{11} = 3$."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s15",
+      "concepts": ["orthonormal-basis-and-qr"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A robotics frame axis came out of Gram–Schmidt as $\\vec u = \\langle 2, 6, 9 \\rangle$. Normalize it for use as a rotation-matrix column.",
+      "steps": [
+        { "instruction": "Compute $\\lVert \\vec u \\rVert$.", "answer": "11", "accept": [], "hint": "$\\sqrt{4 + 36 + 81} = \\sqrt{121}$." },
+        { "instruction": "Give the unit vector with exact fractions.", "answer": "<2/11, 6/11, 9/11>", "accept": ["(2/11, 6/11, 9/11)"], "hint": "Divide each component by 11." }
+      ],
+      "finalAnswer": { "value": "<2/11, 6/11, 9/11>", "unit": "" },
+      "solutionNarrative": "$\\lVert \\vec u \\rVert = \\sqrt{121} = 11$, so the unit axis is $\\langle 2/11, 6/11, 9/11 \\rangle$."
+    },
+    {
+      "id": "linear-algebra.gram-schmidt.s16",
+      "concepts": ["orthonormal-basis-and-qr", "orthogonalize-two-vectors"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Build the full QR data for the columns $\\vec v_1 = \\langle 3, 4 \\rangle$, $\\vec v_2 = \\langle 1, 3 \\rangle$ of a regression design matrix: orthogonalize, normalize, and read off $r_{11}$.",
+      "steps": [
+        { "instruction": "Compute the Gram–Schmidt coefficient $\\dfrac{\\vec v_2 \\cdot \\vec v_1}{\\vec v_1 \\cdot \\vec v_1}$ as an exact fraction.", "answer": "3/5", "accept": ["15/25", "0.6"], "hint": "$\\vec v_2 \\cdot \\vec v_1 = 3 + 12 = 15$; $\\vec v_1 \\cdot \\vec v_1 = 25$." },
+        { "instruction": "Compute $\\vec u_2 = \\vec v_2 - \\tfrac{3}{5}\\vec v_1$ with exact fractions.", "answer": "<-4/5, 3/5>", "accept": ["(-4/5, 3/5)", "<-0.8, 0.6>"], "hint": "$\\langle 1 - \\tfrac{9}{5}, 3 - \\tfrac{12}{5} \\rangle$." },
+        { "instruction": "Normalize $\\vec u_1 = \\vec v_1$: give $\\vec q_1$ with exact fractions.", "answer": "<3/5, 4/5>", "accept": ["(3/5, 4/5)", "<0.6, 0.8>"], "hint": "$\\lVert \\vec v_1 \\rVert = 5$." },
+        { "instruction": "What is $\\lVert \\vec u_2 \\rVert$? (Then $\\vec q_2 = \\vec u_2$ scaled by it.)", "answer": "1", "accept": [], "hint": "$\\sqrt{16/25 + 9/25} = \\sqrt{25/25}$." },
+        { "instruction": "State $r_{11} = \\lVert \\vec u_1 \\rVert$.", "answer": "5", "accept": [], "hint": "The norm of the first column." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Coefficient $\\tfrac{3}{5}$ gives $\\vec u_2 = \\langle -\\tfrac{4}{5}, \\tfrac{3}{5} \\rangle$, which is already a unit vector. So $\\vec q_1 = \\langle \\tfrac{3}{5}, \\tfrac{4}{5} \\rangle$, $\\vec q_2 = \\langle -\\tfrac{4}{5}, \\tfrac{3}{5} \\rangle$, and $r_{11} = 5$."
+    }
+  ]
+}

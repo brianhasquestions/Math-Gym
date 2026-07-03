@@ -1,0 +1,266 @@
+{
+  "id": "differential-equations.laplace-transforms",
+  "subject": "differential-equations",
+  "title": "Laplace Transforms",
+  "prerequisites": ["differential-equations.second-order-linear", "algebra-2.rational-expressions"],
+  "estimatedMinutes": 60,
+  "keyConcepts": [
+    {
+      "id": "transform-basic-functions",
+      "label": "Transforms of basic functions",
+      "microLesson": "The Laplace transform turns a function of time $f(t)$ into a **rational function of $s$**. You almost never compute the defining integral — you use a small table: $\\mathcal{L}\\{1\\} = \\dfrac{1}{s}$, $\\mathcal{L}\\{t^n\\} = \\dfrac{n!}{s^{n+1}}$, $\\mathcal{L}\\{e^{at}\\} = \\dfrac{1}{s-a}$, $\\mathcal{L}\\{\\sin bt\\} = \\dfrac{b}{s^2+b^2}$, $\\mathcal{L}\\{\\cos bt\\} = \\dfrac{s}{s^2+b^2}$. Example: $\\mathcal{L}\\{t^3\\} = \\dfrac{3!}{s^4} = \\dfrac{6}{s^4}$. Memorize the shapes: exponentials give simple poles, sines put $b$ on top, cosines put $s$ on top."
+    },
+    {
+      "id": "transform-properties",
+      "label": "Linearity and s-shifting",
+      "microLesson": "Two properties do most of the work. **Linearity:** $\\mathcal{L}\\{c_1 f + c_2 g\\} = c_1 F(s) + c_2 G(s)$ — transform term by term. **s-shifting:** multiplying by $e^{at}$ in the time domain shifts the transform: $\\mathcal{L}\\{e^{at}f(t)\\} = F(s-a)$. So $\\mathcal{L}\\{e^{2t}\\sin 3t\\}$ starts from $\\dfrac{3}{s^2+9}$ and replaces every $s$ with $s-2$: $\\dfrac{3}{(s-2)^2+9}$. Damped oscillations are exactly shifted sines and cosines."
+    },
+    {
+      "id": "inverse-transforms",
+      "label": "Inverse transforms via partial fractions",
+      "microLesson": "To go backwards from $F(s)$ to $f(t)$, split $F(s)$ into table-sized pieces with **partial fractions**. For distinct roots, $\\dfrac{N(s)}{(s-a)(s-b)} = \\dfrac{A}{s-a} + \\dfrac{B}{s-b}$ where the cover-up rule gives $A = \\dfrac{N(a)}{a-b}$ and $B = \\dfrac{N(b)}{b-a}$. Then each piece inverts by table: $\\dfrac{A}{s-a} \\to Ae^{at}$. For $\\dfrac{cs + db}{s^2+b^2}$, split into $c\\,\\dfrac{s}{s^2+b^2} + d\\,\\dfrac{b}{s^2+b^2} \\to c\\cos bt + d\\sin bt$."
+    },
+    {
+      "id": "solve-ivp-with-laplace",
+      "label": "Solving IVPs with the transform",
+      "microLesson": "The derivative rules $\\mathcal{L}\\{y'\\} = sY - y(0)$ and $\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$ turn an initial value problem into **one algebra equation in $Y(s)$** — the initial conditions are built in automatically, no constants to solve for later. The pipeline is always: (1) transform the whole ODE, (2) solve for $Y(s)$ as a rational function, (3) partial-fraction it, (4) invert with the table. Example: $y' + 3y = 0$, $y(0) = 5$ gives $(s+3)Y = 5$, so $Y = \\dfrac{5}{s+3}$ and $y(t) = 5e^{-3t}$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Trading calculus for algebra\n\nEvery method you've used so far solves a differential equation *inside* the world of calculus — guessing exponentials, differentiating candidates, matching coefficients. The **Laplace transform** takes a different route entirely: it maps the whole problem into a parallel universe where **differentiation becomes multiplication by $s$**. In that universe, an initial value problem is just a rational-function algebra problem — the kind you solved in Algebra 2. Solve it there, then map the answer back.\n\nThe transform of a function $f(t)$ (defined for $t \\ge 0$) is\n\n$$F(s) = \\mathcal{L}\\{f(t)\\} = \\int_0^{\\infty} e^{-st} f(t)\\, dt.$$\n\nYou compute this integral **once per basic function**, record the result in a table, and from then on the table does the work.\n\n## The transform table\n\n| $f(t)$ | $F(s) = \\mathcal{L}\\{f(t)\\}$ |\n|---|---|\n| $1$ | $\\dfrac{1}{s}$ |\n| $t^n$ | $\\dfrac{n!}{s^{n+1}}$ |\n| $e^{at}$ | $\\dfrac{1}{s-a}$ |\n| $\\sin bt$ | $\\dfrac{b}{s^2+b^2}$ |\n| $\\cos bt$ | $\\dfrac{s}{s^2+b^2}$ |\n| $e^{at}f(t)$ | $F(s-a)$ (s-shift) |\n| $y'(t)$ | $sY(s) - y(0)$ |\n| $y''(t)$ | $s^2Y(s) - sy(0) - y'(0)$ |\n\nNotice the pattern: every entry on the right is a **rational function of $s$** (or a rule for making one). Time-domain behavior becomes pole locations: $e^{at}$ puts a pole at $s = a$, and $\\sin bt$, $\\cos bt$ put a conjugate pole pair on $s^2 + b^2 = 0$. Growth, decay, and oscillation are all visible at a glance from the denominator.\n\n**Worked example.** $\\mathcal{L}\\{t^3\\} = \\dfrac{3!}{s^4} = \\dfrac{6}{s^4}$, and $\\mathcal{L}\\{e^{-2t}\\} = \\dfrac{1}{s+2}$ (careful: $a = -2$, so $s - a = s + 2$).\n\n## Two properties that multiply the table's power\n\n**Linearity.** The transform of a sum is the sum of the transforms:\n\n$$\\mathcal{L}\\{c_1 f + c_2 g\\} = c_1 F(s) + c_2 G(s).$$\n\nSo $\\mathcal{L}\\{6 + 5t\\} = \\dfrac{6}{s} + \\dfrac{5}{s^2} = \\dfrac{6s + 5}{s^2}$ — transform term by term, then (if you like) combine over a common denominator.\n\n**s-shifting.** Multiplying by $e^{at}$ in the time domain *shifts* the transform:\n\n$$\\mathcal{L}\\{e^{at}f(t)\\} = F(s-a).$$\n\nThis is how the table handles damped vibrations. $\\mathcal{L}\\{\\sin 3t\\} = \\dfrac{3}{s^2+9}$, so\n\n$$\\mathcal{L}\\{e^{2t}\\sin 3t\\} = \\frac{3}{(s-2)^2 + 9}.$$\n\nReplace every $s$ with $s - a$ — that's the whole rule.\n\n## Going backwards: partial fractions\n\nSolving problems produces some $F(s)$, and you need $f(t)$ back. The strategy is always the same: **break $F(s)$ into table-sized pieces**. Rational-expression skills carry the load here.\n\nFor distinct linear factors, use the **cover-up rule**:\n\n$$F(s) = \\frac{5s - 1}{(s+1)(s-2)} = \\frac{A}{s+1} + \\frac{B}{s-2},$$\n\nwhere $A$ is $\\dfrac{5s-1}{s-2}$ evaluated at $s = -1$ (cover the $s+1$ factor): $A = \\dfrac{-6}{-3} = 2$, and $B = \\dfrac{9}{3} = 3$. Then invert term by term:\n\n$$f(t) = 2e^{-t} + 3e^{2t}.$$\n\nFor an irreducible quadratic denominator, split the numerator into a **cosine part** (the $s$ term) and a **sine part** (the constant):\n\n$$\\frac{2s + 12}{s^2 + 4} = 2\\,\\frac{s}{s^2+4} + 6\\,\\frac{2}{s^2+4} \\;\\Rightarrow\\; f(t) = 2\\cos 2t + 6\\sin 2t.$$\n\n(The constant $12$ had to be written as $6 \\times 2$ so the sine entry's $b = 2$ shows up on top.)\n\n## The IVP pipeline\n\nThe derivative rules are where the magic pays off. Because\n\n$$\\mathcal{L}\\{y'\\} = sY - y(0), \\qquad \\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0),$$\n\nthe initial conditions enter the algebra **automatically** — no general solution, no solving for constants afterward. The pipeline:\n\n1. **Transform** every term of the ODE.\n2. **Solve for $Y(s)$** — always a rational function.\n3. **Partial-fraction** it into table pieces.\n4. **Invert** with the table.\n\n**Worked example.** Solve $y'' + 3y' + 2y = 0$, $y(0) = 3$, $y'(0) = -4$.\n\nTransform: $\\big(s^2Y - 3s + 4\\big) + 3\\big(sY - 3\\big) + 2Y = 0$, so $(s^2 + 3s + 2)Y = 3s + 5$ and\n\n$$Y(s) = \\frac{3s+5}{(s+1)(s+2)}.$$\n\nCover-up: $A = \\dfrac{3(-1)+5}{-1+2} = 2$ at $s = -1$, and $B = \\dfrac{3(-2)+5}{-2+1} = 1$ at $s = -2$. Invert:\n\n$$y(t) = 2e^{-t} + e^{-2t}.$$\n\nCheck instantly: $y(0) = 2 + 1 = 3$. ✓\n\n## Common pitfalls\n\n- **Sign of $a$:** $\\mathcal{L}\\{e^{-3t}\\} = \\dfrac{1}{s+3}$, not $\\dfrac{1}{s-3}$. The table says $s - a$ with $a = -3$.\n- **Sine vs. cosine numerators:** sine carries $b$ on top, cosine carries $s$. Mixing them up is the single most common table error.\n- **Forgetting $n!$:** $\\mathcal{L}\\{t^3\\}$ is $6/s^4$, not $1/s^4$.\n- **Dropping initial conditions:** $\\mathcal{L}\\{y''\\}$ has *two* correction terms, $-sy(0)$ and $-y'(0)$. Omit one and the whole answer shifts.\n- **Not factoring the denominator first:** $s^2 + 3s + 2$ must become $(s+1)(s+2)$ before partial fractions can start."
+  },
+  "application": {
+    "summary": "The Laplace transform is the working language of circuit analysis and control engineering: it converts differential equations for currents, charges, and displacements into rational functions of s, where poles instantly reveal decay rates and oscillation frequencies. Engineers design filters, tune dampers, and stabilize feedback loops by placing poles — algebra on Y(s) — rather than solving calculus problems in time.",
+    "domains": ["electrical engineering", "mechanical engineering", "control systems", "signal processing"],
+    "workedExample": "**A discharging RC circuit.**\n\nA charged capacitor drains through a resistor. The charge obeys $y' + 2y = 0$ with $y(0) = 8$ (millicoulombs, with $1/RC = 2$ per second).\n\nTransform the whole equation: $\\big(sY - 8\\big) + 2Y = 0$, so $(s + 2)Y = 8$ and\n\n$$Y(s) = \\frac{8}{s+2}.$$\n\nOne table lookup inverts it: $y(t) = 8e^{-2t}$. After one second the charge is $8e^{-2} \\approx 1.083$ — about 13.5% remains.\n\nThe payoff shows at scale: a realistic circuit with several loops produces a *system* of ODEs, and the transform turns the whole thing into simultaneous linear equations in $s$. The denominator polynomial's roots — the **poles** — tell the engineer everything before inverting: a pole at $s = -2$ means decay like $e^{-2t}$; a pole pair at $s = -1 \\pm 5i$ means a 5 rad/s ringing that dies like $e^{-t}$. Filter design and controller tuning are literally the art of moving those poles.",
+    "domainNotes": [
+      "**Electrical:** RLC circuit analysis and filter design — impedance methods are the Laplace transform in disguise ($Ls$, $R$, $1/Cs$).",
+      "**Mechanical:** damped oscillators and suspension design; the transform handles sudden inputs (potholes, impacts) more gracefully than undetermined coefficients.",
+      "**Control systems:** transfer functions $G(s) = Y(s)/U(s)$ describe every feedback loop; stability is 'all poles in the left half-plane'.",
+      "**Signal processing:** the transform's sibling (Fourier) analyzes frequency content; Laplace adds decay/growth, making it the tool for transients."
+    ]
+  },
+  "generators": ["lap-basic-1", "lap-basic-2", "lap-basic-3", "lap-props-1", "lap-props-2", "lap-props-3", "lap-inv-1", "lap-inv-2", "lap-inv-3", "lap-ivp-1", "lap-ivp-2", "lap-ivp-3"],
+  "problems": [
+    {
+      "id": "differential-equations.laplace-transforms.s01",
+      "concepts": ["transform-basic-functions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the transform table to compute $\\mathcal{L}\\{e^{4t}\\}$.",
+      "steps": [
+        { "instruction": "Match against $\\mathcal{L}\\{e^{at}\\} = \\dfrac{1}{s-a}$. What is $a$ here?", "answer": "4", "accept": ["a = 4"], "hint": "The exponent is $4t$." },
+        { "instruction": "Write $F(s)$ as a rational function of $s$.", "answer": "1/(s - 4)", "accept": ["1/(s-4)"], "hint": "Substitute $a = 4$ into $\\dfrac{1}{s-a}$." }
+      ],
+      "finalAnswer": { "value": "1/(s - 4)", "unit": "" },
+      "solutionNarrative": "$\\mathcal{L}\\{e^{4t}\\} = \\dfrac{1}{s-4}$ — the table entry $\\dfrac{1}{s-a}$ with $a = 4$."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s02",
+      "concepts": ["transform-basic-functions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\mathcal{L}\\{7\\}$ and $\\mathcal{L}\\{t\\}$ from the table.",
+      "steps": [
+        { "instruction": "Write $\\mathcal{L}\\{7\\}$ as a rational function of $s$.", "answer": "7/s", "accept": [], "hint": "$7\\,\\mathcal{L}\\{1\\} = 7 \\cdot \\dfrac{1}{s}$." },
+        { "instruction": "Write $\\mathcal{L}\\{t\\}$ as a rational function of $s$.", "answer": "1/s^2", "accept": [], "hint": "$t = t^1$, so $\\dfrac{1!}{s^2}$." }
+      ],
+      "finalAnswer": { "value": "1/s^2", "unit": "" },
+      "solutionNarrative": "$\\mathcal{L}\\{7\\} = \\dfrac{7}{s}$ and $\\mathcal{L}\\{t\\} = \\dfrac{1}{s^2}$ — both straight from the table."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s03",
+      "concepts": ["transform-basic-functions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\mathcal{L}\\{t^4\\}$ using $\\mathcal{L}\\{t^n\\} = \\dfrac{n!}{s^{n+1}}$.",
+      "steps": [
+        { "instruction": "Compute $4!$.", "answer": "24", "accept": [], "hint": "$4 \\cdot 3 \\cdot 2 \\cdot 1$." },
+        { "instruction": "Write $F(s)$ as a rational function of $s$.", "answer": "24/s^5", "accept": [], "hint": "Numerator $4! = 24$, denominator $s^{4+1}$." }
+      ],
+      "finalAnswer": { "value": "24/s^5", "unit": "" },
+      "solutionNarrative": "$\\mathcal{L}\\{t^4\\} = \\dfrac{4!}{s^5} = \\dfrac{24}{s^5}$."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s04",
+      "concepts": ["transform-basic-functions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute both trig transforms for $b = 3$: $\\mathcal{L}\\{\\sin 3t\\}$ and $\\mathcal{L}\\{\\cos 3t\\}$.",
+      "steps": [
+        { "instruction": "Both entries share the denominator $s^2 + b^2$. Compute $b^2$.", "answer": "9", "accept": [], "hint": "$3^2 = 9$." },
+        { "instruction": "Write $\\mathcal{L}\\{\\sin 3t\\}$ as a rational function of $s$.", "answer": "3/(s^2 + 9)", "accept": ["3/(s^2+9)"], "hint": "Sine puts $b$ on top: $\\dfrac{b}{s^2+b^2}$." },
+        { "instruction": "Write $\\mathcal{L}\\{\\cos 3t\\}$ as a rational function of $s$.", "answer": "s/(s^2 + 9)", "accept": ["s/(s^2+9)"], "hint": "Cosine puts $s$ on top: $\\dfrac{s}{s^2+b^2}$." }
+      ],
+      "finalAnswer": { "value": "s/(s^2 + 9)", "unit": "" },
+      "solutionNarrative": "$\\mathcal{L}\\{\\sin 3t\\} = \\dfrac{3}{s^2+9}$ and $\\mathcal{L}\\{\\cos 3t\\} = \\dfrac{s}{s^2+9}$ — same denominator, different numerator."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s05",
+      "concepts": ["transform-properties"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use linearity to compute $\\mathcal{L}\\{6 + 5t\\}$.",
+      "steps": [
+        { "instruction": "Transform the first term: $\\mathcal{L}\\{6\\} = ?$", "answer": "6/s", "accept": [], "hint": "$6\\,\\mathcal{L}\\{1\\}$." },
+        { "instruction": "Transform the second term: $\\mathcal{L}\\{5t\\} = ?$", "answer": "5/s^2", "accept": [], "hint": "$5\\,\\mathcal{L}\\{t\\}$." },
+        { "instruction": "Add the two transforms and combine over the common denominator $s^2$ into a single rational function.", "answer": "(6s + 5)/s^2", "accept": ["6/s + 5/s^2", "5/s^2 + 6/s"], "hint": "$\\dfrac{6}{s} = \\dfrac{6s}{s^2}$, then add numerators." }
+      ],
+      "finalAnswer": { "value": "(6s + 5)/s^2", "unit": "" },
+      "solutionNarrative": "Linearity: $\\dfrac{6}{s} + \\dfrac{5}{s^2} = \\dfrac{6s+5}{s^2}$."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s06",
+      "concepts": ["transform-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the s-shifting property $\\mathcal{L}\\{e^{at}f(t)\\} = F(s-a)$ to compute $\\mathcal{L}\\{e^{2t}\\sin 3t\\}$.",
+      "steps": [
+        { "instruction": "First the base transform: $\\mathcal{L}\\{\\sin 3t\\} = ?$", "answer": "3/(s^2 + 9)", "accept": ["3/(s^2+9)"], "hint": "$\\dfrac{b}{s^2+b^2}$ with $b = 3$." },
+        { "instruction": "Now shift: replace every $s$ by $s - 2$. Write the result as a rational function of $s$.", "answer": "3/((s - 2)^2 + 9)", "accept": ["3/((s-2)^2+9)", "3/(s^2 - 4s + 13)"], "hint": "The $e^{2t}$ factor turns $F(s)$ into $F(s-2)$; expanding the denominator is also fine." }
+      ],
+      "finalAnswer": { "value": "3/((s - 2)^2 + 9)", "unit": "" },
+      "solutionNarrative": "$\\mathcal{L}\\{\\sin 3t\\} = \\dfrac{3}{s^2+9}$; the $e^{2t}$ factor shifts $s \\to s-2$: $\\dfrac{3}{(s-2)^2+9}$."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s07",
+      "concepts": ["transform-properties"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $\\mathcal{L}\\{t^2 e^{-3t}\\}$ by combining the $t^n$ table entry with s-shifting.",
+      "steps": [
+        { "instruction": "Base transform first: $\\mathcal{L}\\{t^2\\} = ?$", "answer": "2/s^3", "accept": [], "hint": "$\\dfrac{2!}{s^3}$." },
+        { "instruction": "Shift for the $e^{-3t}$ factor: replace $s$ by $s - (-3) = s + 3$.", "answer": "2/(s + 3)^3", "accept": ["2/(s+3)^3", "2/((s+3)^3)"], "hint": "$F(s-a)$ with $a = -3$ — the sign flips." },
+        { "instruction": "Check: evaluate your $F(s)$ at $s = -2$ (the denominator becomes 1).", "answer": "2", "accept": [], "hint": "$(-2 + 3)^3 = 1$, so $F(-2)$ equals the numerator." }
+      ],
+      "finalAnswer": { "value": "2/(s + 3)^3", "unit": "" },
+      "solutionNarrative": "$\\mathcal{L}\\{t^2\\} = \\dfrac{2}{s^3}$; the $e^{-3t}$ factor shifts $s \\to s+3$, giving $\\dfrac{2}{(s+3)^3}$. At $s = -2$ the denominator is 1, confirming the numerator 2."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s08",
+      "concepts": ["inverse-transforms"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the inverse transform $f(t) = \\mathcal{L}^{-1}\\left\\{\\dfrac{4}{s-2}\\right\\}$.",
+      "steps": [
+        { "instruction": "This matches $\\dfrac{c}{s-a}$, whose inverse is $ce^{at}$. What is $a$?", "answer": "2", "accept": ["a = 2"], "hint": "The denominator is $s - 2$." },
+        { "instruction": "Write $f(t)$ using notation like \"5e^(2t)\".", "answer": "4e^(2t)", "accept": ["4e^{2t}", "4*e^(2t)", "4exp(2t)"], "hint": "$f(t) = 4e^{2t}$." }
+      ],
+      "finalAnswer": { "value": "4e^(2t)", "unit": "" },
+      "solutionNarrative": "$\\dfrac{4}{s-2} = 4 \\cdot \\dfrac{1}{s-2}$, so $f(t) = 4e^{2t}$."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s09",
+      "concepts": ["inverse-transforms"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Invert $F(s) = \\dfrac{5s - 1}{(s+1)(s-2)}$ by partial fractions: write $F(s) = \\dfrac{A}{s+1} + \\dfrac{B}{s-2}$, then read off $f(t)$.",
+      "steps": [
+        { "instruction": "Find $A$ by cover-up: evaluate $\\dfrac{5s-1}{s-2}$ at $s = -1$.", "answer": "2", "accept": ["A = 2"], "hint": "$\\dfrac{5(-1)-1}{-1-2} = \\dfrac{-6}{-3}$." },
+        { "instruction": "Find $B$ by cover-up: evaluate $\\dfrac{5s-1}{s+1}$ at $s = 2$.", "answer": "3", "accept": ["B = 3"], "hint": "$\\dfrac{5(2)-1}{2+1} = \\dfrac{9}{3}$." },
+        { "instruction": "Each term $\\dfrac{c}{s-a}$ inverts to $ce^{at}$. Write $f(t)$ (e.g. \"3e^(2t) - 4e^(-5t)\").", "answer": "2e^(-t) + 3e^(2t)", "accept": ["2e^{-t} + 3e^{2t}", "3e^(2t) + 2e^(-t)", "3e^{2t} + 2e^{-t}", "2*e^(-t) + 3*e^(2t)"], "hint": "$A = 2$ pairs with $e^{-t}$, $B = 3$ pairs with $e^{2t}$." }
+      ],
+      "finalAnswer": { "value": "2e^(-t) + 3e^(2t)", "unit": "" },
+      "solutionNarrative": "Cover-up gives $A = 2$, $B = 3$, so $F(s) = \\dfrac{2}{s+1} + \\dfrac{3}{s-2}$ and $f(t) = 2e^{-t} + 3e^{2t}$."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s10",
+      "concepts": ["inverse-transforms"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $f(t) = \\mathcal{L}^{-1}\\left\\{\\dfrac{10}{s^2 + 25}\\right\\}$.",
+      "steps": [
+        { "instruction": "The denominator is $s^2 + b^2$. What is $b$?", "answer": "5", "accept": ["b = 5"], "hint": "$b^2 = 25$." },
+        { "instruction": "The sine entry needs $b = 5$ on top, but the numerator is 10. What constant multiplies $\\dfrac{5}{s^2+25}$ to give $F(s)$?", "answer": "2", "accept": [], "hint": "$10 = 2 \\times 5$." },
+        { "instruction": "Write $f(t)$ (e.g. \"2sin(5t)\").", "answer": "2sin(5t)", "accept": ["2sin 5t", "2*sin(5t)"], "hint": "$f(t) = 2\\sin 5t$." }
+      ],
+      "finalAnswer": { "value": "2sin(5t)", "unit": "" },
+      "solutionNarrative": "$\\dfrac{10}{s^2+25} = 2\\,\\dfrac{5}{s^2+25}$, so $f(t) = 2\\sin 5t$."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s11",
+      "concepts": ["inverse-transforms"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Invert $F(s) = \\dfrac{2s + 12}{s^2 + 4}$ by splitting it into cosine and sine pieces ($b = 2$).",
+      "steps": [
+        { "instruction": "The cosine piece is $c\\,\\dfrac{s}{s^2+4}$. Read off $c$, the coefficient of $s$ in the numerator.", "answer": "2", "accept": ["c = 2"], "hint": "The numerator's $s$-term is $2s$." },
+        { "instruction": "The sine piece is $d\\,\\dfrac{2}{s^2+4}$. The constant part of the numerator is 12, so $d = 12/2 = ?$", "answer": "6", "accept": ["d = 6"], "hint": "Divide the constant 12 by $b = 2$." },
+        { "instruction": "Write $f(t)$ (e.g. \"2cos(3t) + 4sin(3t)\").", "answer": "2cos(2t) + 6sin(2t)", "accept": ["2cos 2t + 6sin 2t", "6sin(2t) + 2cos(2t)", "6sin 2t + 2cos 2t", "2*cos(2t) + 6*sin(2t)"], "hint": "$f(t) = 2\\cos 2t + 6\\sin 2t$." },
+        { "instruction": "Check: compute $f(0)$ (recall $\\cos 0 = 1$, $\\sin 0 = 0$).", "answer": "2", "accept": [], "hint": "Only the cosine term survives at $t = 0$." }
+      ],
+      "finalAnswer": { "value": "2cos(2t) + 6sin(2t)", "unit": "" },
+      "solutionNarrative": "$\\dfrac{2s+12}{s^2+4} = 2\\,\\dfrac{s}{s^2+4} + 6\\,\\dfrac{2}{s^2+4}$, so $f(t) = 2\\cos 2t + 6\\sin 2t$, and $f(0) = 2$ checks."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s12",
+      "concepts": ["solve-ivp-with-laplace"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A capacitor discharges through a resistor: the charge obeys $y' + 3y = 0$ with $y(0) = 5$. Solve the IVP with the Laplace transform.",
+      "steps": [
+        { "instruction": "Transform using $\\mathcal{L}\\{y'\\} = sY - y(0)$: from $sY - 5 + 3Y = 0$, solve for $Y(s)$ as a rational function.", "answer": "5/(s + 3)", "accept": ["5/(s+3)"], "hint": "$(s + 3)Y = 5$." },
+        { "instruction": "Invert with the table: $y(t) = ?$ (e.g. \"5e^(-2t)\").", "answer": "5e^(-3t)", "accept": ["5e^{-3t}", "5*e^(-3t)", "5exp(-3t)"], "hint": "$\\dfrac{5}{s+3}$ is the $\\dfrac{c}{s-a}$ pattern with $a = -3$." }
+      ],
+      "finalAnswer": { "value": "5e^(-3t)", "unit": "" },
+      "solutionNarrative": "$(s+3)Y = 5$ gives $Y(s) = \\dfrac{5}{s+3}$, so $y(t) = 5e^{-3t}$ — exponential discharge with the initial condition built in automatically."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s13",
+      "concepts": ["solve-ivp-with-laplace"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An undamped spring-mass system obeys $y'' + 4y = 0$ with $y(0) = 3$, $y'(0) = 0$. Solve it with the Laplace transform.",
+      "steps": [
+        { "instruction": "Transform using $\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$: from $s^2Y - 3s + 4Y = 0$, solve for $Y(s)$.", "answer": "3s/(s^2 + 4)", "accept": ["3s/(s^2+4)"], "hint": "$(s^2 + 4)Y = 3s$." },
+        { "instruction": "Invert: $\\dfrac{s}{s^2+b^2}$ is the cosine entry. Write $y(t)$ (e.g. \"3cos(2t)\").", "answer": "3cos(2t)", "accept": ["3cos 2t", "3*cos(2t)"], "hint": "$b^2 = 4$, so $b = 2$ and $y(t) = 3\\cos 2t$." },
+        { "instruction": "Evaluate $y(\\pi/2)$ exactly.", "answer": "-3", "accept": [], "hint": "$\\cos(2 \\cdot \\pi/2) = \\cos\\pi = -1$." }
+      ],
+      "finalAnswer": { "value": "3cos(2t)", "unit": "" },
+      "solutionNarrative": "$(s^2+4)Y = 3s$ gives $Y = \\dfrac{3s}{s^2+4}$, the cosine pattern: $y(t) = 3\\cos 2t$. At $t = \\pi/2$, $y = -3$ — the mass is at the opposite extreme."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s14",
+      "concepts": ["solve-ivp-with-laplace"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A damped suspension obeys $y'' + 3y' + 2y = 0$ with $y(0) = 3$, $y'(0) = -4$. Solve the IVP with the Laplace transform (the characteristic roots are $-1$ and $-2$).",
+      "steps": [
+        { "instruction": "Transform the whole equation and solve for $Y(s)$ as one rational function.", "answer": "(3s + 5)/(s^2 + 3s + 2)", "accept": ["(3s+5)/(s^2+3s+2)", "(3s + 5)/((s + 1)(s + 2))", "(3s+5)/((s+1)(s+2))"], "hint": "$(s^2 + 3s + 2)Y = 3s + 9 - 4 = 3s + 5$ — collect the initial-condition terms." },
+        { "instruction": "Partial fractions: $Y(s) = \\dfrac{A}{s+1} + \\dfrac{B}{s+2}$. Find $A$ by cover-up at $s = -1$.", "answer": "2", "accept": ["A = 2"], "hint": "$A = \\dfrac{3(-1)+5}{-1+2} = \\dfrac{2}{1}$." },
+        { "instruction": "Find $B$ by cover-up at $s = -2$.", "answer": "1", "accept": ["B = 1"], "hint": "$B = \\dfrac{3(-2)+5}{-2+1} = \\dfrac{-1}{-1}$." },
+        { "instruction": "Write $y(t)$ (e.g. \"3e^(-2t) - 4e^(-5t)\").", "answer": "2e^(-t) + e^(-2t)", "accept": ["2e^{-t} + e^{-2t}", "e^(-2t) + 2e^(-t)", "e^{-2t} + 2e^{-t}", "2e^(-t) + 1e^(-2t)", "2*e^(-t) + e^(-2t)"], "hint": "$y(t) = 2e^{-t} + e^{-2t}$. Check: $y(0) = 3$. ✓" }
+      ],
+      "finalAnswer": { "value": "2e^(-t) + e^(-2t)", "unit": "" },
+      "solutionNarrative": "Transforming gives $(s^2+3s+2)Y = 3s+5$, so $Y = \\dfrac{3s+5}{(s+1)(s+2)}$. Cover-up: $A = 2$, $B = 1$. Thus $y(t) = 2e^{-t} + e^{-2t}$, which decays without oscillating — overdamped, as the real roots promised."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s15",
+      "concepts": ["solve-ivp-with-laplace"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A mixing tank flushes out solute: $y' + 2y = 0$ with $y(0) = 8$ grams. Solve with the Laplace transform, then find how much remains at $t = 1$ minute.",
+      "steps": [
+        { "instruction": "Transform and solve for $Y(s)$.", "answer": "8/(s + 2)", "accept": ["8/(s+2)"], "hint": "$sY - 8 + 2Y = 0$, so $(s+2)Y = 8$." },
+        { "instruction": "Invert: $y(t) = ?$ (e.g. \"8e^(-2t)\").", "answer": "8e^(-2t)", "accept": ["8e^{-2t}", "8*e^(-2t)", "8exp(-2t)"], "hint": "$\\dfrac{c}{s-a}$ with $c = 8$, $a = -2$." },
+        { "instruction": "Evaluate $y(1) = 8e^{-2}$, rounded to 3 decimal places.", "answer": "1.083", "accept": ["1.0827", "1.082"], "hint": "$e^{-2} \\approx 0.13534$, so $8e^{-2} \\approx 1.0827$." }
+      ],
+      "finalAnswer": { "value": "1.083", "unit": "grams" },
+      "solutionNarrative": "$(s+2)Y = 8$ gives $Y = \\dfrac{8}{s+2}$ and $y(t) = 8e^{-2t}$. At $t = 1$: $8e^{-2} \\approx 1.083$ grams — about 13.5% of the solute remains."
+    },
+    {
+      "id": "differential-equations.laplace-transforms.s16",
+      "concepts": ["transform-basic-functions", "transform-properties"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A damped oscillator's response contains the term $e^{-t}\\cos 2t$. Compute its Laplace transform $\\mathcal{L}\\{e^{-t}\\cos 2t\\}$.",
+      "steps": [
+        { "instruction": "Base transform first: $\\mathcal{L}\\{\\cos 2t\\} = ?$", "answer": "s/(s^2 + 4)", "accept": ["s/(s^2+4)"], "hint": "Cosine entry with $b = 2$." },
+        { "instruction": "Shift for the $e^{-t}$ factor: replace every $s$ by $s + 1$.", "answer": "(s + 1)/((s + 1)^2 + 4)", "accept": ["(s+1)/((s+1)^2+4)", "(s + 1)/(s^2 + 2s + 5)", "(s+1)/(s^2+2s+5)"], "hint": "$F(s-a)$ with $a = -1$; expanding the denominator is also fine." }
+      ],
+      "finalAnswer": { "value": "(s + 1)/((s + 1)^2 + 4)", "unit": "" },
+      "solutionNarrative": "$\\mathcal{L}\\{\\cos 2t\\} = \\dfrac{s}{s^2+4}$; the damping factor $e^{-t}$ shifts $s \\to s+1$: $\\dfrac{s+1}{(s+1)^2+4}$. The pole pair sits at $s = -1 \\pm 2i$ — decay rate 1, ringing frequency 2."
+    }
+  ]
+}

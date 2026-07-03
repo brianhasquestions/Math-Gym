@@ -1,0 +1,272 @@
+{
+  "id": "algebra-2.polynomial-functions",
+  "subject": "algebra-2",
+  "title": "Polynomial Functions and Their Graphs",
+  "prerequisites": ["algebra.factoring", "algebra.polynomials-operations", "algebra-2.functions"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "end-behavior",
+      "label": "End behavior (leading term test)",
+      "microLesson": "Far from the origin, a polynomial acts like its **leading term** alone — the lower terms become rounding error. So two facts decide both ends of the graph: the **degree's parity** and the **leading coefficient's sign**. Even degree: both ends point the same way (up if the coefficient is positive, down if negative). Odd degree: the ends point opposite ways (positive coefficient: falls left, rises right; negative: the reverse). For $f(x) = -3x^4 + 5x - 1$, the $-3x^4$ rules: even degree, negative lead — both ends fall."
+    },
+    {
+      "id": "zeros-and-multiplicity",
+      "label": "Zeros and multiplicity",
+      "microLesson": "A **zero** of $f$ is an $x$ with $f(x) = 0$ — an x-intercept of the graph. In factored form each factor $(x - r)$ contributes the zero $x = r$ (flip the sign inside). The exponent on the factor is the zero's **multiplicity**, and it controls the geometry: **odd** multiplicity means the graph **crosses** the axis there; **even** multiplicity means it **touches and bounces** without crossing. For $f(x) = (x + 2)^2(x - 1)$: the graph bounces at $x = -2$ and crosses at $x = 1$."
+    },
+    {
+      "id": "factored-and-expanded-forms",
+      "label": "Factored and expanded forms",
+      "microLesson": "The same polynomial wears two outfits. **Factored form** $a(x - r_1)(x - r_2)\\cdots$ shows the zeros and the leading coefficient at a glance. **Expanded form** $ax^n + \\dots$ shows the y-intercept (the constant term) and is what you evaluate. Convert by FOILing: zeros $2$ and $-5$ give $(x - 2)(x + 5) = x^2 + 3x - 10$ — middle coefficient $=-(\\text{sum of zeros})$, constant $=$ product of zeros. Scaling by $a$ stretches the graph but never moves the zeros."
+    },
+    {
+      "id": "evaluating-and-remainder-theorem",
+      "label": "Evaluating and the remainder theorem",
+      "microLesson": "The **remainder theorem** says: dividing $f(x)$ by $(x - k)$ leaves remainder $f(k)$. So one substitution replaces the whole division — and if $f(k) = 0$, then $(x - k)$ is a **factor**. **Synthetic division** organizes the division into a three-row table: bring down the leading coefficient, then repeatedly *multiply by $k$, add the next coefficient*. The bottom row gives the quotient's coefficients (one degree lower) with the remainder last. Watch the sign: dividing by $(x + 3)$ means $k = -3$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Reading a curve without plotting a single point\n\nA polynomial function\n\n$$f(x) = a_n x^n + a_{n-1}x^{n-1} + \\dots + a_1 x + a_0$$\n\nlooks like a wall of symbols, but its graph is almost entirely determined by a few easy-to-spot features: the **leading term**, the **zeros**, and each zero's **multiplicity**. This topic is about extracting the shape of the curve straight from the formula — the skill that turns 'plot 50 points' into 'sketch it in ten seconds.'\n\n## End behavior: only the leading term survives\n\nWhen $|x|$ is huge, $x^4$ dwarfs $x^2$, which dwarfs $x$. Try $x = 100$ in $f(x) = x^3 - 5x^2 + 2$: the $x^3$ term is $1{,}000{,}000$ while everything else totals about $-50{,}000$. Far from the origin, **the leading term is the whole story**. That gives the **leading term test** — a two-question checklist:\n\n1. **Is the degree even or odd?** Even (like $x^2$): both ends point the *same* way. Odd (like $x^3$): the ends point *opposite* ways.\n2. **Is the leading coefficient positive or negative?** Positive: the right end **rises**. Negative: the right end **falls**.\n\n| | right end | left end |\n|---|---|---|\n| even degree, $a > 0$ | rises | rises |\n| even degree, $a < 0$ | falls | falls |\n| odd degree, $a > 0$ | rises | falls |\n| odd degree, $a < 0$ | falls | rises |\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-3, 3], \"yRange\": [-8, 8], \"grid\": true, \"curves\": [ { \"fn\": \"x^3 - 3*x\", \"label\": \"odd degree: ends oppose\", \"color\": \"accent\", \"labelAt\": 1.6 }, { \"fn\": \"-x^2 + 4\", \"label\": \"even, negative: both fall\", \"color\": \"warn\", \"labelAt\": -2.4 } ], \"caption\": \"End behavior: x^3 - 3x rises right / falls left; -x^2 + 4 falls on both ends\" }\n```\n\nFor $f(x) = -3x^4 + 5x - 1$: the leading term is $-3x^4$ — even degree, negative coefficient — so **both ends fall**, no matter what the middle of the graph does.\n\n## Zeros: where the graph meets the axis\n\nA **zero** is a solution of $f(x) = 0$; graphically it's an x-intercept. Factored form hands you the zeros directly: each factor $(x - r)$ vanishes at $x = r$. Watch the sign flip — $(x + 5)$ has the zero $x = -5$.\n\n$$f(x) = (x - 3)(x + 5) \\quad\\Rightarrow\\quad \\text{zeros } x = 3 \\text{ and } x = -5.$$\n\nThe **y-intercept** comes free too: substitute $x = 0$ to get $(-3)(5) = -15$.\n\n## Multiplicity: cross or bounce?\n\nThe exponent on a factor is that zero's **multiplicity**, and it controls what the graph does at the intercept:\n\n- **Odd multiplicity** (1, 3, ...): the sign of $f$ flips there — the graph **crosses** the axis.\n- **Even multiplicity** (2, 4, ...): the sign does not flip — the graph **touches** the axis and **bounces** back.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-3, 4], \"yRange\": [-12, 12], \"grid\": true, \"curves\": [ { \"fn\": \"(x+1)^2 * (x-2)\", \"label\": \"y = (x+1)^2 (x-2)\", \"color\": \"accent\", \"labelAt\": 2.5 } ], \"points\": [ { \"x\": -1, \"y\": 0, \"label\": \"touch (mult 2)\", \"color\": \"warn\" }, { \"x\": 2, \"y\": 0, \"label\": \"cross (mult 1)\", \"color\": \"success\" } ], \"caption\": \"Even multiplicity touches and bounces; odd multiplicity crosses\" }\n```\n\nMultiplicities also add up to the degree: $f(x) = x(x - 4)^2(x + 1)$ has degree $1 + 2 + 1 = 4$, and with leading coefficient 1 (positive, even degree) both ends rise.\n\n## Two forms of the same polynomial\n\n**Factored form** $a(x - r_1)(x - r_2)\\cdots$ displays the zeros and the leading coefficient. **Expanded (standard) form** displays the degree, leading term, and constant term. Moving between them is routine FOILing:\n\n$$\\text{zeros } 2, -5:\\quad (x - 2)(x + 5) = x^2 + 3x - 10.$$\n\nNotice the pattern for quadratics: middle coefficient $= -(\\text{sum of the zeros})$, constant $= \\text{product of the zeros}$ — a fast self-check. A leading coefficient just scales every term: $3(x - 1)(x + 4) = 3x^2 + 9x - 12$. **The zeros do not move when you scale** — only the vertical stretch changes.\n\n**Pitfall:** 'the zeros of $(x + 5)$' is $-5$, not $5$. And a squared factor is ONE zero (with multiplicity 2), not two different zeros.\n\n## Evaluating, the remainder theorem, and synthetic division\n\nEvaluating $f(k)$ is just substitution with careful signs. But it secretly answers a division question. The **remainder theorem**:\n\n$$f(x) \\div (x - k) \\text{ leaves remainder } f(k).$$\n\nSo the remainder of $(x^2 + 5x - 2) \\div (x - 3)$ is $f(3) = 9 + 15 - 2 = 22$ — no long division needed. And the payoff case: if $f(k) = 0$, the division is exact, so $(x - k)$ is a **factor** of $f$. Zeros and factors are the same fact seen from two sides.\n\n**Synthetic division** makes the division itself quick. To divide $x^3 - 2x^2 - 5x + 6$ by $(x - 3)$, write $k = 3$ and the coefficients $1, -2, -5, 6$; bring down the 1, then repeat *multiply by $k$, add the next coefficient*:\n\n$$1 \\xrightarrow{\\times 3} 3, \\; 3 + (-2) = 1 \\xrightarrow{\\times 3} 3, \\; 3 + (-5) = -2 \\xrightarrow{\\times 3} -6, \\; -6 + 6 = 0.$$\n\nBottom row $1, 1, -2, \\mathbf{0}$: quotient $x^2 + x - 2$, remainder $0$ — so $(x - 3)$ is a factor, and $f(3) = 0$ confirms it. **Sign pitfall:** dividing by $(x + 3)$ means $k = -3$, not $3$."
+  },
+  "application": {
+    "summary": "Polynomials model quantities built from products of lengths and rates: box volumes, revenue = price × demand, projectile paths, and cost curves. Zeros mark break-even points and physical limits, end behavior tells you what happens at scale, and the remainder theorem is the fast way to test candidate break-even values.",
+    "domains": ["manufacturing", "business", "physics", "computer graphics"],
+    "workedExample": "**Designing an open-top box**\n\nA factory cuts squares of side $x$ inches from the corners of a 10-by-8 inch sheet and folds up the sides. The volume is length × width × height:\n\n$$V(x) = x(10 - 2x)(8 - 2x).$$\n\nThe **zeros** are read straight off the factors: $x = 0$, $x = 5$, $x = 4$ — cut nothing and there's no height; cut 4-inch squares and the 8-inch side vanishes; cut 5-inch squares and the 10-inch side would vanish (already impossible). So the physically meaningful domain is $0 < x < 4$: the volume is a degree-3 polynomial arch that rises from zero, peaks, and returns to zero at $x = 4$.\n\nExpanding gives $V(x) = 4x^3 - 36x^2 + 80x$, and evaluating candidate cuts is just substitution: $V(1) = 4 - 36 + 80 = 48$ cubic inches, $V(2) = 32 - 144 + 160 = 48$ cubic inches — equal! So the peak sits between 1 and 2, and a couple more evaluations home in on it. Zeros gave the feasible region, the factored form gave the zeros for free, and evaluation found the best design — the whole topic in one cardboard box.",
+    "domainNotes": [
+      "**Manufacturing:** volume and material-use formulas are products of linear dimensions — naturally factored polynomials whose zeros are physical limits.",
+      "**Business:** revenue = price × quantity models are polynomials; zeros are break-even prices, and the remainder theorem quickly tests candidate break-even points.",
+      "**Physics:** heights, ranges, and energies are low-degree polynomials in time or distance; end behavior warns when a model stops being physical.",
+      "**Graphics:** curves and animation paths are stitched from cubic polynomials (splines) precisely because degree 3 is the smallest that bends twice."
+    ]
+  },
+  "generators": [
+    "a2f-end-behavior-1", "a2f-end-behavior-2", "a2f-end-behavior-3",
+    "a2f-zeros-mult-1", "a2f-zeros-mult-2", "a2f-zeros-mult-3",
+    "a2f-poly-forms-1", "a2f-poly-forms-2", "a2f-poly-forms-3",
+    "a2f-remainder-thm-1", "a2f-remainder-thm-2", "a2f-remainder-thm-3"
+  ],
+  "problems": [
+    {
+      "id": "algebra-2.polynomial-functions.s01",
+      "concepts": ["end-behavior"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the leading term test on $f(x) = 2x^3$.",
+      "steps": [
+        { "instruction": "Is the degree 3 even or odd? (Answer 'even' or 'odd'.)", "answer": "odd", "accept": [], "hint": "3 is not divisible by 2." },
+        { "instruction": "Is the leading coefficient 2 positive or negative? (Answer 'positive' or 'negative'.)", "answer": "positive", "accept": ["pos"], "hint": "Look at its sign." },
+        { "instruction": "As $x \\to +\\infty$ (far right), does the graph rise or fall? (Answer 'rises' or 'falls'.)", "answer": "rises", "accept": ["rise", "up", "goes up", "increases"], "hint": "Large positive $x$ makes $2x^3$ large and positive." }
+      ],
+      "finalAnswer": { "value": "rises", "unit": "on the right" },
+      "solutionNarrative": "Odd degree with a positive leading coefficient: the graph falls on the left and rises on the right."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s02",
+      "concepts": ["end-behavior"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = -3x^4 + 5x^2 - 1$, identify the leading term and describe both ends of the graph.",
+      "steps": [
+        { "instruction": "What is the leading term (the term with the highest power)?", "answer": "-3x^4", "accept": [], "hint": "The $x^4$ term dominates for large $|x|$." },
+        { "instruction": "What is the degree of $f$?", "answer": "4", "accept": [], "hint": "The highest exponent." },
+        { "instruction": "As $x \\to -\\infty$ (far left), does the graph rise or fall? (Answer 'rises' or 'falls'.)", "answer": "falls", "accept": ["fall", "down", "goes down", "decreases"], "hint": "Even degree: both ends match the sign of $-3$." },
+        { "instruction": "As $x \\to +\\infty$ (far right), does the graph rise or fall? (Answer 'rises' or 'falls'.)", "answer": "falls", "accept": ["fall", "down", "goes down", "decreases"], "hint": "The negative leading coefficient pulls the right end down." }
+      ],
+      "finalAnswer": { "value": "falls left, falls right", "unit": "" },
+      "solutionNarrative": "Only $-3x^4$ matters at the extremes: even degree, negative lead — both ends fall."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s03",
+      "concepts": ["end-behavior"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The polynomial $f(x) = -2(x - 1)(x + 3)^2$ is given in factored form. Determine its degree, leading coefficient, and end behavior WITHOUT expanding.",
+      "steps": [
+        { "instruction": "What is the degree? (Add the multiplicities of the factors.)", "answer": "3", "accept": [], "hint": "$1 + 2$." },
+        { "instruction": "What is the leading coefficient?", "answer": "-2", "accept": [], "hint": "Each factor contributes leading term $x$; the constant out front scales it." },
+        { "instruction": "As $x \\to -\\infty$, does the graph rise or fall? (Answer 'rises' or 'falls'.)", "answer": "rises", "accept": ["rise", "up", "goes up", "increases"], "hint": "Odd degree with a negative lead: rises left, falls right." },
+        { "instruction": "As $x \\to +\\infty$, does the graph rise or fall? (Answer 'rises' or 'falls'.)", "answer": "falls", "accept": ["fall", "down", "goes down", "decreases"], "hint": "The sign of $-2$ decides the right end." }
+      ],
+      "finalAnswer": { "value": "rises left, falls right", "unit": "" },
+      "solutionNarrative": "The leading term is $-2x^3$ (multiplicities add: $1 + 2 = 3$), so the graph rises on the left and falls on the right."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s04",
+      "concepts": ["end-behavior"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A drone's altitude error over time is modeled by $e(t) = 5t^2$ for a badly tuned controller. Use the leading term test: what happens to the error as $t$ grows without bound?",
+      "steps": [
+        { "instruction": "Is the degree 2 even or odd? (Answer 'even' or 'odd'.)", "answer": "even", "accept": [], "hint": "2 is divisible by 2." },
+        { "instruction": "As $t \\to +\\infty$, does the graph of $e$ rise or fall? (Answer 'rises' or 'falls'.)", "answer": "rises", "accept": ["rise", "up", "goes up", "increases"], "hint": "Even degree, positive coefficient 5: both ends rise." }
+      ],
+      "finalAnswer": { "value": "rises", "unit": "" },
+      "solutionNarrative": "Even degree with positive leading coefficient rises without bound — the error explodes, which is exactly the diagnosis 'the controller is unstable.'"
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s05",
+      "concepts": ["zeros-and-multiplicity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x) = (x - 3)(x + 5)$, find the zeros and the y-intercept.",
+      "steps": [
+        { "instruction": "Set each factor equal to zero and solve. Give both zeros (e.g. \"x = 1 or x = 2\").", "answer": "x = 3 or x = -5", "accept": ["3, -5"], "form": "solutions", "hint": "Each factor $(x - r)$ vanishes at $x = r$; watch the sign inside." },
+        { "instruction": "Find the y-intercept by evaluating $f(0)$.", "answer": "-15", "accept": [], "hint": "$(0 - 3)(0 + 5) = (-3)(5)$." }
+      ],
+      "finalAnswer": { "value": "x = 3 or x = -5", "unit": "" },
+      "solutionNarrative": "The zeros are $x = 3$ and $x = -5$ (flip the sign inside each factor). At $x = 0$: $(-3)(5) = -15$."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s06",
+      "concepts": ["zeros-and-multiplicity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = (x + 2)^2(x - 1)$, find the zeros with multiplicities and describe the graph at each intercept.",
+      "steps": [
+        { "instruction": "Give the distinct zeros (e.g. \"x = 1 or x = 2\").", "answer": "x = -2 or x = 1", "accept": ["-2, 1"], "form": "solutions", "hint": "One zero from each distinct factor." },
+        { "instruction": "What is the multiplicity of the zero $x = -2$?", "answer": "2", "accept": [], "hint": "The exponent on $(x + 2)$." },
+        { "instruction": "At $x = -2$, does the graph cross the axis or just touch it and turn around? (Answer 'crosses' or 'touches'.)", "answer": "touches", "accept": ["touch", "bounces", "bounce", "touches and turns around"], "hint": "EVEN multiplicity: no sign change." },
+        { "instruction": "At $x = 1$ (multiplicity 1), does the graph cross or touch? (Answer 'crosses' or 'touches'.)", "answer": "crosses", "accept": ["cross", "crosses through", "passes through"], "hint": "ODD multiplicity: the sign flips." }
+      ],
+      "finalAnswer": { "value": "touches", "unit": "at x = -2" },
+      "solutionNarrative": "Zeros: $x = -2$ (multiplicity 2) and $x = 1$ (multiplicity 1). The graph bounces at $-2$ and crosses at $1$."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s07",
+      "concepts": ["zeros-and-multiplicity"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Analyze $f(x) = x(x - 4)^2(x + 1)$: degree, all zeros with multiplicity, and end behavior.",
+      "steps": [
+        { "instruction": "What is the degree of $f$? (Add all the multiplicities.)", "answer": "4", "accept": [], "hint": "$1 + 2 + 1$." },
+        { "instruction": "Give all distinct zeros (e.g. \"x = 0 or x = 1 or x = 2\").", "answer": "x = 0 or x = 4 or x = -1", "accept": ["0, 4, -1"], "form": "solutions", "hint": "Don't forget the lone factor $x$ vanishes at 0." },
+        { "instruction": "What is the multiplicity of the zero $x = 4$?", "answer": "2", "accept": [], "hint": "The exponent on $(x - 4)$." },
+        { "instruction": "Degree 4 (even), leading coefficient 1 (positive): do BOTH ends rise or fall? (Answer 'rise' or 'fall'.)", "answer": "rise", "accept": ["rises", "up", "both rise", "rise on both ends"], "hint": "Even degree, positive lead: up on both sides." }
+      ],
+      "finalAnswer": { "value": "x = 0 or x = 4 or x = -1", "unit": "" },
+      "solutionNarrative": "Zeros: $0$, $4$ (multiplicity 2 — the graph bounces there), and $-1$. The leading term is $x^4$, so both ends rise."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s08",
+      "concepts": ["zeros-and-multiplicity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An open-top box is made by cutting $x$-inch squares from a 10-by-8 sheet: $V(x) = x(10 - 2x)(8 - 2x)$. Find where the volume is zero and the model's degree.",
+      "steps": [
+        { "instruction": "Set each factor to zero. Give all three zeros (e.g. \"x = 0 or x = 1 or x = 2\").", "answer": "x = 0 or x = 5 or x = 4", "accept": ["0, 5, 4"], "form": "solutions", "hint": "$x = 0$, $10 - 2x = 0$, and $8 - 2x = 0$." },
+        { "instruction": "What is the degree of $V$?", "answer": "3", "accept": [], "hint": "Three linear factors multiply to a cubic." }
+      ],
+      "finalAnswer": { "value": "x = 0 or x = 5 or x = 4", "unit": "" },
+      "solutionNarrative": "The volume vanishes at $x = 0$ (no height), $x = 4$ (the 8-inch side is used up), and $x = 5$ (the 10-inch side would be). Physically usable cuts live between 0 and 4; the model is a cubic."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s09",
+      "concepts": ["factored-and-expanded-forms"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A quadratic with leading coefficient 1 has zeros $x = 2$ and $x = -5$. Write it in factored form, then expand.",
+      "steps": [
+        { "instruction": "Write the factored form (a product of two linear factors).", "answer": "(x - 2)(x + 5)", "accept": [], "form": "factored", "hint": "A zero at $x = r$ gives the factor $(x - r)$ — flip the sign of the zero." },
+        { "instruction": "Expand the product into $x^2 + bx + c$ form.", "answer": "x^2 + 3x - 10", "accept": [], "hint": "Middle: $-(2 + (-5)) = 3$. Constant: $(2)(-5) = -10$." }
+      ],
+      "finalAnswer": { "value": "x^2 + 3x - 10", "unit": "" },
+      "solutionNarrative": "Zeros 2 and $-5$ give $(x - 2)(x + 5) = x^2 + 3x - 10$: minus the sum of zeros in the middle, product of zeros at the end."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s10",
+      "concepts": ["factored-and-expanded-forms"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Expand $f(x) = 3(x - 1)(x + 4)$ into standard form. Expand the binomials first, then distribute the 3.",
+      "steps": [
+        { "instruction": "Expand $(x - 1)(x + 4)$ first.", "answer": "x^2 + 3x - 4", "accept": [], "hint": "FOIL: middle $= -(1 + (-4)) = 3$, constant $= (1)(-4) = -4$." },
+        { "instruction": "Now multiply every term by 3. Give the expanded standard form.", "answer": "3x^2 + 9x - 12", "accept": [], "hint": "Distribute 3 across all three terms." }
+      ],
+      "finalAnswer": { "value": "3x^2 + 9x - 12", "unit": "" },
+      "solutionNarrative": "$(x - 1)(x + 4) = x^2 + 3x - 4$; scaling by 3 gives $3x^2 + 9x - 12$. The zeros stay at 1 and $-4$ — scaling never moves them."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s11",
+      "concepts": ["factored-and-expanded-forms"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A cubic has leading coefficient 2, a zero at $x = 3$ with multiplicity 2, and a zero at $x = -1$. Write its factored form, then expand it completely.",
+      "steps": [
+        { "instruction": "Write the factored form (include the leading coefficient and the squared factor).", "answer": "2(x - 3)^2(x + 1)", "accept": [], "form": "factored", "hint": "Multiplicity 2 means $(x - 3)$ is squared." },
+        { "instruction": "Expand the squared factor $(x - 3)^2$ first.", "answer": "x^2 - 6x + 9", "accept": [], "hint": "$(x - r)^2 = x^2 - 2rx + r^2$ with $r = 3$." },
+        { "instruction": "Multiply by $(x + 1)$ and by 2. Give the fully expanded cubic.", "answer": "2x^3 - 10x^2 + 6x + 18", "accept": [], "hint": "$(x^2 - 6x + 9)(x + 1) = x^3 - 5x^2 + 3x + 9$, then double every term." }
+      ],
+      "finalAnswer": { "value": "2x^3 - 10x^2 + 6x + 18", "unit": "" },
+      "solutionNarrative": "Factored: $2(x - 3)^2(x + 1)$. Expanding: $(x - 3)^2 = x^2 - 6x + 9$; times $(x + 1)$ gives $x^3 - 5x^2 + 3x + 9$; times 2 gives $2x^3 - 10x^2 + 6x + 18$."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s12",
+      "concepts": ["factored-and-expanded-forms"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Factor $x^2 - 9$ (a difference of squares), then read off its zeros.",
+      "steps": [
+        { "instruction": "Write $x^2 - 9$ in factored form.", "answer": "(x - 3)(x + 3)", "accept": [], "form": "factored", "hint": "$a^2 - b^2 = (a - b)(a + b)$ with $b = 3$." },
+        { "instruction": "Give the zeros (e.g. \"x = 1 or x = 2\").", "answer": "x = 3 or x = -3", "accept": ["3, -3"], "form": "solutions", "hint": "One from each factor." }
+      ],
+      "finalAnswer": { "value": "x = 3 or x = -3", "unit": "" },
+      "solutionNarrative": "$x^2 - 9 = (x - 3)(x + 3)$, so the zeros are $x = \\pm 3$ — factored form hands you the intercepts."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s13",
+      "concepts": ["evaluating-and-remainder-theorem"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $f(x) = x^2 - 3x + 7$ at $x = 2$.",
+      "steps": [
+        { "instruction": "First compute $x^2$ at $x = 2$.", "answer": "4", "accept": [], "hint": "$2^2$." },
+        { "instruction": "Now compute $f(2) = 4 - 3(2) + 7$.", "answer": "5", "accept": [], "hint": "$4 - 6 + 7$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Substitute carefully: $f(2) = 4 - 6 + 7 = 5$."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s14",
+      "concepts": ["evaluating-and-remainder-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the remainder theorem to find the remainder when $f(x) = x^2 + 5x - 2$ is divided by $(x - 3)$ — no long division needed.",
+      "steps": [
+        { "instruction": "The remainder on division by $(x - k)$ is $f(k)$. For the divisor $(x - 3)$, what is $k$?", "answer": "3", "accept": [], "hint": "Match $(x - 3)$ to $(x - k)$." },
+        { "instruction": "Evaluate $f(3) = 3^2 + 5(3) - 2$.", "answer": "22", "accept": [], "hint": "$9 + 15 - 2$." }
+      ],
+      "finalAnswer": { "value": "22", "unit": "" },
+      "solutionNarrative": "By the remainder theorem the remainder equals $f(3) = 9 + 15 - 2 = 22$. One substitution replaces the whole division."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s15",
+      "concepts": ["evaluating-and-remainder-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Use synthetic division to divide $f(x) = x^3 - 2x^2 - 5x + 6$ by $(x - 3)$. Write the coefficients $1, -2, -5, 6$ and use $k = 3$: bring down the 1, then repeatedly multiply by 3 and add.",
+      "steps": [
+        { "instruction": "Bring down the leading 1, multiply by 3, and add to $-2$. What is the second bottom-row number?", "answer": "1", "accept": [], "hint": "$-2 + (1)(3)$." },
+        { "instruction": "Multiply that result by 3 and add to $-5$. What is the third bottom-row number?", "answer": "-2", "accept": [], "hint": "$-5 + (1)(3)$." },
+        { "instruction": "Multiply again by 3 and add to 6. This last number is the remainder.", "answer": "0", "accept": [], "hint": "$6 + (-2)(3)$." },
+        { "instruction": "The other bottom-row numbers are the quotient's coefficients. Write the quotient polynomial.", "answer": "x^2 + x - 2", "accept": [], "hint": "Coefficients $1, 1, -2$ give a quadratic." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "remainder" },
+      "solutionNarrative": "Bottom row $1, 1, -2, 0$: quotient $x^2 + x - 2$, remainder 0. So $(x - 3)$ is a factor of $f$, and indeed $f(3) = 27 - 18 - 15 + 6 = 0$."
+    },
+    {
+      "id": "algebra-2.polynomial-functions.s16",
+      "concepts": ["evaluating-and-remainder-theorem"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cafe's daily profit from selling coffee at $x$ dollars a cup is modeled by $P(x) = -x^2 + 12x - 20$ (in tens of dollars). Evaluate the profit at a price of \\$4.",
+      "steps": [
+        { "instruction": "Compute $x^2$ at $x = 4$.", "answer": "16", "accept": [], "hint": "$4^2$." },
+        { "instruction": "Now compute $P(4) = -16 + 12(4) - 20$.", "answer": "12", "accept": [], "hint": "$-16 + 48 - 20$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "tens of dollars" },
+      "solutionNarrative": "$P(4) = -16 + 48 - 20 = 12$, i.e. about \\$120 of daily profit at a \\$4 price."
+    }
+  ]
+}

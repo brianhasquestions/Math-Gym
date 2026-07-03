@@ -1,0 +1,291 @@
+{
+  "id": "calculus-1.lhopital-rule",
+  "subject": "calculus-1",
+  "title": "L'Hôpital's Rule and Indeterminate Forms",
+  "prerequisites": ["calculus-1.limits-and-continuity", "calculus-1.transcendental-derivatives"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "identify-indeterminate-forms",
+      "label": "Identifying indeterminate forms",
+      "microLesson": "Before touching L'Hôpital's rule, **substitute and classify**. If the numerator and denominator both head to $0$, the limit is the indeterminate form $0/0$; if both blow up, it is $\\infty/\\infty$. Those two forms are stalemates — the answer could be anything, so more work is needed. But $\\frac{4}{-2}$, $\\frac{0}{5}$, or $\\frac{7}{0}$ are **not indeterminate**: the first is just $-2$, the second is just $0$, and the third signals a vertical asymptote. Applying L'Hôpital to a non-indeterminate form gives confidently wrong answers."
+    },
+    {
+      "id": "lhopital-zero-over-zero",
+      "label": "L'Hôpital for 0/0",
+      "microLesson": "If $\\lim_{x \\to a}\\frac{f(x)}{g(x)}$ is a genuine $0/0$ form, then $\\lim_{x \\to a}\\frac{f(x)}{g(x)} = \\lim_{x \\to a}\\frac{f'(x)}{g'(x)}$ — differentiate the **top and bottom separately** (this is not the quotient rule!). Example: $\\lim_{x \\to 0}\\frac{\\sin 5x}{x}$ is $0/0$; the new ratio is $\\frac{5\\cos 5x}{1}$, which at $x = 0$ equals $5$. Always re-substitute after differentiating — often the stalemate is broken immediately."
+    },
+    {
+      "id": "lhopital-inf-over-inf",
+      "label": "L'Hôpital for ∞/∞",
+      "microLesson": "The rule works the same way when both top and bottom blow up: for an $\\infty/\\infty$ form, replace the ratio with the ratio of derivatives. For rational functions at infinity this recovers the leading-coefficient shortcut: $\\lim_{x \\to \\infty}\\frac{5x + 2}{3x - 7}$ is $\\infty/\\infty$, and one application gives $\\frac{5}{3}$. When the degrees differ, L'Hôpital shows *why* the limit is $0$ (bottom-heavy) or $\\infty$ (top-heavy) — each application knocks one power of $x$ off both sides."
+    },
+    {
+      "id": "repeated-and-growth-rates",
+      "label": "Repeating the rule and growth rates",
+      "microLesson": "If differentiating once still leaves $0/0$ or $\\infty/\\infty$, **classify again and apply again**: $\\lim_{x \\to 0}\\frac{1 - \\cos x}{x^2} \\to \\frac{\\sin x}{2x} \\to \\frac{\\cos x}{2} = \\frac{1}{2}$. Repeated use also proves the growth hierarchy $\\ln x \\ll x^p \\ll e^x$: $\\lim_{x \\to \\infty}\\frac{\\ln x}{x} = \\lim \\frac{1/x}{1} = 0$, while $\\lim_{x \\to \\infty}\\frac{x^2}{e^x} \\to \\frac{2x}{e^x} \\to \\frac{2}{e^x} = 0$ — the exponential eventually crushes every polynomial."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When substitution answers back with nonsense\n\nYou already know the first rule of limits: **substitute first**. Most of the time that settles it. But some of the most important limits in calculus — the ones that define derivatives, growth rates, and long-run behavior — answer back with $\\frac{0}{0}$ or $\\frac{\\infty}{\\infty}$. These are **indeterminate forms**: stalemates, not answers. $\\frac{0}{0}$ could hide any value at all, because it is really a race between how fast the top and the bottom die out. $\\frac{\\infty}{\\infty}$ is the same race run upward.\n\nIn *Limits and Continuity* you broke $0/0$ stalemates with algebra — factor and cancel. That works beautifully for polynomials, but it is helpless against $\\frac{\\sin 5x}{x}$ or $\\frac{e^{2x} - 1}{x}$: there is nothing to factor. **L'Hôpital's rule** is the tool that handles them all with one move.\n\n## Step 0: classify the form (always!)\n\nSubstitute the target value into the top and the bottom **separately** and see what each one does:\n\n- top $\\to 0$ and bottom $\\to 0$: the **$0/0$** indeterminate form — more work needed.\n- top $\\to \\pm\\infty$ and bottom $\\to \\pm\\infty$: the **$\\infty/\\infty$** indeterminate form — more work needed.\n- anything else — say top $\\to 4$, bottom $\\to -2$ — is **not indeterminate**. The limit is just $\\frac{4}{-2} = -2$ and you are done. ($\\frac{0}{5} = 0$ is not indeterminate either; nor is $\\frac{7}{0}$, which signals an infinite limit.)\n\nThis classification step is not bureaucracy. It is the *license* to use the rule, and skipping it is the single most common way to get these problems wrong.\n\n## The rule\n\n> **L'Hôpital's Rule.** If $\\lim_{x \\to a}\\frac{f(x)}{g(x)}$ is of the form $0/0$ or $\\infty/\\infty$, and $f$ and $g$ are differentiable near $a$, then\n> $$\\lim_{x \\to a}\\frac{f(x)}{g(x)} = \\lim_{x \\to a}\\frac{f'(x)}{g'(x)}$$\n> provided the right-hand limit exists (or is $\\pm\\infty$). The point $a$ may be a number or $\\pm\\infty$.\n\nRead it carefully: differentiate the **numerator and denominator separately**. This is *not* the quotient rule — you are replacing the race between $f$ and $g$ with the race between their speeds.\n\n### Worked example ($0/0$)\n\n$$\\lim_{x \\to 0}\\frac{e^{2x} - 1}{\\sin 3x}$$\n\n**Classify:** at $x = 0$ the top is $e^0 - 1 = 0$ and the bottom is $\\sin 0 = 0$: a genuine $0/0$. **Apply:** differentiate top and bottom separately to get $\\frac{2e^{2x}}{3\\cos 3x}$. **Re-substitute:** $\\frac{2 \\cdot 1}{3 \\cdot 1} = \\frac{2}{3}$. Done in one pass.\n\n### Worked example ($\\infty/\\infty$)\n\n$$\\lim_{x \\to \\infty}\\frac{4x^2 + x}{2x^2 + 7}$$\n\nBoth top and bottom blow up: $\\infty/\\infty$. One application gives $\\frac{8x + 1}{4x}$ — *still* $\\infty/\\infty$, so classify again and apply again: $\\frac{8}{4} = 2$. Notice this agrees with the leading-coefficient shortcut $\\frac{4}{2}$ you already knew for rational functions; L'Hôpital is the reason that shortcut works. When the degrees differ the same logic says the limit is $0$ (denominator wins) or $\\pm\\infty$ (numerator wins).\n\n## Repeating the rule\n\nOne application may trade one stalemate for another. That is fine — **classify the new ratio and, if it is still indeterminate, differentiate again**:\n\n$$\\lim_{x \\to 0}\\frac{1 - \\cos x}{x^2} \\;\\xrightarrow{0/0}\\; \\lim_{x \\to 0}\\frac{\\sin x}{2x} \\;\\xrightarrow{0/0}\\; \\lim_{x \\to 0}\\frac{\\cos x}{2} = \\frac{1}{2}.$$\n\nEach pass must be re-licensed by a fresh classification. The moment the form stops being indeterminate, **stop differentiating** — one extra application wrecks a finished answer.\n\n## The growth hierarchy: ln x ≪ x ≪ e^x\n\nL'Hôpital settles, once and for all, which functions win the race to infinity:\n\n$$\\lim_{x \\to \\infty}\\frac{\\ln x}{x} = \\lim_{x \\to \\infty}\\frac{1/x}{1} = 0 \\qquad\\text{and}\\qquad \\lim_{x \\to \\infty}\\frac{x^2}{e^x} = \\lim_{x \\to \\infty}\\frac{2x}{e^x} = \\lim_{x \\to \\infty}\\frac{2}{e^x} = 0.$$\n\nThe first says $\\ln x$ grows more slowly than any positive power of $x$; the second (two applications!) says $e^x$ eventually dwarfs $x^2$ — and the same argument with more repetitions beats $x^{100}$ too. The hierarchy\n\n$$\\ln x \\;\\ll\\; x^p \\;\\ll\\; e^x \\qquad (p > 0)$$\n\nis what lets computer scientists rank algorithms and lets modelers say an exponential process *always* overtakes a polynomial one, no matter the coefficients.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0.2, 4.2], \"yRange\": [-1, 8], \"grid\": true, \"curves\": [ { \"fn\": \"ln(x)\", \"label\": \"y = ln x\", \"color\": \"dim\", \"labelAt\": 3.4 }, { \"fn\": \"x\", \"label\": \"y = x\", \"color\": \"accent\", \"labelAt\": 3.0 }, { \"fn\": \"exp(x)\", \"label\": \"y = e^x\", \"color\": \"warn\", \"labelAt\": 1.5 } ], \"caption\": \"The growth race: e^x pulls away from x, which pulls away from ln x. L'Hôpital's rule turns this picture into exact limits: ln(x)/x → 0 and x²/eˣ → 0.\" }\n```\n\n## Common pitfalls\n\n- **Applying the rule to a non-indeterminate form.** $\\lim_{x \\to 0}\\frac{\\cos x}{1 - x}$ is $\\frac{1}{1} = 1$ by substitution. Blindly 'L'Hôpitaling' gives $\\frac{-\\sin x}{-1} \\to 0$ — a wrong answer produced with total confidence. No indeterminate form, no rule.\n- **Using the quotient rule instead.** The rule is $\\frac{f'}{g'}$, never $\\frac{f'g - fg'}{g^2}$. Differentiate top and bottom *separately*.\n- **Stopping too early or too late.** After each application, re-classify. Still $0/0$? Go again. A real number (or a clean $\\pm\\infty$)? Stop — do not differentiate a finished answer.\n- **Forgetting the cheap checks.** For rational functions at $\\pm\\infty$, the degree comparison (leading terms) gives the answer instantly; L'Hôpital should confirm it, not fight it."
+  },
+  "application": {
+    "summary": "L'Hôpital's rule breaks the 0/0 and ∞/∞ stalemates that appear whenever a rate, a ratio, or a long-run comparison is pushed to its limit — and it proves the growth hierarchy ln x ≪ x^p ≪ e^x that computer scientists use to rank algorithms and economists use to compare growth models.",
+    "domains": ["computer science", "physics", "economics", "biology"],
+    "workedExample": "**Which algorithm wins at scale?**\n\nAlgorithm A needs about $n^2$ operations to process $n$ records; algorithm B needs about $100\\, n \\ln n$. B's constant looks terrible — for small $n$, B does *more* work. Which one should handle a database that keeps growing?\n\nCompare them with a limit:\n\n$$\\lim_{n \\to \\infty}\\frac{100\\, n \\ln n}{n^2} = \\lim_{n \\to \\infty}\\frac{100 \\ln n}{n}.$$\n\nBoth top and bottom blow up — a genuine $\\infty/\\infty$ form — so apply L'Hôpital's rule:\n\n$$\\lim_{n \\to \\infty}\\frac{100/n}{1} = \\lim_{n \\to \\infty}\\frac{100}{n} = 0.$$\n\n**The ratio tends to 0, so B's cost becomes negligible compared with A's** — the ugly constant 100 never had a vote. Past some crossover size, B wins by a factor that keeps growing forever. This is exactly the reasoning behind big-O analysis: constants and low-order terms lose to growth rates, and growth rates are ranked by L'Hôpital-style limits.",
+    "domainNotes": [
+      "**Computer science:** ranking algorithm costs ($\\ln n$ vs $n$ vs $2^n$) — every big-O comparison is a limit of a ratio, usually an $\\infty/\\infty$ form.",
+      "**Physics:** small-angle and small-time behavior, e.g. $\\lim_{t \\to 0}\\frac{\\sin \\omega t}{t} = \\omega$ turning an average rate into an instantaneous one.",
+      "**Economics:** comparing an exponentially growing quantity (compound interest, adoption) against polynomial costs — the exponential always overtakes, with L'Hôpital saying exactly why.",
+      "**Biology:** early-epidemic ratios like $\\frac{e^{kt} - 1}{t}$ at $t \\to 0$ give the initial per-capita growth rate $k$ from a 0/0 form."
+    ]
+  },
+  "generators": [
+    "c1b-identify-forms-1",
+    "c1b-identify-forms-2",
+    "c1b-identify-forms-3",
+    "c1b-lhop-zero-1",
+    "c1b-lhop-zero-2",
+    "c1b-lhop-zero-3",
+    "c1b-lhop-inf-1",
+    "c1b-lhop-inf-2",
+    "c1b-lhop-inf-3",
+    "c1b-growth-rates-1",
+    "c1b-growth-rates-2",
+    "c1b-growth-rates-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-1.lhopital-rule.s01",
+      "concepts": ["identify-indeterminate-forms"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Classify the form of $\\lim_{x \\to 2}\\frac{x^2 - 4}{x - 2}$ before evaluating it.",
+      "steps": [
+        { "instruction": "Substitute $x = 2$ into the numerator $x^2 - 4$. What value does it approach?", "answer": "0", "accept": [], "hint": "$2^2 - 4 = 0$." },
+        { "instruction": "Substitute $x = 2$ into the denominator $x - 2$. What value does it approach?", "answer": "0", "accept": [], "hint": "$2 - 2 = 0$." },
+        { "instruction": "Classify the form. Answer '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "0/0", "accept": ["zero over zero", "0 over 0"], "hint": "Both top and bottom head to 0 — that is the classic indeterminate stalemate." }
+      ],
+      "finalAnswer": { "value": "0/0", "unit": "" },
+      "solutionNarrative": "At $x = 2$ both the numerator ($4 - 4 = 0$) and the denominator ($2 - 2 = 0$) vanish, so the limit is the indeterminate form $0/0$ and needs more work (factoring or L'Hôpital)."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s02",
+      "concepts": ["identify-indeterminate-forms"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Classify the form of $\\lim_{x \\to \\infty}\\frac{3x^2 + 1}{x^2 + 2}$.",
+      "steps": [
+        { "instruction": "As $x \\to \\infty$, what does the numerator $3x^2 + 1$ do? Answer 'infinity' if it grows without bound.", "answer": "infinity", "accept": ["inf", "+infinity", "∞", "grows without bound"], "hint": "A positive-leading-coefficient polynomial blows up as $x \\to \\infty$." },
+        { "instruction": "As $x \\to \\infty$, what does the denominator $x^2 + 2$ do? Answer 'infinity' if it grows without bound.", "answer": "infinity", "accept": ["inf", "+infinity", "∞", "grows without bound"], "hint": "Same story: $x^2 + 2 \\to \\infty$." },
+        { "instruction": "Classify the form. Answer '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "Both top and bottom blow up." }
+      ],
+      "finalAnswer": { "value": "inf/inf", "unit": "" },
+      "solutionNarrative": "Both the numerator and the denominator grow without bound as $x \\to \\infty$, so the limit is the indeterminate form $\\infty/\\infty$ (its value turns out to be 3, but the form itself is the stalemate)."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s03",
+      "concepts": ["identify-indeterminate-forms"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify the form of $\\lim_{x \\to 1}\\frac{x^2 + 3}{x - 3}$, then evaluate the limit.",
+      "steps": [
+        { "instruction": "Substitute $x = 1$ into the numerator $x^2 + 3$.", "answer": "4", "accept": [], "hint": "$1 + 3 = 4$." },
+        { "instruction": "Substitute $x = 1$ into the denominator $x - 3$.", "answer": "-2", "accept": [], "hint": "$1 - 3 = -2$." },
+        { "instruction": "Classify the form. Answer '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "not indeterminate", "accept": ["not", "neither", "no", "none"], "hint": "$\\frac{4}{-2}$ is a perfectly ordinary number — no stalemate here." },
+        { "instruction": "So the limit is just the quotient of those two values. Evaluate it.", "answer": "-2", "accept": ["4/-2", "-4/2"], "hint": "$\\frac{4}{-2} = -2$. No L'Hôpital allowed — or needed." }
+      ],
+      "finalAnswer": { "value": "-2", "unit": "" },
+      "solutionNarrative": "Substitution gives $\\frac{4}{-2}$, which is not indeterminate — the limit is simply $-2$. Applying L'Hôpital here would be illegal and would give the wrong answer."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s04",
+      "concepts": ["identify-indeterminate-forms"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A student evaluates $\\lim_{x \\to 0}\\frac{\\cos x}{1 - x}$ by 'applying L'Hôpital', getting $\\lim_{x \\to 0}\\frac{-\\sin x}{-1} = 0$. Diagnose the mistake and find the correct limit.",
+      "steps": [
+        { "instruction": "Substitute $x = 0$ into the numerator $\\cos x$.", "answer": "1", "accept": [], "hint": "$\\cos 0 = 1$." },
+        { "instruction": "Substitute $x = 0$ into the denominator $1 - x$.", "answer": "1", "accept": [], "hint": "$1 - 0 = 1$." },
+        { "instruction": "Classify the form. Answer '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "not indeterminate", "accept": ["not", "neither", "no", "none"], "hint": "$\\frac{1}{1}$ is an ordinary value — L'Hôpital's rule does not apply." },
+        { "instruction": "So was the student's answer of 0 correct? Answer 'yes' or 'no'.", "answer": "no", "accept": ["incorrect", "wrong"], "hint": "The rule's license (an indeterminate form) was missing, so its output is meaningless." },
+        { "instruction": "Find the correct limit by substitution.", "answer": "1", "accept": ["1/1"], "hint": "$\\frac{\\cos 0}{1 - 0} = \\frac{1}{1}$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "At $x = 0$ the ratio is $\\frac{1}{1}$ — not indeterminate — so plain substitution gives the limit $1$. The student's L'Hôpital step was unlicensed: applied to a non-indeterminate form, the rule confidently produced the wrong answer $0$."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s05",
+      "concepts": ["lhopital-zero-over-zero"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to 0}\\frac{\\sin 5x}{x}$ using L'Hôpital's rule.",
+      "steps": [
+        { "instruction": "Substitute $x = 0$ into top and bottom. Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "0/0", "accept": ["zero over zero", "0 over 0"], "hint": "$\\sin 0 = 0$ and the denominator is 0 at $x = 0$." },
+        { "instruction": "The derivative of the numerator is $5\\cos 5x$. Evaluate it at $x = 0$.", "answer": "5", "accept": ["5cos(0)"], "hint": "$\\cos 0 = 1$, so the value is $5 \\cdot 1$." },
+        { "instruction": "The derivative of the denominator $x$ is constant. What is it?", "answer": "1", "accept": [], "hint": "$\\frac{d}{dx}x = 1$." },
+        { "instruction": "The limit equals the ratio of those derivative values. Evaluate it.", "answer": "5", "accept": ["5/1"], "hint": "$\\frac{5}{1}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "The form is $0/0$, so L'Hôpital applies: $\\lim_{x \\to 0}\\frac{\\sin 5x}{x} = \\lim_{x \\to 0}\\frac{5\\cos 5x}{1} = \\frac{5 \\cdot 1}{1} = 5$."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s06",
+      "concepts": ["lhopital-zero-over-zero"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to 1}\\frac{x^2 - 1}{x^2 - 3x + 2}$ using L'Hôpital's rule.",
+      "steps": [
+        { "instruction": "Substitute $x = 1$ into top and bottom. Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "0/0", "accept": ["zero over zero", "0 over 0"], "hint": "Top: $1 - 1 = 0$. Bottom: $1 - 3 + 2 = 0$." },
+        { "instruction": "Differentiate the numerator $x^2 - 1$.", "answer": "2x", "accept": [], "hint": "Power rule; the constant dies." },
+        { "instruction": "Differentiate the denominator $x^2 - 3x + 2$.", "answer": "2x - 3", "accept": ["2x-3"], "hint": "Term by term: $2x$ and $-3$." },
+        { "instruction": "Evaluate $\\frac{2x}{2x - 3}$ at $x = 1$.", "answer": "-2", "accept": ["2/-1", "-2/1"], "hint": "$\\frac{2}{2 - 3} = \\frac{2}{-1}$." }
+      ],
+      "finalAnswer": { "value": "-2", "unit": "" },
+      "solutionNarrative": "Both top and bottom vanish at $x = 1$ ($0/0$), so the limit equals $\\lim_{x \\to 1}\\frac{2x}{2x - 3} = \\frac{2}{-1} = -2$. (Factoring $\\frac{(x-1)(x+1)}{(x-1)(x-2)}$ confirms it.)"
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s07",
+      "concepts": ["lhopital-zero-over-zero"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to 0}\\frac{e^x - 1}{x}$ — the limit that defines the slope of $e^x$ at 0.",
+      "steps": [
+        { "instruction": "Substitute $x = 0$. Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "0/0", "accept": ["zero over zero", "0 over 0"], "hint": "$e^0 - 1 = 0$ over $0$." },
+        { "instruction": "The derivative of the numerator is $e^x$. Evaluate it at $x = 0$.", "answer": "1", "accept": ["e^0"], "hint": "$e^0 = 1$." },
+        { "instruction": "The derivative of the denominator is 1, so the limit is the ratio. Evaluate it.", "answer": "1", "accept": ["1/1"], "hint": "$\\frac{1}{1}$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "The form is $0/0$; differentiating top and bottom gives $\\lim_{x \\to 0}\\frac{e^x}{1} = 1$. This is exactly why $e$ is the natural base: the slope of $e^x$ at $x = 0$ is 1."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s08",
+      "concepts": ["lhopital-zero-over-zero"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to 0}\\frac{e^{2x} - 1}{\\sin 3x}$ using L'Hôpital's rule.",
+      "steps": [
+        { "instruction": "Substitute $x = 0$ into top and bottom. Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "0/0", "accept": ["zero over zero", "0 over 0"], "hint": "$e^0 - 1 = 0$ and $\\sin 0 = 0$." },
+        { "instruction": "The derivative of the numerator is $2e^{2x}$. Evaluate it at $x = 0$.", "answer": "2", "accept": ["2e^0"], "hint": "$e^0 = 1$, so the value is $2$." },
+        { "instruction": "The derivative of the denominator is $3\\cos 3x$. Evaluate it at $x = 0$.", "answer": "3", "accept": ["3cos(0)"], "hint": "$\\cos 0 = 1$, so the value is $3$." },
+        { "instruction": "The limit is the ratio of those two values. Give a fraction.", "answer": "2/3", "accept": ["0.667", "0.6667"], "hint": "$\\frac{2}{3}$." }
+      ],
+      "finalAnswer": { "value": "2/3", "unit": "" },
+      "solutionNarrative": "The form is $0/0$. Differentiating separately: $\\frac{2e^{2x}}{3\\cos 3x}$, which at $x = 0$ is $\\frac{2}{3}$."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s09",
+      "concepts": ["lhopital-inf-over-inf"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to \\infty}\\frac{5x + 2}{3x - 7}$ using L'Hôpital's rule.",
+      "steps": [
+        { "instruction": "As $x \\to \\infty$ both top and bottom blow up. Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "Both linear polynomials head to $+\\infty$." },
+        { "instruction": "Differentiate the numerator $5x + 2$. What constant do you get?", "answer": "5", "accept": [], "hint": "$\\frac{d}{dx}(5x + 2) = 5$." },
+        { "instruction": "Differentiate the denominator $3x - 7$. What constant do you get?", "answer": "3", "accept": [], "hint": "$\\frac{d}{dx}(3x - 7) = 3$." },
+        { "instruction": "The limit is the ratio of those constants. Give a fraction.", "answer": "5/3", "accept": ["1.667", "1.6667"], "hint": "$\\frac{5}{3}$ — the ratio of leading coefficients, as expected." }
+      ],
+      "finalAnswer": { "value": "5/3", "unit": "" },
+      "solutionNarrative": "The form is $\\infty/\\infty$; one application of L'Hôpital gives $\\frac{5}{3}$, matching the leading-coefficient shortcut for same-degree rational functions."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s10",
+      "concepts": ["lhopital-inf-over-inf"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to \\infty}\\frac{4x^2 + x}{2x^2 + 7}$, applying L'Hôpital's rule as many times as needed.",
+      "steps": [
+        { "instruction": "Classify the original form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "Both quadratics blow up." },
+        { "instruction": "One application gives $\\frac{8x + 1}{4x}$. Classify this new form as $x \\to \\infty$: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "Still two quantities that blow up — the license renews and you may apply the rule again." },
+        { "instruction": "Apply the rule once more: differentiate $8x + 1$ and $4x$ and take the ratio. Evaluate the limit.", "answer": "2", "accept": ["8/4"], "hint": "$\\frac{8}{4} = 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$\\infty/\\infty$ twice over: $\\frac{4x^2 + x}{2x^2 + 7} \\to \\frac{8x + 1}{4x} \\to \\frac{8}{4} = 2$ — the leading-coefficient ratio $\\frac{4}{2}$, as the shortcut predicts."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s11",
+      "concepts": ["lhopital-inf-over-inf"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to \\infty}\\frac{2x^2 + 3x}{5x + 1}$. Use 'infinity' or '-infinity' if the limit is infinite.",
+      "steps": [
+        { "instruction": "Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "Both polynomials blow up as $x \\to \\infty$." },
+        { "instruction": "Apply L'Hôpital once: differentiate top and bottom. Write the new ratio.", "answer": "(4x + 3)/5", "accept": ["(4x+3)/5", "4x/5 + 3/5", "(3+4x)/5"], "hint": "Top: $4x + 3$. Bottom: $5$." },
+        { "instruction": "As $x \\to \\infty$, what does $\\frac{4x + 3}{5}$ do? Answer 'infinity', '-infinity', or a number.", "answer": "infinity", "accept": ["inf", "+infinity", "∞", "diverges to infinity"], "hint": "A linear function with positive slope over a constant grows without bound." }
+      ],
+      "finalAnswer": { "value": "infinity", "unit": "" },
+      "solutionNarrative": "The form is $\\infty/\\infty$; one application leaves $\\frac{4x + 3}{5}$, which is no longer indeterminate — it grows without bound. The limit is $+\\infty$: the top-heavy rational function wins the race."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s12",
+      "concepts": ["repeated-and-growth-rates"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Which grows faster, $e^x$ or $x$? Decide by evaluating $\\lim_{x \\to \\infty}\\frac{e^x}{x}$. Use 'infinity' if the limit is infinite.",
+      "steps": [
+        { "instruction": "Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "Both $e^x$ and $x$ blow up." },
+        { "instruction": "Apply L'Hôpital: the ratio becomes $\\frac{e^x}{1}$. What is its limit as $x \\to \\infty$? Answer 'infinity' or a number.", "answer": "infinity", "accept": ["inf", "+infinity", "∞", "diverges to infinity"], "hint": "$e^x$ alone grows without bound." },
+        { "instruction": "An infinite limit means the numerator wins the race. Which function grows faster: type 'e^x' or 'x'?", "answer": "e^x", "accept": ["e^x grows faster", "exponential", "the exponential"], "hint": "The ratio $\\frac{e^x}{x}$ blowing up means $e^x$ dwarfs $x$." }
+      ],
+      "finalAnswer": { "value": "infinity", "unit": "" },
+      "solutionNarrative": "$\\frac{e^x}{x}$ is $\\infty/\\infty$; one application gives $\\frac{e^x}{1} \\to \\infty$. The exponential grows faster than $x$ — and the same argument beats any linear function."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s13",
+      "concepts": ["repeated-and-growth-rates"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to \\infty}\\frac{x^2}{e^x}$ by applying L'Hôpital's rule twice.",
+      "steps": [
+        { "instruction": "Classify the original form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "$x^2$ and $e^x$ both blow up." },
+        { "instruction": "One application gives $\\frac{2x}{e^x}$. Classify this form as $x \\to \\infty$: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "$2x$ and $e^x$ still both blow up — apply the rule again." },
+        { "instruction": "A second application gives $\\frac{2}{e^x}$. Evaluate its limit as $x \\to \\infty$.", "answer": "0", "accept": [], "hint": "A constant over something that blows up shrinks to 0." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "Two rounds of L'Hôpital: $\\frac{x^2}{e^x} \\to \\frac{2x}{e^x} \\to \\frac{2}{e^x} \\to 0$. The exponential crushes $x^2$ — and with more repetitions, any power of $x$."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s14",
+      "concepts": ["repeated-and-growth-rates"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\lim_{x \\to 0}\\frac{1 - \\cos x}{x^2}$ by applying L'Hôpital's rule twice.",
+      "steps": [
+        { "instruction": "Substitute $x = 0$. Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "0/0", "accept": ["zero over zero", "0 over 0"], "hint": "$1 - \\cos 0 = 0$ and $0^2 = 0$." },
+        { "instruction": "One application gives $\\frac{\\sin x}{2x}$. Substitute $x = 0$ and classify this new form.", "answer": "0/0", "accept": ["zero over zero", "0 over 0"], "hint": "$\\sin 0 = 0$ over $2 \\cdot 0 = 0$ — still a stalemate, so the rule applies again." },
+        { "instruction": "A second application gives $\\frac{\\cos x}{2}$. Evaluate it at $x = 0$. Give a fraction.", "answer": "1/2", "accept": ["0.5"], "hint": "$\\frac{\\cos 0}{2} = \\frac{1}{2}$." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Each pass is re-licensed by a fresh $0/0$ check: $\\frac{1 - \\cos x}{x^2} \\to \\frac{\\sin x}{2x} \\to \\frac{\\cos x}{2} = \\frac{1}{2}$. This limit is the reason $\\cos x \\approx 1 - \\frac{x^2}{2}$ for small $x$."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s15",
+      "concepts": ["repeated-and-growth-rates"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A search routine takes about $\\ln n$ steps on an input of size $n$; a scan takes about $n$ steps. Compare them for huge inputs by evaluating $\\lim_{n \\to \\infty}\\frac{\\ln n}{n}$.",
+      "steps": [
+        { "instruction": "Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "inf/inf", "accept": ["infinity/infinity", "∞/∞", "inf over inf", "infinity over infinity"], "hint": "$\\ln n$ and $n$ both grow without bound (the log just does it very slowly)." },
+        { "instruction": "Apply L'Hôpital: the ratio becomes $\\frac{1/n}{1} = \\frac{1}{n}$. Evaluate its limit as $n \\to \\infty$.", "answer": "0", "accept": [], "hint": "$\\frac{1}{n}$ shrinks to 0." },
+        { "instruction": "A limit of 0 means the numerator loses the race. Which grows faster: type 'ln n' or 'n'?", "answer": "n", "accept": ["n grows faster", "the scan", "linear"], "hint": "The ratio dying to 0 means $\\ln n$ becomes negligible next to $n$." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "$\\frac{\\ln n}{n}$ is $\\infty/\\infty$; L'Hôpital gives $\\frac{1/n}{1} \\to 0$. The logarithm grows far more slowly than $n$ — which is why $\\ln n$-time algorithms scale so well."
+    },
+    {
+      "id": "calculus-1.lhopital-rule.s16",
+      "concepts": ["lhopital-zero-over-zero"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A colony's population is $P(t) = P_0 e^{3t}$. Its average per-capita growth over the first $t$ hours is $\\frac{e^{3t} - 1}{t}$. Find the instantaneous per-capita rate at $t = 0$ by evaluating $\\lim_{t \\to 0}\\frac{e^{3t} - 1}{t}$.",
+      "steps": [
+        { "instruction": "Substitute $t = 0$. Classify the form: '0/0', 'inf/inf', or 'not indeterminate'.", "answer": "0/0", "accept": ["zero over zero", "0 over 0"], "hint": "$e^0 - 1 = 0$ over $0$." },
+        { "instruction": "The derivative of the numerator is $3e^{3t}$. Evaluate it at $t = 0$.", "answer": "3", "accept": ["3e^0"], "hint": "$e^0 = 1$." },
+        { "instruction": "The derivative of the denominator is 1, so the limit is the ratio. Evaluate it (per hour).", "answer": "3", "accept": ["3/1"], "hint": "$\\frac{3}{1}$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "per hour" },
+      "solutionNarrative": "The $0/0$ form breaks under one application: $\\lim_{t \\to 0}\\frac{3e^{3t}}{1} = 3$. The instantaneous per-capita growth rate is exactly the exponent's coefficient — L'Hôpital recovers the model's rate constant."
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "id": "trigonometry.inverse-trig-functions",
+  "subject": "trigonometry",
+  "title": "Inverse Trigonometric Functions",
+  "prerequisites": ["trigonometry.radians-and-unit-circle", "geometry.right-triangle-trigonometry"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "inverse-trig-values",
+      "label": "Exact values of arcsin, arccos, arctan",
+      "microLesson": "Ordinary trig goes angle → ratio; the inverse functions go ratio → angle. $\\arcsin x$ (also written $\\sin^{-1} x$) asks: *which angle has sine $x$?* Read the special-value table backwards: $\\arcsin\\frac{1}{2} = 30^\\circ$, $\\arccos\\frac{\\sqrt{3}}{2} = 30^\\circ$, $\\arctan 1 = 45^\\circ$. Because many angles share a sine, each inverse returns ONE canonical angle: $\\arcsin$ and $\\arctan$ answer from $[-90^\\circ, 90^\\circ]$, $\\arccos$ from $[0^\\circ, 180^\\circ]$. So $\\arcsin\\left(-\\frac{1}{2}\\right) = -30^\\circ$ (not $330^\\circ$) and $\\arccos\\left(-\\frac{1}{2}\\right) = 120^\\circ$."
+    },
+    {
+      "id": "domain-range-restrictions",
+      "label": "Domains and ranges of the inverses",
+      "microLesson": "Sine and cosine never leave $[-1, 1]$, so $\\arcsin$ and $\\arccos$ only accept inputs in $[-1, 1]$ — $\\arcsin(1.5)$ is undefined. Tangent takes every real value, so $\\arctan$ accepts any real number. The outputs are pinned to one window each: $\\arcsin$ returns $[-90^\\circ, 90^\\circ]$, $\\arccos$ returns $[0^\\circ, 180^\\circ]$, $\\arctan$ returns $(-90^\\circ, 90^\\circ)$. This is why $\\arcsin(\\sin 150^\\circ) = 30^\\circ$, NOT $150^\\circ$ — the inverse must answer from its own window."
+    },
+    {
+      "id": "compositions",
+      "label": "Compositions like sin(arccos x)",
+      "microLesson": "To evaluate $\\sin\\left(\\arccos\\frac{3}{5}\\right)$, don't find the angle — draw its triangle. $\\theta = \\arccos\\frac{3}{5}$ means adjacent 3, hypotenuse 5; the Pythagorean theorem gives opposite $\\sqrt{25 - 9} = 4$, so $\\sin\\theta = \\frac{4}{5}$. Exact answer, no calculator. For negative inputs check the sign from the range: $\\arcsin$ of a negative lands between $-90^\\circ$ and $0^\\circ$, where cosine is still positive but tangent is negative."
+    },
+    {
+      "id": "applied-angle-recovery",
+      "label": "Recovering angles from measurements",
+      "microLesson": "When you know sides and need the angle, pick the inverse that matches the sides you have: opposite and hypotenuse → $\\arcsin$, adjacent and hypotenuse → $\\arccos$, opposite and adjacent → $\\arctan$. A ladder reaching 5 ft up on a 10 ft length makes $\\arcsin\\frac{5}{10} = 30^\\circ$ with the ground; a ramp rising 1 ft per 12 ft of run inclines at $\\arctan\\frac{1}{12} \\approx 4.8^\\circ$. Calculator in DEGREE mode, and round only at the end."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The question, turned around\n\nRight-triangle trig answers one direction: *given the angle, what's the ratio?* But the questions a builder, pilot, or inspector actually asks run the other way: the ladder is 10 ft and reaches 5 ft up — **is the angle safe?** The ramp rises 2 ft over 25 ft — **does it meet code?** You know the sides; you need the *angle*. The **inverse trigonometric functions** answer exactly that:\n\n$$\\arcsin x = \\text{the angle whose sine is } x, \\qquad \\arccos x, \\qquad \\arctan x \\text{ likewise.}$$\n\nThey're also written $\\sin^{-1}$, $\\cos^{-1}$, $\\tan^{-1}$ — calculator-button notation. One warning about that notation: $\\sin^{-1} x$ is **not** $\\frac{1}{\\sin x}$ (that's $\\csc x$). The $-1$ means *inverse function*, not reciprocal.\n\n## The many-answers problem — and the fix\n\nHere is the wrinkle: $\\sin 30^\\circ = \\frac{1}{2}$, but so do $\\sin 150^\\circ$, $\\sin 390^\\circ$, and infinitely many others. If $\\arcsin\\frac{1}{2}$ answered \"all of them,\" it wouldn't be a function. So each inverse is defined to return exactly ONE canonical angle, drawn from a window where the original function hits every value exactly once:\n\n| function | accepts (domain) | returns (range) |\n|---|---|---|\n| $\\arcsin x$ | $[-1, 1]$ | $[-90^\\circ, 90^\\circ]$ |\n| $\\arccos x$ | $[-1, 1]$ | $[0^\\circ, 180^\\circ]$ |\n| $\\arctan x$ | all reals | $(-90^\\circ, 90^\\circ)$ |\n\nThe domains matter too: sine and cosine never leave $[-1, 1]$, so $\\arcsin 2$ is as meaningless as asking which angle has sine 2. Tangent, on the other hand, takes every real value, so $\\arctan$ swallows anything — even $\\arctan(1{,}000{,}000)$ is a perfectly good angle just shy of $90^\\circ$.\n\nThe picture below shows the fix at work: keep only the piece of the sine wave from $-90^\\circ$ to $90^\\circ$, and every horizontal line crosses it exactly once. On this restricted piece, height $\\frac{1}{2}$ is hit only at $30^\\circ$ — so $\\arcsin\\frac{1}{2}$ has one honest answer.\n\n```plot\n{ \"xRange\": [-90, 90], \"yRange\": [-1.3, 1.3], \"curves\": [ { \"fn\": \"sin(x*pi/180)\", \"color\": \"accent\", \"label\": \"y = sin x, restricted\", \"labelAt\": -45 } ], \"segments\": [ { \"from\": [-90, 0.5], \"to\": [90, 0.5], \"dashed\": true, \"color\": \"warn\", \"label\": \"y = 1/2\" } ], \"points\": [ { \"x\": 30, \"y\": 0.5, \"label\": \"30°\", \"color\": \"warn\" } ], \"caption\": \"Restricted to [-90°, 90°], sine hits each height exactly once — so arcsin(1/2) = 30° and nothing else\" }\n```\n\n## Reading the table backwards\n\nEvaluating an inverse at a special value is just the special-value table read in reverse:\n\n- $\\arcsin\\frac{1}{2} = 30^\\circ$ because $\\sin 30^\\circ = \\frac{1}{2}$ and $30^\\circ$ is in range.\n- $\\arccos\\frac{\\sqrt{2}}{2} = 45^\\circ$, $\\arctan\\sqrt{3} = 60^\\circ$.\n\n**Negative inputs** are where the ranges earn their keep. Two rules cover everything:\n\n- $\\arcsin$ and $\\arctan$ have ranges symmetric about $0^\\circ$, so a negative input just negates the reference angle: $\\arcsin\\left(-\\frac{1}{2}\\right) = -30^\\circ$ and $\\arctan(-1) = -45^\\circ$. Answering $330^\\circ$ is the classic error — right sine, wrong window.\n- $\\arccos$ is **never negative**: its range is $[0^\\circ, 180^\\circ]$, so a negative input lands in QII at $180^\\circ$ minus the reference angle. $\\arccos\\left(-\\frac{1}{2}\\right) = 180^\\circ - 60^\\circ = 120^\\circ$.\n\n## The composition trap\n\nBecause the inverse must answer from its window, function-then-inverse does **not** always round-trip:\n\n$$\\arcsin(\\sin 150^\\circ) = \\arcsin\\tfrac{1}{2} = 30^\\circ \\neq 150^\\circ.$$\n\nWork inside-out and let the range have the final say. The round-trip only survives when the original angle already lives in the range.\n\n## The triangle trick for compositions\n\nExpressions like $\\sin\\left(\\arccos\\frac{3}{5}\\right)$ look like they need a calculator — they don't. Name the inner angle and draw its right triangle:\n\n$\\theta = \\arccos\\frac{3}{5}$ means *adjacent 3, hypotenuse 5*. The Pythagorean theorem fills in the opposite side: $\\sqrt{5^2 - 3^2} = 4$. Now every trig function of $\\theta$ is on the table:\n\n$$\\sin\\left(\\arccos\\tfrac{3}{5}\\right) = \\tfrac{4}{5}, \\qquad \\tan\\left(\\arccos\\tfrac{3}{5}\\right) = \\tfrac{4}{3}.$$\n\nFor negative inputs, get the **magnitude from the triangle and the sign from the range**: $\\arcsin\\left(-\\frac{3}{5}\\right)$ sits between $-90^\\circ$ and $0^\\circ$ (quadrant IV territory), where cosine is positive and tangent negative — so $\\cos\\left(\\arcsin\\left(-\\frac{3}{5}\\right)\\right) = +\\frac{4}{5}$ while $\\tan\\left(\\arcsin\\left(-\\frac{3}{5}\\right)\\right) = -\\frac{3}{4}$.\n\n## Recovering angles in the wild\n\nApplied problems hand you two sides and ask for the angle. The only decision is *which inverse*, and SOH-CAH-TOA already made it:\n\n- opposite & hypotenuse known → $\\theta = \\arcsin\\frac{\\text{opp}}{\\text{hyp}}$\n- adjacent & hypotenuse known → $\\theta = \\arccos\\frac{\\text{adj}}{\\text{hyp}}$\n- opposite & adjacent known → $\\theta = \\arctan\\frac{\\text{opp}}{\\text{adj}}$\n\nA drone 30 m up, viewed from 40 m away horizontally, sits at an elevation of $\\arctan\\frac{30}{40} = \\arctan(0.75) \\approx 36.9^\\circ$. Two practical habits: keep the calculator in **degree mode** (a radian-mode answer like $0.6435$ is correct but useless on a protractor), and round only at the final step.\n\n## Common pitfalls\n\n1. $\\sin^{-1} x \\neq \\frac{1}{\\sin x}$ — inverse, not reciprocal.\n2. $\\arcsin\\left(-\\frac{1}{2}\\right) = -30^\\circ$, never $330^\\circ$ — respect the range.\n3. $\\arccos$ never returns a negative angle.\n4. $\\arcsin(\\sin\\theta) = \\theta$ only when $\\theta$ is already in $[-90^\\circ, 90^\\circ]$.\n5. $\\arcsin 1.5$ is undefined — no angle has sine bigger than 1."
+  },
+  "application": {
+    "summary": "Inverse trig turns measured lengths back into angles — the question behind ladder safety, ramp compliance, glide slopes, roof pitch, solar panel tilt, and every robot that must know which way to turn from x-y coordinates.",
+    "domains": ["aviation", "construction", "robotics", "accessibility engineering"],
+    "workedExample": "**Is the plane on the glide slope?**\n\nA landing aircraft is 2 miles (10,560 ft) from the runway threshold, at an altitude of 550 ft. Standard approach procedure calls for a glide slope of about $3^\\circ$. Is this plane on profile?\n\nThe altitude is the side opposite the descent angle and the ground distance is adjacent, so arctangent is the tool:\n\n$$\\theta = \\arctan\\frac{550}{10560} = \\arctan(0.0521) \\approx 3.0^\\circ.$$\n\n**The plane is exactly on the standard glide slope.** If the same math had returned $4.5^\\circ$, the approach would be dangerously steep and the crew would go around. The identical computation — two measured lengths in, one angle out — checks a wheelchair ramp against the $4.8^\\circ$ accessibility limit, sets a roof pitch from span and rise, and tells a delivery robot the heading to its target from the difference in coordinates.",
+    "domainNotes": [
+      "**Aviation:** glide-slope and climb-gradient checks are $\\arctan(\\text{altitude}/\\text{distance})$; instrument approaches publish the resulting angle.",
+      "**Construction & accessibility:** ramp codes, stair stringers, and roof pitches are all specified as maximum angles — inspectors recover the actual angle from rise and run with $\\arctan$.",
+      "**Robotics & navigation:** converting a displacement $(\\Delta x, \\Delta y)$ into a steering heading is an arctangent; every GPS bearing calculation does it.",
+      "**Physics & solar design:** panel tilt, incline angles, and projectile launch angles are recovered from measured components via $\\arcsin$ and $\\arctan$."
+    ]
+  },
+  "generators": [
+    "trg3-inverse-values-1",
+    "trg3-inverse-values-2",
+    "trg3-inverse-values-3",
+    "trg3-inverse-domain-1",
+    "trg3-inverse-domain-2",
+    "trg3-inverse-domain-3",
+    "trg3-inverse-comp-1",
+    "trg3-inverse-comp-2",
+    "trg3-inverse-comp-3",
+    "trg3-inverse-applied-1",
+    "trg3-inverse-applied-2",
+    "trg3-inverse-applied-3"
+  ],
+  "problems": [
+    {
+      "id": "trigonometry.inverse-trig-functions.s01",
+      "concepts": ["inverse-trig-values"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\arcsin\\frac{1}{2}$ in degrees.",
+      "steps": [
+        { "instruction": "$\\arcsin$ asks: which angle in $[-90^\\circ, 90^\\circ]$ has sine $\\frac{1}{2}$? (Degrees.)", "answer": "30", "accept": ["30 degrees"], "hint": "Read the special-value table backwards: $\\sin 30^\\circ = \\frac{1}{2}$." },
+        { "instruction": "Check: is $30^\\circ$ inside $\\arcsin$'s range $[-90^\\circ, 90^\\circ]$? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "$-90 \\le 30 \\le 90$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "degrees" },
+      "solutionNarrative": "$\\sin 30^\\circ = \\frac{1}{2}$ and $30^\\circ$ lies in the range $[-90^\\circ, 90^\\circ]$, so $\\arcsin\\frac{1}{2} = 30^\\circ$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s02",
+      "concepts": ["inverse-trig-values"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\arccos\\left(-\\frac{1}{2}\\right)$ in degrees.",
+      "steps": [
+        { "instruction": "What is the reference angle — the angle whose cosine is $+\\frac{1}{2}$? (Degrees.)", "answer": "60", "accept": ["60 degrees"], "hint": "$\\cos 60^\\circ = \\frac{1}{2}$." },
+        { "instruction": "$\\arccos$ returns angles in $[0^\\circ, 180^\\circ]$; a negative input lands in QII at $180^\\circ$ minus the reference angle. Compute the value.", "answer": "120", "accept": ["120 degrees"], "hint": "$180 - 60$." }
+      ],
+      "finalAnswer": { "value": "120", "unit": "degrees" },
+      "solutionNarrative": "Reference angle $60^\\circ$; a negative cosine puts the answer in QII, so $\\arccos(-\\frac{1}{2}) = 180 - 60 = 120^\\circ$. Note $\\arccos$ is never negative."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s03",
+      "concepts": ["inverse-trig-values"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\arctan(-1)$. Give the exact answer in radians (type it like -pi/4).",
+      "steps": [
+        { "instruction": "What is the reference angle — the angle whose tangent is $+1$? (Degrees.)", "answer": "45", "accept": ["45 degrees"], "hint": "$\\tan 45^\\circ = 1$." },
+        { "instruction": "$\\arctan$ returns angles in $(-90^\\circ, 90^\\circ)$, so a negative input gives the negated reference angle. What is the value in degrees?", "answer": "-45", "accept": ["-45 degrees"], "hint": "Negate: $-45^\\circ$ (NOT $135^\\circ$ or $315^\\circ$ — those are outside the range)." },
+        { "instruction": "Convert to radians (exact, in terms of $\\pi$).", "answer": "-pi/4", "accept": ["-π/4"], "hint": "$-45 \\cdot \\frac{\\pi}{180} = -\\frac{\\pi}{4}$." }
+      ],
+      "finalAnswer": { "value": "-pi/4", "unit": "radians" },
+      "solutionNarrative": "Reference angle $45^\\circ$; the range $(-90^\\circ, 90^\\circ)$ forces the negative answer $-45^\\circ = -\\frac{\\pi}{4}$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s04",
+      "concepts": ["inverse-trig-values"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\arctan 1$ in degrees.",
+      "steps": [
+        { "instruction": "Which angle in $(-90^\\circ, 90^\\circ)$ has tangent equal to 1?", "answer": "45", "accept": ["45 degrees"], "hint": "Tangent is 1 where opposite equals adjacent — the $45$-$45$-$90$ triangle." }
+      ],
+      "finalAnswer": { "value": "45", "unit": "degrees" },
+      "solutionNarrative": "$\\tan 45^\\circ = 1$ and $45^\\circ$ is in range, so $\\arctan 1 = 45^\\circ$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s05",
+      "concepts": ["domain-range-restrictions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Decide whether $\\arccos(1.3)$ is defined.",
+      "steps": [
+        { "instruction": "What is the largest value $\\cos\\theta$ can ever equal?", "answer": "1", "accept": [], "hint": "Cosine is a coordinate on the radius-1 unit circle." },
+        { "instruction": "So is $\\arccos(1.3)$ defined? (yes/no)", "answer": "no", "accept": ["n"], "hint": "No angle has cosine bigger than 1, so there is no angle to return." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Cosine never exceeds 1, so $\\arccos$ only accepts inputs in $[-1, 1]$; $1.3$ is outside, and $\\arccos(1.3)$ is undefined."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s06",
+      "concepts": ["domain-range-restrictions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "State the range of $\\arcsin$ — the window of angles it can return.",
+      "steps": [
+        { "instruction": "What is the smallest angle (degrees) $\\arcsin$ can return?", "answer": "-90", "accept": ["-90 degrees"], "hint": "The restricted piece of the sine wave runs from its minimum to its maximum, once each." },
+        { "instruction": "And the largest? (Degrees.)", "answer": "90", "accept": ["90 degrees"], "hint": "$\\sin 90^\\circ = 1$ is the top of the restricted piece." },
+        { "instruction": "Could $\\arcsin$ ever return $150^\\circ$? (yes/no)", "answer": "no", "accept": ["n"], "hint": "Is $150^\\circ$ inside $[-90^\\circ, 90^\\circ]$?" }
+      ],
+      "finalAnswer": { "value": "-90 to 90", "unit": "degrees" },
+      "solutionNarrative": "$\\arcsin$ returns only angles in $[-90^\\circ, 90^\\circ]$ — the window where sine hits every value in $[-1,1]$ exactly once. $150^\\circ$ can never be an output."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s07",
+      "concepts": ["domain-range-restrictions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\arcsin(\\sin 150^\\circ)$ — careful: the answer is NOT $150^\\circ$.",
+      "steps": [
+        { "instruction": "Work inside-out: what is $\\sin 150^\\circ$? (Exact.)", "answer": "1/2", "accept": ["0.5"], "hint": "$150^\\circ$ is in QII with reference angle $30^\\circ$, and sine is positive there." },
+        { "instruction": "Now evaluate $\\arcsin\\frac{1}{2}$, remembering the range $[-90^\\circ, 90^\\circ]$. (Degrees.)", "answer": "30", "accept": ["30 degrees"], "hint": "Which angle INSIDE the range has sine $\\frac{1}{2}$?" },
+        { "instruction": "Is $\\arcsin(\\sin 150^\\circ)$ equal to $150^\\circ$? (yes/no)", "answer": "no", "accept": ["n"], "hint": "$150^\\circ$ is outside $\\arcsin$'s range, so the composition cannot return it." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "degrees" },
+      "solutionNarrative": "$\\sin 150^\\circ = \\frac{1}{2}$, and $\\arcsin\\frac{1}{2} = 30^\\circ$ because the answer must come from $[-90^\\circ, 90^\\circ]$. The round-trip only preserves angles already inside the range."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s08",
+      "concepts": ["compositions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\sin\\left(\\arccos\\frac{3}{5}\\right)$ exactly — no calculator needed.",
+      "steps": [
+        { "instruction": "Let $\\theta = \\arccos\\frac{3}{5}$: adjacent 3, hypotenuse 5. Find the opposite side with the Pythagorean theorem.", "answer": "4", "accept": [], "hint": "$\\sqrt{5^2 - 3^2} = \\sqrt{16}$." },
+        { "instruction": "Now read off $\\sin\\theta = \\frac{\\text{opposite}}{\\text{hypotenuse}}$.", "answer": "4/5", "accept": ["0.8"], "hint": "$\\frac{4}{5}$ — the triangle answers the composition in one ratio." }
+      ],
+      "finalAnswer": { "value": "4/5", "unit": "" },
+      "solutionNarrative": "The angle $\\theta = \\arccos\\frac{3}{5}$ lives in a 3-4-5 triangle (opposite $= \\sqrt{25-9} = 4$), so $\\sin\\theta = \\frac{4}{5}$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s09",
+      "concepts": ["compositions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\tan\\left(\\arcsin\\frac{5}{13}\\right)$ exactly.",
+      "steps": [
+        { "instruction": "Let $\\theta = \\arcsin\\frac{5}{13}$: opposite 5, hypotenuse 13. Find the adjacent side.", "answer": "12", "accept": [], "hint": "$\\sqrt{13^2 - 5^2} = \\sqrt{144}$." },
+        { "instruction": "Read off $\\tan\\theta = \\frac{\\text{opposite}}{\\text{adjacent}}$.", "answer": "5/12", "accept": [], "hint": "Opposite 5 over adjacent 12." }
+      ],
+      "finalAnswer": { "value": "5/12", "unit": "" },
+      "solutionNarrative": "$\\theta$ sits in a 5-12-13 triangle (adjacent $= \\sqrt{169 - 25} = 12$), so $\\tan\\theta = \\frac{5}{12}$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s10",
+      "concepts": ["compositions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\cos\\left(\\arcsin\\left(-\\frac{3}{5}\\right)\\right)$ exactly. Mind the sign.",
+      "steps": [
+        { "instruction": "Because the input is negative, $\\arcsin\\left(-\\frac{3}{5}\\right)$ lies between $-90^\\circ$ and $0^\\circ$ (QIV). Is cosine positive or negative there? (Type positive or negative.)", "answer": "positive", "accept": ["+", "pos"], "hint": "In QIV cosine stays positive (All Students Take Calculus)." },
+        { "instruction": "Find the missing side of the reference triangle (opposite 3, hypotenuse 5).", "answer": "4", "accept": [], "hint": "$\\sqrt{25 - 9} = 4$." },
+        { "instruction": "Combine magnitude and sign: what is $\\cos\\left(\\arcsin\\left(-\\frac{3}{5}\\right)\\right)$?", "answer": "4/5", "accept": ["0.8"], "hint": "Magnitude $\\frac{4}{5}$ from the triangle, positive sign from QIV." }
+      ],
+      "finalAnswer": { "value": "4/5", "unit": "" },
+      "solutionNarrative": "The angle is in QIV where cosine is positive; the 3-4-5 triangle gives magnitude $\\frac{4}{5}$, so the answer is $+\\frac{4}{5}$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s11",
+      "concepts": ["applied-angle-recovery"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 10-ft ladder leans against a wall, reaching 5 ft up. What angle does the ladder make with the ground?",
+      "steps": [
+        { "instruction": "You know the side opposite the angle (5) and the hypotenuse (10). What is $\\sin\\theta$?", "answer": "1/2", "accept": ["0.5", "5/10"], "hint": "$\\frac{5}{10}$ reduces." },
+        { "instruction": "Apply the inverse: $\\theta = \\arcsin\\frac{1}{2}$ = ? (degrees)", "answer": "30", "accept": ["30 degrees"], "hint": "A special value — $\\sin 30^\\circ = \\frac{1}{2}$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "degrees" },
+      "solutionNarrative": "$\\sin\\theta = \\frac{5}{10} = \\frac{1}{2}$, so $\\theta = \\arcsin\\frac{1}{2} = 30^\\circ$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s12",
+      "concepts": ["applied-angle-recovery"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A radio tower is 50 m tall. From a point 120 m from its base, find the angle of elevation to the top. Round to 1 decimal place.",
+      "steps": [
+        { "instruction": "Height is opposite, ground distance is adjacent. What is $\\tan\\theta$ as a fraction?", "answer": "50/120", "accept": ["5/12"], "hint": "$\\frac{50}{120} = \\frac{5}{12}$." },
+        { "instruction": "Compute $\\theta = \\arctan\\frac{5}{12}$ in degree mode; round to 1 decimal place.", "answer": "22.6", "accept": ["22.6 degrees"], "hint": "$\\frac{5}{12} \\approx 0.4167$; take $\\tan^{-1}$." }
+      ],
+      "finalAnswer": { "value": "22.6", "unit": "degrees" },
+      "solutionNarrative": "$\\tan\\theta = \\frac{50}{120} = \\frac{5}{12}$, so $\\theta = \\arctan(0.4167) \\approx 22.6^\\circ$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s13",
+      "concepts": ["applied-angle-recovery"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A wheelchair ramp rises 3 ft over a horizontal run of 30 ft. The accessibility code allows an incline of at most $4.8^\\circ$. Find the ramp's angle (1 decimal place) and decide whether it complies.",
+      "steps": [
+        { "instruction": "Rise is opposite, run is adjacent. What is $\\tan\\theta$?", "answer": "3/30", "accept": ["1/10", "0.1"], "hint": "$\\frac{3}{30} = \\frac{1}{10}$." },
+        { "instruction": "Compute $\\theta = \\arctan\\frac{1}{10}$ and round to 1 decimal place (degrees).", "answer": "5.7", "accept": ["5.7 degrees"], "hint": "$\\tan^{-1}(0.1) \\approx 5.71^\\circ$." },
+        { "instruction": "Does the ramp comply with the $4.8^\\circ$ limit? (yes/no)", "answer": "no", "accept": ["n"], "hint": "Compare $5.7^\\circ$ with $4.8^\\circ$." }
+      ],
+      "finalAnswer": { "value": "5.7 degrees — does NOT comply", "unit": "" },
+      "solutionNarrative": "$\\theta = \\arctan(0.1) \\approx 5.7^\\circ > 4.8^\\circ$, so the ramp fails inspection — it needs a longer run for the same rise."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s14",
+      "concepts": ["inverse-trig-values"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\arcsin\\left(-\\frac{\\sqrt{2}}{2}\\right)$ in degrees.",
+      "steps": [
+        { "instruction": "What is the reference angle — the angle whose sine is $+\\frac{\\sqrt{2}}{2}$? (Degrees.)", "answer": "45", "accept": ["45 degrees"], "hint": "$\\sin 45^\\circ = \\frac{\\sqrt{2}}{2}$." },
+        { "instruction": "$\\arcsin$ returns angles in $[-90^\\circ, 90^\\circ]$, so a negative input negates the reference angle. Give the value in degrees.", "answer": "-45", "accept": ["-45 degrees"], "hint": "$-45^\\circ$, not $225^\\circ$ or $315^\\circ$ — those are outside the range." }
+      ],
+      "finalAnswer": { "value": "-45", "unit": "degrees" },
+      "solutionNarrative": "Reference angle $45^\\circ$; the symmetric range forces $\\arcsin(-\\frac{\\sqrt{2}}{2}) = -45^\\circ$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s15",
+      "concepts": ["domain-range-restrictions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Unlike $\\arcsin$, the function $\\arctan$ accepts ANY real input. Verify this with a huge value.",
+      "steps": [
+        { "instruction": "Can $\\tan\\theta$ equal $1{,}000{,}000$ for some angle $\\theta$? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "As $\\theta$ approaches $90^\\circ$, tangent blows up past every real number." },
+        { "instruction": "So is $\\arctan(1{,}000{,}000)$ defined? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "Every real number is some angle's tangent, so $\\arctan$ has an answer for every input." }
+      ],
+      "finalAnswer": { "value": "yes — arctan is defined for all real numbers", "unit": "" },
+      "solutionNarrative": "Tangent takes every real value (it blows up near $90^\\circ$), so $\\arctan$ accepts all reals — $\\arctan(1{,}000{,}000)$ is an angle just shy of $90^\\circ$."
+    },
+    {
+      "id": "trigonometry.inverse-trig-functions.s16",
+      "concepts": ["compositions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\sin\\left(\\arctan\\frac{3}{4}\\right)$ exactly.",
+      "steps": [
+        { "instruction": "Let $\\theta = \\arctan\\frac{3}{4}$: opposite 3, adjacent 4. Find the hypotenuse.", "answer": "5", "accept": [], "hint": "$\\sqrt{3^2 + 4^2} = \\sqrt{25}$." },
+        { "instruction": "Read off $\\sin\\theta = \\frac{\\text{opposite}}{\\text{hypotenuse}}$.", "answer": "3/5", "accept": ["0.6"], "hint": "Opposite 3 over hypotenuse 5." }
+      ],
+      "finalAnswer": { "value": "3/5", "unit": "" },
+      "solutionNarrative": "$\\theta$ lives in a 3-4-5 triangle (hypotenuse $= \\sqrt{9+16} = 5$), so $\\sin\\theta = \\frac{3}{5}$."
+    }
+  ]
+}

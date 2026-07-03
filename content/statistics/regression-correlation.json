@@ -1,0 +1,280 @@
+{
+  "id": "statistics.regression-correlation",
+  "subject": "statistics",
+  "title": "Correlation and Linear Regression",
+  "prerequisites": ["statistics.descriptive-statistics", "algebra.graphing-linear-equations"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "scatterplots-and-direction",
+      "label": "Scatterplots: direction, strength, form",
+      "microLesson": "Two quantitative variables are read off a **scatterplot** with three words. **Direction**: positive if the variables rise together, negative if one falls as the other rises. **Strength**: strong if the points hug a curve tightly, weak if they form a loose cloud. **Form**: linear if a straight line describes the trend, nonlinear if it bends. \"Hours studied vs. exam score\" is typically a strong positive linear pattern; \"car age vs. resale value\" a strong negative one. Always describe all three — and remember that a pattern, however strong, is not yet a cause."
+    },
+    {
+      "id": "correlation-coefficient",
+      "label": "The correlation coefficient r",
+      "microLesson": "The **correlation coefficient** compresses a linear pattern into one number: $r = \\dfrac{S_{xy}}{\\sqrt{S_{xx}S_{yy}}}$, where $S_{xy} = \\sum(x-\\bar{x})(y-\\bar{y})$ and $S_{xx}, S_{yy}$ are the squared-deviation sums. Always $-1 \\le r \\le 1$: the sign gives the direction, the magnitude the strength ($|r|$ near 1 = tight line, near 0 = no linear pattern). $r$ has no units and doesn't care which variable is $x$ — but it measures ONLY linear association: a perfect parabola can have $r = 0$."
+    },
+    {
+      "id": "least-squares-line",
+      "label": "The least-squares line",
+      "microLesson": "The **least-squares regression line** $\\hat{y} = a + bx$ is the line minimizing the sum of squared vertical misses. Its slope is $b = r\\dfrac{s_y}{s_x} = \\dfrac{S_{xy}}{S_{xx}}$ and it always passes through the point of means, so $a = \\bar{y} - b\\bar{x}$. With $r = 0.8$, $s_y = 5$, $s_x = 2$, $\\bar{x} = 5$, $\\bar{y} = 20$: $b = 0.8 \\cdot \\tfrac{5}{2} = 2$ and $a = 20 - 2(5) = 10$, giving $\\hat{y} = 10 + 2x$. The slope means: each 1-unit increase in $x$ changes the *predicted* $y$ by $b$."
+    },
+    {
+      "id": "prediction-and-residuals",
+      "label": "Prediction, residuals, extrapolation",
+      "microLesson": "To predict, plug in: at $x = 6$, $\\hat{y} = 10 + 2(6) = 22$. The **residual** for an observed point is $y - \\hat{y}$ — positive means the point sits above the line, negative below; least squares makes these misses collectively as small as possible. The line is only trustworthy over the $x$-range that produced it: predicting far outside the data is **extrapolation**, where the linear pattern has no evidence behind it (a child's growth line, extended, predicts a 12-foot adult)."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Two variables at once\n\nDescriptive statistics summarized one variable at a time. Most real questions, though, are about *relationships*: does more ad spend bring more sales? Does a hotter day mean higher electricity load? This topic builds the standard toolkit for a pair of quantitative variables: draw the **scatterplot**, measure the linear association with **$r$**, summarize it with the **least-squares line**, and use that line to **predict** — carefully.\n\n## Reading a scatterplot\n\nPlot each observation as a point $(x, y)$, with the explanatory variable on the horizontal axis. Then describe three things:\n\n- **Direction** — positive (rise together) or negative (one falls as the other rises),\n- **Strength** — how tightly the points follow the trend,\n- **Form** — linear or curved.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 10], \"yRange\": [12, 26], \"grid\": true, \"points\": [ { \"x\": 2, \"y\": 17, \"color\": \"warn\" }, { \"x\": 4, \"y\": 21, \"color\": \"warn\" }, { \"x\": 6, \"y\": 19, \"color\": \"warn\" }, { \"x\": 8, \"y\": 23, \"color\": \"warn\" } ], \"segments\": [ { \"from\": [1, 16.8], \"to\": [9, 23.2], \"color\": \"accent\", \"label\": \"y = 16 + 0.8x\" } ], \"caption\": \"Four data points and their least-squares line: a positive, fairly strong, linear pattern (r = 0.8).\" }\n```\n\nThe picture always comes first: $r$ and the regression line are meaningful only when the form is roughly linear.\n\n## Measuring the pattern: the correlation coefficient\n\nThe **correlation coefficient** turns \"how linear and which way\" into a single number. Working from deviations, define the sums\n\n$$S_{xx} = \\sum (x - \\bar{x})^2, \\qquad S_{yy} = \\sum (y - \\bar{y})^2, \\qquad S_{xy} = \\sum (x - \\bar{x})(y - \\bar{y}),$$\n\nand then\n\n$$r = \\frac{S_{xy}}{\\sqrt{S_{xx}\\,S_{yy}}}.$$\n\nThe cross-product sum $S_{xy}$ does the work: a point that is above average in both $x$ and $y$ (or below in both) contributes positively; a point high in one and low in the other contributes negatively. Dividing by $\\sqrt{S_{xx}S_{yy}}$ strips the units and traps $r$ in $[-1, 1]$.\n\n**Worked example.** Data $x: 2, 4, 6, 8$ and $y: 17, 21, 19, 23$ (the plot above). Means: $\\bar{x} = 5$, $\\bar{y} = 20$. Deviations: $x$: $-3, -1, 1, 3$; $y$: $-3, 1, -1, 3$. Then\n\n$$S_{xy} = (-3)(-3) + (-1)(1) + (1)(-1) + (3)(3) = 9 - 1 - 1 + 9 = 16,$$\n\nwith $S_{xx} = 9+1+1+9 = 20$ and $S_{yy} = 9+1+1+9 = 20$. So\n\n$$r = \\frac{16}{\\sqrt{20 \\cdot 20}} = \\frac{16}{20} = 0.8$$\n\n— a strong positive linear association. A rough interpretation scale:\n\n| $|r|$ | strength |\n|---|---|\n| 0.8 – 1.0 | strong |\n| 0.5 – 0.8 | moderate |\n| 0.0 – 0.5 | weak |\n\nThree facts worth memorizing: $r$ is unitless; swapping $x$ and $y$ leaves it unchanged; and $r$ detects **only linear** association — data lying on a perfect parabola can produce $r = 0$.\n\n## The least-squares line\n\nTo predict $y$ from $x$, draw the line that makes the vertical misses as small as possible — specifically, the line $\\hat{y} = a + bx$ minimizing the sum of squared residuals. Calculus gives clean formulas:\n\n$$b = r\\,\\frac{s_y}{s_x} = \\frac{S_{xy}}{S_{xx}}, \\qquad a = \\bar{y} - b\\,\\bar{x}.$$\n\nThe second formula says the line always passes through the point of means $(\\bar{x}, \\bar{y})$ — the data's center of gravity.\n\nFor the example: $b = \\tfrac{16}{20} = 0.8$ and $a = 20 - 0.8(5) = 16$, so\n\n$$\\hat{y} = 16 + 0.8x.$$\n\n**Read the slope out loud:** each additional unit of $x$ raises the *predicted* $y$ by $0.8$. The intercept $a = 16$ is the prediction at $x = 0$ — meaningful only if $x = 0$ makes sense for the data.\n\n## Prediction and residuals\n\nPredicting is substitution: at $x = 6$, $\\hat{y} = 16 + 0.8(6) = 20.8$. The observed value there was $y = 19$, so the **residual** is\n\n$$y - \\hat{y} = 19 - 20.8 = -1.8:$$\n\nthe point sits 1.8 below the line. Residuals are the line's errors; least squares chooses the line that makes their squares sum as small as possible, and a residual plot with no pattern is the sign that a line was the right model.\n\n### Extrapolation: where lines go to lie\n\nThe fitted line summarizes the data **over the observed $x$-range only**. Plugging in an $x$ far outside it — extrapolation — asks the line about territory it has never seen. A toddler's height data may fit a line beautifully, and that line will cheerfully predict a 12-foot 40-year-old. Interpolation (inside the range) inherits the data's support; extrapolation is a guess wearing an equation.\n\n### Correlation is not causation\n\nThe most important sentence in this topic. A strong $r$ between ice cream sales and drownings does not mean dessert is dangerous — hot weather drives both. A **lurking variable** that influences both $x$ and $y$ can manufacture correlation with no causal link anywhere. Only a controlled, randomized experiment can separate cause from association. Related traps:\n\n- **Outliers and influence:** one far-out point can swing both $r$ and the line dramatically — always look at the plot.\n- **Restricted range:** correlations computed on a narrow slice of $x$ (only admitted students, only sunny days) are usually weaker than the full-population truth.\n- **$r$ for curves:** a small $r$ does not mean \"no relationship\", just \"no *linear* relationship\"."
+  },
+  "application": {
+    "summary": "Correlation and regression power forecasting and evaluation across business, health, and engineering: quantify how tightly two quantities move together with $r$, summarize the trend with $\\hat{y} = a + bx$, predict inside the data's range, and audit the model through its residuals.",
+    "domains": ["economics and business forecasting", "medicine and public health", "sports analytics", "engineering calibration"],
+    "workedExample": "**Pricing ad spend: does the budget pay for itself?**\n\nA small retailer logs weekly ad spend $x$ (hundreds of dollars) and sales $y$ (units) for four representative weeks: $x: 2, 4, 6, 8$; $y: 17, 21, 19, 23$.\n\n*Step 1 — plot and describe.* The points rise from left to right with modest scatter: positive, fairly strong, linear.\n\n*Step 2 — correlation.* Means are $\\bar{x} = 5$, $\\bar{y} = 20$; the deviation sums come to $S_{xy} = 16$, $S_{xx} = 20$, $S_{yy} = 20$, so $r = \\tfrac{16}{20} = 0.8$ — strong enough that a linear summary is useful.\n\n*Step 3 — the line.* $b = \\tfrac{S_{xy}}{S_{xx}} = 0.8$ and $a = 20 - 0.8(5) = 16$: $\\hat{y} = 16 + 0.8x$. Business translation: each extra \\$100 of weekly ads is associated with about 0.8 extra units sold, on top of a 16-unit baseline.\n\n*Step 4 — predict and check.* Next week's plan is $x = 5$: predict $\\hat{y} = 16 + 0.8(5) = 20$ units. Last week the shop spent $x = 6$ and sold 19: residual $19 - 20.8 = -1.8$, a slightly under-line week, nothing alarming.\n\n*Step 5 — respect the limits.* Marketing floats a \\$5{,}000 blitz ($x = 50$). The line says $\\hat{y} = 56$ — but $x = 50$ is wild extrapolation from data that never left $[2, 8]$, and ad response famously saturates. And even inside the range, the association is not proof of causation: holiday weeks may drive both ad budgets and sales. The honest next step is an experiment — randomize the spend across weeks.",
+    "domainNotes": [
+      "**Economics:** demand curves, price elasticities, and market betas are regression slopes; a stock's beta is literally $b$ from regressing its returns on the market's.",
+      "**Medicine:** dose-response summaries and risk-factor studies lean on regression, and the lurking-variable trap is why observational findings (like diet correlations) so often fail in randomized trials.",
+      "**Sports analytics:** projecting a player's next season from age and past performance is regression — and famous busts are usually extrapolations outside the observed range.",
+      "**Engineering:** instrument calibration fits $\\hat{y} = a + bx$ between a sensor's reading and a known standard; residual plots reveal when the sensor drifts nonlinearly."
+    ]
+  },
+  "generators": [
+    "st2-scatter-1", "st2-scatter-2", "st2-scatter-3",
+    "st2-corr-1", "st2-corr-2", "st2-corr-3",
+    "st2-line-1", "st2-line-2", "st2-line-3",
+    "st2-pred-1", "st2-pred-2", "st2-pred-3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.regression-correlation.s01",
+      "concepts": ["scatterplots-and-direction"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A scatterplot of hours studied vs. exam score shows scores rising steadily as hours rise, with the points hugging a straight line tightly. Describe the association.",
+      "steps": [
+        { "instruction": "Direction: type 'positive' or 'negative'.", "answer": "positive", "accept": [], "hint": "The variables rise together." },
+        { "instruction": "Strength: type 'strong' or 'weak'.", "answer": "strong", "accept": [], "hint": "Tight cluster around the trend." },
+        { "instruction": "Form: type 'linear' or 'nonlinear'.", "answer": "linear", "accept": ["line", "straight"], "hint": "The trend is a straight line." }
+      ],
+      "finalAnswer": { "value": "strong positive linear", "unit": "" },
+      "solutionNarrative": "Scores rise with hours (positive), the points cluster tightly (strong), and the trend is straight (linear)."
+    },
+    {
+      "id": "statistics.regression-correlation.s02",
+      "concepts": ["scatterplots-and-direction"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Two studies report correlations $r = -0.85$ and $r = 0.6$. Strength is judged by $|r|$, not the sign.",
+      "steps": [
+        { "instruction": "Compute $|-0.85|$.", "answer": "0.85", "accept": [], "hint": "Drop the sign." },
+        { "instruction": "Which $r$ indicates the STRONGER linear relationship? Type its value (with sign).", "answer": "-0.85", "accept": [], "hint": "Compare 0.85 with 0.6." },
+        { "instruction": "What is the direction of that stronger relationship? Type 'positive' or 'negative'.", "answer": "negative", "accept": [], "hint": "The sign of $r$ gives the direction." }
+      ],
+      "finalAnswer": { "value": "-0.85", "unit": "" },
+      "solutionNarrative": "$|-0.85| = 0.85 > 0.6$, so $r = -0.85$ marks the stronger relationship — a strongly negative one. A correlation of $-0.85$ is stronger than $+0.6$, not weaker."
+    },
+    {
+      "id": "statistics.regression-correlation.s03",
+      "concepts": ["scatterplots-and-direction"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Across many months, ice cream sales and drowning incidents correlate strongly: $r = 0.88$. Reason about what this does and does not show.",
+      "steps": [
+        { "instruction": "What is the direction of the association? Type 'positive' or 'negative'.", "answer": "positive", "accept": [], "hint": "Look at the sign of $r$." },
+        { "instruction": "Does this correlation PROVE that ice cream causes drowning? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Correlation is not causation." },
+        { "instruction": "Is \"summer weather drives both variables\" a plausible alternative explanation? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "A lurking variable can create correlation with no causal link." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The association is strong and positive, but hot weather plausibly drives both swimming (hence drownings) and ice cream sales. A lurking variable manufactures the correlation — no causal arrow between the pair is needed."
+    },
+    {
+      "id": "statistics.regression-correlation.s04",
+      "concepts": ["scatterplots-and-direction"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A used-car dataset plots car age ($x$) against resale value ($y$): value falls steadily as age rises, in a loose, fuzzy cloud. Describe the association.",
+      "steps": [
+        { "instruction": "Direction: type 'positive' or 'negative'.", "answer": "negative", "accept": [], "hint": "One rises while the other falls." },
+        { "instruction": "Strength: type 'strong' or 'weak'.", "answer": "weak", "accept": [], "hint": "A loose cloud means a weak pattern." }
+      ],
+      "finalAnswer": { "value": "weak negative", "unit": "" },
+      "solutionNarrative": "Value moves opposite to age (negative), and the loose scatter makes the association weak."
+    },
+    {
+      "id": "statistics.regression-correlation.s05",
+      "concepts": ["correlation-coefficient"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A dataset has summary sums $S_{xy} = 16$, $S_{xx} = 20$, $S_{yy} = 20$. Compute $r = \\dfrac{S_{xy}}{\\sqrt{S_{xx} S_{yy}}}$.",
+      "steps": [
+        { "instruction": "Compute $S_{xx} \\cdot S_{yy} = 20 \\times 20$.", "answer": "400", "accept": [], "hint": "Multiply the two sums." },
+        { "instruction": "Take the square root.", "answer": "20", "accept": ["sqrt(400)"], "hint": "$20^2 = 400$." },
+        { "instruction": "Divide: $r = \\dfrac{16}{20}$. (Give a decimal.)", "answer": "0.8", "accept": ["16/20", "4/5"], "hint": "Reduce or divide." }
+      ],
+      "finalAnswer": { "value": "0.8", "unit": "" },
+      "solutionNarrative": "$r = \\tfrac{16}{\\sqrt{400}} = \\tfrac{16}{20} = 0.8$: a strong positive linear association."
+    },
+    {
+      "id": "statistics.regression-correlation.s06",
+      "concepts": ["correlation-coefficient"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute the correlation of the dataset $x: 2, 4, 6, 8$ and $y: 17, 21, 19, 23$ (paired in order). You may use $\\sum(x-\\bar{x})^2 = 20$ and $\\sum(y-\\bar{y})^2 = 20$.",
+      "plot": { "type": "cartesian", "xRange": [0, 10], "yRange": [14, 26], "grid": true, "points": [ { "x": 2, "y": 17, "color": "warn" }, { "x": 4, "y": 21, "color": "warn" }, { "x": 6, "y": 19, "color": "warn" }, { "x": 8, "y": 23, "color": "warn" } ], "caption": "The four data points: a positive linear trend with some scatter." },
+      "steps": [
+        { "instruction": "Compute $\\bar{x}$, the mean of the $x$ values.", "answer": "5", "accept": [], "hint": "$(2+4+6+8)/4$." },
+        { "instruction": "Compute $\\bar{y}$.", "answer": "20", "accept": [], "hint": "$(17+21+19+23)/4$." },
+        { "instruction": "Compute $S_{xy} = \\sum(x-\\bar{x})(y-\\bar{y})$. The deviation pairs multiply as $(-3)(-3) + (-1)(1) + (1)(-1) + (3)(3)$.", "answer": "16", "accept": [], "hint": "$9 - 1 - 1 + 9$." },
+        { "instruction": "Compute $r = \\dfrac{16}{\\sqrt{20 \\times 20}}$. (Give a decimal.)", "answer": "0.8", "accept": ["16/20", "4/5"], "hint": "$\\sqrt{400} = 20$." }
+      ],
+      "finalAnswer": { "value": "0.8", "unit": "" },
+      "solutionNarrative": "Means are 5 and 20; the cross products sum to $S_{xy} = 16$, so $r = \\tfrac{16}{20} = 0.8$."
+    },
+    {
+      "id": "statistics.regression-correlation.s07",
+      "concepts": ["correlation-coefficient"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Screen time ($x$, hours) and sleep quality score ($y$) for four people: $x: 1, 3, 5, 7$; $y: 26, 28, 22, 24$. Using $\\sum(x-\\bar{x})^2 = \\sum(y-\\bar{y})^2 = 20$, compute and interpret $r$. (Scale: $|r| \\ge 0.8$ strong; $0.5 \\le |r| < 0.8$ moderate; $|r| < 0.5$ weak.)",
+      "steps": [
+        { "instruction": "Compute $\\bar{x}$ and give it.", "answer": "4", "accept": [], "hint": "$(1+3+5+7)/4$." },
+        { "instruction": "Compute $\\bar{y}$.", "answer": "25", "accept": [], "hint": "$(26+28+22+24)/4$." },
+        { "instruction": "Compute $S_{xy}$: the deviation pairs multiply as $(-3)(1) + (-1)(3) + (1)(-3) + (3)(-1)$.", "answer": "-12", "accept": [], "hint": "$-3 - 3 - 3 - 3$." },
+        { "instruction": "Compute $r = \\dfrac{-12}{\\sqrt{20 \\times 20}}$. (Give a decimal.)", "answer": "-0.6", "accept": ["-12/20", "-3/5"], "hint": "Divide by 20, keeping the sign." },
+        { "instruction": "Strength on the given scale: type 'strong', 'moderate', or 'weak'.", "answer": "moderate", "accept": [], "hint": "$|r| = 0.6$ falls between 0.5 and 0.8." }
+      ],
+      "finalAnswer": { "value": "-0.6", "unit": "" },
+      "solutionNarrative": "$S_{xy} = -12$ gives $r = -0.6$: a moderate negative association — more screen time, somewhat worse sleep, though far from a tight rule."
+    },
+    {
+      "id": "statistics.regression-correlation.s08",
+      "concepts": ["correlation-coefficient"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A dataset has $S_{xy} = -8$ with $S_{xx} = S_{yy} = 20$. Compute and classify $r$. (Scale: $|r| \\ge 0.8$ strong; $0.5 \\le |r| < 0.8$ moderate; $|r| < 0.5$ weak.)",
+      "steps": [
+        { "instruction": "Compute $r = \\dfrac{-8}{\\sqrt{20 \\times 20}}$. (Give a decimal.)", "answer": "-0.4", "accept": ["-8/20", "-2/5"], "hint": "$\\sqrt{400} = 20$." },
+        { "instruction": "Direction: type 'positive' or 'negative'.", "answer": "negative", "accept": [], "hint": "The sign of $r$." },
+        { "instruction": "Strength on the given scale: type 'strong', 'moderate', or 'weak'.", "answer": "weak", "accept": [], "hint": "$|r| = 0.4 < 0.5$." }
+      ],
+      "finalAnswer": { "value": "-0.4", "unit": "" },
+      "solutionNarrative": "$r = \\tfrac{-8}{20} = -0.4$: a weak negative linear association — the cloud leans downhill but only loosely."
+    },
+    {
+      "id": "statistics.regression-correlation.s09",
+      "concepts": ["least-squares-line"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A least-squares line has slope $b = 0.8$ and passes through the point of means $(\\bar{x}, \\bar{y}) = (5, 20)$. Find the intercept $a = \\bar{y} - b\\bar{x}$ and write the line. (Write $\\hat{y}$ as plain $y$.)",
+      "steps": [
+        { "instruction": "Compute $b\\bar{x} = 0.8 \\times 5$.", "answer": "4", "accept": [], "hint": "Slope times $\\bar{x}$." },
+        { "instruction": "Intercept: $a = 20 - 4$.", "answer": "16", "accept": [], "hint": "$\\bar{y}$ minus the product." },
+        { "instruction": "Write the regression equation (e.g. y = 2 + 3x).", "answer": "y = 16 + 0.8x", "accept": ["y = 0.8x + 16", "16 + 0.8x"], "hint": "$y = a + bx$ with your $a$ and $b$." }
+      ],
+      "finalAnswer": { "value": "y = 16 + 0.8x", "unit": "" },
+      "solutionNarrative": "$a = 20 - 0.8(5) = 16$, so $\\hat{y} = 16 + 0.8x$. Every least-squares line passes through $(\\bar{x}, \\bar{y})$."
+    },
+    {
+      "id": "statistics.regression-correlation.s10",
+      "concepts": ["least-squares-line"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A training dataset has $r = 0.6$, $s_x = 3$, $s_y = 10$, $\\bar{x} = 4$, $\\bar{y} = 30$. Build the least-squares line with $b = r\\dfrac{s_y}{s_x}$ and $a = \\bar{y} - b\\bar{x}$. (Write $\\hat{y}$ as plain $y$.)",
+      "steps": [
+        { "instruction": "Slope: $b = 0.6 \\times \\dfrac{10}{3}$.", "answer": "2", "accept": [], "hint": "$0.6 \\times 10 = 6$, then divide by 3." },
+        { "instruction": "Compute $b\\bar{x} = 2 \\times 4$.", "answer": "8", "accept": [], "hint": "Slope times $\\bar{x}$." },
+        { "instruction": "Intercept: $a = 30 - 8$.", "answer": "22", "accept": [], "hint": "$\\bar{y} - b\\bar{x}$." },
+        { "instruction": "Write the regression equation (e.g. y = 2 + 3x).", "answer": "y = 22 + 2x", "accept": ["y = 2x + 22", "22 + 2x"], "hint": "$y = a + bx$." }
+      ],
+      "finalAnswer": { "value": "y = 22 + 2x", "unit": "" },
+      "solutionNarrative": "$b = 0.6 \\cdot \\tfrac{10}{3} = 2$ and $a = 30 - 2(4) = 22$: $\\hat{y} = 22 + 2x$. The slope's sign always matches $r$'s."
+    },
+    {
+      "id": "statistics.regression-correlation.s11",
+      "concepts": ["least-squares-line"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "For the ad-spend data ($x: 2, 4, 6, 8$; $y: 17, 21, 19, 23$) the sums are $S_{xy} = 16$, $S_{xx} = 20$, with $\\bar{x} = 5$, $\\bar{y} = 20$. Build the least-squares line and interpret its slope. (Write $\\hat{y}$ as plain $y$.)",
+      "steps": [
+        { "instruction": "Slope: $b = \\dfrac{S_{xy}}{S_{xx}} = \\dfrac{16}{20}$. (Give a decimal.)", "answer": "0.8", "accept": ["16/20", "4/5"], "hint": "Divide." },
+        { "instruction": "Intercept: $a = 20 - (0.8)(5)$.", "answer": "16", "accept": [], "hint": "$b\\bar{x} = 4$." },
+        { "instruction": "Write the regression equation (e.g. y = 2 + 3x).", "answer": "y = 16 + 0.8x", "accept": ["y = 0.8x + 16", "16 + 0.8x"], "hint": "$y = a + bx$." },
+        { "instruction": "For each extra unit of ad spend, predicted sales change by how much? (Give a number.)", "answer": "0.8", "accept": [], "hint": "That is what the slope means." }
+      ],
+      "finalAnswer": { "value": "y = 16 + 0.8x", "unit": "" },
+      "solutionNarrative": "$b = \\tfrac{16}{20} = 0.8$ and $a = 20 - 4 = 16$, so $\\hat{y} = 16 + 0.8x$: each extra hundred dollars of ads is associated with 0.8 more units sold."
+    },
+    {
+      "id": "statistics.regression-correlation.s12",
+      "concepts": ["least-squares-line"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Car age and value: $r = -0.8$, $s_x = 4$, $s_y = 5$, $\\bar{x} = 6$, $\\bar{y} = 18$. Build the least-squares line. (Write $\\hat{y}$ as plain $y$.)",
+      "steps": [
+        { "instruction": "Slope: $b = -0.8 \\times \\dfrac{5}{4}$.", "answer": "-1", "accept": [], "hint": "$5/4 = 1.25$, times $-0.8$." },
+        { "instruction": "Intercept: $a = 18 - (-1)(6)$.", "answer": "24", "accept": [], "hint": "Subtracting a negative adds." },
+        { "instruction": "Write the regression equation (e.g. y = 2 - 3x).", "answer": "y = 24 - x", "accept": ["y = 24 - 1x", "y = -x + 24", "24 - x"], "hint": "$y = a + bx$ with $b = -1$." }
+      ],
+      "finalAnswer": { "value": "y = 24 - x", "unit": "" },
+      "solutionNarrative": "$b = -0.8 \\cdot \\tfrac{5}{4} = -1$ and $a = 18 + 6 = 24$: $\\hat{y} = 24 - x$. Each year of age costs about one unit of predicted value."
+    },
+    {
+      "id": "statistics.regression-correlation.s13",
+      "concepts": ["prediction-and-residuals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A regression line is $\\hat{y} = 16 + 0.8x$. Predict $\\hat{y}$ at $x = 10$.",
+      "steps": [
+        { "instruction": "Compute the slope term: $0.8 \\times 10$.", "answer": "8", "accept": [], "hint": "Multiply." },
+        { "instruction": "Add the intercept: $16 + 8$.", "answer": "24", "accept": [], "hint": "Intercept plus slope term." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "$\\hat{y} = 16 + 0.8(10) = 24$ — prediction is substitution."
+    },
+    {
+      "id": "statistics.regression-correlation.s14",
+      "concepts": ["prediction-and-residuals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A gym's model for weekly sign-ups is $\\hat{y} = 22 + 2x$, where $x$ is promo emails sent (thousands). In a week with $x = 5$, actual sign-ups were $y = 35$. Find the residual.",
+      "steps": [
+        { "instruction": "Predicted value: $\\hat{y} = 22 + 2(5)$.", "answer": "32", "accept": [], "hint": "Evaluate the line at $x = 5$." },
+        { "instruction": "Residual: $y - \\hat{y} = 35 - 32$. (Give a number, sign included.)", "answer": "3", "accept": ["+3"], "hint": "Observed minus predicted." },
+        { "instruction": "Does the actual point sit ABOVE or BELOW the line? Type 'above' or 'below'.", "answer": "above", "accept": [], "hint": "Positive residual = above." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$\\hat{y} = 32$, so the residual is $35 - 32 = 3$: the week beat the model by 3 sign-ups, sitting above the line."
+    },
+    {
+      "id": "statistics.regression-correlation.s15",
+      "concepts": ["prediction-and-residuals"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The ad-spend line $\\hat{y} = 16 + 0.8x$ was fitted to data with $x$ between 2 and 8 (hundreds of dollars). Marketing asks for a prediction at $x = 25$.",
+      "steps": [
+        { "instruction": "Mechanically, what does the line give at $x = 25$? Compute $16 + 0.8(25)$.", "answer": "36", "accept": [], "hint": "$0.8 \\times 25 = 20$." },
+        { "instruction": "Is predicting at $x = 25$ interpolation or extrapolation? Type one.", "answer": "extrapolation", "accept": ["extrapolating"], "hint": "Compare 25 with the data range $[2, 8]$." },
+        { "instruction": "Should this prediction be trusted as much as one inside $[2, 8]$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The line was never tested out there." }
+      ],
+      "finalAnswer": { "value": "extrapolation", "unit": "" },
+      "solutionNarrative": "The line outputs 36, but $x = 25$ is more than triple the largest observed spend — extrapolation. Ad response typically saturates, so the true value could be far lower."
+    },
+    {
+      "id": "statistics.regression-correlation.s16",
+      "concepts": ["prediction-and-residuals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A model for machine output is $\\hat{y} = 50 - 2x$, where $x$ is machine age (years). An 8-year-old machine produced $y = 30$ units. Find the residual.",
+      "steps": [
+        { "instruction": "Predicted value: $\\hat{y} = 50 - 2(8)$.", "answer": "34", "accept": [], "hint": "$2 \\times 8 = 16$." },
+        { "instruction": "Residual: $y - \\hat{y} = 30 - 34$. (Give a number, sign included.)", "answer": "-4", "accept": [], "hint": "Observed minus predicted; it is negative." },
+        { "instruction": "Does the actual point sit ABOVE or BELOW the line? Type 'above' or 'below'.", "answer": "below", "accept": [], "hint": "Negative residual = below." }
+      ],
+      "finalAnswer": { "value": "-4", "unit": "" },
+      "solutionNarrative": "$\\hat{y} = 34$, so the residual is $30 - 34 = -4$: this machine underperforms its age group by 4 units, sitting below the line."
+    }
+  ]
+}

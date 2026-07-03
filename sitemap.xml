@@ -49,7 +49,13 @@
     <loc>https://mathgym.io/topic.html?id=algebra-2.functions</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=algebra-2.polynomial-functions</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=algebra-2.radicals</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=algebra-2.complex-numbers</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=algebra-2.rational-expressions</loc>
@@ -106,10 +112,16 @@
     <loc>https://mathgym.io/topic.html?id=trigonometry.trig-identities</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=trigonometry.inverse-trig-functions</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=trigonometry.law-of-sines-and-cosines</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=trigonometry.trig-equations</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=trigonometry.polar-coordinates</loc>
   </url>
   <url>
     <loc>https://mathgym.io/subject.html?id=calculus-1</loc>
@@ -133,10 +145,16 @@
     <loc>https://mathgym.io/topic.html?id=calculus-1.analyzing-functions</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-1.linearization-and-differentials</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=calculus-1.related-rates</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=calculus-1.optimization</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-1.lhopital-rule</loc>
   </url>
   <url>
     <loc>https://mathgym.io/subject.html?id=calculus-2</loc>
@@ -154,10 +172,19 @@
     <loc>https://mathgym.io/topic.html?id=calculus-2.integration-by-parts</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-2.partial-fractions</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-2.improper-integrals</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=calculus-2.applications-of-integration</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=calculus-2.series-and-convergence</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-2.taylor-series</loc>
   </url>
   <url>
     <loc>https://mathgym.io/subject.html?id=calculus-3</loc>
@@ -172,6 +199,9 @@
     <loc>https://mathgym.io/topic.html?id=calculus-3.vector-proofs</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-3.vector-valued-functions</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=calculus-3.partial-derivatives</loc>
   </url>
   <url>
@@ -182,6 +212,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=calculus-3.multiple-integrals</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-3.line-integrals</loc>
   </url>
   <url>
     <loc>https://mathgym.io/subject.html?id=differential-equations</loc>
@@ -203,6 +236,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=differential-equations.nonhomogeneous-second-order</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=differential-equations.laplace-transforms</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=differential-equations.numerical-methods</loc>
@@ -253,6 +289,9 @@
     <loc>https://mathgym.io/topic.html?id=linear-algebra.orthogonality-and-least-squares</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=linear-algebra.gram-schmidt</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/subject.html?id=statistics</loc>
   </url>
   <url>
@@ -272,6 +311,15 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=statistics.normal-and-sampling</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.confidence-intervals</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.hypothesis-testing</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=statistics.regression-correlation</loc>
   </url>
   <url>
     <loc>https://mathgym.io/subject.html?id=discrete-math</loc>

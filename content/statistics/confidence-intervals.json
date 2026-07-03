@@ -1,0 +1,272 @@
+{
+  "id": "statistics.confidence-intervals",
+  "subject": "statistics",
+  "title": "Confidence Intervals",
+  "prerequisites": ["statistics.normal-and-sampling"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "standard-error-and-margin",
+      "label": "Standard error and margin of error",
+      "microLesson": "An estimate from a sample is never exact, but its typical miss is predictable: the **standard error** of a sample mean is $\\mathrm{SE} = \\dfrac{s}{\\sqrt{n}}$ — the sample's spread shrunk by $\\sqrt{n}$. The **margin of error** scales that up to a chosen confidence: $m = z^* \\cdot \\mathrm{SE}$, where $z^*$ comes from the normal curve ($1.645$ for 90%, $1.960$ for 95%, $2.576$ for 99%). With $s = 12$ and $n = 36$, $\\mathrm{SE} = \\tfrac{12}{6} = 2$, so a 95% margin is $1.96 \\times 2 = 3.92$."
+    },
+    {
+      "id": "ci-for-a-mean",
+      "label": "Confidence interval for a mean",
+      "microLesson": "A confidence interval is just *estimate $\\pm$ margin*: $\\bar{x} \\pm z^* \\dfrac{s}{\\sqrt{n}}$. Compute the standard error, scale by $z^*$, then subtract and add. With $\\bar{x} = 502$, $s = 12$, $n = 36$ at 95% confidence: $\\mathrm{SE} = 2$, margin $= 3.92$, interval $= (498.08,\\ 505.92)$. The center is the data's best guess; the radius is the uncertainty you must honestly attach to it."
+    },
+    {
+      "id": "ci-for-a-proportion",
+      "label": "Confidence interval for a proportion",
+      "microLesson": "For yes/no data the estimate is $\\hat{p} = \\dfrac{\\text{successes}}{n}$, and its standard error is $\\mathrm{SE} = \\sqrt{\\dfrac{\\hat{p}(1-\\hat{p})}{n}}$. The interval is again $\\hat{p} \\pm z^* \\cdot \\mathrm{SE}$. A poll with 320 of 400 in favor has $\\hat{p} = 0.8$, $\\mathrm{SE} = \\sqrt{\\tfrac{0.8 \\times 0.2}{400}} = 0.02$, and a 95% margin of $1.96 \\times 0.02 = 0.0392$ — the '$\\pm 4$ points' a news story would report."
+    },
+    {
+      "id": "interpretation-and-sample-size",
+      "label": "Interpretation and sample size",
+      "microLesson": "\"95% confident\" describes the **procedure**, not this one interval: if you repeated the sampling many times, about 95% of the intervals built this way would capture the true value. It is NOT correct to say the parameter has a 95% chance of being in your specific interval — the parameter is fixed; the interval is what varies. Planning works backwards: to hit a target margin $m$, solve $n = \\left(\\dfrac{z^* \\sigma}{m}\\right)^2$ and always round UP. Because of the $\\sqrt{n}$, halving the margin takes four times the data."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## An estimate without an error bar is a guess\n\nA sample mean of $502$ g sounds precise — until you ask how different it would have been with a different random sample. Every honest estimate needs two numbers: the estimate itself and how far off it could plausibly be. A **confidence interval** packages both: *best guess $\\pm$ margin of error*. This topic is the direct payoff of the Central Limit Theorem: because sample means are approximately normal with spread $\\sigma/\\sqrt{n}$, we can say exactly how wide the error bar should be.\n\n## Standard error: the size of a typical miss\n\nRecall from sampling theory that the sample mean $\\bar{x}$ scatters around the true mean $\\mu$ with standard deviation\n\n$$\\mathrm{SE} = \\frac{s}{\\sqrt{n}},$$\n\nwhere $s$ is the sample standard deviation. This **standard error** is the typical distance between $\\bar{x}$ and the truth. With $s = 12$ and $n = 36$ bags of coffee, $\\mathrm{SE} = \\tfrac{12}{6} = 2$ g: averaging 36 bags turned 12 g of bag-to-bag noise into 2 g of uncertainty about the mean.\n\n## The margin of error and $z^*$\n\nHow many standard errors wide should the error bar be? That depends on how confident you want to be, and the normal curve supplies the conversion. The middle 95% of a normal distribution lies within $1.960$ standard deviations of center, the middle 90% within $1.645$, and the middle 99% within $2.576$. These are the **critical values** $z^*$:\n\n| Confidence level | $z^*$ |\n|---|---|\n| 90% | 1.645 |\n| 95% | 1.960 |\n| 99% | 2.576 |\n\nThe **margin of error** is $m = z^* \\cdot \\mathrm{SE}$, and the interval is\n\n$$\\bar{x} \\pm z^* \\frac{s}{\\sqrt{n}}.$$\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-4, 4], \"yRange\": [0, 0.45], \"grid\": false, \"curves\": [ { \"fn\": \"0.3989*exp(-x*x/2)\", \"color\": \"accent\", \"fillRange\": [-1.96, 1.96] } ], \"segments\": [ { \"from\": [-1.96, 0], \"to\": [-1.96, 0.32], \"dashed\": true, \"color\": \"warn\", \"label\": \"-1.96\" }, { \"from\": [1.96, 0], \"to\": [1.96, 0.32], \"dashed\": true, \"color\": \"warn\", \"label\": \"+1.96\" } ], \"caption\": \"The middle 95% of the sampling distribution lies within 1.96 standard errors of the mean — that is where z* = 1.960 comes from.\" }\n```\n\n### Worked example: a mean\n\nA filling machine is sampled: $n = 36$ bags, $\\bar{x} = 502$ g, $s = 12$ g. Build the 95% interval.\n\n1. $\\mathrm{SE} = \\tfrac{12}{\\sqrt{36}} = 2$.\n2. $m = 1.96 \\times 2 = 3.92$.\n3. Interval: $502 \\pm 3.92 = (498.08,\\ 505.92)$.\n\nThe label says 500 g. Since 500 sits inside the interval, the data are consistent with an honest machine — a preview of hypothesis testing.\n\n## Proportions: the polling formula\n\nFor yes/no data, the estimate is the sample proportion $\\hat{p} = \\tfrac{\\text{successes}}{n}$, and the same recipe applies with\n\n$$\\mathrm{SE} = \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}.$$\n\nA poll finds 320 of 400 voters in favor: $\\hat{p} = 0.8$, $\\mathrm{SE} = \\sqrt{\\tfrac{0.8 \\times 0.2}{400}} = \\sqrt{0.0004} = 0.02$, so the 95% margin is $1.96 \\times 0.02 = 0.0392$ — about $\\pm 4$ percentage points. The interval $(0.76,\\ 0.84)$ (rounding the margin to $0.039$ gives $(0.761,\\ 0.839)$) is exactly the \"80% $\\pm$ 4\" formulation news reports use.\n\n## What \"95% confident\" actually means\n\nThis is the most misinterpreted sentence in statistics, so slow down. The randomness is in the **sampling**, not in the parameter. The true mean $\\mu$ is a fixed number; it does not wobble. What varies is the interval: each new sample would produce a slightly different $(\\text{lo}, \\text{hi})$.\n\n> **Correct:** \"If we repeated this whole procedure many times, about 95% of the intervals we built would capture $\\mu$.\"\n>\n> **Wrong:** \"There is a 95% probability that $\\mu$ is between 498.08 and 505.92.\" Your particular interval either contains $\\mu$ or it doesn't — you just don't know which.\n\nThe confidence level is the procedure's long-run success rate, like a fisherman whose net catches the fish 95% of the throws. Once a particular net has landed, the fish is either in it or not.\n\n### Common pitfalls\n\n- **Probability transfer:** saying \"$\\mu$ has a 95% chance of being in (498, 506)\" — see above.\n- **Describing individuals:** a 95% CI for the *mean* does NOT contain 95% of individual values. Individual bags spread with $s = 12$, far wider than the interval for $\\mu$.\n- **Confusing confidence with accuracy:** a 99% interval is *wider*, not better — you buy certainty by giving up precision.\n- **Forgetting the interval is only as good as the sample:** a biased sample (say, polling only landline owners) has a margin of error that measures sampling noise, not bias. No formula fixes a bad sample.\n\n## Designing the study: sample size\n\nPlanning runs the formula backwards. To achieve a target margin $m$ for a mean, solve $m = z^* \\sigma / \\sqrt{n}$ for $n$:\n\n$$n = \\left(\\frac{z^* \\sigma}{m}\\right)^2.$$\n\nWant a mean known to within $m = 2$ when $\\sigma \\approx 10$, at 95% confidence? $n = (1.96 \\times 10 / 2)^2 = 9.8^2 = 96.04$, so take $n = 97$ — sample sizes always round **up**, because 96 subjects would leave the margin slightly over target. The square makes precision expensive: halving the margin quadruples the required sample. That $\\sqrt{n}$ wall is why national polls stop at a few thousand respondents."
+  },
+  "application": {
+    "summary": "Confidence intervals are the standard language of uncertainty in polling, manufacturing, and medicine: the margin of error on a poll, the tolerance band on a production line, and the reported range for a drug's effect are all $\\text{estimate} \\pm z^* \\cdot \\mathrm{SE}$.",
+    "domains": ["political and market polling", "manufacturing quality control", "clinical trials and medicine", "A/B testing and product analytics"],
+    "workedExample": "**Quality control: is the coffee machine drifting?**\n\nA roastery's bagging machine targets 500 g. Each morning a technician weighs a random sample of $n = 25$ bags. Today: $\\bar{x} = 507$ g, $s = 10$ g.\n\n*Step 1 — standard error.* $\\mathrm{SE} = \\tfrac{10}{\\sqrt{25}} = 2$ g. Even though individual bags wobble by 10 g, the sample mean is only about 2 g uncertain.\n\n*Step 2 — margin at 95%.* $m = 1.96 \\times 2 = 3.92$ g.\n\n*Step 3 — the interval.* $507 \\pm 3.92 = (503.08,\\ 510.92)$.\n\n*Step 4 — the decision.* The target 500 g is NOT in the interval. Every plausible value of the true mean is above 500, so the machine is overfilling — costing product on every bag — and should be recalibrated. Had the interval been $(498.1,\\ 505.9)$, the 500 g target would be plausible and no action needed.\n\n*Step 5 — designing tomorrow's check.* Management wants the daily estimate good to $\\pm 2$ g at 95% confidence. Solve $n = (1.96 \\times 10 / 2)^2 = 96.04 \\to 97$ bags: about four times the current sample for half the margin, the $\\sqrt{n}$ tax in action.",
+    "domainNotes": [
+      "**Polling:** the famous \"$\\pm 3$ points\" is a 95% margin of error, $1.96\\sqrt{\\hat{p}(1-\\hat{p})/n}$; near $\\hat{p} = 0.5$ it is approximately $1/\\sqrt{n}$, which is why $n \\approx 1{,}000$ gives about $\\pm 3\\%$.",
+      "**Medicine:** trial results are reported as effect estimates with 95% CIs; an interval for a risk difference that includes 0 (or a risk ratio interval that includes 1) means the data are compatible with no effect.",
+      "**Manufacturing:** control charts flag a process when the sample mean drifts outside bands built from $z^* \\sigma / \\sqrt{n}$ — a confidence interval run in reverse.",
+      "**A/B testing:** dashboards show conversion rates with interval whiskers; overlapping whiskers warn that an apparent winner may be sampling noise."
+    ]
+  },
+  "generators": [
+    "st2-margin-1", "st2-margin-2", "st2-margin-3",
+    "st2-cimean-1", "st2-cimean-2", "st2-cimean-3",
+    "st2-ciprop-1", "st2-ciprop-2", "st2-ciprop-3",
+    "st2-interp-1", "st2-interp-2", "st2-interp-3"
+  ],
+  "problems": [
+    {
+      "id": "statistics.confidence-intervals.s01",
+      "concepts": ["standard-error-and-margin"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A sample of $n = 25$ values has sample standard deviation $s = 20$. Find the standard error of the sample mean, $\\mathrm{SE} = \\dfrac{s}{\\sqrt{n}}$.",
+      "steps": [
+        { "instruction": "Compute $\\sqrt{25}$.", "answer": "5", "accept": ["sqrt(25)"], "hint": "$5^2 = 25$." },
+        { "instruction": "Divide: $\\dfrac{20}{5}$.", "answer": "4", "accept": [], "hint": "$20 / 5$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = \\tfrac{20}{\\sqrt{25}} = \\tfrac{20}{5} = 4$: averaging 25 values cuts the uncertainty by a factor of 5."
+    },
+    {
+      "id": "statistics.confidence-intervals.s02",
+      "concepts": ["standard-error-and-margin"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A café times $n = 36$ orders: the sample standard deviation is $s = 12$ seconds. For a 95% confidence interval ($z^* = 1.960$), find the standard error and the margin of error.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{12}{\\sqrt{36}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{36} = 6$." },
+        { "instruction": "Margin of error: $1.96 \\times 2$. Give the exact value.", "answer": "3.92", "accept": ["3.920"], "hint": "$1.96 \\times 2$." }
+      ],
+      "finalAnswer": { "value": "3.92", "unit": "seconds" },
+      "solutionNarrative": "$\\mathrm{SE} = \\tfrac{12}{6} = 2$ seconds, so the 95% margin of error is $1.96 \\times 2 = 3.92$ seconds."
+    },
+    {
+      "id": "statistics.confidence-intervals.s03",
+      "concepts": ["standard-error-and-margin"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Battery lifetimes are sampled: $n = 100$, $s = 15$ hours. Find the margin of error for a 99% confidence interval. Use the table: 90% $\\to 1.645$, 95% $\\to 1.960$, 99% $\\to 2.576$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{15}{\\sqrt{100}}$. (Give a decimal.)", "answer": "1.5", "accept": ["3/2"], "hint": "$\\sqrt{100} = 10$." },
+        { "instruction": "Which $z^*$ matches 99% confidence?", "answer": "2.576", "accept": [], "hint": "Read the 99% row of the table." },
+        { "instruction": "Margin of error: $2.576 \\times 1.5$. Give the exact value.", "answer": "3.864", "accept": [], "hint": "$2.576 \\times 1.5$." }
+      ],
+      "finalAnswer": { "value": "3.864", "unit": "hours" },
+      "solutionNarrative": "$\\mathrm{SE} = 1.5$; at 99% confidence $z^* = 2.576$, so $m = 2.576 \\times 1.5 = 3.864$ hours. The higher confidence level widens the margin compared with 95%."
+    },
+    {
+      "id": "statistics.confidence-intervals.s04",
+      "concepts": ["standard-error-and-margin"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A population has $\\sigma = 30$ and you take samples of size $n = 36$. Find the standard error of the sample mean.",
+      "steps": [
+        { "instruction": "Compute $\\sqrt{36}$.", "answer": "6", "accept": ["sqrt(36)"], "hint": "$6^2 = 36$." },
+        { "instruction": "Divide: $\\dfrac{30}{6}$.", "answer": "5", "accept": [], "hint": "$30 / 6$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = \\tfrac{30}{\\sqrt{36}} = \\tfrac{30}{6} = 5$."
+    },
+    {
+      "id": "statistics.confidence-intervals.s05",
+      "concepts": ["ci-for-a-mean"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A sample gives $\\bar{x} = 80$ with margin of error $m = 6$. Find the endpoints of the confidence interval $\\bar{x} \\pm m$.",
+      "steps": [
+        { "instruction": "Lower bound: $80 - 6$.", "answer": "74", "accept": [], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $80 + 6$.", "answer": "86", "accept": [], "hint": "Center plus margin." }
+      ],
+      "finalAnswer": { "value": "(74, 86)", "unit": "" },
+      "solutionNarrative": "The interval is centered at 80 with radius 6: $(74, 86)$."
+    },
+    {
+      "id": "statistics.confidence-intervals.s06",
+      "concepts": ["ci-for-a-mean"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bagging machine is checked with $n = 36$ bags: $\\bar{x} = 502$ g, $s = 12$ g. Build a 95% confidence interval for the true mean weight ($z^* = 1.960$). Give exact values.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{12}{\\sqrt{36}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{36} = 6$." },
+        { "instruction": "Margin of error: $1.96 \\times 2$. Give the exact value.", "answer": "3.92", "accept": ["3.920"], "hint": "$1.96 \\times 2$." },
+        { "instruction": "Lower bound: $502 - 3.92$. Give the exact value.", "answer": "498.08", "accept": [], "hint": "Subtract the margin." },
+        { "instruction": "Upper bound: $502 + 3.92$. Give the exact value.", "answer": "505.92", "accept": [], "hint": "Add the margin." }
+      ],
+      "finalAnswer": { "value": "(498.08, 505.92)", "unit": "g" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$, margin $= 3.92$, so the 95% CI is $(498.08, 505.92)$ g. The 500 g label value sits inside, so the machine is consistent with its target."
+    },
+    {
+      "id": "statistics.confidence-intervals.s07",
+      "concepts": ["ci-for-a-mean"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Commute times are sampled: $n = 25$, $\\bar{x} = 42$ minutes, $s = 10$ minutes. Build a 99% confidence interval for the mean commute. Use: 90% $\\to 1.645$, 95% $\\to 1.960$, 99% $\\to 2.576$. Give exact values.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{10}{\\sqrt{25}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{25} = 5$." },
+        { "instruction": "Margin of error: $2.576 \\times 2$. Give the exact value.", "answer": "5.152", "accept": [], "hint": "99% confidence uses $z^* = 2.576$." },
+        { "instruction": "Lower bound: $42 - 5.152$. Give the exact value.", "answer": "36.848", "accept": [], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $42 + 5.152$. Give the exact value.", "answer": "47.152", "accept": [], "hint": "Center plus margin." }
+      ],
+      "finalAnswer": { "value": "(36.848, 47.152)", "unit": "minutes" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$; the 99% margin is $2.576(2) = 5.152$, giving $(36.848, 47.152)$ minutes. The 99% interval is wider than a 95% one would be ($42 \\pm 3.92$) — certainty costs width."
+    },
+    {
+      "id": "statistics.confidence-intervals.s08",
+      "concepts": ["ci-for-a-mean"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A 95% confidence interval is reported as $(55, 65)$. Recover the sample mean and the margin of error from the endpoints.",
+      "steps": [
+        { "instruction": "The sample mean is the midpoint: $\\dfrac{55 + 65}{2}$.", "answer": "60", "accept": [], "hint": "Average the endpoints." },
+        { "instruction": "The margin of error is half the width: $\\dfrac{65 - 55}{2}$.", "answer": "5", "accept": [], "hint": "Half of 10." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Any interval $\\bar{x} \\pm m$ is centered at $\\bar{x}$ with half-width $m$: here $\\bar{x} = 60$ and $m = 5$."
+    },
+    {
+      "id": "statistics.confidence-intervals.s09",
+      "concepts": ["ci-for-a-proportion"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "In a survey, 50 of $n = 100$ respondents said yes. Find the sample proportion and its standard error $\\mathrm{SE} = \\sqrt{\\dfrac{\\hat{p}(1-\\hat{p})}{n}}$.",
+      "steps": [
+        { "instruction": "Sample proportion: $\\hat{p} = \\dfrac{50}{100}$. (Give a decimal.)", "answer": "0.5", "accept": ["1/2", "50/100"], "hint": "Successes over sample size." },
+        { "instruction": "Compute $\\hat{p}(1-\\hat{p}) = 0.5 \\times 0.5$.", "answer": "0.25", "accept": ["1/4"], "hint": "$0.5 \\times 0.5$." },
+        { "instruction": "Divide by $n$: $\\dfrac{0.25}{100}$.", "answer": "0.0025", "accept": [], "hint": "Move the decimal two places." },
+        { "instruction": "Take the square root for the SE.", "answer": "0.05", "accept": ["sqrt(0.0025)", "0.050"], "hint": "$0.05^2 = 0.0025$." }
+      ],
+      "finalAnswer": { "value": "0.05", "unit": "" },
+      "solutionNarrative": "$\\hat{p} = 0.5$; $\\hat{p}(1-\\hat{p})/n = 0.0025$, whose square root gives $\\mathrm{SE} = 0.05$ — five percentage points of standard error from just 100 people."
+    },
+    {
+      "id": "statistics.confidence-intervals.s10",
+      "concepts": ["ci-for-a-proportion"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A poll finds 320 of $n = 400$ voters favor a measure. Find $\\hat{p}$, its standard error, and the 95% margin of error ($z^* = 1.960$).",
+      "steps": [
+        { "instruction": "Sample proportion: $\\hat{p} = \\dfrac{320}{400}$. (Give a decimal.)", "answer": "0.8", "accept": ["4/5", "320/400"], "hint": "Reduce the fraction." },
+        { "instruction": "Standard error: $\\sqrt{\\dfrac{0.8 \\times 0.2}{400}}$. (Give a decimal.)", "answer": "0.02", "accept": ["sqrt(0.0004)", "0.020"], "hint": "$0.16/400 = 0.0004$." },
+        { "instruction": "Margin of error: $1.96 \\times 0.02$. Give the exact value.", "answer": "0.0392", "accept": [], "hint": "$1.96 \\times 0.02$." }
+      ],
+      "finalAnswer": { "value": "0.0392", "unit": "" },
+      "solutionNarrative": "$\\hat{p} = 0.8$ with $\\mathrm{SE} = 0.02$, so the 95% margin is $1.96(0.02) = 0.0392$ — the poll would be reported as $80\\% \\pm 4$ points."
+    },
+    {
+      "id": "statistics.confidence-intervals.s11",
+      "concepts": ["ci-for-a-proportion"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "90 of $n = 100$ tested devices pass. Build a 90% confidence interval for the true pass rate ($z^* = 1.645$). The standard error is $\\sqrt{\\dfrac{0.9 \\times 0.1}{100}}$.",
+      "steps": [
+        { "instruction": "Standard error: $\\sqrt{\\dfrac{0.09}{100}}$. (Give a decimal.)", "answer": "0.03", "accept": ["sqrt(0.0009)", "0.030"], "hint": "$0.03^2 = 0.0009$." },
+        { "instruction": "Margin of error: $1.645 \\times 0.03$, rounded to 3 decimal places.", "answer": "0.049", "accept": ["0.04935"], "hint": "Multiply, then round." },
+        { "instruction": "Lower bound, using the rounded margin: $0.9 - 0.049$.", "answer": "0.851", "accept": [], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $0.9 + 0.049$.", "answer": "0.949", "accept": [], "hint": "Center plus margin." }
+      ],
+      "finalAnswer": { "value": "(0.851, 0.949)", "unit": "" },
+      "solutionNarrative": "$\\hat{p} = 0.9$, $\\mathrm{SE} = 0.03$, margin $= 1.645(0.03) \\approx 0.049$, so the 90% CI is $(0.851, 0.949)$: the true pass rate is plausibly anywhere from 85.1% to 94.9%."
+    },
+    {
+      "id": "statistics.confidence-intervals.s12",
+      "concepts": ["ci-for-a-proportion"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "20 of $n = 100$ users click an ad, so $\\hat{p} = 0.2$ and $\\mathrm{SE} = \\sqrt{\\dfrac{0.2 \\times 0.8}{100}} = 0.04$. Find the 99% margin of error ($z^* = 2.576$), rounded to 3 decimal places.",
+      "steps": [
+        { "instruction": "Multiply: $2.576 \\times 0.04$. Give the exact value.", "answer": "0.10304", "accept": [], "hint": "$2.576 \\times 0.04$." },
+        { "instruction": "Round to 3 decimal places.", "answer": "0.103", "accept": [], "hint": "The fourth decimal is 0, so the third stays." }
+      ],
+      "finalAnswer": { "value": "0.103", "unit": "" },
+      "solutionNarrative": "$m = 2.576 \\times 0.04 = 0.10304 \\approx 0.103$: at 99% confidence the click rate is only pinned down to about $\\pm 10$ percentage points — small samples make wide intervals."
+    },
+    {
+      "id": "statistics.confidence-intervals.s13",
+      "concepts": ["interpretation-and-sample-size"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A 95% confidence interval for $\\mu$ comes out to $(10, 14)$. Interpret the confidence level correctly.",
+      "steps": [
+        { "instruction": "If the whole sampling procedure were repeated many times, what percent of the resulting intervals would capture $\\mu$? (Give a number.)", "answer": "95", "accept": ["95%"], "hint": "That is the definition of 95% confidence." },
+        { "instruction": "Is it correct to say \"$\\mu$ has a 95% probability of being between 10 and 14\"? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$\\mu$ is a fixed number; the interval is what varies." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The 95% describes the procedure's long-run capture rate. This particular interval either contains $\\mu$ or it doesn't — no probability attaches to a completed interval."
+    },
+    {
+      "id": "statistics.confidence-intervals.s14",
+      "concepts": ["interpretation-and-sample-size"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You want to estimate a mean to within $m = 2$ units at 95% confidence ($z^* = 1.96$), and past data suggest $\\sigma = 10$. Use $n = \\left(\\dfrac{z^* \\sigma}{m}\\right)^2$, rounding UP.",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{1.96 \\times 10}{2}$. Give the exact value.", "answer": "9.8", "accept": [], "hint": "$\\sigma/m = 5$, times 1.96." },
+        { "instruction": "Square it: $(9.8)^2$. Give the exact value.", "answer": "96.04", "accept": [], "hint": "$9.8 \\times 9.8$." },
+        { "instruction": "Round UP to a whole number of subjects.", "answer": "97", "accept": [], "hint": "96 subjects would leave the margin slightly over target." }
+      ],
+      "finalAnswer": { "value": "97", "unit": "subjects" },
+      "solutionNarrative": "$(1.96 \\times 10/2)^2 = 9.8^2 = 96.04$, so $n = 97$. Sample-size answers always round up — rounding down would miss the precision target."
+    },
+    {
+      "id": "statistics.confidence-intervals.s15",
+      "concepts": ["interpretation-and-sample-size"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A lab needs a 99% confidence estimate ($z^* = 2.576$) of a mean to within $m = 4$ units; historical $\\sigma = 20$. Find the required sample size with $n = \\left(\\dfrac{z^* \\sigma}{m}\\right)^2$.",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{2.576 \\times 20}{4}$. Give the exact value.", "answer": "12.88", "accept": [], "hint": "$\\sigma/m = 5$, times 2.576." },
+        { "instruction": "Square it: $(12.88)^2$. Give the exact value.", "answer": "165.8944", "accept": [], "hint": "$12.88 \\times 12.88$." },
+        { "instruction": "Round UP to a whole number.", "answer": "166", "accept": [], "hint": "Always round sample sizes up." }
+      ],
+      "finalAnswer": { "value": "166", "unit": "subjects" },
+      "solutionNarrative": "$(2.576 \\times 20/4)^2 = 12.88^2 = 165.8944$, so $n = 166$. Note how the demanding 99% level (versus 95%) inflates the required sample."
+    },
+    {
+      "id": "statistics.confidence-intervals.s16",
+      "concepts": ["interpretation-and-sample-size"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "You want a narrower confidence interval WITHOUT lowering the confidence level. Reason about your options.",
+      "steps": [
+        { "instruction": "Should you INCREASE or DECREASE the sample size? Type 'increase' or 'decrease'.", "answer": "increase", "accept": ["increase n", "bigger"], "hint": "$\\mathrm{SE} = \\sigma/\\sqrt{n}$ shrinks as $n$ grows." },
+        { "instruction": "Quadrupling $n$ multiplies the margin of error by what factor? (Give a fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "half"], "hint": "$\\sqrt{4n} = 2\\sqrt{n}$." }
+      ],
+      "finalAnswer": { "value": "increase", "unit": "" },
+      "solutionNarrative": "More data is the only free lunch: increasing $n$ narrows the interval at the same confidence. But the square root means quadruple the data for half the width."
+    }
+  ]
+}

@@ -1,0 +1,286 @@
+{
+  "id": "calculus-3.vector-valued-functions",
+  "subject": "calculus-3",
+  "title": "Vector-Valued Functions and Motion",
+  "prerequisites": ["calculus-3.vectors-in-space", "calculus-1.differentiation-rules"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "parametrize-and-evaluate",
+      "label": "Parametrizing curves and evaluating r(t)",
+      "microLesson": "A **vector-valued function** $\\vec{r}(t) = \\langle x(t),\\, y(t) \\rangle$ hands you a whole moving point: plug in a time, get a position. The three parametrizations to know cold: a **line** through $P$ with velocity $\\vec{v}$ is $\\vec{r}(t) = P + t\\vec{v}$ (so $\\langle 1+3t,\\, 2-t \\rangle$ starts at $(1,2)$ and drifts by $\\langle 3,-1 \\rangle$ each second); a **circle** of radius $R$ is $\\vec{r}(t) = \\langle R\\cos t,\\, R\\sin t \\rangle$; a **graph** $y = f(x)$ is $\\vec{r}(t) = \\langle t,\\, f(t) \\rangle$. To evaluate, substitute the time into every component: $\\vec{r}(2) = \\langle 1+6,\\, 2-2 \\rangle = \\langle 7, 0 \\rangle$."
+    },
+    {
+      "id": "velocity-and-acceleration",
+      "label": "Velocity and acceleration vectors",
+      "microLesson": "Differentiate a vector function **componentwise**: $\\vec{r}\\,'(t) = \\langle x'(t),\\, y'(t) \\rangle$ is the **velocity** $\\vec{v}(t)$, and differentiating again gives the **acceleration** $\\vec{a}(t) = \\vec{r}\\,''(t)$. Both are functions of time, so in practice you **evaluate at a specific $t$** to get numeric vectors. For $\\vec{r}(t) = \\langle t^2,\\, 4t \\rangle$: $\\vec{v}(t) = \\langle 2t,\\, 4 \\rangle$, so $\\vec{v}(3) = \\langle 6, 4 \\rangle$, and $\\vec{a}(t) = \\langle 2, 0 \\rangle$ at every moment. Velocity points along the motion; acceleration tells how the velocity is changing."
+    },
+    {
+      "id": "speed-and-arc-length",
+      "label": "Speed and arc length",
+      "microLesson": "**Speed** is the magnitude of velocity: $|\\vec{v}(t)| = \\sqrt{x'(t)^2 + y'(t)^2}$ — a number, not a vector. If $\\vec{v}(2) = \\langle 4, 3 \\rangle$ then the speed at $t=2$ is $\\sqrt{16+9} = 5$. **Arc length** adds up speed over time: $L = \\int_a^b |\\vec{r}\\,'(t)|\\, dt$ — literally 'distance = speed × time' upgraded to varying speed. Along a straight line the speed is constant, so $L = |\\vec{v}| \\cdot (b-a)$: the path $\\langle 3t, 4t \\rangle$ covers $5 \\times 2 = 10$ units over $[0,2]$. Curvier paths need integrands engineered to simplify, like $\\sqrt{1+t}$."
+    },
+    {
+      "id": "tangent-vectors-and-motion",
+      "label": "Unit tangents and projectile motion",
+      "microLesson": "The **unit tangent** $\\vec{T}(t) = \\vec{v}(t)/|\\vec{v}(t)|$ strips speed away and keeps only the *direction* of travel — divide the velocity by its own length. If $\\vec{v} = \\langle 6, 8 \\rangle$, then $|\\vec{v}| = 10$ and $\\vec{T} = \\langle 3/5,\\, 4/5 \\rangle$. In **projectile motion** (feet, gravity $32\\ \\text{ft/s}^2$), $\\vec{r}(t) = \\langle v_0 t,\\; h + v_1 t - 16t^2 \\rangle$: the peak is where the vertical velocity $v_1 - 32t$ hits 0, the landing is where the height component returns to 0, and the impact velocity is $\\vec{v}$ evaluated at the landing time."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## One function, a whole flight path\n\nA drone doesn't have *a* position — it has a position **at every moment**. Ordinary functions return one number; to describe motion you need a function that returns a whole point. That is a **vector-valued function**:\n\n$$\\vec{r}(t) = \\langle x(t),\\; y(t) \\rangle \\qquad \\text{or in 3D} \\qquad \\vec{r}(t) = \\langle x(t),\\; y(t),\\; z(t) \\rangle.$$\n\nFeed in a time $t$, get back the position vector at that instant. Everything in this topic — velocity, speed, arc length, tangent directions — falls out of this one object by doing ordinary calculus **one component at a time**.\n\n## The three parametrizations you'll use constantly\n\n- **Line**: through point $P$ with constant velocity $\\vec{v}$: $\\ \\vec{r}(t) = P + t\\vec{v}$. Example: $\\vec{r}(t) = \\langle 1 + 3t,\\; 2 - t \\rangle$ starts at $(1,2)$ and moves by $\\langle 3, -1 \\rangle$ per unit time.\n- **Circle** of radius $R$ centered at the origin: $\\ \\vec{r}(t) = \\langle R\\cos t,\\; R\\sin t \\rangle$. Check: $x^2 + y^2 = R^2\\cos^2 t + R^2\\sin^2 t = R^2$ for every $t$. Centered at $(h,k)$, just add: $\\langle h + R\\cos t,\\; k + R\\sin t \\rangle$.\n- **Graph** of $y = f(x)$: let $x$ *be* the parameter: $\\ \\vec{r}(t) = \\langle t,\\; f(t) \\rangle$. The parabola $y = x^2$ becomes $\\langle t,\\, t^2 \\rangle$.\n\n**Evaluating** is pure substitution. For the line above, $\\vec{r}(2) = \\langle 1 + 6,\\; 2 - 2 \\rangle = \\langle 7,\\, 0 \\rangle$. For the circle of radius 4 at $t = \\pi/2$: $\\langle 4\\cos\\tfrac{\\pi}{2},\\; 4\\sin\\tfrac{\\pi}{2} \\rangle = \\langle 0,\\, 4 \\rangle$. Remember the landmark values: $\\cos 0 = 1$, $\\sin 0 = 0$, $\\cos\\tfrac{\\pi}{2} = 0$, $\\sin\\tfrac{\\pi}{2} = 1$, $\\cos\\pi = -1$, $\\sin\\pi = 0$.\n\n## Velocity and acceleration: differentiate componentwise\n\nThe derivative of a vector function is taken **one component at a time**:\n\n$$\\vec{v}(t) = \\vec{r}\\,'(t) = \\langle x'(t),\\; y'(t) \\rangle, \\qquad \\vec{a}(t) = \\vec{r}\\,''(t) = \\langle x''(t),\\; y''(t) \\rangle.$$\n\nAll your Calc 1 differentiation rules apply inside each slot. For $\\vec{r}(t) = \\langle t^2,\\; 4t \\rangle$:\n\n$$\\vec{v}(t) = \\langle 2t,\\; 4 \\rangle, \\qquad \\vec{v}(3) = \\langle 6,\\; 4 \\rangle, \\qquad \\vec{a}(t) = \\langle 2,\\; 0 \\rangle.$$\n\nThe velocity vector is **tangent to the path**, pointing the way the particle is actually heading:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-1,4],\"yRange\":[-1,10],\"grid\":true,\"curves\":[{\"fn\":\"x^2\",\"color\":\"accent\",\"label\":\"path y = x²\"}],\"points\":[{\"x\":1,\"y\":1,\"label\":\"r(1)\",\"color\":\"text\"}],\"segments\":[{\"from\":[1,1],\"to\":[2,3],\"arrow\":true,\"color\":\"warn\",\"label\":\"v(1) = <1, 2>\"}],\"caption\":\"The path r(t) = <t, t²>: at t = 1 the velocity r'(1) = <1, 2> is tangent to the curve, pointing along the motion\"}\n```\n\n**Pitfall**: velocity is a *vector*; don't report a number when a problem asks for $\\vec{v}(3)$. And the acceleration of $\\langle t^2, 4t \\rangle$ is $\\langle 2, 0 \\rangle$, not $2$ — the second component's derivative is 0 and still occupies its slot.\n\n## Speed and arc length\n\n**Speed** is the *length* of the velocity vector — direction thrown away:\n\n$$\\text{speed}(t) = |\\vec{v}(t)| = \\sqrt{x'(t)^2 + y'(t)^2}.$$\n\nIf $\\vec{v}(2) = \\langle 4, 3 \\rangle$, the speed at $t = 2$ is $\\sqrt{16 + 9} = 5$. Speed is a scalar; velocity is a vector. Interviewers and exams love this distinction because sloppy work blurs it.\n\n**Arc length** is accumulated speed:\n\n$$L = \\int_a^b |\\vec{r}\\,'(t)|\\; dt.$$\n\nTwo cases keep the integral honest:\n\n1. **Straight lines**: speed is constant, so $L = |\\vec{v}| \\cdot (b - a)$. The path $\\vec{r}(t) = \\langle 1+2t,\\; 3t,\\; 2+6t \\rangle$ has $|\\vec{v}| = \\sqrt{4+9+36} = 7$, so over $[0,3]$ it covers $21$ units. (Notice the Pythagorean-friendly components — real problems are engineered this way on purpose.)\n2. **Curves with square integrands**. For $\\vec{r}(t) = \\langle t,\\; \\tfrac{2}{3}t^{3/2} \\rangle$: $\\vec{r}\\,'(t) = \\langle 1,\\; t^{1/2} \\rangle$, so $|\\vec{r}\\,'|^2 = 1 + t$ — a perfect setup. Then\n$$L = \\int_0^3 \\sqrt{1+t}\\; dt = \\left[\\tfrac{2}{3}(1+t)^{3/2}\\right]_0^3 = \\tfrac{2}{3}(8 - 1) = \\tfrac{14}{3}.$$\n\n**Pitfall**: arc length is distance *along the path*, not displacement. A particle that loops back has large arc length and small displacement.\n\n## The unit tangent, and motion under gravity\n\nOften you want pure direction of travel with the speed stripped out. Divide the velocity by its own magnitude:\n\n$$\\vec{T}(t) = \\frac{\\vec{v}(t)}{|\\vec{v}(t)|}.$$\n\nIf $\\vec{v} = \\langle 6, 8 \\rangle$, then $|\\vec{v}| = 10$ and $\\vec{T} = \\langle 3/5,\\; 4/5 \\rangle$ — length exactly 1. Problems here are engineered with 3-4-5-style norms so the components come out as clean fractions. **Pitfall**: forgetting to normalize. $\\langle 6, 8 \\rangle$ is a tangent vector but not a *unit* tangent.\n\n### Projectile motion, the classic application\n\nNear the ground (feet, seconds), gravity contributes $-16t^2$ to height, so a launched object follows\n\n$$\\vec{r}(t) = \\langle v_0 t,\\; h + v_1 t - 16t^2 \\rangle,$$\n\nwith $v_0$ the horizontal launch speed, $v_1$ the vertical launch speed, $h$ the launch height. Differentiate: $\\vec{v}(t) = \\langle v_0,\\; v_1 - 32t \\rangle$ and $\\vec{a}(t) = \\langle 0,\\, -32 \\rangle$ — gravity never touches the horizontal component. Three questions, three moves:\n\n- **Apex**: vertical velocity zero: $v_1 - 32t = 0 \\Rightarrow t = v_1/32$.\n- **Landing**: height component $= 0$; solve the quadratic, keep the positive root.\n- **Impact velocity**: plug the landing time into $\\vec{v}(t)$.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,5.5],\"yRange\":[0,170],\"grid\":true,\"curves\":[{\"fn\":\"80 + 64*x - 16*x^2\",\"color\":\"accent\",\"label\":\"height y(t)\"}],\"points\":[{\"x\":2,\"y\":144,\"label\":\"apex t = 2\",\"color\":\"warn\"},{\"x\":5,\"y\":0,\"label\":\"lands t = 5\",\"color\":\"text\"}],\"caption\":\"Projectile height 80 + 64t − 16t²: the apex is where v_y = 64 − 32t = 0 (t = 2); the landing is where the height returns to 0 (t = 5)\"}\n```\n\nThe whole topic is four moves: *parametrize the path, differentiate componentwise, take magnitudes for speed and length, normalize for direction.*"
+  },
+  "application": {
+    "summary": "Vector-valued functions are the language of anything that moves: drone and robot path planning, projectile and orbital trajectories, camera paths in games and film, and the physics engines that need position, velocity, and acceleration every frame.",
+    "domains": ["robotics & drones", "physics & aerospace", "game development", "animation"],
+    "workedExample": "**Will the water balloon clear the fence?**\n\nA launcher fires a balloon from a 80-ft rooftop with horizontal speed 30 ft/s and vertical speed 64 ft/s, so $\\vec{r}(t) = \\langle 30t,\\; 80 + 64t - 16t^2 \\rangle$ (feet). When does it land, how far away, and how fast is it falling at impact?\n\nDifferentiate componentwise: $\\vec{v}(t) = \\langle 30,\\; 64 - 32t \\rangle$.\n\n**Apex**: $64 - 32t = 0$ at $t = 2$ s, height $80 + 128 - 64 = 144$ ft.\n\n**Landing**: solve $80 + 64t - 16t^2 = 0$, i.e. $-16(t^2 - 4t - 5) = -16(t-5)(t+1) = 0$, so $t = 5$ s (discard $t = -1$). Horizontal distance: $30 \\times 5 = 150$ ft.\n\n**Impact velocity**: $\\vec{v}(5) = \\langle 30,\\; 64 - 160 \\rangle = \\langle 30,\\, -96 \\rangle$ — still drifting 30 ft/s sideways, plummeting 96 ft/s down. Impact speed: $\\sqrt{900 + 9216} \\approx 100.6$ ft/s. Every step was componentwise calculus on one vector function — the same bookkeeping a game physics engine runs every frame.",
+    "domainNotes": [
+      "**Robotics/drones:** waypoint paths are parametrized curves; controllers consume $\\vec{v}(t)$ and $\\vec{a}(t)$ to command motors and respect acceleration limits.",
+      "**Aerospace/physics:** projectile and orbital trajectories are vector functions of time; apex, range, and impact conditions come from zeroing components.",
+      "**Game development:** physics engines integrate acceleration to velocity to position componentwise, exactly reversing the derivatives in this topic.",
+      "**Animation/film:** camera fly-throughs are parametrized curves; arc length reparametrization keeps on-screen speed constant along the path."
+    ]
+  },
+  "generators": [
+    "c3v-param-eval-1",
+    "c3v-param-eval-2",
+    "c3v-param-eval-3",
+    "c3v-vel-accel-1",
+    "c3v-vel-accel-2",
+    "c3v-vel-accel-3",
+    "c3v-speed-arclen-1",
+    "c3v-speed-arclen-2",
+    "c3v-speed-arclen-3",
+    "c3v-tangent-motion-1",
+    "c3v-tangent-motion-2",
+    "c3v-tangent-motion-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-3.vector-valued-functions.s01",
+      "concepts": ["parametrize-and-evaluate"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A line passes through the point $(1, 2)$ with constant velocity $\\vec{v} = \\langle 3, -1 \\rangle$. Build the vector-valued function $\\vec{r}(t) = P + t\\vec{v}$ and evaluate it at $t = 2$.",
+      "steps": [
+        { "instruction": "Write the x-component of $\\vec{r}(t)$.", "answer": "1 + 3t", "accept": ["3t + 1", "1+3t"], "hint": "Start at $x = 1$ and add $3$ per unit time: $1 + 3t$." },
+        { "instruction": "Write the y-component of $\\vec{r}(t)$.", "answer": "2 - t", "accept": ["-t + 2", "2-t"], "hint": "Start at $y = 2$ and add $-1$ per unit time: $2 - t$." },
+        { "instruction": "Evaluate $\\vec{r}(2)$ as a numeric vector.", "answer": "<7, 0>", "accept": ["(7, 0)"], "hint": "$1 + 3(2) = 7$ and $2 - 2 = 0$." }
+      ],
+      "finalAnswer": { "value": "<7, 0>", "unit": "" },
+      "solutionNarrative": "$\\vec{r}(t) = \\langle 1 + 3t,\\; 2 - t \\rangle$; substituting $t = 2$ gives $\\langle 7, 0 \\rangle$."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s02",
+      "concepts": ["parametrize-and-evaluate"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A delivery drone flies in a straight line from base $(0, 0)$ to a drop point $(6, 8)$ (km), reaching it at $t = 1$ hour: $\\vec{r}(t) = \\langle 6t,\\; 8t \\rangle$. Where is the drone at $t = 1/2$, and how far is it from base?",
+      "steps": [
+        { "instruction": "Evaluate the position $\\vec{r}(1/2)$ as a numeric vector.", "answer": "<3, 4>", "accept": ["(3, 4)"], "hint": "$6 \\cdot \\tfrac12 = 3$ and $8 \\cdot \\tfrac12 = 4$." },
+        { "instruction": "Compute the drone's distance from base at that moment.", "answer": "5", "accept": [], "hint": "$|\\langle 3,4 \\rangle| = \\sqrt{9 + 16}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "km" },
+      "solutionNarrative": "$\\vec{r}(1/2) = \\langle 3, 4 \\rangle$, which is $\\sqrt{9+16} = 5$ km from base — halfway along the 10 km leg."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s03",
+      "concepts": ["parametrize-and-evaluate"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The function $\\vec{r}(t) = \\langle 4\\cos t,\\; 4\\sin t \\rangle$ traces a circle. Confirm the radius and evaluate the position at $t = 0$, $t = \\pi/2$, and $t = \\pi$.",
+      "steps": [
+        { "instruction": "For every $t$, $x^2 + y^2$ equals what constant?", "answer": "16", "accept": [], "hint": "$16\\cos^2 t + 16\\sin^2 t = 16(\\cos^2 t + \\sin^2 t)$." },
+        { "instruction": "Evaluate $\\vec{r}(0)$ as a numeric vector.", "answer": "<4, 0>", "accept": ["(4, 0)"], "hint": "$\\cos 0 = 1$, $\\sin 0 = 0$." },
+        { "instruction": "Evaluate $\\vec{r}(\\pi/2)$ as a numeric vector.", "answer": "<0, 4>", "accept": ["(0, 4)"], "hint": "$\\cos\\tfrac{\\pi}{2} = 0$, $\\sin\\tfrac{\\pi}{2} = 1$." },
+        { "instruction": "Evaluate $\\vec{r}(\\pi)$ as a numeric vector.", "answer": "<-4, 0>", "accept": ["(-4, 0)"], "hint": "$\\cos\\pi = -1$, $\\sin\\pi = 0$." }
+      ],
+      "finalAnswer": { "value": "<-4, 0>", "unit": "" },
+      "solutionNarrative": "$x^2 + y^2 = 16$ always, so the radius is 4. The landmark positions are $\\vec{r}(0) = \\langle 4,0 \\rangle$, $\\vec{r}(\\pi/2) = \\langle 0,4 \\rangle$, $\\vec{r}(\\pi) = \\langle -4,0 \\rangle$ — a quarter turn each."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s04",
+      "concepts": ["parametrize-and-evaluate"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The parabola $y = x^2 - 4$ is parametrized as $\\vec{r}(t) = \\langle t,\\; t^2 - 4 \\rangle$. Evaluate $\\vec{r}(2)$, find the parameter value that lands on the point $(3, 5)$, and decide whether $(4, 10)$ is on the curve.",
+      "steps": [
+        { "instruction": "Evaluate $\\vec{r}(2)$ as a numeric vector.", "answer": "<2, 0>", "accept": ["(2, 0)"], "hint": "$2^2 - 4 = 0$." },
+        { "instruction": "For which $t$ is $\\vec{r}(t) = (3, 5)$?", "answer": "3", "accept": ["t=3"], "hint": "The x-component forces $t = 3$; check that $3^2 - 4 = 5$. ✓" },
+        { "instruction": "Is the point $(4, 10)$ on the curve? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$t = 4$ gives $y = 16 - 4 = 12 \\neq 10$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$\\vec{r}(2) = \\langle 2, 0 \\rangle$. Matching $(3,5)$: the first component forces $t = 3$ and indeed $3^2 - 4 = 5$. For $(4,10)$: $t = 4$ produces $y = 12$, not 10, so the point is not on the curve."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s05",
+      "concepts": ["velocity-and-acceleration"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $\\vec{r}(t) = \\langle t^2,\\; 4t \\rangle$, find the velocity at $t = 3$ and the acceleration.",
+      "steps": [
+        { "instruction": "Write the x-component of the velocity $\\vec{v}(t) = \\vec{r}\\,'(t)$.", "answer": "2t", "accept": ["2*t"], "hint": "Differentiate $t^2$." },
+        { "instruction": "Evaluate $\\vec{v}(3)$ as a numeric vector.", "answer": "<6, 4>", "accept": ["(6, 4)"], "hint": "$\\vec{v}(t) = \\langle 2t, 4 \\rangle$; substitute $t = 3$." },
+        { "instruction": "Give the acceleration $\\vec{a}(t) = \\vec{r}\\,''(t)$ as a numeric vector (it is constant).", "answer": "<2, 0>", "accept": ["(2, 0)"], "hint": "Differentiate $\\langle 2t, 4 \\rangle$ componentwise." }
+      ],
+      "finalAnswer": { "value": "<6, 4>", "unit": "" },
+      "solutionNarrative": "$\\vec{v}(t) = \\langle 2t, 4 \\rangle$, so $\\vec{v}(3) = \\langle 6, 4 \\rangle$; differentiating again, $\\vec{a} = \\langle 2, 0 \\rangle$ at every moment."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s06",
+      "concepts": ["velocity-and-acceleration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the 3D path $\\vec{r}(t) = \\langle t^3,\\; t^2,\\; 2t \\rangle$, find the velocity and acceleration at $t = 2$.",
+      "steps": [
+        { "instruction": "Write the x-component of $\\vec{v}(t)$.", "answer": "3t^2", "accept": ["3*t^2"], "hint": "Differentiate $t^3$." },
+        { "instruction": "Evaluate $\\vec{v}(2)$ as a numeric vector.", "answer": "<12, 4, 2>", "accept": ["(12, 4, 2)"], "hint": "$\\vec{v}(t) = \\langle 3t^2, 2t, 2 \\rangle$ at $t = 2$." },
+        { "instruction": "Evaluate $\\vec{a}(2)$ as a numeric vector.", "answer": "<12, 2, 0>", "accept": ["(12, 2, 0)"], "hint": "$\\vec{a}(t) = \\langle 6t, 2, 0 \\rangle$ at $t = 2$." }
+      ],
+      "finalAnswer": { "value": "<12, 4, 2>", "unit": "" },
+      "solutionNarrative": "Componentwise: $\\vec{v}(t) = \\langle 3t^2, 2t, 2 \\rangle$ gives $\\vec{v}(2) = \\langle 12, 4, 2 \\rangle$, and $\\vec{a}(t) = \\langle 6t, 2, 0 \\rangle$ gives $\\vec{a}(2) = \\langle 12, 2, 0 \\rangle$."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s07",
+      "concepts": ["velocity-and-acceleration", "speed-and-arc-length"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rover's position (meters) is $\\vec{r}(t) = \\langle 2t^2,\\; 3t \\rangle$. Find its velocity, speed, and acceleration at $t = 1$ s.",
+      "steps": [
+        { "instruction": "Evaluate the velocity $\\vec{v}(1)$ as a numeric vector.", "answer": "<4, 3>", "accept": ["(4, 3)"], "hint": "$\\vec{v}(t) = \\langle 4t, 3 \\rangle$; substitute $t = 1$." },
+        { "instruction": "Compute the speed at $t = 1$.", "answer": "5", "accept": [], "hint": "$|\\langle 4, 3 \\rangle| = \\sqrt{16 + 9}$." },
+        { "instruction": "Evaluate the acceleration $\\vec{a}(1)$ as a numeric vector.", "answer": "<4, 0>", "accept": ["(4, 0)"], "hint": "$\\vec{a}(t) = \\langle 4, 0 \\rangle$, constant." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "meters per second" },
+      "solutionNarrative": "$\\vec{v}(1) = \\langle 4, 3 \\rangle$, speed $= \\sqrt{16+9} = 5$ m/s, and $\\vec{a} = \\langle 4, 0 \\rangle$ — the rover accelerates only in the x-direction."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s08",
+      "concepts": ["velocity-and-acceleration"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $\\vec{r}(t) = \\langle t^3 - 3t,\\; 2t^2 \\rangle$, find the moment ($t \\geq 0$) when the horizontal velocity vanishes, and the velocity and acceleration vectors there.",
+      "steps": [
+        { "instruction": "Write the x-component of $\\vec{v}(t)$.", "answer": "3t^2 - 3", "accept": ["3*t^2 - 3", "-3 + 3t^2"], "hint": "Differentiate $t^3 - 3t$." },
+        { "instruction": "Solve $3t^2 - 3 = 0$ for $t \\geq 0$.", "answer": "1", "accept": ["t=1"], "hint": "$t^2 = 1$; keep the nonnegative root." },
+        { "instruction": "Evaluate $\\vec{v}(1)$ as a numeric vector.", "answer": "<0, 4>", "accept": ["(0, 4)"], "hint": "$\\vec{v}(t) = \\langle 3t^2 - 3,\\; 4t \\rangle$ at $t = 1$." },
+        { "instruction": "Evaluate $\\vec{a}(1)$ as a numeric vector.", "answer": "<6, 4>", "accept": ["(6, 4)"], "hint": "$\\vec{a}(t) = \\langle 6t, 4 \\rangle$ at $t = 1$." }
+      ],
+      "finalAnswer": { "value": "<0, 4>", "unit": "" },
+      "solutionNarrative": "$v_x(t) = 3t^2 - 3 = 0$ at $t = 1$. There $\\vec{v}(1) = \\langle 0, 4 \\rangle$ — the particle is momentarily moving straight up — while $\\vec{a}(1) = \\langle 6, 4 \\rangle$ is already pushing it rightward again."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s09",
+      "concepts": ["speed-and-arc-length"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For the straight-line path $\\vec{r}(t) = \\langle 3t,\\; 4t \\rangle$, find the speed and the arc length over $[0, 2]$.",
+      "steps": [
+        { "instruction": "Give the velocity $\\vec{v}(t)$ as a numeric vector (it is constant).", "answer": "<3, 4>", "accept": ["(3, 4)"], "hint": "Differentiate each component." },
+        { "instruction": "Compute the speed.", "answer": "5", "accept": [], "hint": "$\\sqrt{3^2 + 4^2} = \\sqrt{25}$." },
+        { "instruction": "Arc length over $[0,2]$ is speed × elapsed time. Compute it.", "answer": "10", "accept": [], "hint": "$5 \\times (2 - 0)$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "The velocity is the constant $\\langle 3, 4 \\rangle$ with magnitude 5, so $L = \\int_0^2 5\\, dt = 10$."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s10",
+      "concepts": ["speed-and-arc-length"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $\\vec{r}(t) = \\langle t^2,\\; 3t \\rangle$, find the speed at $t = 2$.",
+      "steps": [
+        { "instruction": "Write the x-component of $\\vec{v}(t)$.", "answer": "2t", "accept": ["2*t"], "hint": "Differentiate $t^2$." },
+        { "instruction": "Evaluate $\\vec{v}(2)$ as a numeric vector.", "answer": "<4, 3>", "accept": ["(4, 3)"], "hint": "$\\langle 2(2), 3 \\rangle$." },
+        { "instruction": "Compute the speed at $t = 2$.", "answer": "5", "accept": [], "hint": "$\\sqrt{4^2 + 3^2} = \\sqrt{25}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$\\vec{v}(t) = \\langle 2t, 3 \\rangle$, so $\\vec{v}(2) = \\langle 4, 3 \\rangle$ and the speed is $\\sqrt{16+9} = 5$."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s11",
+      "concepts": ["speed-and-arc-length"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A drone climbs along the straight 3D path $\\vec{r}(t) = \\langle 1 + 2t,\\; 3t,\\; 2 + 6t \\rangle$ (km, hours). Find its speed and the distance flown between $t = 0$ and $t = 3$.",
+      "steps": [
+        { "instruction": "Give the velocity $\\vec{v}(t)$ as a numeric vector.", "answer": "<2, 3, 6>", "accept": ["(2, 3, 6)"], "hint": "Differentiate each component; the constants vanish." },
+        { "instruction": "Compute the speed.", "answer": "7", "accept": [], "hint": "$\\sqrt{4 + 9 + 36} = \\sqrt{49}$." },
+        { "instruction": "Compute the distance flown over $[0, 3]$.", "answer": "21", "accept": [], "hint": "Constant speed: $7 \\times 3$." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "km" },
+      "solutionNarrative": "$\\vec{v} = \\langle 2, 3, 6 \\rangle$ with $|\\vec{v}| = \\sqrt{49} = 7$ km/h, so the drone covers $7 \\times 3 = 21$ km."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s12",
+      "concepts": ["speed-and-arc-length"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute the arc length of $\\vec{r}(t) = \\langle t,\\; \\tfrac{2}{3}t^{3/2} \\rangle$ over $[0, 3]$. (The curve is engineered so the speed simplifies.)",
+      "steps": [
+        { "instruction": "With $\\vec{r}\\,'(t) = \\langle 1,\\; t^{1/2} \\rangle$, write $|\\vec{r}\\,'(t)|^2$ as a polynomial in $t$.", "answer": "1 + t", "accept": ["t + 1", "1+t"], "hint": "$1^2 + (t^{1/2})^2 = 1 + t$." },
+        { "instruction": "The antiderivative of $\\sqrt{1+t}$ is $\\tfrac{2}{3}(1+t)^{3/2}$. Evaluate $(1+3)^{3/2}$.", "answer": "8", "accept": [], "hint": "$4^{3/2} = (\\sqrt{4})^3 = 2^3$." },
+        { "instruction": "Compute $L = \\tfrac{2}{3}\\left[(1+t)^{3/2}\\right]_0^3 = \\tfrac{2}{3}(8 - 1)$.", "answer": "14/3", "accept": ["4.67", "4.667"], "hint": "$\\tfrac{2}{3} \\times 7$." }
+      ],
+      "finalAnswer": { "value": "14/3", "unit": "" },
+      "solutionNarrative": "$|\\vec{r}\\,'|^2 = 1 + t$, so $L = \\int_0^3 \\sqrt{1+t}\\,dt = \\tfrac{2}{3}(1+t)^{3/2}\\big|_0^3 = \\tfrac{2}{3}(8-1) = \\tfrac{14}{3} \\approx 4.67$."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s13",
+      "concepts": ["tangent-vectors-and-motion"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "At some moment a particle's velocity is $\\vec{v} = \\langle 6, 8 \\rangle$. Find its speed and the unit tangent vector $\\vec{T} = \\vec{v}/|\\vec{v}|$.",
+      "steps": [
+        { "instruction": "Compute the speed $|\\vec{v}|$.", "answer": "10", "accept": [], "hint": "$\\sqrt{36 + 64} = \\sqrt{100}$." },
+        { "instruction": "Give the unit tangent $\\vec{T}$ as a numeric vector.", "answer": "<3/5, 4/5>", "accept": ["(3/5, 4/5)", "<0.6, 0.8>"], "hint": "Divide $\\langle 6, 8 \\rangle$ by 10." }
+      ],
+      "finalAnswer": { "value": "<3/5, 4/5>", "unit": "" },
+      "solutionNarrative": "$|\\vec{v}| = 10$, so $\\vec{T} = \\langle 6, 8 \\rangle / 10 = \\langle 3/5,\\; 4/5 \\rangle$ — pure direction, length 1."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s14",
+      "concepts": ["tangent-vectors-and-motion"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $\\vec{r}(t) = \\langle t^2,\\; 3t \\rangle$, find the unit tangent vector at $t = 2$.",
+      "steps": [
+        { "instruction": "Evaluate $\\vec{v}(2)$ as a numeric vector.", "answer": "<4, 3>", "accept": ["(4, 3)"], "hint": "$\\vec{v}(t) = \\langle 2t, 3 \\rangle$ at $t = 2$." },
+        { "instruction": "Compute the speed at $t = 2$.", "answer": "5", "accept": [], "hint": "$\\sqrt{16 + 9}$." },
+        { "instruction": "Give the unit tangent $\\vec{T}(2)$ as a numeric vector.", "answer": "<4/5, 3/5>", "accept": ["(4/5, 3/5)", "<0.8, 0.6>"], "hint": "Divide $\\langle 4, 3 \\rangle$ by 5." }
+      ],
+      "finalAnswer": { "value": "<4/5, 3/5>", "unit": "" },
+      "solutionNarrative": "$\\vec{v}(2) = \\langle 4, 3 \\rangle$, speed 5, so $\\vec{T}(2) = \\langle 4/5,\\; 3/5 \\rangle$."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s15",
+      "concepts": ["tangent-vectors-and-motion"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A ball is thrown so that $\\vec{r}(t) = \\langle 40t,\\; 96t - 16t^2 \\rangle$ (feet). Find the velocity at $t = 1$, the time it peaks, and the maximum height.",
+      "steps": [
+        { "instruction": "Write the y-component of $\\vec{v}(t)$.", "answer": "96 - 32t", "accept": ["-32t + 96"], "hint": "Differentiate $96t - 16t^2$." },
+        { "instruction": "Evaluate $\\vec{v}(1)$ as a numeric vector.", "answer": "<40, 64>", "accept": ["(40, 64)"], "hint": "$\\langle 40,\\; 96 - 32 \\rangle$." },
+        { "instruction": "Find the time of the peak (where the vertical velocity is 0).", "answer": "3", "accept": ["t=3"], "hint": "$96 - 32t = 0$." },
+        { "instruction": "Compute the maximum height, $y(3)$.", "answer": "144", "accept": [], "hint": "$96(3) - 16(9) = 288 - 144$." }
+      ],
+      "finalAnswer": { "value": "144", "unit": "feet" },
+      "solutionNarrative": "$\\vec{v}(t) = \\langle 40,\\; 96 - 32t \\rangle$, so $\\vec{v}(1) = \\langle 40, 64 \\rangle$. The peak is at $t = 96/32 = 3$ s, with height $288 - 144 = 144$ ft."
+    },
+    {
+      "id": "calculus-3.vector-valued-functions.s16",
+      "concepts": ["tangent-vectors-and-motion"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A water balloon launched from a rooftop follows $\\vec{r}(t) = \\langle 30t,\\; 80 + 64t - 16t^2 \\rangle$ (feet). Find the apex time, the landing time, how far it lands from the building, and the impact velocity.",
+      "steps": [
+        { "instruction": "Find the apex time (vertical velocity $64 - 32t = 0$).", "answer": "2", "accept": ["t=2"], "hint": "Solve $64 = 32t$." },
+        { "instruction": "Find the landing time: solve $80 + 64t - 16t^2 = 0$ (keep the positive root).", "answer": "5", "accept": ["t=5"], "hint": "Divide by $-16$: $t^2 - 4t - 5 = (t-5)(t+1) = 0$." },
+        { "instruction": "How far from the building does it land (horizontal distance)?", "answer": "150", "accept": [], "hint": "$x(5) = 30 \\times 5$." },
+        { "instruction": "Give the impact velocity $\\vec{v}(5)$ as a numeric vector.", "answer": "<30, -96>", "accept": ["(30, -96)"], "hint": "$\\vec{v}(t) = \\langle 30,\\; 64 - 32t \\rangle$ at $t = 5$." }
+      ],
+      "finalAnswer": { "value": "<30, -96>", "unit": "" },
+      "solutionNarrative": "Apex at $t = 2$ (vertical velocity zero). Landing: $-16(t-5)(t+1) = 0$ gives $t = 5$, at horizontal distance $150$ ft. Impact velocity $\\vec{v}(5) = \\langle 30, -96 \\rangle$ — gravity never touched the horizontal 30."
+    }
+  ]
+}
