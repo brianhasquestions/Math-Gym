@@ -7,7 +7,7 @@ import { loadManifest, loadTopic } from "./content-loader.js";
 import { getTopicState, setTopicState } from "./progress-store.js";
 import { initState, grade } from "./mastery-model.js";
 import { checkStep } from "./problem-engine.js";
-import { renderInlineInto } from "./renderer.js";
+import { renderProseInto } from "./renderer.js";
 import { el, showError } from "./app.js";
 
 // A spread across the catalog, easy -> hard. Missing ids are skipped silently.
@@ -73,7 +73,7 @@ export async function runPlacement(root) {
     const q = el("section", { class: "card placement-q" });
     q.appendChild(el("div", { class: "placement-meta" }, `${i + 1}. ${it.meta.subject} — ${it.meta.title}`));
     const prompt = el("div", { class: "placement-prompt" });
-    renderInlineInto(prompt, it.problem.prompt);
+    renderProseInto(prompt, it.problem.prompt);
     q.appendChild(prompt);
     const unit = it.problem.finalAnswer.unit ? ` (${it.problem.finalAnswer.unit})` : "";
     it.input = el("input", { class: "step-input", type: "text", autocomplete: "off", placeholder: `Your answer${unit}…`, "aria-label": `Answer for question ${i + 1}` });

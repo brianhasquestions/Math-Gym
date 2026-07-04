@@ -24,6 +24,7 @@ const { ProblemSource } = await imp("js/problem-engine.js");
 const mastery = await imp("js/mastery-model.js");
 const store = await imp("js/progress-store.js");
 const { plotToSvg } = await imp("js/plot.js");
+const { renderMarkdown } = await imp("js/renderer.js");
 
 let pass = 0, fail = 0;
 const eq = (desc, got, want) => {
@@ -164,6 +165,25 @@ group("plot renderer — binary operators in fn (compileFn self-capture regressi
   ok('"exp(0.4*x)" draws a curve', drawsCurve("exp(0.4*x)"));
   ok('"sqrt(25 - x^2)" draws a curve', drawsCurve("sqrt(25 - x^2)"));
   ok('"x/2 - 1" draws a curve', drawsCurve("x/2 - 1"));
+}
+
+// ---------------------------------------------------------------- markdown tables
+group("markdown renderer — tables (payoff matrices, data tables)");
+{
+  const md = [
+    "| Row \\ Col | Left | Right |",
+    "|---|---|---|",
+    "| Top | 4, 0 | 3, 9 |",
+    "| Bottom | 5, 2 | 8, 6 |",
+  ].join("\n");
+  const html = renderMarkdown(md);
+  ok("emits a <table>", html.includes("<table"));
+  ok("has header cells", (html.match(/<th>/g) || []).length === 3);
+  ok("has data cells", (html.match(/<td>/g) || []).length === 6);
+  ok("does not leak raw pipes into a paragraph", !/<p>[^<]*\|/.test(html));
+  const mixed = renderMarkdown("Consider the game.\n\n| A | B |\n|---|---|\n| 1 | 2 |");
+  ok("prose before a table still becomes a paragraph", mixed.includes("<p>Consider the game.</p>"));
+  ok("plain prose (no table) is untouched", !renderMarkdown("just words").includes("<table"));
 }
 
 // ---------------------------------------------------------------- report

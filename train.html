@@ -46,7 +46,7 @@
     import { initState, selectConcept, grade, topicProgress, conceptProgress, CONFIG } from "./js/mastery-model.js";
     import { ProblemSource, checkStep } from "./js/problem-engine.js";
     import { unmetPrerequisites } from "./js/insights.js";
-    import { renderInlineInto, renderMarkdown } from "./js/renderer.js";
+    import { renderInlineInto, renderProseInto, renderMarkdown } from "./js/renderer.js";
     import { plotToSvg } from "./js/plot.js";
     import {
       pulse, stampStep, celebrateConcept, celebrateTopic, setMeter,
@@ -174,7 +174,7 @@
       );
       nodes.chip.textContent = problem.context === "applied" ? "Real-world problem" : "Practice";
       nodes.figure.innerHTML = problem.plot ? plotToSvg(problem.plot) : "";
-      renderInlineInto(nodes.prompt, problem.prompt);
+      renderProseInto(nodes.prompt, problem.prompt);
 
       renderSteps();
       refreshMastery(); // re-highlight the skill now being drilled
@@ -188,7 +188,7 @@
         const active = i === stepIndex && !current.locked;
         const stepEl = el("div", { class: "step" + (done ? " step-correct" : active ? " active" : "") });
         const instr = el("div", { class: "step-instruction" });
-        renderInlineInto(instr, step.instruction);
+        renderProseInto(instr, step.instruction);
         stepEl.appendChild(instr);
 
         if (done) {

@@ -108,6 +108,26 @@ export function renderMarkdown(src) {
       continue;
     }
 
+    // Table: a header row of pipe-delimited cells, a separator row of dashes,
+    // then zero or more data rows. Cells carry inline formatting and math.
+    if (
+      line.trim().startsWith("|") &&
+      i + 1 < lines.length &&
+      /^[\s|:-]+$/.test(lines[i + 1]) && lines[i + 1].includes("-") && lines[i + 1].includes("|")
+    ) {
+      const cells = (l) => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
+      const header = cells(line);
+      i += 2; // consume header + separator
+      const body = [];
+      while (i < lines.length && lines[i].trim().startsWith("|")) { body.push(cells(lines[i])); i++; }
+      const thead = `<thead><tr>${header.map((c) => `<th>${renderInline(c)}</th>`).join("")}</tr></thead>`;
+      const tbody = `<tbody>${body
+        .map((r) => `<tr>${r.map((c) => `<td>${renderInline(c)}</td>`).join("")}</tr>`)
+        .join("")}</tbody>`;
+      out.push(`<div class="md-table-wrap"><table class="md-table">${thead}${tbody}</table></div>`);
+      continue;
+    }
+
     // Headings
     const h = line.match(/^(#{1,4})\s+(.*)$/);
     if (h) {
@@ -166,4 +186,16 @@ export function renderInto(el, src) {
 // Render inline prose (single line, may contain math) into an element.
 export function renderInlineInto(el, src) {
   el.innerHTML = renderInline(src);
+}
+
+// Render prose that may carry a block structure (e.g. a payoff/data table) as
+// well as inline formatting. When the source contains a markdown table we route
+// through the full block renderer; otherwise we keep the lightweight inline path
+// so all existing single-line prompts render exactly as before.
+export function renderProseInto(el, src) {
+  if (typeof src === "string" && /\n\s*\|.*\|/.test(src)) {
+    el.innerHTML = renderMarkdown(src);
+  } else {
+    el.innerHTML = renderInline(src);
+  }
 }
