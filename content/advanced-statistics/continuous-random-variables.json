@@ -1,0 +1,268 @@
+{
+  "id": "advanced-statistics.continuous-random-variables",
+  "subject": "advanced-statistics",
+  "title": "Continuous Random Variables and Densities",
+  "prerequisites": ["advanced-statistics.discrete-distributions", "calculus-2.definite-integrals"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "density-basics",
+      "label": "Density functions and the constant k",
+      "microLesson": "A continuous random variable is described by a **density** $f(x)$: a curve that is never negative and whose total area is exactly 1, $\\int_{-\\infty}^{\\infty} f(x)\\,dx = 1$. Heights of $f$ are NOT probabilities (they can exceed 1!) — only areas are. To find an unknown constant, integrate and set the area to 1: for $f(x) = kx$ on $[0, 2]$, $\\int_0^2 kx\\,dx = 2k = 1$ gives $k = \\tfrac12$."
+    },
+    {
+      "id": "probabilities-from-densities",
+      "label": "Probabilities as areas",
+      "microLesson": "For a continuous variable, $P(a < X < b) = \\int_a^b f(x)\\,dx$ — the area under the density between $a$ and $b$. A single point carries zero area, so $P(X = a) = 0$ and $<$ versus $\\le$ makes no difference. Working through the CDF $F(x) = P(X \\le x)$ is fastest: for $f(x) = \\tfrac{x}{2}$ on $[0,2]$, $F(x) = \\tfrac{x^2}{4}$, so $P(1 < X < 2) = F(2) - F(1) = 1 - \\tfrac14 = \\tfrac34$."
+    },
+    {
+      "id": "uniform-distribution",
+      "label": "The uniform distribution",
+      "microLesson": "When every value in $[a, b]$ is equally likely, the density is flat at height $\\tfrac{1}{b-a}$ (so the rectangle has area 1). Probabilities are just length fractions: $P(c < X < d) = \\tfrac{d - c}{b - a}$. The mean is the midpoint $\\tfrac{a+b}{2}$ and the variance is $\\tfrac{(b-a)^2}{12}$. A bus arriving uniformly in the next 12 minutes: mean wait 6, $P(\\text{wait} > 9) = \\tfrac{3}{12} = \\tfrac14$."
+    },
+    {
+      "id": "expected-value-continuous",
+      "label": "Expected value and median",
+      "microLesson": "The continuous mean replaces the sum with an integral: $E[X] = \\int x\\, f(x)\\,dx$. For $f(x) = 2x$ on $[0,1]$: $E[X] = \\int_0^1 2x^2\\,dx = \\tfrac23$ — pulled above the midpoint because the density piles weight to the right. The **median** $m$ splits the area in half: solve $F(m) = \\tfrac12$. Mean and median only coincide for symmetric densities; a rising density has mean and median above the midpoint."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When outcomes stop being countable\n\nA binomial count takes values $0, 1, \\dots, n$ — you can list them and add their probabilities. But a wait time, a weight, a voltage can land *anywhere* in an interval. There are uncountably many outcomes, and each individual one has probability zero. The discrete playbook — list and sum — dies here, and calculus takes over: probability stops being a sum of spikes and becomes an **area under a curve**.\n\n## Densities: the rules of the game\n\nA **probability density function** $f(x)$ describes a continuous random variable through two axioms:\n\n1. $f(x) \\ge 0$ everywhere — no negative chances;\n2. $\\displaystyle\\int_{-\\infty}^{\\infty} f(x)\\,dx = 1$ — total area one.\n\nAnd the single most misunderstood fact in this topic: **$f(x)$ is not a probability.** A density can tower above 1 (the uniform on $[0, \\tfrac12]$ has height 2) — only *areas* under $f$ are probabilities. Density is to probability what mass-per-meter is to mass: multiply by a length before you have anything real.\n\n### Finding the constant $k$\n\nAxiom 2 pins down unknown constants. Take $f(x) = kx^2$ on $[0, 2]$ (zero elsewhere):\n\n$$\\int_0^2 kx^2\\,dx = k \\cdot \\frac{x^3}{3}\\Big|_0^2 = \\frac{8k}{3} = 1 \\quad\\Longrightarrow\\quad k = \\frac{3}{8}.$$\n\nOne definite integral, one equation, one constant. Always sanity-check axiom 1 afterwards: $\\tfrac{3}{8}x^2 \\ge 0$ on $[0,2]$. ✓\n\n## Probabilities are areas\n\n$$P(a < X < b) = \\int_a^b f(x)\\,dx.$$\n\nThe cleanest workflow goes through the **cumulative distribution function** $F(x) = P(X \\le x) = \\int_{-\\infty}^x f(t)\\,dt$, because then every probability is a subtraction: $P(a < X < b) = F(b) - F(a)$.\n\n### Worked example\n\nLet $f(x) = \\tfrac{x}{2}$ on $[0, 2]$. Then $F(x) = \\int_0^x \\tfrac{t}{2}\\,dt = \\tfrac{x^2}{4}$, and\n\n$$P(1 < X < 2) = F(2) - F(1) = \\frac{4}{4} - \\frac{1}{4} = \\frac{3}{4}.$$\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 2], \"yRange\": [0, 1.15], \"grid\": false, \"curves\": [ { \"fn\": \"x/2\", \"color\": \"accent\", \"fillRange\": [1, 2], \"label\": \"f(x) = x/2\" } ], \"segments\": [ { \"from\": [1, 0], \"to\": [1, 0.5], \"dashed\": true, \"color\": \"warn\", \"label\": \"x = 1\" } ], \"caption\": \"The density f(x) = x/2 on [0, 2]; the shaded area is P(1 < X < 2) = 3/4.\" }\n```\n\nBecause single points have zero area, $P(X = a) = 0$ for every $a$, and consequently\n\n$$P(a < X < b) = P(a \\le X \\le b).$$\n\nStrict versus non-strict inequalities — a life-or-death distinction for discrete variables — stops mattering entirely.\n\n## The uniform distribution: geometry only\n\nIf every value in $[a, b]$ is equally plausible, the density must be flat, and area 1 forces the height:\n\n$$f(x) = \\frac{1}{b - a} \\text{ on } [a, b].$$\n\nEvery probability is a length ratio — no integration required:\n\n$$P(c < X < d) = \\frac{d - c}{b - a}, \\qquad E[X] = \\frac{a + b}{2}, \\qquad \\mathrm{Var}(X) = \\frac{(b-a)^2}{12}.$$\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [2, 8], \"yRange\": [0, 0.3], \"grid\": false, \"curves\": [ { \"fn\": \"1/6\", \"color\": \"accent\", \"fillRange\": [3, 5] } ], \"caption\": \"Uniform density on [2, 8]: height 1/6, and P(3 < X < 5) = 2/6 = 1/3 is just a length fraction.\" }\n```\n\nThe $\\tfrac{(b-a)^2}{12}$ variance drops out of $\\int x^2 f\\,dx - \\mu^2$ — worth deriving once, then trusting. A uniform wait on $[0, 12]$ minutes has mean 6 and variance $\\tfrac{144}{12} = 12$.\n\n## Expected value: the integral that replaces the sum\n\nThe discrete $E[X] = \\sum x\\,P(x)$ becomes\n\n$$E[X] = \\int x\\, f(x)\\,dx.$$\n\nFor the rising density $f(x) = 2x$ on $[0, 1]$:\n\n$$E[X] = \\int_0^1 x \\cdot 2x\\,dx = \\int_0^1 2x^2\\,dx = \\frac{2}{3}.$$\n\nNote what happened: the midpoint of the interval is $\\tfrac12$, but the mean landed at $\\tfrac23$ — the density piles probability toward 1 and drags the balance point right. For any $f(x) = kx^m$ density on $[0, c]$, the mean is $\\tfrac{m+1}{m+2}\\,c$: always past the midpoint, creeping toward $c$ as $m$ grows.\n\n### The median: splitting the area\n\nThe **median** $m$ solves $F(m) = \\tfrac12$ — half the area on each side. For $f(x) = \\tfrac{x}{2}$ on $[0,2]$, $F(x) = \\tfrac{x^2}{4}$:\n\n$$\\frac{m^2}{4} = \\frac{1}{2} \\quad\\Longrightarrow\\quad m^2 = 2 \\quad\\Longrightarrow\\quad m = \\sqrt{2} \\approx 1.414.$$\n\nHere the mean is $\\tfrac43 \\approx 1.333 < \\sqrt 2$: for this density the median sits to the right of the mean. Symmetric densities (like the uniform) are the special case where mean $=$ median $=$ midpoint.\n\n### Common pitfalls\n\n- **Reading $f(a)$ as $P(X = a)$:** heights are not probabilities; $P(X = a) = 0$ always. Only integrals mean anything.\n- **Forgetting to re-derive $k$:** change the interval or the power and the old constant is wrong. Re-solve $\\int f = 1$ every time.\n- **Dropping the support:** $f$ is zero outside its interval, so an integral from $-1$ or past $c$ picks up nothing. Clip your limits to the support first.\n- **Mean vs. median on skewed densities:** they differ whenever the density is lopsided; neither is 'the' center. Say which one you mean."
+  },
+  "application": {
+    "summary": "Densities price continuous uncertainty: wait times at a clinic, load on a beam, latency of a request, error of a sensor. Finding k, integrating for probabilities, and computing means and medians are the daily moves of reliability, queueing, and tolerance analysis.",
+    "domains": ["queueing and service systems", "manufacturing tolerances", "sensor calibration and measurement error", "hydrology and load modeling"],
+    "workedExample": "**Sizing a clinic's walk-in window.**\n\nA clinic models the arrival moment $X$ of walk-in patients within its 2-hour lunch window using the density $f(x) = \\tfrac{x}{2}$ on $[0, 2]$ (hours after noon) — arrivals thicken toward the end of the window.\n\n*Step 1 — is it a valid density?* $\\int_0^2 \\tfrac{x}{2}\\,dx = \\tfrac{x^2}{4}\\big|_0^2 = 1$. ✓ And $\\tfrac{x}{2} \\ge 0$ on the interval. ✓\n\n*Step 2 — late-rush probability.* The fraction of walk-ins arriving in the second hour is $P(1 < X < 2) = F(2) - F(1) = 1 - \\tfrac14 = \\tfrac34$. Three-quarters of the load lands in the second hour — the staffing plan should be back-loaded.\n\n*Step 3 — the average arrival.* $E[X] = \\int_0^2 x \\cdot \\tfrac{x}{2}\\,dx = \\tfrac{x^3}{6}\\big|_0^2 = \\tfrac{8}{6} = \\tfrac43$ hours — about 1:20 pm, well past the 1:00 midpoint.\n\n*Step 4 — the half-load moment.* The median solves $F(m) = \\tfrac{m^2}{4} = \\tfrac12$, so $m = \\sqrt2 \\approx 1.41$ hours ≈ 1:25 pm. Half of all walk-ins arrive in the final 35 minutes — the receptionist's experience ('it all happens at the end') is a theorem.\n\n*Step 5 — compare to a uniform assumption.* Had the clinic assumed uniform arrivals on $[0,2]$ (height $\\tfrac12$, mean 1, second-hour share $\\tfrac12$), it would have under-staffed the final hour by a third. The shape of the density, not just its range, drives the decision.",
+    "domainNotes": [
+      "**Queueing:** service and inter-arrival times are continuous; their densities (exponential, uniform, custom fits) feed directly into wait-time and staffing formulas.",
+      "**Manufacturing:** part dimensions vary continuously; the probability a part is in tolerance is an area under the dimension's density between the spec limits.",
+      "**Measurement:** sensor error densities determine calibration bands; a symmetric density centered at 0 means unbiased readings, and its spread sets the error bar.",
+      "**Hydrology and loads:** river discharge and structural loads are modeled with skewed densities where mean, median, and extreme-tail areas each answer a different engineering question."
+    ]
+  },
+  "generators": [
+    "as1-density-basics-1", "as1-density-basics-2", "as1-density-basics-3",
+    "as1-density-prob-1", "as1-density-prob-2", "as1-density-prob-3",
+    "as1-uniform-1", "as1-uniform-2", "as1-uniform-3",
+    "as1-ev-continuous-1", "as1-ev-continuous-2", "as1-ev-continuous-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.continuous-random-variables.s01",
+      "concepts": ["density-basics"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the constant $k$ so that $f(x) = kx$ on $[0, 2]$ (zero elsewhere) is a valid probability density.",
+      "steps": [
+        { "instruction": "Compute $\\displaystyle\\int_0^2 x\\,dx$. (Give a number.)", "answer": "2", "accept": ["4/2"], "hint": "$\\frac{x^2}{2}$ evaluated from 0 to 2." },
+        { "instruction": "Solve $k \\cdot 2 = 1$ for $k$. (Give a fraction or decimal.)", "answer": "1/2", "accept": ["0.5"], "hint": "The total area must equal 1." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "$\\int_0^2 kx\\,dx = 2k$, and setting $2k = 1$ gives $k = \\tfrac12$."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s02",
+      "concepts": ["density-basics"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the constant $k$ so that $f(x) = kx^2$ on $[0, 2]$ (zero elsewhere) is a valid probability density.",
+      "steps": [
+        { "instruction": "Compute $\\displaystyle\\int_0^2 x^2\\,dx$. (Give a fraction.)", "answer": "8/3", "accept": ["2.667"], "hint": "$\\frac{x^3}{3}$ from 0 to 2." },
+        { "instruction": "Solve $k \\cdot \\dfrac{8}{3} = 1$ for $k$. (Give a fraction.)", "answer": "3/8", "accept": ["0.375"], "hint": "$k$ is the reciprocal of the integral." },
+        { "instruction": "Besides total area 1, a density must never be ___. Type 'negative' or 'positive'.", "answer": "negative", "accept": [], "hint": "Axiom 1: $f(x) \\ge 0$." }
+      ],
+      "finalAnswer": { "value": "3/8", "unit": "" },
+      "solutionNarrative": "$\\int_0^2 kx^2\\,dx = \\tfrac{8k}{3} = 1$ gives $k = \\tfrac38$, and $\\tfrac38 x^2 \\ge 0$ on the interval, so both density axioms hold."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s03",
+      "concepts": ["density-basics"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the constant $k$ so that $f(x) = kx^3$ on $[0, 2]$ (zero elsewhere) is a valid probability density.",
+      "steps": [
+        { "instruction": "Compute $\\displaystyle\\int_0^2 x^3\\,dx$. (Give a number.)", "answer": "4", "accept": ["16/4"], "hint": "$\\frac{x^4}{4}$ from 0 to 2." },
+        { "instruction": "What must the TOTAL area under a density equal? (Give a number.)", "answer": "1", "accept": [], "hint": "Axiom 2." },
+        { "instruction": "Solve $4k = 1$. (Give a fraction or decimal.)", "answer": "1/4", "accept": ["0.25"], "hint": "Divide both sides by 4." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "$\\int_0^2 kx^3\\,dx = 4k = 1$, so $k = \\tfrac14$. The density $\\tfrac{x^3}{4}$ rises steeply toward 2."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s04",
+      "concepts": ["density-basics"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A machine's cycle time is equally likely to be anywhere in $[0, 5]$ seconds, so its density is a constant $k$ on $[0, 5]$. Find $k$.",
+      "steps": [
+        { "instruction": "The area under the flat density is $k \\times 5$. Set it equal to 1 and solve for $k$. (Give a fraction or decimal.)", "answer": "1/5", "accept": ["0.2"], "hint": "Rectangle area: height times width equals 1." }
+      ],
+      "finalAnswer": { "value": "1/5", "unit": "" },
+      "solutionNarrative": "A flat density on an interval of length 5 must have height $k = \\tfrac15$ so the rectangle has area 1."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s05",
+      "concepts": ["probabilities-from-densities"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $f(x) = \\dfrac{x}{2}$ on $[0, 2]$, with CDF $F(x) = \\dfrac{x^2}{4}$. Find $P(1 < X < 2) = F(2) - F(1)$.",
+      "steps": [
+        { "instruction": "Compute $F(2) = \\dfrac{2^2}{4}$.", "answer": "1", "accept": ["4/4"], "hint": "The CDF reaches 1 at the right end of the support." },
+        { "instruction": "Compute $F(1) = \\dfrac{1^2}{4}$. (Give a fraction.)", "answer": "1/4", "accept": ["0.25"], "hint": "One over four." },
+        { "instruction": "Subtract: $P(1 < X < 2) = F(2) - F(1)$. (Give a fraction.)", "answer": "3/4", "accept": ["0.75"], "hint": "$1 - \\tfrac14$." }
+      ],
+      "finalAnswer": { "value": "3/4", "unit": "" },
+      "solutionNarrative": "$P(1 < X < 2) = F(2) - F(1) = 1 - \\tfrac14 = \\tfrac34$ — three quarters of the probability sits in the second half of the interval."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s06",
+      "concepts": ["probabilities-from-densities"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $f(x) = \\dfrac{x^2}{9}$ on $[0, 3]$, with CDF $F(x) = \\dfrac{x^3}{27}$. Find $P(1 < X < 2)$.",
+      "steps": [
+        { "instruction": "Compute $F(2) = \\dfrac{2^3}{27}$. (Give a fraction.)", "answer": "8/27", "accept": [], "hint": "Cube the 2." },
+        { "instruction": "Compute $F(1) = \\dfrac{1^3}{27}$. (Give a fraction.)", "answer": "1/27", "accept": [], "hint": "One twenty-seventh." },
+        { "instruction": "Subtract: $P(1 < X < 2)$. (Give a fraction.)", "answer": "7/27", "accept": [], "hint": "$\\tfrac{8}{27} - \\tfrac{1}{27}$." }
+      ],
+      "finalAnswer": { "value": "7/27", "unit": "" },
+      "solutionNarrative": "$P(1 < X < 2) = F(2) - F(1) = \\tfrac{8}{27} - \\tfrac{1}{27} = \\tfrac{7}{27}$."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s07",
+      "concepts": ["probabilities-from-densities"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $f(x) = 2x$ on $[0, 1]$, with CDF $F(x) = x^2$. Find $P\\left(X > \\tfrac12\\right)$ and $P\\left(X = \\tfrac12\\right)$.",
+      "steps": [
+        { "instruction": "Compute $F\\left(\\tfrac12\\right) = \\left(\\tfrac12\\right)^2$. (Give a fraction.)", "answer": "1/4", "accept": ["0.25"], "hint": "Square the half." },
+        { "instruction": "Complement: $P\\left(X > \\tfrac12\\right) = 1 - F\\left(\\tfrac12\\right)$. (Give a fraction.)", "answer": "3/4", "accept": ["0.75"], "hint": "$1 - \\tfrac14$." },
+        { "instruction": "What is $P\\left(X = \\tfrac12\\right)$ exactly, for this continuous variable? (Give a number.)", "answer": "0", "accept": [], "hint": "A single point has zero area." }
+      ],
+      "finalAnswer": { "value": "3/4", "unit": "" },
+      "solutionNarrative": "$P(X > \\tfrac12) = 1 - (\\tfrac12)^2 = \\tfrac34$, while $P(X = \\tfrac12) = 0$: single points carry no area, so strict and non-strict inequalities agree."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s08",
+      "concepts": ["probabilities-from-densities"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $f(x) = 2x$ on $[0, 1]$, with CDF $F(x) = x^2$. Find $P\\left(0 < X < \\tfrac12\\right)$.",
+      "steps": [
+        { "instruction": "Compute $F\\left(\\tfrac12\\right) = \\left(\\tfrac12\\right)^2$. (Give a fraction.)", "answer": "1/4", "accept": ["0.25"], "hint": "Square one half." },
+        { "instruction": "Since $F(0) = 0$, what is $P\\left(0 < X < \\tfrac12\\right)$? (Give a fraction.)", "answer": "1/4", "accept": ["0.25"], "hint": "$F(\\tfrac12) - F(0)$." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "$P(0 < X < \\tfrac12) = F(\\tfrac12) - F(0) = \\tfrac14$: the lower half of the interval holds only a quarter of the probability, because the density rises."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s09",
+      "concepts": ["uniform-distribution"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A random number generator outputs values uniformly on $[0, 10]$. Find the density height, $P(2 < X < 5)$, and the mean.",
+      "steps": [
+        { "instruction": "Density height: $\\dfrac{1}{b - a} = \\dfrac{1}{10}$. (Give a fraction or decimal.)", "answer": "1/10", "accept": ["0.1"], "hint": "One over the interval length." },
+        { "instruction": "Compute $P(2 < X < 5) = \\dfrac{5 - 2}{10}$. (Give a fraction or decimal.)", "answer": "3/10", "accept": ["0.3"], "hint": "Length of the sub-interval over total length." },
+        { "instruction": "Mean: $\\dfrac{0 + 10}{2}$.", "answer": "5", "accept": [], "hint": "The midpoint." }
+      ],
+      "finalAnswer": { "value": "3/10", "unit": "" },
+      "solutionNarrative": "Height $\\tfrac{1}{10}$, $P(2 < X < 5) = \\tfrac{3}{10}$, and the mean is the midpoint 5."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s10",
+      "concepts": ["uniform-distribution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $X$ be uniform on $[2, 8]$. Find its mean and variance, using $\\mathrm{Var}(X) = \\dfrac{(b-a)^2}{12}$.",
+      "steps": [
+        { "instruction": "Mean: $\\dfrac{2 + 8}{2}$.", "answer": "5", "accept": [], "hint": "Midpoint of the interval." },
+        { "instruction": "Compute $(b - a)^2 = (8 - 2)^2$.", "answer": "36", "accept": [], "hint": "Six squared." },
+        { "instruction": "Variance: $\\dfrac{36}{12}$.", "answer": "3", "accept": [], "hint": "Divide by 12." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Mean $= 5$ (the midpoint) and $\\mathrm{Var}(X) = \\tfrac{36}{12} = 3$."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s11",
+      "concepts": ["uniform-distribution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A bus arrives at a uniformly random moment in the next 12 minutes, so your wait $W$ is uniform on $[0, 12]$.",
+      "steps": [
+        { "instruction": "Compute $P(W \\le 3) = \\dfrac{3}{12}$. (Give a fraction.)", "answer": "1/4", "accept": ["3/12", "0.25"], "hint": "Reduce the fraction." },
+        { "instruction": "Compute $P(W > 9) = \\dfrac{12 - 9}{12}$. (Give a fraction.)", "answer": "1/4", "accept": ["3/12", "0.25"], "hint": "The last 3 of 12 minutes." },
+        { "instruction": "Mean wait: $\\dfrac{0 + 12}{2}$.", "answer": "6", "accept": [], "hint": "Midpoint." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "minutes" },
+      "solutionNarrative": "Uniform waits are pure geometry: $P(W \\le 3) = P(W > 9) = \\tfrac14$ and the mean wait is 6 minutes."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s12",
+      "concepts": ["uniform-distribution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $X$ be uniform on $[0, 4]$. Find its mean and variance.",
+      "steps": [
+        { "instruction": "Mean: $\\dfrac{0 + 4}{2}$.", "answer": "2", "accept": [], "hint": "Midpoint." },
+        { "instruction": "Variance: $\\dfrac{(4 - 0)^2}{12}$. (Give a fraction.)", "answer": "4/3", "accept": ["16/12"], "hint": "$\\tfrac{16}{12}$, reduced." }
+      ],
+      "finalAnswer": { "value": "4/3", "unit": "" },
+      "solutionNarrative": "Mean $= 2$; variance $= \\tfrac{16}{12} = \\tfrac43$."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s13",
+      "concepts": ["expected-value-continuous"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $f(x) = 2x$ on $[0, 1]$. Find $E[X] = \\displaystyle\\int_0^1 x \\cdot 2x\\,dx$.",
+      "steps": [
+        { "instruction": "Compute $\\displaystyle\\int_0^1 x^2\\,dx$. (Give a fraction.)", "answer": "1/3", "accept": [], "hint": "$\\frac{x^3}{3}$ from 0 to 1." },
+        { "instruction": "Multiply by 2: $E[X] = 2 \\times \\dfrac{1}{3}$. (Give a fraction.)", "answer": "2/3", "accept": [], "hint": "Two thirds." }
+      ],
+      "finalAnswer": { "value": "2/3", "unit": "" },
+      "solutionNarrative": "$E[X] = \\int_0^1 2x^2\\,dx = \\tfrac23$ — above the midpoint $\\tfrac12$ because the density rises toward 1."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s14",
+      "concepts": ["expected-value-continuous"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $f(x) = \\dfrac{x}{2}$ on $[0, 2]$. Find $E[X] = \\displaystyle\\int_0^2 x \\cdot \\dfrac{x}{2}\\,dx$.",
+      "steps": [
+        { "instruction": "Compute $\\displaystyle\\int_0^2 x^2\\,dx$. (Give a fraction.)", "answer": "8/3", "accept": ["2.667"], "hint": "$\\frac{x^3}{3}$ from 0 to 2." },
+        { "instruction": "Multiply by $\\dfrac{1}{2}$: $E[X] = \\dfrac{1}{2} \\times \\dfrac{8}{3}$. (Give a fraction.)", "answer": "4/3", "accept": ["8/6"], "hint": "Halve the numerator." }
+      ],
+      "finalAnswer": { "value": "4/3", "unit": "" },
+      "solutionNarrative": "$E[X] = \\tfrac12 \\cdot \\tfrac83 = \\tfrac43 \\approx 1.33$, past the midpoint 1 of the interval."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s15",
+      "concepts": ["expected-value-continuous"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $f(x) = \\dfrac{x}{2}$ on $[0, 2]$, with CDF $F(x) = \\dfrac{x^2}{4}$. Find the median $m$, the value where $F(m) = \\dfrac12$.",
+      "steps": [
+        { "instruction": "Set $\\dfrac{m^2}{4} = \\dfrac12$ and solve for $m^2$.", "answer": "2", "accept": ["m^2 = 2"], "hint": "Multiply both sides by 4." },
+        { "instruction": "Take the positive square root: $m = \\sqrt{2}$. (Exact or to 4 decimal places.)", "answer": "sqrt(2)", "accept": ["1.4142", "1.414"], "hint": "$\\sqrt 2 \\approx 1.4142$." }
+      ],
+      "finalAnswer": { "value": "sqrt(2)", "unit": "" },
+      "solutionNarrative": "$F(m) = \\tfrac{m^2}{4} = \\tfrac12$ gives $m^2 = 2$, so $m = \\sqrt2 \\approx 1.414$: half the probability lies beyond 1.414, even though the interval midpoint is 1."
+    },
+    {
+      "id": "advanced-statistics.continuous-random-variables.s16",
+      "concepts": ["expected-value-continuous"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $f(x) = \\dfrac{3x^2}{8}$ on $[0, 2]$. Find $E[X]$ and compare it to the interval midpoint.",
+      "steps": [
+        { "instruction": "Compute $\\displaystyle\\int_0^2 x^3\\,dx$. (Give a number.)", "answer": "4", "accept": ["16/4"], "hint": "$\\frac{x^4}{4}$ from 0 to 2." },
+        { "instruction": "Multiply by $\\dfrac{3}{8}$: $E[X] = \\dfrac{3}{8} \\times 4$. (Give a fraction or decimal.)", "answer": "3/2", "accept": ["1.5"], "hint": "Three eighths of four." },
+        { "instruction": "The interval midpoint is 1. Is $E[X]$ 'greater' or 'less' than the midpoint? Type one.", "answer": "greater", "accept": [], "hint": "The density piles weight toward 2." }
+      ],
+      "finalAnswer": { "value": "3/2", "unit": "" },
+      "solutionNarrative": "$E[X] = \\tfrac38 \\int_0^2 x^3\\,dx = \\tfrac38 \\cdot 4 = \\tfrac32$, which exceeds the midpoint 1 — a rising density always pulls the mean right of center."
+    }
+  ]
+}

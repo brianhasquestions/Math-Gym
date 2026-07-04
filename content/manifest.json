@@ -179,6 +179,25 @@
       ]
     },
     {
+      "id": "advanced-statistics",
+      "title": "Advanced Statistics",
+      "blurb": "A second course in statistics — named distributions, covariance, Bayesian updating, and the full inference toolkit: t, chi-square, ANOVA, and regression.",
+      "topics": [
+        { "id": "advanced-statistics.experimental-design", "title": "Experimental Design and Sampling Methods", "file": "content/advanced-statistics/experimental-design.json", "status": "ready" },
+        { "id": "advanced-statistics.discrete-distributions", "title": "Discrete Distributions: Binomial and Geometric", "file": "content/advanced-statistics/discrete-distributions.json", "status": "ready" },
+        { "id": "advanced-statistics.poisson-exponential", "title": "Poisson and Exponential Models", "file": "content/advanced-statistics/poisson-exponential.json", "status": "ready" },
+        { "id": "advanced-statistics.continuous-random-variables", "title": "Continuous Random Variables and Densities", "file": "content/advanced-statistics/continuous-random-variables.json", "status": "ready" },
+        { "id": "advanced-statistics.joint-covariance", "title": "Joint Distributions, Covariance, and Correlation", "file": "content/advanced-statistics/joint-covariance.json", "status": "ready" },
+        { "id": "advanced-statistics.estimators-sampling", "title": "Estimators and Sampling Distributions", "file": "content/advanced-statistics/estimators-sampling.json", "status": "ready" },
+        { "id": "advanced-statistics.t-inference", "title": "t-Distribution Inference", "file": "content/advanced-statistics/t-inference.json", "status": "ready" },
+        { "id": "advanced-statistics.two-sample-inference", "title": "Two-Sample Inference", "file": "content/advanced-statistics/two-sample-inference.json", "status": "ready" },
+        { "id": "advanced-statistics.chi-square-tests", "title": "Chi-Square Tests", "file": "content/advanced-statistics/chi-square-tests.json", "status": "ready" },
+        { "id": "advanced-statistics.anova", "title": "One-Way ANOVA", "file": "content/advanced-statistics/anova.json", "status": "ready" },
+        { "id": "advanced-statistics.regression-inference", "title": "Inference for Regression", "file": "content/advanced-statistics/regression-inference.json", "status": "ready" },
+        { "id": "advanced-statistics.bayesian-inference", "title": "Bayesian Inference", "file": "content/advanced-statistics/bayesian-inference.json", "status": "ready" }
+      ]
+    },
+    {
       "id": "discrete-math",
       "title": "Discrete Math",
       "blurb": "Logic, sets, counting, and networks — the math beneath algorithms and computer science.",

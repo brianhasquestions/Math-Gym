@@ -1,0 +1,274 @@
+{
+  "id": "advanced-statistics.estimators-sampling",
+  "subject": "advanced-statistics",
+  "title": "Estimators and Sampling Distributions",
+  "prerequisites": ["statistics.normal-and-sampling", "advanced-statistics.joint-covariance"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "point-estimators",
+      "label": "Statistics, parameters, and point estimators",
+      "microLesson": "A **parameter** is a fixed (usually unknown) fact about the population: $\\mu$, $p$, $\\sigma^2$. A **statistic** is anything computed from a sample: $\\bar{x}$, $\\hat{p}$, $s^2$. A point estimator is a statistic used to guess a parameter — $\\bar{x}$ estimates $\\mu$, $\\hat{p} = x/n$ estimates $p$, and $s^2 = \\frac{\\sum (x_i - \\bar{x})^2}{n-1}$ estimates $\\sigma^2$. The $n - 1$ denominator is deliberate: it makes $s^2$ unbiased. Parameters are constants; statistics are random — they change with every new sample."
+    },
+    {
+      "id": "bias-and-mse",
+      "label": "Bias and mean squared error",
+      "microLesson": "The **bias** of an estimator is its systematic offset: $\\mathrm{bias} = E[\\hat{\\theta}] - \\theta$. Zero bias means the estimator is right on average across repeated samples. But average-correctness is not the whole story — a wildly noisy unbiased estimator can be worse than a slightly biased steady one. **Mean squared error** charges for both: $\\mathrm{MSE} = \\mathrm{Var}(\\hat{\\theta}) + \\mathrm{bias}^2$. Comparing estimators by MSE is the standard tiebreak, and it sometimes crowns the biased contender — the bias-variance tradeoff in one line."
+    },
+    {
+      "id": "standard-errors",
+      "label": "Standard errors",
+      "microLesson": "The **standard error** is the standard deviation of an estimator's sampling distribution — how much the estimate wobbles from sample to sample. For a mean: $\\mathrm{SE}(\\bar{x}) = \\frac{\\sigma}{\\sqrt{n}}$. For a proportion: $\\mathrm{SE}(\\hat{p}) = \\sqrt{\\frac{p(1-p)}{n}}$. Both shrink with $\\sqrt{n}$, not $n$: quadrupling the sample only halves the wobble. The SE is the yardstick for every interval and test that follows — 'how surprising is this estimate?' always means 'how many standard errors from expected?'."
+    },
+    {
+      "id": "clt-applications",
+      "label": "Applying the Central Limit Theorem",
+      "microLesson": "The CLT says the sample mean of $n$ independent draws is approximately normal — regardless of the population's shape — with mean $\\mu$ and standard deviation $\\sigma/\\sqrt{n}$. To find $P(\\bar{X} < x)$: compute the SE, standardize with $z = \\frac{x - \\mu}{\\sigma/\\sqrt{n}}$ (divide by the SE, never by raw $\\sigma$), and read the given $\\Phi$ value. Tails use $1 - \\Phi(z)$; symmetric central intervals use $2\\Phi(z) - 1$. The most common error is standardizing a MEAN with the individual-level $\\sigma$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The estimation game\n\nEvery statistical question has the same cast of characters. Hidden offstage is a **parameter** — the true mean battery life $\\mu$, the true support rate $p$, the true variance $\\sigma^2$. It is a fixed number; you just don't know it. Onstage is your **sample**, and anything you compute from it is a **statistic**. A statistic deployed to guess a parameter is a **point estimator**:\n\n| Parameter (population, fixed) | Estimator (sample, random) |\n|---|---|\n| mean $\\mu$ | $\\bar{x} = \\frac{1}{n}\\sum x_i$ |\n| proportion $p$ | $\\hat{p} = \\frac{x}{n}$ |\n| variance $\\sigma^2$ | $s^2 = \\frac{\\sum (x_i - \\bar{x})^2}{n-1}$ |\n\nThe crucial mental flip: the parameter is constant, but the *estimator is a random variable*. Redraw the sample and $\\bar{x}$ lands somewhere else. The distribution of those landings — over all possible samples — is the **sampling distribution**, and everything in inference is a statement about it.\n\nWhy $n - 1$ in $s^2$? The deviations are measured from $\\bar{x}$, which was itself chosen to sit in the middle of the data — so raw squared deviations come out systematically too small. Dividing by $n - 1$ instead of $n$ exactly cancels that shrinkage.\n\n## Bias: systematically off, or not\n\nAim the estimator at the truth and ask where its shots center:\n\n$$\\mathrm{bias}(\\hat{\\theta}) = E[\\hat{\\theta}] - \\theta.$$\n\nIf the bias is 0 the estimator is **unbiased**: right on average. $\\bar{x}$ is unbiased for $\\mu$; $\\hat{p}$ is unbiased for $p$; $s^2$ (with its $n-1$) is unbiased for $\\sigma^2$. An estimator with $E[\\hat{\\theta}] = \\theta + 3$ overshoots by 3 no matter how much data arrives from the same design — bias does not average away.\n\n## MSE: the full bill\n\nUnbiasedness is not the same as accuracy. Picture two archers: one's arrows center on the bullseye but scatter wildly; the other clusters tightly, one inch left. Who would you hire? **Mean squared error** prices both failings in one number:\n\n$$\\mathrm{MSE}(\\hat{\\theta}) = E\\big[(\\hat{\\theta} - \\theta)^2\\big] = \\mathrm{Var}(\\hat{\\theta}) + \\mathrm{bias}^2.$$\n\n*Worked comparison.* Estimator A: unbiased, variance 10, so $\\mathrm{MSE}_A = 10$. Estimator B: bias 2, variance 5, so $\\mathrm{MSE}_B = 5 + 4 = 9$. B wins — a small systematic error bought a big reduction in noise. This **bias-variance tradeoff** is the engine behind shrinkage estimators and regularization in machine learning: deliberately biased, and better for it.\n\n## Standard error: the estimator's own sigma\n\nThe standard deviation of the sampling distribution gets its own name: the **standard error**. For the sample mean,\n\n$$\\mathrm{SE}(\\bar{x}) = \\frac{\\sigma}{\\sqrt{n}},$$\n\nbecause averaging $n$ independent values cancels noise — but only at the $\\sqrt{n}$ rate. For a proportion,\n\n$$\\mathrm{SE}(\\hat{p}) = \\sqrt{\\frac{p(1-p)}{n}},$$\n\nlargest at $p = \\frac{1}{2}$ and shrinking near 0 or 1. The square root has a budgetary sting: to halve an SE you must *quadruple* the sample. Precision is bought at a quadratic price, which is why polls plateau around $n \\approx 1000$ — the next digit of accuracy costs 100 times more interviews.\n\n## The Central Limit Theorem, put to work\n\nThe CLT is the reason the normal curve rules applied statistics: for large $n$, the sample mean is approximately normal *no matter what shape the population has* —\n\n$$\\bar{X} \\;\\approx\\; N\\!\\left(\\mu,\\ \\frac{\\sigma}{\\sqrt{n}}\\right).$$\n\nSkewed incomes, lumpy wait times, binary clicks: average enough of them and the bell emerges. The working recipe for $P(\\bar{X} < x)$:\n\n1. **SE first**: $\\sigma/\\sqrt{n}$.\n2. **Standardize with the SE**: $z = \\dfrac{x - \\mu}{\\sigma/\\sqrt{n}}$.\n3. **Read the table value** you are given, e.g. $P(Z < 1.5) = 0.933$.\n\nTails and intervals fold in by symmetry: $P(\\bar{X} > x) = 1 - \\Phi(z)$, and for a symmetric band $P(\\mu - z\\,\\mathrm{SE} < \\bar{X} < \\mu + z\\,\\mathrm{SE}) = 2\\Phi(z) - 1$.\n\n*Example.* Weights: $\\mu = 100$, $\\sigma = 20$, $n = 25$, so $\\mathrm{SE} = 20/5 = 4$. Then $P(\\bar{X} < 104) = P(Z < 1) = 0.841$, given $\\Phi(1) = 0.841$. A single item below 104 is barely informative ($z = 0.2$); the mean of 25 below 104 is a different, sharper claim.\n\n### Pitfalls\n\n- **Standardizing a mean with $\\sigma$ instead of $\\sigma/\\sqrt{n}$** — the classic. The sample mean is far less variable than one observation; using raw $\\sigma$ wildly understates significance.\n- **Bias is not variance.** An unbiased estimator can be terrible (huge variance); a biased one can be excellent (tiny MSE). Judge by MSE, not by the word 'unbiased' alone.\n- **$\\sqrt{n}$, not $n$.** Doubling data does not double precision; it buys a factor $\\sqrt{2}$.\n- **Statistics are random; parameters are not.** Sentences like 'the probability that $\\mu$ is between 4 and 6' are category errors in this framework — $\\mu$ doesn't move; the estimator does (the Bayesian topic revisits this deliberately)."
+  },
+  "application": {
+    "summary": "Estimator quality and sampling distributions are the machinery behind every poll's margin of error, every A/B test's significance call, and every manufacturing acceptance rule: the standard error says how much an estimate wobbles, and the CLT says the wobble is normal enough to compute with.",
+    "domains": ["election polling", "A/B testing", "manufacturing quality", "machine learning"],
+    "workedExample": "**Will the batch pass? A CLT acceptance calculation.**\n\nA bottling line fills with mean $\\mu = 200$ g and standard deviation $\\sigma = 30$ g per bottle. QA samples $n = 36$ bottles each shift and accepts the batch when the sample mean lands between 190 g and 210 g. You are given $P(Z < 2) = 0.977$. How often does a healthy line pass?\n\n*Step 1 — the sampling distribution.* By the CLT, $\\bar{X}$ is approximately normal with mean 200 and standard error $\\mathrm{SE} = \\frac{30}{\\sqrt{36}} = \\frac{30}{6} = 5$ g. Note the shrinkage: individual bottles wobble by 30 g, but the 36-bottle average wobbles by only 5 g.\n\n*Step 2 — standardize the bounds.* $z_{\\text{upper}} = \\frac{210 - 200}{5} = 2$ and $z_{\\text{lower}} = -2$ by symmetry.\n\n*Step 3 — central probability.* $P(-2 < Z < 2) = 2\\Phi(2) - 1 = 2(0.977) - 1 = 0.954$.\n\nA healthy line passes about $95.4\\%$ of shifts — roughly one false alarm every 22 shifts, a rate management can budget for. Every acceptance sampling plan, clinical trial size, and poll margin is this same three-line calculation wearing different clothes: pick the tolerance, compute the SE, and let the normal curve price the error rates. And if one false alarm in 22 is too many, the fix is written in the SE formula: quadruple the sample to halve the wobble.",
+    "domainNotes": [
+      "**Election polling:** the reported margin of error is roughly $2\\,\\mathrm{SE}(\\hat{p})$; at $p \\approx 0.5$ and $n = 1000$ that is about 3 points, and halving it would require 4000 interviews — the $\\sqrt{n}$ tax in action.",
+      "**A/B testing:** deciding whether a conversion lift is real is asking whether the observed difference exceeds a couple of standard errors of the difference — the sampling distribution IS the test.",
+      "**Manufacturing:** control charts draw lines at $\\mu \\pm 3\\sigma/\\sqrt{n}$; a sample mean outside them signals the process drifted, with a false-alarm rate the normal curve prices exactly.",
+      "**Machine learning:** regularized models accept bias to slash variance — the MSE decomposition $\\mathrm{Var} + \\mathrm{bias}^2$ is the textbook justification for ridge regression and shrinkage."
+    ]
+  },
+  "generators": [
+    "as2-point-est-1", "as2-point-est-2", "as2-point-est-3",
+    "as2-bias-mse-1", "as2-bias-mse-2", "as2-bias-mse-3",
+    "as2-se-1", "as2-se-2", "as2-se-3",
+    "as2-clt-1", "as2-clt-2", "as2-clt-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.estimators-sampling.s01",
+      "concepts": ["point-estimators"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A factory tests a sample of 50 light bulbs from today's production and computes their average lifetime. Classify the quantities involved.",
+      "steps": [
+        { "instruction": "The average lifetime of the 50 SAMPLED bulbs — statistic or parameter? Type 'statistic' or 'parameter'.", "answer": "statistic", "accept": [], "hint": "It is computed from sampled data." },
+        { "instruction": "The true mean lifetime of ALL bulbs the factory produces — statistic or parameter? Type 'statistic' or 'parameter'.", "answer": "parameter", "accept": [], "hint": "A fixed property of the whole population, known only to the universe." }
+      ],
+      "finalAnswer": { "value": "parameter", "unit": "" },
+      "solutionNarrative": "The sample average is a statistic — random, recomputed with every sample. The population mean is a parameter — fixed but unknown. The statistic $\\bar{x}$ is the point estimator of the parameter $\\mu$."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s02",
+      "concepts": ["point-estimators"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "In a sample of 40 shoppers, 12 say they would recommend the store. Compute the point estimate of the true recommendation rate.",
+      "steps": [
+        { "instruction": "Sample proportion: $\\hat{p} = \\dfrac{12}{40}$. Give a fraction in lowest terms.", "answer": "3/10", "accept": ["12/40", "0.3"], "hint": "Divide successes by sample size, then reduce." },
+        { "instruction": "Express $\\hat{p}$ as a decimal.", "answer": "0.3", "accept": ["3/10"], "hint": "$3 \\div 10$." }
+      ],
+      "finalAnswer": { "value": "0.3", "unit": "" },
+      "solutionNarrative": "$\\hat{p} = \\frac{12}{40} = \\frac{3}{10} = 0.3$: the sample proportion is the natural point estimator of the population proportion $p$."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s03",
+      "concepts": ["point-estimators"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Five sampled delivery times (minutes): $12,\\ 14,\\ 15,\\ 16,\\ 18$. Compute the sample mean and the sample variance $s^2 = \\dfrac{\\sum (x_i - \\bar{x})^2}{n-1}$.",
+      "steps": [
+        { "instruction": "Sum the five values. (Give a number.)", "answer": "75", "accept": [], "hint": "$12 + 14 + 15 + 16 + 18$." },
+        { "instruction": "Sample mean $\\bar{x}$. (Give a number.)", "answer": "15", "accept": [], "hint": "$75 / 5$." },
+        { "instruction": "The deviations from 15 are $-3, -1, 0, 1, 3$. Compute $\\sum (x_i - \\bar{x})^2$. (Give a number.)", "answer": "20", "accept": [], "hint": "$9 + 1 + 0 + 1 + 9$." },
+        { "instruction": "Sample variance $s^2 = \\dfrac{20}{4}$ (divide by $n - 1 = 4$). (Give a number.)", "answer": "5", "accept": ["20/4"], "hint": "The $n-1$ denominator makes $s^2$ unbiased." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$\\bar{x} = 15$, squared deviations sum to 20, and dividing by $n - 1 = 4$ gives $s^2 = 5$. Dividing by 5 instead would give 4 — a systematic underestimate of $\\sigma^2$."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s04",
+      "concepts": ["point-estimators"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Five sampled wait times (minutes): $8,\\ 8,\\ 10,\\ 12,\\ 12$. Compute $\\bar{x}$, $s^2$, and the sample standard deviation $s$.",
+      "steps": [
+        { "instruction": "Sample mean $\\bar{x}$. (Give a number.)", "answer": "10", "accept": [], "hint": "The sum is 50; divide by 5." },
+        { "instruction": "Deviations: $-2, -2, 0, 2, 2$. Compute $\\sum (x_i - \\bar{x})^2$. (Give a number.)", "answer": "16", "accept": [], "hint": "$4 + 4 + 0 + 4 + 4$." },
+        { "instruction": "Sample variance $s^2 = \\dfrac{16}{4}$. (Give a number.)", "answer": "4", "accept": ["16/4"], "hint": "Divide by $n - 1 = 4$." },
+        { "instruction": "Sample standard deviation $s = \\sqrt{4}$. (Give a number.)", "answer": "2", "accept": ["sqrt(4)"], "hint": "$2^2 = 4$." },
+        { "instruction": "Is $s$, computed from this sample, a statistic or a parameter? Type 'statistic' or 'parameter'.", "answer": "statistic", "accept": [], "hint": "It came from sampled data and estimates the parameter $\\sigma$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "minutes" },
+      "solutionNarrative": "$\\bar{x} = 10$, $\\sum(x_i - \\bar{x})^2 = 16$, so $s^2 = 4$ and $s = 2$ minutes. All of these are statistics — random quantities that estimate the fixed parameters $\\mu$, $\\sigma^2$, $\\sigma$."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s05",
+      "concepts": ["bias-and-mse"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "An estimator $\\hat{\\theta}$ has expected value $E[\\hat{\\theta}] = 103$, while the true parameter is $\\theta = 100$. Evaluate its bias.",
+      "steps": [
+        { "instruction": "Bias $= E[\\hat{\\theta}] - \\theta = 103 - 100$. (Give a number.)", "answer": "3", "accept": [], "hint": "Expected estimate minus truth." },
+        { "instruction": "Is the estimator unbiased or biased? Type 'unbiased' or 'biased'.", "answer": "biased", "accept": [], "hint": "Unbiased means bias exactly 0." }
+      ],
+      "finalAnswer": { "value": "biased", "unit": "" },
+      "solutionNarrative": "Bias $= 103 - 100 = 3$: across repeated samples this estimator overshoots the truth by 3 on average, so it is biased. More data from the same design will not fix a systematic offset."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s06",
+      "concepts": ["bias-and-mse"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The sample mean $\\bar{X}$ of $n$ independent draws from a population with mean $\\mu = 50$ satisfies $E[\\bar{X}] = 50$. Evaluate its bias.",
+      "steps": [
+        { "instruction": "Bias $= E[\\bar{X}] - \\mu = 50 - 50$. (Give a number.)", "answer": "0", "accept": [], "hint": "Expected value of the estimator minus the parameter." },
+        { "instruction": "Is $\\bar{X}$ unbiased or biased for $\\mu$? Type 'unbiased' or 'biased'.", "answer": "unbiased", "accept": [], "hint": "Zero bias is the definition." }
+      ],
+      "finalAnswer": { "value": "unbiased", "unit": "" },
+      "solutionNarrative": "$E[\\bar{X}] = \\mu$ makes the bias 0 — the sample mean is the canonical unbiased estimator. Unbiased does NOT mean each estimate is correct; it means the misses cancel on average."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s07",
+      "concepts": ["bias-and-mse"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An estimator has bias $2$ and variance $5$. Compute its mean squared error, $\\mathrm{MSE} = \\mathrm{Var} + \\mathrm{bias}^2$.",
+      "steps": [
+        { "instruction": "Square the bias: $2^2$. (Give a number.)", "answer": "4", "accept": [], "hint": "Bias enters the MSE squared." },
+        { "instruction": "$\\mathrm{MSE} = 5 + 4$. (Give a number.)", "answer": "9", "accept": [], "hint": "Variance plus squared bias." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$\\mathrm{MSE} = 5 + 2^2 = 9$. The decomposition charges the estimator for noise (variance) and for systematic error (bias squared) in a single accuracy score."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s08",
+      "concepts": ["bias-and-mse"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two estimators of the same parameter: estimator A is unbiased with variance 10; estimator B has bias 2 but variance 5. Which is better by MSE?",
+      "steps": [
+        { "instruction": "MSE of estimator A $= 10 + 0^2$. (Give a number.)", "answer": "10", "accept": [], "hint": "Unbiased: the bias term vanishes." },
+        { "instruction": "MSE of estimator B $= 5 + 2^2$. (Give a number.)", "answer": "9", "accept": [], "hint": "$2^2 = 4$." },
+        { "instruction": "Which estimator has the smaller MSE? Type 'estimator A' or 'estimator B'.", "answer": "estimator B", "accept": ["b"], "hint": "Compare 10 and 9." }
+      ],
+      "finalAnswer": { "value": "estimator B", "unit": "" },
+      "solutionNarrative": "$\\mathrm{MSE}_A = 10$ versus $\\mathrm{MSE}_B = 9$: the biased estimator wins, because its small systematic error bought a large variance reduction. This bias-variance tradeoff is why regularized (deliberately biased) estimators dominate machine learning."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s09",
+      "concepts": ["bias-and-mse"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An estimator satisfies $E[\\hat{\\theta}] = \\theta - 2$ and $\\mathrm{Var}(\\hat{\\theta}) = 9$. Compute its MSE.",
+      "steps": [
+        { "instruction": "Read off the bias. (Give a number, sign included.)", "answer": "-2", "accept": [], "hint": "$E[\\hat{\\theta}] - \\theta$." },
+        { "instruction": "Square it. (Give a number.)", "answer": "4", "accept": [], "hint": "The sign disappears when squaring." },
+        { "instruction": "$\\mathrm{MSE} = 9 + 4$. (Give a number.)", "answer": "13", "accept": [], "hint": "Variance plus squared bias." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "" },
+      "solutionNarrative": "Bias $= -2$ (an undershoot), but MSE squares it: $\\mathrm{MSE} = 9 + 4 = 13$. Undershooting and overshooting by the same amount cost the same."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s10",
+      "concepts": ["standard-errors"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A population has standard deviation $\\sigma = 20$. You draw a sample of $n = 25$. Find the standard error of the sample mean, $\\mathrm{SE} = \\dfrac{\\sigma}{\\sqrt{n}}$.",
+      "steps": [
+        { "instruction": "Compute $\\sqrt{25}$. (Give a number.)", "answer": "5", "accept": ["sqrt(25)"], "hint": "$5^2 = 25$." },
+        { "instruction": "Divide: $\\mathrm{SE} = \\dfrac{20}{5}$. (Give a number.)", "answer": "4", "accept": [], "hint": "Individual noise 20, shrunk by the averaging factor 5." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = \\frac{20}{\\sqrt{25}} = 4$: the mean of 25 observations is five times steadier than a single observation."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s11",
+      "concepts": ["standard-errors"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A poll of $n = 100$ voters gives $\\hat{p} = 0.2$. Find the standard error of $\\hat{p}$: $\\mathrm{SE} = \\sqrt{\\dfrac{\\hat{p}(1-\\hat{p})}{n}}$.",
+      "steps": [
+        { "instruction": "Compute $\\hat{p}(1 - \\hat{p}) = 0.2 \\times 0.8$. (Give a decimal.)", "answer": "0.16", "accept": ["4/25"], "hint": "$1 - 0.2 = 0.8$." },
+        { "instruction": "Divide by $n$: $\\dfrac{0.16}{100}$. (Give a decimal.)", "answer": "0.0016", "accept": [], "hint": "Move the decimal two places." },
+        { "instruction": "Take the square root. (Give a decimal.)", "answer": "0.04", "accept": ["sqrt(0.0016)", "1/25"], "hint": "$0.04^2 = 0.0016$." }
+      ],
+      "finalAnswer": { "value": "0.04", "unit": "" },
+      "solutionNarrative": "$\\hat{p}(1-\\hat{p}) = 0.16$, over 100 gives $0.0016$, whose root is $\\mathrm{SE} = 0.04$: the poll's estimate wobbles by about 4 percentage points per standard error."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s12",
+      "concepts": ["standard-errors"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A lab needs the standard error of a sample mean to be $2$, and the population standard deviation is $\\sigma = 16$. Find the required sample size, then reason about scaling.",
+      "steps": [
+        { "instruction": "Solve $\\dfrac{16}{\\sqrt{n}} = 2$ for $\\sqrt{n}$. (Give a number.)", "answer": "8", "accept": [], "hint": "$\\sqrt{n} = 16 / 2$." },
+        { "instruction": "Square it: $n$. (Give a number.)", "answer": "64", "accept": [], "hint": "$8^2$." },
+        { "instruction": "If the lab later quadruples $n$ to 256, the SE gets multiplied by what factor? (Give a fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "half"], "hint": "$\\sqrt{4n} = 2\\sqrt{n}$ sits in the denominator." }
+      ],
+      "finalAnswer": { "value": "64", "unit": "" },
+      "solutionNarrative": "$\\sqrt{n} = 8$ gives $n = 64$. Quadrupling to 256 only halves the SE to 1 — precision scales with $\\sqrt{n}$, so each extra digit of accuracy costs a hundredfold more data."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s13",
+      "concepts": ["clt-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Package weights have mean $\\mu = 100$ g and standard deviation $\\sigma = 20$ g. By the CLT, the mean of $n = 25$ packages is approximately normal. You are given $P(Z < 1) = 0.841$. Find $P(\\bar{X} < 104)$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{20}{\\sqrt{25}}$. (Give a number.)", "answer": "4", "accept": [], "hint": "$\\sqrt{25} = 5$." },
+        { "instruction": "Standardize: $z = \\dfrac{104 - 100}{4}$. (Give a number.)", "answer": "1", "accept": [], "hint": "Divide by the STANDARD ERROR, not by $\\sigma = 20$." },
+        { "instruction": "So $P(\\bar{X} < 104) = P(Z < 1)$. Give the probability.", "answer": "0.841", "accept": [], "hint": "Read the given value." }
+      ],
+      "finalAnswer": { "value": "0.841", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 4$, so 104 is one standard error above the mean: $P(\\bar{X} < 104) = \\Phi(1) = 0.841$. Standardizing with raw $\\sigma$ would give $z = 0.2$ — a completely different (and wrong) answer."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s14",
+      "concepts": ["clt-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Daily call durations have mean $\\mu = 50$ minutes and $\\sigma = 10$. Over $n = 25$ calls, the average duration $\\bar{X}$ is approximately normal (CLT). You are given $P(Z < 1.5) = 0.933$. Find $P(\\bar{X} > 53)$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{10}{\\sqrt{25}}$. (Give a number.)", "answer": "2", "accept": [], "hint": "$10 / 5$." },
+        { "instruction": "Standardize: $z = \\dfrac{53 - 50}{2}$. (Give a decimal.)", "answer": "1.5", "accept": ["3/2"], "hint": "$3 / 2$." },
+        { "instruction": "Tail: $P(\\bar{X} > 53) = 1 - P(Z < 1.5) = 1 - 0.933$. (Give a decimal.)", "answer": "0.067", "accept": [], "hint": "Subtract the given value from 1." }
+      ],
+      "finalAnswer": { "value": "0.067", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$, $z = 1.5$, so $P(\\bar{X} > 53) = 1 - 0.933 = 0.067$: only a $6.7\\%$ chance the 25-call average drifts that high by luck alone."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s15",
+      "concepts": ["clt-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A bottling line fills with $\\mu = 200$ g and $\\sigma = 30$ g. A batch passes when the mean of $n = 36$ sampled bottles lands between 190 and 210 g. You are given $P(Z < 2) = 0.977$. Find the passing probability $P(190 < \\bar{X} < 210)$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{30}{\\sqrt{36}}$. (Give a number.)", "answer": "5", "accept": [], "hint": "$30 / 6$." },
+        { "instruction": "Standardize the upper bound: $z = \\dfrac{210 - 200}{5}$. (Give a number.)", "answer": "2", "accept": [], "hint": "The lower bound gives $-2$ by symmetry." },
+        { "instruction": "Central probability: $2\\,P(Z < 2) - 1 = 2(0.977) - 1$. (Give a decimal.)", "answer": "0.954", "accept": [], "hint": "Double the given value, subtract 1." }
+      ],
+      "finalAnswer": { "value": "0.954", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 5$ puts the limits at $z = \\pm 2$, so the batch passes with probability $2(0.977) - 1 = 0.954$ — about one false rejection every 22 healthy batches."
+    },
+    {
+      "id": "advanced-statistics.estimators-sampling.s16",
+      "concepts": ["point-estimators"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Five sampled response times (ms): $20,\\ 22,\\ 25,\\ 28,\\ 30$. Compute the sample mean and sample variance.",
+      "steps": [
+        { "instruction": "Sum the values. (Give a number.)", "answer": "125", "accept": [], "hint": "$20 + 22 + 25 + 28 + 30$." },
+        { "instruction": "Sample mean $\\bar{x}$. (Give a number.)", "answer": "25", "accept": [], "hint": "$125 / 5$." },
+        { "instruction": "Deviations: $-5, -3, 0, 3, 5$. Compute $\\sum (x_i - \\bar{x})^2$. (Give a number.)", "answer": "68", "accept": [], "hint": "$25 + 9 + 0 + 9 + 25$." },
+        { "instruction": "Sample variance $s^2 = \\dfrac{68}{4}$. (Give a number.)", "answer": "17", "accept": ["68/4"], "hint": "Divide by $n - 1 = 4$." }
+      ],
+      "finalAnswer": { "value": "17", "unit": "" },
+      "solutionNarrative": "$\\bar{x} = 25$ and the squared deviations total 68, so $s^2 = \\frac{68}{4} = 17$. Both are statistics: fresh samples would produce different values, scattered around the true $\\mu$ and $\\sigma^2$."
+    }
+  ]
+}

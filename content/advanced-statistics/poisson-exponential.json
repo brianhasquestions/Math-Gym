@@ -1,0 +1,273 @@
+{
+  "id": "advanced-statistics.poisson-exponential",
+  "subject": "advanced-statistics",
+  "title": "Poisson and Exponential Models",
+  "prerequisites": ["advanced-statistics.discrete-distributions"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "poisson-setting-and-mean",
+      "label": "The Poisson setting and its mean",
+      "microLesson": "When events land **one at a time, independently, at a constant average rate** — calls at a call center, typos on a page, cars past a sensor — the count in a fixed window is **Poisson** with parameter $\\lambda$ = the average count for that window. Its signature: mean AND variance both equal $\\lambda$. Rates rescale linearly: 6 calls per hour means $\\lambda = 6 \\times \\tfrac{20}{60} = 2$ for a 20-minute window. One number does all the work."
+    },
+    {
+      "id": "poisson-probabilities",
+      "label": "Poisson probabilities",
+      "microLesson": "The Poisson pmf is $P(X = k) = \\dfrac{e^{-\\lambda} \\lambda^k}{k!}$. Compute it in three pieces: the power $\\lambda^k$, the factorial $k!$, and the constant $e^{-\\lambda}$ (given to you, e.g. $e^{-2} \\approx 0.1353$). With $\\lambda = 2$: $P(X = 3) = 0.1353 \\times \\tfrac{8}{6} \\approx 0.1804$. Note $P(X = 0) = e^{-\\lambda}$ — the chance of a totally quiet window — and $P(X \\ge 1) = 1 - e^{-\\lambda}$."
+    },
+    {
+      "id": "exponential-waiting",
+      "label": "Exponential waiting times",
+      "microLesson": "If events arrive as a Poisson stream with rate $\\lambda$ per unit time, the WAIT $T$ until the next event is **exponential**: $P(T > t) = e^{-\\lambda t}$, with mean wait $E[T] = \\tfrac{1}{\\lambda}$. At 0.5 arrivals per minute, $P(T > 4) = e^{-2} \\approx 0.1353$ and the average wait is 2 minutes. The exponential is **memoryless**: having already waited 10 minutes changes nothing about the wait still to come — $P(T > s + t \\mid T > s) = P(T > t)$."
+    },
+    {
+      "id": "poisson-approximation-and-applications",
+      "label": "Poisson approximation of the binomial",
+      "microLesson": "A binomial with **large $n$ and small $p$** — rare events, many chances — is well approximated by a Poisson with $\\lambda = np$. Among $n = 500$ packages each lost with $p = 0.004$, the number lost is nearly Poisson with $\\lambda = 2$, so $P(\\text{none lost}) \\approx e^{-2} \\approx 0.1353$. The approximation trades an unwieldy $\\binom{500}{k}(0.004)^k(0.996)^{500-k}$ for one clean parameter, and it is how rare-defect, rare-accident, and rare-mutation counts are modeled in practice."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Counting the rare and timing the random\n\nSome randomness comes in *streams*: support tickets, radioactive decays, cars past a loop detector, typos in a manuscript. No fixed number of trials, no natural $n$ — just events dripping in at some average rate. Two linked questions organize this whole topic:\n\n1. **How many** events land in a fixed window? → the **Poisson** distribution (discrete).\n2. **How long** until the next event? → the **exponential** distribution (continuous).\n\nThey are two views of the same stream, and they share one parameter: the rate $\\lambda$.\n\n## The Poisson setting\n\nA count is Poisson when events occur **singly** (no simultaneous pairs), **independently** (one arrival doesn't trigger or block another), and at a **constant average rate**. The parameter $\\lambda$ is simply the expected count for the window you're watching, and it rescales linearly with the window:\n\n$$\\lambda_{\\text{new}} = \\text{rate} \\times \\text{window length}.$$\n\nA switchboard averaging 6 calls per hour has $\\lambda = 6$ for an hour, $\\lambda = 2$ for 20 minutes, $\\lambda = 3$ for half an hour. Independent streams also **add**: 3 emails/hour plus 5 texts/hour is an 8-messages/hour Poisson stream.\n\nThe Poisson's signature fact:\n\n$$E[X] = \\lambda, \\qquad \\mathrm{Var}(X) = \\lambda.$$\n\nMean equals variance. A real data set whose variance far exceeds its mean is telling you the Poisson assumptions (usually independence or constant rate) have failed.\n\n## Poisson probabilities\n\n$$P(X = k) = \\frac{e^{-\\lambda}\\, \\lambda^k}{k!}$$\n\nThe only transcendental ingredient is $e^{-\\lambda}$, and in this course it is always **given**. Values worth having on hand:\n\n| $\\lambda$ | $e^{-\\lambda}$ |\n|---|---|\n| 0.5 | 0.6065 |\n| 1 | 0.3679 |\n| 1.5 | 0.2231 |\n| 2 | 0.1353 |\n| 3 | 0.0498 |\n| 4 | 0.0183 |\n| 5 | 0.0067 |\n\n### Worked example\n\nA help desk gets $\\lambda = 3$ tickets per hour ($e^{-3} \\approx 0.0498$). Probability of exactly 2 tickets in the next hour?\n\n1. Power: $\\lambda^k = 3^2 = 9$.\n2. Factorial: $k! = 2! = 2$.\n3. Assemble: $P(X = 2) = 0.0498 \\times \\tfrac{9}{2} = 0.0498 \\times 4.5 = 0.2241$.\n\nTwo special cases carry most of the workload: $P(X = 0) = e^{-\\lambda}$ (a silent window) and $P(X \\ge 1) = 1 - e^{-\\lambda}$ (at least one event).\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-0.5, 6.5], \"yRange\": [0, 0.32], \"grid\": false, \"segments\": [ { \"from\": [0, 0], \"to\": [0, 0.1353], \"color\": \"accent\" }, { \"from\": [1, 0], \"to\": [1, 0.2707], \"color\": \"accent\" }, { \"from\": [2, 0], \"to\": [2, 0.2707], \"color\": \"accent\" }, { \"from\": [3, 0], \"to\": [3, 0.1804], \"color\": \"accent\" }, { \"from\": [4, 0], \"to\": [4, 0.0902], \"color\": \"accent\" }, { \"from\": [5, 0], \"to\": [5, 0.0361], \"color\": \"accent\" }, { \"from\": [6, 0], \"to\": [6, 0.012], \"color\": \"accent\" } ], \"points\": [ { \"x\": 0, \"y\": 0.1353, \"color\": \"accent\", \"label\": \"e^-2\" }, { \"x\": 1, \"y\": 0.2707, \"color\": \"accent\" }, { \"x\": 2, \"y\": 0.2707, \"color\": \"accent\" }, { \"x\": 3, \"y\": 0.1804, \"color\": \"accent\" }, { \"x\": 4, \"y\": 0.0902, \"color\": \"accent\" }, { \"x\": 5, \"y\": 0.0361, \"color\": \"accent\" }, { \"x\": 6, \"y\": 0.012, \"color\": \"accent\" } ], \"caption\": \"The Poisson(2) pmf: P(X = 0) = e^-2 ≈ 0.1353, and the probabilities peak near λ = 2.\" }\n```\n\n## Between the events: the exponential\n\nFlip the question: not *how many* events in a window, but *how long until the next one*. For a Poisson stream at rate $\\lambda$ per unit time, the waiting time $T$ satisfies\n\n$$P(T > t) = e^{-\\lambda t}, \\qquad E[T] = \\frac{1}{\\lambda}.$$\n\nThe logic is a one-liner: $T > t$ exactly when the window $[0, t]$ contains **zero** events, and that Poisson count has probability $e^{-\\lambda t}$. Fast rate, short waits: at $\\lambda = 0.5$ arrivals per minute the mean wait is $1/0.5 = 2$ minutes, and $P(T > 4) = e^{-0.5 \\times 4} = e^{-2} \\approx 0.1353$.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 10], \"yRange\": [0, 0.55], \"grid\": false, \"curves\": [ { \"fn\": \"0.5*exp(-0.5*x)\", \"color\": \"accent\", \"fillRange\": [3, 10], \"label\": \"f(t)\" } ], \"segments\": [ { \"from\": [3, 0], \"to\": [3, 0.28], \"dashed\": true, \"color\": \"warn\", \"label\": \"t = 3\" } ], \"caption\": \"Exponential density at rate 0.5 per minute; the shaded tail is P(T > 3) = e^{-1.5} ≈ 0.2231.\" }\n```\n\n### Memorylessness — the property everyone gets wrong\n\n$$P(T > s + t \\mid T > s) = P(T > t).$$\n\nIf you've already waited 10 minutes for a bus that arrives as a Poisson stream, the distribution of your *remaining* wait is exactly what it was when you arrived. The wait does not \"build up.\" This is the continuous twin of the geometric distribution's memorylessness, and the same warning applies: believing a long quiet spell makes an event \"due\" is the gambler's fallacy. (It also cuts the other way — a component whose lifetime is truly exponential does not wear out; old ones are statistically as good as new. Real machinery wears, which is exactly when the exponential model must be abandoned.)\n\n## The Poisson as a binomial limit\n\nWhy does the same distribution govern typos, decays, and lost packages? Because each is a **binomial with huge $n$ and tiny $p$**: every character is a chance at a typo, every package a chance at a loss. When $n$ is large and $p$ is small, the binomial is excellently approximated by a Poisson with\n\n$$\\lambda = np.$$\n\nRule of thumb: $n \\ge 100$ and $np \\le 10$ or so. The payoff is computational: $\\binom{500}{2}(0.004)^2(0.996)^{498}$ is painful, but Poisson gives $P(X = 2) \\approx e^{-2} \\cdot \\tfrac{2^2}{2!} = 0.1353 \\times 2 = 0.2706$ in one line.\n\n### Common pitfalls\n\n- **Forgetting to rescale $\\lambda$:** a rate of 6 per hour does NOT mean $\\lambda = 6$ for a 10-minute window ($\\lambda = 1$ there). Match $\\lambda$ to the window every time.\n- **Mean $\\ne$ variance in the data:** overdispersion signals clustered or dependent events — the Poisson understates the tails.\n- **Applying memorylessness to things that age:** exponential lifetimes suit random shocks (surges, hits), not wear-out failures.\n- **Using the Poisson approximation when $p$ is not small:** with $n = 20$, $p = 0.4$, stick to the exact binomial."
+  },
+  "application": {
+    "summary": "Poisson counts and exponential waits are the mathematics of queues and rare events: sizing a call center, predicting quiet windows on a server, pricing rare-defect warranties, and estimating time-to-next-failure all reduce to one rate parameter λ.",
+    "domains": ["call centers and queueing", "reliability and maintenance", "network traffic and server operations", "insurance and rare-event risk"],
+    "workedExample": "**Staffing a night-shift help desk.**\n\nTickets arrive at a steady $\\lambda = 2$ per hour overnight ($e^{-2} \\approx 0.1353$), one at a time and independently — a textbook Poisson stream.\n\n*Step 1 — how often is an hour totally quiet?* $P(X = 0) = e^{-2} \\approx 0.1353$: about one hour in seven, the tech can catch up on documentation.\n\n*Step 2 — how often does an hour get busy (3 or more)?* $P(X = 1) = 2e^{-2} \\approx 0.2706$ and $P(X = 2) = e^{-2} \\cdot \\tfrac{4}{2} \\approx 0.2706$, so $P(X \\le 2) \\approx 0.1353 + 0.2706 + 0.2706 = 0.6765$ and $P(X \\ge 3) \\approx 0.3235$. A single tech who can clear two tickets an hour will fall behind roughly a third of the time — evidence for a second responder.\n\n*Step 3 — waits between tickets.* The gap between tickets is exponential with mean $1/2$ hour = 30 minutes. The chance of a gap longer than an hour is $P(T > 1) = e^{-2} \\approx 0.1353$ — same number as Step 1, and not by coincidence: a long gap IS a quiet window.\n\n*Step 4 — the memoryless check.* Forty-five quiet minutes into a gap, how much longer until the next ticket, on average? Still 30 minutes. Waiting time already served buys nothing — a fact that keeps staffing models honest.",
+    "domainNotes": [
+      "**Call centers:** arrival counts per interval are Poisson and inter-arrival times exponential — the entry assumptions of Erlang queueing formulas used to set staffing levels.",
+      "**Reliability:** for components that fail from random shocks, time-to-failure is exponential with rate λ; the mean 1/λ is the quoted MTBF (mean time between failures).",
+      "**Networking:** packet and request arrivals are modeled as Poisson streams; a load balancer's quiet-window probability e^{-λt} sets timeout and health-check budgets.",
+      "**Insurance:** rare claims among many policies are binomial with tiny p, so actuaries work with the Poisson λ = np — the backbone of claim-count models."
+    ]
+  },
+  "generators": [
+    "as1-poisson-setting-1", "as1-poisson-setting-2", "as1-poisson-setting-3",
+    "as1-poisson-prob-1", "as1-poisson-prob-2", "as1-poisson-prob-3",
+    "as1-exponential-1", "as1-exponential-2", "as1-exponential-3",
+    "as1-poisson-approx-1", "as1-poisson-approx-2", "as1-poisson-approx-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.poisson-exponential.s01",
+      "concepts": ["poisson-setting-and-mean"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A website logs errors at a steady average of 6 per hour, one at a time and independently. Let $X$ be the number of errors in one hour.",
+      "steps": [
+        { "instruction": "What is the mean of $X$?", "answer": "6", "accept": [], "hint": "$\\lambda$ is the average count for the window." },
+        { "instruction": "What is the variance of $X$?", "answer": "6", "accept": [], "hint": "For a Poisson, variance $= \\lambda$." },
+        { "instruction": "For a Poisson distribution, the mean and variance are ___. Type 'equal' or 'different'.", "answer": "equal", "accept": [], "hint": "Both are $\\lambda$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "errors" },
+      "solutionNarrative": "$X$ is Poisson with $\\lambda = 6$, so mean $= 6$ and variance $= 6$ — the Poisson's signature is that the two are equal."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s02",
+      "concepts": ["poisson-setting-and-mean"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Calls arrive at a switchboard at 6 per hour. Find $\\lambda$ for a 20-minute window.",
+      "steps": [
+        { "instruction": "What fraction of an hour is 20 minutes? (Give a fraction.)", "answer": "1/3", "accept": ["20/60"], "hint": "$20/60$, reduced." },
+        { "instruction": "Rescale: $\\lambda = 6 \\times \\dfrac{1}{3}$.", "answer": "2", "accept": [], "hint": "Rates scale linearly with the window." },
+        { "instruction": "What is the variance of the 20-minute count?", "answer": "2", "accept": [], "hint": "Variance equals the (rescaled) $\\lambda$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "calls" },
+      "solutionNarrative": "20 minutes is $1/3$ of an hour, so $\\lambda = 6 \\times 1/3 = 2$ calls, and the variance of the count is also 2."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s03",
+      "concepts": ["poisson-setting-and-mean"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A support inbox receives emails at 3 per hour and chat requests at 5 per hour, independently. Consider the combined stream of incoming messages.",
+      "steps": [
+        { "instruction": "What is the combined rate per hour? (Independent Poisson streams add.)", "answer": "8", "accept": [], "hint": "$3 + 5$." },
+        { "instruction": "Are the counts in two DISJOINT time intervals independent for a Poisson stream? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Non-overlapping windows share no events." },
+        { "instruction": "Find $\\lambda$ for a 15-minute window of the combined stream.", "answer": "2", "accept": [], "hint": "$8 \\times \\tfrac{15}{60}$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "messages" },
+      "solutionNarrative": "Independent Poisson streams merge into a Poisson stream at rate $3 + 5 = 8$ per hour; a 15-minute window has $\\lambda = 8/4 = 2$."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s04",
+      "concepts": ["poisson-setting-and-mean"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A proofreader finds typos at an average rate of 0.8 per page, occurring singly and independently at a roughly constant rate. Is a Poisson model appropriate, and what is the mean typo count for 5 pages?",
+      "steps": [
+        { "instruction": "Events occur singly, independently, at a constant average rate — is a Poisson model appropriate here? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Those are exactly the Poisson conditions." },
+        { "instruction": "Mean typos in 5 pages: $\\lambda = 0.8 \\times 5$.", "answer": "4", "accept": [], "hint": "Rescale the rate to the new window." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "typos" },
+      "solutionNarrative": "The three Poisson conditions hold, and $\\lambda$ scales with length: $0.8 \\times 5 = 4$ expected typos in 5 pages."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s05",
+      "concepts": ["poisson-probabilities"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Tickets arrive at $\\lambda = 2$ per hour (use $e^{-2} \\approx 0.1353$). Find $P(X = 0)$ and $P(X = 1)$ for one hour.",
+      "steps": [
+        { "instruction": "Compute $P(X = 0) = e^{-\\lambda}$. (Use the given value.)", "answer": "0.1353", "accept": [], "hint": "$P(X=0) = e^{-2}$, given in the prompt." },
+        { "instruction": "Compute $P(X = 1) = \\lambda e^{-\\lambda} = 2 \\times 0.1353$. Give the exact value.", "answer": "0.2706", "accept": [], "hint": "Double the previous answer." }
+      ],
+      "finalAnswer": { "value": "0.2706", "unit": "" },
+      "solutionNarrative": "$P(X = 0) = e^{-2} \\approx 0.1353$ and $P(X = 1) = 2e^{-2} \\approx 0.2706$."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s06",
+      "concepts": ["poisson-probabilities"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A help desk receives $\\lambda = 3$ tickets per hour (use $e^{-3} \\approx 0.0498$). Find the probability of exactly 2 tickets in the next hour, rounded to 4 decimal places.",
+      "steps": [
+        { "instruction": "Compute $\\lambda^k = 3^2$.", "answer": "9", "accept": [], "hint": "Square the rate." },
+        { "instruction": "Compute $k! = 2!$.", "answer": "2", "accept": [], "hint": "$2 \\times 1$." },
+        { "instruction": "Assemble and round to 4 decimal places: $P(X = 2) = 0.0498 \\times \\dfrac{9}{2}$.", "answer": "0.2241", "accept": [], "hint": "$0.0498 \\times 4.5$." }
+      ],
+      "finalAnswer": { "value": "0.2241", "unit": "" },
+      "solutionNarrative": "$P(X = 2) = e^{-3} \\cdot \\tfrac{3^2}{2!} = 0.0498 \\times 4.5 = 0.2241$."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s07",
+      "concepts": ["poisson-probabilities"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Requests hit a server at $\\lambda = 2$ per second (use $e^{-2} \\approx 0.1353$). Find $P(X \\le 1)$ and $P(X \\ge 2)$ for a one-second window.",
+      "steps": [
+        { "instruction": "Compute $P(X = 0)$. (Use the given value.)", "answer": "0.1353", "accept": [], "hint": "$e^{-2}$." },
+        { "instruction": "Compute $P(X = 1) = 2 \\times 0.1353$.", "answer": "0.2706", "accept": [], "hint": "$\\lambda e^{-\\lambda}$." },
+        { "instruction": "Add your two values: $P(X \\le 1)$.", "answer": "0.4059", "accept": [], "hint": "$0.1353 + 0.2706$." },
+        { "instruction": "Complement: $P(X \\ge 2) = 1 - 0.4059$.", "answer": "0.5941", "accept": [], "hint": "Everything else." }
+      ],
+      "finalAnswer": { "value": "0.5941", "unit": "" },
+      "solutionNarrative": "$P(X \\le 1) = e^{-2}(1 + 2) = 0.4059$, so $P(X \\ge 2) = 1 - 0.4059 = 0.5941$ — busier-than-average seconds happen more often than not."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s08",
+      "concepts": ["poisson-probabilities"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A print shop's machine jams $\\lambda = 4$ times per week on average (use $e^{-4} \\approx 0.0183$). Find the probability of exactly 3 jams next week, rounded to 4 decimal places.",
+      "steps": [
+        { "instruction": "Compute $\\lambda^k = 4^3$.", "answer": "64", "accept": [], "hint": "$4 \\times 4 \\times 4$." },
+        { "instruction": "Compute $k! = 3!$.", "answer": "6", "accept": [], "hint": "$3 \\times 2 \\times 1$." },
+        { "instruction": "Assemble and round to 4 decimal places: $P(X = 3) = 0.0183 \\times \\dfrac{64}{6}$.", "answer": "0.1952", "accept": [], "hint": "$0.0183 \\times 10.666\\ldots$" }
+      ],
+      "finalAnswer": { "value": "0.1952", "unit": "" },
+      "solutionNarrative": "$P(X = 3) = e^{-4} \\cdot \\tfrac{4^3}{3!} = 0.0183 \\times \\tfrac{64}{6} \\approx 0.1952$."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s09",
+      "concepts": ["exponential-waiting"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Customers arrive at $\\lambda = 0.5$ per minute (use $e^{-2} \\approx 0.1353$). Find the probability the NEXT customer takes more than 4 minutes: $P(T > t) = e^{-\\lambda t}$.",
+      "steps": [
+        { "instruction": "Compute the exponent product $\\lambda t = 0.5 \\times 4$.", "answer": "2", "accept": [], "hint": "Rate times time." },
+        { "instruction": "So $P(T > 4) = e^{-2} \\approx$ ? (Use the given value.)", "answer": "0.1353", "accept": [], "hint": "Read it from the prompt." }
+      ],
+      "finalAnswer": { "value": "0.1353", "unit": "" },
+      "solutionNarrative": "$P(T > 4) = e^{-0.5 \\times 4} = e^{-2} \\approx 0.1353$ — a 4-minute lull happens about once in seven gaps."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s10",
+      "concepts": ["exponential-waiting"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Buses pass a stop at $\\lambda = 0.25$ per minute (use $e^{-2} \\approx 0.1353$). Find the mean wait, then $P(T > 8)$ and $P(T \\le 8)$.",
+      "steps": [
+        { "instruction": "Mean wait: $E[T] = \\dfrac{1}{\\lambda} = \\dfrac{1}{0.25}$.", "answer": "4", "accept": [], "hint": "One over the rate." },
+        { "instruction": "Exponent: $\\lambda t = 0.25 \\times 8$.", "answer": "2", "accept": [], "hint": "Rate times time." },
+        { "instruction": "$P(T > 8) = e^{-2} \\approx$ ? (Use the given value.)", "answer": "0.1353", "accept": [], "hint": "Given in the prompt." },
+        { "instruction": "$P(T \\le 8) = 1 - 0.1353$.", "answer": "0.8647", "accept": [], "hint": "Complement." }
+      ],
+      "finalAnswer": { "value": "0.8647", "unit": "" },
+      "solutionNarrative": "Mean wait $= 1/0.25 = 4$ minutes; $P(T > 8) = e^{-2} \\approx 0.1353$, so $P(T \\le 8) = 0.8647$."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s11",
+      "concepts": ["exponential-waiting"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Taxis pass at $\\lambda = 0.5$ per minute (use $e^{-1.5} \\approx 0.2231$). You have ALREADY waited 5 minutes with no taxi. Find the probability you wait more than 3 ADDITIONAL minutes.",
+      "steps": [
+        { "instruction": "Does the 5 minutes already waited change the distribution of the remaining wait? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The exponential is memoryless." },
+        { "instruction": "Exponent for the additional wait: $\\lambda t = 0.5 \\times 3$.", "answer": "1.5", "accept": ["3/2"], "hint": "Only the additional time matters." },
+        { "instruction": "$P(T > 3) = e^{-1.5} \\approx$ ? (Use the given value.)", "answer": "0.2231", "accept": [], "hint": "Given in the prompt." }
+      ],
+      "finalAnswer": { "value": "0.2231", "unit": "" },
+      "solutionNarrative": "By memorylessness, $P(T > 5 + 3 \\mid T > 5) = P(T > 3) = e^{-1.5} \\approx 0.2231$ — the 5 minutes already served buy nothing."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s12",
+      "concepts": ["exponential-waiting"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A sensor detects lightning strikes at $\\lambda = 2$ per hour during a storm. Find the mean time between strikes, in hours and in minutes.",
+      "steps": [
+        { "instruction": "Mean wait in hours: $E[T] = \\dfrac{1}{\\lambda}$.", "answer": "0.5", "accept": ["1/2"], "hint": "One over the rate." },
+        { "instruction": "Convert to minutes: $0.5 \\times 60$.", "answer": "30", "accept": [], "hint": "Half an hour." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "minutes" },
+      "solutionNarrative": "$E[T] = 1/2$ hour $= 30$ minutes between strikes on average."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s13",
+      "concepts": ["poisson-approximation-and-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A courier handles $n = 500$ packages a day; each is independently lost with probability $p = 0.004$. Set up the Poisson approximation for the number lost.",
+      "steps": [
+        { "instruction": "Compute $\\lambda = np = 500 \\times 0.004$.", "answer": "2", "accept": [], "hint": "Move the decimal." },
+        { "instruction": "The Poisson approximation works when $n$ is large and $p$ is ___. Type 'small' or 'large'.", "answer": "small", "accept": [], "hint": "Rare events, many chances." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "With $n = 500$ large and $p = 0.004$ small, the lost-package count is approximately Poisson with $\\lambda = np = 2$."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s14",
+      "concepts": ["poisson-approximation-and-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A vaccine batch has $n = 200$ doses; each independently fails a purity check with probability $p = 0.01$ (use $e^{-2} \\approx 0.1353$). Approximate the probability that NO dose fails, and that at least one fails.",
+      "steps": [
+        { "instruction": "Compute $\\lambda = np = 200 \\times 0.01$.", "answer": "2", "accept": [], "hint": "$np$." },
+        { "instruction": "$P(X = 0) \\approx e^{-\\lambda} =$ ? (Use the given value.)", "answer": "0.1353", "accept": [], "hint": "The zero term of the Poisson." },
+        { "instruction": "$P(X \\ge 1) = 1 - 0.1353$.", "answer": "0.8647", "accept": [], "hint": "Complement of none." }
+      ],
+      "finalAnswer": { "value": "0.8647", "unit": "" },
+      "solutionNarrative": "$\\lambda = 2$, so $P(X = 0) \\approx e^{-2} = 0.1353$ and $P(X \\ge 1) \\approx 0.8647$."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s15",
+      "concepts": ["poisson-approximation-and-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A data center runs $n = 1000$ drives; each independently fails in a given month with probability $p = 0.003$ (use $e^{-3} \\approx 0.0498$). Approximate the probability of exactly 2 failures this month, rounded to 4 decimal places.",
+      "steps": [
+        { "instruction": "Compute $\\lambda = np = 1000 \\times 0.003$.", "answer": "3", "accept": [], "hint": "$np$." },
+        { "instruction": "Compute $\\dfrac{\\lambda^2}{2!} = \\dfrac{9}{2}$.", "answer": "4.5", "accept": ["9/2"], "hint": "Nine halves." },
+        { "instruction": "Assemble and round to 4 decimal places: $P(X = 2) \\approx 0.0498 \\times 4.5$.", "answer": "0.2241", "accept": [], "hint": "Multiply the given $e^{-3}$ by 4.5." }
+      ],
+      "finalAnswer": { "value": "0.2241", "unit": "" },
+      "solutionNarrative": "$\\lambda = 3$; $P(X = 2) \\approx e^{-3} \\cdot \\tfrac{3^2}{2!} = 0.0498 \\times 4.5 = 0.2241$."
+    },
+    {
+      "id": "advanced-statistics.poisson-exponential.s16",
+      "concepts": ["poisson-approximation-and-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An airline oversells: among $n = 400$ ticketed passengers, each independently misses the flight with probability $p = 0.01$ (use $e^{-4} \\approx 0.0183$). Approximate $P(X = 0)$ and $P(X = 1)$ for the number of no-shows.",
+      "steps": [
+        { "instruction": "Compute $\\lambda = np = 400 \\times 0.01$.", "answer": "4", "accept": [], "hint": "$np$." },
+        { "instruction": "$P(X = 0) \\approx e^{-4} =$ ? (Use the given value.)", "answer": "0.0183", "accept": [], "hint": "Read it from the prompt." },
+        { "instruction": "$P(X = 1) \\approx 4 \\times 0.0183$. Give the exact value.", "answer": "0.0732", "accept": [], "hint": "$\\lambda e^{-\\lambda}$." }
+      ],
+      "finalAnswer": { "value": "0.0732", "unit": "" },
+      "solutionNarrative": "$\\lambda = 4$: $P(X = 0) \\approx 0.0183$ and $P(X = 1) \\approx 4(0.0183) = 0.0732$ — zero or one no-show is rare, which is why airlines oversell."
+    }
+  ]
+}

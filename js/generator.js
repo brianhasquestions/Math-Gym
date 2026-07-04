@@ -42,6 +42,10 @@ import { fill as deFill3 } from "./gen-de-fill3.js";                // def3- (sy
 import { fill as alg2bFill } from "./gen-alg2b-fill.js";            // a2c-  (conic sections)
 import { fill as calc2bFill } from "./gen-calc2b-fill.js";          // c2p-  (parametric/polar calculus)
 import { fill as calc3sFill } from "./gen-calc3s-fill.js";          // c3s-  (Stokes, divergence)
+import { fill as advStat1Fill } from "./gen-advstat1-fill.js";      // as1-  (adv-stats distributions)
+import { fill as advStat2Fill } from "./gen-advstat2-fill.js";      // as2-  (adv-stats estimation/Bayes)
+import { fill as advStat3Fill } from "./gen-advstat3-fill.js";      // as3-  (adv-stats t/two-sample/chi-square)
+import { fill as advStat4Fill } from "./gen-advstat4-fill.js";      // as4-  (adv-stats ANOVA/regression/design)
 
 // --- Seeded RNG (mulberry32) so sessions are reproducible/debuggable ---
 export function makeRng(seed) {
@@ -2657,7 +2661,8 @@ Object.assign(generators, deFill, linAlgFill,
   geoProofFill, calc3ProofFill, crypto1Fill, crypto2Fill, crypto3Fill, crypto4Fill,
   discreteFill, statsFill,
   alg2Fill, trig3Fill, calc1bFill, calc2Fill, calc3vFill, lapGsFill, stats2Fill,
-  geo2Fill, discrete2Fill, deFill3, alg2bFill, calc2bFill, calc3sFill);
+  geo2Fill, discrete2Fill, deFill3, alg2bFill, calc2bFill, calc3sFill,
+  advStat1Fill, advStat2Fill, advStat3Fill, advStat4Fill);
 
 export function hasGenerator(template) {
   return Object.prototype.hasOwnProperty.call(generators, template);

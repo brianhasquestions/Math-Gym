@@ -1,0 +1,281 @@
+{
+  "id": "advanced-statistics.bayesian-inference",
+  "subject": "advanced-statistics",
+  "title": "Bayesian Inference",
+  "prerequisites": ["statistics.conditional-probability", "statistics.confidence-intervals"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "prior-to-posterior",
+      "label": "From prior to posterior",
+      "microLesson": "Bayesian updating is bookkeeping: for each hypothesis, multiply **prior × likelihood** to get a joint weight, then divide each weight by the total so they sum to 1. The results are the **posterior** probabilities. With hypotheses $H_1, H_2$ and observed data $D$: $P(H_i \\mid D) = \\frac{P(H_i)\\,P(D \\mid H_i)}{\\sum_j P(H_j)\\,P(D \\mid H_j)}$. Natural frequencies make it concrete: imagine 1000 cases, count how many land in each branch, and the posterior is a simple ratio of counts."
+    },
+    {
+      "id": "sequential-updating",
+      "label": "Sequential updating",
+      "microLesson": "Evidence compounds: **yesterday's posterior is today's prior.** After datum $D_1$ produces a posterior, feed that posterior back in as the prior when $D_2$ arrives, and update again. For independent observations the order doesn't matter — updating on $D_1$ then $D_2$ lands exactly where updating on $D_2$ then $D_1$ does, and both match a single update on the combined evidence. This is how spam filters absorb words one at a time and how a second medical test sharpens the verdict of the first."
+    },
+    {
+      "id": "bayes-factors-and-odds",
+      "label": "Bayes factors and odds",
+      "microLesson": "In odds form, Bayes' theorem is one multiplication: **posterior odds = prior odds × likelihood ratio.** Odds repackage probability as for-versus-against: $P = \\frac{1}{4}$ means odds $\\frac{1}{3}$ (one for, three against). The likelihood ratio $\\mathrm{LR} = \\frac{P(D \\mid H)}{P(D \\mid \\lnot H)}$ — the Bayes factor — is the evidence's strength in a single number: LR $> 1$ supports $H$, LR $= 1$ is uninformative, and independent pieces of evidence multiply their LRs. Convert back at the end: odds $\\frac{a}{b}$ mean probability $\\frac{a}{a+b}$."
+    },
+    {
+      "id": "bayesian-vs-frequentist",
+      "label": "Bayesian versus frequentist",
+      "microLesson": "The frameworks disagree about what is random. **Frequentist:** the parameter is fixed; only data vary — so a 95% *confidence* interval says 95% of intervals built this way capture the truth, never that this one holds it with probability 0.95. **Bayesian:** the parameter gets a distribution — so a 95% *credible* interval genuinely means 'the parameter is in here with probability 0.95, given data and prior.' Bayesian posteriors also feed directly into decisions: pick the action with the smallest **expected loss** under the posterior."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Belief as a number you must maintain\n\nA spam filter sees a suspicious word. A doctor sees a positive test. A quality engineer sees a flawed part. Each starts with a **prior** belief, receives **evidence**, and must produce an updated — **posterior** — belief. Bayesian inference is the arithmetic of that update, and it is nothing more than conditional probability read in a particular direction:\n\n$$P(H \\mid D) = \\frac{P(H)\\,P(D \\mid H)}{P(D)}.$$\n\n## The Bayes table: prior × likelihood, then normalize\n\nThe cleanest way to update is a table with one row per hypothesis. Multiply each prior by its likelihood, total the column, divide.\n\n*A part is drawn from one of two machines.* Machine A makes half the parts and produces this defect with probability $\\frac{1}{10}$; machine B makes the other half with defect probability $\\frac{3}{10}$. The part IS defective:\n\n| Hypothesis | Prior | Likelihood | Prior × Likelihood | Posterior |\n|---|---|---|---|---|\n| A | $1/2$ | $1/10$ | $1/20$ | $1/4$ |\n| B | $1/2$ | $3/10$ | $3/20$ | $3/4$ |\n| **Total** |  |  | $4/20 = 1/5$ | $1$ |\n\nThe defect is three times likelier on B, so B absorbs three quarters of the belief: $P(A \\mid \\text{defect}) = \\frac{1/20}{1/5} = \\frac{1}{4}$. That division by the total is the whole of Bayes' theorem — the rest is multiplication.\n\n**Natural frequencies** make the same table visceral. A condition affects $\\frac{1}{10}$ of 1000 people (100 sick). A test catches $\\frac{9}{10}$ of them (90 true positives) but also flags $\\frac{1}{5}$ of the 900 healthy (180 false positives). Among the $90 + 180 = 270$ positives, only 90 are real:\n\n$$P(\\text{sick} \\mid +) = \\frac{90}{270} = \\frac{1}{3}.$$\n\nA test that 'catches 90%' leaves a positive patient at just one-in-three — because the healthy crowd is nine times larger and pours out false positives. Ignoring that prior is **base-rate neglect**, the most common probabilistic error in medicine and law.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 5], \"yRange\": [0, 1], \"grid\": true, \"segments\": [ { \"from\": [1, 0], \"to\": [1, 0.1], \"color\": \"muted\", \"label\": \"prior 0.10\" }, { \"from\": [2.2, 0], \"to\": [2.2, 0.333], \"color\": \"accent\", \"label\": \"after test 1: 0.33\" }, { \"from\": [3.4, 0], \"to\": [3.4, 0.8], \"color\": \"warn\", \"label\": \"after test 2: 0.80\" } ], \"caption\": \"Belief in 'sick' as evidence accumulates: prior 1/10, posterior 1/3 after one positive test, 4/5 after a second independent positive.\" }\n```\n\n## Sequential updating: posteriors become priors\n\nEvidence rarely arrives all at once. The rule is mechanical: **the posterior after datum one is the prior for datum two.** Continue the medical example with a second, independent test (sensitivity $\\frac{4}{5}$, false-positive rate $\\frac{1}{10}$) that also comes back positive. New prior: $\\frac{1}{3}$.\n\n$$P(\\text{sick} \\mid +_2) = \\frac{\\tfrac{1}{3} \\cdot \\tfrac{4}{5}}{\\tfrac{1}{3} \\cdot \\tfrac{4}{5} + \\tfrac{2}{3} \\cdot \\tfrac{1}{10}} = \\frac{4/15}{4/15 + 1/15} = \\frac{4}{5}.$$\n\nTwo modest tests compounded into strong evidence — exactly why screening protocols confirm before treating. For independent data the **order is irrelevant**: swap the two tests and the final $\\frac{4}{5}$ is unchanged. A related and deeper fact: for a Bayesian, only the data actually observed matter, not the stopping rule that generated them — whether the lab planned two tests or kept testing until satisfied, the same observations yield the same posterior.\n\n## Odds form: Bayes as a single multiplication\n\nProbabilities restate cleanly as **odds**, for-to-against: probability $\\frac{1}{4}$ is odds $\\frac{1}{3}$. In odds, updating collapses to\n\n$$\\underbrace{\\text{posterior odds}}_{\\text{after}} = \\underbrace{\\text{prior odds}}_{\\text{before}} \\times \\underbrace{\\frac{P(D \\mid H)}{P(D \\mid \\lnot H)}}_{\\text{likelihood ratio (Bayes factor)}}.$$\n\nThe **likelihood ratio** is the strength of the evidence in one number. The medical test above: $\\mathrm{LR} = \\frac{9/10}{1/5} = 4.5$. A test with sensitivity $\\frac{9}{10}$ and false-positive rate $\\frac{1}{10}$ has $\\mathrm{LR} = 9$. Prevalence $\\frac{1}{10}$ means prior odds $\\frac{1}{9}$, so posterior odds $= \\frac{1}{9} \\times 9 = 1$ — a coin flip, from one arithmetic step. Independent evidence multiplies its LRs: two tests with LR 3 and LR 4 act like one test with LR 12. Convert back at the end: odds $\\frac{a}{b}$ is probability $\\frac{a}{a+b}$.\n\nWatch for the degenerate case: $\\mathrm{LR} = 1$ means the datum is equally probable under both hypotheses — the posterior equals the prior, and the evidence taught you nothing.\n\n## Bayesian versus frequentist: what is allowed to be random?\n\n- **Frequentist:** the parameter is a fixed unknown constant; probability describes the long-run behavior of *procedures* over repeated samples. A 95% **confidence interval** promises that 95% of intervals built this way capture the truth. It does NOT license 'there's a 95% chance $\\mu$ is in $(4, 6)$' — this specific interval either contains $\\mu$ or it doesn't.\n- **Bayesian:** the parameter itself carries a probability distribution that encodes belief. A 95% **credible interval** means exactly what everyone wants the other one to mean: given the data and the prior, the parameter lies inside with probability $0.95$.\n\nThe price of the Bayesian statement is the **prior** — the conclusion depends on it, though with enough data the likelihood swamps any reasonable prior. The reward is that posteriors plug directly into **decisions**. Given posterior probability $0.2$ that a batch is defective, and losses (in \\$1000s): recall costs 20 regardless; shipping a defective batch costs 50; shipping a fine batch costs 0. Expected losses: recall $= 20$; ship $= 0.2 \\times 50 + 0.8 \\times 0 = 10$. **Ship** — the posterior turned straight into the cheaper action. No p-value can do that on its own.\n\n### Pitfalls\n\n- **Base-rate neglect:** a strong likelihood cannot rescue a tiny prior; always multiply through the base rate.\n- **Confusing the two intervals:** 'ninety-five percent probability the parameter is in here' is a *credible*-interval sentence; attaching it to a confidence interval is the most common statistics error in print.\n- **LR = 1 evidence:** if a datum is equally likely under both hypotheses it moves nothing — quoting it as support for either side is rhetoric, not inference.\n- **Double-counting dependent evidence:** LRs multiply only for independent evidence; two symptoms with a common cause are not two independent facts."
+  },
+  "application": {
+    "summary": "Bayesian updating is the working logic of spam filters (multiplying word-by-word likelihood ratios), medical screening (turning sensitivity and prevalence into what a positive actually means), A/B testing (posterior probability a variant is better), and decision-making under uncertainty (choosing the action with least expected loss under the posterior).",
+    "domains": ["spam filtering", "medical screening", "A/B testing", "forensics", "operations"],
+    "workedExample": "**A spam filter, two words deep.**\n\nAn email arrives. Historically half of incoming mail is spam: prior $P(\\text{spam}) = \\frac{1}{2}$. The filter scans for two words known from training data, and both appear.\n\n*Word 1* appears in $\\frac{3}{4}$ of spam and $\\frac{1}{4}$ of legitimate mail. Update:\n\n$$P(\\text{spam} \\mid w_1) = \\frac{\\tfrac{1}{2} \\cdot \\tfrac{3}{4}}{\\tfrac{1}{2} \\cdot \\tfrac{3}{4} + \\tfrac{1}{2} \\cdot \\tfrac{1}{4}} = \\frac{3/8}{4/8} = \\frac{3}{4}.$$\n\n*Word 2* (independent of word 1 given the class) appears in $\\frac{2}{3}$ of spam and $\\frac{1}{3}$ of ham. Yesterday's posterior is today's prior:\n\n$$P(\\text{spam} \\mid w_1, w_2) = \\frac{\\tfrac{3}{4} \\cdot \\tfrac{2}{3}}{\\tfrac{3}{4} \\cdot \\tfrac{2}{3} + \\tfrac{1}{4} \\cdot \\tfrac{1}{3}} = \\frac{1/2}{1/2 + 1/12} = \\frac{6}{7}.$$\n\nIn odds form the same computation is two multiplications: prior odds $1$, times $\\mathrm{LR}_1 = 3$, times $\\mathrm{LR}_2 = 2$, gives posterior odds $6$ — probability $\\frac{6}{7}$. Real filters chain hundreds of words exactly this way, adding *logs* of likelihood ratios so the products don't overflow. The same pipeline ends in a decision: if misfiling a legitimate email is 10 times costlier than letting one spam through, the filter compares expected losses under the posterior before routing — Bayes from first word to final action.",
+    "domainNotes": [
+      "**Spam filtering:** naive Bayes classifiers are literally sequential updating with independence assumed between words; their failure mode (correlated words double-counted) is the dependent-evidence pitfall.",
+      "**Medical screening:** clinical guidelines quote likelihood ratios per test so physicians can chain them: pretest odds × LR₁ × LR₂ = posttest odds — the odds form at the bedside.",
+      "**A/B testing:** Bayesian analysis reports 'probability variant B beats A given the data', a directly actionable number a frequentist p-value only gestures at.",
+      "**Forensics:** courts increasingly require DNA evidence stated as a likelihood ratio, precisely to keep the jury's prior (the other case evidence) separate from the strength of the forensic datum.",
+      "**Operations:** inventory and recall decisions minimize posterior expected loss — the loss-table calculation is the standard bridge from inference to action."
+    ]
+  },
+  "generators": [
+    "as2-prior-post-1", "as2-prior-post-2", "as2-prior-post-3",
+    "as2-seq-update-1", "as2-seq-update-2", "as2-seq-update-3",
+    "as2-bayes-odds-1", "as2-bayes-odds-2", "as2-bayes-odds-3",
+    "as2-bayes-freq-1", "as2-bayes-freq-2", "as2-bayes-freq-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.bayesian-inference.s01",
+      "concepts": ["prior-to-posterior"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A part came from machine A with prior probability $1/2$, otherwise from machine B. This defect occurs with probability $1/10$ on machine A and $3/10$ on machine B. The part is defective. Find the posterior probability it came from machine A. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "Joint for A: $\\dfrac{1}{2} \\times \\dfrac{1}{10}$. Give a fraction in lowest terms.", "answer": "1/20", "accept": ["0.05"], "hint": "Prior times likelihood." },
+        { "instruction": "Joint for B: $\\dfrac{1}{2} \\times \\dfrac{3}{10}$. Give a fraction in lowest terms.", "answer": "3/20", "accept": ["0.15"], "hint": "Prior times likelihood for the other machine." },
+        { "instruction": "Total evidence: $\\dfrac{1}{20} + \\dfrac{3}{20}$. Give a fraction in lowest terms.", "answer": "1/5", "accept": ["4/20", "0.2"], "hint": "Law of total probability." },
+        { "instruction": "Posterior: $P(A \\mid \\text{defect}) = \\dfrac{1/20}{1/5}$. Give a fraction in lowest terms.", "answer": "1/4", "accept": ["0.25"], "hint": "A's joint weight over the total." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "The Bayes table gives joints $\\frac{1}{20}$ (A) and $\\frac{3}{20}$ (B). Normalizing: $P(A \\mid \\text{defect}) = \\frac{1/20}{4/20} = \\frac{1}{4}$ — belief shifted toward B, whose defect rate is three times higher."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s02",
+      "concepts": ["prior-to-posterior"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A condition affects $1/10$ of a population. A screening test has sensitivity $9/10$ and false-positive rate $1/5$. Use natural frequencies with 1000 people, all tested. A person tests positive — find the posterior probability they have the condition.",
+      "steps": [
+        { "instruction": "How many of the 1000 have the condition? (Give a number.)", "answer": "100", "accept": [], "hint": "$1000 \\times \\frac{1}{10}$." },
+        { "instruction": "True positives: how many of those 100 test positive? (Give a number.)", "answer": "90", "accept": [], "hint": "$100 \\times \\frac{9}{10}$." },
+        { "instruction": "False positives: how many of the 900 healthy test positive? (Give a number.)", "answer": "180", "accept": [], "hint": "$900 \\times \\frac{1}{5}$." },
+        { "instruction": "Posterior: $\\dfrac{90}{90 + 180}$. Give a fraction in lowest terms.", "answer": "1/3", "accept": ["90/270", "0.333"], "hint": "True positives over ALL positives." }
+      ],
+      "finalAnswer": { "value": "1/3", "unit": "" },
+      "solutionNarrative": "Of 1000 people: 100 sick (90 true positives) and 900 healthy (180 false positives). Among the 270 positives, only 90 are real: posterior $= \\frac{1}{3}$. The nine-times-larger healthy group floods the result with false positives — base rates rule."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s03",
+      "concepts": ["prior-to-posterior"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Three urns are equally likely to be chosen ($P = 1/3$ each). Urn A gives a red ball with probability $3/4$, urn B with probability $1/4$, urn C with probability $1/2$. A red ball is drawn. Build the Bayes table and find the posterior probability the urn was A. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "Joint for A: $\\dfrac{1}{3} \\times \\dfrac{3}{4}$. Give a fraction in lowest terms.", "answer": "1/4", "accept": ["3/12", "0.25"], "hint": "Prior times likelihood." },
+        { "instruction": "Joint for B: $\\dfrac{1}{3} \\times \\dfrac{1}{4}$. Give a fraction in lowest terms.", "answer": "1/12", "accept": [], "hint": "Prior times likelihood." },
+        { "instruction": "Joint for C: $\\dfrac{1}{3} \\times \\dfrac{1}{2}$. Give a fraction in lowest terms.", "answer": "1/6", "accept": ["2/12"], "hint": "Prior times likelihood." },
+        { "instruction": "Total: $\\dfrac{1}{4} + \\dfrac{1}{12} + \\dfrac{1}{6}$. Give a fraction in lowest terms.", "answer": "1/2", "accept": ["6/12", "0.5"], "hint": "Common denominator 12: $3 + 1 + 2 = 6$ twelfths." },
+        { "instruction": "Posterior for A: $\\dfrac{1/4}{1/2}$. Give a fraction in lowest terms.", "answer": "1/2", "accept": ["0.5"], "hint": "A's joint over the total." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Joints: $\\frac{3}{12}, \\frac{1}{12}, \\frac{2}{12}$, totaling $\\frac{6}{12}$. Urn A holds half the evidence weight: posterior $\\frac{1}{2}$, up from the prior $\\frac{1}{3}$ because red is most typical of A."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s04",
+      "concepts": ["prior-to-posterior"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "The prior probability of rain tomorrow is $1/4$. A forecast predicts rain; such predictions occur with probability $4/5$ on rainy days and $1/5$ on dry days. Find the posterior probability of rain. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "Joint for rain: $\\dfrac{1}{4} \\times \\dfrac{4}{5}$. Give a fraction in lowest terms.", "answer": "1/5", "accept": ["4/20", "0.2"], "hint": "Prior times likelihood." },
+        { "instruction": "Joint for dry: $\\dfrac{3}{4} \\times \\dfrac{1}{5}$. Give a fraction in lowest terms.", "answer": "3/20", "accept": ["0.15"], "hint": "$P(\\text{dry}) = \\frac{3}{4}$." },
+        { "instruction": "Posterior: $\\dfrac{1/5}{1/5 + 3/20}$. Give a fraction in lowest terms.", "answer": "4/7", "accept": ["0.571"], "hint": "$\\frac{1}{5} = \\frac{4}{20}$, so the total is $\\frac{7}{20}$." }
+      ],
+      "finalAnswer": { "value": "4/7", "unit": "" },
+      "solutionNarrative": "Joints: rain $\\frac{4}{20}$, dry $\\frac{3}{20}$, total $\\frac{7}{20}$. Posterior $P(\\text{rain} \\mid \\text{forecast}) = \\frac{4}{7}$ — the forecast more than doubled the prior $\\frac{1}{4}$, but did not make rain certain."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s05",
+      "concepts": ["sequential-updating"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A drawer holds two coins: one fair ($P(H) = 1/2$) and one double-headed ($P(H) = 1$). You grab one at random (prior $1/2$ it is fair) and flip HEADS twice in a row. Update after each flip. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "After the first head: $P(\\text{fair} \\mid H) = \\dfrac{\\frac{1}{2} \\cdot \\frac{1}{2}}{\\frac{1}{2} \\cdot \\frac{1}{2} + \\frac{1}{2} \\cdot 1}$. Give a fraction in lowest terms.", "answer": "1/3", "accept": ["0.333"], "hint": "Joints: $\\frac{1}{4}$ versus $\\frac{1}{2}$." },
+        { "instruction": "Use $1/3$ as the new prior. After the second head: $\\dfrac{\\frac{1}{3} \\cdot \\frac{1}{2}}{\\frac{1}{3} \\cdot \\frac{1}{2} + \\frac{2}{3} \\cdot 1}$. Give a fraction in lowest terms.", "answer": "1/5", "accept": ["0.2"], "hint": "Joints: $\\frac{1}{6}$ versus $\\frac{2}{3} = \\frac{4}{6}$." }
+      ],
+      "finalAnswer": { "value": "1/5", "unit": "" },
+      "solutionNarrative": "Each head is twice as likely from the double-headed coin, so the fair hypothesis fades: $\\frac{1}{2} \\to \\frac{1}{3} \\to \\frac{1}{5}$. Yesterday's posterior became today's prior at every step."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s06",
+      "concepts": ["sequential-updating"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A spam filter starts with prior $P(\\text{spam}) = 1/2$. Word 1 appears in $3/4$ of spam and $1/4$ of legitimate mail; word 2 independently appears in $2/3$ of spam and $1/3$ of legitimate mail. An email contains BOTH words. Update twice. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "After word 1: $\\dfrac{\\frac{1}{2} \\cdot \\frac{3}{4}}{\\frac{1}{2} \\cdot \\frac{3}{4} + \\frac{1}{2} \\cdot \\frac{1}{4}}$. Give a fraction in lowest terms.", "answer": "3/4", "accept": ["0.75"], "hint": "Joints: $\\frac{3}{8}$ versus $\\frac{1}{8}$." },
+        { "instruction": "Use $3/4$ as the new prior. After word 2: $\\dfrac{\\frac{3}{4} \\cdot \\frac{2}{3}}{\\frac{3}{4} \\cdot \\frac{2}{3} + \\frac{1}{4} \\cdot \\frac{1}{3}}$. Give a fraction in lowest terms.", "answer": "6/7", "accept": ["0.857"], "hint": "Joints: $\\frac{1}{2} = \\frac{6}{12}$ versus $\\frac{1}{12}$." }
+      ],
+      "finalAnswer": { "value": "6/7", "unit": "" },
+      "solutionNarrative": "Word 1 lifts spam belief from $\\frac{1}{2}$ to $\\frac{3}{4}$; word 2 lifts it to $\\frac{6}{7}$. Each independent clue multiplies in — the naive Bayes engine, two words deep."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s07",
+      "concepts": ["sequential-updating"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A condition has prevalence $1/10$. Test 1: sensitivity $9/10$, false-positive rate $1/5$. Test 2 (independent given the true state): sensitivity $4/5$, false-positive rate $1/10$. A patient is positive on BOTH. Chain the updates. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "Joint for 'sick and positive on test 1': $\\dfrac{1}{10} \\times \\dfrac{9}{10}$. Give a fraction in lowest terms.", "answer": "9/100", "accept": ["0.09"], "hint": "Prior times sensitivity." },
+        { "instruction": "Posterior after test 1: $\\dfrac{9/100}{9/100 + \\frac{9}{10} \\cdot \\frac{1}{5}}$. Give a fraction in lowest terms.", "answer": "1/3", "accept": ["9/27", "0.333"], "hint": "The healthy joint is $\\frac{9}{10} \\cdot \\frac{1}{5} = \\frac{18}{100}$." },
+        { "instruction": "Now the prior is $1/3$. After the second positive: $\\dfrac{\\frac{1}{3} \\cdot \\frac{4}{5}}{\\frac{1}{3} \\cdot \\frac{4}{5} + \\frac{2}{3} \\cdot \\frac{1}{10}}$. Give a fraction in lowest terms.", "answer": "4/5", "accept": ["0.8"], "hint": "Joints: $\\frac{4}{15}$ versus $\\frac{1}{15}$." }
+      ],
+      "finalAnswer": { "value": "4/5", "unit": "" },
+      "solutionNarrative": "Test 1 moves belief from $\\frac{1}{10}$ to $\\frac{9}{9+18} = \\frac{1}{3}$; the second independent positive moves it to $\\frac{4/15}{5/15} = \\frac{4}{5}$. Two moderate tests compound into strong evidence — the logic of confirmatory testing."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s08",
+      "concepts": ["sequential-updating"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Order irrelevance. Redo the two-word spam update (prior $1/2$; word 1: $3/4$ spam vs $1/4$ ham; word 2: $2/3$ spam vs $1/3$ ham) but process word 2 FIRST. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "After word 2 first: $\\dfrac{\\frac{1}{2} \\cdot \\frac{2}{3}}{\\frac{1}{2} \\cdot \\frac{2}{3} + \\frac{1}{2} \\cdot \\frac{1}{3}}$. Give a fraction in lowest terms.", "answer": "2/3", "accept": ["0.667"], "hint": "Joints: $\\frac{1}{3}$ versus $\\frac{1}{6}$." },
+        { "instruction": "Now update on word 1: $\\dfrac{\\frac{2}{3} \\cdot \\frac{3}{4}}{\\frac{2}{3} \\cdot \\frac{3}{4} + \\frac{1}{3} \\cdot \\frac{1}{4}}$. Give a fraction in lowest terms.", "answer": "6/7", "accept": ["0.857"], "hint": "Joints: $\\frac{1}{2} = \\frac{6}{12}$ versus $\\frac{1}{12}$." },
+        { "instruction": "Processing word 1 first also ends at $6/7$. Is the final posterior the same or different when independent evidence is processed in the other order? Type 'same' or 'different'.", "answer": "same", "accept": [], "hint": "Multiplication commutes." }
+      ],
+      "finalAnswer": { "value": "same", "unit": "" },
+      "solutionNarrative": "Either order lands on $\\frac{6}{7}$: sequential updates on independent evidence multiply likelihoods, and multiplication doesn't care about order. Only the evidence itself matters — not the sequence (or the stopping rule) that delivered it."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s09",
+      "concepts": ["bayes-factors-and-odds"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A hypothesis has prior probability $P(H) = 1/4$. Evidence arrives with likelihood ratio $\\mathrm{LR} = 6$. Use posterior odds = prior odds × LR. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "Prior odds $= \\dfrac{P(H)}{1 - P(H)} = \\dfrac{1/4}{3/4}$. Give a fraction in lowest terms.", "answer": "1/3", "accept": ["0.333"], "hint": "One part for, three parts against." },
+        { "instruction": "Posterior odds $= \\dfrac{1}{3} \\times 6$. Give the value.", "answer": "2", "accept": ["2/1", "6/3"], "hint": "Multiply the numerator by 6, then reduce." },
+        { "instruction": "Convert back: probability $= \\dfrac{\\text{odds}}{1 + \\text{odds}} = \\dfrac{2}{3}$. Give a fraction in lowest terms.", "answer": "2/3", "accept": ["0.667"], "hint": "Odds $\\frac{2}{1}$ mean 2 for, 1 against." }
+      ],
+      "finalAnswer": { "value": "2/3", "unit": "" },
+      "solutionNarrative": "Prior odds $\\frac{1}{3}$, times LR 6, gives posterior odds 2, i.e. probability $\\frac{2}{3}$. In odds form the whole of Bayes' theorem is one multiplication."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s10",
+      "concepts": ["bayes-factors-and-odds"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A diagnostic test has sensitivity $9/10$ and false-positive rate $1/10$. The condition's prevalence is $1/10$. A patient tests positive. Work in odds. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "Likelihood ratio: $\\mathrm{LR} = \\dfrac{9/10}{1/10}$. (Give a whole number.)", "answer": "9", "accept": [], "hint": "The tens cancel." },
+        { "instruction": "Prior odds: $\\dfrac{1/10}{9/10}$. Give a fraction in lowest terms.", "answer": "1/9", "accept": ["0.111"], "hint": "One sick for every nine healthy." },
+        { "instruction": "Posterior odds $= \\dfrac{1}{9} \\times 9$. (Give a number.)", "answer": "1", "accept": ["1/1", "9/9"], "hint": "The nines cancel." },
+        { "instruction": "Posterior probability $= \\dfrac{1}{1 + 1}$. Give a fraction in lowest terms.", "answer": "1/2", "accept": ["0.5"], "hint": "Even odds." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "LR $= 9$ exactly cancels the prior odds $\\frac{1}{9}$: posterior odds 1, probability $\\frac{1}{2}$. A '90% accurate' test on a 10% base rate leaves a positive patient at a coin flip — the odds form makes the cancellation visible."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s11",
+      "concepts": ["bayes-factors-and-odds"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two independent pieces of evidence support a hypothesis with likelihood ratios $\\mathrm{LR}_1 = 3$ and $\\mathrm{LR}_2 = 4$. The prior probability is $1/10$. Independent Bayes factors multiply. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "Combined likelihood ratio: $3 \\times 4$. (Give a number.)", "answer": "12", "accept": [], "hint": "Independent LRs multiply." },
+        { "instruction": "Prior odds: $\\dfrac{1/10}{9/10}$. Give a fraction in lowest terms.", "answer": "1/9", "accept": ["0.111"], "hint": "One for, nine against." },
+        { "instruction": "Posterior odds $= \\dfrac{1}{9} \\times 12$. Give a fraction in lowest terms.", "answer": "4/3", "accept": ["12/9"], "hint": "Reduce $\\frac{12}{9}$." },
+        { "instruction": "Posterior probability $= \\dfrac{4/3}{1 + 4/3}$. Give a fraction in lowest terms.", "answer": "4/7", "accept": ["0.571"], "hint": "Odds $\\frac{4}{3}$: four for, three against, so $\\frac{4}{4+3}$." }
+      ],
+      "finalAnswer": { "value": "4/7", "unit": "" },
+      "solutionNarrative": "Combined LR $= 12$; posterior odds $= \\frac{1}{9} \\times 12 = \\frac{4}{3}$; probability $\\frac{4}{7}$. Stacking independent evidence is multiplication in odds space — and only for genuinely independent evidence."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s12",
+      "concepts": ["bayes-factors-and-odds"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A sensor flags a defect. It fires on $4/5$ of truly defective parts and on $1/5$ of fine parts. Before the reading, the probability the part was defective was $1/4$. Use odds. Give fractions in lowest terms.",
+      "steps": [
+        { "instruction": "Likelihood ratio: $\\dfrac{4/5}{1/5}$. (Give a whole number.)", "answer": "4", "accept": [], "hint": "The fifths cancel." },
+        { "instruction": "Prior odds: $\\dfrac{1/4}{3/4}$. Give a fraction in lowest terms.", "answer": "1/3", "accept": ["0.333"], "hint": "One defective for every three fine." },
+        { "instruction": "Posterior odds $= \\dfrac{1}{3} \\times 4$. Give a fraction in lowest terms.", "answer": "4/3", "accept": [], "hint": "Multiply the numerator." },
+        { "instruction": "Posterior probability $= \\dfrac{4}{4 + 3}$. Give a fraction in lowest terms.", "answer": "4/7", "accept": ["0.571"], "hint": "Odds $a/b$ mean probability $\\frac{a}{a+b}$." }
+      ],
+      "finalAnswer": { "value": "4/7", "unit": "" },
+      "solutionNarrative": "LR $= 4$ turns prior odds $\\frac{1}{3}$ into posterior odds $\\frac{4}{3}$, i.e. probability $\\frac{4}{7}$. The alarm more than doubled the defect probability, yet certainty is still far off — one flag is one flag."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s13",
+      "concepts": ["bayesian-vs-frequentist"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "An analyst reports an interval of $(4, 6)$ for a mean and says: 'There is a ninety-five percent probability the true mean lies in this interval, given the data and my prior.' Identify the framework.",
+      "steps": [
+        { "instruction": "Which kind of interval licenses that sentence? Type 'credible interval' or 'confidence interval'.", "answer": "credible interval", "accept": ["credible"], "hint": "Only one framework puts a probability distribution on the parameter itself." },
+        { "instruction": "In the frequentist framework, is the true mean treated as fixed or random? Type 'fixed' or 'random'.", "answer": "fixed", "accept": [], "hint": "To a frequentist, only the data — and hence the interval — vary." }
+      ],
+      "finalAnswer": { "value": "credible interval", "unit": "" },
+      "solutionNarrative": "Direct probability statements about the parameter are Bayesian — a credible interval. A 95% confidence interval promises only that 95% of intervals built by this procedure capture the fixed, non-random truth."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s14",
+      "concepts": ["bayesian-vs-frequentist"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two analysts summarize the same drug trial. Classify each statement's framework.",
+      "steps": [
+        { "instruction": "Statement 1: 'Given the observed data and the prior, the probability the drug beats placebo is ninety-three percent.' Type 'bayesian' or 'frequentist'.", "answer": "bayesian", "accept": [], "hint": "Probability ABOUT the hypothesis, conditioned on data and prior." },
+        { "instruction": "Statement 2: 'If the drug truly had no effect, data this extreme would occur in fewer than five percent of repeated trials.' Type 'bayesian' or 'frequentist'.", "answer": "frequentist", "accept": [], "hint": "Long-run frequency over hypothetical repetitions — a p-value sentence." },
+        { "instruction": "Does the Bayesian conclusion depend on the choice of prior? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Posterior $\\propto$ prior $\\times$ likelihood." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Statement 1 assigns probability to the hypothesis itself — Bayesian. Statement 2 describes how the testing procedure behaves under repetition — frequentist. The Bayesian answer inherits its prior, an influence that fades as data accumulate."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s15",
+      "concepts": ["bayesian-vs-frequentist"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "After testing, the posterior probability a batch is defective is $0.2$. Losses (in thousands of dollars):\n\n| Action | Batch defective | Batch fine |\n|---|---|---|\n| Recall | 20 | 20 |\n| Ship | 50 | 0 |\n\nChoose the action with the smaller expected loss under the posterior.",
+      "steps": [
+        { "instruction": "Expected loss of RECALL (it costs 20 in either state). (Give a number.)", "answer": "20", "accept": [], "hint": "$0.2 \\cdot 20 + 0.8 \\cdot 20$." },
+        { "instruction": "Expected loss of SHIP: $0.2 \\cdot 50 + 0.8 \\cdot 0$. (Give a number.)", "answer": "10", "accept": [], "hint": "Posterior probability times the defective-shipment loss." },
+        { "instruction": "Which action minimizes expected loss? Type 'recall' or 'ship'.", "answer": "ship", "accept": [], "hint": "Compare 20 with 10." }
+      ],
+      "finalAnswer": { "value": "ship", "unit": "" },
+      "solutionNarrative": "Expected losses: recall 20, ship $0.2 \\times 50 = 10$. Shipping is the Bayes-optimal action. The posterior fed straight into a decision — the practical payoff of the Bayesian framework."
+    },
+    {
+      "id": "advanced-statistics.bayesian-inference.s16",
+      "concepts": ["bayesian-vs-frequentist"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Sort the machinery: decide which framework each object belongs to.",
+      "steps": [
+        { "instruction": "A prior distribution over the parameter — used by which framework? Type 'bayesian' or 'frequentist'.", "answer": "bayesian", "accept": [], "hint": "It encodes belief about the parameter before the data." },
+        { "instruction": "A p-value from a null hypothesis test — which framework? Type 'bayesian' or 'frequentist'.", "answer": "frequentist", "accept": [], "hint": "It is a statement about repeated sampling under the null." },
+        { "instruction": "Can a frequentist 95% confidence interval be read as 'the parameter is inside with probability ninety-five percent'? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The parameter is fixed; the INTERVAL is what varies across samples." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Priors (and posteriors, and credible intervals) are Bayesian objects; p-values and confidence procedures are frequentist. The forbidden reading of a confidence interval is exactly the sentence a credible interval exists to make legal."
+    }
+  ]
+}

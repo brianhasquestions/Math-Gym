@@ -1,0 +1,281 @@
+{
+  "id": "advanced-statistics.anova",
+  "subject": "advanced-statistics",
+  "title": "One-Way ANOVA",
+  "prerequisites": ["statistics.hypothesis-testing", "statistics.descriptive-statistics"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "anova-setup",
+      "label": "The ANOVA setup",
+      "microLesson": "Comparing three or more group means with separate two-sample t-tests lets Type I errors pile up: each test carries its own $\\alpha$ chance of a false alarm, and with six pairwise tests at $\\alpha = 0.05$ the overall false-alarm rate balloons far past 5%. **One-way ANOVA** replaces them with ONE test: $H_0$: all group means are equal, versus $H_a$: at least one mean differs. Bookkeeping: with $k$ groups and $N$ total observations, $df_{between} = k - 1$ and $df_{within} = N - k$ (they add to $N - 1$)."
+    },
+    {
+      "id": "sums-of-squares",
+      "label": "Sums of squares",
+      "microLesson": "ANOVA splits the total variation into two piles. The **between-groups sum of squares** $SSB = n\\sum(\\bar{x}_i - \\bar{x})^2$ measures how far the group means sit from the grand mean — the signal. The **within-groups sum of squares** $SSW = \\sum_{groups}\\sum(x - \\bar{x}_i)^2$ adds up each observation's squared deviation from ITS OWN group mean — the noise. Example: groups with means 10, 14, 18 (n = 3 each) have grand mean 14, so $SSB = 3[(-4)^2 + 0^2 + 4^2] = 96$."
+    },
+    {
+      "id": "f-statistic",
+      "label": "The F statistic",
+      "microLesson": "Divide each sum of squares by its degrees of freedom to get a **mean square**: $MSB = SSB/df_B$ and $MSW = SSW/df_W$. The test statistic is their ratio, $F = MSB/MSW$ — signal over noise. If all means are truly equal, $F$ hovers around 1; group means that spread out more than the within-group noise justifies push $F$ well above 1. With $SSB = 24$, $SSW = 12$, $df_B = 2$, $df_W = 6$: $MSB = 12$, $MSW = 2$, $F = 6$."
+    },
+    {
+      "id": "anova-decision",
+      "label": "Decision and interpretation",
+      "microLesson": "Compare $F$ to a **critical value** $F^*$ from the F table for $(df_B, df_W)$ at your chosen $\\alpha$: reject $H_0$ when $F > F^*$ (the test is always right-tailed — only a LARGE ratio contradicts equal means). For $(2, 6)$ at $\\alpha = 0.05$, $F^* = 5.14$. Crucially, rejection says only that **at least one** mean differs — it does NOT say all means differ, and it does not say WHICH group is the odd one out. That takes follow-up pairwise comparisons."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Three fertilizers walk into a field\n\nYou test three fertilizer blends on nine equal garden plots and get three sample means. They differ — sample means always differ. The real question is the one hypothesis testing was built for: *are these differences bigger than random noise can explain?*\n\nThe tempting shortcut is to run a two-sample t-test on every pair: A vs B, A vs C, B vs C. That shortcut is a trap. Each test at $\\alpha = 0.05$ carries its own 5% false-alarm risk, and the risks accumulate: with three tests the chance of at least one false alarm is already near $1 - 0.95^3 \\approx 14\\%$, and with six groups (fifteen pairs) it passes 50%. You would be almost guaranteed to \"discover\" a difference that isn't there.\n\n**One-way ANOVA** (analysis of variance, R. A. Fisher's invention) fixes this with a single test:\n\n$$H_0: \\mu_1 = \\mu_2 = \\cdots = \\mu_k \\qquad H_a: \\text{at least one } \\mu_i \\text{ differs.}$$\n\nNote how modest $H_a$ is. It does not claim all means differ — one deserter is enough.\n\n## The idea: compare two kinds of variation\n\nDespite the name, ANOVA tests *means* by comparing *variances* — two different estimates of the same noise:\n\n- **Within-groups variation** ($SSW$): how much observations scatter around their OWN group's mean. This is pure noise — fertilizer can't explain scatter inside a single fertilizer group.\n- **Between-groups variation** ($SSB$): how much the group means scatter around the grand mean. This contains noise PLUS any real treatment effect.\n\nIf $H_0$ is true, both piles are just noise and their ratio should hover near 1. A real effect inflates only the between pile, pushing the ratio up.\n\n### The recipe\n\nWith $k$ groups, $n$ observations per group, and $N = kn$ total:\n\n$$SSB = n\\sum_{i=1}^{k}(\\bar{x}_i - \\bar{x})^2, \\qquad SSW = \\sum_{i=1}^{k}\\sum_{j=1}^{n}(x_{ij} - \\bar{x}_i)^2,$$\n\n$$MSB = \\frac{SSB}{k-1}, \\qquad MSW = \\frac{SSW}{N-k}, \\qquad F = \\frac{MSB}{MSW}.$$\n\nThe degrees of freedom always satisfy $(k - 1) + (N - k) = N - 1$.\n\n## A fully worked ANOVA\n\nYields for three fertilizer blends, three plots each:\n\n| Blend | Observations | Group mean |\n|---|---|---|\n| A | 9, 10, 11 | 10 |\n| B | 12, 14, 16 | 14 |\n| C | 17, 18, 19 | 18 |\n\nGrand mean: $\\bar{x} = (10 + 14 + 18)/3 = 14$.\n\n**Between:** the mean deviations are $-4, 0, 4$, so $SSB = 3[16 + 0 + 16] = 96$.\n\n**Within:** group A's deviations from 10 are $-1, 0, 1$ (contributing 2); B's from 14 are $-2, 0, 2$ (contributing 8); C's from 18 are $-1, 0, 1$ (contributing 2). $SSW = 2 + 8 + 2 = 12$.\n\n| Source | SS | df | MS | F |\n|---|---|---|---|---|\n| Between groups | 96 | 2 | 48 | 24 |\n| Within groups | 12 | 6 | 2 | |\n| Total | 108 | 8 | | |\n\nThe between-group signal is 24 times the within-group noise.\n\n## The decision\n\nThe F test is always **right-tailed**: only a large ratio contradicts $H_0$ (an F near 0 just means the group means huddle unusually close). Critical values depend on BOTH degrees of freedom:\n\n| $(df_B, df_W)$ | $F^*$ at $\\alpha = 0.05$ | $F^*$ at $\\alpha = 0.01$ |\n|---|---|---|\n| (2, 6) | 5.14 | 10.92 |\n| (2, 12) | 3.89 | 6.93 |\n| (3, 12) | 3.49 | 5.95 |\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 12], \"yRange\": [0, 0.9], \"grid\": false, \"curves\": [ { \"fn\": \"0.8*exp(-0.8*x)\", \"color\": \"accent\" }, { \"fn\": \"0.8*exp(-0.8*x)\", \"color\": \"warn\", \"fillRange\": [5.14, 12] } ], \"segments\": [ { \"from\": [5.14, 0], \"to\": [5.14, 0.45], \"dashed\": true, \"color\": \"warn\", \"label\": \"F* = 5.14\" }, { \"from\": [9, 0], \"to\": [9, 0.3], \"color\": \"error\", \"label\": \"F = 9\" } ], \"caption\": \"An F(2, 6) test at alpha = 0.05: the rejection region is the right tail beyond 5.14. A statistic of F = 9 lands inside it, so H0 is rejected.\" }\n```\n\nFor our worked example, $F = 24 > 5.14$ (and even $> 10.92$): reject $H_0$ at either level. The fertilizer blends do not all perform equally.\n\n### Say the verdict carefully\n\n- **Reject $H_0$:** at least one group mean differs from the others. Nothing more.\n- **Fail to reject:** the data are compatible with equal means — which, as always, is not proof of equality.\n\n### Common pitfalls\n\n- **Rejection does not name the culprit.** $F > F^*$ says the means are not ALL equal — it does not say which group broke away, or that every pair differs. Identifying the odd group takes follow-up pairwise comparisons (with their own multiple-testing correction, e.g. Tukey's procedure), or you re-inflate exactly the Type I risk ANOVA existed to control.\n- **ANOVA is not immune to its assumptions.** It presumes roughly equal group variances and independent observations; wildly unequal spreads make $MSW$ a meaningless average.\n- **A significant F can be practically tiny.** With enormous samples, $F$ detects differences too small to matter. Report the group means alongside the verdict.\n- **F near zero is not evidence of anything.** Group means agreeing suspiciously well is consistent with $H_0$; the test only rejects to the right."
+  },
+  "application": {
+    "summary": "ANOVA is the workhorse for any 'do these groups differ on average?' question with more than two groups: crop trials, drug dose comparisons, A/B/C tests, and industrial process tuning — one honest test instead of a pile of inflated pairwise ones.",
+    "domains": ["agricultural trials", "clinical research", "manufacturing and process engineering", "product experimentation"],
+    "workedExample": "**Does the training program matter? Three onboarding curricula.**\n\nA company assigns nine new hires (three per curriculum) and records their week-four productivity scores: curriculum A: 19, 20, 21 (mean 20); B: 22, 24, 26 (mean 24); C: 27, 28, 29 (mean 28).\n\n*Step 1 — hypotheses.* $H_0$: all three curricula produce the same mean score; $H_a$: at least one differs. $k = 3$, $N = 9$, so $df_B = 2$, $df_W = 6$; at $\\alpha = 0.05$, $F^* = 5.14$.\n\n*Step 2 — sums of squares.* Grand mean $= 24$. $SSB = 3[(-4)^2 + 0^2 + 4^2] = 96$. Within: A contributes 2, B contributes 8, C contributes 2, so $SSW = 12$.\n\n*Step 3 — the ratio.* $MSB = 96/2 = 48$, $MSW = 12/6 = 2$, $F = 24$.\n\n*Step 4 — decision.* $24 > 5.14$: reject $H_0$. The curricula are not interchangeable.\n\n*Step 5 — the honest caveat.* The ANOVA does NOT say curriculum C is the winner — only that the three means aren't all equal. Ranking them takes follow-up pairwise comparisons with a multiple-testing correction, and with $n = 3$ per group, the estimate of any single curriculum's effect is still rough.",
+    "domainNotes": [
+      "**Agriculture:** Fisher built ANOVA at Rothamsted in the 1920s to compare crop treatments across field plots — the F distribution is named for him.",
+      "**Clinical trials:** dose-finding studies compare placebo and several dose levels in one ANOVA before any pairwise dose claims are made.",
+      "**Manufacturing:** comparing output across machines, shifts, or suppliers; a significant F triggers investigation of WHICH line drifted.",
+      "**Product analytics:** an A/B/C/D test analyzed as six pairwise z-tests at 5% is a false-positive factory; the omnibus test comes first."
+    ]
+  },
+  "generators": [
+    "as4-anova-setup-1", "as4-anova-setup-2", "as4-anova-setup-3",
+    "as4-anova-ss-1", "as4-anova-ss-2", "as4-anova-ss-3",
+    "as4-anova-f-1", "as4-anova-f-2", "as4-anova-f-3",
+    "as4-anova-decide-1", "as4-anova-decide-2", "as4-anova-decide-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.anova.s01",
+      "concepts": ["anova-setup"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A nutritionist wants to compare mean weight loss across 4 diet plans. A colleague suggests running a separate two-sample t-test on every pair of diets, each at $\\alpha = 0.05$.",
+      "steps": [
+        { "instruction": "Running many separate t-tests lets false alarms accumulate. Which error becomes more likely overall? Type 'Type I' or 'Type II'.", "answer": "Type I", "accept": ["type 1", "I", "1"], "hint": "Each test carries its own 5% false-alarm chance." },
+        { "instruction": "ANOVA replaces them with one test. Its alternative hypothesis says: type 'all means differ' or 'at least one mean differs'.", "answer": "at least one mean differs", "accept": ["at least one differs", "at least one mean is different"], "hint": "One deserter is enough to reject." },
+        { "instruction": "With $k = 4$ diet plans, the between-groups degrees of freedom are $k - 1$. (Give a number.)", "answer": "3", "accept": [], "hint": "One less than the number of groups." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Six pairwise t-tests would inflate the Type I rate; ANOVA tests $H_0$: all means equal vs $H_a$: at least one differs, with $df_B = 4 - 1 = 3$."
+    },
+    {
+      "id": "advanced-statistics.anova.s02",
+      "concepts": ["anova-setup"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A one-way ANOVA compares mean battery life across $k = 4$ charger firmware versions with $n = 6$ phones per version. Work out the degrees of freedom.",
+      "steps": [
+        { "instruction": "Total sample size: $N = 4 \\times 6$. (Give a number.)", "answer": "24", "accept": [], "hint": "Groups times observations per group." },
+        { "instruction": "Between-groups degrees of freedom: $k - 1$. (Give a number.)", "answer": "3", "accept": [], "hint": "One less than the number of groups." },
+        { "instruction": "Within-groups degrees of freedom: $N - k$. (Give a number.)", "answer": "20", "accept": [], "hint": "$24 - 4$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "" },
+      "solutionNarrative": "$N = 24$, $df_B = 3$, $df_W = 20$; they add to the total df, $N - 1 = 23$."
+    },
+    {
+      "id": "advanced-statistics.anova.s03",
+      "concepts": ["anova-setup"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An agronomist compares mean yield for 3 wheat varieties, 5 plots per variety, with a one-way ANOVA. State the hypotheses and the full degrees-of-freedom bookkeeping.",
+      "steps": [
+        { "instruction": "The null hypothesis $H_0$ says: type 'all group means are equal' or 'at least one mean differs'.", "answer": "all group means are equal", "accept": ["all means are equal", "all equal"], "hint": "$H_0$ is the no-effect default." },
+        { "instruction": "The alternative $H_a$ says: type 'all group means are equal' or 'at least one mean differs'.", "answer": "at least one mean differs", "accept": ["at least one differs", "at least one mean is different"], "hint": "The opposite of 'all equal' is not 'all different'." },
+        { "instruction": "Between df: $k - 1$. (Give a number.)", "answer": "2", "accept": [], "hint": "$k = 3$." },
+        { "instruction": "Within df: $N - k$ with $N = 15$. (Give a number.)", "answer": "12", "accept": [], "hint": "$15 - 3$." },
+        { "instruction": "Total df: $N - 1$. (Give a number.)", "answer": "14", "accept": [], "hint": "Between and within df must add to this." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "" },
+      "solutionNarrative": "$H_0$: all variety means equal; $H_a$: at least one differs. $df_B = 2$ and $df_W = 12$ add to $df_{total} = 14$."
+    },
+    {
+      "id": "advanced-statistics.anova.s04",
+      "concepts": ["anova-setup"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A one-way ANOVA is planned for $k = 5$ groups.",
+      "steps": [
+        { "instruction": "Between-groups degrees of freedom: $k - 1$. (Give a number.)", "answer": "4", "accept": [], "hint": "One less than the number of groups." },
+        { "instruction": "Rejecting $H_0$ would support: type 'all means differ' or 'at least one mean differs'.", "answer": "at least one mean differs", "accept": ["at least one differs", "at least one mean is different"], "hint": "ANOVA's alternative is deliberately modest." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$df_B = 5 - 1 = 4$, and the alternative hypothesis claims only that at least one mean differs."
+    },
+    {
+      "id": "advanced-statistics.anova.s05",
+      "concepts": ["sums-of-squares"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Three groups of $n = 3$ observations each have group means $\\bar{x}_A = 8$, $\\bar{x}_B = 12$, $\\bar{x}_C = 16$. Compute the between-groups sum of squares $SSB = n \\sum (\\bar{x}_i - \\bar{x})^2$.",
+      "steps": [
+        { "instruction": "Grand mean: $\\dfrac{8 + 12 + 16}{3}$. (Give a whole number.)", "answer": "12", "accept": [], "hint": "Equal group sizes, so average the three means." },
+        { "instruction": "Sum the squared deviations of the group means: $(-4)^2 + 0^2 + 4^2$. (Give a number.)", "answer": "32", "accept": [], "hint": "The deviations are $-4, 0, 4$." },
+        { "instruction": "Multiply by the group size: $SSB = 3 \\times 32$. (Give a number.)", "answer": "96", "accept": [], "hint": "Each group mean represents three observations." }
+      ],
+      "finalAnswer": { "value": "96", "unit": "" },
+      "solutionNarrative": "Grand mean 12; deviations $-4, 0, 4$ square-sum to 32, so $SSB = 3 \\times 32 = 96$."
+    },
+    {
+      "id": "advanced-statistics.anova.s06",
+      "concepts": ["sums-of-squares"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Corrosion scores for three protective coatings, three samples each — A: 9, 10, 11; B: 13, 14, 15; C: 17, 18, 19. Find the group means and the within-groups sum of squares $SSW$.",
+      "steps": [
+        { "instruction": "Mean of group A: $\\dfrac{9 + 10 + 11}{3}$. (Give a whole number.)", "answer": "10", "accept": [], "hint": "Add and divide by three." },
+        { "instruction": "Mean of group B. (Give a whole number.)", "answer": "14", "accept": [], "hint": "$(13+14+15)/3$." },
+        { "instruction": "Mean of group C. (Give a whole number.)", "answer": "18", "accept": [], "hint": "$(17+18+19)/3$." },
+        { "instruction": "Each group's deviations from its own mean are $-1, 0, 1$, contributing $2$ per group. Total: $SSW = ?$ (Give a number.)", "answer": "6", "accept": [], "hint": "$2 + 2 + 2$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Group means 10, 14, 18. Every group contributes $(-1)^2 + 0^2 + 1^2 = 2$, so $SSW = 6$ — the noise left after each group explains its own center."
+    },
+    {
+      "id": "advanced-statistics.anova.s07",
+      "concepts": ["sums-of-squares"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Quiz scores under three lesson formats — A: 10, 12, 14; B: 15, 16, 17; C: 18, 20, 22. The group means are 12, 16, and 20. Build both ANOVA sums of squares.",
+      "steps": [
+        { "instruction": "Grand mean of all nine scores. (Give a whole number.)", "answer": "16", "accept": [], "hint": "With equal group sizes, average the three group means." },
+        { "instruction": "Between: $SSB = 3\\left[(12-16)^2 + (16-16)^2 + (20-16)^2\\right]$. (Give a number.)", "answer": "96", "accept": [], "hint": "Deviations $-4, 0, 4$ square-sum to 32." },
+        { "instruction": "Group A's squared deviations from its own mean sum to 8; group B's sum to 2. Compute group C's contribution. (Give a number.)", "answer": "8", "accept": [], "hint": "Group C's deviations from 20 are $-2, 0, 2$." },
+        { "instruction": "Total within: $SSW = 8 + 2 + 8$. (Give a number.)", "answer": "18", "accept": [], "hint": "Add the three contributions." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "" },
+      "solutionNarrative": "Grand mean 16. $SSB = 3 \\times 32 = 96$ (spread between formats); $SSW = 8 + 2 + 8 = 18$ (noise within formats)."
+    },
+    {
+      "id": "advanced-statistics.anova.s08",
+      "concepts": ["sums-of-squares"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Three groups ($n = 3$ each) have means 5, 8, and 11. Compute $SSB$.",
+      "steps": [
+        { "instruction": "Grand mean: $\\dfrac{5 + 8 + 11}{3}$. (Give a whole number.)", "answer": "8", "accept": [], "hint": "Average of the three means." },
+        { "instruction": "$SSB = 3\\left[(-3)^2 + 0^2 + 3^2\\right]$. (Give a number.)", "answer": "54", "accept": [], "hint": "The squared deviations sum to 18." }
+      ],
+      "finalAnswer": { "value": "54", "unit": "" },
+      "solutionNarrative": "Deviations $-3, 0, 3$ square-sum to 18, so $SSB = 3 \\times 18 = 54$."
+    },
+    {
+      "id": "advanced-statistics.anova.s09",
+      "concepts": ["f-statistic"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A one-way ANOVA on 3 groups of 3 observations gives $SSB = 24$ and $SSW = 12$, with $df_B = 2$ and $df_W = 6$. Compute the F statistic.",
+      "steps": [
+        { "instruction": "$MSB = \\dfrac{24}{2}$. (Give a number.)", "answer": "12", "accept": [], "hint": "SSB over its df." },
+        { "instruction": "$MSW = \\dfrac{12}{6}$. (Give a number.)", "answer": "2", "accept": [], "hint": "SSW over its df." },
+        { "instruction": "$F = \\dfrac{MSB}{MSW}$. (Give a number.)", "answer": "6", "accept": [], "hint": "$12 / 2$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$MSB = 12$, $MSW = 2$, so $F = 6$: the between-group signal is six times the within-group noise."
+    },
+    {
+      "id": "advanced-statistics.anova.s10",
+      "concepts": ["f-statistic"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A weight-gain experiment uses $k = 4$ feed mixtures with $n = 4$ lambs each and finds $SSB = 36$, $SSW = 24$. Build the full F statistic, degrees of freedom first.",
+      "steps": [
+        { "instruction": "Between df: $k - 1$. (Give a number.)", "answer": "3", "accept": [], "hint": "$k = 4$." },
+        { "instruction": "Within df: $N - k$ with $N = 16$. (Give a number.)", "answer": "12", "accept": [], "hint": "$16 - 4$." },
+        { "instruction": "$MSB = \\dfrac{36}{3}$. (Give a number.)", "answer": "12", "accept": [], "hint": "SSB over its df." },
+        { "instruction": "$MSW = \\dfrac{24}{12}$. (Give a number.)", "answer": "2", "accept": [], "hint": "SSW over its df." },
+        { "instruction": "$F = \\dfrac{12}{2}$. (Give a number.)", "answer": "6", "accept": [], "hint": "Divide the mean squares." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$df_B = 3$, $df_W = 12$; $MSB = 12$ against $MSW = 2$ gives $F = 6$."
+    },
+    {
+      "id": "advanced-statistics.anova.s11",
+      "concepts": ["f-statistic"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The lesson-format study (three groups, $n = 3$ each) produced $SSB = 96$ and $SSW = 18$ with $df_B = 2$, $df_W = 6$. Assemble the F statistic and read it.",
+      "steps": [
+        { "instruction": "$MSB = \\dfrac{96}{2}$. (Give a number.)", "answer": "48", "accept": [], "hint": "SSB over between df." },
+        { "instruction": "$MSW = \\dfrac{18}{6}$. (Give a number.)", "answer": "3", "accept": [], "hint": "SSW over within df." },
+        { "instruction": "$F = \\dfrac{48}{3}$. (Give a number.)", "answer": "16", "accept": [], "hint": "Signal over noise." },
+        { "instruction": "If all format means were truly equal, F would hover near what value? (Give a number.)", "answer": "1", "accept": ["one"], "hint": "Under $H_0$, both mean squares estimate the same noise." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "" },
+      "solutionNarrative": "$MSB = 48$, $MSW = 3$, $F = 16$ — sixteen times the ratio expected under equal means, which hovers near 1."
+    },
+    {
+      "id": "advanced-statistics.anova.s12",
+      "concepts": ["anova-decision"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A one-way ANOVA with $df_B = 2$ and $df_W = 6$ gives $F = 6$. At $\\alpha = 0.05$ the critical value is $F^* = 5.14$: reject $H_0$ when $F > F^*$. Decide.",
+      "steps": [
+        { "instruction": "Is $6 > 5.14$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare the two numbers." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Beyond the critical value means significant." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "$F = 6 > 5.14$: reject $H_0$ — at least one group mean differs."
+    },
+    {
+      "id": "advanced-statistics.anova.s13",
+      "concepts": ["anova-decision"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An ANOVA table for a coatings trial reports $MSB = 9$ and $MSW = 2$ ($df_B = 2$, $df_W = 6$). At $\\alpha = 0.05$, $F^* = 5.14$. Finish the test.",
+      "steps": [
+        { "instruction": "$F = \\dfrac{9}{2}$. (Give a number.)", "answer": "4.5", "accept": ["9/2"], "hint": "Mean square between over mean square within." },
+        { "instruction": "Is $4.5 > 5.14$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Compare with the critical value." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "fail to reject", "accept": ["do not reject", "fail"], "hint": "F below the critical value." },
+        { "instruction": "Does failing to reject PROVE the coating means are all equal? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Absence of evidence is not evidence of absence." }
+      ],
+      "finalAnswer": { "value": "fail to reject", "unit": "" },
+      "solutionNarrative": "$F = 4.5 \\le 5.14$: fail to reject $H_0$. The data are compatible with equal means — which is a shrug, not a proof of equality."
+    },
+    {
+      "id": "advanced-statistics.anova.s14",
+      "concepts": ["anova-decision"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The lesson-format ANOVA gave $F = 16$ with $df_B = 2$, $df_W = 6$. At the stricter level $\\alpha = 0.01$, $F^* = 10.92$. Decide, then say precisely what the decision does and does not tell you.",
+      "steps": [
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "$16 > 10.92$." },
+        { "instruction": "What does rejection support? Type 'all means differ' or 'at least one mean differs'.", "answer": "at least one mean differs", "accept": ["at least one differs", "at least one mean is different"], "hint": "The alternative hypothesis is modest." },
+        { "instruction": "Does the ANOVA by itself tell you WHICH format is the odd one out? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "That takes follow-up pairwise comparisons." }
+      ],
+      "finalAnswer": { "value": "at least one mean differs", "unit": "" },
+      "solutionNarrative": "$F = 16 > 10.92$: reject even at the 1% level. But rejection establishes only that at least one mean differs — naming the odd group requires follow-up comparisons with multiple-testing protection."
+    },
+    {
+      "id": "advanced-statistics.anova.s15",
+      "concepts": ["anova-decision"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A one-way ANOVA with $df_B = 2$ and $df_W = 6$ gives $F = 3$. At $\\alpha = 0.05$, $F^* = 5.14$. Decide.",
+      "steps": [
+        { "instruction": "Is $3 > 5.14$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Compare the two numbers." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "fail to reject", "accept": ["do not reject", "fail"], "hint": "Only a large F contradicts equal means." }
+      ],
+      "finalAnswer": { "value": "fail to reject", "unit": "" },
+      "solutionNarrative": "$F = 3 \\le 5.14$: the group spread is within what noise can explain, so we fail to reject $H_0$."
+    },
+    {
+      "id": "advanced-statistics.anova.s16",
+      "concepts": ["sums-of-squares"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Plot yields under three fertilizer blends — A: 20, 21, 22; B: 24, 26, 28; C: 30, 31, 32. Find the group means and $SSW$.",
+      "steps": [
+        { "instruction": "Mean of group A. (Give a whole number.)", "answer": "21", "accept": [], "hint": "$(20+21+22)/3$." },
+        { "instruction": "Mean of group B. (Give a whole number.)", "answer": "26", "accept": [], "hint": "$(24+26+28)/3$." },
+        { "instruction": "Mean of group C. (Give a whole number.)", "answer": "31", "accept": [], "hint": "$(30+31+32)/3$." },
+        { "instruction": "Groups A and C each contribute 2 to the within sum of squares. Group B's deviations from 26 are $-2, 0, 2$. Compute B's contribution and the total $SSW$. (Give the total.)", "answer": "12", "accept": [], "hint": "B contributes 8; then $2 + 8 + 2$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "Means 21, 26, 31. Contributions $2 + 8 + 2$ give $SSW = 12$."
+    }
+  ]
+}

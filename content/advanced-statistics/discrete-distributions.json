@@ -1,0 +1,275 @@
+{
+  "id": "advanced-statistics.discrete-distributions",
+  "subject": "advanced-statistics",
+  "title": "Discrete Distributions: Binomial and Geometric",
+  "prerequisites": ["statistics.random-variables", "discrete-math.counting-principles"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "binomial-setting",
+      "label": "Recognizing the binomial setting",
+      "microLesson": "A count $X$ is **binomial** exactly when the four BINS conditions hold: **B**inary trials (each trial is success/failure), **I**ndependent trials, a fixed **N**umber of trials $n$, and the **S**ame success probability $p$ on every trial. A quiz with 10 four-choice questions answered by pure guessing gives $n = 10$, $p = 0.25$. Drawing cards *without replacement* breaks independence; rolling a die *until* the first 6 breaks the fixed $n$ — those counts are not binomial, no matter how binomial-ish they look."
+    },
+    {
+      "id": "binomial-probabilities",
+      "label": "Binomial probabilities",
+      "microLesson": "The chance of exactly $k$ successes in $n$ trials is $P(X = k) = \\binom{n}{k} p^k (1-p)^{n-k}$. Read it as three factors: $\\binom{n}{k}$ counts *which* trials succeed, $p^k$ prices the successes, and $(1-p)^{n-k}$ prices the failures. For 4 parts each defective with $p = 0.2$: $P(X = 2) = \\binom{4}{2}(0.2)^2(0.8)^2 = 6 \\times 0.04 \\times 0.64 = 0.1536$. Compute the three pieces separately and multiply — that is where the arithmetic stays honest."
+    },
+    {
+      "id": "binomial-mean-sd",
+      "label": "Binomial mean and standard deviation",
+      "microLesson": "A binomial count has mean $\\mu = np$ and standard deviation $\\sigma = \\sqrt{np(1-p)}$. Both drop straight out of adding up $n$ identical trials. With $n = 100$ and $p = 0.5$: $\\mu = 50$ and $\\sigma = \\sqrt{100 \\times 0.5 \\times 0.5} = \\sqrt{25} = 5$, so seeing 45–55 heads is routine and seeing 70 is shocking. The mean scales like $n$; the spread only like $\\sqrt{n}$ — that widening gap is why proportions stabilize in the long run."
+    },
+    {
+      "id": "geometric-distribution",
+      "label": "The geometric distribution",
+      "microLesson": "When you repeat independent trials with success probability $p$ and ask *how many trials until the first success*, the count is **geometric**: $P(X = k) = (1-p)^{k-1} p$ — you need $k - 1$ failures, then one success. Its expected value is the wonderfully simple $E[X] = \\dfrac{1}{p}$: a 1-in-5 chance takes 5 tries on average. Unlike the binomial, there is no fixed $n$ — the experiment runs as long as it must."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Two questions, two distributions\n\nRepeat the same yes/no experiment over and over — a free throw, a sales call, a part off the line that is either good or defective — and two natural questions appear:\n\n1. In a **fixed number** of trials, *how many* successes? → the **binomial** distribution.\n2. With no limit on trials, *how long until the first* success? → the **geometric** distribution.\n\nMixing these two up is the classic error in this topic, so keep the test question handy: **is the number of trials fixed in advance?** If yes, binomial. If the experiment stops when something happens, geometric.\n\n## The binomial setting: BINS\n\nA count $X$ of successes is binomial only when all four conditions hold:\n\n- **B**inary: each trial is success or failure (define \"success\" however you like — a *defect* can be the success if defects are what you're counting).\n- **I**ndependent: one trial's outcome doesn't change another's chances.\n- **N**umber fixed: $n$ is set before the experiment starts.\n- **S**ame $p$: every trial has the same success probability.\n\nEach condition genuinely fails somewhere. Drawing 5 cards *without replacement* and counting hearts: not independent (each card drawn changes the deck). Rolling a die *until* a 6 appears: no fixed $n$. A machine whose defect rate drifts upward during the day: no constant $p$. When a condition fails, the binomial formula silently gives wrong answers — the model check comes first, then the arithmetic.\n\n## Computing binomial probabilities\n\n$$P(X = k) = \\binom{n}{k}\\, p^k\\, (1-p)^{n-k}$$\n\nThe counting factor $\\binom{n}{k} = \\frac{n!}{k!(n-k)!}$ comes straight from your counting-principles toolkit: it counts the arrangements of $k$ successes among $n$ slots. Any *one* arrangement — say SSFF — has probability $p^k(1-p)^{n-k}$ by independence, and there are $\\binom{n}{k}$ of them.\n\n### Worked example\n\nFour parts come off a line; each is independently defective with probability $p = 0.2$. What is the chance of exactly 2 defects?\n\n1. Count the arrangements: $\\binom{4}{2} = 6$.\n2. Price the successes: $(0.2)^2 = 0.04$.\n3. Price the failures: $(0.8)^2 = 0.64$.\n4. Multiply: $6 \\times 0.04 \\times 0.64 = 0.1536$.\n\nA useful companion is the **at least one** trick: $P(X \\ge 1) = 1 - P(X = 0) = 1 - (1-p)^n$. One subtraction replaces summing $n$ terms.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-0.5, 4.5], \"yRange\": [0, 0.45], \"grid\": false, \"segments\": [ { \"from\": [0, 0], \"to\": [0, 0.0625], \"color\": \"accent\" }, { \"from\": [1, 0], \"to\": [1, 0.25], \"color\": \"accent\" }, { \"from\": [2, 0], \"to\": [2, 0.375], \"color\": \"accent\" }, { \"from\": [3, 0], \"to\": [3, 0.25], \"color\": \"accent\" }, { \"from\": [4, 0], \"to\": [4, 0.0625], \"color\": \"accent\" } ], \"points\": [ { \"x\": 0, \"y\": 0.0625, \"color\": \"accent\" }, { \"x\": 1, \"y\": 0.25, \"color\": \"accent\" }, { \"x\": 2, \"y\": 0.375, \"color\": \"accent\", \"label\": \"P(X=2) = 0.375\" }, { \"x\": 3, \"y\": 0.25, \"color\": \"accent\" }, { \"x\": 4, \"y\": 0.0625, \"color\": \"accent\" } ], \"caption\": \"The pmf of a Binomial(4, 0.5) count: probabilities concentrate around the mean np = 2.\" }\n```\n\n## Mean and standard deviation without the sum\n\nYou *could* compute $E[X] = \\sum k \\cdot P(X = k)$, but the binomial collapses to formulas worth memorizing:\n\n$$\\mu = np, \\qquad \\sigma = \\sqrt{np(1-p)}.$$\n\nWhy $np$? The count is a sum of $n$ little indicator variables, each contributing $p$ on average. With $n = 100$ coin flips: $\\mu = 50$, $\\sigma = \\sqrt{100(0.5)(0.5)} = 5$. So 45 to 55 heads is one-sigma territory (unremarkable), while 70 heads sits four sigmas out (suspect the coin). Notice the scaling: double $n$ and the mean doubles, but the spread only grows by $\\sqrt{2}$ — counts drift, *proportions* settle.\n\n**Pitfall:** $\\sigma$ needs *all three* factors, $n$, $p$, and $1 - p$. Students who compute $\\sqrt{np}$ have accidentally used the Poisson formula a topic early.\n\n## Waiting for the first success: geometric\n\nNow drop the fixed $n$. Keep trying independent trials with success probability $p$; let $X$ be the trial on which the first success lands. For $X = k$, you need $k - 1$ failures then one success:\n\n$$P(X = k) = (1-p)^{k-1}\\, p, \\qquad E[X] = \\frac{1}{p}.$$\n\nA cold-caller closing 20% of calls: $P(\\text{first sale on call 3}) = (0.8)^2(0.2) = 0.128$, and the average wait is $1/0.2 = 5$ calls. Two more facts worth knowing:\n\n- $P(X > k) = (1-p)^k$ — the first $k$ trials all fail.\n- The geometric is **memoryless**: after 10 straight failures, the chance the *next* trial succeeds is still exactly $p$. Dice, roulette wheels, and random defects do not remember, and the belief that they do is precisely the gambler's fallacy.\n\n### Binomial vs. geometric at a glance\n\n| Question | Distribution | Support | Formula |\n|---|---|---|---|\n| Successes in $n$ fixed trials | Binomial | $0, 1, \\dots, n$ | $\\binom{n}{k}p^k(1-p)^{n-k}$ |\n| Trial of first success | Geometric | $1, 2, 3, \\dots$ | $(1-p)^{k-1}p$ |\n\nSame ingredients — independent trials, constant $p$ — different question. Check which question is being asked before touching a formula."
+  },
+  "application": {
+    "summary": "Binomial and geometric models are the arithmetic of quality control, sales pipelines, and reliability: how many defects a sample should show, how likely a batch passes inspection, and how many attempts a first success should take.",
+    "domains": ["quality control and acceptance sampling", "sales and marketing funnels", "reliability engineering", "clinical screening"],
+    "workedExample": "**Acceptance sampling: should this shipment go out?**\n\nA factory ships components in lots. Historically each component is independently defective with probability $p = 0.1$. Before a lot ships, an inspector tests a random sample of $n = 5$ components and rejects the lot if any defect appears.\n\n*Step 1 — is it binomial?* Binary (defective or not), independent (random sample, large lot), fixed $n = 5$, same $p = 0.1$. All four BINS conditions hold.\n\n*Step 2 — chance a lot passes.* The lot passes when $X = 0$: $P(X = 0) = (0.9)^5 = 0.59049$. So about 59% of lots sail through — and $P(X \\ge 1) = 1 - 0.59049 = 0.40951$, so 41% get flagged.\n\n*Step 3 — what inspection load to expect.* Across 200 lots a week, flagged lots number about $\\mu = 200 \\times 0.40951 \\approx 82$, with $\\sigma = \\sqrt{200(0.40951)(0.59049)} \\approx 7$. Staffing the rework station for 82 ± 14 flags covers virtually every week.\n\n*Step 4 — the geometric view.* A line worker watching individual components asks a different question: how many parts until the next defect? That wait is geometric with $E[X] = 1/0.1 = 10$ parts — and by memorylessness, 30 clean parts in a row does NOT make the next one more likely to fail. The binomial plans the batch; the geometric paces the line.",
+    "domainNotes": [
+      "**Quality control:** acceptance-sampling plans are binomial calculations — sample size and rejection threshold are tuned so bad lots rarely pass and good lots rarely fail.",
+      "**Sales funnels:** if each call closes with probability $p$, calls-to-first-sale is geometric with mean $1/p$ — the number every commission forecast leans on.",
+      "**Reliability:** the chance that at least one of $n$ redundant components survives is a binomial complement, $1 - P(\\text{all fail})$.",
+      "**Screening:** the number of positives among $n$ independent tests is binomial; the patient number of the first positive in a queue is geometric."
+    ]
+  },
+  "generators": [
+    "as1-binomial-setting-1", "as1-binomial-setting-2", "as1-binomial-setting-3",
+    "as1-binomial-prob-1", "as1-binomial-prob-2", "as1-binomial-prob-3",
+    "as1-binomial-meansd-1", "as1-binomial-meansd-2", "as1-binomial-meansd-3",
+    "as1-geometric-1", "as1-geometric-2", "as1-geometric-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.discrete-distributions.s01",
+      "concepts": ["binomial-setting"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A quiz has 10 multiple-choice questions with 4 choices each, and a student guesses every answer at random. Let $X$ be the number of correct answers. Identify the binomial parameters.",
+      "steps": [
+        { "instruction": "How many trials $n$ are there?", "answer": "10", "accept": [], "hint": "One trial per question." },
+        { "instruction": "What is the success probability $p$ per trial? (Give a decimal.)", "answer": "0.25", "accept": ["1/4"], "hint": "One correct choice out of 4." },
+        { "instruction": "Binary, independent, fixed number, same $p$ — does $X$ follow a binomial distribution? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Check all four BINS conditions for guessing." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Each question is a binary trial, guesses are independent, $n = 10$ is fixed, and $p = 0.25$ never changes — $X$ is Binomial(10, 0.25)."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s02",
+      "concepts": ["binomial-setting"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You draw 5 cards from a standard deck WITHOUT replacement and count the hearts. Decide whether this count is binomial.",
+      "steps": [
+        { "instruction": "Which BINS condition fails here? Type 'independence', 'fixed-number', 'same-probability', or 'none'.", "answer": "independence", "accept": ["same-probability", "independent"], "hint": "Each card drawn changes the composition of the deck." },
+        { "instruction": "So is the count of hearts binomial? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "All four conditions must hold." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Without replacement, each draw changes the deck, so the trials are not independent (and the heart probability shifts draw to draw). The count is hypergeometric, not binomial."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s03",
+      "concepts": ["binomial-setting"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A server rack holds 40 drives; each drive independently fails during the year with probability $0.1$. Let $X$ be the number of drives that fail. Set up the binomial model.",
+      "steps": [
+        { "instruction": "How many trials $n$?", "answer": "40", "accept": [], "hint": "One trial per drive." },
+        { "instruction": "Counting a FAILURE as a 'success' for the model, what is $p$? (Give a decimal.)", "answer": "0.1", "accept": ["1/10"], "hint": "The event being counted is a failure." },
+        { "instruction": "How many failed drives do you expect on average? ($\\mu = np$.)", "answer": "4", "accept": [], "hint": "$40 \\times 0.1$." },
+        { "instruction": "Is $X$ binomial? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Binary, independent, fixed 40, same 0.1." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "drives" },
+      "solutionNarrative": "\"Success\" is whatever you count — here a failure. $X$ is Binomial(40, 0.1) with mean $np = 4$ failed drives per year."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s04",
+      "concepts": ["binomial-setting"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "You roll a fair die repeatedly UNTIL the first 6 appears, and let $X$ be the number of rolls needed. Classify this experiment.",
+      "steps": [
+        { "instruction": "Which BINS condition fails for a binomial model? Type 'independence', 'fixed-number', 'same-probability', or 'none'.", "answer": "fixed-number", "accept": ["fixed number", "n"], "hint": "Is the number of rolls decided before you start?" },
+        { "instruction": "Is $X$ binomial? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The experiment stops when something happens." },
+        { "instruction": "Which distribution DOES model the trial of the first success? Type 'geometric' or 'binomial'.", "answer": "geometric", "accept": [], "hint": "Waiting for the first success." }
+      ],
+      "finalAnswer": { "value": "geometric", "unit": "" },
+      "solutionNarrative": "There is no fixed $n$ — the experiment runs until a 6 appears. The waiting time for a first success is geometric with $p = 1/6$."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s05",
+      "concepts": ["binomial-probabilities"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A fair coin is flipped 3 times. Find $P(X = 2)$, the probability of exactly 2 heads, using $P(X = k) = \\binom{n}{k} p^k (1-p)^{n-k}$.",
+      "steps": [
+        { "instruction": "Compute $\\binom{3}{2}$.", "answer": "3", "accept": [], "hint": "The 2 heads can land on flips 12, 13, or 23." },
+        { "instruction": "Compute $(0.5)^2 (0.5)^1 = (0.5)^3$. (Fraction or decimal.)", "answer": "0.125", "accept": ["1/8"], "hint": "$\\left(\\tfrac12\\right)^3$." },
+        { "instruction": "Multiply: $3 \\times 0.125$. Give the exact value.", "answer": "0.375", "accept": ["3/8"], "hint": "Three arrangements, each with probability 1/8." }
+      ],
+      "finalAnswer": { "value": "0.375", "unit": "" },
+      "solutionNarrative": "$P(X = 2) = \\binom{3}{2}(0.5)^2(0.5)^1 = 3 \\times \\tfrac18 = 0.375$."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s06",
+      "concepts": ["binomial-probabilities"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Four parts come off a line; each is independently defective with probability $p = 0.2$. Find the probability of exactly 2 defective parts.",
+      "steps": [
+        { "instruction": "Compute $\\binom{4}{2}$.", "answer": "6", "accept": [], "hint": "$\\frac{4!}{2!\\,2!}$." },
+        { "instruction": "Compute $(0.2)^2$. Give the exact value.", "answer": "0.04", "accept": ["1/25"], "hint": "$0.2 \\times 0.2$." },
+        { "instruction": "Compute $(0.8)^2$. Give the exact value.", "answer": "0.64", "accept": ["16/25"], "hint": "$0.8 \\times 0.8$." },
+        { "instruction": "Multiply all three: $6 \\times 0.04 \\times 0.64$. Give the exact value.", "answer": "0.1536", "accept": [], "hint": "$6 \\times 0.0256$." }
+      ],
+      "finalAnswer": { "value": "0.1536", "unit": "" },
+      "solutionNarrative": "$P(X = 2) = \\binom{4}{2}(0.2)^2(0.8)^2 = 6 \\times 0.04 \\times 0.64 = 0.1536$ — about a 15% chance."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s07",
+      "concepts": ["binomial-probabilities"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A basketball player makes 70% of her free throws. In 5 independent attempts, find the probability she makes exactly 4. Round the final answer to 4 decimal places.",
+      "steps": [
+        { "instruction": "Compute $\\binom{5}{4}$.", "answer": "5", "accept": [], "hint": "Choosing which single attempt misses." },
+        { "instruction": "Compute $(0.7)^4$. Give the exact value.", "answer": "0.2401", "accept": [], "hint": "$0.49 \\times 0.49$." },
+        { "instruction": "Compute $(0.3)^1$.", "answer": "0.3", "accept": ["3/10"], "hint": "One miss." },
+        { "instruction": "Multiply and round to 4 decimal places: $5 \\times 0.2401 \\times 0.3$.", "answer": "0.3602", "accept": ["0.36015"], "hint": "$5 \\times 0.07203 = 0.36015$, then round." }
+      ],
+      "finalAnswer": { "value": "0.3602", "unit": "" },
+      "solutionNarrative": "$P(X = 4) = \\binom{5}{4}(0.7)^4(0.3)^1 = 5(0.2401)(0.3) = 0.36015 \\approx 0.3602$."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s08",
+      "concepts": ["binomial-probabilities"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A fair coin is flipped 4 times. Find $P(X = 2)$, the probability of exactly 2 heads.",
+      "steps": [
+        { "instruction": "Compute $\\binom{4}{2}$.", "answer": "6", "accept": [], "hint": "$\\frac{4 \\times 3}{2}$." },
+        { "instruction": "Compute $(0.5)^4$. (Fraction or decimal.)", "answer": "0.0625", "accept": ["1/16"], "hint": "Half, four times." },
+        { "instruction": "Multiply: $6 \\times 0.0625$. Give the exact value.", "answer": "0.375", "accept": ["3/8"], "hint": "$6/16$." }
+      ],
+      "finalAnswer": { "value": "0.375", "unit": "" },
+      "solutionNarrative": "$P(X = 2) = \\binom{4}{2}(0.5)^4 = 6 \\times 0.0625 = 0.375$."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s09",
+      "concepts": ["binomial-mean-sd"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A newsletter is sent to 50 subscribers; each independently opens it with probability $p = 0.2$. Find the expected number of opens.",
+      "steps": [
+        { "instruction": "What is $1 - p$? (Give a decimal.)", "answer": "0.8", "accept": ["4/5"], "hint": "The probability of not opening." },
+        { "instruction": "Expected opens: $\\mu = np = 50 \\times 0.2$.", "answer": "10", "accept": [], "hint": "One fifth of 50." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "opens" },
+      "solutionNarrative": "$\\mu = np = 50(0.2) = 10$ opens on average."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s10",
+      "concepts": ["binomial-mean-sd"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A fair coin is flipped $n = 100$ times. Find the mean and standard deviation of the number of heads.",
+      "steps": [
+        { "instruction": "Mean: $\\mu = np = 100 \\times 0.5$.", "answer": "50", "accept": [], "hint": "Half the flips." },
+        { "instruction": "Variance: $np(1-p) = 100 \\times 0.5 \\times 0.5$.", "answer": "25", "accept": [], "hint": "$100 \\times 0.25$." },
+        { "instruction": "Standard deviation: $\\sigma = \\sqrt{25}$.", "answer": "5", "accept": ["sqrt(25)"], "hint": "$5^2 = 25$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$\\mu = 50$ and $\\sigma = \\sqrt{100(0.5)(0.5)} = \\sqrt{25} = 5$: 45–55 heads is a one-sigma band."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s11",
+      "concepts": ["binomial-mean-sd"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An email campaign goes to $n = 50$ recipients, each clicking with probability $p = 0.2$. Find the mean and standard deviation of the click count; round $\\sigma$ to 2 decimal places.",
+      "steps": [
+        { "instruction": "Mean: $\\mu = np$.", "answer": "10", "accept": [], "hint": "$50 \\times 0.2$." },
+        { "instruction": "Variance: $np(1-p) = 50 \\times 0.2 \\times 0.8$.", "answer": "8", "accept": [], "hint": "$10 \\times 0.8$." },
+        { "instruction": "Standard deviation, rounded to 2 decimal places: $\\sigma = \\sqrt{8}$.", "answer": "2.83", "accept": ["sqrt(8)", "2.828"], "hint": "$\\sqrt{8} = 2.8284\\ldots$" }
+      ],
+      "finalAnswer": { "value": "2.83", "unit": "clicks" },
+      "solutionNarrative": "$\\mu = 10$, variance $= 8$, so $\\sigma = \\sqrt{8} \\approx 2.83$ clicks. A day with 16 clicks sits more than two sigmas above the mean."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s12",
+      "concepts": ["binomial-mean-sd"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A pollster asks $n = 48$ people a question that 25% of the population answers 'yes' to ($p = 0.25$). Find the mean and standard deviation of the number of yes answers.",
+      "steps": [
+        { "instruction": "Mean: $\\mu = np = 48 \\times 0.25$.", "answer": "12", "accept": [], "hint": "A quarter of 48." },
+        { "instruction": "Variance: $np(1-p) = 48 \\times 0.25 \\times 0.75$.", "answer": "9", "accept": [], "hint": "$12 \\times 0.75$." },
+        { "instruction": "Standard deviation: $\\sigma = \\sqrt{9}$.", "answer": "3", "accept": ["sqrt(9)"], "hint": "$3^2 = 9$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$\\mu = 12$ and $\\sigma = \\sqrt{48(0.25)(0.75)} = \\sqrt{9} = 3$ yes answers."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s13",
+      "concepts": ["geometric-distribution"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A salesperson closes each cold call independently with probability $p = 0.2$. Find the probability the FIRST sale happens on the 2nd call.",
+      "steps": [
+        { "instruction": "What is the failure probability $q = 1 - p$?", "answer": "0.8", "accept": ["4/5"], "hint": "$1 - 0.2$." },
+        { "instruction": "Compute $P(X = 2) = q \\cdot p = 0.8 \\times 0.2$. Give the exact value.", "answer": "0.16", "accept": ["4/25"], "hint": "One failure, then one success." }
+      ],
+      "finalAnswer": { "value": "0.16", "unit": "" },
+      "solutionNarrative": "First sale on call 2 means fail-then-succeed: $P(X = 2) = (0.8)(0.2) = 0.16$."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s14",
+      "concepts": ["geometric-distribution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A fair coin is flipped until the first head. Find the probability the first head appears on the 4th flip, and the expected number of flips.",
+      "steps": [
+        { "instruction": "Compute $q^3 = (0.5)^3$. (Fraction or decimal.)", "answer": "0.125", "accept": ["1/8"], "hint": "Three tails in a row." },
+        { "instruction": "Compute $P(X = 4) = q^3 p = 0.125 \\times 0.5$. (Fraction or decimal.)", "answer": "0.0625", "accept": ["1/16"], "hint": "Multiply by the success probability." },
+        { "instruction": "Expected flips: $E[X] = \\dfrac{1}{p} = \\dfrac{1}{0.5}$.", "answer": "2", "accept": [], "hint": "One over one-half." }
+      ],
+      "finalAnswer": { "value": "0.0625", "unit": "" },
+      "solutionNarrative": "$P(X = 4) = (0.5)^3(0.5) = 1/16 = 0.0625$, and on average the first head takes $1/p = 2$ flips."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s15",
+      "concepts": ["geometric-distribution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Parts on a line are independently defective with probability $p = 0.1$. An inspector watches parts one by one, waiting for the first defect.",
+      "steps": [
+        { "instruction": "Probability the first 3 parts are ALL clean: $P(X > 3) = q^3 = (0.9)^3$. Give the exact value.", "answer": "0.729", "accept": [], "hint": "$0.9 \\times 0.9 \\times 0.9$." },
+        { "instruction": "Given the first 3 parts were clean, what is the probability the 4th part is defective? (The geometric is memoryless.)", "answer": "0.1", "accept": ["1/10"], "hint": "The past does not change $p$." },
+        { "instruction": "On average, how many parts until the first defect? $E[X] = 1/p$.", "answer": "10", "accept": [], "hint": "$1/0.1$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "parts" },
+      "solutionNarrative": "$P(X > 3) = (0.9)^3 = 0.729$; by memorylessness the next part is defective with probability exactly $0.1$ regardless of history; and the mean wait is $1/0.1 = 10$ parts."
+    },
+    {
+      "id": "advanced-statistics.discrete-distributions.s16",
+      "concepts": ["geometric-distribution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Trials succeed independently with probability $p = 0.5$. Find $P(X = 1)$ and $P(X = 2)$ for the geometric variable $X$ = trial of first success.",
+      "steps": [
+        { "instruction": "Compute $P(X = 1) = p$.", "answer": "0.5", "accept": ["1/2"], "hint": "Success immediately." },
+        { "instruction": "Compute $P(X = 2) = q \\cdot p = 0.5 \\times 0.5$.", "answer": "0.25", "accept": ["1/4"], "hint": "Fail once, then succeed." }
+      ],
+      "finalAnswer": { "value": "0.25", "unit": "" },
+      "solutionNarrative": "$P(X = 1) = 0.5$ and $P(X = 2) = (0.5)(0.5) = 0.25$ — each extra trial of waiting halves the probability."
+    }
+  ]
+}

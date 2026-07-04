@@ -1,0 +1,263 @@
+{
+  "id": "advanced-statistics.experimental-design",
+  "subject": "advanced-statistics",
+  "title": "Experimental Design and Sampling Methods",
+  "prerequisites": ["statistics.descriptive-statistics", "statistics.probability-basics"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "sampling-methods",
+      "label": "Sampling methods",
+      "microLesson": "How you choose the sample decides what it can prove. A **simple random sample** gives every possible group of $n$ individuals an equal chance. **Stratified** sampling splits the population into meaningful groups and draws SOME members from EVERY group; **cluster** sampling randomly picks a few groups and takes ALL members of those groups. **Systematic** sampling takes every $k$th individual after a random start, with $k = N/n$. A **convenience** sample takes whoever is easiest to reach — and no calculation can rescue it."
+    },
+    {
+      "id": "bias-types",
+      "label": "Types of bias",
+      "microLesson": "Bias is a systematic tilt, and each flavor enters at a different spot. **Undercoverage**: the sampling frame omits part of the population entirely (a landline-only poll cannot reach cell-only households). **Nonresponse**: properly chosen subjects fail to answer, and answerers differ from the silent. **Response bias**: the answers themselves are distorted — leading wording, or respondents polishing the truth. **Selection bias**: a person (or self-selection) decides who gets in, instead of a random rule. Bigger samples do NOT fix bias — they just make the wrong answer more confident."
+    },
+    {
+      "id": "experiments-vs-observation",
+      "label": "Experiments vs observation",
+      "microLesson": "The dividing line is one question: *did the researchers ASSIGN the treatment?* In an **observational study** you record variables as they happen to occur; groups form themselves, so a **confounder** (a third variable driving both) can fake or mask any association — causation is off the table. In a **randomized experiment**, chance assigns the **explanatory variable** and you measure the **response variable**; randomization balances confounders across groups, so a difference in outcomes can be attributed to the treatment."
+    },
+    {
+      "id": "randomization-and-blocking",
+      "label": "Randomization and blocking",
+      "microLesson": "Fisher's four pillars: **control** (a comparison group, so outside influences hit everyone alike), **randomization** (chance assignment spreads unknown differences evenly), **replication** (enough subjects that noise cannot masquerade as effect), and **blocking** (group similar subjects first — by age, site, soil — then randomize WITHIN each block, removing that known factor's noise from the comparison). Arithmetic follows the design: $N$ subjects in $g$ equal groups means $N/g$ each, and crossing $a$ levels of one factor with $b$ of another makes $a \\times b$ treatment combinations."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Data are made, not found\n\nEvery statistic you will ever compute inherits its meaning from HOW the data were collected. A perfect confidence interval on a rotten sample is a beautifully decorated wrong answer. This topic is about the two collection crafts: **sampling** (choosing whom to measure) and **experimental design** (deciding who gets which treatment).\n\n## Five ways to draw a sample\n\nSuppose a university with $N = 20{,}000$ students wants a sample of $n = 400$.\n\n- **Simple random sample (SRS):** put all names in a (digital) hat and draw 400. The gold standard: every possible set of 400 students is equally likely.\n- **Stratified sample:** split students into meaningful groups first (say, the four class years), then draw a random sample FROM EVERY group. Guarantees representation of each stratum and reduces variance — the strata should be internally similar.\n- **Cluster sample:** randomly choose a few dorm buildings and survey EVERYONE in the chosen buildings. Cheap logistics; the trade-off is that people in one cluster resemble each other, so information per person drops. Note the mirror image: stratified takes *some from every group*, cluster takes *all from some groups*.\n- **Systematic sample:** sort the roster, pick a random start, then take every $k$th name where\n$$k = \\frac{N}{n} = \\frac{20{,}000}{400} = 50.$$\nEvenly spread and easy to execute; dangerous only if the list hides a cycle that matches $k$.\n- **Convenience sample:** stand in the quad and ask whoever walks by. Fast, cheap, and unfixable — the people who happen to be handy are not the population.\n\n## Bias: the tilt that size cannot cure\n\nRandom **sampling error** shrinks like $1/\\sqrt{n}$ as samples grow. **Bias does not.** It is a systematic offset built into the design:\n\n| Bias | Where it enters | Signature clause |\n|---|---|---|\n| Undercoverage | the sampling frame | part of the population *never had a chance* of selection |\n| Nonresponse | after selection | chosen subjects *do not answer*, and answerers differ |\n| Response | the answers | wording leads, or people *polish the truth* |\n| Selection | the choosing rule | a person or self-selection decides *who gets in* |\n\nThe most famous cautionary tale: the 1936 *Literary Digest* poll mailed 10 million ballots (frame: phone books and car registrations — undercoverage of poorer voters) and got 2.4 million replies (massive nonresponse). It predicted a landslide for the wrong candidate, while Gallup's far smaller but properly drawn sample called the election. Ten million tilted answers lost to a few thousand straight ones.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 12], \"yRange\": [0, 1.1], \"grid\": false, \"curves\": [ { \"fn\": \"0.5*exp(-(x-5)^2/2)\", \"color\": \"accent\", \"label\": \"unbiased\" }, { \"fn\": \"exp(-(x-8)^2*2)\", \"color\": \"warn\", \"label\": \"biased, huge n\" } ], \"segments\": [ { \"from\": [5, 0], \"to\": [5, 1.05], \"dashed\": true, \"color\": \"dim\", \"label\": \"truth\" } ], \"caption\": \"Sampling distributions of an estimate. More data narrows the curve, but a biased design narrows it around the WRONG value.\" }\n```\n\n## Observation vs experiment\n\nAn **observational study** records variables as they occur: compare heart disease between coffee drinkers and abstainers, say. The groups chose themselves — and anything correlated with coffee habits (smoking, sleep, work stress) rides along as a **confounder**, a third variable influencing both the explanatory variable and the response. Observational data can establish *association*, never causation on its own.\n\nA **randomized experiment** breaks the deadlock: the researcher ASSIGNS the explanatory variable by chance. Randomization does something almost magical — it balances every confounder, known and unknown, across the treatment groups on average. If the groups then differ in the response, the treatment is the only systematic explanation left.\n\n### Fisher's four pillars\n\nRonald Fisher, laying out agricultural trials at Rothamsted in the 1920s, distilled experimental design into principles still used verbatim in drug trials today:\n\n1. **Control** — include a comparison group (placebo, standard treatment) so that weather, time, and placebo effects hit all groups alike.\n2. **Randomization** — let chance assign treatments; no gardener's hunch about which plot looks fertile.\n3. **Replication** — enough units per treatment that chance variation cannot impersonate an effect.\n4. **Blocking** — when a nuisance factor is KNOWN (field fertility gradient, age bracket, hospital site), group similar units into blocks and randomize *within* each block. The slogan: *block what you can, randomize what you cannot.*\n\n### Design arithmetic\n\nThe bookkeeping is simple and shows up constantly:\n\n- $N$ subjects split equally among $g$ treatments: $N/g$ per group.\n- A **factorial design** crossing $a$ levels of factor one with $b$ levels of factor two creates $a \\times b$ treatment combinations — e.g. 3 doses $\\times$ 2 schedules $= 6$ combinations.\n- A randomized block design with $B$ equal blocks and $T$ treatments puts $N/B$ subjects in each block and $N/(BT)$ on each treatment within a block.\n\n### Common pitfalls\n\n- **A big convenience sample is still a convenience sample.** Size shrinks noise, not tilt; the fix is a better design, not more of the same.\n- **\"We controlled for it\" is not randomization.** Adjusting observational data helps only with confounders you measured; randomization also handles the ones you never thought of.\n- **Blocking is not stratifying** — same idea, different craft: strata organize *sampling*, blocks organize *treatment assignment* in experiments.\n- **No control group, no conclusion.** \"Everyone who took the supplement felt better\" is meaningless without knowing how the untreated fared."
+  },
+  "application": {
+    "summary": "Sampling and design are where statistical truth is won or lost: polls live on honest frames and response rates, drug trials on randomization and placebo control, and factories on factorial designs — while every viral 'study shows' headline stands or falls on the same checklist.",
+    "domains": ["polling and surveys", "clinical trials", "agricultural research", "industrial design of experiments"],
+    "workedExample": "**Designing a drug trial from scratch.**\n\nA new blood-pressure drug will be tested on 120 volunteer patients, and age is known to affect blood pressure strongly.\n\n*Step 1 — why an experiment?* Comparing patients who already take similar drugs to those who don't would be observational: wealthier, more health-conscious patients differ in a dozen confounding ways. To support a causal claim, the treatment must be ASSIGNED at random.\n\n*Step 2 — control.* Half the subjects receive a placebo, double-blind, so expectation effects and clinic routines hit both groups equally.\n\n*Step 3 — blocking on the known factor.* Split the 120 patients into three age blocks of 40 (young, middle, senior). Within EACH block, randomly assign 20 to drug and 20 to placebo. Age can now no longer masquerade as a drug effect, and the age-driven noise is removed from the comparison.\n\n*Step 4 — the arithmetic.* Blocks: $120/3 = 40$ per block; treatments within a block: $40/2 = 20$. If the team later crosses 2 dose levels with 2 dosing schedules, that is $2 \\times 2 = 4$ treatment combinations, 30 patients each.\n\n*Step 5 — what randomization buys.* If the drug group's mean pressure drops significantly (via a two-sample test), the randomized, controlled, blocked design lets the team say the drug CAUSED the drop — a sentence no observational study, however large, could earn.",
+    "domainNotes": [
+      "**Polling:** modern pollsters stratify by region and demographics, then fight nonresponse with weighting — the 1936 Literary Digest disaster is the founding cautionary tale.",
+      "**Clinical trials:** randomized, double-blind, placebo-controlled designs are the regulatory gold standard precisely because randomization neutralizes unknown confounders.",
+      "**Agriculture:** Fisher invented blocking for field gradients — plots in the same block share soil, so treatment differences within a block are cleaner.",
+      "**Industry:** factorial designs (design of experiments, DOE) let engineers test temperature and pressure and coating in one campaign, including their interactions, instead of one factor at a time."
+    ]
+  },
+  "generators": [
+    "as4-des-sampling-1", "as4-des-sampling-2", "as4-des-sampling-3",
+    "as4-des-bias-1", "as4-des-bias-2", "as4-des-bias-3",
+    "as4-des-causation-1", "as4-des-causation-2", "as4-des-causation-3",
+    "as4-des-random-1", "as4-des-random-2", "as4-des-random-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.experimental-design.s01",
+      "concepts": ["sampling-methods"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A pollster splits a city's voter roll into urban, suburban, and rural residents, then draws a separate random sample FROM EACH of the three groups. Identify the sampling method.",
+      "steps": [
+        { "instruction": "Which sampling method is this? Type 'simple random', 'stratified', 'cluster', 'systematic', or 'convenience'.", "answer": "stratified", "accept": ["stratified sampling", "stratified random sample", "stratified random sampling"], "hint": "Some members are drawn from EVERY group." },
+        { "instruction": "Under this method, does every possible combination of voters have an equal chance of being the sample? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Only a simple random sample makes every possible sample equally likely." }
+      ],
+      "finalAnswer": { "value": "stratified", "unit": "" },
+      "solutionNarrative": "Sampling within every group is stratified sampling. It guarantees each area is represented, but samples made entirely of urban voters are impossible — so not every combination is equally likely, unlike an SRS."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s02",
+      "concepts": ["sampling-methods"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A quality engineer wants a sample of $n = 50$ items from a production run of $N = 2000$. She picks a random starting item and then takes every $k$th item off the line, where $k = N/n$.",
+      "steps": [
+        { "instruction": "Compute the sampling interval $k = \\dfrac{2000}{50}$. (Give a number.)", "answer": "40", "accept": [], "hint": "Population size over sample size." },
+        { "instruction": "Which sampling method is this? Type 'simple random', 'stratified', 'cluster', 'systematic', or 'convenience'.", "answer": "systematic", "accept": ["systematic sampling", "systematic sample"], "hint": "A fixed counting rule after a random start." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "" },
+      "solutionNarrative": "$k = 2000/50 = 40$: every 40th item after a random start — systematic sampling. Beware hidden production cycles that match the interval."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s03",
+      "concepts": ["sampling-methods"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two designs that both use groups — in opposite ways. Design A: a health agency randomly picks 6 of a city's 40 neighborhoods and interviews EVERY household in the chosen neighborhoods. Design B: a dean divides the university into its colleges and randomly selects students WITHIN EVERY college. Classify each.",
+      "steps": [
+        { "instruction": "Design A is which method? Type 'simple random', 'stratified', 'cluster', 'systematic', or 'convenience'.", "answer": "cluster", "accept": ["cluster sampling", "cluster sample"], "hint": "ALL members of a FEW randomly chosen groups." },
+        { "instruction": "Design B is which method? Type 'simple random', 'stratified', 'cluster', 'systematic', or 'convenience'.", "answer": "stratified", "accept": ["stratified sampling", "stratified random sample"], "hint": "SOME members from EVERY group." },
+        { "instruction": "Stratified sampling takes: type 'some from every group' or 'all from some groups'.", "answer": "some from every group", "accept": ["some members from every group", "some from each group"], "hint": "Clusters are wholly taken or wholly skipped." }
+      ],
+      "finalAnswer": { "value": "some from every group", "unit": "" },
+      "solutionNarrative": "Design A takes whole neighborhoods: cluster sampling. Design B represents every college: stratified sampling. The slogan: stratified = some from every group; cluster = all from some groups."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s04",
+      "concepts": ["sampling-methods"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A researcher stands by the entrance of one mall on a single afternoon and questions whoever happens to walk past and agrees to stop. Identify the sampling method.",
+      "steps": [
+        { "instruction": "Which sampling method is this? Type 'simple random', 'stratified', 'cluster', 'systematic', or 'convenience'.", "answer": "convenience", "accept": ["convenience sampling", "convenience sample"], "hint": "Whoever is easiest to reach." }
+      ],
+      "finalAnswer": { "value": "convenience", "unit": "" },
+      "solutionNarrative": "Taking whoever is handy is a convenience sample: mall visitors on one afternoon are nothing like the general population, and no amount of them fixes that."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s05",
+      "concepts": ["bias-types"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Questionnaires go out to a properly drawn random sample of 800 residents, but only a small share mail them back — and the people who bother to reply may differ from those who stay silent. Name the bias.",
+      "steps": [
+        { "instruction": "Which type of bias is this? Type 'undercoverage', 'nonresponse', 'response', or 'selection'.", "answer": "nonresponse", "accept": ["nonresponse bias", "non-response", "non response"], "hint": "The selection was fine; the silence is the problem." }
+      ],
+      "finalAnswer": { "value": "nonresponse", "unit": "" },
+      "solutionNarrative": "The sample was drawn correctly, but chosen subjects failed to answer: nonresponse bias. The angriest or most engaged tend to reply, tilting the results."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s06",
+      "concepts": ["bias-types"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two flawed studies. Study A: a telephone poll dials only landline numbers, so households with no landline never appear on the calling list and have NO chance of selection. Study B: a survey asks, 'Do you agree that the city's reckless and wasteful stadium project should be stopped?' Diagnose each.",
+      "steps": [
+        { "instruction": "Study A suffers from which bias? Type 'undercoverage', 'nonresponse', 'response', or 'selection'.", "answer": "undercoverage", "accept": ["undercoverage bias"], "hint": "Part of the population is missing from the frame entirely." },
+        { "instruction": "Study B suffers from which bias? Type 'undercoverage', 'nonresponse', 'response', or 'selection'.", "answer": "response", "accept": ["response bias", "wording bias"], "hint": "The wording pushes respondents toward one answer." }
+      ],
+      "finalAnswer": { "value": "response", "unit": "" },
+      "solutionNarrative": "Study A's frame omits cell-only households: undercoverage. Study B's loaded wording distorts the answers themselves: response bias."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s07",
+      "concepts": ["bias-types"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An interviewer told to find 50 shoppers approaches only the people who look friendly and unhurried, personally deciding who gets asked. The study's defenders propose simply collecting far more interviews the same way.",
+      "steps": [
+        { "instruction": "Which type of bias is this? Type 'undercoverage', 'nonresponse', 'response', or 'selection'.", "answer": "selection", "accept": ["selection bias"], "hint": "A person, not a random rule, decides who gets in." },
+        { "instruction": "Bias is a SYSTEMATIC error. Will a much larger sample collected the same way remove it? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "More of the same tilt is still tilted." },
+        { "instruction": "Random sampling error shrinks as the sample grows. Does bias shrink the same way? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Bias is a fixed offset, not noise." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The interviewer's choices create selection bias, a systematic tilt. Growing the sample shrinks random error but leaves the tilt untouched — the fix is changing the design, not the size."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s08",
+      "concepts": ["bias-types"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "In face-to-face interviews about exercise, respondents systematically overstate their weekly workouts to look good to the interviewer. Name the bias.",
+      "steps": [
+        { "instruction": "Which type of bias is this? Type 'undercoverage', 'nonresponse', 'response', or 'selection'.", "answer": "response", "accept": ["response bias"], "hint": "The distortion is in the answers themselves." }
+      ],
+      "finalAnswer": { "value": "response", "unit": "" },
+      "solutionNarrative": "The right people were asked, but their answers are polished: response bias. Anonymous questionnaires reduce it; bigger samples do not."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s09",
+      "concepts": ["experiments-vs-observation"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Researchers take 120 volunteers with high blood pressure and use a random draw to ASSIGN each one to either a new drug or a placebo, then compare outcomes.",
+      "steps": [
+        { "instruction": "Is this an experiment or an observational study? Type 'experiment' or 'observational study'.", "answer": "experiment", "accept": ["an experiment", "randomized experiment"], "hint": "Did the researchers assign the treatment?" },
+        { "instruction": "Can this design, by itself, support a cause-and-effect conclusion? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Random assignment balances lurking variables." }
+      ],
+      "finalAnswer": { "value": "experiment", "unit": "" },
+      "solutionNarrative": "Treatments were randomly assigned: a randomized experiment. Randomization balances confounders, so an outcome difference can be attributed to the drug."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s10",
+      "concepts": ["experiments-vs-observation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A gardener varies the amount of fertilizer given to 24 tomato plants and measures each plant's yield.",
+      "steps": [
+        { "instruction": "Which is the explanatory variable? Type 'amount of fertilizer' or 'tomato yield'.", "answer": "amount of fertilizer", "accept": ["fertilizer", "the amount of fertilizer"], "hint": "The variable the researcher manipulates." },
+        { "instruction": "Which is the response variable? Type 'amount of fertilizer' or 'tomato yield'.", "answer": "tomato yield", "accept": ["yield", "the tomato yield"], "hint": "The measured outcome." },
+        { "instruction": "In an experiment, the researcher deliberately changes the ___ variable. Type 'explanatory' or 'response'.", "answer": "explanatory", "accept": ["the explanatory"], "hint": "Set the input, watch the output." }
+      ],
+      "finalAnswer": { "value": "amount of fertilizer", "unit": "" },
+      "solutionNarrative": "Fertilizer amount is the explanatory variable (set by the gardener); yield is the response. Experiments manipulate the explanatory variable and watch the response."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s11",
+      "concepts": ["experiments-vs-observation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An observational study finds that drinking coffee is associated with heart disease. Before anyone claims causation, consider confounding: a third variable that influences BOTH the explanatory and the response variable.",
+      "steps": [
+        { "instruction": "Which is the more plausible confounder here? Type 'smoking' or 'coffee temperature'.", "answer": "smoking", "accept": [], "hint": "A confounder must plausibly drive BOTH variables — smokers historically drank more coffee AND smoking damages the heart." },
+        { "instruction": "Does the observed association alone prove that coffee causes heart disease? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The confounder offers a rival explanation." },
+        { "instruction": "Which design could settle the causal question? Type 'randomized experiment' or 'larger observational study'.", "answer": "randomized experiment", "accept": ["a randomized experiment", "an experiment"], "hint": "Random assignment breaks the confounder's grip." }
+      ],
+      "finalAnswer": { "value": "randomized experiment", "unit": "" },
+      "solutionNarrative": "Smoking plausibly drives both coffee habits and heart disease, so the association proves nothing causal. Only random assignment severs the link to lurking variables — early coffee scares faded once studies adjusted for smoking."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s12",
+      "concepts": ["experiments-vs-observation"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A researcher surveys 600 adults about how much they exercise and how well they sleep, merely recording both variables as they are.",
+      "steps": [
+        { "instruction": "Is this an experiment or an observational study? Type 'experiment' or 'observational study'.", "answer": "observational study", "accept": ["observational", "observation", "an observational study"], "hint": "Nothing was assigned; both variables were just recorded." },
+        { "instruction": "Can this design, by itself, support a cause-and-effect conclusion? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Self-formed groups carry confounders." }
+      ],
+      "finalAnswer": { "value": "observational study", "unit": "" },
+      "solutionNarrative": "Nobody assigned exercise levels — an observational study. It can reveal association, but confounders (age, health, work schedule) block any causal claim."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s13",
+      "concepts": ["randomization-and-blocking"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Match each description to the experimental-design principle it defines.",
+      "steps": [
+        { "instruction": "'Comparing the treated group against a group receiving a placebo, so outside influences act on both alike' describes which principle? Type 'control', 'randomization', 'replication', or 'blocking'.", "answer": "control", "accept": [], "hint": "It is about having a comparison group." },
+        { "instruction": "'Letting chance decide which subject receives which treatment, so unknown differences spread evenly' describes which principle? Type 'control', 'randomization', 'replication', or 'blocking'.", "answer": "randomization", "accept": [], "hint": "Chance assignment is the key phrase." }
+      ],
+      "finalAnswer": { "value": "randomization", "unit": "" },
+      "solutionNarrative": "A placebo comparison group is control; chance assignment is randomization — two of Fisher's four pillars, alongside replication and blocking."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s14",
+      "concepts": ["randomization-and-blocking"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two design calculations. First: 120 subjects are randomly divided EQUALLY among 4 treatment groups. Second: a factorial experiment crosses 3 baking temperatures with 2 baking times, and 30 loaves are split equally among the treatment combinations.",
+      "steps": [
+        { "instruction": "Subjects per treatment group in the first design: $\\dfrac{120}{4}$. (Give a number.)", "answer": "30", "accept": [], "hint": "Equal split." },
+        { "instruction": "Number of treatment combinations in the factorial design: $3 \\times 2$. (Give a number.)", "answer": "6", "accept": [], "hint": "Every temperature meets every time." },
+        { "instruction": "Loaves per treatment combination: $\\dfrac{30}{6}$. (Give a number.)", "answer": "5", "accept": [], "hint": "Total loaves over combinations." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$120/4 = 30$ subjects per group; the factorial crossing makes $3 \\times 2 = 6$ combinations with $30/6 = 5$ loaves each."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s15",
+      "concepts": ["randomization-and-blocking"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A randomized block experiment sorts $N = 48$ patients into 2 blocks by age bracket (age is expected to affect the outcome), splitting them equally. WITHIN each block, patients are randomly assigned equally among 3 treatments.",
+      "steps": [
+        { "instruction": "Patients per block: $\\dfrac{48}{2}$. (Give a number.)", "answer": "24", "accept": [], "hint": "Equal blocks." },
+        { "instruction": "Patients per treatment WITHIN each block: $\\dfrac{24}{3}$. (Give a number.)", "answer": "8", "accept": [], "hint": "Each block splits equally across the treatments." },
+        { "instruction": "Blocking is done to: type 'reduce variation' or 'increase sample size'.", "answer": "reduce variation", "accept": ["to reduce variation", "reduces variation"], "hint": "Comparing treatments among similar patients removes age's noise from the comparison." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "Each block holds 24 patients, 8 per treatment. Blocking removes the known age effect from the treatment comparison: block what you can, randomize what you cannot."
+    },
+    {
+      "id": "advanced-statistics.experimental-design.s16",
+      "concepts": ["randomization-and-blocking"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Match each description to the experimental-design principle it defines.",
+      "steps": [
+        { "instruction": "'Using enough subjects in each group that chance variation cannot masquerade as a treatment effect' describes which principle? Type 'control', 'randomization', 'replication', or 'blocking'.", "answer": "replication", "accept": [], "hint": "It is about the number of subjects." },
+        { "instruction": "'First grouping subjects who are similar on a known nuisance factor, then randomizing treatments separately inside each group' describes which principle? Type 'control', 'randomization', 'replication', or 'blocking'.", "answer": "blocking", "accept": [], "hint": "Group first, randomize within." }
+      ],
+      "finalAnswer": { "value": "blocking", "unit": "" },
+      "solutionNarrative": "Enough subjects is replication; grouping by a known factor before randomizing within is blocking."
+    }
+  ]
+}

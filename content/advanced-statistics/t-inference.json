@@ -1,0 +1,284 @@
+{
+  "id": "advanced-statistics.t-inference",
+  "subject": "advanced-statistics",
+  "title": "t-Distribution Inference",
+  "prerequisites": ["statistics.confidence-intervals", "statistics.hypothesis-testing"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "why-t-and-df",
+      "label": "Why t, and degrees of freedom",
+      "microLesson": "The z procedures assume you KNOW the population standard deviation $\\sigma$ — which almost never happens. In practice you estimate it with the sample's $s$, and that estimate wobbles, adding uncertainty the normal curve doesn't account for. **Student's t-distribution** fixes this: it looks like the normal but with heavier tails, governed by the **degrees of freedom** $\\mathrm{df} = n - 1$. Small samples $\\to$ few df $\\to$ heavy tails $\\to$ larger critical values. As $n$ grows, $s$ pins down $\\sigma$ and t melts back into z: at $\\mathrm{df} = 99$, $t^* = 1.984$ is already close to $z^* = 1.960$."
+    },
+    {
+      "id": "t-confidence-intervals",
+      "label": "t confidence intervals",
+      "microLesson": "The recipe is the familiar one with $t^*$ swapped in: $\\bar{x} \\pm t^* \\dfrac{s}{\\sqrt{n}}$, where $t^*$ comes from the t-table row for $\\mathrm{df} = n - 1$. With $n = 25$, $\\bar{x} = 80$, $s = 10$: $\\mathrm{SE} = \\tfrac{10}{5} = 2$, and at 95% confidence $t^* = 2.064$ (df 24), so the margin is $2.064 \\times 2 = 4.128$ and the interval is $(75.872,\\ 84.128)$. The t interval is always a bit wider than the z interval on the same data — the honest price of estimating $\\sigma$."
+    },
+    {
+      "id": "one-sample-t-test",
+      "label": "One-sample t-test",
+      "microLesson": "Same courtroom as the z-test, new yardstick: $t = \\dfrac{\\bar{x} - \\mu_0}{s/\\sqrt{n}}$, compared against a critical value from the t-table with $\\mathrm{df} = n - 1$. Testing $H_0: \\mu = 100$ with $n = 25$, $\\bar{x} = 106$, $s = 10$: $\\mathrm{SE} = 2$ and $t = \\tfrac{6}{2} = 3$. Against the one-tailed df-24 critical value $1.711$ at $\\alpha = 0.05$, $3 > 1.711$: reject. The verdicts stay 'reject' or 'fail to reject' — nothing about the t swap changes the logic, only the table."
+    },
+    {
+      "id": "paired-t",
+      "label": "Paired t-test",
+      "microLesson": "When the SAME units are measured twice (before/after, left/right), the two columns are not independent samples — subtract first! Form the differences $d_i$, then run a ONE-sample t-test on them: $t = \\dfrac{\\bar{d}}{s_d/\\sqrt{n}}$ with $\\mathrm{df} = n - 1$ (n = number of pairs). Differences $4, 0, 4, 4$ give $\\bar{d} = 3$, $s_d = 2$, $\\mathrm{SE} = 1$, $t = 3$. Pairing subtracts away the unit-to-unit level, so real changes stand out from much less noise."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The dirty secret of the z procedures\n\nEvery z interval and z test you have run so far assumed one implausible thing: that you know the population standard deviation $\\sigma$ exactly while not knowing the mean. Real life hands you a sample, and you estimate BOTH: $\\bar{x}$ for the center and $s$ for the spread. Plugging $s$ where $\\sigma$ belongs and pretending nothing changed understates your uncertainty — the estimate $s$ itself bounces from sample to sample.\n\nWilliam Gosset, quality engineer at Guinness (publishing as \"Student\"), worked out exactly how much extra slack the substitution demands. The statistic\n\n$$t = \\frac{\\bar{x} - \\mu}{s/\\sqrt{n}}$$\n\ndoes not follow the normal curve. It follows the **t-distribution**: bell-shaped, centered at 0, but with **heavier tails** — extreme values happen more often, because sometimes $s$ underestimates $\\sigma$ and inflates the ratio.\n\n## Degrees of freedom\n\nThe t-distribution is a family indexed by **degrees of freedom**:\n\n$$\\mathrm{df} = n - 1.$$\n\nWhy $n-1$? The deviations $x_i - \\bar{x}$ must sum to zero, so only $n-1$ of them are free — one degree of freedom was spent estimating the mean. Fewer df means a wobblier $s$ and heavier tails; more df means t hugs the normal.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-4, 4], \"yRange\": [0, 0.45], \"grid\": false, \"curves\": [ { \"fn\": \"0.3989*exp(-x*x/2)\", \"color\": \"accent\" }, { \"fn\": \"0.3676/((1+x*x/3)*(1+x*x/3))\", \"color\": \"warn\" } ], \"caption\": \"Standard normal (accent) vs t with df = 3 (warn): same bell, but the t curve is lower in the middle and fatter in the tails — extreme t values are genuinely more common.\" }\n```\n\n### The t-table used in this topic\n\n| df | 90% CI (one-tailed $\\alpha = 0.05$) $t^*$ | 95% CI (two-tailed $\\alpha = 0.05$) $t^*$ | 99% CI $t^*$ |\n|---|---|---|---|\n| 3 | 2.353 | 3.182 | 5.841 |\n| 8 | 1.860 | 2.306 | 3.355 |\n| 24 | 1.711 | 2.064 | 2.797 |\n| 35 | 1.690 | 2.030 | 2.724 |\n| 99 | 1.660 | 1.984 | 2.626 |\n| $\\infty$ (= z) | 1.645 | 1.960 | 2.576 |\n\nRead the convergence down each column: by df 99 the t values nearly match the z row at the bottom. And read the cost of tiny samples across the df-3 row — a 99% interval needs $t^* = 5.841$, almost 6 standard errors of radius.\n\n## t confidence intervals\n\nThe recipe is unchanged except for the critical value:\n\n$$\\bar{x} \\pm t^* \\frac{s}{\\sqrt{n}}, \\qquad t^* \\text{ from the } \\mathrm{df} = n-1 \\text{ row}.$$\n\n**Worked example.** A lab measures $n = 25$ parts: $\\bar{x} = 80$, $s = 10$.\n\n1. $\\mathrm{df} = 24$, so at 95% confidence $t^* = 2.064$.\n2. $\\mathrm{SE} = \\tfrac{10}{\\sqrt{25}} = 2$.\n3. Margin: $2.064 \\times 2 = 4.128$.\n4. Interval: $80 \\pm 4.128 = (75.872,\\ 84.128)$.\n\nA z interval would have used $1.960$ and given margin $3.92$ — narrower, but dishonestly so: it ignores the uncertainty in $s$.\n\n## The one-sample t-test\n\nHypotheses, tails, $\\alpha$, and verdict language all carry over from z testing verbatim. Only the statistic and table change:\n\n$$t = \\frac{\\bar{x} - \\mu_0}{s/\\sqrt{n}}, \\qquad \\mathrm{df} = n - 1.$$\n\n**Worked example.** A roaster claims $\\mu_0 = 500$ g per bag. A sample of $n = 36$ gives $\\bar{x} = 509$, $s = 30$. Test $H_a: \\mu > 500$ at $\\alpha = 0.05$.\n\n1. $\\mathrm{SE} = \\tfrac{30}{6} = 5$.\n2. $t = \\tfrac{509 - 500}{5} = 1.8$.\n3. Critical value, one-tailed, df 35: $t^* = 1.690$.\n4. $1.8 > 1.690$: **reject** — the bags run heavy.\n\nNote how close that call was: with z ($z^* = 1.645$) the margin would have looked bigger. Small samples deserve their stricter bar.\n\n## Paired data: subtract first\n\nMeasure the SAME 4 subjects before and after a course: Before $72, 75, 70, 71$; After $76, 75, 74, 75$. These columns are not independent — subject 2 is in both. The fix is to reduce each pair to a single number, its **difference**:\n\n$$d_i = \\text{After}_i - \\text{Before}_i = 4, 0, 4, 4.$$\n\nNow run an ordinary one-sample t-test on the differences, with $H_0: \\mu_d = 0$:\n\n1. $\\bar{d} = \\tfrac{12}{4} = 3$.\n2. Deviations $1, -3, 1, 1$; squared sum $12$; $s_d^2 = \\tfrac{12}{3} = 4$, so $s_d = 2$.\n3. $\\mathrm{SE} = \\tfrac{2}{\\sqrt{4}} = 1$, and $t = \\tfrac{3}{1} = 3$ with $\\mathrm{df} = 3$.\n4. One-tailed critical value at $\\alpha = 0.05$, df 3: $2.353$. Since $3 > 2.353$: **reject** — the course helped.\n\nWhy pairing wins: fast typists stay fast, slow ones stay slow. That subject-to-subject spread is huge, but it cancels in the differences. A two-independent-samples analysis of the same numbers would drown the 3-point gain in between-subject noise.\n\n### Common pitfalls\n\n- **Analyzing paired data as independent samples.** It wastes the design: the SE balloons and real effects vanish. If the same (or matched) units appear in both columns, subtract first.\n- **Using $n$ instead of $n - 1$.** Both in the df AND inside $s$ (the variance divides by $n-1$). One estimated mean = one lost degree of freedom.\n- **One- vs two-tailed $t^*$.** The df-24 row gives $1.711$ one-tailed but $2.064$ two-tailed at the same $\\alpha = 0.05$. Grabbing the wrong column silently doubles (or halves) your false-alarm rate.\n- **Using z out of habit.** With $n = 9$ the 95% t critical value is $2.306$, not $1.960$ — an 18% wider interval. The difference is not pedantry; it is exactly the extra risk of trusting a spread estimated from 9 numbers."
+  },
+  "application": {
+    "summary": "t procedures are the workhorse of small-sample science: lab measurements, clinical before/after comparisons, and manufacturing checks almost never come with a known sigma, so real intervals and tests run on t, with paired designs squeezing signal out of tiny samples.",
+    "domains": ["clinical trials and medicine", "manufacturing quality control", "sports and training science", "laboratory measurement"],
+    "workedExample": "**Does the new sleep protocol work? (A paired t-test.)**\n\nA sleep clinic tries a new wind-down protocol on 4 patients, recording average nightly hours the week before and the week after. The differences (After − Before) come out to $-1, 7, 7, 7$ hours per week.\n\n*Step 1 — reduce to differences.* Same patients, measured twice: this is paired data. All inference runs on the four differences.\n\n*Step 2 — summary statistics.* $\\bar{d} = \\tfrac{20}{4} = 5$. Deviations: $-6, 2, 2, 2$, squared sum $48$, so $s_d^2 = \\tfrac{48}{3} = 16$ and $s_d = 4$.\n\n*Step 3 — the test.* $\\mathrm{SE} = \\tfrac{4}{\\sqrt{4}} = 2$, so $t = \\tfrac{5}{2} = 2.5$ with $\\mathrm{df} = 3$. Testing $H_a: \\mu_d > 0$ at $\\alpha = 0.05$, the critical value is $2.353$. Since $2.5 > 2.353$: reject $H_0$ — the protocol shows a statistically significant gain.\n\n*Step 4 — the honest caveats.* With df = 3 the verdict is fragile: patient 1 actually slept LESS, and one more patient like them would flip the decision. A t-test on 4 pairs is a pilot study, not a conclusion — its real output is the effect estimate ($+5$ hours/week) and a mandate for a bigger trial. Also note the two-tailed bar at df 3 is $3.182$: had the clinic asked \"changed?\" instead of \"improved?\", the same data would NOT reject.",
+    "domainNotes": [
+      "**Medicine:** crossover and before/after designs are paired t-tests; regulators expect the pairing to be declared in advance, because it typically halves the sample size needed.",
+      "**Manufacturing:** daily checks weigh 10-25 parts, sigma is never known, and control decisions ride on t critical values from tiny-df rows.",
+      "**Sports science:** train left leg vs right leg, or athlete-before vs athlete-after — matched designs that subtract away enormous athlete-to-athlete variation.",
+      "**Labs:** instrument calibration certificates quote t-based uncertainty intervals, since repeatability is estimated from a handful of replicate measurements."
+    ]
+  },
+  "generators": [
+    "as3-t-why-1", "as3-t-why-2", "as3-t-why-3",
+    "as3-t-ci-1", "as3-t-ci-2", "as3-t-ci-3",
+    "as3-t-test-1", "as3-t-test-2", "as3-t-test-3",
+    "as3-t-paired-1", "as3-t-paired-2", "as3-t-paired-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.t-inference.s01",
+      "concepts": ["why-t-and-df"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A food lab weighs $n = 25$ granola bars. The population standard deviation is unknown, so the lab computes the sample standard deviation $s = 4.2$ from the same 25 bars.",
+      "steps": [
+        { "instruction": "Because $s$ estimates $\\sigma$, which distribution supplies the critical value? Type 't' or 'z'.", "answer": "t", "accept": ["t-distribution", "student's t"], "hint": "Unknown $\\sigma$ replaced by sample $s$ is the t-distribution's defining situation." },
+        { "instruction": "How many degrees of freedom? ($\\mathrm{df} = n - 1$.)", "answer": "24", "accept": [], "hint": "$25 - 1$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "df" },
+      "solutionNarrative": "With $\\sigma$ unknown and estimated by $s$, the standardized mean follows Student's t with $\\mathrm{df} = 25 - 1 = 24$."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s02",
+      "concepts": ["why-t-and-df"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two analyses of mean commute time: Analysis A uses a city's complete historical database, for which $\\sigma = 9$ minutes is documented. Analysis B times $n = 36$ of its own randomly chosen commutes and computes $s$ from them.",
+      "steps": [
+        { "instruction": "Analysis A should use which distribution? Type 't' or 'z'.", "answer": "z", "accept": ["z-distribution", "normal", "standard normal"], "hint": "Is $\\sigma$ genuinely known here?" },
+        { "instruction": "Analysis B should use which distribution? Type 't' or 'z'.", "answer": "t", "accept": ["t-distribution", "student's t"], "hint": "$s$ is estimated from the sample itself." },
+        { "instruction": "For Analysis B, how many degrees of freedom?", "answer": "35", "accept": [], "hint": "$\\mathrm{df} = n - 1 = 36 - 1$." }
+      ],
+      "finalAnswer": { "value": "35", "unit": "df" },
+      "solutionNarrative": "Known $\\sigma$ $\\to$ z; estimated $s$ $\\to$ t with $\\mathrm{df} = 35$. The t's heavier tails compensate for the wobble in $s$."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s03",
+      "concepts": ["why-t-and-df"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "At 95% confidence, $z^* = 1.960$, while the t-table gives $t^* = 2.306$ for $\\mathrm{df} = 8$ and $t^* = 1.984$ for $\\mathrm{df} = 99$. Reason about the pattern.",
+      "steps": [
+        { "instruction": "On the same data, does the t interval come out wider or narrower than the z interval? Type 'wider' or 'narrower'.", "answer": "wider", "accept": ["wider interval"], "hint": "$t^* > z^*$ at every finite df, and width scales with the critical value." },
+        { "instruction": "As df increases from 8 to 99, does $t^*$ move closer to or further from 1.960? Type 'closer' or 'further'.", "answer": "closer", "accept": ["closer to"], "hint": "Compare 2.306 and 1.984 with 1.960." },
+        { "instruction": "In the limit of very large samples, the t-distribution becomes which distribution? Type 't' or 'z'.", "answer": "z", "accept": ["normal", "standard normal", "z-distribution"], "hint": "With huge $n$, $s$ nails $\\sigma$ and the extra uncertainty vanishes." }
+      ],
+      "finalAnswer": { "value": "wider", "unit": "" },
+      "solutionNarrative": "Finite-df t critical values always exceed 1.960, so t intervals are wider; as df grows ($2.306 \\to 1.984 \\to 1.960$), t converges to the normal because estimating $\\sigma$ stops mattering."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s04",
+      "concepts": ["why-t-and-df"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A sample of $n = 100$ measurements is used for a t procedure ($\\sigma$ unknown).",
+      "steps": [
+        { "instruction": "How many degrees of freedom? ($\\mathrm{df} = n - 1$.)", "answer": "99", "accept": [], "hint": "$100 - 1$." },
+        { "instruction": "Compared with a small sample, are the tails of this t-distribution closer to or further from the normal curve? Type 'closer' or 'further'.", "answer": "closer", "accept": ["closer to"], "hint": "More df $\\to$ lighter tails $\\to$ more normal-like." }
+      ],
+      "finalAnswer": { "value": "99", "unit": "df" },
+      "solutionNarrative": "$\\mathrm{df} = 99$, and at that many degrees of freedom the t-distribution is nearly indistinguishable from the normal ($t^* = 1.984$ vs $z^* = 1.960$)."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s05",
+      "concepts": ["t-confidence-intervals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A sample of $n = 25$ values ($\\sigma$ unknown) has $s = 10$. For a 95% t confidence interval, the critical value with $\\mathrm{df} = 24$ is $t^* = 2.064$. Find the margin of error $m = t^* \\cdot \\dfrac{s}{\\sqrt{n}}$.",
+      "steps": [
+        { "instruction": "Degrees of freedom: $n - 1$. (Give a whole number.)", "answer": "24", "accept": [], "hint": "$25 - 1$." },
+        { "instruction": "Standard error: $\\dfrac{10}{\\sqrt{25}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{25} = 5$." },
+        { "instruction": "Margin of error: $2.064 \\times 2$. Give the exact value.", "answer": "4.128", "accept": [], "hint": "Multiply." }
+      ],
+      "finalAnswer": { "value": "4.128", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$ and $t^* = 2.064$ (df 24), so $m = 4.128$ — slightly wider than the z margin $1.96 \\times 2 = 3.92$ would suggest, on purpose."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s06",
+      "concepts": ["t-confidence-intervals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A café times $n = 36$ espresso pulls: $\\bar{x} = 120$ seconds of total prep, $s = 18$ ($\\sigma$ unknown). Build the 95% t confidence interval; with $\\mathrm{df} = 35$, $t^* = 2.030$. Give exact values.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{18}{\\sqrt{36}}$. (Give a whole number.)", "answer": "3", "accept": [], "hint": "$\\sqrt{36} = 6$." },
+        { "instruction": "Margin of error: $2.030 \\times 3$. Give the exact value.", "answer": "6.09", "accept": ["6.090"], "hint": "Multiply." },
+        { "instruction": "Lower bound: $120 - 6.09$. Give the exact value.", "answer": "113.91", "accept": ["113.910"], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $120 + 6.09$. Give the exact value.", "answer": "126.09", "accept": ["126.090"], "hint": "Center plus margin." }
+      ],
+      "finalAnswer": { "value": "(113.91, 126.09)", "unit": "seconds" },
+      "solutionNarrative": "$\\mathrm{SE} = 3$, margin $= 2.030(3) = 6.09$, so the 95% CI is $(113.91, 126.09)$ seconds."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s07",
+      "concepts": ["t-confidence-intervals"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A pilot study weighs $n = 9$ dosage capsules: $\\bar{x} = 50$ mg, $s = 6$ mg. Build a 99% t confidence interval. From the df-8 table row: 90% $\\to t^* = 1.860$, 95% $\\to t^* = 2.306$, 99% $\\to t^* = 3.355$. Give exact values.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{6}{\\sqrt{9}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{9} = 3$." },
+        { "instruction": "Which $t^*$ matches 99% confidence? (Give the number from the table.)", "answer": "3.355", "accept": [], "hint": "Read the 99% entry." },
+        { "instruction": "Margin of error: $3.355 \\times 2$. Give the exact value.", "answer": "6.71", "accept": ["6.710"], "hint": "Multiply." },
+        { "instruction": "Lower bound: $50 - 6.71$. Give the exact value.", "answer": "43.29", "accept": ["43.290"], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $50 + 6.71$. Give the exact value.", "answer": "56.71", "accept": ["56.710"], "hint": "Center plus margin." }
+      ],
+      "finalAnswer": { "value": "(43.29, 56.71)", "unit": "mg" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$; at 99% with df 8, $t^* = 3.355$, so the margin is 6.71 and the interval $(43.29, 56.71)$ mg. Tiny sample + high confidence = a very wide interval."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s08",
+      "concepts": ["t-confidence-intervals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A fleet audit samples $n = 100$ trips: $\\bar{x} = 250$ km, $s = 40$ km. Build the 95% t confidence interval; with $\\mathrm{df} = 99$, $t^* = 1.984$. Give exact values.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{40}{\\sqrt{100}}$. (Give a whole number.)", "answer": "4", "accept": [], "hint": "$\\sqrt{100} = 10$." },
+        { "instruction": "Margin of error: $1.984 \\times 4$. Give the exact value.", "answer": "7.936", "accept": [], "hint": "Multiply." },
+        { "instruction": "Lower bound: $250 - 7.936$. Give the exact value.", "answer": "242.064", "accept": [], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $250 + 7.936$. Give the exact value.", "answer": "257.936", "accept": [], "hint": "Center plus margin." }
+      ],
+      "finalAnswer": { "value": "(242.064, 257.936)", "unit": "km" },
+      "solutionNarrative": "$\\mathrm{SE} = 4$, margin $= 1.984(4) = 7.936$, interval $(242.064, 257.936)$. At df 99 the t answer is barely wider than the z answer — big samples close the gap."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s09",
+      "concepts": ["one-sample-t-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Test $H_0: \\mu = 100$ with a sample of $n = 25$: $\\bar{x} = 106$, $s = 10$ ($\\sigma$ unknown). Compute $t = \\dfrac{\\bar{x} - \\mu_0}{s/\\sqrt{n}}$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{10}{\\sqrt{25}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{25} = 5$." },
+        { "instruction": "Numerator: $106 - 100$. (Give a number.)", "answer": "6", "accept": [], "hint": "Sample mean minus claimed mean." },
+        { "instruction": "Divide: $t = \\dfrac{6}{2}$. (Give a number.)", "answer": "3", "accept": [], "hint": "$6 / 2$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$, so $t = 3$: the sample mean sits three standard errors above the claim, judged against the t-distribution with df 24."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s10",
+      "concepts": ["one-sample-t-test"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A roaster claims bags average $\\mu_0 = 500$ g. Suspecting overfilling, you test $H_a: \\mu > 500$ (RIGHT-tailed) at $\\alpha = 0.05$ with $n = 36$: $\\bar{x} = 509$, $s = 30$. The critical value for $\\mathrm{df} = 35$ is $t^* = 1.690$: reject when $t > 1.690$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{30}{\\sqrt{36}}$. (Give a whole number.)", "answer": "5", "accept": [], "hint": "$\\sqrt{36} = 6$." },
+        { "instruction": "Test statistic: $t = \\dfrac{509 - 500}{5}$. (Give a decimal.)", "answer": "1.8", "accept": [], "hint": "$9 / 5$." },
+        { "instruction": "Is $1.8 > 1.690$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare with the critical value." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Beyond the critical value means significant." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "$t = 1.8 > 1.690$ (df 35, one-tailed): reject $H_0$ — the bags run significantly heavy at the 5% level."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s11",
+      "concepts": ["one-sample-t-test"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A machine is specified at $\\mu_0 = 75$ units/hour. A technician tests whether the rate has CHANGED (TWO-tailed) at $\\alpha = 0.05$ with $n = 9$: $\\bar{x} = 70$, $s = 6$. With $\\mathrm{df} = 8$ the critical values are $\\pm 2.306$: reject when $|t| > 2.306$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{6}{\\sqrt{9}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{9} = 3$." },
+        { "instruction": "Test statistic: $t = \\dfrac{70 - 75}{2}$. (Give a decimal.)", "answer": "-2.5", "accept": [], "hint": "The numerator is $-5$." },
+        { "instruction": "Compute $|t|$. (Give a decimal.)", "answer": "2.5", "accept": [], "hint": "Drop the sign." },
+        { "instruction": "Is $2.5 > 2.306$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare with the critical value." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Outside $\\pm 2.306$ means significant." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "$t = -2.5$, and $|{-2.5}| = 2.5 > 2.306$ (df 8, two-tailed): reject $H_0$ — the machine has drifted below spec."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s12",
+      "concepts": ["one-sample-t-test"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A courier service claims a mean of $\\mu_0 = 40$ minutes per delivery. A sample of $n = 100$ deliveries gives $\\bar{x} = 38$, $s = 20$. Compute the t statistic.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{20}{\\sqrt{100}}$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{100} = 10$." },
+        { "instruction": "Numerator: $38 - 40$. (Give a number, sign included.)", "answer": "-2", "accept": [], "hint": "It is negative." },
+        { "instruction": "Divide: $t = \\dfrac{-2}{2}$. (Give a number.)", "answer": "-1", "accept": [], "hint": "$-2 / 2$." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$, so $t = -1$: the sample runs one standard error fast — well within ordinary sampling noise for any usual critical value."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s13",
+      "concepts": ["paired-t"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Four employees take a typing course. Words per minute — Before: 72, 75, 70, 71. After: 76, 75, 74, 75. Paired data are analyzed through the differences $d_i = \\text{After} - \\text{Before}$.",
+      "steps": [
+        { "instruction": "Difference for employee 1: $76 - 72$. (Give a number.)", "answer": "4", "accept": [], "hint": "After minus Before." },
+        { "instruction": "Difference for employee 2: $75 - 75$. (Give a number.)", "answer": "0", "accept": [], "hint": "No change." },
+        { "instruction": "All four differences are $4, 0, 4, 4$. Sum them. (Give a number.)", "answer": "12", "accept": [], "hint": "Add the four values." },
+        { "instruction": "Mean difference: $\\bar{d} = \\dfrac{12}{4}$. (Give a number.)", "answer": "3", "accept": [], "hint": "Divide by the number of pairs." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "wpm" },
+      "solutionNarrative": "The differences $4, 0, 4, 4$ average to $\\bar{d} = 3$ wpm. All later paired-t work runs on these four numbers, not the original eight."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s14",
+      "concepts": ["paired-t"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The paired differences from a 4-subject study are $4, 0, 4, 4$ (mean $\\bar{d} = 3$). Compute the spread statistics the paired t-test needs.",
+      "steps": [
+        { "instruction": "The deviations $d_i - \\bar{d}$ are $1, -3, 1, 1$ (they sum to 0). Sum their SQUARES. (Give a number.)", "answer": "12", "accept": [], "hint": "$1 + 9 + 1 + 1$." },
+        { "instruction": "Sample variance: $s_d^2 = \\dfrac{12}{n-1} = \\dfrac{12}{3}$. (Give a number.)", "answer": "4", "accept": [], "hint": "Divide by $n - 1 = 3$, not 4." },
+        { "instruction": "Standard deviation: $s_d = \\sqrt{4}$. (Give a number.)", "answer": "2", "accept": ["sqrt(4)"], "hint": "$2^2 = 4$." },
+        { "instruction": "Standard error of $\\bar{d}$: $\\dfrac{2}{\\sqrt{4}}$. (Give a number.)", "answer": "1", "accept": [], "hint": "$\\sqrt{4} = 2$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "Squared deviations total 12, so $s_d^2 = 4$, $s_d = 2$, and $\\mathrm{SE} = 1$. The paired t statistic will be $t = \\bar{d}/\\mathrm{SE} = 3$ with df 3."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s15",
+      "concepts": ["paired-t"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A sleep clinic's 4 patients show differences (After − Before) of $-1, 7, 7, 7$ hours per week, with mean $\\bar{d} = 5$ and standard deviation $s_d = 4$. Test $H_a: \\mu_d > 0$ (RIGHT-tailed) at $\\alpha = 0.05$: with $\\mathrm{df} = 3$ the critical value is $t^* = 2.353$, reject when $t > 2.353$.",
+      "steps": [
+        { "instruction": "Standard error: $\\dfrac{s_d}{\\sqrt{n}} = \\dfrac{4}{\\sqrt{4}}$. (Give a number.)", "answer": "2", "accept": [], "hint": "$\\sqrt{4} = 2$." },
+        { "instruction": "Test statistic: $t = \\dfrac{\\bar{d}}{\\mathrm{SE}} = \\dfrac{5}{2}$. (Give a decimal.)", "answer": "2.5", "accept": ["5/2"], "hint": "Divide." },
+        { "instruction": "Is $2.5 > 2.353$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare with the critical value." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Beyond the critical value means significant." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 2$ and $t = 2.5 > 2.353$ (df 3): reject $H_0$. The gain is significant at 5%, though with only 4 patients the verdict rides on a razor's edge — note patient 1 got worse."
+    },
+    {
+      "id": "advanced-statistics.t-inference.s16",
+      "concepts": ["paired-t"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Four plants are measured (cm) before and after a fertilizer week. Before: 10, 12, 9, 13. After: 13, 13, 12, 14.",
+      "steps": [
+        { "instruction": "The differences (After − Before) are $3, 1, 3, 1$. Sum them. (Give a number.)", "answer": "8", "accept": [], "hint": "Add the four values." },
+        { "instruction": "Mean difference: $\\bar{d} = \\dfrac{8}{4}$. (Give a number.)", "answer": "2", "accept": [], "hint": "Divide by 4 pairs." },
+        { "instruction": "The paired t-test on these differences would use how many degrees of freedom?", "answer": "3", "accept": [], "hint": "$\\mathrm{df} = n - 1$ where $n$ is the number of PAIRS." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "cm" },
+      "solutionNarrative": "$\\bar{d} = 2$ cm with df $= 4 - 1 = 3$. The df counts pairs, not the 8 individual measurements — pairing reduced the dataset to 4 differences."
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "id": "advanced-statistics.regression-inference",
+  "subject": "advanced-statistics",
+  "title": "Inference for Regression",
+  "prerequisites": ["statistics.regression-correlation", "advanced-statistics.t-inference"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "model-and-residual-sd",
+      "label": "The linear model and residual SD",
+      "microLesson": "Regression inference upgrades the fitted line to a **model**: $y = \\alpha + \\beta x + \\varepsilon$, where $\\varepsilon$ is random scatter with standard deviation $\\sigma$. The data estimate $\\alpha, \\beta$ by the least-squares $a, b$, and estimate $\\sigma$ by the **residual standard deviation** $s_e = \\sqrt{SSE/(n-2)}$, where $SSE$ is the sum of squared residuals $y - \\hat{y}$. We divide by $n - 2$ because fitting the line already spent two degrees of freedom. $s_e$ is the typical size of a prediction miss."
+    },
+    {
+      "id": "slope-inference",
+      "label": "Inference for the slope",
+      "microLesson": "The headline question is whether $x$ genuinely predicts $y$, i.e. whether the true slope $\\beta$ is zero. Test $H_0: \\beta = 0$ with $t = \\dfrac{b}{SE(b)}$ on $n - 2$ degrees of freedom: with $b = 0.6$ and $SE(b) = 0.2$, $t = 3$ — the slope sits three standard errors from zero. A confidence interval for the slope is $b \\pm t^* \\cdot SE(b)$; if it excludes zero, the relationship is statistically significant at that level."
+    },
+    {
+      "id": "r-squared-interpretation",
+      "label": "Reading r-squared",
+      "microLesson": "The total variation in $y$ splits as $SST = SSR + SSE$ (explained plus residual), and $r^2 = SSR/SST = 1 - SSE/SST$ is the **fraction of variation in $y$ the line explains**. With $SST = 100$ and $SSE = 25$, $r^2 = 0.75$: the model accounts for 75% of the variation, leaving 25% to everything else. Two warnings: $r^2$ never proves causation, and a high $r^2$ does not certify the relationship is linear — always look at the residuals too."
+    },
+    {
+      "id": "prediction-vs-confidence",
+      "label": "Prediction vs confidence intervals",
+      "microLesson": "At a given $x^*$, two different intervals share the same center $\\hat{y} = a + bx^*$. A **confidence interval** brackets the MEAN response of all individuals with that $x^*$; a **prediction interval** brackets ONE new individual's value, so it must additionally absorb the scatter $s_e$ of individuals around the mean — it is always wider. And neither interval can be trusted at an $x^*$ outside the observed data range: that is extrapolation, where the straight-line assumption has never been checked."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## From a fitted line to a defensible claim\n\nDescriptive regression ends with a line: $\\hat{y} = a + bx$. But a slope computed from a sample is a *statistic* — a new sample would give a slightly different $b$. Before claiming that practice really improves typing speed, you need the same machinery you used for means: standard errors, t statistics, and intervals. That machinery starts with a model.\n\n## The linear model\n\n$$y = \\alpha + \\beta x + \\varepsilon,$$\n\nwhere $\\alpha$ and $\\beta$ are the TRUE (unknown) intercept and slope, and $\\varepsilon$ is random scatter, assumed roughly normal with mean 0 and standard deviation $\\sigma$, the same at every $x$. The least-squares estimates $a$ and $b$ estimate $\\alpha$ and $\\beta$; the residuals $y - \\hat{y}$ estimate the $\\varepsilon$'s.\n\nThe leftover noise level is estimated by the **residual standard deviation**:\n\n$$s_e = \\sqrt{\\frac{SSE}{n - 2}}, \\qquad SSE = \\sum (y - \\hat{y})^2.$$\n\nWhy $n - 2$? The line already used the data to pin down two parameters, so only $n - 2$ independent pieces of information remain to measure scatter. $s_e$ has a plain-language reading: it is roughly the typical amount by which predictions miss.\n\n## Worked example: practice and typing speed\n\nSix students log practice hours ($x$) and typing speed ($y$):\n\n| $x$ | 1 | 2 | 3 | 4 | 5 | 6 |\n|---|---|---|---|---|---|---|\n| $y$ | 4 | 8 | 6 | 8 | 14 | 14 |\n\nThe least-squares line is exactly $\\hat{y} = 2 + 2x$.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 7], \"yRange\": [0, 17], \"curves\": [ { \"fn\": \"2 + 2*x\", \"color\": \"accent\", \"label\": \"y = 2 + 2x\" } ], \"points\": [ { \"x\": 1, \"y\": 4 }, { \"x\": 2, \"y\": 8 }, { \"x\": 3, \"y\": 6 }, { \"x\": 4, \"y\": 8 }, { \"x\": 5, \"y\": 14 }, { \"x\": 6, \"y\": 14 } ], \"segments\": [ { \"from\": [2, 6], \"to\": [2, 8], \"dashed\": true, \"color\": \"warn\", \"label\": \"residual\" }, { \"from\": [4, 10], \"to\": [4, 8], \"dashed\": true, \"color\": \"warn\" } ], \"caption\": \"Scatter with the fitted line. Residuals are the dashed vertical gaps between each point and the line.\" }\n```\n\nThe residuals are $0, 2, -2, -2, 2, 0$, so\n\n$$SSE = 0 + 4 + 4 + 4 + 4 + 0 = 16, \\qquad s_e = \\sqrt{\\tfrac{16}{4}} = 2.$$\n\nPredictions from this line typically miss by about 2 words per minute.\n\n## Is the slope real? The t test\n\nIf the true slope were $\\beta = 0$, practice would tell us nothing about speed, and any nonzero $b$ we saw would be luck. So the default test is\n\n$$H_0: \\beta = 0 \\quad \\text{vs} \\quad H_a: \\beta \\ne 0, \\qquad t = \\frac{b}{SE(b)}, \\qquad df = n - 2,$$\n\nwhere $SE(b)$ (reported by software, or $s_e/\\sqrt{S_{xx}}$) measures how much the slope would wobble from sample to sample. In the typing example, $SE(b) \\approx 0.48$, so $t \\approx 2/0.48 \\approx 4.2$, beyond the two-tailed critical value $t^* = 2.776$ for $df = 4$: reject $H_0$ — practice genuinely predicts speed.\n\nCritical values used in this topic (two-tailed):\n\n| $df$ | $t^*$ at 95% | $t^*$ at 99% |\n|---|---|---|\n| 4 | 2.776 | 4.604 |\n| 8 | 2.306 | 3.355 |\n| 10 | 2.228 | 3.169 |\n\nA **confidence interval for the slope** uses the same ingredients:\n\n$$b \\pm t^* \\cdot SE(b).$$\n\nIf the interval excludes 0, the t test rejects at the matching level — they are the same information in two costumes. The interval is more useful, though: it brackets HOW BIG the effect plausibly is, not just whether it exists.\n\n## How much does the line explain? r-squared\n\nTotal variation in $y$ splits cleanly:\n\n$$SST = SSR + SSE \\qquad (\\text{total} = \\text{explained} + \\text{residual}),$$\n\n$$r^2 = \\frac{SSR}{SST} = 1 - \\frac{SSE}{SST}.$$\n\n$r^2 = 0.75$ means the line accounts for 75% of the variation in $y$; the remaining 25% is due to everything the model omits. It equals the square of the correlation $r$ — hence the name.\n\n## Predicting: two intervals, one center\n\nAt a chosen $x^*$, the point estimate is $\\hat{y} = a + bx^*$. Around it you can build:\n\n- a **confidence interval for the mean response** — where the AVERAGE $y$ of all individuals with $x = x^*$ plausibly sits;\n- a **prediction interval for one new observation** — where ONE new individual's $y$ plausibly lands.\n\nThe prediction interval is **always wider**: besides the uncertainty in the line itself, it must absorb the scatter $s_e$ of individuals around the mean. Forecasting one specific customer, patient, or plot demands the prediction interval; describing the average demands the confidence interval. Mixing them up understates risk — a classic and expensive mistake.\n\n### Common pitfalls\n\n- **$r^2$ is not causation.** A lurking variable can produce a beautiful fit between two variables that never touch each other causally. Only randomized assignment supports causal language.\n- **A high $r^2$ is not a license to extrapolate.** The model was audited only over the observed range of $x$; outside it, the straight line is an unverified guess. Growth curves bend, dosages saturate, markets flip.\n- **Significance is not size.** With enough data, a slope of 0.001 can have a tiny p-value. The confidence interval for $\\beta$ keeps you honest about magnitude.\n- **Check residuals before trusting any of this.** A curved residual pattern or a fan shape (spread growing with $x$) violates the model's assumptions and quietly invalidates $SE(b)$, the t test, and both intervals."
+  },
+  "application": {
+    "summary": "Regression inference turns 'the line fits' into defensible claims: is the slope real, how big could it plausibly be, how much variation does the model explain, and what range should a forecast honestly carry — the daily bread of econometrics, clinical dose modeling, and demand forecasting.",
+    "domains": ["business forecasting", "medicine and dosing", "economics", "engineering calibration"],
+    "workedExample": "**Does ad spend move sales, and by how much?**\n\nA retailer regresses weekly sales on weekly ad spend across $n = 10$ weeks and gets $\\hat{y} = 40 + 1.2x$ with $SE(b) = 0.4$.\n\n*Step 1 — is the slope real?* Test $H_0: \\beta = 0$ against $H_a: \\beta \\ne 0$ with $df = n - 2 = 8$, two-tailed $t^* = 2.306$. $t = 1.2/0.4 = 3$, and $3 > 2.306$: reject. Ad spend genuinely predicts sales.\n\n*Step 2 — how big is the effect?* The 95% CI for the slope is $1.2 \\pm 2.306 \\times 0.4 = 1.2 \\pm 0.9224$, i.e. $(0.2776, 2.1224)$. Each extra unit of ad spend is associated with somewhere between about 0.28 and 2.12 extra units of sales — significant, but the plausible range spans nearly an order of magnitude. More weeks of data would tighten it.\n\n*Step 3 — forecasting next week.* At planned spend $x^* = 20$, the point forecast is $40 + 1.2(20) = 64$. To promise the CFO a range for NEXT week's actual sales, use the (wider) prediction interval, not the confidence interval for mean sales — one specific week carries the full week-to-week scatter.\n\n*Step 4 — the honest caveats.* $r^2 = 0.53$ here: ad spend explains about half the variation; seasonality and pricing drive the rest. And since spend was never above 25, forecasting at $x^* = 60$ would be extrapolation — the observed straight line says nothing about saturation out there.",
+    "domainNotes": [
+      "**Business:** demand and revenue forecasts live and die by prediction intervals; quoting the narrower confidence interval understates inventory risk.",
+      "**Medicine:** dose-response slopes with confidence intervals decide whether an effect is both real and clinically meaningful — significance alone is not enough.",
+      "**Economics:** the t test on a regression coefficient is the basic unit of econometric argument, always paired with honest talk about confounding.",
+      "**Engineering:** instrument calibration lines report $s_e$ as measurement uncertainty; a drifting residual pattern signals the sensor, not the math."
+    ]
+  },
+  "generators": [
+    "as4-reg-resid-1", "as4-reg-resid-2", "as4-reg-resid-3",
+    "as4-reg-slope-1", "as4-reg-slope-2", "as4-reg-slope-3",
+    "as4-reg-rsq-1", "as4-reg-rsq-2", "as4-reg-rsq-3",
+    "as4-reg-pred-1", "as4-reg-pred-2", "as4-reg-pred-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.regression-inference.s01",
+      "concepts": ["model-and-residual-sd"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The linear model $y = \\alpha + \\beta x + \\varepsilon$ is estimated as $\\hat{y} = 5 + 2x$. One data point is $(4, 15)$. Find its residual.",
+      "steps": [
+        { "instruction": "Predicted value at $x = 4$: $5 + 2 \\times 4$. (Give a number.)", "answer": "13", "accept": [], "hint": "Plug in and evaluate." },
+        { "instruction": "Residual: $y - \\hat{y} = 15 - 13$. (Give a number.)", "answer": "2", "accept": [], "hint": "Observed minus predicted." },
+        { "instruction": "Does the point sit ABOVE or BELOW the fitted line? Type 'above' or 'below'.", "answer": "above", "accept": [], "hint": "Positive residual means above." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$\\hat{y} = 13$, so the residual is $15 - 13 = 2$: the point lies above the line by 2 — the part of $y$ the model left unexplained."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s02",
+      "concepts": ["model-and-residual-sd"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Study hours ($x$) and exam scores ($y$) for six students: $x: 1, 2, 3, 4, 5, 6$; $y: 5, 9, 7, 9, 15, 15$. The least-squares line is exactly $\\hat{y} = 3 + 2x$. Work toward the residual variance.",
+      "steps": [
+        { "instruction": "Predicted value at $x = 2$. (Give a number.)", "answer": "7", "accept": [], "hint": "$3 + 2 \\times 2$." },
+        { "instruction": "Residual at $x = 2$: $9 - 7$. (Give a number.)", "answer": "2", "accept": [], "hint": "Observed minus predicted." },
+        { "instruction": "Computing all six residuals the same way gives $0, 2, -2, -2, 2, 0$. Sum their squares to get $SSE$. (Give a number.)", "answer": "16", "accept": [], "hint": "Square each residual, then add." },
+        { "instruction": "With $n = 6$, the residual variance is $s_e^2 = \\dfrac{SSE}{n-2} = \\dfrac{16}{4}$. (Give a number.)", "answer": "4", "accept": [], "hint": "Divide by $n - 2$, not $n$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "The residuals $0, 2, -2, -2, 2, 0$ square-sum to $SSE = 16$, so $s_e^2 = 16/4 = 4$. The divisor is $n - 2$ because the line already spent two degrees of freedom."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s03",
+      "concepts": ["model-and-residual-sd"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Fertilizer dose ($x$) and plant height ($y$, cm): $x: 1, 2, 3, 4, 5, 6$; $y: 10, 7, 13, 16, 16, 25$. The fitted model is $\\hat{y} = 4 + 3x$. Compute the residual standard deviation $s_e$ and interpret it.",
+      "steps": [
+        { "instruction": "Predicted value at $x = 1$. (Give a number.)", "answer": "7", "accept": [], "hint": "$4 + 3 \\times 1$." },
+        { "instruction": "Residual at $x = 1$: $10 - 7$. (Give a number.)", "answer": "3", "accept": [], "hint": "Observed minus predicted." },
+        { "instruction": "All six residuals are $3, -3, 0, 0, -3, 3$. Compute $SSE$. (Give a number.)", "answer": "36", "accept": [], "hint": "Sum of squared residuals." },
+        { "instruction": "$s_e^2 = \\dfrac{36}{4}$. (Give a number.)", "answer": "9", "accept": [], "hint": "$n - 2 = 4$." },
+        { "instruction": "$s_e = \\sqrt{9}$. (Give a number.)", "answer": "3", "accept": ["sqrt(9)"], "hint": "$3^2 = 9$." },
+        { "instruction": "A LARGER $s_e$ would make predictions from this line more precise or less precise? Type 'more precise' or 'less precise'.", "answer": "less precise", "accept": ["less"], "hint": "$s_e$ is the typical size of the prediction errors." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "cm" },
+      "solutionNarrative": "$SSE = 36$, $s_e^2 = 9$, $s_e = 3$ cm: height predictions typically miss by about 3 cm. Bigger $s_e$ means blurrier predictions."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s04",
+      "concepts": ["model-and-residual-sd"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For the fitted line $\\hat{y} = 10 + 3x$, one observation is $(2, 14)$. Find the residual.",
+      "steps": [
+        { "instruction": "Predicted value at $x = 2$. (Give a number.)", "answer": "16", "accept": [], "hint": "$10 + 3 \\times 2$." },
+        { "instruction": "Residual: $14 - 16$. (Give a number, sign included.)", "answer": "-2", "accept": [], "hint": "Observed minus predicted; it is negative." },
+        { "instruction": "Does the point sit ABOVE or BELOW the line? Type 'above' or 'below'.", "answer": "below", "accept": [], "hint": "Negative residual means below." }
+      ],
+      "finalAnswer": { "value": "-2", "unit": "" },
+      "solutionNarrative": "$\\hat{y} = 16$, residual $= 14 - 16 = -2$: the point lies below the line."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s05",
+      "concepts": ["slope-inference"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A regression of weekly sales on ad spend from $n = 10$ weeks gives slope $b = 0.6$ with standard error $SE(b) = 0.2$. Compute the t statistic for testing $H_0: \\beta = 0$.",
+      "steps": [
+        { "instruction": "Degrees of freedom: $n - 2$. (Give a number.)", "answer": "8", "accept": [], "hint": "A regression line spends two degrees of freedom." },
+        { "instruction": "$t = \\dfrac{0.6}{0.2}$. (Give a number.)", "answer": "3", "accept": [], "hint": "Slope over its standard error." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$df = 8$ and $t = 0.6/0.2 = 3$: the estimated slope sits three standard errors from zero."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s06",
+      "concepts": ["slope-inference"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A regression of typing speed on practice hours from $n = 6$ students gives $b = 1.8$ with $SE(b) = 0.5$. Build a 95% confidence interval for the true slope $\\beta$ using $t^* = 2.776$ ($df = 4$). Give exact values.",
+      "steps": [
+        { "instruction": "Margin of error: $2.776 \\times 0.5$. Give the exact value.", "answer": "1.388", "accept": [], "hint": "Multiply the two numbers." },
+        { "instruction": "Lower bound: $1.8 - 1.388$. Give the exact value.", "answer": "0.412", "accept": [], "hint": "Slope minus margin." },
+        { "instruction": "Upper bound: $1.8 + 1.388$. Give the exact value.", "answer": "3.188", "accept": [], "hint": "Slope plus margin." }
+      ],
+      "finalAnswer": { "value": "(0.412, 3.188)", "unit": "" },
+      "solutionNarrative": "Margin $= 2.776 \\times 0.5 = 1.388$, so the 95% CI for $\\beta$ is $(0.412, 3.188)$. It excludes zero, so the slope is significant at the 5% level."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s07",
+      "concepts": ["slope-inference"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Testing whether car age predicts resale price: $n = 10$, $b = -1.2$, $SE(b) = 0.4$. Test $H_0: \\beta = 0$ vs $H_a: \\beta \\ne 0$ at $\\alpha = 0.05$; the two-tailed critical value is $t^* = 2.306$ ($df = 8$): reject when $|t| > t^*$.",
+      "steps": [
+        { "instruction": "$t = \\dfrac{-1.2}{0.4}$. (Give a number, sign included.)", "answer": "-3", "accept": [], "hint": "Slope over its standard error." },
+        { "instruction": "Is $|-3| > 2.306$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare 3 with 2.306." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Two-tailed: only the size of $t$ matters." },
+        { "instruction": "Rejecting supports that the true slope differs from zero — a real linear relationship. Type 'yes' or 'no': is that what this result supports?", "answer": "yes", "accept": [], "hint": "That is exactly what rejecting $H_0: \\beta = 0$ means." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "$t = -3$, $|t| = 3 > 2.306$: reject $H_0$. Age genuinely predicts resale price, with a negative slope."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s08",
+      "concepts": ["slope-inference"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A regression from $n = 12$ observations reports $b = 1$ and $SE(b) = 0.25$. Compute the t statistic for $H_0: \\beta = 0$.",
+      "steps": [
+        { "instruction": "Degrees of freedom: $n - 2$. (Give a number.)", "answer": "10", "accept": [], "hint": "$12 - 2$." },
+        { "instruction": "$t = \\dfrac{1}{0.25}$. (Give a number.)", "answer": "4", "accept": [], "hint": "How many quarter-units fit in one unit?" }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$df = 10$, $t = 1/0.25 = 4$: the slope is four standard errors from zero."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s09",
+      "concepts": ["r-squared-interpretation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A regression has total sum of squares $SST = 100$ and residual sum of squares $SSE = 25$. Compute $r^2 = 1 - \\dfrac{SSE}{SST}$.",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{25}{100}$. (Give a decimal.)", "answer": "0.25", "accept": ["25/100", "1/4"], "hint": "The unexplained fraction." },
+        { "instruction": "$r^2 = 1 - 0.25$. (Give a decimal.)", "answer": "0.75", "accept": ["3/4"], "hint": "What is left is explained." },
+        { "instruction": "An $r^2$ closer to one means the line explains MORE or LESS of the variation in $y$? Type 'more' or 'less'.", "answer": "more", "accept": [], "hint": "$r^2$ is the explained fraction." }
+      ],
+      "finalAnswer": { "value": "0.75", "unit": "" },
+      "solutionNarrative": "$SSE/SST = 0.25$ is unexplained, so $r^2 = 0.75$: the line accounts for 75% of the variation in $y$."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s10",
+      "concepts": ["r-squared-interpretation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Regressing exam score on study hours gives explained sum of squares $SSR = 45$ and total $SST = 50$. Compute and interpret $r^2 = \\dfrac{SSR}{SST}$.",
+      "steps": [
+        { "instruction": "$r^2 = \\dfrac{45}{50}$. (Give a decimal.)", "answer": "0.9", "accept": ["45/50", "9/10"], "hint": "Explained over total." },
+        { "instruction": "What percent of the variation in scores does the model explain? (Give a number.)", "answer": "90", "accept": ["90%"], "hint": "Multiply $r^2$ by one hundred." },
+        { "instruction": "Does this $r^2$ prove that studying CAUSES higher scores? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$r^2$ measures fit, not mechanism." }
+      ],
+      "finalAnswer": { "value": "0.9", "unit": "" },
+      "solutionNarrative": "$r^2 = 0.9$: hours explain 90% of score variation in these data. Impressive fit — still not causal proof; motivated students may both study more and test better."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s11",
+      "concepts": ["r-squared-interpretation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "For a regression of weekly sales on ad spend: $SST = 200$ and $SSE = 80$. Decompose the variation and interpret carefully.",
+      "steps": [
+        { "instruction": "Explained sum of squares: $SSR = 200 - 80$. (Give a number.)", "answer": "120", "accept": [], "hint": "Total splits into explained plus residual." },
+        { "instruction": "$r^2 = \\dfrac{120}{200}$. (Give a decimal.)", "answer": "0.6", "accept": ["120/200", "3/5"], "hint": "Explained over total." },
+        { "instruction": "What percent of the variation is left UNEXPLAINED? (Give a number.)", "answer": "40", "accept": ["40%"], "hint": "One hundred percent minus the explained share." },
+        { "instruction": "A colleague says the solid $r^2$ shows ad spend causes sales. Is that a valid conclusion? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Fit never establishes causation by itself." }
+      ],
+      "finalAnswer": { "value": "0.6", "unit": "" },
+      "solutionNarrative": "$SSR = 120$, $r^2 = 0.6$: 60% explained, 40% not. Causation would require ruling out confounders — e.g. holiday seasons that raise both ad budgets and sales."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s12",
+      "concepts": ["r-squared-interpretation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A regression has $SST = 50$ and $SSE = 10$. Compute $r^2$.",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{10}{50}$. (Give a decimal.)", "answer": "0.2", "accept": ["10/50", "1/5"], "hint": "The unexplained fraction." },
+        { "instruction": "$r^2 = 1 - 0.2$. (Give a decimal.)", "answer": "0.8", "accept": ["4/5"], "hint": "One minus the unexplained fraction." }
+      ],
+      "finalAnswer": { "value": "0.8", "unit": "" },
+      "solutionNarrative": "$r^2 = 1 - 10/50 = 0.8$: the line explains 80% of the variation."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s13",
+      "concepts": ["prediction-vs-confidence"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "At the same $x^*$, an analyst can build a confidence interval for the MEAN response or a prediction interval for ONE new individual observation. Both are centered at $\\hat{y}$.",
+      "steps": [
+        { "instruction": "Which interval is WIDER? Type 'prediction interval' or 'confidence interval'.", "answer": "prediction interval", "accept": ["prediction", "the prediction interval"], "hint": "One individual carries all the scatter around the mean as extra uncertainty." },
+        { "instruction": "The extra width covers the variability of ___ responses around the mean. Type 'individual' or 'mean'.", "answer": "individual", "accept": ["individual responses", "individuals"], "hint": "Means are steadier than single cases." }
+      ],
+      "finalAnswer": { "value": "prediction interval", "unit": "" },
+      "solutionNarrative": "The prediction interval is always wider: it must absorb the scatter of individual observations around the mean response, on top of the uncertainty in the fitted line."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s14",
+      "concepts": ["prediction-vs-confidence"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The fitted model for daily revenue ($y$, hundreds of dollars) against foot traffic index ($x$) is $\\hat{y} = 20 + 1.5x$. A manager wants to forecast revenue for ONE specific upcoming day with $x^* = 8$.",
+      "steps": [
+        { "instruction": "Slope term: $1.5 \\times 8$. (Give a number.)", "answer": "12", "accept": [], "hint": "Multiply slope by $x^*$." },
+        { "instruction": "Point forecast: $20 + 12$. (Give a number.)", "answer": "32", "accept": [], "hint": "Add the intercept." },
+        { "instruction": "To attach an interval to a forecast for ONE day, which is correct? Type 'prediction interval' or 'confidence interval'.", "answer": "prediction interval", "accept": ["prediction", "the prediction interval"], "hint": "Confidence intervals cover the MEAN response only." }
+      ],
+      "finalAnswer": { "value": "32", "unit": "hundred dollars" },
+      "solutionNarrative": "$\\hat{y} = 20 + 1.5(8) = 32$. For a single day's actual revenue, the honest range is the wider prediction interval."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s15",
+      "concepts": ["prediction-vs-confidence"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A growth model $\\hat{y} = 10 + 2x$ for plant height against fertilizer dose was fitted to doses between 2 and 12. A stakeholder requests a prediction at dose $x^* = 30$.",
+      "steps": [
+        { "instruction": "Mechanically, the line outputs $10 + 2 \\times 30$. (Give a number.)", "answer": "70", "accept": [], "hint": "Plug in and evaluate." },
+        { "instruction": "Predicting at $x^* = 30$ is interpolation or extrapolation? Type one.", "answer": "extrapolation", "accept": ["extrapolating"], "hint": "Compare 30 with the observed range $[2, 12]$." },
+        { "instruction": "Should a prediction interval built here be trusted as much as one inside $[2, 12]$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Overdosing fertilizer may stunt growth — the line may bend." }
+      ],
+      "finalAnswer": { "value": "extrapolation", "unit": "" },
+      "solutionNarrative": "The formula returns 70, but $x^* = 30$ is far outside the tested range: extrapolation. Real dose-response curves saturate or reverse; the straight line out there is an unverified guess."
+    },
+    {
+      "id": "advanced-statistics.regression-inference.s16",
+      "concepts": ["slope-inference"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A regression of crop yield on rainfall from $n = 12$ fields gives $b = 2.4$ with $SE(b) = 0.25$. Build a 95% confidence interval for $\\beta$ using $t^* = 2.228$ ($df = 10$). Give exact values.",
+      "steps": [
+        { "instruction": "Margin of error: $2.228 \\times 0.25$. Give the exact value.", "answer": "0.557", "accept": [], "hint": "Multiply the two numbers." },
+        { "instruction": "Lower bound: $2.4 - 0.557$. Give the exact value.", "answer": "1.843", "accept": [], "hint": "Slope minus margin." },
+        { "instruction": "Upper bound: $2.4 + 0.557$. Give the exact value.", "answer": "2.957", "accept": [], "hint": "Slope plus margin." }
+      ],
+      "finalAnswer": { "value": "(1.843, 2.957)", "unit": "" },
+      "solutionNarrative": "Margin $= 2.228 \\times 0.25 = 0.557$, so the 95% CI is $(1.843, 2.957)$ — comfortably excluding zero."
+    }
+  ]
+}

@@ -1,0 +1,286 @@
+{
+  "id": "advanced-statistics.two-sample-inference",
+  "subject": "advanced-statistics",
+  "title": "Two-Sample Inference",
+  "prerequisites": ["advanced-statistics.t-inference"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "two-sample-setup",
+      "label": "Setting up two-sample comparisons",
+      "microLesson": "First question, always: are the two samples **independent** (separate groups — A/B test arms, treatment vs control) or **paired** (the same or matched units measured twice)? Paired data go back to the paired t-test on differences; only independent groups use two-sample machinery. The null hypothesis is always 'no difference': $H_0: \\mu_1 - \\mu_2 = 0$ (or $p_1 - p_2 = 0$), and the suspicion's wording sets the tail — 'group 1 better' $\\to$ right-tailed on $\\mu_1 - \\mu_2$, 'they differ' $\\to$ two-tailed."
+    },
+    {
+      "id": "difference-of-means",
+      "label": "Testing a difference of means",
+      "microLesson": "For independent groups, VARIANCES add: $\\mathrm{SE} = \\sqrt{\\dfrac{s_1^2}{n_1} + \\dfrac{s_2^2}{n_2}}$ — never add standard deviations. The statistic is $t = \\dfrac{\\bar{x}_1 - \\bar{x}_2}{\\mathrm{SE}}$, compared against the critical value your problem supplies. With $s_1 = 15$, $n_1 = 25$ and $s_2 = 24$, $n_2 = 36$: $\\mathrm{SE} = \\sqrt{9 + 16} = 5$, so an observed gap of 11 gives $t = 2.2$ — significant against a two-tailed 1.960."
+    },
+    {
+      "id": "difference-of-proportions",
+      "label": "Testing a difference of proportions",
+      "microLesson": "Under $H_0: p_1 = p_2$ both groups share one rate, so estimate it by **pooling**: $\\hat{p} = \\dfrac{x_1 + x_2}{n_1 + n_2}$, then $\\mathrm{SE} = \\sqrt{\\hat{p}(1-\\hat{p})\\left(\\tfrac{1}{n_1} + \\tfrac{1}{n_2}\\right)}$ and $z = \\dfrac{\\hat{p}_1 - \\hat{p}_2}{\\mathrm{SE}}$. Converting 110 of 200 vs 90 of 200: pooled $\\hat{p} = 0.5$, $\\mathrm{SE} = \\sqrt{0.25 \\times 0.01} = 0.05$, $z = \\tfrac{0.10}{0.05} = 2$. Pooling is a test-only move — it assumes the null while computing the null's own yardstick."
+    },
+    {
+      "id": "two-sample-intervals",
+      "label": "Confidence intervals for a difference",
+      "microLesson": "The interval is *estimated difference $\\pm$ margin*: $(\\bar{x}_1 - \\bar{x}_2) \\pm z^* \\cdot \\mathrm{SE}$, and likewise for $\\hat{p}_1 - \\hat{p}_2$. The star check: does the interval contain **0**? If not, the groups plausibly differ (matching a two-tailed rejection); if 0 sits inside, 'no difference' remains plausible. A difference of 12 with margin 9.8 gives $(2.2, 21.8)$ — all-positive, so group 1's lead is statistically real."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Almost every real question is a comparison\n\n\"Is the new page better than the old?\" \"Does the drug beat the placebo?\" \"Do the two factories differ?\" One-sample inference checks a group against a fixed number; real decisions almost always check one group against **another group**. Two-sample inference is that tool, and it recycles every idea you already own — hypotheses, standard errors, critical values, verdict language — with one new twist: the uncertainty of TWO estimates must be combined.\n\n## Step 0: independent or paired?\n\nBefore any formula, classify the design:\n\n- **Independent samples:** two separate groups of units — visitors randomized to page A or page B, patients on drug vs placebo. Knowledge of one group tells you nothing unit-by-unit about the other.\n- **Paired samples:** the SAME units (or deliberately matched ones) measured twice — the same stores in June and July, the same patients before and after.\n\nPaired data should go back to the **paired t-test**: subtract within each pair and analyze the differences. Running two-independent-sample machinery on paired columns is the classic blunder — it leaves all the unit-to-unit spread in the standard error, making the SE too LARGE and hiding real effects.\n\nFor genuine two-sample problems the null hypothesis is always the boring default, *no difference*:\n\n$$H_0: \\mu_1 - \\mu_2 = 0 \\qquad \\text{or} \\qquad H_0: p_1 - p_2 = 0,$$\n\nand the alternative's wording sets the tail exactly as in one-sample testing.\n\n## Comparing two means\n\nEach sample mean carries its own sampling noise, $s_1^2/n_1$ and $s_2^2/n_2$. For independent samples these **variances add**:\n\n$$\\mathrm{SE}_{\\bar{x}_1 - \\bar{x}_2} = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}.$$\n\nTwo warnings hide in that formula. First, you add *variances*, never standard deviations: $\\sqrt{9 + 16} = 5$, not $3 + 4 = 7$. Second, the noise ADDS even though the estimates SUBTRACT — a difference is more uncertain than either ingredient.\n\nThe test statistic is the familiar shape, gap over noise:\n\n$$t = \\frac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{s_1^2/n_1 + s_2^2/n_2}}.$$\n\n(With large samples this is compared against normal critical values; with small ones, a t-table row — your problems always supply the critical value to use.)\n\n**Worked example.** Line 1: $\\bar{x}_1 = 520$, $s_1 = 15$, $n_1 = 25$. Line 2: $\\bar{x}_2 = 509$, $s_2 = 24$, $n_2 = 36$.\n\n1. $\\tfrac{s_1^2}{n_1} = \\tfrac{225}{25} = 9$ and $\\tfrac{s_2^2}{n_2} = \\tfrac{576}{36} = 16$.\n2. $\\mathrm{SE} = \\sqrt{9 + 16} = 5$.\n3. $t = \\tfrac{520 - 509}{5} = 2.2$.\n4. Two-tailed at $\\alpha = 0.05$ with critical value $1.960$: $|2.2| > 1.960$ — **reject**; the lines genuinely differ.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-4, 4], \"yRange\": [0, 0.45], \"grid\": false, \"curves\": [ { \"fn\": \"0.3989*exp(-x*x/2)\", \"color\": \"accent\", \"fillRange\": [1.96, 4] }, { \"fn\": \"0.3989*exp(-x*x/2)\", \"color\": \"accent\", \"fillRange\": [-4, -1.96] } ], \"segments\": [ { \"from\": [1.96, 0], \"to\": [1.96, 0.3], \"dashed\": true, \"color\": \"warn\", \"label\": \"+1.96\" }, { \"from\": [-1.96, 0], \"to\": [-1.96, 0.3], \"dashed\": true, \"color\": \"warn\", \"label\": \"-1.96\" }, { \"from\": [2.2, 0], \"to\": [2.2, 0.11], \"color\": \"error\", \"label\": \"t = 2.2\" } ], \"caption\": \"Two-tailed test at alpha = 0.05: rejection regions beyond +/-1.96. The observed t = 2.2 lands in the right-hand region, so no-difference is rejected.\" }\n```\n\n## Comparing two proportions\n\nFor yes/no outcomes the estimates are $\\hat{p}_1 = x_1/n_1$ and $\\hat{p}_2 = x_2/n_2$. Here the null hypothesis does something clever: if $H_0: p_1 = p_2$ is true, both groups share ONE common rate — so estimate that shared rate from everyone, by **pooling**:\n\n$$\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}, \\qquad \\mathrm{SE} = \\sqrt{\\hat{p}(1-\\hat{p})\\left(\\frac{1}{n_1} + \\frac{1}{n_2}\\right)}, \\qquad z = \\frac{\\hat{p}_1 - \\hat{p}_2}{\\mathrm{SE}}.$$\n\n**Worked example (an A/B test).** Variant 1 converts 110 of 200; variant 2 converts 90 of 200.\n\n1. $\\hat{p}_1 = 0.55$, $\\hat{p}_2 = 0.45$; pooled $\\hat{p} = \\tfrac{200}{400} = 0.5$.\n2. $\\mathrm{SE} = \\sqrt{0.5 \\times 0.5 \\times (\\tfrac{1}{200} + \\tfrac{1}{200})} = \\sqrt{0.25 \\times 0.01} = 0.05$.\n3. $z = \\tfrac{0.55 - 0.45}{0.05} = 2$.\n4. Right-tailed at $\\alpha = 0.05$ ($z^* = 1.645$): $2 > 1.645$ — **reject**; variant 1 really converts better.\n\n## Confidence intervals for a difference\n\nEstimate $\\pm$ margin, one more time:\n\n$$(\\bar{x}_1 - \\bar{x}_2) \\pm z^* \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}} \\qquad \\text{or} \\qquad (\\hat{p}_1 - \\hat{p}_2) \\pm z^* \\cdot \\mathrm{SE}.$$\n\n| Confidence level | $z^*$ |\n|---|---|\n| 90% | 1.645 |\n| 95% | 1.960 |\n| 99% | 2.576 |\n\nThe headline check is whether the interval **contains 0**:\n\n- $(2.2,\\ 21.8)$: zero excluded — group 1's lead is statistically real (this matches rejecting a two-tailed test).\n- $(-3.1,\\ 12.4)$: zero inside — 'no difference' is still plausible; don't declare a winner.\n\nAn interval says more than a verdict: $(2.2, 21.8)$ admits the true edge might be a trivial 2.2 or a massive 21.8 — knowledge a bare 'reject' hides.\n\n### Common pitfalls\n\n- **Paired data analyzed as independent.** Same units twice = paired. Subtract first; otherwise the between-unit spread inflates the SE and buries the signal.\n- **Adding standard deviations.** $\\mathrm{SE} \\ne \\tfrac{s_1}{\\sqrt{n_1}} + \\tfrac{s_2}{\\sqrt{n_2}}$. Variances add; take the square root at the end.\n- **Forgetting to pool for the proportion TEST.** The test's SE uses the pooled $\\hat{p}$ because it measures noise in the null's world. (Intervals, which assume no null, use the unpooled version — your problems will hand you the right SE.)\n- **Reading 'contains 0' as 'proved equal'.** An interval straddling 0 means the data cannot distinguish the groups, not that they are identical — with more data the same gap might exclude 0."
+  },
+  "application": {
+    "summary": "Two-sample inference is the statistical engine of every controlled comparison: A/B tests read two-proportion z-tests, clinical trials read differences of means with confidence intervals, and the contains-zero check is how analysts decide whether a 'winner' is real or noise.",
+    "domains": ["A/B testing and product analytics", "clinical trials and medicine", "manufacturing quality control", "elections and polling"],
+    "workedExample": "**Shipping the new checkout — or not.**\n\nAn e-commerce team splits 400 visitors evenly: the new checkout converts 110 of 200, the old converts 90 of 200. Product wants to ship. Finance wants proof.\n\n*Step 1 — design.* Different visitors in each arm: independent samples. $H_0: p_1 - p_2 = 0$ vs $H_a: p_1 - p_2 > 0$, right-tailed at $\\alpha = 0.05$ (critical value 1.645).\n\n*Step 2 — pooled rate.* $\\hat{p} = \\tfrac{110 + 90}{400} = 0.5$ — under the null there is one conversion rate, estimated from everyone.\n\n*Step 3 — standard error.* $\\mathrm{SE} = \\sqrt{0.5 \\times 0.5 \\times (\\tfrac{1}{200} + \\tfrac{1}{200})} = \\sqrt{0.0025} = 0.05$.\n\n*Step 4 — statistic and verdict.* $z = \\tfrac{0.55 - 0.45}{0.05} = 2 > 1.645$: reject. The new checkout's edge is statistically significant.\n\n*Step 5 — the interval tells the business story.* Using the difference's SE, a 95% interval runs $0.10 \\pm 1.96 \\times 0.05 = (0.002,\\ 0.198)$. It excludes 0 — but barely, and it spans 'a rounding error' (0.2 points) to 'a fortune' (19.8 points). The honest recommendation: ship, but keep measuring; the effect is real but its SIZE is still poorly pinned down. That distinction — significance vs magnitude — is where two-sample analyses earn their keep.",
+    "domainNotes": [
+      "**A/B testing:** every experimentation platform's 'winner' banner is a two-proportion z-test; teams fix sample size and one metric in advance to keep the 5% false-alarm promise honest.",
+      "**Medicine:** trial endpoints are reported as differences with 95% CIs; an interval for drug-minus-placebo that excludes 0 is the publishable sentence, and its width is the clinical one.",
+      "**Manufacturing:** comparing two suppliers or two production lines is a difference-of-means test; variances add, so halving decision noise requires improving BOTH lines' sampling.",
+      "**Elections:** 'candidate A leads region 1 by 10 points' needs the two-region SE; overlapping regional intervals are how careful analysts say the race is too close to call."
+    ]
+  },
+  "generators": [
+    "as3-ts-setup-1", "as3-ts-setup-2", "as3-ts-setup-3",
+    "as3-ts-means-1", "as3-ts-means-2", "as3-ts-means-3",
+    "as3-ts-props-1", "as3-ts-props-2", "as3-ts-props-3",
+    "as3-ts-ci-1", "as3-ts-ci-2", "as3-ts-ci-3"
+  ],
+  "problems": [
+    {
+      "id": "advanced-statistics.two-sample-inference.s01",
+      "concepts": ["two-sample-setup"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "An A/B test shows the old checkout page to one random group of visitors and a new page to a DIFFERENT random group. Classify the design.",
+      "steps": [
+        { "instruction": "Are the two samples independent or paired? Type 'independent' or 'paired'.", "answer": "independent", "accept": ["independent samples", "two independent samples"], "hint": "Separate groups of different visitors." },
+        { "instruction": "Under the no-difference null hypothesis, $p_1 - p_2$ equals what number?", "answer": "0", "accept": ["zero"], "hint": "\"No difference\" in symbols." }
+      ],
+      "finalAnswer": { "value": "independent", "unit": "" },
+      "solutionNarrative": "Different visitors in each arm makes the samples independent, and the null hypothesis says the difference in conversion rates is 0."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s02",
+      "concepts": ["two-sample-setup"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A trial compares recovery time (days) for patients randomized to a new drug (group 1) versus placebo (group 2). Researchers suspect the drug SHORTENS recovery. Let $d = \\mu_1 - \\mu_2$.",
+      "steps": [
+        { "instruction": "State $H_0$: what number does $d$ equal under the null?", "answer": "0", "accept": ["zero", "d = 0"], "hint": "The null is always no difference." },
+        { "instruction": "State $H_a$ as an inequality in $d$ (e.g. d > 0).", "answer": "d < 0", "accept": ["d<0", "0 > d"], "hint": "Shorter recovery for group 1 means $\\mu_1$ below $\\mu_2$." },
+        { "instruction": "Is this test left-tailed, right-tailed, or two-tailed? Type one.", "answer": "left-tailed", "accept": ["left tailed", "left"], "hint": "Follow the direction of $H_a$." }
+      ],
+      "finalAnswer": { "value": "left-tailed", "unit": "" },
+      "solutionNarrative": "$H_0: \\mu_1 - \\mu_2 = 0$ and $H_a: \\mu_1 - \\mu_2 < 0$: a left-tailed test, because only shorter recovery in the drug group supports the claim."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s03",
+      "concepts": ["two-sample-setup"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A researcher measures the SAME 30 stores' sales in June and again in July after a promotion, then runs a two-independent-samples test on the two lists of 30 numbers. Diagnose the analysis.",
+      "steps": [
+        { "instruction": "Which design is this really? Type 'paired' or 'independent'.", "answer": "paired", "accept": ["paired samples", "matched pairs", "dependent"], "hint": "The same stores appear in both months." },
+        { "instruction": "The correct analysis runs a one-sample t-test on the ___. Type 'differences' or 'group means'.", "answer": "differences", "accept": ["the differences", "difference scores"], "hint": "July minus June, store by store." },
+        { "instruction": "Ignoring the pairing usually makes the standard error too LARGE or too SMALL? Type 'large' or 'small'.", "answer": "large", "accept": ["larger", "too large"], "hint": "Store-to-store size differences stay in the noise instead of cancelling." }
+      ],
+      "finalAnswer": { "value": "paired", "unit": "" },
+      "solutionNarrative": "Same stores twice = paired. Big stores sell more in BOTH months; subtracting store-by-store cancels that spread. The independent-samples analysis leaves it in, inflating the SE and likely hiding the promotion's effect."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s04",
+      "concepts": ["two-sample-setup"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Quality engineers suspect two suppliers' part weights DIFFER, without guessing which is heavier. Set the tail.",
+      "steps": [
+        { "instruction": "Is this test left-tailed, right-tailed, or two-tailed? Type one.", "answer": "two-tailed", "accept": ["two tailed", "two-sided", "two"], "hint": "\"Differ\" allows either direction." },
+        { "instruction": "Under $H_0$, what number does $\\mu_1 - \\mu_2$ equal?", "answer": "0", "accept": ["zero"], "hint": "No difference." }
+      ],
+      "finalAnswer": { "value": "two-tailed", "unit": "" },
+      "solutionNarrative": "\"Differ, either direction\" is a two-tailed alternative around the null value $\\mu_1 - \\mu_2 = 0$."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s05",
+      "concepts": ["difference-of-means"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two independent samples: group 1 has $s_1 = 15$, $n_1 = 25$; group 2 has $s_2 = 24$, $n_2 = 36$. Find $\\mathrm{SE} = \\sqrt{\\dfrac{s_1^2}{n_1} + \\dfrac{s_2^2}{n_2}}$.",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{15^2}{25}$. (Give a whole number.)", "answer": "9", "accept": ["225/25"], "hint": "$15^2 = 225$." },
+        { "instruction": "Compute $\\dfrac{24^2}{36}$. (Give a whole number.)", "answer": "16", "accept": ["576/36"], "hint": "$24^2 = 576$." },
+        { "instruction": "Add them. (Give a whole number.)", "answer": "25", "accept": [], "hint": "$9 + 16$." },
+        { "instruction": "Take the square root for the SE. (Give a whole number.)", "answer": "5", "accept": ["sqrt(25)"], "hint": "$5^2 = 25$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Variances add: $9 + 16 = 25$, so $\\mathrm{SE} = 5$. Adding standard deviations ($\\tfrac{15}{5} + \\tfrac{24}{6} = 7$) would be wrong — and always too big."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s06",
+      "concepts": ["difference-of-means"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two bottling lines: line 1 gives $\\bar{x}_1 = 520$ mL, $s_1 = 15$, $n_1 = 25$; line 2 gives $\\bar{x}_2 = 509$ mL, $s_2 = 24$, $n_2 = 36$. Compute $t = \\dfrac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{s_1^2/n_1 + s_2^2/n_2}}$.",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{s_1^2}{n_1} + \\dfrac{s_2^2}{n_2} = \\dfrac{225}{25} + \\dfrac{576}{36}$. (Give a whole number.)", "answer": "25", "accept": [], "hint": "$9 + 16$." },
+        { "instruction": "Standard error: the square root of that. (Give a whole number.)", "answer": "5", "accept": ["sqrt(25)"], "hint": "$5^2 = 25$." },
+        { "instruction": "Numerator: $520 - 509$. (Give a number.)", "answer": "11", "accept": [], "hint": "Subtract." },
+        { "instruction": "Divide: $t = \\dfrac{11}{5}$. (Give a decimal.)", "answer": "2.2", "accept": ["11/5"], "hint": "$11 / 5$." }
+      ],
+      "finalAnswer": { "value": "2.2", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = \\sqrt{9 + 16} = 5$ and the observed gap is 11 mL, so $t = 2.2$: the gap sits 2.2 standard errors from zero."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s07",
+      "concepts": ["difference-of-means"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A trial compares scores: treatment group $\\bar{x}_1 = 182$, $s_1 = 30$, $n_1 = 25$; control group $\\bar{x}_2 = 200$, $s_2 = 40$, $n_2 = 25$. Test whether the groups DIFFER (TWO-tailed) at $\\alpha = 0.05$: reject when $|t| > 1.960$.",
+      "steps": [
+        { "instruction": "Standard error: $\\sqrt{\\dfrac{900}{25} + \\dfrac{1600}{25}}$. (Give a whole number.)", "answer": "10", "accept": ["sqrt(100)"], "hint": "$36 + 64 = 100$." },
+        { "instruction": "Test statistic: $t = \\dfrac{182 - 200}{10}$. (Give a decimal.)", "answer": "-1.8", "accept": [], "hint": "The numerator is $-18$." },
+        { "instruction": "Compute $|t|$. (Give a decimal.)", "answer": "1.8", "accept": [], "hint": "Drop the sign." },
+        { "instruction": "Is $1.8 > 1.960$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Compare with the critical value." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "fail to reject", "accept": ["do not reject", "fail"], "hint": "Inside $\\pm 1.960$ is compatible with no difference." }
+      ],
+      "finalAnswer": { "value": "fail to reject", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = 10$, $t = -1.8$, and $|{-1.8}| = 1.8 \\le 1.960$: fail to reject. An 18-point gap LOOKS big, but with this much spread it is within two-sample noise."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s08",
+      "concepts": ["difference-of-means"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Delivery times: courier 1 gives $\\bar{x}_1 = 244$ min, $s_1 = 12$, $n_1 = 16$; courier 2 gives $\\bar{x}_2 = 250$ min, $s_2 = 20$, $n_2 = 25$. Compute the test statistic.",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{144}{16} + \\dfrac{400}{25}$. (Give a whole number.)", "answer": "25", "accept": [], "hint": "$9 + 16$." },
+        { "instruction": "Standard error: the square root. (Give a whole number.)", "answer": "5", "accept": ["sqrt(25)"], "hint": "$5^2 = 25$." },
+        { "instruction": "Numerator: $244 - 250$. (Give a number, sign included.)", "answer": "-6", "accept": [], "hint": "It is negative." },
+        { "instruction": "Divide: $t = \\dfrac{-6}{5}$. (Give a decimal.)", "answer": "-1.2", "accept": ["-6/5"], "hint": "$-6 / 5$." }
+      ],
+      "finalAnswer": { "value": "-1.2", "unit": "" },
+      "solutionNarrative": "$\\mathrm{SE} = \\sqrt{9 + 16} = 5$, so $t = -1.2$: courier 1 runs 1.2 standard errors faster — suggestive, but not extreme by usual critical values."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s09",
+      "concepts": ["difference-of-proportions"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "An A/B test: variant 1 converts 110 of $n_1 = 200$ visitors; variant 2 converts 90 of $n_2 = 200$. Compute the sample proportions and the POOLED proportion.",
+      "steps": [
+        { "instruction": "$\\hat{p}_1 = \\dfrac{110}{200}$. (Give a decimal.)", "answer": "0.55", "accept": ["110/200"], "hint": "Divide." },
+        { "instruction": "$\\hat{p}_2 = \\dfrac{90}{200}$. (Give a decimal.)", "answer": "0.45", "accept": ["90/200"], "hint": "Divide." },
+        { "instruction": "Pooled: $\\hat{p} = \\dfrac{110 + 90}{400}$. (Give a decimal.)", "answer": "0.5", "accept": ["200/400", "1/2", "0.50"], "hint": "All successes over all trials." }
+      ],
+      "finalAnswer": { "value": "0.5", "unit": "" },
+      "solutionNarrative": "$\\hat{p}_1 = 0.55$, $\\hat{p}_2 = 0.45$, pooled $\\hat{p} = 0.5$ — the single shared rate the null hypothesis believes in."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s10",
+      "concepts": ["difference-of-proportions"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Continuing the A/B test ($n_1 = n_2 = 200$, pooled $\\hat{p} = 0.5$): find $\\mathrm{SE} = \\sqrt{\\hat{p}(1-\\hat{p})\\left(\\dfrac{1}{n_1} + \\dfrac{1}{n_2}\\right)}$.",
+      "steps": [
+        { "instruction": "Compute $\\hat{p}(1-\\hat{p}) = 0.5 \\times 0.5$. (Give a decimal.)", "answer": "0.25", "accept": ["1/4"], "hint": "Multiply." },
+        { "instruction": "Compute $\\dfrac{1}{200} + \\dfrac{1}{200}$. (Give a decimal.)", "answer": "0.01", "accept": ["1/100", "0.010"], "hint": "$0.005 + 0.005$." },
+        { "instruction": "Multiply: $0.25 \\times 0.01$. (Give a decimal.)", "answer": "0.0025", "accept": [], "hint": "Move the decimal two places." },
+        { "instruction": "Square root for the SE. (Give a decimal.)", "answer": "0.05", "accept": ["sqrt(0.0025)", "0.050"], "hint": "$0.05^2 = 0.0025$." }
+      ],
+      "finalAnswer": { "value": "0.05", "unit": "" },
+      "solutionNarrative": "$0.25 \\times 0.01 = 0.0025$, whose square root is $\\mathrm{SE} = 0.05$. The SE uses the pooled rate because it measures noise in the null hypothesis's world."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s11",
+      "concepts": ["difference-of-proportions"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Finish the A/B test: $\\hat{p}_1 = 0.55$, $\\hat{p}_2 = 0.45$, pooled $\\mathrm{SE} = 0.05$. Test $H_a: p_1 > p_2$ (RIGHT-tailed) at $\\alpha = 0.05$: reject when $z > 1.645$.",
+      "steps": [
+        { "instruction": "Numerator: $\\hat{p}_1 - \\hat{p}_2 = 0.55 - 0.45$. (Give a decimal.)", "answer": "0.1", "accept": ["0.10"], "hint": "Subtract." },
+        { "instruction": "Test statistic: $z = \\dfrac{0.1}{0.05}$. (Give a number.)", "answer": "2", "accept": [], "hint": "Divide." },
+        { "instruction": "Is $2 > 1.645$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare with the critical value." },
+        { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Beyond the critical value means significant." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "$z = \\tfrac{0.10}{0.05} = 2 > 1.645$: reject $H_0$ — variant 1's higher conversion rate is statistically significant at the 5% level."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s12",
+      "concepts": ["difference-of-proportions"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A survey: 48 of $n_1 = 200$ urban customers and 32 of $n_2 = 200$ rural customers returned an item. Compute the pooled proportion and the pooled SE.",
+      "steps": [
+        { "instruction": "Pooled: $\\hat{p} = \\dfrac{48 + 32}{400}$. (Give a decimal.)", "answer": "0.2", "accept": ["80/400", "0.20", "1/5"], "hint": "$48 + 32 = 80$." },
+        { "instruction": "Compute $\\hat{p}(1-\\hat{p}) = 0.2 \\times 0.8$. (Give a decimal.)", "answer": "0.16", "accept": [], "hint": "Multiply." },
+        { "instruction": "Multiply by $\\dfrac{1}{200} + \\dfrac{1}{200} = 0.01$. (Give a decimal.)", "answer": "0.0016", "accept": [], "hint": "$0.16 \\times 0.01$." },
+        { "instruction": "Square root for the SE. (Give a decimal.)", "answer": "0.04", "accept": ["sqrt(0.0016)", "0.040"], "hint": "$0.04^2 = 0.0016$." }
+      ],
+      "finalAnswer": { "value": "0.04", "unit": "" },
+      "solutionNarrative": "Pooled $\\hat{p} = 0.2$, so the variance is $0.16 \\times 0.01 = 0.0016$ and $\\mathrm{SE} = 0.04$. The observed gap $0.24 - 0.16 = 0.08$ is exactly 2 standard errors — borderline territory."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s13",
+      "concepts": ["two-sample-intervals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two groups give $\\bar{x}_1 - \\bar{x}_2 = 12$ with margin of error $m = 9.8$. Build the confidence interval for $\\mu_1 - \\mu_2$ and interpret.",
+      "steps": [
+        { "instruction": "Lower bound: $12 - 9.8$. (Give a decimal.)", "answer": "2.2", "accept": [], "hint": "Subtract the margin." },
+        { "instruction": "Upper bound: $12 + 9.8$. (Give a decimal.)", "answer": "21.8", "accept": [], "hint": "Add the margin." },
+        { "instruction": "Does the interval contain 0? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Both endpoints are positive." }
+      ],
+      "finalAnswer": { "value": "(2.2, 21.8)", "unit": "" },
+      "solutionNarrative": "The interval $(2.2, 21.8)$ excludes 0, so every plausible value of $\\mu_1 - \\mu_2$ is positive: group 1's lead is statistically real — though its size is anywhere from small to huge."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s14",
+      "concepts": ["two-sample-intervals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two training programs differ by $\\bar{x}_1 - \\bar{x}_2 = 15$ points, with $s_1 = 15$, $n_1 = 25$, $s_2 = 24$, $n_2 = 36$. Build a 95% confidence interval for $\\mu_1 - \\mu_2$ using $z^* = 1.960$. Give exact values.",
+      "steps": [
+        { "instruction": "Standard error: $\\sqrt{\\dfrac{225}{25} + \\dfrac{576}{36}}$. (Give a whole number.)", "answer": "5", "accept": ["sqrt(25)"], "hint": "$9 + 16 = 25$." },
+        { "instruction": "Margin of error: $1.960 \\times 5$. Give the exact value.", "answer": "9.8", "accept": ["9.80", "9.800"], "hint": "Multiply." },
+        { "instruction": "Lower bound: $15 - 9.8$. Give the exact value.", "answer": "5.2", "accept": [], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $15 + 9.8$. Give the exact value.", "answer": "24.8", "accept": [], "hint": "Center plus margin." }
+      ],
+      "finalAnswer": { "value": "(5.2, 24.8)", "unit": "points" },
+      "solutionNarrative": "$\\mathrm{SE} = 5$, margin $= 9.8$, interval $(5.2, 24.8)$. Zero is excluded: program 1 is genuinely better, by somewhere between 5 and 25 points."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s15",
+      "concepts": ["two-sample-intervals"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "In the checkout A/B test, $\\hat{p}_1 = 0.55$ and $\\hat{p}_2 = 0.45$, and the standard error of the difference works out to $\\mathrm{SE} = 0.05$. Build a 95% confidence interval for $p_1 - p_2$ using $z^* = 1.960$. Give exact values.",
+      "steps": [
+        { "instruction": "Point estimate: $0.55 - 0.45$. (Give a decimal.)", "answer": "0.1", "accept": ["0.10"], "hint": "Subtract." },
+        { "instruction": "Margin of error: $1.960 \\times 0.05$. Give the exact value.", "answer": "0.098", "accept": ["0.0980"], "hint": "Multiply." },
+        { "instruction": "Lower bound: $0.1 - 0.098$. Give the exact value.", "answer": "0.002", "accept": [], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $0.1 + 0.098$. Give the exact value.", "answer": "0.198", "accept": [], "hint": "Center plus margin." },
+        { "instruction": "Does the interval contain 0? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Check the sign of the lower bound." }
+      ],
+      "finalAnswer": { "value": "(0.002, 0.198)", "unit": "" },
+      "solutionNarrative": "Interval $(0.002, 0.198)$: zero is excluded — barely. The improvement is statistically real, but its size ranges from a rounding error to 19.8 points; keep collecting data before betting the roadmap on it."
+    },
+    {
+      "id": "advanced-statistics.two-sample-inference.s16",
+      "concepts": ["two-sample-intervals"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two factories differ by $\\bar{x}_1 - \\bar{x}_2 = 30$ units, with $s_1 = 30$, $n_1 = 25$, $s_2 = 40$, $n_2 = 25$. Build a 90% confidence interval using $z^* = 1.645$. Give exact values.",
+      "steps": [
+        { "instruction": "Standard error: $\\sqrt{\\dfrac{900}{25} + \\dfrac{1600}{25}}$. (Give a whole number.)", "answer": "10", "accept": ["sqrt(100)"], "hint": "$36 + 64 = 100$." },
+        { "instruction": "Margin of error: $1.645 \\times 10$. Give the exact value.", "answer": "16.45", "accept": ["16.450"], "hint": "Multiply." },
+        { "instruction": "Lower bound: $30 - 16.45$. Give the exact value.", "answer": "13.55", "accept": [], "hint": "Center minus margin." },
+        { "instruction": "Upper bound: $30 + 16.45$. Give the exact value.", "answer": "46.45", "accept": [], "hint": "Center plus margin." }
+      ],
+      "finalAnswer": { "value": "(13.55, 46.45)", "unit": "units" },
+      "solutionNarrative": "$\\mathrm{SE} = 10$, margin $= 16.45$, interval $(13.55, 46.45)$: factory 1 outproduces factory 2 by a statistically solid but imprecisely known amount."
+    }
+  ]
+}
