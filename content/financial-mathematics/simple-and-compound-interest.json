@@ -1,0 +1,263 @@
+{
+  "id": "financial-mathematics.simple-and-compound-interest",
+  "subject": "financial-mathematics",
+  "title": "Simple and Compound Interest",
+  "prerequisites": ["algebra-2.exponential-functions"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "simple-interest",
+      "label": "Simple interest",
+      "microLesson": "**Simple interest** is a flat charge on the original amount only — it never earns interest on interest. The formula is $I = Prt$, where $P$ is the **principal**, $r$ the annual **rate as a decimal** (6% means $r = 0.06$), and $t$ the **time in years**. A \\$1,000 deposit at 4% for 3 years earns $I = 1000(0.04)(3) = \\$120$. The same three-part formula solves for any unknown: given the interest, principal, and time, the rate is $r = I/(Pt)$."
+    },
+    {
+      "id": "compound-interest",
+      "label": "Compound interest",
+      "microLesson": "**Compound interest** pays interest on prior interest, so a balance grows exponentially: $A = P\\left(1 + \\dfrac{r}{n}\\right)^{nt}$. Here $n$ is the number of compoundings per year — annual $n = 1$, monthly $n = 12$, quarterly $n = 4$. The trap is the **rate per period**: you divide the annual rate by $n$ and multiply the years by $n$. \\$2,000 at 6% compounded monthly for 2 years is $2000(1 + 0.06/12)^{24} = \\$2{,}254.32$ — always compute the parenthesis, raise it to $nt$, then multiply by $P$."
+    },
+    {
+      "id": "compounding-frequency-and-ear",
+      "label": "Compounding frequency and EAR",
+      "microLesson": "The same nominal rate earns more the more often it compounds. The **effective annual rate (EAR)** turns any compounding schedule into one comparable yearly figure: $\\text{EAR} = \\left(1 + \\dfrac{r}{n}\\right)^n - 1$. A 6% nominal rate compounded monthly has $\\text{EAR} = (1 + 0.06/12)^{12} - 1 \\approx 0.0617$, i.e. **6.17%** — above the stated 6%. EAR is how you fairly compare a card quoting 'monthly' against a bank quoting 'daily'; more frequent compounding always gives a higher (but converging) effective rate."
+    },
+    {
+      "id": "continuous-compounding",
+      "label": "Continuous compounding",
+      "microLesson": "As compounding gets infinitely frequent, $\\left(1 + \\dfrac{r}{n}\\right)^{nt}$ approaches the **continuous** limit $A = Pe^{rt}$, where $e \\approx 2.71828$. This is the ceiling ordinary compounding rises toward. \\$1,000 at 5% compounded continuously for 3 years is $A = 1000\\,e^{0.05 \\times 3} = 1000\\,e^{0.15} = \\$1{,}161.83$. Compute the exponent $rt$ first, raise $e$ to it, then multiply by $P$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Money that earns money\n\nInterest is the price of using money over time — what a lender charges or a saver earns. There are two fundamentally different ways to compute it, and the gap between them grows enormous over the years.\n\n## Simple interest: a flat charge on the principal\n\n**Simple interest** is charged only on the original amount, the **principal**. It never compounds. The formula is a single product:\n\n$$\\boxed{\\,I = Prt\\,}$$\n\n- $P$ = principal (the starting amount)\n- $r$ = annual interest rate **written as a decimal** (5% → $r = 0.05$)\n- $t$ = time in **years**\n\n**Worked example.** A \\$1,000 deposit at 4% simple interest for 3 years earns\n$$I = 1000 \\times 0.04 \\times 3 = \\$120.$$\nThe total in the account is $P + I = \\$1{,}120$. Because the rate always applies to the same \\$1,000, each year adds an identical \\$40.\n\nThe formula rearranges to solve for any variable: $r = \\dfrac{I}{Pt}$, $t = \\dfrac{I}{Pr}$, $P = \\dfrac{I}{rt}$. If a \\$1,500 deposit earned \\$270 in 3 years, the rate was $r = \\dfrac{270}{1500 \\times 3} = 0.06 = 6\\%$.\n\n> **Pitfall — percent vs. decimal.** The rate in the formula is always a *decimal*. Enter 6% as $0.06$, not $6$. Forgetting to divide by 100 inflates the answer a hundredfold.\n\n## Compound interest: interest on interest\n\n**Compound interest** adds each period's interest to the balance, so the *next* period earns interest on a larger amount. That feedback loop makes the balance grow exponentially:\n\n$$\\boxed{\\,A = P\\left(1 + \\frac{r}{n}\\right)^{nt}\\,}$$\n\n- $A$ = the final amount (principal + all interest)\n- $n$ = number of times interest compounds per year: **annual** $n = 1$, **semiannual** $n = 2$, **quarterly** $n = 4$, **monthly** $n = 12$, **daily** $n = 365$\n\nThe expression $\\dfrac{r}{n}$ is the **rate per period**, and $nt$ is the **total number of periods**.\n\n**Worked example.** \\$2,000 at 6% compounded **monthly** for 2 years:\n$$\\frac{r}{n} = \\frac{0.06}{12} = 0.005, \\qquad nt = 12 \\times 2 = 24,$$\n$$A = 2000\\,(1.005)^{24} = 2000 \\times 1.127160 = \\$2{,}254.32.$$\nThe \\$254.32 of growth is more than simple interest would give (\\$240), and the gap widens every year.\n\n> **Pitfall — rate per period vs. annual rate.** With monthly compounding you divide the *annual* rate by 12 AND multiply the years by 12. Using the annual rate with a monthly count (or vice versa) is the single most common compounding error.\n\nThe curve below shows why compounding pulls ahead: simple interest is a straight line, compound interest bends upward.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 20], \"yRange\": [900, 3300], \"grid\": true, \"curves\": [ { \"fn\": \"1000*(1.06)^x\", \"label\": \"compound 6%\", \"color\": \"accent\", \"labelAt\": 15 }, { \"fn\": \"1000 + 1000*0.06*x\", \"label\": \"simple 6%\", \"color\": \"warn\", \"labelAt\": 15 } ], \"points\": [ { \"x\": 0, \"y\": 1000, \"label\": \"$1000 start\", \"color\": \"dim\" } ], \"caption\": \"$1000 at 6%: compound (curved) vs. simple (straight) over 20 years\" }\n```\n\n## Compounding frequency and the effective annual rate\n\nBecause frequency changes the outcome, comparing two loans by their *stated* (nominal) rates can mislead. The **effective annual rate (EAR)** collapses any schedule into one honest yearly number:\n\n$$\\boxed{\\,\\text{EAR} = \\left(1 + \\frac{r}{n}\\right)^n - 1\\,}$$\n\nA 6% nominal rate compounded monthly has\n$$\\text{EAR} = (1 + 0.06/12)^{12} - 1 \\approx 0.061678 = 6.17\\%.$$\nThe effective rate (6.17%) exceeds the nominal rate (6%) precisely because interest compounds twelve times. Compounded daily, the same 6% gives an EAR of about 6.18% — higher still, but the gains shrink as $n$ grows.\n\n## Continuous compounding: the limit\n\nPush the frequency to infinity and the formula converges to a clean exponential built on Euler's number $e \\approx 2.71828$:\n\n$$\\boxed{\\,A = Pe^{rt}\\,}$$\n\n**Worked example.** \\$1,000 at 5% compounded continuously for 3 years:\n$$A = 1000\\,e^{0.05 \\times 3} = 1000\\,e^{0.15} = 1000 \\times 1.161834 = \\$1{,}161.83.$$\nContinuous compounding is the ceiling every finite schedule approaches — daily compounding already sits within pennies of it. Compute $rt$ first, then $e^{rt}$, then scale by $P$."
+  },
+  "application": {
+    "summary": "Interest math underlies every savings account, loan, credit card, and bond. Simple interest still appears in short-term notes and some auto financing; compound interest governs savings, mortgages, and credit-card balances; EAR is the fair way to compare offers with different compounding; and continuous compounding is the modeling standard in finance and the ceiling that frequent compounding approaches.",
+    "domains": ["personal finance", "banking", "credit", "investing"],
+    "workedExample": "**Comparing two savings accounts.**\n\nBank A offers 5.9% compounded **monthly**; Bank B offers 6.0% compounded **annually**. B's stated rate is higher — but is it really the better deal? Compare their effective annual rates.\n\nBank A: $\\text{EAR} = (1 + 0.059/12)^{12} - 1 \\approx 0.06062 = 6.06\\%$.\n\nBank B: with annual compounding the EAR equals the nominal rate, $6.00\\%$.\n\nOn \\$10,000 for one year, Bank A yields about \\$606 and Bank B \\$600. **Bank A wins**, despite the lower headline rate, because its more frequent compounding lifts the effective rate above B's. This is exactly why regulators require lenders to disclose an APY/EAR: the nominal rate alone doesn't tell you what you'll actually earn or owe.",
+    "domainNotes": [
+      "**Savings:** banks advertise APY, which is the EAR — the number to compare across accounts.",
+      "**Credit cards:** a quoted APR compounded daily produces an effective rate noticeably above the APR; carrying a balance compounds against you.",
+      "**Auto/short-term loans:** some use simple interest, so paying early reduces total interest more than on a compounding loan.",
+      "**Investing/modeling:** continuous compounding ($Pe^{rt}$) is the standard convention in finance and the ceiling frequent compounding converges to."
+    ]
+  },
+  "generators": ["fm1-simple-interest-1", "fm1-simple-interest-2", "fm1-simple-interest-3", "fm1-compound-interest-1", "fm1-compound-interest-2", "fm1-compound-interest-3", "fm1-compounding-ear-1", "fm1-compounding-ear-2", "fm1-compounding-ear-3", "fm1-continuous-1", "fm1-continuous-2", "fm1-continuous-3"],
+  "problems": [
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s01",
+      "concepts": ["simple-interest"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You deposit \\$1,000 in an account paying 4% simple interest per year. How much interest does it earn in 3 years? Use $I = Prt$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Write the rate 4% as a decimal.", "answer": "0.04", "accept": [], "hint": "Divide the percent by 100: $4/100$." },
+        { "instruction": "Compute $I = Prt = 1000 \\cdot 0.04 \\cdot 3$. Enter a number rounded to the nearest cent.", "answer": "120.00", "accept": ["120", "120.0", "$120.00"], "hint": "Multiply principal, rate, and time straight through." }
+      ],
+      "finalAnswer": { "value": "120.00", "unit": "dollars" },
+      "solutionNarrative": "Simple interest is $I = Prt = 1000(0.04)(3) = \\$120.00$ — a flat \\$40 each year on the unchanging \\$1,000 principal."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s02",
+      "concepts": ["simple-interest"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A \\$2,500 loan charges 5% simple interest per year for 4 years. Find the total amount owed (principal plus interest). Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the interest $I = Prt = 2500 \\cdot 0.05 \\cdot 4$. Enter a number rounded to the nearest cent.", "answer": "500.00", "accept": ["500", "500.0", "$500.00"], "hint": "$2500 \\times 0.05 \\times 4$." },
+        { "instruction": "Add the interest to the principal: $A = P + I$. Enter a number rounded to the nearest cent.", "answer": "3000.00", "accept": ["3000", "3000.0", "$3000.00"], "hint": "$2500 + 500$." }
+      ],
+      "finalAnswer": { "value": "3000.00", "unit": "dollars" },
+      "solutionNarrative": "Interest is $Prt = 2500(0.05)(4) = \\$500$, so the total owed is $P + I = \\$3{,}000.00$."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s03",
+      "concepts": ["simple-interest"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A \\$1,500 deposit earned \\$270 in simple interest over 3 years. What annual rate was paid? Solve $I = Prt$ for $r$. Enter the rate as a percent rounded to 2 decimals (e.g. 6.17).",
+      "steps": [
+        { "instruction": "Rearrange to $r = \\dfrac{I}{Pt}$ and compute the decimal rate: $\\dfrac{270}{1500 \\cdot 3}$. Enter as a decimal (e.g. 0.05).", "answer": "0.06", "accept": ["270/(1500*3)", "270/4500"], "hint": "Divide the interest by (principal times time)." },
+        { "instruction": "Convert that decimal to a percent. Enter as a percent rounded to 2 decimals.", "answer": "6", "accept": ["6.0", "6.00"], "hint": "Multiply the decimal by 100." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "percent" },
+      "solutionNarrative": "Solving $I = Prt$ for the rate: $r = \\dfrac{270}{1500 \\cdot 3} = 0.06 = 6\\%$ per year."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s04",
+      "concepts": ["compound-interest"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You invest \\$1,200 at 5% annual interest, compounded annually ($n = 1$), for 4 years. Use $A = P(1 + r/n)^{nt}$. Enter the final amount as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the annual growth factor $1 + r/n = 1 + 0.05/1$. Enter as a decimal.", "answer": "1.05", "accept": [], "hint": "Add the decimal rate to 1." },
+        { "instruction": "Compute $A = 1200 \\cdot 1.05^{4}$. Enter a number rounded to the nearest cent.", "answer": "1458.61", "accept": ["1458.610", "$1458.61"], "hint": "Raise 1.05 to the 4th power, then multiply by 1200." }
+      ],
+      "finalAnswer": { "value": "1458.61", "unit": "dollars" },
+      "solutionNarrative": "$A = 1200(1.05)^{4} = 1200 \\times 1.215506 = \\$1{,}458.61$ — each year's interest is added before the next is computed."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s05",
+      "concepts": ["compound-interest"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You invest \\$2,000 at 6% annual interest, compounded monthly ($n = 12$), for 2 years. Use $A = P(1 + r/n)^{nt}$. Enter the final amount as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the monthly factor $1 + r/n = 1 + 0.06/12$. Enter as a decimal.", "answer": "1.005", "accept": [], "hint": "Divide 0.06 by 12, then add 1." },
+        { "instruction": "Find the exponent $nt = 12 \\times 2$. Enter a whole number.", "answer": "24", "accept": [], "hint": "Compoundings per year times years." },
+        { "instruction": "Compute $A = 2000 \\cdot 1.005^{24}$. Enter a number rounded to the nearest cent.", "answer": "2254.32", "accept": ["2254.320", "$2254.32"], "hint": "Raise 1.005 to the 24th power, then multiply by 2000." }
+      ],
+      "finalAnswer": { "value": "2254.32", "unit": "dollars" },
+      "solutionNarrative": "Monthly factor $1 + 0.06/12 = 1.005$ over $nt = 24$ months: $A = 2000(1.005)^{24} = \\$2{,}254.32$. Divide the rate by 12 and multiply the years by 12."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s06",
+      "concepts": ["compound-interest"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You invest \\$5,000 at 8% annual interest, compounded quarterly ($n = 4$), for 3 years. Find the final amount and the interest earned. Use $A = P(1 + r/n)^{nt}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the quarterly factor $1 + 0.08/4$. Enter as a decimal.", "answer": "1.02", "accept": [], "hint": "Divide 0.08 by 4, add 1." },
+        { "instruction": "Find the exponent $nt = 4 \\times 3$. Enter a whole number.", "answer": "12", "accept": [], "hint": "Quarters in 3 years." },
+        { "instruction": "Compute $A = 5000 \\cdot 1.02^{12}$. Enter a number rounded to the nearest cent.", "answer": "6341.21", "accept": ["6341.210", "$6341.21"], "hint": "Raise 1.02 to the 12th power, then multiply by 5000." },
+        { "instruction": "Find the interest earned, $A - P$. Enter a number rounded to the nearest cent.", "answer": "1341.21", "accept": ["1341.210", "$1341.21"], "hint": "$6341.21 - 5000$." }
+      ],
+      "finalAnswer": { "value": "6341.21", "unit": "dollars" },
+      "solutionNarrative": "$A = 5000(1.02)^{12} = \\$6{,}341.21$, so the interest is $A - P = \\$1{,}341.21$."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s07",
+      "concepts": ["compounding-frequency-and-ear"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A savings account advertises a 6% nominal annual rate, compounded monthly. Find its effective annual rate (EAR) using $\\text{EAR} = (1 + r/n)^n - 1$. Enter as a percent rounded to 2 decimals (e.g. 6.17).",
+      "steps": [
+        { "instruction": "Find the monthly factor $1 + r/n = 1 + 0.06/12$. Enter as a decimal.", "answer": "1.005", "accept": [], "hint": "Divide 0.06 by 12, add 1." },
+        { "instruction": "Compute $(1 + 0.06/12)^{12} - 1$, then convert to a percent. Enter as a percent rounded to 2 decimals.", "answer": "6.17", "accept": ["1.005^12 - 1"], "hint": "Raise 1.005 to the 12th power, subtract 1, multiply by 100." }
+      ],
+      "finalAnswer": { "value": "6.17", "unit": "percent" },
+      "solutionNarrative": "$\\text{EAR} = (1.005)^{12} - 1 \\approx 0.061678 = 6.17\\%$ — slightly above the 6% nominal rate because interest compounds monthly."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s08",
+      "concepts": ["compounding-frequency-and-ear"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A credit card charges an 8% nominal annual rate, compounded quarterly ($n = 4$). Find the effective annual rate with $\\text{EAR} = (1 + r/n)^n - 1$. Enter as a percent rounded to 2 decimals (e.g. 6.17).",
+      "steps": [
+        { "instruction": "Find the quarterly factor $1 + 0.08/4$. Enter as a decimal.", "answer": "1.02", "accept": [], "hint": "Divide 0.08 by 4, add 1." },
+        { "instruction": "Compute $(1 + 0.08/4)^{4} - 1$ and convert to a percent. Enter as a percent rounded to 2 decimals.", "answer": "8.24", "accept": ["1.02^4 - 1"], "hint": "Fourth power of 1.02, minus 1, times 100." }
+      ],
+      "finalAnswer": { "value": "8.24", "unit": "percent" },
+      "solutionNarrative": "$\\text{EAR} = (1.02)^{4} - 1 \\approx 0.082432 = 8.24\\%$. Quarterly compounding lifts the effective rate above the 8% nominal figure."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s09",
+      "concepts": ["compounding-frequency-and-ear"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A card quotes a 12% nominal annual rate compounded monthly. Find its effective annual rate, and decide whether the effective rate is higher or lower than the nominal 12%. Enter percents rounded to 2 decimals (e.g. 6.17).",
+      "steps": [
+        { "instruction": "Find the monthly factor $1 + 0.12/12$. Enter as a decimal.", "answer": "1.01", "accept": [], "hint": "Divide 0.12 by 12, add 1." },
+        { "instruction": "Compute $(1 + 0.12/12)^{12} - 1$ as a percent. Enter as a percent rounded to 2 decimals.", "answer": "12.68", "accept": ["1.01^12 - 1"], "hint": "12th power of 1.01, minus 1, times 100." },
+        { "instruction": "Is the effective rate higher or lower than the 12% nominal rate? Answer 'higher' or 'lower'.", "answer": "higher", "accept": ["greater", "above", "more"], "hint": "Compounding more than once a year always raises the effective rate." }
+      ],
+      "finalAnswer": { "value": "12.68", "unit": "percent" },
+      "solutionNarrative": "$\\text{EAR} = (1.01)^{12} - 1 \\approx 0.126825 = 12.68\\%$, higher than the 12% nominal rate — the monthly compounding is what pushes it up."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s10",
+      "concepts": ["continuous-compounding"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You invest \\$1,000 at 5% annual interest, compounded continuously, for 3 years. Use $A = Pe^{rt}$. Enter the final amount as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the exponent $rt = 0.05 \\times 3$. Enter as a decimal.", "answer": "0.15", "accept": [], "hint": "Multiply the decimal rate by the years." },
+        { "instruction": "Compute $A = 1000 \\cdot e^{0.15}$. Enter a number rounded to the nearest cent.", "answer": "1161.83", "accept": ["1161.830", "$1161.83", "1000*e^0.15", "1000*e^(0.15)"], "hint": "Use $e \\approx 2.71828$: raise $e$ to 0.15, then multiply by 1000." }
+      ],
+      "finalAnswer": { "value": "1161.83", "unit": "dollars" },
+      "solutionNarrative": "$A = 1000\\,e^{0.05 \\times 3} = 1000\\,e^{0.15} = \\$1{,}161.83$ — the ceiling ordinary compounding rises toward."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s11",
+      "concepts": ["continuous-compounding"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "\\$3,000 grows at 6% compounded continuously for 5 years. Find the final amount and the interest earned. Use $A = Pe^{rt}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the exponent $rt = 0.06 \\times 5$. Enter as a decimal.", "answer": "0.3", "accept": ["0.30"], "hint": "Rate times time." },
+        { "instruction": "Compute $A = 3000 \\cdot e^{0.3}$. Enter a number rounded to the nearest cent.", "answer": "4049.58", "accept": ["4049.580", "$4049.58", "3000*e^(0.3)"], "hint": "Raise $e$ to 0.3, then multiply by 3000." },
+        { "instruction": "Find the interest, $A - P$. Enter a number rounded to the nearest cent.", "answer": "1049.58", "accept": ["1049.580", "$1049.58"], "hint": "$4049.58 - 3000$." }
+      ],
+      "finalAnswer": { "value": "4049.58", "unit": "dollars" },
+      "solutionNarrative": "$A = 3000\\,e^{0.3} = \\$4{,}049.58$, so the interest is $A - P = \\$1{,}049.58$."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s12",
+      "concepts": ["continuous-compounding", "compound-interest"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "\\$2,000 is offered at 5% for 4 years either compounded annually or compounded continuously. Find each ending balance and the difference. Use $A = P(1+r)^t$ and $A = Pe^{rt}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Annual: compute $A = 2000 \\cdot 1.05^{4}$. Enter a number rounded to the nearest cent.", "answer": "2431.01", "accept": ["2431.010", "$2431.01"], "hint": "Raise 1.05 to the 4th power, times 2000." },
+        { "instruction": "Continuous: compute $A = 2000 \\cdot e^{0.2}$. Enter a number rounded to the nearest cent.", "answer": "2442.81", "accept": ["2442.810", "$2442.81", "2000*e^(0.2)"], "hint": "Exponent $rt = 0.05 \\times 4 = 0.2$; raise $e$ to it, times 2000." },
+        { "instruction": "Find how much MORE continuous compounding earns (continuous minus annual). Enter a number rounded to the nearest cent.", "answer": "11.79", "accept": ["11.790", "$11.79"], "hint": "$2442.81 - 2431.01$." }
+      ],
+      "finalAnswer": { "value": "11.79", "unit": "dollars" },
+      "solutionNarrative": "Annual gives \\$2,431.01 and continuous \\$2,442.81, a difference of \\$11.79 — the extra squeezed out by compounding infinitely often."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s13",
+      "concepts": ["simple-interest"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the simple interest on $P = 800$ at $r = 3\\%$ for $t = 5$ years using $I = Prt$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Write 3% as a decimal.", "answer": "0.03", "accept": [], "hint": "$3/100$." },
+        { "instruction": "Compute $I = 800 \\cdot 0.03 \\cdot 5$. Enter a number rounded to the nearest cent.", "answer": "120.00", "accept": ["120", "120.0", "$120.00"], "hint": "Multiply straight through." }
+      ],
+      "finalAnswer": { "value": "120.00", "unit": "dollars" },
+      "solutionNarrative": "$I = 800(0.03)(5) = \\$120.00$."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s14",
+      "concepts": ["compound-interest"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $A = P(1 + r/n)^{nt}$ for $P = 1000$, $r = 0.04$, $n = 2$ (semiannual), $t = 3$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the per-period factor $1 + 0.04/2$. Enter as a decimal.", "answer": "1.02", "accept": [], "hint": "Divide 0.04 by 2, add 1." },
+        { "instruction": "Find the exponent $nt = 2 \\times 3$. Enter a whole number.", "answer": "6", "accept": [], "hint": "Periods per year times years." },
+        { "instruction": "Compute $A = 1000 \\cdot 1.02^{6}$. Enter a number rounded to the nearest cent.", "answer": "1126.16", "accept": ["1126.160", "$1126.16"], "hint": "Raise 1.02 to the 6th power, times 1000." }
+      ],
+      "finalAnswer": { "value": "1126.16", "unit": "dollars" },
+      "solutionNarrative": "$A = 1000(1.02)^{6} = \\$1{,}126.16$ with semiannual compounding."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s15",
+      "concepts": ["continuous-compounding"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $A = Pe^{rt}$ for $P = 500$, $r = 0.04$, $t = 2$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the exponent $rt = 0.04 \\times 2$. Enter as a decimal.", "answer": "0.08", "accept": [], "hint": "Rate times time." },
+        { "instruction": "Compute $A = 500 \\cdot e^{0.08}$. Enter a number rounded to the nearest cent.", "answer": "541.64", "accept": ["541.640", "$541.64", "500*e^(0.08)"], "hint": "Raise $e$ to 0.08, times 500." }
+      ],
+      "finalAnswer": { "value": "541.64", "unit": "dollars" },
+      "solutionNarrative": "$A = 500\\,e^{0.08} = \\$541.64$."
+    },
+    {
+      "id": "financial-mathematics.simple-and-compound-interest.s16",
+      "concepts": ["compounding-frequency-and-ear", "compound-interest"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two banks both quote a 6% nominal rate: Bank M compounds monthly, Bank Q compounds quarterly. Compute each effective annual rate and decide which is higher. Enter percents rounded to 2 decimals (e.g. 6.17).",
+      "steps": [
+        { "instruction": "Bank M: compute $(1 + 0.06/12)^{12} - 1$ as a percent. Enter as a percent rounded to 2 decimals.", "answer": "6.17", "accept": [], "hint": "Monthly: 12th power of 1.005." },
+        { "instruction": "Bank Q: compute $(1 + 0.06/4)^{4} - 1$ as a percent. Enter as a percent rounded to 2 decimals.", "answer": "6.14", "accept": [], "hint": "Quarterly: 4th power of 1.015." },
+        { "instruction": "Which bank's effective rate is higher — the one compounding more often or less often? Answer 'more often' or 'less often'.", "answer": "more often", "accept": ["more", "monthly", "more frequently"], "hint": "More frequent compounding always gives a higher effective rate." }
+      ],
+      "finalAnswer": { "value": "6.17", "unit": "percent" },
+      "solutionNarrative": "Monthly EAR is 6.17% and quarterly EAR is 6.14%, so Bank M (compounding more often) has the higher effective rate — though the gap is small and shrinks toward the continuous limit."
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "id": "numerical-methods.root-finding-open",
+  "subject": "numerical-methods",
+  "title": "Open Methods: Newton and Secant",
+  "prerequisites": ["numerical-methods.root-finding-bracketing", "calculus-1.differentiation-rules"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "newton-iteration",
+      "label": "Newton's method",
+      "microLesson": "**Newton's method** follows the tangent line to a root. From a current guess $x_n$, it slides down the tangent to where that line hits zero, giving the update $x_{n+1} = x_n - \\dfrac{f(x_n)}{f'(x_n)}$. It needs both $f$ and its derivative $f'$. For $f(x) = x^2 - 5$ ($f'(x) = 2x$) starting at $x_0 = 2$: $f(2) = -1$, $f'(2) = 4$, so $x_1 = 2 - \\frac{-1}{4} = 2.25$ — already close to $\\sqrt{5} \\approx 2.2361$. When it works, Newton is spectacularly fast."
+    },
+    {
+      "id": "secant-iteration",
+      "label": "The secant method",
+      "microLesson": "The **secant method** is Newton's method without the derivative: it replaces the tangent with the line through the two most recent points. The update uses only function values: $x_{n+1} = x_n - \\dfrac{f(x_n)(x_n - x_{n-1})}{f(x_n) - f(x_{n-1})}$. You seed it with two starting guesses $x_0, x_1$. For $f(x) = x^2 - 5$ with $x_0 = 2$, $x_1 = 3$: $f(2) = -1$, $f(3) = 4$, so $x_2 = 3 - \\frac{4(3-2)}{4-(-1)} = 3 - 0.8 = 2.2$. Handy when $f'$ is unavailable or expensive."
+    },
+    {
+      "id": "fixed-point-iteration",
+      "label": "Fixed-point iteration",
+      "microLesson": "Rearrange $f(x) = 0$ into the form $x = g(x)$; a solution is then a **fixed point** where the input equals the output. **Fixed-point iteration** just repeats $x_{n+1} = g(x_n)$ and hopes it settles. It converges near a fixed point exactly when the map is a contraction there — when $|g'(x^*)| < 1$. If $|g'| > 1$ the iteration is pushed *away* from the root and diverges. So the same equation can be rewritten as several different $g$'s, some convergent and some not; choosing a $g$ with small $|g'|$ is the whole art."
+    },
+    {
+      "id": "convergence-order",
+      "label": "Order of convergence",
+      "microLesson": "**Order of convergence** measures how fast the error shrinks. **Linear** convergence multiplies the error by a fixed factor each step ($e_{n+1} \\approx C\\,e_n$) — bisection and typical fixed-point iteration. **Quadratic** convergence squares it ($e_{n+1} \\approx C\\,e_n^2$), roughly *doubling* the number of correct digits per step — that's Newton's method at a simple root. The secant method sits between, with order about $1.618$ (the golden ratio). Faster order is why an open method can reach machine precision in a handful of steps where bisection needs dozens."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Trading safety for speed\n\nBracketing methods never fail, but they crawl — one bit of accuracy per step. **Open methods** drop the requirement of a guaranteed bracket and, in exchange, converge dramatically faster. The risk is that without a bracket they can overshoot, oscillate, or diverge. This topic covers the three great open methods — **Newton**, **secant**, and **fixed-point iteration** — and the language of **convergence order** that explains why they're worth the risk.\n\n## Newton's method: follow the tangent\n\nStart at a guess $x_n$. The tangent line to $f$ there is the best straight-line model of the curve; follow it to where it crosses zero and use that as your next guess. The tangent has slope $f'(x_n)$ through the point $(x_n, f(x_n))$, and its x-intercept works out to\n\n$$\\boxed{\\,x_{n+1} = x_n - \\frac{f(x_n)}{f'(x_n)}\\,}.$$\n\n### Worked iterations on $f(x) = x^2 - 5$, $f'(x) = 2x$, from $x_0 = 2$\n\n| step | $x_n$ | $f(x_n)$ | $f'(x_n)$ | $x_{n+1} = x_n - f/f'$ |\n|------|-------|----------|-----------|------------------------|\n| 0 | 2 | $-1$ | 4 | $2 - \\frac{-1}{4} = 2.25$ |\n| 1 | 2.25 | $0.0625$ | 4.5 | $2.25 - \\frac{0.0625}{4.5} = 2.23611$ |\n| 2 | 2.23611 | $0.00019$ | 4.47222 | $2.23607$ |\n\nThe true root is $\\sqrt{5} = 2.2360679\\ldots$. After just **two** steps Newton matches it to five decimals. Notice the correct-digit count roughly *doubles* each step — that's quadratic convergence, drawn below as tangents sliding into the root:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[1.8,3.2],\"yRange\":[-2,5],\"grid\":true,\"curves\":[{\"fn\":\"x^2 - 5\",\"label\":\"f(x) = x² − 5\",\"color\":\"accent\",\"labelAt\":2.95}],\"segments\":[{\"from\":[3,4],\"to\":[2.3333,0],\"color\":\"warn\"},{\"from\":[2.3333,0],\"to\":[2.3333,0.4443],\"dashed\":true,\"color\":\"muted\"},{\"from\":[2.3333,0.4443],\"to\":[2.2381,0],\"color\":\"good\"}],\"points\":[{\"x\":3,\"y\":4,\"label\":\"x₀ = 3\",\"color\":\"warn\"},{\"x\":2.3333,\"y\":0,\"label\":\"x₁\",\"color\":\"warn\"},{\"x\":2.2361,\"y\":0,\"label\":\"root √5\",\"color\":\"accent\"}],\"caption\":\"Each Newton tangent (here from x₀ = 3) crosses the axis much nearer the root; successive tangents converge on √5 ≈ 2.2361.\"}\n```\n\n## The secant method: Newton without a derivative\n\nSometimes $f'$ is unknown or costly. The **secant method** approximates the tangent by the **secant line** through the two most recent points $(x_{n-1}, f(x_{n-1}))$ and $(x_n, f(x_n))$. Its x-intercept gives\n\n$$x_{n+1} = x_n - \\frac{f(x_n)\\,(x_n - x_{n-1})}{f(x_n) - f(x_{n-1})}.$$\n\nYou seed it with two guesses. It uses only function values — no derivative — and converges at order $\\approx 1.618$, nearly as fast as Newton, which is often the best trade when derivatives are painful.\n\nFor $f(x) = x^2 - 5$ with $x_0 = 2$, $x_1 = 3$: $f(2) = -1$, $f(3) = 4$, so $x_2 = 3 - \\dfrac{4(1)}{5} = 2.2$. The next step uses $x_1 = 3$ and $x_2 = 2.2$ to push closer still.\n\n## Fixed-point iteration: rewrite and repeat\n\nAny root problem $f(x) = 0$ can be **rearranged** into $x = g(x)$, so a root becomes a **fixed point** of $g$ — a value that maps to itself. Then simply iterate:\n\n$$x_{n+1} = g(x_n).$$\n\nWhether this converges hinges on one number. Near a fixed point $x^*$, each step multiplies the error by roughly $g'(x^*)$. So the iteration converges when\n\n$$|g'(x^*)| < 1 \\quad (\\text{a contraction})$$\n\nand **diverges** when $|g'(x^*)| > 1$. The catch: the *same* equation yields many different $g$'s. Solving $x^2 - 5 = 0$ as $x = 5/x$ gives $g'(x) = -5/x^2$, which has magnitude $1$ at the root — it stalls, oscillating. Rewriting instead as $x = \\tfrac{1}{2}(x + 5/x)$ (which is exactly Newton's iteration here) gives $g'(x^*) = 0$ and converges beautifully. Choosing a good $g$ is the entire skill.\n\n## Order of convergence: the vocabulary of speed\n\nLet $e_n = |x_n - x^*|$ be the error at step $n$. Methods are classified by how $e_{n+1}$ relates to $e_n$:\n\n- **Linear** ($e_{n+1} \\approx C\\,e_n$, $0 < C < 1$): error shrinks by a fixed factor. Bisection ($C = \\tfrac12$) and generic fixed-point iteration. Adds a *constant* number of digits per step.\n- **Quadratic** ($e_{n+1} \\approx C\\,e_n^2$): error is squared. Newton at a simple root — *doubles* the correct digits each step. From $e_n = 10^{-2}$ you jump to about $10^{-4}$, then $10^{-8}$.\n- **Superlinear, order $\\approx 1.618$**: the secant method — between linear and quadratic.\n\nA quick numeric feel: with quadratic convergence and $C = 1$, an error of $0.1$ becomes $0.01$, then $0.0001$, then $0.00000001$ — machine precision in four steps. That explosive speed is exactly why open methods dominate when they're safe to use.\n\n## Pitfalls\n\n- **Newton needs $f'(x_n) \\ne 0$.** A near-zero derivative sends the tangent nearly horizontal and the next guess flying off — division by (almost) zero.\n- **Newton can diverge or cycle.** A bad start, an inflection point, or a flat region can make iterates oscillate or run away. No bracket means no safety net.\n- **Fixed-point iteration diverges when $|g'| > 1$.** Always check the derivative condition before trusting a rearrangement.\n- **Multiple roots slow Newton to linear.** At a repeated root $f$ and $f'$ vanish together, and the quadratic speed-up is lost."
+  },
+  "application": {
+    "summary": "Open methods power the fast equation-solving inside almost every technical tool: Newton's method is the engine of optimization and machine-learning training, of GPU shaders computing inverse square roots, and of the solvers in circuit and structural software. Their quadratic speed is what makes real-time and large-scale computation feasible.",
+    "domains": ["machine learning", "computer graphics", "engineering", "robotics"],
+    "workedExample": "**How a calculator finds a square root**\n\nYou press $\\sqrt{\\,}$ and get $\\sqrt{5} = 2.2360679\\ldots$ instantly. Under the hood is Newton's method applied to $f(x) = x^2 - 5$. Because $f'(x) = 2x$, the update simplifies to the famous Babylonian formula\n\n$$x_{n+1} = x_n - \\frac{x_n^2 - 5}{2x_n} = \\frac{1}{2}\\left(x_n + \\frac{5}{x_n}\\right),$$\n\nan average of a guess and what it would need to pair with to make $5$. Starting from a rough $x_0 = 2$:\n\n- $x_1 = \\tfrac12(2 + 5/2) = \\tfrac12(2 + 2.5) = 2.25$\n- $x_2 = \\tfrac12(2.25 + 5/2.25) = \\tfrac12(2.25 + 2.2222) = 2.23611$\n- $x_3 = \\tfrac12(2.23611 + 5/2.23611) = 2.2360680$\n\nThree steps reach the display's full precision. Each step doubles the correct digits — quadratic convergence — so even from a crude start the hardware finishes in microseconds. The very same idea, applied to $f(x) = 1/x^2 - a$, gives the legendary 'fast inverse square root' used in real-time graphics: one clever initial guess plus a single Newton step is enough to shade a scene at 60 frames per second. Newton's method isn't academic — it's in the silicon.",
+    "domainNotes": [
+      "**Machine learning:** training minimizes a loss by finding where its gradient is zero; Newton and quasi-Newton (BFGS) methods use curvature to converge fast.",
+      "**Computer graphics:** the fast inverse square root and many shading computations are a good initial guess refined by one or two Newton steps.",
+      "**Engineering:** nonlinear finite-element and circuit solvers run Newton iterations at every time step of a simulation.",
+      "**Robotics:** inverse kinematics solves nonlinear joint equations with Newton-type iteration to hit a target pose in real time."
+    ]
+  },
+  "generators": ["nm1-newton-1", "nm1-newton-2", "nm1-newton-3", "nm1-secant-1", "nm1-secant-2", "nm1-secant-3", "nm1-fixedpoint-1", "nm1-fixedpoint-2", "nm1-fixedpoint-3", "nm1-order-1", "nm1-order-2", "nm1-order-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.root-finding-open.s01",
+      "concepts": ["newton-iteration"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Newton's method: $x_1 = x_0 - \\frac{f(x_0)}{f'(x_0)}$. For $f(x) = x^2 - 5$ ($f'(x) = 2x$) with $x_0 = 2$, take one step. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $f(2) = 2^2 - 5$.", "answer": "-1", "accept": [], "hint": "$4 - 5$." },
+        { "instruction": "Compute $f'(2) = 2\\cdot 2$.", "answer": "4", "accept": [], "hint": "$2 \\times 2$." },
+        { "instruction": "Compute $x_1 = 2 - \\frac{-1}{4}$. Round to 4 decimals.", "answer": "2.2500", "accept": ["2.25"], "hint": "$2 + 0.25$." }
+      ],
+      "finalAnswer": { "value": "2.25", "unit": "" },
+      "solutionNarrative": "$x_1 = 2 - \\frac{-1}{4} = 2.25$, already near $\\sqrt{5} \\approx 2.2361$."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s02",
+      "concepts": ["newton-iteration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^3 - 20$ with $f'(x) = 3x^2$ and $x_0 = 3$, take one Newton step. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $f(3) = 3^3 - 20$.", "answer": "7", "accept": [], "hint": "$27 - 20$." },
+        { "instruction": "Compute $f'(3) = 3\\cdot 3^2$.", "answer": "27", "accept": [], "hint": "$3 \\times 9$." },
+        { "instruction": "Compute $x_1 = 3 - \\frac{7}{27}$. Round to 4 decimals.", "answer": "2.7407", "accept": ["2.7408", "2.741"], "hint": "$\\frac{7}{27} \\approx 0.2593$." }
+      ],
+      "finalAnswer": { "value": "2.7407", "unit": "" },
+      "solutionNarrative": "$x_1 = 3 - \\frac{7}{27} \\approx 2.7407$, converging to $\\sqrt[3]{20} \\approx 2.7144$."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s03",
+      "concepts": ["newton-iteration"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Take TWO Newton steps for $f(x) = x^2 - 7$ ($f'(x) = 2x$) from $x_0 = 3$. Report $x_2$, rounded to 4 decimals.",
+      "steps": [
+        { "instruction": "Step 1: $x_1 = 3 - \\frac{3^2 - 7}{2\\cdot 3}$. Round to 4 decimals.", "answer": "2.6667", "accept": ["2.6666", "2.667"], "hint": "$3 - \\frac{2}{6}$." },
+        { "instruction": "Step 2: with $x_1 = 2.6667$, $x_2 = x_1 - \\frac{x_1^2 - 7}{2x_1}$. Round to 4 decimals.", "answer": "2.6458", "accept": ["2.6457", "2.646"], "hint": "$x_1^2 \\approx 7.1113$, so numerator $\\approx 0.1113$." }
+      ],
+      "finalAnswer": { "value": "2.6458", "unit": "" },
+      "solutionNarrative": "$x_1 \\approx 2.6667$, $x_2 \\approx 2.6458$ — closing fast on $\\sqrt{7} \\approx 2.6458$."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s04",
+      "concepts": ["secant-iteration"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The secant method: $x_2 = x_1 - \\frac{f(x_1)(x_1 - x_0)}{f(x_1) - f(x_0)}$. With $x_0 = 2$, $x_1 = 3$, $f(x_0) = -1$, $f(x_1) = 4$, compute $x_2$. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Plug in: $x_2 = 3 - \\frac{4(3 - 2)}{4 - (-1)}$. Round to 4 decimals.", "answer": "2.2000", "accept": ["2.2"], "hint": "Denominator $= 5$; $\\frac{4}{5} = 0.8$." }
+      ],
+      "finalAnswer": { "value": "2.2", "unit": "" },
+      "solutionNarrative": "$x_2 = 3 - \\frac{4}{5} = 2.2$."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s05",
+      "concepts": ["secant-iteration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Apply one secant step to $f(x) = x^2 - 5$ using $x_0 = 2$, $x_1 = 3$. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $f(2) = 2^2 - 5$.", "answer": "-1", "accept": [], "hint": "$4 - 5$." },
+        { "instruction": "Compute $f(3) = 3^2 - 5$.", "answer": "4", "accept": [], "hint": "$9 - 5$." },
+        { "instruction": "Compute $x_2 = 3 - \\frac{4(3 - 2)}{4 - (-1)}$. Round to 4 decimals.", "answer": "2.2000", "accept": ["2.2"], "hint": "Denominator $= 5$." }
+      ],
+      "finalAnswer": { "value": "2.2", "unit": "" },
+      "solutionNarrative": "$f(2) = -1$, $f(3) = 4$, so $x_2 = 3 - \\frac{4}{5} = 2.2$, near $\\sqrt{5} \\approx 2.2361$."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s06",
+      "concepts": ["secant-iteration"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Do TWO secant steps for $f(x) = x^2 - 7$ from $x_0 = 2$, $x_1 = 3$. Report $x_3$, rounded to 4 decimals.",
+      "steps": [
+        { "instruction": "With $f(2) = -3$, $f(3) = 2$, compute $x_2 = 3 - \\frac{2(3-2)}{2-(-3)}$. Round to 4 decimals.", "answer": "2.6000", "accept": ["2.6"], "hint": "Denominator $= 5$; $\\frac{2}{5} = 0.4$." },
+        { "instruction": "Now $f(2.6) = 2.6^2 - 7 = -0.24$. Compute $x_3 = 2.6 - \\frac{-0.24(2.6 - 3)}{-0.24 - 2}$. Round to 4 decimals.", "answer": "2.6429", "accept": ["2.6428", "2.643"], "hint": "Points are $x_1 = 3$ and $x_2 = 2.6$; denominator $= -2.24$." }
+      ],
+      "finalAnswer": { "value": "2.6429", "unit": "" },
+      "solutionNarrative": "$x_2 = 2.6$, then $x_3 \\approx 2.6429$, closing on $\\sqrt{7} \\approx 2.6458$ without any derivative."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s07",
+      "concepts": ["fixed-point-iteration"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Fixed-point iteration repeats $x_{n+1} = g(x_n)$. For $g(x) = \\frac{x + 6}{3}$ and $x_0 = 3$, compute $x_1 = g(x_0)$. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $g(3) = \\frac{3 + 6}{3}$. Round to 4 decimals.", "answer": "3.0000", "accept": ["3"], "hint": "$\\frac{9}{3}$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$x_1 = g(3) = \\frac{9}{3} = 3$ — in fact $3$ is the fixed point here."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s08",
+      "concepts": ["fixed-point-iteration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $g(x) = \\frac{x + 8}{4}$, decide whether fixed-point iteration converges near a fixed point (it does when $|g'| < 1$), then take one step from $x_0 = 2$.",
+      "steps": [
+        { "instruction": "$g'(x) = \\frac{1}{4}$, a constant. Since $|\\frac{1}{4}| < 1$, converges or diverges?", "answer": "converges", "accept": ["convergent", "converge"], "hint": "Derivative magnitude below 1 is the contraction condition." },
+        { "instruction": "Compute $x_1 = g(2) = \\frac{2 + 8}{4}$. Round to 4 decimals.", "answer": "2.5000", "accept": ["2.5"], "hint": "$\\frac{10}{4}$." }
+      ],
+      "finalAnswer": { "value": "converges", "unit": "" },
+      "solutionNarrative": "$|g'| = \\frac14 < 1$, so it converges; the first step gives $x_1 = 2.5$."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s09",
+      "concepts": ["fixed-point-iteration"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Consider $g(x) = 2x - 3$ for fixed-point iteration. Check the convergence condition, then iterate twice from $x_0 = 4$ to see what happens.",
+      "steps": [
+        { "instruction": "$g'(x) = 2$. Since $|2| > 1$, converges or diverges?", "answer": "diverges", "accept": ["divergent", "diverge"], "hint": "Derivative magnitude above 1 stretches errors each step." },
+        { "instruction": "Compute $x_1 = 2\\cdot 4 - 3$.", "answer": "5", "accept": [], "hint": "$8 - 3$." },
+        { "instruction": "Compute $x_2 = 2\\cdot 5 - 3$.", "answer": "7", "accept": [], "hint": "$10 - 3$; note it is moving AWAY from the fixed point $3$." }
+      ],
+      "finalAnswer": { "value": "diverges", "unit": "" },
+      "solutionNarrative": "$|g'| = 2 > 1$, so it diverges: $x_1 = 5$, $x_2 = 7$ march away from the fixed point $x^* = 3$."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s10",
+      "concepts": ["convergence-order"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "What is the order of convergence of Newton's method at a simple root? Answer linear or quadratic.",
+      "steps": [
+        { "instruction": "State Newton's convergence order (linear or quadratic).", "answer": "quadratic", "accept": [], "hint": "It roughly doubles the correct digits each step." }
+      ],
+      "finalAnswer": { "value": "quadratic", "unit": "" },
+      "solutionNarrative": "Newton's method converges quadratically at a simple root."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s11",
+      "concepts": ["convergence-order"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For quadratically convergent Newton's method the errors satisfy $e_{n+1} \\approx C\\,e_n^2$. With $C = 2$ and current error $e_n = 0.1$, estimate the next error. Round to 6 decimals.",
+      "steps": [
+        { "instruction": "Compute $e_{n+1} = 2\\cdot(0.1)^2$. Round to 6 decimals.", "answer": "0.020000", "accept": ["0.02"], "hint": "$0.1^2 = 0.01$, times 2." }
+      ],
+      "finalAnswer": { "value": "0.02", "unit": "" },
+      "solutionNarrative": "$e_{n+1} \\approx 2(0.1)^2 = 0.02$ — the error is roughly squared, the mark of quadratic convergence."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s12",
+      "concepts": ["convergence-order"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A method produces errors $e_0 = 0.8$, $e_1 = 0.2$, $e_2 = 0.05$. Each error is the same constant times the previous. Find the ratio $\\frac{e_1}{e_0}$, then name the convergence order.",
+      "steps": [
+        { "instruction": "Compute the ratio $\\frac{e_1}{e_0} = \\frac{0.2}{0.8}$. Round to 4 decimals.", "answer": "0.2500", "accept": ["0.25"], "hint": "$0.2 \\div 0.8$." },
+        { "instruction": "A constant nonzero error ratio each step means which order — linear or quadratic?", "answer": "linear", "accept": [], "hint": "Quadratic would shrink the ratio itself each step." }
+      ],
+      "finalAnswer": { "value": "linear", "unit": "" },
+      "solutionNarrative": "The ratio is a constant $0.25$ each step ($0.2/0.8 = 0.05/0.2 = 0.25$), so convergence is linear."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s13",
+      "concepts": ["newton-iteration"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A calculator finds $\\sqrt{10}$ via Newton on $f(x) = x^2 - 10$, i.e. $x_{n+1} = \\frac12(x_n + 10/x_n)$. From $x_0 = 3$, take one step. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $10/3$. Round to 4 decimals.", "answer": "3.3333", "accept": ["3.3334"], "hint": "$10 \\div 3$." },
+        { "instruction": "Average: $x_1 = \\frac12(3 + 3.3333)$. Round to 4 decimals.", "answer": "3.1667", "accept": ["3.1666", "3.167"], "hint": "$\\frac{6.3333}{2}$." }
+      ],
+      "finalAnswer": { "value": "3.1667", "unit": "" },
+      "solutionNarrative": "$x_1 = \\frac12(3 + 10/3) \\approx 3.1667$, near $\\sqrt{10} \\approx 3.1623$ after a single step."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s14",
+      "concepts": ["newton-iteration", "convergence-order"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Newton on $f(x) = x^2 - 2$ from $x_0 = 1.5$ gives $x_1$. Then, given the error at $x_1$ is about $0.0074$ and $C \\approx 0.35$ for this problem, predict the next error via $e_2 \\approx C e_1^2$.",
+      "steps": [
+        { "instruction": "Compute $x_1 = 1.5 - \\frac{1.5^2 - 2}{2\\cdot 1.5}$. Round to 4 decimals.", "answer": "1.4167", "accept": ["1.4166", "1.417"], "hint": "$1.5^2 - 2 = 0.25$; $\\frac{0.25}{3}$." },
+        { "instruction": "Predict $e_2 = 0.35\\cdot(0.0074)^2$. Round to 8 decimals.", "answer": "0.00001917", "accept": ["0.0000192", "0.00001916", "0.00001918"], "hint": "$0.0074^2 \\approx 0.00005476$, times 0.35." }
+      ],
+      "finalAnswer": { "value": "1.4167", "unit": "" },
+      "solutionNarrative": "$x_1 \\approx 1.4167$; the quadratic law predicts $e_2 \\approx 0.35(0.0074)^2 \\approx 1.9\\times10^{-5}$ — the error is squared, doubling the correct digits."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s15",
+      "concepts": ["secant-iteration", "convergence-order"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The secant method needs no derivative. What is its order of convergence (a decimal near the golden ratio)? Then take one secant step for $f(x) = x^2 - 3$ with $x_0 = 1$, $x_1 = 2$.",
+      "steps": [
+        { "instruction": "State the secant method's order of convergence, rounded to 3 decimals (the golden ratio).", "answer": "1.618", "accept": ["1.62", "1.6"], "hint": "$\\frac{1 + \\sqrt{5}}{2}$." },
+        { "instruction": "With $f(1) = -2$, $f(2) = 1$, compute $x_2 = 2 - \\frac{1(2 - 1)}{1 - (-2)}$. Round to 4 decimals.", "answer": "1.6667", "accept": ["1.6666", "1.667"], "hint": "Denominator $= 3$; $\\frac{1}{3}$." }
+      ],
+      "finalAnswer": { "value": "1.6667", "unit": "" },
+      "solutionNarrative": "The secant order is $\\approx 1.618$; the step gives $x_2 = 2 - \\frac13 \\approx 1.6667$, near $\\sqrt{3} \\approx 1.7321$."
+    },
+    {
+      "id": "numerical-methods.root-finding-open.s16",
+      "concepts": ["fixed-point-iteration", "convergence-order"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "To solve $x = \\cos x$ a model iterates $x_{n+1} = \\cos(x_n)$. Near the fixed point $x^* \\approx 0.739$, $g'(x) = -\\sin x$ so $|g'(x^*)| \\approx 0.674 < 1$. Iterate once from $x_0 = 0.7$ (with $\\cos 0.7 \\approx 0.7648$) and state the convergence type.",
+      "steps": [
+        { "instruction": "Compute $x_1 = \\cos(0.7) \\approx 0.7648$. Since $|g'(x^*)| \\approx 0.674 < 1$, converges or diverges?", "answer": "converges", "accept": ["convergent", "converge"], "hint": "$|g'| < 1$ means contraction." },
+        { "instruction": "A nonzero constant $|g'|$ below 1 gives which order — linear or quadratic?", "answer": "linear", "accept": [], "hint": "Fixed-point iteration with $0 < |g'| < 1$ is linear." }
+      ],
+      "finalAnswer": { "value": "converges", "unit": "" },
+      "solutionNarrative": "Since $|g'(x^*)| \\approx 0.674 < 1$ the iteration converges (linearly), settling toward $x^* \\approx 0.739$ — the famous 'keep pressing cos' fixed point."
+    }
+  ]
+}

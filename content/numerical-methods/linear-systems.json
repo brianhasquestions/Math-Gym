@@ -1,0 +1,261 @@
+{
+  "id": "numerical-methods.linear-systems",
+  "subject": "numerical-methods",
+  "title": "Numerical Linear Systems",
+  "prerequisites": ["numerical-methods.error-and-floating-point", "matrix-algebra.solving-systems"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "gaussian-elimination",
+      "label": "Gaussian elimination",
+      "microLesson": "Gaussian elimination solves $A\\mathbf{x} = \\mathbf{b}$ in two phases. **Forward elimination** uses the top row to zero out the entries below each pivot, turning $A$ into an upper-triangular (row-echelon) matrix. The multiplier for row $i$ is $m = a_{i1}/a_{11}$, and you do Row$_i \\to$ Row$_i - m\\,$Row$_1$. **Back-substitution** then solves the triangular system bottom-up. Example: from $2x + 3y = 8,\\ x - y = -1$, eliminate to get $\\left[\\begin{smallmatrix} 2 & 3 & 8 \\\\ 0 & -2.5 & -5 \\end{smallmatrix}\\right]$, so $y = 2$, then $x = 1$."
+    },
+    {
+      "id": "partial-pivoting",
+      "label": "Partial pivoting",
+      "microLesson": "A zero pivot stops elimination cold — you cannot divide by it. Even a *tiny* pivot is dangerous: dividing by it makes huge multipliers that amplify round-off. **Partial pivoting** fixes both: before eliminating a column, swap the row with the **largest-magnitude** entry in that column up to the pivot position. This keeps every multiplier $\\le 1$, so errors never blow up. It is the single most important stabilizing trick in practical linear solvers."
+    },
+    {
+      "id": "lu-decomposition",
+      "label": "LU decomposition",
+      "microLesson": "LU decomposition records the work of Gaussian elimination as a product $A = LU$: $L$ is **unit lower-triangular** (1's on the diagonal, the multipliers below) and $U$ is the upper-triangular result of forward elimination. For a $2\\times 2$: $\\ell_{21} = a_{21}/a_{11}$ and $u_{22} = a_{22} - \\ell_{21}a_{12}$, with $L = \\left[\\begin{smallmatrix}1 & 0\\\\ \\ell_{21} & 1\\end{smallmatrix}\\right]$ and $U = \\left[\\begin{smallmatrix}a_{11} & a_{12}\\\\ 0 & u_{22}\\end{smallmatrix}\\right]$. Once you have $L$ and $U$, you can solve $A\\mathbf{x} = \\mathbf{b}$ for many different $\\mathbf{b}$ cheaply."
+    },
+    {
+      "id": "condition-and-stability",
+      "label": "Conditioning and stability",
+      "microLesson": "A system is **ill-conditioned** when a tiny change in the data (or a little round-off) produces a large change in the solution — the geometry has nearly-parallel lines whose intersection jumps wildly. The **condition number** measures this sensitivity; a large one warns that the answer may be untrustworthy even with exact arithmetic. The **residual** $r = \\mathbf{b} - A\\mathbf{x}$ checks how well a candidate solution fits — but beware: for an ill-conditioned system, a small residual does *not* guarantee an accurate solution."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Solving $A\\mathbf{x} = \\mathbf{b}$ the way a computer does\n\nYou already know how to solve a small system by hand. But a weather model or a structural-analysis code solves systems with **millions** of unknowns, over and over. It needs an algorithm that is systematic, countable in operations, and — crucially — **numerically stable**, so that the tiny rounding errors of floating-point arithmetic don't snowball into nonsense. That algorithm is **Gaussian elimination**, plus two refinements: **partial pivoting** for stability and **LU decomposition** for reuse.\n\n## Phase 1: forward elimination\n\nWrite the system as an augmented matrix and use the top row to knock out the entries beneath each pivot. Take\n\n$$2x + 3y = 8, \\qquad x - y = -1 \\quad\\Longrightarrow\\quad \\left[\\begin{array}{cc|c} 2 & 3 & 8 \\\\ 1 & -1 & -1 \\end{array}\\right].$$\n\nThe pivot is $a_{11} = 2$. The multiplier for row 2 is\n\n$$m = \\frac{a_{21}}{a_{11}} = \\frac{1}{2} = 0.5.$$\n\nApply Row$_2 \\to$ Row$_2 - 0.5\\,$Row$_1$:\n\n- new $y$-entry: $-1 - 0.5(3) = -2.5$,\n- new right side: $-1 - 0.5(8) = -5$.\n\nThe matrix is now **upper-triangular** (row-echelon form):\n\n$$\\left[\\begin{array}{cc|c} 2 & 3 & 8 \\\\ 0 & -2.5 & -5 \\end{array}\\right].$$\n\n## Phase 2: back-substitution\n\nA triangular system solves from the bottom up. The last row says $-2.5\\,y = -5$, so\n\n$$y = \\frac{-5}{-2.5} = 2.$$\n\nSubstitute into the first row: $2x + 3(2) = 8 \\Rightarrow 2x = 2 \\Rightarrow x = 1$. The solution vector is $\\langle 1, 2\\rangle$. Every $3\\times 3$ or larger system works the same way: eliminate column by column to reach a triangular $U$, then back-substitute.\n\n## Why pivoting is not optional\n\nHere is a system that breaks naive elimination:\n\n$$\\left[\\begin{array}{cc|c} 0 & 2 & 4 \\\\ 3 & 1 & 5 \\end{array}\\right].$$\n\nThe pivot $a_{11} = 0$. The multiplier $a_{21}/a_{11} = 3/0$ is **undefined** — elimination halts. The fix is a **row swap**:\n\n$$\\left[\\begin{array}{cc|c} 3 & 1 & 5 \\\\ 0 & 2 & 4 \\end{array}\\right],$$\n\nand now elimination proceeds. Even when the pivot is merely *small* (say $0.0001$), dividing by it produces enormous multipliers that magnify every rounding error. **Partial pivoting** heads this off by a simple rule: **before eliminating a column, swap in the row whose entry in that column has the largest absolute value.** This guarantees every multiplier satisfies $|m| \\le 1$, so round-off is damped instead of amplified.\n\n### Choosing the pivot\n\nIn a pivot column with entries $2, -7, 4$ (rows 1, 2, 3), the magnitudes are $2, 7, 4$. The largest is $7$, in row 2, so partial pivoting swaps row 2 up to be the pivot row. The multipliers that follow are then $2/7$ and $4/7$ — both comfortably below 1.\n\n## LU decomposition: do the work once, reuse it\n\nForward elimination throws away useful information. If you *record* the multipliers, you can factor\n\n$$A = LU,$$\n\nwhere $U$ is the upper-triangular result and $L$ is **unit lower-triangular** — 1's on the diagonal and the multipliers stored below. For\n\n$$A = \\left[\\begin{array}{cc} 2 & 3 \\\\ 1 & -1 \\end{array}\\right],$$\n\nwe found $\\ell_{21} = 0.5$ and $u_{22} = -1 - 0.5(3) = -2.5$, so\n\n$$L = \\left[\\begin{array}{cc} 1 & 0 \\\\ 0.5 & 1 \\end{array}\\right], \\qquad U = \\left[\\begin{array}{cc} 2 & 3 \\\\ 0 & -2.5 \\end{array}\\right].$$\n\nMultiply back: $LU = A$ ✓. The payoff: to solve $A\\mathbf{x} = \\mathbf{b}$ you now solve two easy triangular systems — $L\\mathbf{y} = \\mathbf{b}$ (forward) then $U\\mathbf{x} = \\mathbf{y}$ (backward). If a new right-hand side $\\mathbf{b}$ arrives, you skip elimination entirely and reuse $L$ and $U$. That is exactly why production solvers factor once and back-solve many times.\n\n## Conditioning: when the answer can't be trusted\n\nSome systems are inherently fragile. Picture two lines that are *nearly parallel*: their intersection point skitters far away if you nudge either line slightly. Such a system is **ill-conditioned**, and no algorithm can rescue it — the fragility is in the problem, not the method. The **condition number** quantifies it; a huge condition number means small data errors (or ordinary round-off) can wreck the solution.\n\nA natural sanity check is the **residual** $r = \\mathbf{b} - A\\mathbf{x}$: plug your solution back in and see how close you land to $\\mathbf{b}$. A small residual is reassuring — usually. But for an ill-conditioned system it is a **trap**: two wildly different solution vectors can both produce tiny residuals, because the matrix squashes big differences in $\\mathbf{x}$ into small differences in $A\\mathbf{x}$. So report the residual, but pair it with the condition number before you trust the answer.\n\n## Why this matters\n\nGaussian elimination with partial pivoting, packaged as an LU factorization, is the workhorse inside every scientific-computing library on Earth. Understanding the multipliers, the pivot swap, and the conditioning caveat is what separates typing `solve(A, b)` from knowing whether the number that comes back means anything."
+  },
+  "application": {
+    "summary": "Numerical linear solvers sit at the core of structural engineering, circuit simulation, computer graphics, and machine learning. Gaussian elimination with partial pivoting (delivered as an LU factorization) solves the huge systems these fields produce, while the condition number warns when a result — a bridge stress, a node voltage — is too sensitive to round-off to trust.",
+    "domains": ["structural engineering", "electrical engineering", "computer graphics", "scientific computing"],
+    "workedExample": "**Truss forces from a small system.**\n\nA statics problem for a two-bar joint yields the linear system\n\n$$2x + y = 5, \\qquad 4x + 3y = 11,$$\n\nwhere $x$ and $y$ are the unknown bar forces (kN). Build the augmented matrix and eliminate. Pivot $a_{11} = 2$; multiplier $m = 4/2 = 2$. Row$_2 \\to$ Row$_2 - 2\\,$Row$_1$:\n\n- new $y$-entry: $3 - 2(1) = 1$,\n- new right side: $11 - 2(5) = 1$.\n\nThe REF matrix is $\\left[\\begin{array}{cc|c} 2 & 1 & 5 \\\\ 0 & 1 & 1 \\end{array}\\right]$. Back-substitute: $y = 1$, then $2x + 1 = 5 \\Rightarrow x = 2$. So the forces are $\\langle 2, 1\\rangle$ kN.\n\nRecorded as an LU factorization, $L = \\left[\\begin{smallmatrix}1 & 0\\\\ 2 & 1\\end{smallmatrix}\\right]$ and $U = \\left[\\begin{smallmatrix}2 & 1\\\\ 0 & 1\\end{smallmatrix}\\right]$. When the load changes — a new right-hand side $\\mathbf{b}$ — the engineer reuses this same $L$ and $U$ to re-solve instantly, which is exactly how a finite-element package updates a structure under many load cases. Finally, a residual check $r = \\mathbf{b} - A\\mathbf{x}$ confirms the fit, and the matrix's condition number confirms the forces are physically trustworthy.",
+    "domainNotes": [
+      "**Structural engineering:** finite-element analysis assembles a giant stiffness matrix; solving $K\\mathbf{u} = \\mathbf{f}$ by LU gives displacements and stresses.",
+      "**Electrical engineering:** nodal analysis of a circuit is a linear system $G\\mathbf{v} = \\mathbf{i}$; ill-conditioning flags a numerically delicate network.",
+      "**Computer graphics:** transforming and shading scenes, and physics solvers, reduce to repeated linear solves that reuse a single factorization.",
+      "**Scientific computing:** virtually every simulation eventually calls an LU (or Cholesky) solve; the condition number decides how many correct digits survive."
+    ]
+  },
+  "generators": ["nm2-gauss-1", "nm2-gauss-2", "nm2-gauss-3", "nm2-pivot-1", "nm2-pivot-2", "nm2-pivot-3", "nm2-lu-1", "nm2-lu-2", "nm2-lu-3", "nm2-cond-1", "nm2-cond-2", "nm2-cond-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.linear-systems.s01",
+      "concepts": ["gaussian-elimination"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve by Gaussian elimination:\n$$x + 2y = 7$$\n$$3x + 2y = 13$$",
+      "steps": [
+        { "instruction": "The pivot is $1$, so the multiplier for row 2 is $m = 3/1 = 3$. Row$_2 \\to$ Row$_2 - 3\\,$Row$_1$ gives a new $y$-coefficient $2 - 3(2)$. What is it?", "answer": "-4", "accept": [], "hint": "$2 - 6$." },
+        { "instruction": "The new right-hand side is $13 - 3(7)$. Compute it.", "answer": "-8", "accept": [], "hint": "$13 - 21$." },
+        { "instruction": "Back-substitute: $y = -8 / -4$. Find $y$.", "answer": "2", "accept": ["y=2"], "hint": "$-8 \\div -4$." },
+        { "instruction": "Solve the first row $x + 2(2) = 7$ for $x$, then give the solution as $\\langle x, y\\rangle$.", "answer": "<3, 2>", "accept": ["(3, 2)", "x=3, y=2"], "hint": "$x = 7 - 4$." }
+      ],
+      "finalAnswer": { "value": "<3, 2>", "unit": "" },
+      "solutionNarrative": "Multiplier $3$ gives new row $[0, -4, -8]$, so $y = 2$; back-substitution gives $x = 3$. Solution $\\langle 3, 2\\rangle$."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s02",
+      "concepts": ["gaussian-elimination"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve by Gaussian elimination:\n$$x - y = 1$$\n$$2x + y = 8$$",
+      "steps": [
+        { "instruction": "Multiplier for row 2 is $m = 2/1 = 2$. New $y$-coefficient: $1 - 2(-1)$. What is it?", "answer": "3", "accept": [], "hint": "$1 + 2$." },
+        { "instruction": "New right side: $8 - 2(1)$. Compute it.", "answer": "6", "accept": [], "hint": "$8 - 2$." },
+        { "instruction": "Back-substitute: $y = 6/3$. Find $y$.", "answer": "2", "accept": ["y=2"], "hint": "$6 \\div 3$." },
+        { "instruction": "Solve $x - 2 = 1$ for $x$ and give $\\langle x, y\\rangle$.", "answer": "<3, 2>", "accept": ["(3, 2)", "x=3, y=2"], "hint": "$x = 1 + 2$." }
+      ],
+      "finalAnswer": { "value": "<3, 2>", "unit": "" },
+      "solutionNarrative": "Eliminate to $[0, 3, 6]$, so $y = 2$, then $x = 3$. Solution $\\langle 3, 2\\rangle$."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s03",
+      "concepts": ["gaussian-elimination"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Forward-eliminate the augmented matrix $\\left[\\begin{array}{cc|c} 2 & 4 & 14 \\\\ 4 & 5 & 22 \\end{array}\\right]$ to row-echelon form (leave the pivot row unchanged), then read off the solution.",
+      "steps": [
+        { "instruction": "The multiplier is $m = 4/2 = 2$. Apply Row$_2 \\to$ Row$_2 - 2\\,$Row$_1$ and enter the REF matrix as $[[2, 4, 14], [0, a', b']]$.", "answer": "[[2, 4, 14], [0, -3, -6]]", "accept": [], "hint": "$a' = 5 - 2(4) = -3$, $b' = 22 - 2(14) = -6$." },
+        { "instruction": "Back-substitute: $y = -6 / -3$. Find $y$.", "answer": "2", "accept": ["y=2"], "hint": "$-6 \\div -3$." },
+        { "instruction": "Solve for $x$ from $2x + 4(2) = 14$ and give $\\langle x, y\\rangle$.", "answer": "<3, 2>", "accept": ["(3, 2)", "x=3, y=2"], "hint": "$2x = 14 - 8$." }
+      ],
+      "finalAnswer": { "value": "<3, 2>", "unit": "" },
+      "solutionNarrative": "REF is $[[2, 4, 14], [0, -3, -6]]$; back-substitution gives $y = 2$, $x = 3$."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s04",
+      "concepts": ["gaussian-elimination"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve the $3\\times 3$ system by Gaussian elimination:\n$$x + y + z = 6$$\n$$2x + 3y + z = 11$$\n$$x + y + 2z = 9$$",
+      "steps": [
+        { "instruction": "Pivot $a_{11} = 1$. Eliminate $x$ from row 2 with $m_{21} = 2$: new $y$-coefficient $3 - 2(1)$. What is it?", "answer": "1", "accept": [], "hint": "$3 - 2$." },
+        { "instruction": "Eliminate $x$ from row 3 with $m_{31} = 1$: new $z$-coefficient in row 3 is $2 - 1(1)$. What is it?", "answer": "1", "accept": [], "hint": "$2 - 1$." },
+        { "instruction": "After elimination, row 3 reads $z = 3$ and row 2 gives $y - z = -1$. Solve fully and give $\\langle x, y, z\\rangle$.", "answer": "<1, 2, 3>", "accept": ["(1, 2, 3)", "x=1, y=2, z=3"], "hint": "$z = 3$, then $y = z - 1 = 2$, then $x = 6 - y - z$." }
+      ],
+      "finalAnswer": { "value": "<1, 2, 3>", "unit": "" },
+      "solutionNarrative": "Forward elimination (multipliers $2$ and $1$) triangulates the system; back-substitution yields $z = 3$, $y = 2$, $x = 1$, i.e. $\\langle 1, 2, 3\\rangle$."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s05",
+      "concepts": ["partial-pivoting"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a pivot column the current pivot entry is $0$ and the entry below it is $5$. Does partial pivoting require a row swap? (Type \"yes\" or \"no\".)",
+      "steps": [
+        { "instruction": "Type \"yes\" or \"no\".", "answer": "yes", "accept": [], "hint": "You cannot divide by a zero pivot." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The pivot is exactly $0$, so elimination cannot proceed; you must swap the nonzero row up. Answer: yes."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s06",
+      "concepts": ["partial-pivoting"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Partial pivoting moves the entry of largest absolute value into the pivot position. In a pivot column the three entries (rows 1, 2, 3) are $2, -7, 4$. Which row should become the pivot row?",
+      "steps": [
+        { "instruction": "Compare $|2| = 2$, $|-7| = 7$, $|4| = 4$. What is the largest magnitude?", "answer": "7", "accept": [], "hint": "Take the biggest of $2, 7, 4$." },
+        { "instruction": "Give the (1-based) row number holding that entry.", "answer": "2", "accept": [], "hint": "$-7$ sits in row 2." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "The largest magnitude is $7$ (row 2), so partial pivoting swaps row 2 up. The resulting multipliers $2/7$ and $4/7$ stay below 1, damping round-off."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s07",
+      "concepts": ["partial-pivoting"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A pivot column has $2$ on top and $8$ below. Without pivoting the multiplier would be $8/2 = 4$ — larger than 1, which amplifies round-off. Apply partial pivoting.",
+      "steps": [
+        { "instruction": "Should you swap the rows so the larger entry $8$ is the pivot? (Type \"yes\" or \"no\".)", "answer": "yes", "accept": [], "hint": "Partial pivoting brings the largest-magnitude entry to the pivot." },
+        { "instruction": "After swapping, the multiplier for the other row is $2/8$. Compute it (round to 2 decimals).", "answer": "0.25", "accept": ["0.250"], "hint": "$2 \\div 8$." }
+      ],
+      "finalAnswer": { "value": "0.25", "unit": "" },
+      "solutionNarrative": "Swap $8$ to the pivot; the multiplier becomes $2/8 = 0.25 \\le 1$, so round-off no longer grows during elimination."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s08",
+      "concepts": ["lu-decomposition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the LU decomposition ($L$ unit-lower, Doolittle) of $A = \\left[\\begin{array}{cc} 2 & 4 \\\\ 6 & 3 \\end{array}\\right]$.",
+      "steps": [
+        { "instruction": "The multiplier $\\ell_{21} = a_{21}/a_{11} = 6/2$. Compute it.", "answer": "3", "accept": [], "hint": "$6 \\div 2$." },
+        { "instruction": "Then $u_{22} = a_{22} - \\ell_{21}\\,a_{12} = 3 - 3(4)$. Compute it.", "answer": "-9", "accept": [], "hint": "$3 - 12$." },
+        { "instruction": "Write $U$ as a matrix $[[2, 4], [0, u_{22}]]$ with your value.", "answer": "[[2, 4], [0, -9]]", "accept": [], "hint": "$U$ keeps row 1 and has $0$ then $u_{22}$ in row 2." }
+      ],
+      "finalAnswer": { "value": "[[2, 4], [0, -9]]", "unit": "" },
+      "solutionNarrative": "$\\ell_{21} = 3$, $u_{22} = -9$, so $L = [[1, 0], [3, 1]]$ and $U = [[2, 4], [0, -9]]$, with $LU = A$."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s09",
+      "concepts": ["lu-decomposition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Decompose $A = \\left[\\begin{array}{cc} 4 & 2 \\\\ 8 & 7 \\end{array}\\right]$ into $L$ (unit lower) and $U$ (upper), and give the $L$ matrix.",
+      "steps": [
+        { "instruction": "Find $\\ell_{21} = 8/4$.", "answer": "2", "accept": [], "hint": "$8 \\div 4$." },
+        { "instruction": "Find $u_{22} = 7 - 2(2)$.", "answer": "3", "accept": [], "hint": "$7 - 4$." },
+        { "instruction": "Write $L$ as a matrix $[[1, 0], [\\ell_{21}, 1]]$ with your $\\ell_{21}$.", "answer": "[[1, 0], [2, 1]]", "accept": [], "hint": "$L$ has 1's on the diagonal, $\\ell_{21}$ below." }
+      ],
+      "finalAnswer": { "value": "[[1, 0], [2, 1]]", "unit": "" },
+      "solutionNarrative": "$\\ell_{21} = 2$, $u_{22} = 3$: $L = [[1, 0], [2, 1]]$, $U = [[4, 2], [0, 3]]$, and $LU = A$."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s10",
+      "concepts": ["lu-decomposition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $A = \\left[\\begin{array}{ccc} 2 & 1 & 1 \\\\ 4 & 3 & 3 \\\\ 6 & 2 & \\cdot \\end{array}\\right]$, find the first-column multipliers of $L$ and the $(2,2)$ entry of $U$.",
+      "steps": [
+        { "instruction": "$\\ell_{21} = a_{21}/a_{11} = 4/2$.", "answer": "2", "accept": [], "hint": "$4 \\div 2$." },
+        { "instruction": "$\\ell_{31} = a_{31}/a_{11} = 6/2$.", "answer": "3", "accept": [], "hint": "$6 \\div 2$." },
+        { "instruction": "$u_{22} = a_{22} - \\ell_{21}\\,a_{12} = 3 - 2(1)$.", "answer": "1", "accept": [], "hint": "$3 - 2$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "First-column multipliers $\\ell_{21} = 2$, $\\ell_{31} = 3$; after eliminating column 1, $u_{22} = 3 - 2(1) = 1$."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s11",
+      "concepts": ["condition-and-stability"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A system is called **ill-conditioned** when a tiny change in the data causes a ___ change in the solution. (Type one word.)",
+      "steps": [
+        { "instruction": "Type the word that completes the sentence.", "answer": "large", "accept": ["big", "huge"], "hint": "Ill-conditioning means high sensitivity." }
+      ],
+      "finalAnswer": { "value": "large", "unit": "" },
+      "solutionNarrative": "Ill-conditioned systems amplify small data changes into large solution changes — the completing word is \"large\"."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s12",
+      "concepts": ["condition-and-stability"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A candidate solution $x = 2, y = 3$ is proposed for the equation $2x + 3y = 14$. The residual measures how far off it is: $r = b - (2x + 3y)$.",
+      "steps": [
+        { "instruction": "Compute $2x + 3y$ at the candidate: $2(2) + 3(3)$.", "answer": "13", "accept": [], "hint": "$4 + 9$." },
+        { "instruction": "Compute the residual $r = 14 - 13$.", "answer": "1", "accept": [], "hint": "Subtract the computed value from $b$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "The candidate gives $13$, so the residual is $r = 14 - 13 = 1$. A small residual is reassuring but, for an ill-conditioned system, not a guarantee of accuracy."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s13",
+      "concepts": ["condition-and-stability"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "True or false: for an ill-conditioned system, a very small residual guarantees the computed solution is close to the true one. (Type \"true\" or \"false\".)",
+      "steps": [
+        { "instruction": "Type \"true\" or \"false\".", "answer": "false", "accept": ["f", "no"], "hint": "Two very different solutions can both give small residuals when the matrix is ill-conditioned." }
+      ],
+      "finalAnswer": { "value": "false", "unit": "" },
+      "solutionNarrative": "False. An ill-conditioned matrix squashes large differences in $\\mathbf{x}$ into small differences in $A\\mathbf{x}$, so a tiny residual does not certify accuracy."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s14",
+      "concepts": ["gaussian-elimination", "lu-decomposition"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A two-bar truss joint gives $2x + y = 5,\\ 4x + 3y = 11$ (forces in kN). Solve by elimination, then record the multiplier for the LU factorization.",
+      "steps": [
+        { "instruction": "Multiplier $m = 4/2 = 2$. New $y$-coefficient: $3 - 2(1)$. What is it?", "answer": "1", "accept": [], "hint": "$3 - 2$." },
+        { "instruction": "New right side: $11 - 2(5)$. Compute it.", "answer": "1", "accept": [], "hint": "$11 - 10$." },
+        { "instruction": "Back-substitute for $y$, then $x$, and give the force vector $\\langle x, y\\rangle$.", "answer": "<2, 1>", "accept": ["(2, 1)", "x=2, y=1"], "hint": "$y = 1$, then $2x + 1 = 5$." }
+      ],
+      "finalAnswer": { "value": "<2, 1>", "unit": "kN" },
+      "solutionNarrative": "Elimination gives row $[0, 1, 1]$, so $y = 1$ and $x = 2$: forces $\\langle 2, 1\\rangle$ kN. The multiplier $2$ is stored as $\\ell_{21}$, giving $L = [[1,0],[2,1]]$, $U = [[2,1],[0,1]]$."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s15",
+      "concepts": ["partial-pivoting", "condition-and-stability"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "True or false: partial pivoting improves numerical stability during elimination, but it cannot make an inherently ill-conditioned matrix well-conditioned. (Type \"true\" or \"false\".)",
+      "steps": [
+        { "instruction": "Type \"true\" or \"false\".", "answer": "true", "accept": ["t", "yes"], "hint": "Conditioning is a property of the matrix itself, independent of the algorithm." }
+      ],
+      "finalAnswer": { "value": "true", "unit": "" },
+      "solutionNarrative": "True. Pivoting controls round-off growth from the algorithm, but conditioning is intrinsic to the matrix — a fragile problem stays fragile no matter how carefully you eliminate."
+    },
+    {
+      "id": "numerical-methods.linear-systems.s16",
+      "concepts": ["gaussian-elimination"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A chemist balances two conditions into the system $3x + y = 9,\\ x + 2y = 8$ (quarts of two solutions). Solve by Gaussian elimination and give $\\langle x, y\\rangle$.",
+      "steps": [
+        { "instruction": "Use row 1 as pivot. Multiplier for row 2 is $m = 1/3$. Rather than fractions, swap rows so $x$'s coefficient $3$ leads, then eliminate: from $3x + y = 9$ and $x + 2y = 8$, the multiplier $1/3$ gives new $y$-coefficient $2 - \\frac{1}{3}(1) = \\frac{5}{3}$ and new RHS $8 - \\frac{1}{3}(9) = 5$. Solve $\\frac{5}{3}y = 5$ for $y$.", "answer": "3", "accept": ["y=3"], "hint": "$5 \\div \\frac{5}{3} = 3$." },
+        { "instruction": "Substitute $y = 3$ into $3x + y = 9$ and solve for $x$, then give $\\langle x, y\\rangle$.", "answer": "<2, 3>", "accept": ["(2, 3)", "x=2, y=3"], "hint": "$3x + 3 = 9 \\Rightarrow x = 2$." }
+      ],
+      "finalAnswer": { "value": "<2, 3>", "unit": "quarts" },
+      "solutionNarrative": "Eliminating gives $\\frac{5}{3}y = 5$, so $y = 3$; then $3x + 3 = 9$ gives $x = 2$. The blend is $\\langle 2, 3\\rangle$ quarts."
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "id": "financial-mathematics.present-and-future-value",
+  "subject": "financial-mathematics",
+  "title": "Time Value of Money",
+  "prerequisites": ["financial-mathematics.simple-and-compound-interest"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "future-value",
+      "label": "Future value of a single sum",
+      "microLesson": "The **future value** of one lump sum is what it grows to after $n$ periods at a per-period rate $i$: $FV = PV(1 + i)^n$. It is the compound-interest formula seen as 'push a dollar forward in time.' \\$1,000 at 6% for 5 years is $FV = 1000(1.06)^5 = \\$1{,}338.23$. For monthly growth, convert first: the per-period rate is the annual rate over 12 and $n$ is the number of months."
+    },
+    {
+      "id": "present-value",
+      "label": "Present value of a single sum",
+      "microLesson": "**Present value** runs the clock backward: what is a future amount worth *today*? Divide instead of multiply — $PV = \\dfrac{FV}{(1 + i)^n}$. This is **discounting**. \\$5,000 due in 4 years, with money worth 5%, is worth $PV = \\dfrac{5000}{(1.05)^4} = \\$4{,}113.51$ today. A dollar tomorrow is worth less than a dollar now, and the discount factor $(1+i)^n$ measures exactly how much less."
+    },
+    {
+      "id": "solving-for-rate-or-time",
+      "label": "Solving for rate or time",
+      "microLesson": "When the unknown is the **rate**, take a root: $i = (FV/PV)^{1/n} - 1$. When the unknown is the **time**, the variable is stuck in the exponent, so use **logarithms**: $n = \\dfrac{\\ln(FV/PV)}{\\ln(1 + i)}$. To double money at 6%, $n = \\dfrac{\\ln 2}{\\ln 1.06} \\approx 11.90$ years. The Rule of 72 estimates the same doubling time as $72/6 = 12$ — a fast mental check."
+    },
+    {
+      "id": "comparing-cash-flows",
+      "label": "Comparing cash flows",
+      "microLesson": "You can only compare money at the **same point in time**. To choose between offers paid at different dates, discount each to **today** and compare present values — the larger present value is the better deal. \\$3,000 now versus \\$3,600 in 3 years at 6%: the future \\$3,600 is worth $3600/(1.06)^3 = \\$3{,}022.63$ today, which just beats \\$3,000. For a stream of several payments, sum the present value of each piece."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A dollar today beats a dollar tomorrow\n\nThe single most important idea in finance is the **time value of money**: a dollar in hand now is worth more than a dollar promised later, because the dollar now can be invested and grow. Every comparison of amounts at different dates has to account for this — you cannot simply line up the numbers.\n\nTwo mirror-image operations move money through time. Let $i$ be the **interest rate per period** (as a decimal) and $n$ the **number of periods**.\n\n## Future value: pushing money forward\n\nThe **future value** of a single present amount is the compound-interest result written as growth:\n\n$$\\boxed{\\,FV = PV\\,(1 + i)^n\\,}$$\n\n**Worked example.** \\$1,000 at 6% per year for 5 years:\n$$FV = 1000\\,(1.06)^5 = 1000 \\times 1.338226 = \\$1{,}338.23.$$\n\nWhen growth is more frequent than yearly, convert to a **per-period** rate first. \\$1,000 at 6% compounded monthly for 3 years uses $i = 0.06/12 = 0.005$ and $n = 12 \\times 3 = 36$:\n$$FV = 1000\\,(1.005)^{36} = \\$1{,}196.68.$$\n\n> **Pitfall.** The rate and the period count must match. Monthly growth means a monthly rate ($r/12$) **and** a month count ($12t$) — never mix an annual rate with a monthly count.\n\n## Present value: pulling money back\n\n**Present value** reverses the arrow: given a future amount, what deposit **today** would grow into it? Divide by the same growth factor — this is **discounting**:\n\n$$\\boxed{\\,PV = \\frac{FV}{(1 + i)^n}\\,}$$\n\n**Worked example.** \\$5,000 due in 4 years, with money worth 5%:\n$$PV = \\frac{5000}{(1.05)^4} = \\frac{5000}{1.215506} = \\$4{,}113.51.$$\n\nThe promise of \\$5,000 in four years is worth only \\$4,113.51 today. The quantity $(1+i)^n$ is the **discount factor**, and the rate $i$ used to discount is often called the **discount rate**. A higher discount rate, or a longer wait, shrinks the present value.\n\nThe picture below shows a single \\$1,000 growing forward (future value) against a fixed future \\$1,000 discounted back (present value):\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 10], \"yRange\": [500, 1900], \"grid\": true, \"curves\": [ { \"fn\": \"1000*(1.06)^x\", \"label\": \"FV of $1000 now\", \"color\": \"accent\", \"labelAt\": 7 }, { \"fn\": \"1000/(1.06)^x\", \"label\": \"PV of $1000 in year x\", \"color\": \"warn\", \"labelAt\": 7 } ], \"points\": [ { \"x\": 0, \"y\": 1000, \"label\": \"$1000\", \"color\": \"dim\" } ], \"caption\": \"Growing forward vs. discounting back, both from $1000 at 6%\" }\n```\n\n## Solving for the rate or the time\n\nOften you know the start, the end, and one of $\\{i, n\\}$, and must find the other.\n\n**Unknown rate.** Solve $FV = PV(1+i)^n$ for $i$ by taking the $n$th root:\n$$i = \\left(\\frac{FV}{PV}\\right)^{1/n} - 1.$$\nIf \\$1,000 grew to \\$1,500 in 5 years, $i = (1.5)^{1/5} - 1 \\approx 0.0845 = 8.45\\%$.\n\n**Unknown time.** Now the unknown sits in the *exponent*, so ordinary algebra can't isolate it — **logarithms** can. Taking $\\ln$ of both sides of $FV/PV = (1+i)^n$ brings the exponent down:\n$$n = \\frac{\\ln(FV/PV)}{\\ln(1 + i)}.$$\nAt 6%, doubling takes $n = \\dfrac{\\ln 2}{\\ln 1.06} = \\dfrac{0.6931}{0.0583} \\approx 11.90$ years. The **Rule of 72** gives a quick estimate — $72 \\div (\\text{rate as a percent})$ — here $72/6 = 12$, close to the exact 11.90.\n\n> **Note.** You compute the logarithm to a *number* on a calculator; the answer is numeric (11.90 years), not a symbolic expression.\n\n## Comparing cash flows: discount to a common date\n\nOffers arriving at different times are not comparable as stated — first move them all to the **same date**, usually today. Discount each amount to its present value and compare.\n\n**Worked example.** Take \\$3,000 now, or \\$3,600 in 3 years, with money worth 6%?\n$$PV(\\$3{,}600) = \\frac{3600}{(1.06)^3} = \\$3{,}022.63.$$\nThe delayed \\$3,600 is worth \\$3,022.63 today — just above \\$3,000 — so waiting wins, but only barely. Raise the discount rate enough and the ranking flips.\n\nFor a **stream** of payments, discount each one to today and add the present values. That single principle — sum of discounted cash flows — is the backbone of annuities, bond pricing, and net present value in the topics ahead."
+  },
+  "application": {
+    "summary": "Time value of money is the engine under every financial decision: retirement projections (future value), the cash value of a lottery or lawsuit settlement and bond pricing (present value), figuring how long until a goal or what rate an investment earned (solving for time or rate), and choosing between a lump sum and installments (comparing cash flows).",
+    "domains": ["personal finance", "investing", "retirement planning", "insurance"],
+    "workedExample": "**Lump sum or annual payments?**\n\nA lottery winner may take \\$1,000,000 today, or \\$120,000 a year for 10 years (\\$1,200,000 nominal). The nominal total looks bigger — but is it worth more *today*? Assume money is worth 5%.\n\nEach future payment must be discounted to the present. The first \\$120,000 (a year out) is worth $120000/1.05 = \\$114{,}286$; the tenth is worth $120000/1.05^{10} = \\$73{,}670$; and so on. Summing all ten discounted payments gives a present value of about **\\$926,800** — *less* than the \\$1,000,000 lump sum.\n\nSo despite the larger sticker total, the lump sum is worth more today (at 5%). Change the discount rate and the answer can change: at a low enough rate the payments win. This is exactly the calculation lottery offices, courts valuing structured settlements, and pension administrators run — and it is the reason 'time value of money' is the first thing every finance course teaches.",
+    "domainNotes": [
+      "**Retirement:** future value projects what today's savings become; present value tells you how big a nest egg a target income requires.",
+      "**Lawsuits/lotteries:** structured settlements are valued by discounting each future payment to a present lump sum.",
+      "**Investing:** solving for the rate recovers an investment's annualized return from its start and end values.",
+      "**Everyday choices:** rebates, 'buy now vs. layaway,' and signing bonuses paid over time all reduce to comparing present values."
+    ]
+  },
+  "generators": ["fm1-future-value-1", "fm1-future-value-2", "fm1-future-value-3", "fm1-present-value-1", "fm1-present-value-2", "fm1-present-value-3", "fm1-solve-rate-time-1", "fm1-solve-rate-time-2", "fm1-solve-rate-time-3", "fm1-compare-cashflows-1", "fm1-compare-cashflows-2", "fm1-compare-cashflows-3"],
+  "problems": [
+    {
+      "id": "financial-mathematics.present-and-future-value.s01",
+      "concepts": ["future-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A single sum of \\$1,000 grows at 6% per year for 5 years. Find its future value with $FV = PV(1 + i)^n$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the growth factor $1 + i = 1 + 0.06$. Enter as a decimal.", "answer": "1.06", "accept": [], "hint": "Add the decimal rate to 1." },
+        { "instruction": "Compute $FV = 1000 \\cdot 1.06^{5}$. Enter a number rounded to the nearest cent.", "answer": "1338.23", "accept": ["1338.230", "$1338.23"], "hint": "Raise 1.06 to the 5th power, then multiply by 1000." }
+      ],
+      "finalAnswer": { "value": "1338.23", "unit": "dollars" },
+      "solutionNarrative": "$FV = 1000(1.06)^{5} = \\$1{,}338.23$ — the same sum carried forward 5 years at 6%."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s02",
+      "concepts": ["future-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "\\$2,000 is invested at 6% per year, compounded monthly, for 3 years. Find its future value. The per-period rate is $i = 6\\%/12$ and the number of periods is $n = 12 \\times 3$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the monthly factor $1 + 0.06/12$. Enter as a decimal.", "answer": "1.005", "accept": [], "hint": "Divide 0.06 by 12, add 1." },
+        { "instruction": "Find the number of periods $n = 12 \\times 3$. Enter a whole number.", "answer": "36", "accept": [], "hint": "Months in 3 years." },
+        { "instruction": "Compute $FV = 2000 \\cdot 1.005^{36}$. Enter a number rounded to the nearest cent.", "answer": "2393.36", "accept": ["2393.360", "$2393.36"], "hint": "Raise 1.005 to the 36th power, times 2000." }
+      ],
+      "finalAnswer": { "value": "2393.36", "unit": "dollars" },
+      "solutionNarrative": "Per-period rate 0.005 over 36 months: $FV = 2000(1.005)^{36} = \\$2{,}393.36$. Convert the annual rate to a per-period rate first."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s03",
+      "concepts": ["future-value"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "\\$1,500 grows at 7% per year. Compare leaving it invested 5 years versus 10 years, and find how much MORE the longer horizon yields. Use $FV = PV(1 + i)^n$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the 5-year value $FV = 1500 \\cdot 1.07^{5}$. Enter a number rounded to the nearest cent.", "answer": "2103.83", "accept": ["2103.830", "$2103.83"], "hint": "1.07 to the 5th power, times 1500." },
+        { "instruction": "Compute the 10-year value $FV = 1500 \\cdot 1.07^{10}$. Enter a number rounded to the nearest cent.", "answer": "2950.73", "accept": ["2950.730", "$2950.73"], "hint": "1.07 to the 10th power, times 1500." },
+        { "instruction": "Find the extra earned by waiting (10-year minus 5-year). Enter a number rounded to the nearest cent.", "answer": "846.90", "accept": ["846.9", "$846.90"], "hint": "$2950.73 - 2103.83$." }
+      ],
+      "finalAnswer": { "value": "846.90", "unit": "dollars" },
+      "solutionNarrative": "After 5 years: \\$2,103.83; after 10 years: \\$2,950.73. The extra 5 years add \\$846.90 — time is the biggest lever in compounding."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s04",
+      "concepts": ["present-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You are promised \\$5,000 in 4 years. If money is worth 5% per year, what is that promise worth today? Use $PV = \\dfrac{FV}{(1 + i)^n}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the discount factor $(1 + i)^n = 1.05^{4}$. Enter as a decimal (round to 6 places).", "answer": "1.215506", "accept": ["1.05^4", "1.05^(4)"], "hint": "Raise 1.05 to the 4th power." },
+        { "instruction": "Divide the future value by that factor: $PV = 5000 / 1.05^{4}$. Enter a number rounded to the nearest cent.", "answer": "4113.51", "accept": ["4113.510", "$4113.51"], "hint": "Discounting divides; it undoes the growth." }
+      ],
+      "finalAnswer": { "value": "4113.51", "unit": "dollars" },
+      "solutionNarrative": "$PV = \\dfrac{5000}{(1.05)^4} = \\$4{,}113.51$ — the amount that, invested today at 5%, grows to \\$5,000 in 4 years."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s05",
+      "concepts": ["present-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "How much must you deposit today at 6% per year to have \\$10,000 in 8 years? This is the present value $PV = \\dfrac{FV}{(1 + i)^n}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the growth factor $1 + i$. Enter as a decimal.", "answer": "1.06", "accept": [], "hint": "Add 0.06 to 1." },
+        { "instruction": "Compute $PV = 10000 / 1.06^{8}$. Enter a number rounded to the nearest cent.", "answer": "6274.12", "accept": ["6274.120", "$6274.12"], "hint": "Divide 10000 by 1.06 raised to the 8th power." }
+      ],
+      "finalAnswer": { "value": "6274.12", "unit": "dollars" },
+      "solutionNarrative": "$PV = \\dfrac{10000}{(1.06)^8} = \\$6{,}274.12$. A dollar in the future is worth less than a dollar today, and discounting measures how much less."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s06",
+      "concepts": ["present-value"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You need \\$8,000 in 3 years. Money earns 12% per year compounded monthly. What single deposit today funds it? Discount with the per-period rate $i = 12\\%/12$ over 36 months. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the monthly factor $1 + 0.12/12$. Enter as a decimal.", "answer": "1.01", "accept": [], "hint": "Divide 0.12 by 12, add 1." },
+        { "instruction": "Find the number of periods $n = 12 \\times 3$. Enter a whole number.", "answer": "36", "accept": [], "hint": "Months in 3 years." },
+        { "instruction": "Compute $PV = 8000 / 1.01^{36}$. Enter a number rounded to the nearest cent.", "answer": "5591.40", "accept": ["5591.4", "$5591.40"], "hint": "Divide 8000 by 1.01 raised to the 36th power." }
+      ],
+      "finalAnswer": { "value": "5591.40", "unit": "dollars" },
+      "solutionNarrative": "Discounting monthly: $PV = \\dfrac{8000}{(1.01)^{36}} = \\$5{,}591.40$."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s07",
+      "concepts": ["solving-for-rate-or-time"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "\\$1,000 grew to \\$1,500 in 5 years with annual compounding. Find the annual rate. Solve $FV = PV(1+i)^n$ for $i$: $i = (FV/PV)^{1/n} - 1$. Enter the rate as a percent rounded to 2 decimals (e.g. 6.17).",
+      "steps": [
+        { "instruction": "Find the ratio $FV/PV = 1500/1000$. Enter as a decimal.", "answer": "1.5", "accept": ["1500/1000", "3/2"], "hint": "Divide the future value by the present value." },
+        { "instruction": "Take the 5th root and subtract 1: $i = 1.5^{1/5} - 1$, then convert to a percent. Enter as a percent rounded to 2 decimals.", "answer": "8.45", "accept": ["1.5^(1/5) - 1"], "hint": "A $1/5$ power is the 5th root; subtract 1 and multiply by 100." }
+      ],
+      "finalAnswer": { "value": "8.45", "unit": "percent" },
+      "solutionNarrative": "$i = (1500/1000)^{1/5} - 1 = 1.5^{0.2} - 1 \\approx 0.0845 = 8.45\\%$ per year — the rate recovered from the growth multiple."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s08",
+      "concepts": ["solving-for-rate-or-time"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "At 6% per year, how long until \\$2,000 grows to \\$3,000? Solve $FV = PV(1+i)^n$ for $n$ using logs: $n = \\dfrac{\\ln(FV/PV)}{\\ln(1+i)}$. Enter the number of years rounded to 2 decimals.",
+      "steps": [
+        { "instruction": "Find the growth multiple $FV/PV = 3000/2000$. Enter as a decimal.", "answer": "1.5", "accept": ["3000/2000", "3/2"], "hint": "Divide the target by the start." },
+        { "instruction": "Compute $n = \\ln(1.5) / \\ln(1.06)$ (use a calculator's ln). Enter the number of years rounded to 2 decimals.", "answer": "6.96", "accept": [], "hint": "$\\ln 1.5 \\approx 0.4055$ and $\\ln 1.06 \\approx 0.0583$; divide." }
+      ],
+      "finalAnswer": { "value": "6.96", "unit": "years" },
+      "solutionNarrative": "$n = \\dfrac{\\ln 1.5}{\\ln 1.06} \\approx \\dfrac{0.4055}{0.0583} = 6.96$ years. Logs pull the unknown exponent down out of the formula."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s09",
+      "concepts": ["solving-for-rate-or-time"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "At 6% per year, how long does an investment take to double? Solve $2 = (1+i)^n$ for $n$: $n = \\dfrac{\\ln 2}{\\ln(1+i)}$. Then compare with the Rule of 72 estimate $72/6$. Enter values rounded to 2 decimals.",
+      "steps": [
+        { "instruction": "Compute the exact doubling time $n = \\ln 2 / \\ln(1.06)$. Enter the number of years rounded to 2 decimals.", "answer": "11.90", "accept": ["11.9"], "hint": "$\\ln 2 \\approx 0.6931$; divide by $\\ln 1.06 \\approx 0.0583$." },
+        { "instruction": "Compute the Rule of 72 estimate $72 / 6$. Enter a number rounded to 2 decimals.", "answer": "12", "accept": ["12.0", "12.00", "72/6"], "hint": "Divide 72 by the percent rate." }
+      ],
+      "finalAnswer": { "value": "11.90", "unit": "years" },
+      "solutionNarrative": "Exactly, $n = \\dfrac{\\ln 2}{\\ln 1.06} \\approx 11.90$ years; the Rule of 72 estimates $72/6 = 12$ — a quick mental check that stays close for ordinary rates."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s10",
+      "concepts": ["comparing-cash-flows"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Offer A pays \\$3,000 today. Offer B pays \\$3,600 in 3 years. Money is worth 6% per year. Which is worth more today? Discount Offer B to the present with $PV = FV/(1+i)^n$. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the present value of Offer B: $PV = 3600 / 1.06^{3}$. Enter a number rounded to the nearest cent.", "answer": "3022.63", "accept": ["3022.630", "$3022.63"], "hint": "Divide by $(1.06)^{3}$." },
+        { "instruction": "Compare Offer A's \\$3,000 today with Offer B's present value. Which offer is worth more today? Answer 'Offer A' or 'Offer B'.", "answer": "Offer B", "accept": ["B", "offer b", "the second offer"], "hint": "The larger present value wins." }
+      ],
+      "finalAnswer": { "value": "Offer B", "unit": "" },
+      "solutionNarrative": "Offer B's present value is \\$3,022.63 versus Offer A's flat \\$3,000, so Offer B is the better deal today — but only just. Never compare cash at different times without discounting first."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s11",
+      "concepts": ["comparing-cash-flows"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Offer A pays \\$4,000 in 2 years; Offer B pays \\$5,000 in 5 years. At 6% per year, which is worth more today? Discount each with $PV = FV/(1+i)^n$. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Present value of Offer A: $4000 / 1.06^{2}$. Enter a number rounded to the nearest cent.", "answer": "3559.99", "accept": ["3559.990", "$3559.99"], "hint": "Discount 2 years." },
+        { "instruction": "Present value of Offer B: $5000 / 1.06^{5}$. Enter a number rounded to the nearest cent.", "answer": "3736.29", "accept": ["3736.290", "$3736.29"], "hint": "Discount 5 years." },
+        { "instruction": "Which present value is larger? Answer 'Offer A' or 'Offer B'.", "answer": "Offer B", "accept": ["B", "offer b"], "hint": "Bigger present value wins." }
+      ],
+      "finalAnswer": { "value": "Offer B", "unit": "" },
+      "solutionNarrative": "Offer A is worth \\$3,559.99 today and Offer B \\$3,736.29, so Offer B wins — the larger, later payment still comes out ahead here."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s12",
+      "concepts": ["comparing-cash-flows"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You can take a lump sum of \\$5,000 today, or an installment plan of \\$3,000 in 1 year and \\$3,000 in 3 years. At 6% per year, which is worth more today? Discount each installment and add. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Present value of the first installment: $3000 / 1.06^{1}$. Enter a number rounded to the nearest cent.", "answer": "2830.19", "accept": ["2830.190", "$2830.19"], "hint": "Discount \\$3,000 back 1 year." },
+        { "instruction": "Present value of the second installment: $3000 / 1.06^{3}$. Enter a number rounded to the nearest cent.", "answer": "2518.86", "accept": ["2518.860", "$2518.86"], "hint": "Discount \\$3,000 back 3 years." },
+        { "instruction": "Add the two present values for the plan's total worth today. Enter a number rounded to the nearest cent.", "answer": "5349.05", "accept": ["5349.050", "$5349.05"], "hint": "$2830.19 + 2518.86$." },
+        { "instruction": "Which is worth more today? Answer 'the lump sum' or 'the installment plan'.", "answer": "the installment plan", "accept": ["installment plan", "installments", "the plan"], "hint": "Compare the total present value with the lump sum." }
+      ],
+      "finalAnswer": { "value": "the installment plan", "unit": "" },
+      "solutionNarrative": "The installments are worth \\$2,830.19 + \\$2,518.86 = \\$5,349.05 today, above the \\$5,000 lump sum, so the installment plan wins. A cash-flow stream is compared by summing the present value of each piece."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s13",
+      "concepts": ["future-value"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $FV = PV(1 + i)^n$ for $PV = 800$, $i = 0.04$, $n = 3$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the growth factor $1 + i$. Enter as a decimal.", "answer": "1.04", "accept": [], "hint": "Add 0.04 to 1." },
+        { "instruction": "Compute $FV = 800 \\cdot 1.04^{3}$. Enter a number rounded to the nearest cent.", "answer": "899.89", "accept": ["899.890", "$899.89"], "hint": "1.04 cubed, times 800." }
+      ],
+      "finalAnswer": { "value": "899.89", "unit": "dollars" },
+      "solutionNarrative": "$FV = 800(1.04)^{3} = \\$899.89$."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s14",
+      "concepts": ["present-value"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $PV = \\dfrac{FV}{(1+i)^n}$ for $FV = 2500$, $i = 0.08$, $n = 6$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the discount factor $1.08^{6}$. Enter as a decimal (round to 6 places).", "answer": "1.586874", "accept": ["1.08^6"], "hint": "Raise 1.08 to the 6th power." },
+        { "instruction": "Compute $PV = 2500 / 1.08^{6}$. Enter a number rounded to the nearest cent.", "answer": "1575.42", "accept": ["1575.420", "$1575.42"], "hint": "Divide 2500 by the discount factor." }
+      ],
+      "finalAnswer": { "value": "1575.42", "unit": "dollars" },
+      "solutionNarrative": "$PV = \\dfrac{2500}{(1.08)^6} = \\$1{,}575.42$."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s15",
+      "concepts": ["solving-for-rate-or-time"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "\\$500 grew to \\$605 in 2 years. Find the annual rate with $i = (FV/PV)^{1/n} - 1$. Enter the rate as a percent rounded to 2 decimals (e.g. 6.17).",
+      "steps": [
+        { "instruction": "Find the ratio $605/500$. Enter as a decimal.", "answer": "1.21", "accept": ["605/500"], "hint": "Divide 605 by 500." },
+        { "instruction": "Take the square root and subtract 1: $i = 1.21^{1/2} - 1$, as a percent. Enter as a percent rounded to 2 decimals.", "answer": "10", "accept": ["10.0", "10.00"], "hint": "$\\sqrt{1.21} = 1.1$, so $i = 0.10$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "percent" },
+      "solutionNarrative": "$i = (605/500)^{1/2} - 1 = 1.1 - 1 = 0.10 = 10\\%$."
+    },
+    {
+      "id": "financial-mathematics.present-and-future-value.s16",
+      "concepts": ["comparing-cash-flows", "present-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bonus can be taken as \\$2,000 now or \\$2,300 in 2 years. Money is worth 7% per year. Discount the delayed bonus and decide which is worth more today. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Present value of the delayed bonus: $2300 / 1.07^{2}$. Enter a number rounded to the nearest cent.", "answer": "2008.91", "accept": ["2008.910", "$2008.91"], "hint": "Discount \\$2,300 back 2 years at 7%." },
+        { "instruction": "Which is worth more today? Answer 'the bonus now' or 'the delayed bonus'.", "answer": "the delayed bonus", "accept": ["delayed bonus", "the delayed one", "delayed"], "hint": "Compare the present value with \\$2,000." }
+      ],
+      "finalAnswer": { "value": "the delayed bonus", "unit": "" },
+      "solutionNarrative": "The delayed bonus is worth $2300/1.07^2 = \\$2{,}008.91$ today, just above \\$2,000, so the delayed bonus wins — a close call that a higher discount rate would reverse."
+    }
+  ]
+}

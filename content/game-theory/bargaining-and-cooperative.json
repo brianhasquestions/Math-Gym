@@ -1,0 +1,268 @@
+{
+  "id": "game-theory.bargaining-and-cooperative",
+  "subject": "game-theory",
+  "title": "Bargaining and Cooperative Games",
+  "prerequisites": ["game-theory.pure-nash-equilibrium"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "bargaining-basics",
+      "label": "Bargaining and the disagreement point",
+      "microLesson": "Two parties can create a **surplus** by agreeing, but only if the deal beats what each gets by walking away. Those walk-away payoffs are the **disagreement point** $(d_1, d_2)$ — also called the threat point or BATNA. The surplus up for grabs is the pie size $S$ minus what the disagreement guarantees: $S - d_1 - d_2$. If two roommates can split a \\$100 gift only by agreeing, but each can grab \\$20 alone, the disagreement point is $(20, 20)$ and the surplus to divide is $100 - 20 - 20 = 60$. No rational party accepts less than its disagreement value, so the disagreement point sets the floor of every offer."
+    },
+    {
+      "id": "nash-bargaining-solution",
+      "label": "The Nash bargaining solution",
+      "microLesson": "Among all feasible splits, the **Nash bargaining solution** picks the one that maximizes the *product* of the two players' gains over the disagreement point: maximize $(u_1 - d_1)(u_2 - d_2)$. For splitting a pie of size $S$ with disagreement $(d_1, d_2)$, the maximizer is the wonderfully simple **split-the-surplus** rule: each player keeps its threat value and then takes half of what's left, $u_i = d_i + \\dfrac{S - d_1 - d_2}{2}$. With $S = 100$ and disagreement $(20, 40)$, the surplus is $40$, so player 1 gets $20 + 20 = 40$ and player 2 gets $40 + 20 = 60$. The stronger threat earns more, but the *gains* are split evenly."
+    },
+    {
+      "id": "coalitions-and-characteristic-function",
+      "label": "Coalitions and the characteristic function",
+      "microLesson": "A **cooperative game** replaces individual strategies with a **characteristic function** $v(S)$: for every coalition (subset of players) $S$, $v(S)$ is the total value that group can guarantee itself by cooperating. The grand coalition of everyone is $N$, and $v(N)$ is the whole pie to be divided. A game is **superadditive** when merging disjoint coalitions never hurts: $v(S \\cup T) \\ge v(S) + v(T)$. Reading a $v(S)$ table is the first skill: if $v(\\{1,2\\}) = 30$ while $v(\\{1\\}) = 10$ and $v(\\{2\\}) = 15$, then players 1 and 2 together create $30 - 10 - 15 = 5$ of *synergy* beyond what they'd earn apart."
+    },
+    {
+      "id": "shapley-value",
+      "label": "The Shapley value",
+      "microLesson": "How should the grand coalition's value $v(N)$ be divided fairly? The **Shapley value** pays each player their *average marginal contribution*, taken over every order in which the players could join the coalition. For player $i$: imagine building the coalition one player at a time in a random order; $i$'s marginal contribution is $v(\\text{those before } i, \\text{ plus } i) - v(\\text{those before } i)$. Average that over all $n!$ orderings. For 3 players there are $3! = 6$ orderings. The Shapley value is the unique payout that is efficient (the shares sum to $v(N)$), symmetric, and gives 0 to a player who adds nothing. It's how you fairly split the gains — or costs — of a joint venture."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When cooperating beats competing\n\nMuch of game theory studies conflict: players choosing strategies against each other, landing at a Nash equilibrium that may leave everyone worse off. **Cooperative game theory** asks a different question. Suppose the players *can* sign binding agreements and pool their efforts. Now the questions are: how much is cooperation worth, who has the leverage, and — the hard one — what is a *fair* division of the joint gains? This topic builds the two great answers: the **Nash bargaining solution** for two-party deals, and the **Shapley value** for splitting the value of any coalition.\n\n## Bargaining: the surplus and the threat point\n\nTwo people can create value only by agreeing — a buyer and seller, two firms merging, two nations signing a treaty. Call the total value they create by agreeing the **pie**, of size $S$. But agreement is voluntary, so each party has a fallback: the payoff it secures by walking away. Those fallbacks form the **disagreement point** $(d_1, d_2)$, also called the *threat point* or, in negotiation slang, the **BATNA** (Best Alternative To a Negotiated Agreement).\n\nThe disagreement point is the gravitational center of every negotiation. No rational player accepts a deal giving it less than its threat value $d_i$ — it would simply walk. So the genuinely negotiable quantity is not the whole pie but the **surplus**:\n\n$$\\text{surplus} = S - d_1 - d_2.$$\n\nThis is the value that *exists only because the parties agree* — the gains from trade. If two roommates receive a \\$100 gift only if they jointly claim it, but each could grab \\$20 by acting alone, then $S = 100$, $(d_1, d_2) = (20, 20)$, and the surplus to split is $100 - 40 = 60$.\n\n## The Nash bargaining solution\n\nSplitting the surplus is *fair* — but is it forced? John Nash (1950) proposed four reasonable axioms a bargaining rule should satisfy (invariance to rescaling, Pareto efficiency, symmetry, independence of irrelevant alternatives) and proved a startling result: **exactly one** rule satisfies all four. It is the split that **maximizes the product of the two players' gains over disagreement**:\n\n$$\\max_{(u_1, u_2)} \\; (u_1 - d_1)(u_2 - d_2).$$\n\nFor a divisible pie of size $S$ (so $u_1 + u_2 = S$), this maximization has a clean closed form. Writing $g_i = u_i - d_i$ for each player's gain, we need $g_1 + g_2 = S - d_1 - d_2 = $ surplus, and the product $g_1 g_2$ is largest when the two gains are **equal**. Hence each player keeps its threat value and then takes *half the surplus*:\n\n$$\\boxed{\\,u_i = d_i + \\frac{S - d_1 - d_2}{2}\\,}$$\n\n### Worked example\n\nA pie of size $S = 100$ is to be split, with disagreement point $(d_1, d_2) = (20, 40)$.\n\n1. **Surplus:** $S - d_1 - d_2 = 100 - 20 - 40 = 40$.\n2. **Each gain:** half the surplus, $40 / 2 = 20$.\n3. **Player 1:** $u_1 = d_1 + 20 = 20 + 20 = 40$.\n4. **Player 2:** $u_2 = d_2 + 20 = 40 + 20 = 60$.\n\nCheck: $u_1 + u_2 = 40 + 60 = 100 = S$. ✓ The player with the stronger threat ($d_2 = 40$) walks away with more of the pie ($60$), yet the *gains from cooperating* are split exactly evenly ($20$ each). That asymmetry — equal gains, unequal totals — is the signature of the Nash solution, and it is why improving your BATNA is the single most powerful move in any negotiation.\n\n## Coalitions and the characteristic function\n\nWith three or more players, \"who gets what\" gets richer, because subgroups can form. A **cooperative game** is described not by strategies but by a **characteristic function** $v(S)$ that assigns, to every coalition $S \\subseteq N$, the total value that group can guarantee by cooperating among themselves. By convention $v(\\varnothing) = 0$. The full set $N = \\{1, 2, \\dots, n\\}$ is the **grand coalition**, and $v(N)$ is the whole pie.\n\nMost interesting games are **superadditive**: disjoint groups never lose by merging, $v(S \\cup T) \\ge v(S) + v(T)$ for disjoint $S, T$. Superadditivity is what makes the grand coalition worth forming. The gap $v(S \\cup T) - v(S) - v(T)$ measures the **synergy** the merger creates.\n\nA typical 3-player table looks like this:\n\n| Coalition $S$ | $v(S)$ |\n|---|---|\n| $\\varnothing$ | 0 |\n| $\\{1\\}$ | 0 |\n| $\\{2\\}$ | 0 |\n| $\\{3\\}$ | 0 |\n| $\\{1,2\\}$ | 60 |\n| $\\{1,3\\}$ | 60 |\n| $\\{2,3\\}$ | 30 |\n| $\\{1,2,3\\}$ | 90 |\n\nHere every player is worthless alone, but pairs create value and the grand coalition is worth $90$. Player 1 shows up in both of the high-value pairs — a hint that a *fair* division should reward player 1 more.\n\n## The Shapley value: fair division by marginal contribution\n\nHow do we split $v(N) = 90$ fairly? The **Shapley value** (Lloyd Shapley, 1953) gives the unique answer satisfying efficiency, symmetry, the null-player property, and additivity. The idea: pay each player their **average marginal contribution** over all orders in which the grand coalition could be assembled.\n\nImagine the players joining a room one at a time in some order. When player $i$ walks in, the value already present is $v(\\text{those before } i)$; after $i$ joins it becomes $v(\\text{those before } i, \\text{ plus } i)$. Player $i$'s **marginal contribution** in that order is the difference. Average this over all $n!$ orders. For $n = 3$ there are $3! = 6$ orders.\n\n### Fully worked Shapley computation\n\nUsing the table above ($v(12)=60$, $v(13)=60$, $v(23)=30$, $v(123)=90$, all singletons $0$), here is the marginal-contribution table. Each row is one of the six join orders; each cell is that player's marginal contribution *in that order*.\n\n| Order | Player 1 | Player 2 | Player 3 |\n|---|---|---|---|\n| 1,2,3 | $v(1){-}0 = 0$ | $v(12){-}v(1) = 60$ | $v(123){-}v(12) = 30$ |\n| 1,3,2 | $v(1){-}0 = 0$ | $v(123){-}v(13) = 30$ | $v(13){-}v(1) = 60$ |\n| 2,1,3 | $v(12){-}v(2) = 60$ | $v(2){-}0 = 0$ | $v(123){-}v(12) = 30$ |\n| 2,3,1 | $v(123){-}v(23) = 60$ | $v(2){-}0 = 0$ | $v(23){-}v(2) = 30$ |\n| 3,1,2 | $v(13){-}v(3) = 60$ | $v(123){-}v(13) = 30$ | $v(3){-}0 = 0$ |\n| 3,2,1 | $v(123){-}v(23) = 60$ | $v(23){-}v(3) = 30$ | $v(3){-}0 = 0$ |\n| **Sum** | **240** | **150** | **150** |\n| **$\\div 6$** | **40** | **25** | **25** |\n\nSo the Shapley values are $\\varphi = (40, 25, 25)$. **Verify efficiency:** $40 + 25 + 25 = 90 = v(N)$. ✓ Player 1, who was pivotal to both strong pairs, earns the largest share, exactly as intuition predicted.\n\nWith singleton values of zero, there is a shortcut formula worth knowing:\n\n$$\\varphi_i = \\frac{1}{3}v(N) + \\frac{1}{6}\\big[v(ij) + v(ik) - 2\\,v(jk)\\big].$$\n\nFor player 1: $\\tfrac{1}{3}(90) + \\tfrac{1}{6}[60 + 60 - 2(30)] = 30 + \\tfrac{1}{6}(60) = 30 + 10 = 40$. ✓ For player 2: $30 + \\tfrac{1}{6}[60 + 30 - 2(60)] = 30 + \\tfrac{1}{6}(-30) = 30 - 5 = 25$. ✓\n\n## Pitfalls\n\n- **Shapley ordering.** A player's marginal contribution depends on *who is already in the room*. You must average over **all** $n!$ orders, not just one — computing $v(N) - v(N \\setminus i)$ (the contribution when $i$ joins last) gives only one of the $n!$ terms and is generally wrong.\n- **Don't confuse $v(N) - v(\\text{others})$ with the Shapley value.** The quantity $v(N) - v(N\\setminus\\{i\\})$ is $i$'s marginal contribution *to the grand coalition only*. It is a component of the Shapley value, never the whole of it.\n- **The disagreement point is a floor, not the answer.** In bargaining, $d_i$ is the *minimum* a player accepts. The Nash solution adds half the surplus on top; forgetting the surplus gives each player only its threat value and leaves the gains from trade unallocated.\n- **Split the *gains*, not the pie.** Equal gains over disagreement ($g_1 = g_2$) does **not** mean equal totals ($u_1 = u_2$) unless the threats are equal. The stronger threat earns a bigger total."
+  },
+  "application": {
+    "summary": "Cooperative game theory is the mathematics of fair division and negotiated deals: splitting the gains of a merger or joint venture, allocating shared costs, dividing an inheritance or a windfall, and setting the terms of any two-party bargain from wage talks to trade treaties.",
+    "domains": ["business partnerships and mergers", "cost allocation and shared infrastructure", "labor and trade negotiation", "revenue sharing and profit splitting"],
+    "workedExample": "**Splitting the savings of a shared runway.**\n\nThree airlines, 1, 2, and 3, can each build their own short runway, but a single longer shared runway serves all three more cheaply. Framed as savings (value created versus everyone going alone), the characteristic function is: any single airline saves nothing alone, so $v(\\{i\\}) = 0$; the pairs that could share save $v(\\{1,2\\}) = 60$, $v(\\{1,3\\}) = 60$, $v(\\{2,3\\}) = 30$ (in \\$100k units); and all three together save $v(\\{1,2,3\\}) = 90$.\n\nHow should the \\$90 (hundred-thousand) of shared savings be divided so no airline feels cheated? The Shapley value pays each its average marginal contribution across all six join orders. From the worked computation, $\\varphi = (40, 25, 25)$: airline 1, which pairs profitably with *both* others, is allocated the largest share of the savings, while 2 and 3 — interchangeable in their contribution — split the rest equally.\n\nThis is not an academic nicety. Airports, telecoms sharing cell towers, and firms sharing R&D use exactly this logic (the Shapley value and its cousin, the *core*) to divide joint costs and savings in a way every party can accept as fair — because each is paid precisely what it brings, on average, to the table.",
+    "domainNotes": [
+      "**Mergers & joint ventures:** the synergy $v(S\\cup T) - v(S) - v(T)$ is the deal's reason to exist; the Shapley value or Nash bargaining split decides how the two sides share it.",
+      "**Cost allocation:** utilities, airports, and shared IT systems allocate common costs by Shapley value so each user pays its average marginal cost — defensible in court and to regulators.",
+      "**Negotiation strategy:** the single highest-leverage move in any bargain is improving your BATNA (disagreement point), because the Nash solution ties your total directly to your threat value.",
+      "**Revenue sharing:** streaming royalties, ad-network splits, and franchise agreements use marginal-contribution logic to divide pooled revenue among unequal contributors."
+    ]
+  },
+  "generators": [
+    "gt3-bargbasic-1", "gt3-bargbasic-2", "gt3-bargbasic-3",
+    "gt3-nashbarg-1", "gt3-nashbarg-2", "gt3-nashbarg-3",
+    "gt3-coalition-1", "gt3-coalition-2", "gt3-coalition-3",
+    "gt3-shapley-1", "gt3-shapley-2", "gt3-shapley-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.bargaining-and-cooperative.s01",
+      "concepts": ["bargaining-basics"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two neighbors can share a \\$120 rebate only if they jointly apply. Acting alone, each could instead claim \\$30. The disagreement point is therefore $(30, 30)$. How much genuinely negotiable **surplus** does agreeing create?",
+      "steps": [
+        { "instruction": "The surplus is the pie minus both disagreement values: $120 - 30 - 30$. Give a number.", "answer": "60", "accept": [], "hint": "Subtract each player's walk-away value from the pie." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "dollars" },
+      "solutionNarrative": "Surplus $= S - d_1 - d_2 = 120 - 30 - 30 = 60$. Only this \\$60 is created by cooperating; the first \\$60 of the pie merely replaces what each could grab alone."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s02",
+      "concepts": ["bargaining-basics"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A pie of size $S = 50$ is bargained over with disagreement point $(d_1, d_2) = (10, 5)$. Find the surplus available to divide.",
+      "steps": [
+        { "instruction": "Compute $S - d_1 - d_2 = 50 - 10 - 5$. Give a number.", "answer": "35", "accept": [], "hint": "The surplus is what's left after each player's threat value is set aside." }
+      ],
+      "finalAnswer": { "value": "35", "unit": "" },
+      "solutionNarrative": "Surplus $= 50 - 10 - 5 = 35$. Everything above the disagreement floors is the gains from trade."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s03",
+      "concepts": ["bargaining-basics", "nash-bargaining-solution"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A supplier and a retailer split a \\$200 joint profit. If they fail to agree, the supplier earns \\$60 elsewhere and the retailer earns \\$40 elsewhere, so the disagreement point is $(60, 40)$. Find the surplus, then note what fair share of the surplus each receives.",
+      "steps": [
+        { "instruction": "Surplus: $200 - 60 - 40$. Give a number.", "answer": "100", "accept": [], "hint": "Pie minus both threat values." },
+        { "instruction": "Under the Nash solution the surplus is split evenly. How much surplus does each party get? Give a number.", "answer": "50", "accept": [], "hint": "Half of the surplus." }
+      ],
+      "finalAnswer": { "value": "50", "unit": "dollars" },
+      "solutionNarrative": "Surplus $= 200 - 60 - 40 = 100$, and the Nash solution splits it evenly, so each gains \\$50 over its threat value."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s04",
+      "concepts": ["nash-bargaining-solution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Apply the Nash bargaining solution to a pie of size $S = 100$ with disagreement point $(d_1, d_2) = (20, 40)$. Use $u_i = d_i + \\dfrac{S - d_1 - d_2}{2}$.",
+      "steps": [
+        { "instruction": "Surplus: $100 - 20 - 40$. Give a number.", "answer": "40", "accept": [], "hint": "$S - d_1 - d_2$." },
+        { "instruction": "Half the surplus (each player's gain): $40 / 2$. Give a number.", "answer": "20", "accept": [], "hint": "Divide the surplus by 2." },
+        { "instruction": "Player 1's share: $u_1 = 20 + 20$. Give a number.", "answer": "40", "accept": [], "hint": "Threat value plus half-surplus." },
+        { "instruction": "Player 2's share: $u_2 = 40 + 20$. Give a number.", "answer": "60", "accept": [], "hint": "Threat value plus half-surplus." }
+      ],
+      "finalAnswer": { "value": "(40, 60)", "unit": "" },
+      "solutionNarrative": "Surplus $= 40$, half is $20$. So $u_1 = 20 + 20 = 40$ and $u_2 = 40 + 20 = 60$, which sum to $100$. Equal gains, unequal totals — player 2's stronger threat earns it more."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s05",
+      "concepts": ["nash-bargaining-solution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A pie of size $S = 80$ has a symmetric disagreement point $(0, 0)$. Find each player's Nash bargaining share.",
+      "steps": [
+        { "instruction": "With $(d_1,d_2)=(0,0)$ the whole pie is surplus. Half of $80$ goes to each. Give player 1's share.", "answer": "40", "accept": [], "hint": "Split evenly when threats are equal at 0." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "" },
+      "solutionNarrative": "With zero disagreement values the surplus is the entire pie, so each player gets $80/2 = 40$ — the familiar equal split is the Nash solution when threats are symmetric."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s06",
+      "concepts": ["nash-bargaining-solution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two firms negotiate over a joint venture worth \\$300. Firm A's best alternative is \\$120; firm B's is \\$60. Compute the Nash bargaining outcome $(u_A, u_B)$ and confirm the shares sum to the pie.",
+      "steps": [
+        { "instruction": "Surplus: $300 - 120 - 60$. Give a number.", "answer": "120", "accept": [], "hint": "$S - d_A - d_B$." },
+        { "instruction": "Half the surplus: $120 / 2$. Give a number.", "answer": "60", "accept": [], "hint": "Each firm's gain over its alternative." },
+        { "instruction": "Firm A's share: $120 + 60$. Give a number.", "answer": "180", "accept": [], "hint": "Alternative plus half-surplus." },
+        { "instruction": "Firm B's share: $60 + 60$. Give a number.", "answer": "120", "accept": [], "hint": "Alternative plus half-surplus." },
+        { "instruction": "Do the shares sum to the \\$300 pie? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$180 + 120$." }
+      ],
+      "finalAnswer": { "value": "(180, 120)", "unit": "dollars" },
+      "solutionNarrative": "Surplus $= 120$, half is $60$. Firm A gets $120 + 60 = 180$, firm B gets $60 + 60 = 120$, and $180 + 120 = 300$ recovers the whole pie."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s07",
+      "concepts": ["coalitions-and-characteristic-function"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A cooperative game has characteristic function values $v(\\{1\\}) = 10$, $v(\\{2\\}) = 15$, and $v(\\{1,2\\}) = 30$. How much **synergy** does the coalition $\\{1,2\\}$ create beyond what the players earn alone?",
+      "steps": [
+        { "instruction": "Synergy $= v(\\{1,2\\}) - v(\\{1\\}) - v(\\{2\\}) = 30 - 10 - 15$. Give a number.", "answer": "5", "accept": [], "hint": "Coalition value minus the two singleton values." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Synergy $= 30 - 10 - 15 = 5$. The pair is worth 5 more than the sum of its parts, so the game is superadditive here."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s08",
+      "concepts": ["coalitions-and-characteristic-function"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Consider a 3-player game with the value table below.\n\n| $S$ | $v(S)$ |\n|---|---|\n| $\\{1\\}$ | 0 |\n| $\\{2\\}$ | 0 |\n| $\\{3\\}$ | 0 |\n| $\\{1,2\\}$ | 40 |\n| $\\{1,3\\}$ | 50 |\n| $\\{2,3\\}$ | 30 |\n| $\\{1,2,3\\}$ | 90 |\n\nAnswer the coalition-value questions.",
+      "steps": [
+        { "instruction": "What is $v(\\{1,3\\})$? Give a number.", "answer": "50", "accept": [], "hint": "Read the $\\{1,3\\}$ row." },
+        { "instruction": "What is the value of the grand coalition $v(\\{1,2,3\\})$? Give a number.", "answer": "90", "accept": [], "hint": "All three players together." },
+        { "instruction": "Synergy of the pair $\\{2,3\\}$ over its singletons: $30 - 0 - 0$. Give a number.", "answer": "30", "accept": [], "hint": "Pair value minus the singleton values (both 0)." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "" },
+      "solutionNarrative": "$v(\\{1,3\\}) = 50$ and $v(N) = 90$ are read directly. Since both singletons are 0, the pair $\\{2,3\\}$ contributes all $30$ of its value as synergy."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s09",
+      "concepts": ["coalitions-and-characteristic-function"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Three startups can license a shared technology. Alone none profits: $v(\\{i\\}) = 0$. The pairs earn $v(\\{1,2\\}) = 24$, $v(\\{1,3\\}) = 18$, $v(\\{2,3\\}) = 12$, and all three earn $v(\\{1,2,3\\}) = 48$ (in \\$M). Verify the game is superadditive by checking that the grand coalition beats splitting into a pair plus a singleton.",
+      "steps": [
+        { "instruction": "Best pair-plus-singleton split value: take the largest pair $v(\\{1,2\\}) = 24$ plus $v(\\{3\\}) = 0$. Give that sum.", "answer": "24", "accept": [], "hint": "$24 + 0$." },
+        { "instruction": "Compare with $v(\\{1,2,3\\}) = 48$. Is the grand coalition worth at least as much? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$48 \\ge 24$." },
+        { "instruction": "How much extra value does forming the grand coalition create over that best split: $48 - 24$? Give a number.", "answer": "24", "accept": [], "hint": "Grand-coalition value minus the split value." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "The best pair-plus-singleton split is $24 + 0 = 24$, well below $v(N) = 48$, so merging all three adds \\$24M of synergy — the game is superadditive and the grand coalition is worth forming."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s10",
+      "concepts": ["shapley-value"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a 2-player game, $v(\\{1\\}) = 10$, $v(\\{2\\}) = 20$, and $v(\\{1,2\\}) = 40$. The Shapley value gives each player its own value plus half the shared synergy. Find player 1's Shapley value.",
+      "steps": [
+        { "instruction": "Synergy: $40 - 10 - 20$. Give a number.", "answer": "10", "accept": [], "hint": "$v(\\{1,2\\}) - v(\\{1\\}) - v(\\{2\\})$." },
+        { "instruction": "Player 1's Shapley value: $10 + \\tfrac{1}{2}(10) = 10 + 5$. Give a number.", "answer": "15", "accept": [], "hint": "Own value plus half the synergy." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "The two-player Shapley value splits synergy evenly: $\\varphi_1 = v(\\{1\\}) + \\tfrac12[v(\\{1,2\\}) - v(\\{1\\}) - v(\\{2\\})] = 10 + \\tfrac12(10) = 15$ (and $\\varphi_2 = 25$, summing to 40)."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s11",
+      "concepts": ["shapley-value"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A symmetric 3-player game has all singletons 0, all pairs $v(\\{i,j\\}) = 60$, and $v(\\{1,2,3\\}) = 120$. By symmetry the three Shapley values are equal and sum to $v(N)$. Find each player's Shapley value.",
+      "steps": [
+        { "instruction": "Efficiency: the three equal shares sum to $v(N) = 120$. Each share is $120 / 3$. Give a number.", "answer": "40", "accept": [], "hint": "Divide the grand-coalition value by 3." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "" },
+      "solutionNarrative": "In a symmetric game every player has the same average marginal contribution, so by efficiency each Shapley value is $v(N)/3 = 120/3 = 40$."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s12",
+      "concepts": ["shapley-value"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute all three Shapley values for the game with singletons 0 and pairs $v(\\{1,2\\}) = 60$, $v(\\{1,3\\}) = 60$, $v(\\{2,3\\}) = 30$, $v(\\{1,2,3\\}) = 90$. Use the zero-singleton shortcut $\\varphi_i = \\tfrac13 v(N) + \\tfrac16[v(ij) + v(ik) - 2\\,v(jk)]$, and verify they sum to $v(N)$.",
+      "steps": [
+        { "instruction": "Base term shared by all: $\\tfrac13 v(N) = \\tfrac13(90)$. Give a number.", "answer": "30", "accept": [], "hint": "One-third of the grand-coalition value." },
+        { "instruction": "Player 1: $30 + \\tfrac16[60 + 60 - 2(30)]$. Give a number.", "answer": "40", "accept": [], "hint": "Inside the bracket: $60 + 60 - 60 = 60$, times $\\tfrac16$ is 10." },
+        { "instruction": "Player 2: $30 + \\tfrac16[60 + 30 - 2(60)]$. Give a number.", "answer": "25", "accept": [], "hint": "Bracket: $60 + 30 - 120 = -30$, times $\\tfrac16$ is $-5$." },
+        { "instruction": "Player 3: $30 + \\tfrac16[60 + 30 - 2(60)]$. Give a number.", "answer": "25", "accept": [], "hint": "Same bracket as player 2 by symmetry." },
+        { "instruction": "Do the three Shapley values sum to $v(N) = 90$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$40 + 25 + 25$." }
+      ],
+      "finalAnswer": { "value": "(40, 25, 25)", "unit": "" },
+      "solutionNarrative": "$\\varphi_1 = 30 + 10 = 40$, $\\varphi_2 = \\varphi_3 = 30 - 5 = 25$. They sum to $90 = v(N)$, confirming efficiency. Player 1 earns most because it is pivotal to both high-value pairs."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s13",
+      "concepts": ["shapley-value"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A driver, a navigator, and a mechanic form a rally team. Alone each earns 0. Any pair earns: driver+navigator $v(\\{1,2\\}) = 30$, driver+mechanic $v(\\{1,3\\}) = 30$, navigator+mechanic $v(\\{2,3\\}) = 30$; all three earn $v(\\{1,2,3\\}) = 60$. Find each member's Shapley value.",
+      "steps": [
+        { "instruction": "Base term $\\tfrac13 v(N) = \\tfrac13(60)$. Give a number.", "answer": "20", "accept": [], "hint": "One-third of 60." },
+        { "instruction": "Driver (player 1): $20 + \\tfrac16[30 + 30 - 2(30)]$. Give a number.", "answer": "20", "accept": [], "hint": "The bracket is $60 - 60 = 0$." },
+        { "instruction": "Since the game is fully symmetric, what is each of the other two members' Shapley value?", "answer": "20", "accept": [], "hint": "Symmetry forces equal shares." }
+      ],
+      "finalAnswer": { "value": "(20, 20, 20)", "unit": "" },
+      "solutionNarrative": "Every pair is worth 30 and the trio 60, so the game is symmetric: each Shapley value is $v(N)/3 = 20$. Nobody is more pivotal than anyone else, so the split is even."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s14",
+      "concepts": ["shapley-value", "coalitions-and-characteristic-function"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two workers share the profit of a job. Worker 1 alone completes $v(\\{1\\}) = 12$ of work, worker 2 alone $v(\\{2\\}) = 6$, and together $v(\\{1,2\\}) = 30$. Find both Shapley values.",
+      "steps": [
+        { "instruction": "Synergy from cooperating: $30 - 12 - 6$. Give a number.", "answer": "12", "accept": [], "hint": "Joint value minus both solo values." },
+        { "instruction": "Worker 1's Shapley value: $12 + \\tfrac12(12)$. Give a number.", "answer": "18", "accept": [], "hint": "Own value plus half the synergy." },
+        { "instruction": "Worker 2's Shapley value: $6 + \\tfrac12(12)$. Give a number.", "answer": "12", "accept": [], "hint": "Own value plus half the synergy." }
+      ],
+      "finalAnswer": { "value": "(18, 12)", "unit": "" },
+      "solutionNarrative": "Synergy is $30 - 18 = 12$, split evenly. Worker 1 gets $12 + 6 = 18$, worker 2 gets $6 + 6 = 12$, and $18 + 12 = 30 = v(N)$."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s15",
+      "concepts": ["bargaining-basics", "nash-bargaining-solution"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A landlord and tenant negotiate a lease surplus of \\$1000 (the value of avoiding a costly turnover). The landlord's alternative is worth \\$400 and the tenant's is worth \\$200. Here $S = 1000$ is already the pie and $(d_1, d_2) = (400, 200)$. Find the tenant's Nash bargaining share.",
+      "steps": [
+        { "instruction": "Surplus: $1000 - 400 - 200$. Give a number.", "answer": "400", "accept": [], "hint": "$S - d_1 - d_2$." },
+        { "instruction": "Half the surplus: $400 / 2$. Give a number.", "answer": "200", "accept": [], "hint": "Split the surplus evenly." },
+        { "instruction": "Tenant's share $u_2 = d_2 + 200 = 200 + 200$. Give a number.", "answer": "400", "accept": [], "hint": "Tenant's threat value plus half-surplus." }
+      ],
+      "finalAnswer": { "value": "400", "unit": "dollars" },
+      "solutionNarrative": "Surplus $= 400$, half is $200$. The tenant's share is $200 + 200 = 400$ (and the landlord's is $400 + 200 = 600$)."
+    },
+    {
+      "id": "game-theory.bargaining-and-cooperative.s16",
+      "concepts": ["nash-bargaining-solution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A pie of size $S = 60$ has disagreement point $(10, 10)$. Find player 1's Nash bargaining share using $u_1 = d_1 + \\tfrac{S - d_1 - d_2}{2}$.",
+      "steps": [
+        { "instruction": "Surplus: $60 - 10 - 10$. Give a number.", "answer": "40", "accept": [], "hint": "$S - d_1 - d_2$." },
+        { "instruction": "Player 1's share: $10 + 40/2 = 10 + 20$. Give a number.", "answer": "30", "accept": [], "hint": "Threat value plus half the surplus." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "" },
+      "solutionNarrative": "Surplus $= 40$, so $u_1 = 10 + 20 = 30$. With equal threats the pie splits evenly at 30 each."
+    }
+  ]
+}

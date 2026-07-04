@@ -1,0 +1,272 @@
+{
+  "id": "financial-mathematics.npv-and-irr",
+  "subject": "financial-mathematics",
+  "title": "Net Present Value and Capital Budgeting",
+  "prerequisites": ["financial-mathematics.present-and-future-value"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "net-present-value",
+      "label": "Net present value",
+      "microLesson": "A project's **net present value** discounts every future cash flow back to today and subtracts the up-front cost: $\\text{NPV} = \\sum_{t=1}^{n} \\dfrac{CF_t}{(1+r)^t} - C_0$, where $C_0$ is the initial investment, $CF_t$ the cash flow received at the end of year $t$, and $r$ the required rate (discount rate). Discount each cash flow with its own power of $(1+r)$, add the present values, then subtract the cost. A positive NPV means the project creates value beyond the required return."
+    },
+    {
+      "id": "accept-reject-rule",
+      "label": "Accept–reject rule and payback",
+      "microLesson": "The NPV decision rule is simple: **accept** a project if $\\text{NPV} > 0$, **reject** it if $\\text{NPV} < 0$ (at exactly 0 you are indifferent). A rougher screen is the **payback period** — how many years of cash flow it takes to recover the initial cost. With level cash flows, $\\text{payback} = C_0 / (\\text{annual cash flow})$; with uneven flows, accumulate them year by year until the running total reaches $C_0$. Payback ignores the time value of money and anything after the cutoff, so it is a screen, not a verdict."
+    },
+    {
+      "id": "internal-rate-of-return",
+      "label": "Internal rate of return",
+      "microLesson": "The **internal rate of return** is the discount rate that makes $\\text{NPV} = 0$ — the project's own break-even return. For a one-period project, $C_0 = \\dfrac{CF_1}{1+\\text{IRR}}$ solves exactly: $\\text{IRR} = \\dfrac{CF_1}{C_0} - 1$. When NPV is known at two rates, you can **interpolate**: the IRR lies where NPV crosses zero, at $r_1 + (r_2 - r_1)\\dfrac{\\text{NPV}_1}{\\text{NPV}_1 - \\text{NPV}_2}$. Accept a project when its IRR exceeds the required rate."
+    },
+    {
+      "id": "comparing-projects",
+      "label": "Comparing and ranking projects",
+      "microLesson": "When projects are **mutually exclusive** (you can pick only one), rank them by **NPV** and choose the highest — NPV measures dollars of value added. IRR can disagree with NPV because it is a percentage that ignores project size and reinvestment: a small project can have a higher IRR but add fewer dollars. When NPV and IRR conflict for mutually exclusive projects, **follow NPV**, since maximizing total value is the goal."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The core question of capital budgeting\n\nA company (or a person) has a pile of cash and a menu of things to spend it on: a new machine, a product line, a rental property. Each choice costs money today and returns money over several years. **Capital budgeting** is the discipline of deciding which of these are worth doing. The master tool is **net present value**.\n\n## Net present value\n\nA dollar next year is worth less than a dollar today, because today's dollar can be invested. So to judge a project honestly, discount every future cash flow back to the present and compare the total to what you must pay now:\n\n$$\\boxed{\\;\\text{NPV} = \\sum_{t=1}^{n} \\frac{CF_t}{(1+r)^{t}} \\;-\\; C_0\\;}$$\n\nHere $C_0$ is the up-front cost, $CF_t$ is the cash received at the *end* of year $t$, $r$ is the **discount rate** (the return you require), and $n$ is the project's life.\n\n### Worked example\n\nA project costs \\$1,000 today and pays \\$600 at the end of year 1 and \\$700 at the end of year 2. Your required rate is 10% ($r = 0.10$).\n\n- Year 1: $\\dfrac{600}{1.10} = \\$545.45$.\n- Year 2: $\\dfrac{700}{(1.10)^2} = \\dfrac{700}{1.21} = \\$578.51$.\n- Sum of present values: $545.45 + 578.51 = \\$1{,}123.96$.\n- **NPV:** $1{,}123.96 - 1{,}000 = \\$123.96$.\n\nA positive NPV of \\$123.96 means the project returns \\$123.96 *more*, in today's dollars, than your 10% requirement. It creates value.\n\n## The accept–reject rule\n\nOnce you have NPV, the decision is mechanical:\n\n- $\\text{NPV} > 0 \\Rightarrow$ **accept** (it beats your required return).\n- $\\text{NPV} < 0 \\Rightarrow$ **reject** (it falls short).\n- $\\text{NPV} = 0 \\Rightarrow$ indifferent (it exactly meets the requirement).\n\n### Payback period: a quick screen\n\nBefore the full NPV, managers often ask a blunter question: *how long until I get my money back?* The **payback period** counts years until cumulative cash flow recovers $C_0$. With equal annual cash flows,\n\n$$\\text{Payback} = \\frac{C_0}{\\text{annual cash flow}}.$$\n\nWith uneven flows, add them up year by year until the running total reaches the cost. A \\$1,000 project returning \\$400, \\$400, \\$400 recovers \\$800 after two years and needs half of year 3's \\$400 to reach \\$1,000, so payback $= 2.5$ years. **Payback ignores the time value of money and everything after the cutoff**, so treat it as a screen, never the final word.\n\n## Internal rate of return\n\nThe **internal rate of return (IRR)** flips the NPV question around: instead of picking a rate and computing NPV, find the rate that makes $\\text{NPV} = 0$. That rate *is* the project's return.\n\nFor a one-period project it solves exactly. Setting $C_0 = \\dfrac{CF_1}{1 + \\text{IRR}}$ and rearranging:\n\n$$\\boxed{\\;\\text{IRR} = \\frac{CF_1}{C_0} - 1\\;}$$\n\nInvest \\$1,000, get \\$1,150 back in a year: $\\text{IRR} = \\tfrac{1150}{1000} - 1 = 0.15 = 15\\%$.\n\nFor longer projects the IRR generally can't be written in closed form, but if you know the NPV at two rates you can **interpolate** to the crossing point. If NPV is $+\\$50$ at 8% and $-\\$30$ at 12%, the IRR sits between them where NPV hits zero:\n\n$$\\text{IRR} \\approx r_1 + (r_2 - r_1)\\cdot\\frac{\\text{NPV}_1}{\\text{NPV}_1 - \\text{NPV}_2} = 8\\% + 4\\%\\cdot\\frac{50}{50-(-30)} = 8\\% + 4\\%\\cdot 0.625 = 10.5\\%.$$\n\nThe **IRR rule**: accept when IRR exceeds your required rate.\n\n## Comparing projects — and when the rules fight\n\nFor **independent** projects (you can do all that clear the bar), NPV and IRR agree. The tension appears with **mutually exclusive** projects, where you must choose one:\n\n- **Rank by NPV** and take the highest. NPV is measured in *dollars of value added*, which is exactly what you want to maximize.\n- **IRR can mislead** because it's a *percentage*. A small project might earn a dazzling 40% IRR on \\$100 (adding little in dollars), while a large project earns a steady 15% on \\$10,000 (adding far more).\n\nWhen the two rankings **conflict for mutually exclusive projects, follow NPV.** Maximizing total dollar value beats maximizing a rate of return.\n\n## Pitfalls\n\n- **Don't forget to subtract $C_0$.** The summation gives the present value of the *inflows*; NPV is that minus the initial cost.\n- **Discount each year with its own exponent.** Year 2's cash flow is divided by $(1+r)^2$, not $(1+r)$.\n- **IRR is not NPV.** IRR is a rate; NPV is a dollar amount. For choosing between mutually exclusive projects, dollars win."
+  },
+  "application": {
+    "summary": "Net present value and IRR are the standard tools corporations use to decide which investments to fund, how banks and private-equity firms evaluate deals, and how individuals judge a rental property or a business idea. NPV converts a stream of future cash into a single today-dollar verdict; IRR expresses the same project as a rate of return; payback offers a fast first screen.",
+    "domains": ["corporate finance", "investing", "entrepreneurship"],
+    "workedExample": "**Should the factory buy the machine?**\n\nA \\$5,000 machine is projected to save \\$2,000, \\$2,500, and \\$3,000 in the next three years. The company's required rate is 12%. Is it worth buying?\n\nDiscount each saving at 12%:\n\n- Year 1: $2000/1.12 = \\$1{,}785.71$.\n- Year 2: $2500/(1.12)^2 = 2500/1.2544 = \\$1{,}992.98$.\n- Year 3: $3000/(1.12)^3 = 3000/1.404928 = \\$2{,}135.34$.\n- Sum of PVs: $\\$5{,}914.03$.\n- NPV: $5{,}914.03 - 5{,}000 = \\$914.03 > 0$, so **accept**.\n\nThe payback period is a faster gut check: cumulative savings hit \\$4,500 after two years and cross \\$5,000 partway through year 3, so payback is about 2.2 years — comfortably inside the machine's life. Both signals point to buying it. The identical framework tells a landlord whether a rental's rent stream justifies the purchase price, or a founder whether a product's projected profits beat the cost of building it.",
+    "domainNotes": [
+      "**Corporate finance:** choosing which factories, machines, or R&D projects to fund from a limited capital budget by ranking NPVs.",
+      "**Investing:** valuing a rental property, a small business, or any asset as the present value of its future cash flows minus its price.",
+      "**Entrepreneurship:** deciding whether a venture's projected cash flows justify the start-up cost, and comparing competing product ideas by NPV."
+    ]
+  },
+  "generators": ["fm2-net-present-value-1", "fm2-net-present-value-2", "fm2-net-present-value-3", "fm2-accept-reject-1", "fm2-accept-reject-2", "fm2-accept-reject-3", "fm2-irr-1", "fm2-irr-2", "fm2-irr-3", "fm2-comparing-projects-1", "fm2-comparing-projects-2", "fm2-comparing-projects-3"],
+  "problems": [
+    {
+      "id": "financial-mathematics.npv-and-irr.s01",
+      "concepts": ["net-present-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A project costs \\$1,000 today and returns a single \\$1,200 one year from now. Your required rate is 10%. Find the NPV using $\\text{NPV} = \\dfrac{CF_1}{1+r} - C_0$.",
+      "steps": [
+        { "instruction": "Discount the \\$1,200 back one year: $1200/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1090.91", "accept": [], "hint": "$1200 \\div 1.10$." },
+        { "instruction": "Subtract the \\$1,000 initial cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "90.91", "accept": [], "hint": "$1090.91 - 1000$." }
+      ],
+      "finalAnswer": { "value": "90.91", "unit": "dollars" },
+      "solutionNarrative": "The \\$1,200 is worth $1200/1.10 = \\$1{,}090.91$ today; minus the \\$1,000 cost, NPV $= \\$90.91 > 0$."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s02",
+      "concepts": ["net-present-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A project costs \\$1,000 today and returns \\$600 at the end of year 1 and \\$700 at the end of year 2. The required rate is 10%. Find the NPV.",
+      "steps": [
+        { "instruction": "Present value of year 1: $600/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "545.45", "accept": [], "hint": "$600 \\div 1.10$." },
+        { "instruction": "Present value of year 2: $700/(1.10)^2 = 700/1.21$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "578.51", "accept": [], "hint": "$700 \\div 1.21$." },
+        { "instruction": "Add the two present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1123.96", "accept": [], "hint": "$545.45 + 578.51$." },
+        { "instruction": "Subtract the \\$1,000 cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "123.96", "accept": [], "hint": "$1123.96 - 1000$." }
+      ],
+      "finalAnswer": { "value": "123.96", "unit": "dollars" },
+      "solutionNarrative": "PVs are $600/1.10 = \\$545.45$ and $700/1.21 = \\$578.51$, summing to \\$1,123.96. NPV $= 1123.96 - 1000 = \\$123.96 > 0$."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s03",
+      "concepts": ["net-present-value"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A project costs \\$5,000 today and returns \\$2,000, \\$2,500, and \\$3,000 at the ends of years 1, 2, and 3. The required rate is 12%. Find the NPV.",
+      "steps": [
+        { "instruction": "PV of year 1: $2000/1.12$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1785.71", "accept": [], "hint": "$2000 \\div 1.12$." },
+        { "instruction": "PV of year 2: $2500/(1.12)^2 = 2500/1.2544$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1992.98", "accept": [], "hint": "$2500 \\div 1.2544$." },
+        { "instruction": "PV of year 3: $3000/(1.12)^3 = 3000/1.404928$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "2135.34", "accept": [], "hint": "$3000 \\div 1.404928$." },
+        { "instruction": "Sum the three present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "5914.03", "accept": [], "hint": "$1785.71 + 1992.98 + 2135.34$." },
+        { "instruction": "Subtract the \\$5,000 cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "914.03", "accept": [], "hint": "$5914.03 - 5000$." }
+      ],
+      "finalAnswer": { "value": "914.03", "unit": "dollars" },
+      "solutionNarrative": "The PVs are \\$1,785.71, \\$1,992.98, and \\$2,135.34, summing to \\$5,914.03. NPV $= 5914.03 - 5000 = \\$914.03 > 0$, so the project is worth doing."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s04",
+      "concepts": ["accept-reject-rule"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A project has a net present value of \\$450. Using the NPV rule, should you accept or reject it? Answer exactly one of: accept, reject.",
+      "steps": [
+        { "instruction": "Is the NPV positive or negative? Answer exactly one of: positive, negative.", "answer": "positive", "accept": ["above zero"], "hint": "Is \\$450 greater than zero?" },
+        { "instruction": "The NPV rule says accept when NPV is positive. Accept or reject? Answer exactly one of: accept, reject.", "answer": "accept", "accept": ["yes"], "hint": "Positive NPV means the project adds value." }
+      ],
+      "finalAnswer": { "value": "accept", "unit": "" },
+      "solutionNarrative": "NPV is \\$450 > 0, so by the accept–reject rule the project should be accepted."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s05",
+      "concepts": ["accept-reject-rule"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A project costs \\$1,200 and returns level cash flows of \\$400 per year. Find the payback period (in years) using $\\text{payback} = C_0/(\\text{annual cash flow})$, then apply the accept-reject rule if the firm requires payback within 4 years.",
+      "steps": [
+        { "instruction": "Compute the payback period: $1200/400$ (give a number of years).", "answer": "3", "accept": ["3.0", "3 years"], "hint": "$1200 \\div 400$." },
+        { "instruction": "Is 3 years within the 4-year requirement? Answer exactly one of: yes, no.", "answer": "yes", "accept": ["within"], "hint": "Is 3 less than 4?" },
+        { "instruction": "By the payback screen, accept or reject? Answer exactly one of: accept, reject.", "answer": "accept", "accept": ["yes"], "hint": "Recovering the cost inside the required window passes the screen." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "years" },
+      "solutionNarrative": "Payback $= 1200/400 = 3$ years, inside the 4-year requirement, so it passes the payback screen and is accepted."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s06",
+      "concepts": ["accept-reject-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A project costs \\$1,000 and returns uneven cash flows of \\$400, \\$400, and \\$400. Find the payback period by accumulating cash flows until they reach \\$1,000.",
+      "steps": [
+        { "instruction": "Cumulative cash flow after 2 years: $400 + 400$ (give a number).", "answer": "800", "accept": [], "hint": "Add the first two years." },
+        { "instruction": "How much more is needed after year 2 to reach \\$1,000? (give a number).", "answer": "200", "accept": [], "hint": "$1000 - 800$." },
+        { "instruction": "Year 3 brings \\$400. What fraction of year 3 recovers the remaining \\$200? Give the decimal $200/400$.", "answer": "0.5", "accept": ["1/2", "0.50"], "hint": "$200 \\div 400$." },
+        { "instruction": "Add the whole years to the fraction: $2 + 0.5$ (give the payback in years).", "answer": "2.5", "accept": ["2.50", "2.5 years"], "hint": "Two full years plus half of the third." }
+      ],
+      "finalAnswer": { "value": "2.5", "unit": "years" },
+      "solutionNarrative": "After 2 years \\$800 is recovered; the remaining \\$200 is $200/400 = 0.5$ of year 3, so payback $= 2.5$ years. Note payback ignores the time value of money and anything past the cutoff."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s07",
+      "concepts": ["internal-rate-of-return"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A project costs \\$1,000 today and returns \\$1,150 in one year. Find its IRR using $\\text{IRR} = \\dfrac{CF_1}{C_0} - 1$, as a percent.",
+      "steps": [
+        { "instruction": "Compute $CF_1/C_0 = 1150/1000$ (give the decimal).", "answer": "1.15", "accept": [], "hint": "$1150 \\div 1000$." },
+        { "instruction": "Subtract 1 to get the IRR as a decimal.", "answer": "0.15", "accept": [], "hint": "$1.15 - 1$." },
+        { "instruction": "Convert to a percent. Enter the IRR as a percent (a number, no % sign).", "answer": "15", "accept": ["15.0", "15.00"], "hint": "$0.15 \\times 100$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "percent" },
+      "solutionNarrative": "$\\text{IRR} = 1150/1000 - 1 = 0.15 = 15\\%$ — the single rate at which the \\$1,150 discounts exactly back to the \\$1,000 cost."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s08",
+      "concepts": ["internal-rate-of-return"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A project costs \\$2,000 and returns \\$2,300 in one year. Find its IRR as a percent using $\\text{IRR} = CF_1/C_0 - 1$.",
+      "steps": [
+        { "instruction": "Compute $2300/2000$ (give the decimal).", "answer": "1.15", "accept": [], "hint": "$2300 \\div 2000$." },
+        { "instruction": "Subtract 1 (give the decimal).", "answer": "0.15", "accept": [], "hint": "$1.15 - 1$." },
+        { "instruction": "Convert to a percent. Enter the IRR as a percent (a number, no % sign).", "answer": "15", "accept": ["15.0", "15.00"], "hint": "$0.15 \\times 100$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "percent" },
+      "solutionNarrative": "$\\text{IRR} = 2300/2000 - 1 = 0.15 = 15\\%$."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s09",
+      "concepts": ["internal-rate-of-return"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "For a project, the NPV is $+\\$50$ at a discount rate of 8% and $-\\$30$ at 12%. Interpolate to estimate the IRR (the rate where NPV $= 0$) using $\\text{IRR} \\approx r_1 + (r_2-r_1)\\dfrac{\\text{NPV}_1}{\\text{NPV}_1 - \\text{NPV}_2}$. Give the IRR as a percent.",
+      "steps": [
+        { "instruction": "Compute the denominator $\\text{NPV}_1 - \\text{NPV}_2 = 50 - (-30)$ (give a number).", "answer": "80", "accept": [], "hint": "$50 + 30 = 80$." },
+        { "instruction": "Compute the fraction $\\text{NPV}_1/(\\text{NPV}_1 - \\text{NPV}_2) = 50/80$ (give the decimal).", "answer": "0.625", "accept": ["5/8"], "hint": "$50 \\div 80$." },
+        { "instruction": "Multiply by the rate gap $(r_2 - r_1) = 4$ percentage points: $4 \\times 0.625$ (give a number of percentage points).", "answer": "2.5", "accept": ["2.50"], "hint": "$4 \\times 0.625$." },
+        { "instruction": "Add to $r_1 = 8$: $8 + 2.5$. Enter the IRR as a percent (a number, no % sign).", "answer": "10.5", "accept": ["10.50"], "hint": "$8 + 2.5$." }
+      ],
+      "finalAnswer": { "value": "10.5", "unit": "percent" },
+      "solutionNarrative": "NPV crosses zero between 8% and 12%. Interpolating: $8 + 4\\cdot\\dfrac{50}{80} = 8 + 2.5 = 10.5\\%$."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s10",
+      "concepts": ["comparing-projects"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You can fund only one project. Project A has an NPV of \\$800; Project B has an NPV of \\$1,200. Which should you choose? Answer exactly one of: A, B.",
+      "steps": [
+        { "instruction": "Which project has the higher NPV? Answer exactly one of: A, B.", "answer": "B", "accept": ["project b"], "hint": "Compare \\$800 to \\$1,200." },
+        { "instruction": "For mutually exclusive projects you take the higher NPV. Which do you choose? Answer exactly one of: A, B.", "answer": "B", "accept": ["project b"], "hint": "Higher NPV adds more value." }
+      ],
+      "finalAnswer": { "value": "B", "unit": "" },
+      "solutionNarrative": "Project B's NPV (\\$1,200) exceeds Project A's (\\$800), and since you can pick only one, you choose the higher-NPV project — B."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s11",
+      "concepts": ["comparing-projects"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two independent one-year projects. Project A: cost \\$1,000, returns \\$1,120. Project B: cost \\$1,000, returns \\$1,090. Rank them by NPV at a 5% required rate.",
+      "steps": [
+        { "instruction": "NPV of A: $1120/1.05 - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "66.67", "accept": [], "hint": "$1120/1.05 = 1066.67$, minus 1000." },
+        { "instruction": "NPV of B: $1090/1.05 - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "38.10", "accept": [], "hint": "$1090/1.05 = 1038.10$, minus 1000." },
+        { "instruction": "Which project has the higher NPV? Answer exactly one of: A, B.", "answer": "A", "accept": ["project a"], "hint": "Compare \\$66.67 to \\$38.10." }
+      ],
+      "finalAnswer": { "value": "A", "unit": "" },
+      "solutionNarrative": "NPV$_A = 1066.67 - 1000 = \\$66.67$ and NPV$_B = 1038.10 - 1000 = \\$38.10$. A ranks higher."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s12",
+      "concepts": ["comparing-projects"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two mutually exclusive one-year projects. Small: cost \\$100, returns \\$150 (IRR 50%), NPV \\$36.36 at 10%. Large: cost \\$1,000, returns \\$1,300 (IRR 30%), NPV \\$181.82 at 10%. IRR and NPV disagree on the ranking. Decide which to fund.",
+      "steps": [
+        { "instruction": "Which project has the higher IRR? Answer exactly one of: small, large.", "answer": "small", "accept": ["the small one"], "hint": "50% vs 30%." },
+        { "instruction": "Which project has the higher NPV? Answer exactly one of: small, large.", "answer": "large", "accept": ["the large one"], "hint": "\\$36.36 vs \\$181.82." },
+        { "instruction": "When NPV and IRR conflict for mutually exclusive projects, you follow which measure? Answer exactly one of: NPV, IRR.", "answer": "NPV", "accept": ["net present value"], "hint": "Maximize dollars of value, not the percentage." },
+        { "instruction": "So which project do you fund? Answer exactly one of: small, large.", "answer": "large", "accept": ["the large one"], "hint": "The higher-NPV project adds more total value." }
+      ],
+      "finalAnswer": { "value": "large", "unit": "" },
+      "solutionNarrative": "The small project wins on IRR (50% vs 30%) but the large project wins on NPV (\\$181.82 vs \\$36.36). For mutually exclusive projects you follow NPV, so you fund the large project — it adds far more total value despite the lower rate."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s13",
+      "concepts": ["net-present-value", "accept-reject-rule"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A project costs \\$2,000 and returns \\$1,100 at the end of each of years 1 and 2. At a required rate of 10%, find the NPV and decide.",
+      "steps": [
+        { "instruction": "PV of year 1: $1100/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1000.00", "accept": ["1000"], "hint": "$1100 \\div 1.10$." },
+        { "instruction": "PV of year 2: $1100/(1.10)^2 = 1100/1.21$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "909.09", "accept": [], "hint": "$1100 \\div 1.21$." },
+        { "instruction": "NPV: sum the PVs and subtract \\$2,000 (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "-90.91", "accept": [], "hint": "$1000 + 909.09 - 2000$." },
+        { "instruction": "Since the NPV is negative, accept or reject? Answer exactly one of: accept, reject.", "answer": "reject", "accept": ["no"], "hint": "A negative NPV fails the accept-reject rule." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "PVs are \\$1,000.00 and \\$909.09, summing to \\$1,909.09; NPV $= 1909.09 - 2000 = -\\$90.91 < 0$, so reject."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s14",
+      "concepts": ["accept-reject-rule"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A project has a net present value of $-\\$120$. Using the NPV rule, accept or reject? Answer exactly one of: accept, reject.",
+      "steps": [
+        { "instruction": "Is the NPV positive or negative? Answer exactly one of: positive, negative.", "answer": "negative", "accept": ["below zero"], "hint": "Is $-\\$120$ less than zero?" },
+        { "instruction": "The rule rejects negative-NPV projects. Accept or reject? Answer exactly one of: accept, reject.", "answer": "reject", "accept": ["no"], "hint": "Negative NPV destroys value." }
+      ],
+      "finalAnswer": { "value": "reject", "unit": "" },
+      "solutionNarrative": "NPV is $-\\$120 < 0$, so the project should be rejected."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s15",
+      "concepts": ["internal-rate-of-return"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You invest \\$500 and receive \\$600 one year later. Find the IRR as a percent using $\\text{IRR} = CF_1/C_0 - 1$.",
+      "steps": [
+        { "instruction": "Compute $600/500$ (give the decimal).", "answer": "1.2", "accept": ["1.20"], "hint": "$600 \\div 500$." },
+        { "instruction": "Subtract 1 (give the decimal).", "answer": "0.2", "accept": ["0.20"], "hint": "$1.2 - 1$." },
+        { "instruction": "Convert to a percent. Enter the IRR as a percent (a number, no % sign).", "answer": "20", "accept": ["20.0", "20.00"], "hint": "$0.2 \\times 100$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "percent" },
+      "solutionNarrative": "$\\text{IRR} = 600/500 - 1 = 0.2 = 20\\%$."
+    },
+    {
+      "id": "financial-mathematics.npv-and-irr.s16",
+      "concepts": ["net-present-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A project costs \\$800 and returns a single \\$880 one year from now. At a 10% required rate, find the NPV.",
+      "steps": [
+        { "instruction": "Discount the \\$880: $880/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "800.00", "accept": ["800"], "hint": "$880 \\div 1.10$." },
+        { "instruction": "Subtract the \\$800 cost for the NPV. Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "0.00", "accept": ["0"], "hint": "$800.00 - 800$." }
+      ],
+      "finalAnswer": { "value": "0.00", "unit": "dollars" },
+      "solutionNarrative": "The \\$880 discounts to exactly \\$800, so NPV $= 0$: the project earns precisely the 10% required rate — the break-even case."
+    }
+  ]
+}

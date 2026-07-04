@@ -1,0 +1,272 @@
+{
+  "id": "financial-mathematics.bonds-and-yields",
+  "subject": "financial-mathematics",
+  "title": "Bonds and Yields",
+  "prerequisites": ["financial-mathematics.present-and-future-value", "financial-mathematics.annuities"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "bond-pricing",
+      "label": "Pricing a bond",
+      "microLesson": "A bond is two promises: a stream of fixed **coupon** payments, plus the **face value** (par) returned at maturity. Its fair price is the present value of both, discounted at the market rate $r$ per period. The coupons form an ordinary annuity, so $\\text{Price} = C \\cdot \\dfrac{1 - (1+r)^{-n}}{r} + \\dfrac{F}{(1+r)^n}$, where $C$ is the coupon per period, $F$ the face value, $n$ the number of periods. Compute the annuity part and the lump-sum part separately, then add. Round to the nearest cent."
+    },
+    {
+      "id": "premium-par-discount",
+      "label": "Premium, par, or discount",
+      "microLesson": "Compare the bond's **coupon rate** to the current **market (yield) rate**. If the coupon rate is *higher* than the market rate, the bond pays more than newer bonds, so it sells above face value — at a **premium**. If it is *lower*, it sells below face — at a **discount**. If they are *equal*, it sells exactly at face value — at **par**. The rule is purely a comparison of two rates; no arithmetic on price is needed to classify."
+    },
+    {
+      "id": "current-yield-and-ytm",
+      "label": "Current yield and yield to maturity",
+      "microLesson": "**Current yield** is the annual coupon divided by the current price: $\\text{CY} = \\dfrac{\\text{annual coupon}}{\\text{price}}$, expressed as a percent. It ignores any gain or loss at maturity. **Yield to maturity (YTM)** is the single rate that makes the bond's price equal the PV of all its cash flows. A common approximation is $\\text{YTM} \\approx \\dfrac{C + (F - P)/n}{(F + P)/2}$, where the numerator adds the coupon to the amortized gain/loss and the denominator is the average of face and price."
+    },
+    {
+      "id": "interest-rate-sensitivity",
+      "label": "Interest-rate sensitivity",
+      "microLesson": "Bond prices and market rates move in **opposite directions**. When market rates *rise*, existing bonds paying the old lower coupon become less attractive, so their price *falls*; when rates *fall*, existing bonds become more valuable and their price *rises*. To find the new price after a rate change, re-discount the same coupons and face value at the new rate using the pricing formula. Longer maturities swing more for the same rate change."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## What a bond actually is\n\nWhen a government or company borrows money by issuing a **bond**, it makes two written promises to whoever holds it:\n\n1. Pay a fixed **coupon** every period (say, every six months) until maturity.\n2. Return the **face value** (also called *par*, usually \\$1,000) on the maturity date.\n\nSo owning a bond is owning a cash-flow stream: a run of equal coupon payments plus one big lump sum at the end. Everything about pricing and yield follows from putting a present value on that stream.\n\n## Pricing: present value of the promises\n\nThe fair price of a bond is what those future cash flows are worth **today**, discounted at the current market rate $r$ per period. The coupons are an ordinary annuity and the face value is a single lump sum, so:\n\n$$\\boxed{\\;\\text{Price} = C \\cdot \\frac{1 - (1+r)^{-n}}{r} \\;+\\; \\frac{F}{(1+r)^{n}}\\;}$$\n\nwhere $C$ is the coupon paid each period, $F$ the face value, $n$ the number of periods, and $r$ the market rate **per period**.\n\n### Worked example\n\nA 3-year bond has face value \\$1,000 and a 5% annual coupon, so $C = \\$50$ per year and $F = \\$1{,}000$. The market rate is 6% per year ($r = 0.06$, $n = 3$).\n\n- **Coupons (annuity):** $50 \\cdot \\dfrac{1 - (1.06)^{-3}}{0.06} = 50 \\cdot 2.673012 = \\$133.65$.\n- **Face value (lump sum):** $\\dfrac{1000}{(1.06)^3} = \\dfrac{1000}{1.191016} = \\$839.62$.\n- **Price:** $133.65 + 839.62 = \\$973.27$.\n\nBecause the 5% coupon is below the 6% market rate, the price came in **below** \\$1,000.\n\n## Premium, par, and discount — just compare two rates\n\nThat last observation is a rule, not a coincidence. Line up the **coupon rate** against the **market rate**:\n\n| Coupon rate vs. market rate | Bond sells at | Price vs. face |\n|---|---|---|\n| Coupon **>** market | **Premium** | above face |\n| Coupon **=** market | **Par** | exactly face |\n| Coupon **<** market | **Discount** | below face |\n\nA bond paying 8% when the market demands only 5% is a bargain, so buyers bid its price *above* par. A bond paying 4% when the market wants 7% is unattractive, so it must be *discounted* below par to sell.\n\n## Two ways to measure return\n\n**Current yield** looks only at the income you collect relative to what you pay:\n\n$$\\text{Current yield} = \\frac{\\text{annual coupon}}{\\text{price}}.$$\n\nA \\$50 coupon on a \\$973.27 bond is a current yield of $50 / 973.27 = 5.14\\%$. Simple, but it ignores the pull toward par at maturity.\n\n**Yield to maturity (YTM)** is the honest single rate that discounts *all* the cash flows back to the current price — coupons *and* the gain or loss when the price converges to face at maturity. Solving it exactly means solving a polynomial, so a widely used approximation is:\n\n$$\\boxed{\\;\\text{YTM} \\approx \\frac{C + \\dfrac{F - P}{n}}{\\dfrac{F + P}{2}}\\;}$$\n\nThe numerator is the annual coupon plus the amortized capital gain (or loss) $\\tfrac{F-P}{n}$; the denominator is the average of face and price. For a bond bought at a discount ($P < F$), the $F - P$ term is positive, so YTM exceeds the current yield — you also earn the climb back to par.\n\n## Rates up, prices down\n\nHere is the fact that trips up first-time investors: **bond prices move opposite to interest rates.** If you hold a bond paying a 5% coupon and market rates jump to 8%, nobody will pay full price for your stingy 5% bond — its price *drops* until its yield matches the new 8%. If rates instead fall to 3%, your 5% bond is suddenly generous, and its price *rises*.\n\nTo quantify it, just re-price the same bond at the new rate. Take the 5% \\$1,000 3-year bond above. If the market rate rises from 6% to 8%:\n\n$$\\text{Price} = 50 \\cdot \\frac{1 - (1.08)^{-3}}{0.08} + \\frac{1000}{(1.08)^3} = 50 \\cdot 2.577097 + 793.83 = \\$922.69.$$\n\nThe price fell from \\$973.27 to \\$922.69. Longer bonds move even more for the same rate change — that extra swing is called *duration risk*.\n\n## Pitfalls\n\n- **Coupon rate is not the yield.** The coupon rate is fixed at issue and never changes; the yield floats with the price. Only at par do they coincide.\n- **Annual vs. per-period.** With semiannual coupons, halve the annual coupon and the annual rate, and double the number of periods. Every input in the formula is *per period*.\n- **Discount ⇏ bad, premium ⇏ good.** A discount bond isn't cheap in a meaningful sense — the low price exactly compensates for the low coupon. Price and coupon always conspire to deliver the market's required yield."
+  },
+  "application": {
+    "summary": "Bond math underlies how governments and corporations borrow, how pension funds and retirees generate steady income, and how the price of trillions of dollars of fixed-income securities responds to central-bank rate moves. Pricing values the cash-flow stream; yields compare returns; sensitivity explains why bond portfolios lose value when rates rise.",
+    "domains": ["investing", "corporate finance", "retirement planning"],
+    "workedExample": "**Should a retiree buy this bond?**\n\nA retiree is offered a 4-year corporate bond: face value \\$1,000, 6% annual coupon (so \\$60 a year), when comparable bonds yield 4.5%. Is it a premium or discount bond, and what will it cost?\n\nThe coupon rate (6%) is **above** the market rate (4.5%), so it sells at a **premium** — expect a price above \\$1,000. Pricing it at $r = 0.045$, $n = 4$:\n\n- Coupons: $60 \\cdot \\dfrac{1 - (1.045)^{-4}}{0.045} = 60 \\cdot 3.587526 = \\$215.25$.\n- Face: $\\dfrac{1000}{(1.045)^4} = \\$838.56$.\n- Price: $215.25 + 838.56 = \\$1{,}053.81$.\n\nThe current yield is $60 / 1053.81 = 5.69\\%$ — higher than the 4.5% market rate because the coupon is rich, but *lower* than the 6% coupon rate because the retiree overpaid relative to par. If rates later rise, this bond's price will fall; if the retiree needs to sell early, that matters. The same reasoning lets a pension fund match long-dated bonds to its future payout obligations.",
+    "domainNotes": [
+      "**Investing:** deciding whether a bond is cheap or rich by comparing its yield to alternatives, and estimating price moves before a Fed rate decision.",
+      "**Corporate finance:** setting the coupon on a new bond issue so it sells near par, and refinancing debt when rates fall.",
+      "**Retirement planning:** building a bond ladder for predictable income and understanding why a bond fund can lose value even though bonds are 'safe'."
+    ]
+  },
+  "generators": ["fm2-bond-pricing-1", "fm2-bond-pricing-2", "fm2-bond-pricing-3", "fm2-premium-par-discount-1", "fm2-premium-par-discount-2", "fm2-premium-par-discount-3", "fm2-current-yield-ytm-1", "fm2-current-yield-ytm-2", "fm2-current-yield-ytm-3", "fm2-rate-sensitivity-1", "fm2-rate-sensitivity-2", "fm2-rate-sensitivity-3"],
+  "problems": [
+    {
+      "id": "financial-mathematics.bonds-and-yields.s01",
+      "concepts": ["bond-pricing"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 3-year bond has face value \\$1,000 and pays an annual coupon of \\$40. The market rate is 4% per year. Because the coupon rate equals the market rate, price the bond. Use $\\text{Price} = C \\cdot \\dfrac{1-(1+r)^{-n}}{r} + \\dfrac{F}{(1+r)^n}$ with $C=40$, $r=0.04$, $n=3$.",
+      "steps": [
+        { "instruction": "Compute the annuity factor $\\dfrac{1-(1.04)^{-3}}{0.04}$ (round to 6 decimal places).", "answer": "2.775091", "accept": [], "hint": "$(1.04)^{-3} = 0.888996$, so $1 - 0.888996 = 0.111004$, divided by $0.04$." },
+        { "instruction": "Value the coupons: multiply the annuity factor by the \\$40 coupon (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "111.00", "accept": ["111"], "hint": "$40 \\times 2.775091$." },
+        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.04)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "889.00", "accept": ["889"], "hint": "$1000 / 1.124864$." },
+        { "instruction": "Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1000.00", "accept": ["1000"], "hint": "$111.00 + 889.00$; a bond at par prices at face value." }
+      ],
+      "finalAnswer": { "value": "1000.00", "unit": "dollars" },
+      "solutionNarrative": "The coupons are worth $40 \\cdot 2.775091 = \\$111.00$ and the face value is worth $1000/(1.04)^3 = \\$889.00$; together the price is \\$1,000.00 — exactly par, because the coupon rate equals the market rate."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s02",
+      "concepts": ["bond-pricing"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 3-year bond has face value \\$1,000 and a 5% annual coupon (\\$50 per year). The market rate is 6% per year. Price it with $C=50$, $r=0.06$, $n=3$.",
+      "steps": [
+        { "instruction": "Compute the annuity factor $\\dfrac{1-(1.06)^{-3}}{0.06}$ (round to 6 decimal places).", "answer": "2.673012", "accept": [], "hint": "$(1.06)^{-3} = 0.839619$; $1 - 0.839619 = 0.160381$, over $0.06$." },
+        { "instruction": "Value the coupons: $50 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "133.65", "accept": [], "hint": "$50 \\times 2.673012$." },
+        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.06)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "839.62", "accept": [], "hint": "$1000 / 1.191016$." },
+        { "instruction": "Add the parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "973.27", "accept": [], "hint": "$133.65 + 839.62$." }
+      ],
+      "finalAnswer": { "value": "973.27", "unit": "dollars" },
+      "solutionNarrative": "Coupons: $50 \\cdot 2.673012 = \\$133.65$. Face: $1000/(1.06)^3 = \\$839.62$. Price $= \\$973.27$, a discount because the 5% coupon is below the 6% market rate."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s03",
+      "concepts": ["bond-pricing"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 4-year bond has face value \\$1,000 and a 7% annual coupon (\\$70 per year). The market rate is 5% per year. Price it with $C=70$, $r=0.05$, $n=4$.",
+      "steps": [
+        { "instruction": "Compute the annuity factor $\\dfrac{1-(1.05)^{-4}}{0.05}$ (round to 6 decimal places).", "answer": "3.545951", "accept": [], "hint": "$(1.05)^{-4} = 0.822702$; $1 - 0.822702 = 0.177298$, over $0.05$." },
+        { "instruction": "Value the coupons: $70 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "248.22", "accept": [], "hint": "$70 \\times 3.545951$." },
+        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.05)^4}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "822.70", "accept": [], "hint": "$1000 / 1.215506$." },
+        { "instruction": "Add the parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1070.92", "accept": [], "hint": "$248.22 + 822.70$; a premium, since 7% beats the 5% market rate." }
+      ],
+      "finalAnswer": { "value": "1070.92", "unit": "dollars" },
+      "solutionNarrative": "Coupons: $70 \\cdot 3.545951 = \\$248.22$. Face: $1000/(1.05)^4 = \\$822.70$. Price $= \\$1{,}070.92$, a premium because the 7% coupon exceeds the 5% market rate."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s04",
+      "concepts": ["premium-par-discount"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bond has a coupon rate of 6%. The current market rate is 4%. Does the bond sell at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.",
+      "steps": [
+        { "instruction": "Is the coupon rate higher than, equal to, or lower than the market rate? Answer exactly one of: higher, equal, lower.", "answer": "higher", "accept": ["above", "greater"], "hint": "Compare 6% to 4%." },
+        { "instruction": "A coupon rate higher than the market rate means the bond sells at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.", "answer": "premium", "accept": ["at a premium"], "hint": "A richer-than-market coupon commands a price above face value." }
+      ],
+      "finalAnswer": { "value": "premium", "unit": "" },
+      "solutionNarrative": "The coupon rate (6%) exceeds the market rate (4%), so the bond pays more than newer bonds and sells above face value — at a premium."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s05",
+      "concepts": ["premium-par-discount"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bond has a coupon rate of 3.5%. The current market rate is 5%. Does it sell at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.",
+      "steps": [
+        { "instruction": "Compare the coupon rate to the market rate: is the coupon higher, equal, or lower? Answer exactly one of: higher, equal, lower.", "answer": "lower", "accept": ["below", "less"], "hint": "Compare 3.5% to 5%." },
+        { "instruction": "A coupon rate lower than the market rate means the bond sells at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.", "answer": "discount", "accept": ["at a discount"], "hint": "An unattractive coupon must be priced below face value to sell." }
+      ],
+      "finalAnswer": { "value": "discount", "unit": "" },
+      "solutionNarrative": "The coupon rate (3.5%) is below the market rate (5%), so buyers demand a price below face value — the bond trades at a discount."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s06",
+      "concepts": ["premium-par-discount"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A bond has a coupon rate of 5%. Market rates rise so that the current market rate is exactly 5%. Does the bond sell at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.",
+      "steps": [
+        { "instruction": "Compare the coupon rate to the market rate: higher, equal, or lower? Answer exactly one of: higher, equal, lower.", "answer": "equal", "accept": ["same", "equals"], "hint": "Both are 5%." },
+        { "instruction": "When the coupon rate equals the market rate, the bond sells at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.", "answer": "par", "accept": ["at par"], "hint": "Equal rates mean the price equals the face value." }
+      ],
+      "finalAnswer": { "value": "par", "unit": "" },
+      "solutionNarrative": "When the coupon rate equals the market rate, there is no reason to price the bond above or below face value — it trades at par."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s07",
+      "concepts": ["current-yield-and-ytm"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bond pays an annual coupon of \\$60 and currently trades at a price of \\$1,000. Find its current yield, $\\text{CY} = \\dfrac{\\text{annual coupon}}{\\text{price}}$, as a percent.",
+      "steps": [
+        { "instruction": "Divide the annual coupon by the price: $60 / 1000$ (give the decimal, round to 4 places).", "answer": "0.06", "accept": ["0.0600"], "hint": "$60 \\div 1000 = 0.06$." },
+        { "instruction": "Convert to a percent by multiplying by 100. Enter the current yield as a percent (a number, no % sign).", "answer": "6", "accept": ["6.0", "6.00"], "hint": "$0.06 \\times 100 = 6$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "percent" },
+      "solutionNarrative": "Current yield $= 60/1000 = 0.06 = 6\\%$. Because the bond trades exactly at face value, the current yield equals the coupon rate."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s08",
+      "concepts": ["current-yield-and-ytm"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bond pays an annual coupon of \\$50 and currently trades at \\$960. Find its current yield as a percent (round to 2 decimal places).",
+      "steps": [
+        { "instruction": "Divide the annual coupon by the price: $50 / 960$ (give the decimal, round to 6 places).", "answer": "0.052083", "accept": [], "hint": "$50 \\div 960$." },
+        { "instruction": "Multiply by 100 and round to 2 decimal places. Enter the current yield as a percent (a number, no % sign).", "answer": "5.21", "accept": [], "hint": "$0.052083 \\times 100 = 5.2083$, rounded to $5.21$." }
+      ],
+      "finalAnswer": { "value": "5.21", "unit": "percent" },
+      "solutionNarrative": "Current yield $= 50/960 = 0.052083 = 5.21\\%$. It exceeds the 5% coupon rate because the bond trades below face value."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s09",
+      "concepts": ["current-yield-and-ytm"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A bond has face value \\$1,000, an annual coupon of \\$50, price \\$920, and 5 years to maturity. Approximate its yield to maturity using $\\text{YTM} \\approx \\dfrac{C + (F-P)/n}{(F+P)/2}$ with $C=50$, $F=1000$, $P=920$, $n=5$. Give the result as a percent (round to 2 decimal places).",
+      "steps": [
+        { "instruction": "Compute the amortized gain $(F-P)/n = (1000-920)/5$ (give a number).", "answer": "16", "accept": [], "hint": "$80 / 5 = 16$." },
+        { "instruction": "Add it to the coupon for the numerator: $50 + 16$ (give a number).", "answer": "66", "accept": [], "hint": "$C + (F-P)/n = 50 + 16$." },
+        { "instruction": "Compute the denominator, the average of face and price: $(1000+920)/2$ (give a number).", "answer": "960", "accept": [], "hint": "$1920 / 2 = 960$." },
+        { "instruction": "Divide numerator by denominator, multiply by 100, and round to 2 decimals. Enter the YTM as a percent (a number, no % sign).", "answer": "6.88", "accept": [], "hint": "$66 / 960 = 0.06875$, times 100 is $6.875\\%$, rounded to $6.88$." }
+      ],
+      "finalAnswer": { "value": "6.88", "unit": "percent" },
+      "solutionNarrative": "The approximation gives $\\dfrac{50 + 16}{960} = \\dfrac{66}{960} = 0.06875 = 6.88\\%$. YTM exceeds the current yield because the discount bond also earns the climb from \\$920 back to \\$1,000 at maturity."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s10",
+      "concepts": ["interest-rate-sensitivity"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You hold a bond paying a fixed 5% coupon. Market interest rates fall from 5% to 3%. Does the price of your bond go up or down? Answer exactly one of: up, down.",
+      "steps": [
+        { "instruction": "Bond prices and market rates move in opposite directions. Rates went down, so the price goes which way? Answer exactly one of: up, down.", "answer": "up", "accept": ["rises", "increases", "higher"], "hint": "When rates fall, an existing fixed coupon becomes more attractive." }
+      ],
+      "finalAnswer": { "value": "up", "unit": "" },
+      "solutionNarrative": "Prices move opposite to rates. When market rates fall to 3%, a bond paying 5% is now generous, so its price rises."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s11",
+      "concepts": ["interest-rate-sensitivity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 3-year, \\$1,000 face-value bond with a 5% annual coupon (\\$50) was priced at the market rate. Now the market rate rises to 8%. Re-price the bond at $r=0.08$, $n=3$, $C=50$.",
+      "steps": [
+        { "instruction": "Will the new price be above or below \\$1,000? Answer exactly one of: above, below.", "answer": "below", "accept": ["under", "lower"], "hint": "Rates rose above the 5% coupon, so the price falls below face value." },
+        { "instruction": "Compute the annuity factor $\\dfrac{1-(1.08)^{-3}}{0.08}$ (round to 6 decimal places).", "answer": "2.577097", "accept": [], "hint": "$(1.08)^{-3} = 0.793832$; $1 - 0.793832 = 0.206168$, over $0.08$." },
+        { "instruction": "Value the coupons: $50 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "128.85", "accept": [], "hint": "$50 \\times 2.577097$." },
+        { "instruction": "Value the face: $\\dfrac{1000}{(1.08)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "793.83", "accept": [], "hint": "$1000 / 1.259712$." },
+        { "instruction": "Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "922.69", "accept": ["922.68"], "hint": "$128.85 + 793.83$." }
+      ],
+      "finalAnswer": { "value": "922.69", "unit": "dollars" },
+      "solutionNarrative": "At 8%: coupons worth $50 \\cdot 2.577097 = \\$128.85$, face worth \\$793.83, price \\$922.69 — well below par, confirming that a rate rise pushes the price down."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s12",
+      "concepts": ["interest-rate-sensitivity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 4-year, \\$1,000 face-value bond with a 6% annual coupon (\\$60) is held when the market rate drops to 4%. Re-price it at $r=0.04$, $n=4$, $C=60$.",
+      "steps": [
+        { "instruction": "Will the new price be above or below \\$1,000? Answer exactly one of: above, below.", "answer": "above", "accept": ["over", "higher"], "hint": "The 6% coupon now beats the 4% market rate, so the price is a premium." },
+        { "instruction": "Compute the annuity factor $\\dfrac{1-(1.04)^{-4}}{0.04}$ (round to 6 decimal places).", "answer": "3.629895", "accept": [], "hint": "$(1.04)^{-4} = 0.854804$; $1 - 0.854804 = 0.145196$, over $0.04$." },
+        { "instruction": "Value the coupons: $60 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "217.79", "accept": [], "hint": "$60 \\times 3.629895$." },
+        { "instruction": "Value the face: $\\dfrac{1000}{(1.04)^4}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "854.80", "accept": [], "hint": "$1000 / 1.169859$." },
+        { "instruction": "Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1072.60", "accept": ["1072.59"], "hint": "$217.79 + 854.80$." }
+      ],
+      "finalAnswer": { "value": "1072.60", "unit": "dollars" },
+      "solutionNarrative": "At 4%: coupons worth $60 \\cdot 3.629895 = \\$217.79$, face worth \\$854.80, price \\$1,072.60 — a premium, confirming that a rate drop lifts the price."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s13",
+      "concepts": ["bond-pricing", "premium-par-discount"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A 2-year bond has face value \\$1,000 and an 8% annual coupon (\\$80). The market rate is 6%. First classify, then price it at $r=0.06$, $n=2$, $C=80$.",
+      "steps": [
+        { "instruction": "Does the bond sell at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.", "answer": "premium", "accept": ["at a premium"], "hint": "The 8% coupon exceeds the 6% market rate." },
+        { "instruction": "Compute the annuity factor $\\dfrac{1-(1.06)^{-2}}{0.06}$ (round to 6 decimal places).", "answer": "1.833393", "accept": [], "hint": "$(1.06)^{-2} = 0.889996$; $1 - 0.889996 = 0.110004$, over $0.06$." },
+        { "instruction": "Value the coupons: $80 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "146.67", "accept": [], "hint": "$80 \\times 1.833393$." },
+        { "instruction": "Value the face: $\\dfrac{1000}{(1.06)^2}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "890.00", "accept": ["889.996"], "hint": "$1000 / 1.1236$." },
+        { "instruction": "Add for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1036.67", "accept": [], "hint": "$146.67 + 890.00$; above par, as predicted." }
+      ],
+      "finalAnswer": { "value": "1036.67", "unit": "dollars" },
+      "solutionNarrative": "The 8% coupon beats the 6% market rate, so it is a premium bond. Pricing: coupons $80 \\cdot 1.833393 = \\$146.67$, face \\$890.00, price \\$1,036.67 — above par, confirming the classification."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s14",
+      "concepts": ["current-yield-and-ytm"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bond pays \\$80 in annual coupons and trades at \\$1,000. What is its current yield as a percent?",
+      "steps": [
+        { "instruction": "Divide the coupon by the price: $80/1000$ (give the decimal).", "answer": "0.08", "accept": ["0.0800"], "hint": "$80 \\div 1000$." },
+        { "instruction": "Convert to a percent. Enter the current yield as a percent (a number, no % sign).", "answer": "8", "accept": ["8.0", "8.00"], "hint": "$0.08 \\times 100$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "percent" },
+      "solutionNarrative": "Current yield $= 80/1000 = 8\\%$, equal to the coupon rate because the bond trades at face value."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s15",
+      "concepts": ["interest-rate-sensitivity"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A financial news story reports that the central bank raised interest rates today. All else equal, what happens to the price of existing bonds? Answer exactly one of: up, down.",
+      "steps": [
+        { "instruction": "Rates rose. Since bond prices move opposite to rates, prices go which way? Answer exactly one of: up, down.", "answer": "down", "accept": ["falls", "decreases", "lower"], "hint": "Higher rates make old lower-coupon bonds less attractive." }
+      ],
+      "finalAnswer": { "value": "down", "unit": "" },
+      "solutionNarrative": "Bond prices and rates move in opposite directions, so a rate hike pushes existing bond prices down."
+    },
+    {
+      "id": "financial-mathematics.bonds-and-yields.s16",
+      "concepts": ["current-yield-and-ytm", "premium-par-discount"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A bond has face value \\$1,000, an annual coupon of \\$40, price \\$1,080, and 4 years to maturity. First classify it, then approximate its YTM using $\\text{YTM} \\approx \\dfrac{C + (F-P)/n}{(F+P)/2}$. Give YTM as a percent (round to 2 decimals).",
+      "steps": [
+        { "instruction": "Since the price \\$1,080 is above face \\$1,000, is it a premium, par, or discount bond? Answer exactly one of: premium, par, discount.", "answer": "premium", "accept": ["at a premium"], "hint": "Price above face value means premium." },
+        { "instruction": "Compute the amortized gain/loss $(F-P)/n = (1000-1080)/4$ (give a number, watch the sign).", "answer": "-20", "accept": [], "hint": "$-80/4 = -20$; it is a loss because you paid above par." },
+        { "instruction": "Numerator: $C + (F-P)/n = 40 + (-20)$ (give a number).", "answer": "20", "accept": [], "hint": "$40 - 20 = 20$." },
+        { "instruction": "Denominator: $(1000+1080)/2$ (give a number).", "answer": "1040", "accept": [], "hint": "$2080/2$." },
+        { "instruction": "Divide, times 100, round to 2 decimals. Enter the YTM as a percent (a number, no % sign).", "answer": "1.92", "accept": [], "hint": "$20/1040 = 0.019231 = 1.9231\\%$, rounded to $1.92$." }
+      ],
+      "finalAnswer": { "value": "1.92", "unit": "percent" },
+      "solutionNarrative": "Price above par makes it a premium bond. YTM $\\approx \\dfrac{40 + (-20)}{1040} = \\dfrac{20}{1040} = 1.92\\%$ — below the 4% coupon rate, because paying a premium eats into the return."
+    }
+  ]
+}

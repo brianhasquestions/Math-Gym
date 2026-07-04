@@ -1,0 +1,255 @@
+{
+  "id": "numerical-methods.root-finding-bracketing",
+  "subject": "numerical-methods",
+  "title": "Bracketing Methods: Bisection and False Position",
+  "prerequisites": ["numerical-methods.error-and-floating-point", "calculus-1.limits-and-continuity"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "sign-change-and-ivt",
+      "label": "Bracketing a root with a sign change",
+      "microLesson": "To find where a continuous function $f$ crosses zero, first trap the root inside an interval $[a, b]$ where $f$ **changes sign** — that is, $f(a)$ and $f(b)$ have opposite signs, so $f(a)\\cdot f(b) < 0$. The **Intermediate Value Theorem** guarantees that a continuous $f$ taking a negative value and a positive value must hit $0$ somewhere between. For $f(x) = x^2 - 2$, $f(1) = -1$ and $f(2) = 2$: opposite signs, so a root (namely $\\sqrt{2}$) lies in $[1, 2]$. No bracket, no bracketing method."
+    },
+    {
+      "id": "bisection-iteration",
+      "label": "The bisection step",
+      "microLesson": "Once a root is bracketed in $[a, b]$, **bisection** repeatedly cuts the interval in half. Compute the midpoint $m = \\frac{a+b}{2}$ and evaluate $f(m)$. Whichever half still shows a sign change contains the root: if $f(a)$ and $f(m)$ have opposite signs, keep $[a, m]$; otherwise keep $[m, b]$. Each step halves the uncertainty. For $f(x) = x^2 - 2$ on $[1, 2]$: $m = 1.5$, $f(1.5) = 0.25 > 0$, and since $f(1) = -1 < 0$ they differ in sign, so the root is in $[1, 1.5]$."
+    },
+    {
+      "id": "false-position",
+      "label": "False position (regula falsi)",
+      "microLesson": "**False position** brackets a root like bisection but chooses a smarter test point: instead of the midpoint, it draws the straight line through $(a, f(a))$ and $(b, f(b))$ and takes that line's x-intercept, $c = b - \\dfrac{f(b)(b - a)}{f(b) - f(a)}$. Then it keeps whichever subinterval still brackets the root, exactly as bisection does. Because the secant line leans toward the nearer root, false position usually converges faster than plain bisection — while never losing the safety of a guaranteed bracket."
+    },
+    {
+      "id": "convergence-and-iteration-count",
+      "label": "Convergence and iteration count",
+      "microLesson": "Bisection's great virtue is a *predictable* error. After $n$ steps a starting bracket of width $w$ has shrunk to $w/2^n$. To guarantee the root is pinned to within a tolerance $\\text{tol}$, solve $w/2^n \\le \\text{tol}$, giving $n = \\left\\lceil \\log_2\\!\\frac{w}{\\text{tol}} \\right\\rceil$ — the ceiling, because you need a whole number of steps. A bracket of width $2$ narrowed to $\\text{tol} = 0.001$ needs $\\lceil \\log_2 2000 \\rceil = \\lceil 10.97 \\rceil = 11$ steps. This is *linear* convergence: each step buys one more bit of accuracy, no more."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The problem: solve $f(x) = 0$ when you can't solve it\n\nMost equations that matter — $x = \\cos x$, $x^5 - x - 1 = 0$, the pressure balance in a pipe — have **no formula for their roots**. What you *can* always do is *evaluate* $f$ at any point. Root-finding methods turn that ability into a root. The safest family, **bracketing methods**, never lose track of a proven interval containing the root, so they cannot diverge. The price is speed. This topic covers the two classics: **bisection** and **false position**.\n\n## Step 1: trap the root (sign change + IVT)\n\nThe foundation is the **Intermediate Value Theorem**: if $f$ is continuous on $[a, b]$ and $f(a)$ and $f(b)$ have opposite signs, then $f$ must equal $0$ somewhere in $(a, b)$. In symbols, a **bracket** is any interval with\n\n$$f(a)\\cdot f(b) < 0.$$\n\nFinding one is usually a matter of trying a few integer inputs and watching for the sign to flip.\n\n### Worked example\n\nFor $f(x) = x^2 - 2$ (whose positive root is $\\sqrt{2}$): $f(1) = 1 - 2 = -1$ and $f(2) = 4 - 2 = 2$. Opposite signs, so a root is trapped in $[1, 2]$.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,2.4],\"yRange\":[-2.5,3],\"grid\":true,\"curves\":[{\"fn\":\"x^2 - 2\",\"label\":\"f(x) = x² − 2\",\"color\":\"accent\",\"labelAt\":2.1}],\"points\":[{\"x\":1,\"y\":-1,\"label\":\"f(1) = −1\",\"color\":\"warn\"},{\"x\":2,\"y\":2,\"label\":\"f(2) = 2\",\"color\":\"good\"},{\"x\":1.41421,\"y\":0,\"label\":\"root √2\",\"color\":\"accent\"}],\"segments\":[{\"from\":[0,0],\"to\":[2.4,0],\"color\":\"muted\"}],\"caption\":\"f changes sign between x = 1 (negative) and x = 2 (positive), so a root is bracketed in [1, 2].\"}\n```\n\n## Step 2: bisection — halve, and halve again\n\nGiven a bracket $[a, b]$, **bisection** tests the midpoint and throws away the half that can't contain the root:\n\n1. Compute $m = \\dfrac{a + b}{2}$ and $f(m)$.\n2. If $f(a)$ and $f(m)$ have opposite signs, the root is in $[a, m]$ — set $b = m$.\n3. Otherwise it's in $[m, b]$ — set $a = m$.\n4. Repeat until the interval is narrow enough.\n\n### Worked iterations on $f(x) = x^2 - 2$, starting from $[1, 2]$\n\n| step | $a$ | $b$ | $m$ | $f(m)$ | keep |\n|------|-----|-----|-----|--------|------|\n| 1 | 1 | 2 | 1.5 | $+0.25$ | $[1,\\,1.5]$ |\n| 2 | 1 | 1.5 | 1.25 | $-0.4375$ | $[1.25,\\,1.5]$ |\n| 3 | 1.25 | 1.5 | 1.375 | $-0.1094$ | $[1.375,\\,1.5]$ |\n| 4 | 1.375 | 1.5 | 1.4375 | $+0.0664$ | $[1.375,\\,1.4375]$ |\n\nAfter four steps the root $\\sqrt{2} = 1.41421\\ldots$ is pinned between $1.375$ and $1.4375$. Each row halves the interval — dependable, if unhurried.\n\n## Step 3: false position — a smarter guess, same safety\n\nBisection ignores *how* negative or positive the endpoints are. **False position** (Latin *regula falsi*) uses that information: it connects $(a, f(a))$ and $(b, f(b))$ with a line and takes the line's x-intercept as the test point,\n\n$$c = b - \\frac{f(b)\\,(b - a)}{f(b) - f(a)}.$$\n\nThen it keeps whichever subinterval, $[a, c]$ or $[c, b]$, still shows a sign change — the bracket is never abandoned. Because the secant line leans toward the closer crossing, $c$ usually lands nearer the root than the midpoint would.\n\nFor $f(x) = x^2 - 2$ on $[1, 2]$: $c = 2 - \\dfrac{2(2 - 1)}{2 - (-1)} = 2 - \\dfrac{2}{3} \\approx 1.3333$. Already closer to $\\sqrt{2} \\approx 1.4142$ than the bisection midpoint $1.5$ — and the next step tightens it further.\n\n## Step 4: how many steps? (bisection's honest guarantee)\n\nBisection's error is completely predictable. Starting from a bracket of width $w = b - a$, after $n$ steps the width is\n\n$$\\frac{w}{2^n}.$$\n\nTo be sure the root is located to within a tolerance $\\text{tol}$, require $\\dfrac{w}{2^n} \\le \\text{tol}$ and solve for $n$:\n\n$$n = \\left\\lceil \\log_2 \\frac{w}{\\text{tol}} \\right\\rceil.$$\n\nThe ceiling is essential — a fractional step doesn't exist, so you round up. Example: width $w = 2$, tolerance $\\text{tol} = 0.001$. Then $\\frac{w}{\\text{tol}} = 2000$, $\\log_2 2000 \\approx 10.97$, so $n = 11$ steps. This is **linear convergence**: every step adds exactly one binary digit of accuracy. The open methods in the next topic converge far faster — but can also fail, which bisection never does.\n\n## Pitfalls\n\n- **No bracket, no method.** If $f(a)$ and $f(b)$ share a sign, there may be zero roots *or* an even number; bisection can't start. Always verify the sign change first.\n- **Even-order roots hide.** A root the graph merely *touches* (like $x^2 = 0$) produces no sign change, so bracketing methods miss it entirely.\n- **False position can stall.** For strongly curved $f$, one endpoint can get 'stuck' and never update, so the bracket stops shrinking on one side — convergence slows to a crawl even though it never fails. Modified variants (Illinois) fix this."
+  },
+  "application": {
+    "summary": "Bracketing methods are the reliable workhorses whenever you need a root and cannot afford to diverge: solving equilibrium equations in engineering, finding an implied rate in finance, or locating where a simulated quantity crosses a threshold. Bisection's guaranteed iteration count makes it the method of choice when a hard real-time deadline must be met.",
+    "domains": ["engineering", "finance", "physics", "computer graphics"],
+    "workedExample": "**Finding a break-even temperature in a control system**\n\nA thermostat must find the temperature $T$ at which a nonlinear heat balance $f(T) = 0.02T^2 - 3T - 5$ crosses zero (the point where heat gained equals heat lost). There's no clean formula, but the controller can evaluate $f$ cheaply.\n\nTry a bracket: $f(100) = 200 - 300 - 5 = -105$ and $f(200) = 800 - 600 - 5 = 195$. Opposite signs, so a root lives in $[100, 200]$ by the IVT. The width is $100$; to pin $T$ to within $0.1^\\circ$, the controller needs $n = \\lceil \\log_2(100/0.1) \\rceil = \\lceil \\log_2 1000 \\rceil = \\lceil 9.97 \\rceil = 10$ bisection steps — a fixed, known budget it can schedule inside its control loop.\n\nThe first step tests $m = 150$: $f(150) = 450 - 450 - 5 = -5 < 0$; since $f(100) < 0$ too, the sign change is on the *other* side, so the root is in $[150, 200]$. Ten such halvings and the crossing temperature is known to a tenth of a degree — with a rock-solid guarantee the loop will never run long or diverge, which is exactly what a safety-critical controller requires.",
+    "domainNotes": [
+      "**Engineering:** solving nonlinear equilibrium, heat-balance, and circuit equations where divergence is unacceptable.",
+      "**Finance:** bisection reliably finds an implied interest rate or yield where the price-vs-rate function is monotone but has no closed form.",
+      "**Physics:** locating where a simulated trajectory or field crosses a threshold value.",
+      "**Computer graphics:** ray-surface intersection along a ray is a bracketed 1-D root find; bisection refines the hit point."
+    ]
+  },
+  "generators": ["nm1-signchange-1", "nm1-signchange-2", "nm1-signchange-3", "nm1-bisection-1", "nm1-bisection-2", "nm1-bisection-3", "nm1-falsepos-1", "nm1-falsepos-2", "nm1-falsepos-3", "nm1-bisect-count-1", "nm1-bisect-count-2", "nm1-bisect-count-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.root-finding-bracketing.s01",
+      "concepts": ["sign-change-and-ivt"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2 - 2$, which interval brackets a root? A root is bracketed when $f$ changes sign. Options: $A = [1, 2]$ or $B = [2, 3]$. Answer A or B.",
+      "steps": [
+        { "instruction": "Check the endpoint signs. Which interval shows a sign change? Answer A or B.", "answer": "A", "accept": ["a"], "hint": "$f(1) = -1$ (negative), $f(2) = 2$ (positive); $f(2)$ and $f(3)$ are both positive." }
+      ],
+      "finalAnswer": { "value": "A", "unit": "" },
+      "solutionNarrative": "$f(1) = -1 < 0$ and $f(2) = 2 > 0$: interval $A$ brackets the root $\\sqrt{2}$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s02",
+      "concepts": ["sign-change-and-ivt"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2 - 7$ on $[1, 3]$, evaluate $f$ at both endpoints and multiply. A negative product confirms a bracketed root.",
+      "steps": [
+        { "instruction": "Compute $f(1) = 1^2 - 7$.", "answer": "-6", "accept": [], "hint": "$1 - 7$." },
+        { "instruction": "Compute $f(3) = 3^2 - 7$.", "answer": "2", "accept": [], "hint": "$9 - 7$." },
+        { "instruction": "Multiply $f(1)\\cdot f(3)$.", "answer": "-12", "accept": [], "hint": "$(-6)(2)$." }
+      ],
+      "finalAnswer": { "value": "-12", "unit": "" },
+      "solutionNarrative": "$f(1) = -6$, $f(3) = 2$; product $-12 < 0$, so a root (namely $\\sqrt{7}$) lies in $[1, 3]$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s03",
+      "concepts": ["sign-change-and-ivt"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A load builds as $g(t) = 10t^2$ kN after $t$ seconds; we want when it first reaches $100$ kN, a root of $f(t) = 10t^2 - 100$. Confirm the root lies in $[3, 4]$ via the sign change.",
+      "steps": [
+        { "instruction": "Compute $f(3) = 10\\cdot 3^2 - 100$.", "answer": "-10", "accept": [], "hint": "$90 - 100$." },
+        { "instruction": "Compute $f(4) = 10\\cdot 4^2 - 100$.", "answer": "60", "accept": [], "hint": "$160 - 100$." },
+        { "instruction": "Do the endpoints have opposite signs, bracketing a root? Answer yes or no.", "answer": "yes", "accept": ["y"], "hint": "One is negative, one positive." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$f(3) = -10 < 0$ and $f(4) = 60 > 0$: by the IVT the load reaches $100$ kN in $[3, 4]$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s04",
+      "concepts": ["bisection-iteration"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Bisection tests the midpoint of the bracket $[1, 2]$. Compute the midpoint $\\frac{a+b}{2}$.",
+      "steps": [
+        { "instruction": "Compute $\\frac{1 + 2}{2}$.", "answer": "1.5", "accept": ["3/2"], "hint": "$(1+2)/2$." }
+      ],
+      "finalAnswer": { "value": "1.5", "unit": "" },
+      "solutionNarrative": "Midpoint $= \\frac{1+2}{2} = 1.5$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s05",
+      "concepts": ["bisection-iteration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Bisect $f(x) = x^2 - 2$ on $[1, 2]$: compute the midpoint, evaluate $f$ there, and decide which half to keep.",
+      "steps": [
+        { "instruction": "Midpoint $m = \\frac{1+2}{2}$.", "answer": "1.5", "accept": ["3/2"], "hint": "$(1+2)/2$." },
+        { "instruction": "Compute $f(1.5) = 1.5^2 - 2$.", "answer": "0.25", "accept": [], "hint": "$2.25 - 2$." },
+        { "instruction": "$f(1) = -1$. Since $f(1)$ and $f(1.5)$ have opposite signs, which half holds the root — left $[1, 1.5]$ or right $[1.5, 2]$? Answer left or right.", "answer": "left", "accept": ["l"], "hint": "Opposite signs bracket the root: keep that side." }
+      ],
+      "finalAnswer": { "value": "left", "unit": "" },
+      "solutionNarrative": "$m = 1.5$, $f(1.5) = 0.25 > 0$; with $f(1) = -1 < 0$ the sign change is on the left, so keep $[1, 1.5]$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s06",
+      "concepts": ["bisection-iteration"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Do TWO bisection steps for $f(x) = x^2 - 7$ starting from $[2, 4]$, and report the midpoint of the bracket after both steps.",
+      "steps": [
+        { "instruction": "Step 1 midpoint $m_1 = \\frac{2+4}{2}$.", "answer": "3", "accept": [], "hint": "$(2+4)/2$." },
+        { "instruction": "$f(2) = -3$ and $f(3) = 2$ have opposite signs, so keep $[2, 3]$. Compute its midpoint $m_2$.", "answer": "2.5", "accept": ["5/2"], "hint": "$(2+3)/2$." }
+      ],
+      "finalAnswer": { "value": "2.5", "unit": "" },
+      "solutionNarrative": "Step 1 gives $m_1 = 3$; the sign check keeps $[2, 3]$, whose midpoint is $2.5$, homing in on $\\sqrt{7} \\approx 2.646$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s07",
+      "concepts": ["false-position"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "False position takes the x-intercept of the line through the endpoints: $c = b - \\frac{f(b)(b-a)}{f(b)-f(a)}$. With $a = 1$, $b = 3$, $f(a) = -2$, $f(b) = 2$, compute $c$. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Plug in: $c = 3 - \\frac{2(3 - 1)}{2 - (-2)}$. Round to 4 decimals.", "answer": "2.0000", "accept": ["2", "2.0"], "hint": "Denominator $= 2 - (-2) = 4$; $\\frac{2\\cdot 2}{4} = 1$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$c = 3 - \\frac{2(2)}{4} = 3 - 1 = 2$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s08",
+      "concepts": ["false-position"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Apply one false-position step to $f(x) = x^2 - 2$ on $[1, 3]$. Round the new estimate to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $f(1) = 1^2 - 2$.", "answer": "-1", "accept": [], "hint": "$1 - 2$." },
+        { "instruction": "Compute $f(3) = 3^2 - 2$.", "answer": "7", "accept": [], "hint": "$9 - 2$." },
+        { "instruction": "Compute $c = 3 - \\frac{7(3 - 1)}{7 - (-1)}$. Round to 4 decimals.", "answer": "1.2500", "accept": ["1.25"], "hint": "Denominator $= 8$; $\\frac{7\\cdot 2}{8} = 1.75$." }
+      ],
+      "finalAnswer": { "value": "1.25", "unit": "" },
+      "solutionNarrative": "$f(1) = -1$, $f(3) = 7$, so $c = 3 - \\frac{7\\cdot 2}{8} = 3 - 1.75 = 1.25$, approaching $\\sqrt{2} \\approx 1.4142$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s09",
+      "concepts": ["false-position"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Do TWO false-position steps for $f(x) = x^2 - 2$ on $[1, 3]$. Report the second estimate, rounded to 4 decimals.",
+      "steps": [
+        { "instruction": "First step: with $f(1) = -1$, $f(3) = 7$, compute $c_1 = 3 - \\frac{7(3-1)}{8}$. Round to 4 decimals.", "answer": "1.2500", "accept": ["1.25"], "hint": "$\\frac{7\\cdot 2}{8} = 1.75$, so $3 - 1.75$." },
+        { "instruction": "Now $f(1.25) = 1.25^2 - 2 = -0.4375$ (negative), so the new bracket is $[1.25, 3]$. Compute $c_2 = 3 - \\frac{7(3 - 1.25)}{7 - (-0.4375)}$. Round to 4 decimals.", "answer": "1.3487", "accept": ["1.3488", "1.349"], "hint": "Denominator $= 7.4375$; numerator $= 7\\times 1.75 = 12.25$." }
+      ],
+      "finalAnswer": { "value": "1.3487", "unit": "" },
+      "solutionNarrative": "$c_1 = 1.25$; then with $f(1.25) = -0.4375$, $c_2 = 3 - \\frac{7\\cdot 1.75}{7.4375} \\approx 1.3487$, converging on $\\sqrt{2}$ from below faster than bisection."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s10",
+      "concepts": ["convergence-and-iteration-count"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each bisection step halves the bracket. Starting from a bracket of width $4$, how many steps guarantee the width drops below $0.5$? Use $n = \\lceil \\log_2(\\text{width}/\\text{tol}) \\rceil$.",
+      "steps": [
+        { "instruction": "Compute $\\log_2(4/0.5)$ and round UP.", "answer": "3", "accept": [], "hint": "$4/0.5 = 8 = 2^3$, so exactly 3 halvings." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "steps" },
+      "solutionNarrative": "$n = \\lceil \\log_2(4/0.5) \\rceil = \\lceil \\log_2 8 \\rceil = 3$ steps."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s11",
+      "concepts": ["convergence-and-iteration-count"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A root is bracketed in $[0, 5]$. How many bisection steps guarantee an interval narrower than $0.01$? Use $n = \\lceil \\log_2(\\text{width}/\\text{tol}) \\rceil$.",
+      "steps": [
+        { "instruction": "Width $= 5 - 0 = 5$. Compute $\\frac{5}{0.01}$.", "answer": "500", "accept": [], "hint": "$5 \\div 0.01$." },
+        { "instruction": "Take $\\log_2 500 \\approx 8.966$ and round UP. How many steps?", "answer": "9", "accept": [], "hint": "$2^9 = 512 > 500$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "steps" },
+      "solutionNarrative": "$n = \\lceil \\log_2(5/0.01) \\rceil = \\lceil \\log_2 500 \\rceil = \\lceil 8.97 \\rceil = 9$ steps."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s12",
+      "concepts": ["convergence-and-iteration-count"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An engineer bisects a bracket of width $10$ mm to locate a critical length within $0.001$ mm. Find the number of steps, then the actual width after that many steps.",
+      "steps": [
+        { "instruction": "Steps: $n = \\lceil \\log_2(10/0.001) \\rceil$. Compute $n$.", "answer": "14", "accept": [], "hint": "$10/0.001 = 10000$; $\\log_2 10000 \\approx 13.29$, round up." },
+        { "instruction": "After 14 halvings the width is $\\frac{10}{2^{14}}$. Compute it, rounded to 6 decimals.", "answer": "0.000610", "accept": ["0.00061", "0.0006"], "hint": "$2^{14} = 16384$; $10/16384$." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "steps" },
+      "solutionNarrative": "$n = \\lceil \\log_2 10000 \\rceil = 14$; the width becomes $10/16384 \\approx 0.00061$ mm, safely under $0.001$ mm."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s13",
+      "concepts": ["sign-change-and-ivt", "bisection-iteration"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^3 - x - 2$, confirm a root is bracketed in $[1, 2]$, then take one bisection step.",
+      "steps": [
+        { "instruction": "Compute $f(1) = 1 - 1 - 2$.", "answer": "-2", "accept": [], "hint": "$1 - 1 - 2$." },
+        { "instruction": "Compute $f(2) = 8 - 2 - 2$.", "answer": "4", "accept": [], "hint": "$2^3 - 2 - 2$." },
+        { "instruction": "Opposite signs, so bisect: the midpoint of $[1, 2]$ is?", "answer": "1.5", "accept": ["3/2"], "hint": "$(1+2)/2$." }
+      ],
+      "finalAnswer": { "value": "1.5", "unit": "" },
+      "solutionNarrative": "$f(1) = -2$, $f(2) = 4$: a root is bracketed, and the first bisection midpoint is $1.5$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s14",
+      "concepts": ["bisection-iteration", "convergence-and-iteration-count"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Starting from $[0, 1]$, how many bisection steps guarantee width below $0.001$, and what is the midpoint of the very first step?",
+      "steps": [
+        { "instruction": "Steps: $n = \\lceil \\log_2(1/0.001) \\rceil = \\lceil \\log_2 1000 \\rceil$. Compute $n$.", "answer": "10", "accept": [], "hint": "$\\log_2 1000 \\approx 9.97$, round up." },
+        { "instruction": "First midpoint of $[0, 1]$?", "answer": "0.5", "accept": ["1/2"], "hint": "$(0+1)/2$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "steps" },
+      "solutionNarrative": "$n = \\lceil \\log_2 1000 \\rceil = 10$ steps; the first midpoint is $0.5$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s15",
+      "concepts": ["false-position"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A cable's tension satisfies $f(x) = x^2 - 10 = 0$ (so $x = \\sqrt{10}$). Apply one false-position step on $[3, 4]$. Round to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $f(3) = 9 - 10$ and $f(4) = 16 - 10$. Enter $f(3)$.", "answer": "-1", "accept": [], "hint": "$9 - 10$." },
+        { "instruction": "Compute $c = 4 - \\frac{6(4 - 3)}{6 - (-1)}$. Round to 4 decimals.", "answer": "3.1429", "accept": ["3.1428", "3.143"], "hint": "Denominator $= 7$; $\\frac{6\\cdot 1}{7} \\approx 0.8571$." }
+      ],
+      "finalAnswer": { "value": "3.1429", "unit": "" },
+      "solutionNarrative": "$f(3) = -1$, $f(4) = 6$; $c = 4 - \\frac{6}{7} \\approx 3.1429$, near $\\sqrt{10} \\approx 3.1623$."
+    },
+    {
+      "id": "numerical-methods.root-finding-bracketing.s16",
+      "concepts": ["sign-change-and-ivt", "convergence-and-iteration-count"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A bracket of width $8$ must be narrowed below tolerance $1$. How many bisection steps are needed? Use $n = \\lceil \\log_2(\\text{width}/\\text{tol}) \\rceil$.",
+      "steps": [
+        { "instruction": "Compute $\\log_2(8/1)$ and round up.", "answer": "3", "accept": [], "hint": "$8 = 2^3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "steps" },
+      "solutionNarrative": "$n = \\lceil \\log_2 8 \\rceil = 3$ steps take width $8$ down to $1$."
+    }
+  ]
+}

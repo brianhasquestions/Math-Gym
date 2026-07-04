@@ -1,0 +1,284 @@
+{
+  "id": "number-theory.gcd-lcm-and-bezout",
+  "subject": "number-theory",
+  "title": "GCD, LCM, and Bézout's Identity",
+  "prerequisites": ["number-theory.divisibility-and-primes"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "euclidean-algorithm",
+      "label": "The Euclidean algorithm",
+      "microLesson": "The **greatest common divisor** $\\gcd(a,b)$ is found without factoring by the key fact $\\gcd(a,b) = \\gcd(b,\\, a \\bmod b)$: replace $(a,b)$ with $(b,\\, a \\bmod b)$ and repeat until the remainder is 0 — the **last nonzero remainder** is the gcd. For $\\gcd(252, 105)$: $252 = 2 \\cdot 105 + 42$, $105 = 2 \\cdot 42 + 21$, $42 = 2 \\cdot 21 + 0$, so $\\gcd = 21$. Always write the full remainder sequence ($42 \\to 21 \\to 0$); it is the record you back-substitute through for Bézout."
+    },
+    {
+      "id": "lcm-and-gcd-product",
+      "label": "LCM via the GCD",
+      "microLesson": "The **least common multiple** and gcd are linked by $a \\cdot b = \\gcd(a,b) \\cdot \\mathrm{lcm}(a,b)$, so $\\mathrm{lcm}(a,b) = \\dfrac{a b}{\\gcd(a,b)}$ — one gcd gives you the lcm for free. For 12 and 18: $\\gcd = 6$, so $\\mathrm{lcm} = \\frac{12 \\cdot 18}{6} = 36$. This answers every 'when do two cycles realign?' question: two events with periods 12 and 18 coincide every 36 units. Divide by the gcd BEFORE multiplying to keep the numbers small."
+    },
+    {
+      "id": "bezout-coefficients",
+      "label": "Bézout's identity",
+      "microLesson": "**Bézout's identity**: for any $a, b$ there are integers $s, t$ with $as + bt = \\gcd(a,b)$. The **extended Euclidean algorithm** produces one such pair by back-substituting through the remainder sequence. For $\\gcd(7,5) = 1$: $1 = 5 - 2 \\cdot 2 = 5 - 2(7 - 5) = 3 \\cdot 5 - 2 \\cdot 7$, so $s = -2$, $t = 3$. The coefficients are NOT unique — you can add $(b/g, -a/g)$ to $(s,t)$ — so we always pin them to the extended-Euclid output and verify by substitution. When $\\gcd(a, n) = 1$, that $s$ is the modular inverse $a^{-1} \\bmod n$."
+    },
+    {
+      "id": "coprime-and-applications",
+      "label": "Coprimality and its uses",
+      "microLesson": "Two numbers are **coprime** (relatively prime) when $\\gcd(a,b) = 1$ — they share no prime factor. Coprimality is what makes modular inverses exist, makes CRT moduli combine cleanly, and guarantees that coin values like 3 and 5 can build every large amount. To test it, run Euclid and check the gcd is 1: $\\gcd(14, 15) = 1$ (coprime, though neither is prime) while $\\gcd(14, 21) = 7$ (not coprime). Reducing a fraction to lowest terms is dividing numerator and denominator by their gcd until they are coprime."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Two numbers, one shared structure\n\nGiven two integers, the single most useful thing to know is their **greatest common divisor**. From it flow the least common multiple, the reduction of fractions, the existence of modular inverses, and — via **Bézout's identity** — the solution of every linear Diophantine equation and congruence in the topics ahead. And it is all computable by a 2300-year-old algorithm that never factors anything.\n\n## The Euclidean algorithm\n\nThe **gcd** of $a$ and $b$ is the largest positive integer dividing both. You *could* factor both and multiply the shared primes ($\\gcd(2^3 \\cdot 3, \\, 2 \\cdot 3^2) = 2 \\cdot 3 = 6$), but factoring is slow. Euclid's insight avoids it entirely:\n\n$$\\gcd(a, b) = \\gcd(b,\\; a \\bmod b).$$\n\nDivide, keep the remainder, repeat; the **last nonzero remainder** is the gcd. Trace $\\gcd(252, 105)$ as a table — this table is the thing we reuse for Bézout, so keep it:\n\n| step | division | remainder |\n|---|---|---|\n| 1 | $252 = 2 \\cdot 105 + 42$ | 42 |\n| 2 | $105 = 2 \\cdot 42 + 21$ | 21 |\n| 3 | $42 = 2 \\cdot 21 + 0$ | 0 |\n\nRemainder sequence $42 \\to 21 \\to 0$, so $\\gcd(252, 105) = 21$. Each step shrinks the numbers fast, so even huge inputs finish quickly.\n\n## LCM from the GCD\n\nThe **least common multiple** is tied to the gcd by a clean identity:\n\n$$a \\cdot b = \\gcd(a,b) \\cdot \\mathrm{lcm}(a,b) \\quad\\Longrightarrow\\quad \\mathrm{lcm}(a,b) = \\frac{a \\, b}{\\gcd(a,b)}.$$\n\nFor 12 and 18: $\\gcd = 6$, so $\\mathrm{lcm} = \\frac{12 \\cdot 18}{6} = 36$. (Reduce by the gcd first — $\\frac{12}{6} \\cdot 18 = 2 \\cdot 18$ — to keep arithmetic small.) The lcm answers **cycle-alignment**: two repeating events of periods 12 and 18 coincide every 36 units, and never sooner.\n\n## Extended Euclid and Bézout's identity\n\nThe remainder table hides a bonus. Read it **backwards**, expressing each remainder as a combination of the two numbers above it, and you write the gcd as an integer combination of $a$ and $b$ — **Bézout's identity**:\n\n$$as + bt = \\gcd(a, b).$$\n\n**Worked back-substitution for $\\gcd(7, 5)$.** Forward: $7 = 1 \\cdot 5 + 2$, then $5 = 2 \\cdot 2 + 1$. Now backward, starting from the gcd 1:\n\n$$1 = 5 - 2 \\cdot 2 = 5 - 2(7 - 5) = 3 \\cdot 5 - 2 \\cdot 7.$$\n\nSo $7(-2) + 5(3) = 1$: the extended-Euclid coefficients are $s = -2$ (on 7) and $t = 3$ (on 5). **Always verify by substitution** — it catches sign slips instantly: $-14 + 15 = 1$. ✓\n\n### Two warnings the topics ahead depend on\n\n1. **The coefficients are not unique.** From any solution $(s, t)$ you get another by $(s + \\tfrac{b}{g},\\; t - \\tfrac{a}{g})$. So $(-2, 3)$ and $(3, -4)$ both work for $\\gcd(7,5)$. Because of this, we *pin* the answer to the specific extended-Euclid output and grade $s$ and $t$ as separate, verified values — never as a vague 'a Bézout pair.'\n\n2. **Watch the sign.** Back-substitution routinely gives a negative coefficient. That is correct, not a mistake — and it is exactly the coefficient you reduce mod $n$ to get a modular inverse.\n\n### Bézout $\\to$ modular inverse\n\nWhen $\\gcd(a, n) = 1$, Bézout gives $as + nt = 1$. Read mod $n$: the $nt$ term vanishes, leaving $as \\equiv 1 \\pmod n$. So $s$ **is** $a^{-1} \\bmod n$ (reduce it into $0..n-1$). This is the bridge to the next topic and to RSA key generation.\n\n## Coprimality\n\nTwo integers are **coprime** when $\\gcd(a,b) = 1$. Coprimality — not primality — is the property that matters: $14$ and $15$ are coprime although neither is prime, while $14$ and $21$ share the factor 7. Coprimality is exactly the condition for a modular inverse to exist, for CRT moduli to combine, and for coin values like 3 and 5 to reach every sufficiently large total. And **reducing a fraction** to lowest terms is just dividing top and bottom by their gcd until they are coprime: $\\frac{252}{105} = \\frac{12}{5}$ after dividing by 21.\n\n## Honest scaling\n\nWe run Euclid on 252 and 105. RSA runs the *identical* extended algorithm on 600-digit numbers to compute private keys. The table gets taller; the method does not change."
+  },
+  "application": {
+    "summary": "The Euclidean algorithm and its extended form compute gcds, lcms, reduced fractions, modular inverses, and Bézout coefficients — the primitives every later number-theory and cryptography topic calls. LCM answers cycle alignment; Bézout answers Diophantine equations and congruences.",
+    "domains": ["cryptography", "computer science", "engineering", "scheduling"],
+    "workedExample": "**Aligning two schedules with the lcm, then a Bézout twist.**\n\nA ferry runs every 18 minutes and a bus every 24 minutes, both leaving at 9:00. When do they next depart together? That is $\\mathrm{lcm}(18, 24)$.\n\nGcd first, by Euclid: $24 = 1 \\cdot 18 + 6$, $18 = 3 \\cdot 6 + 0$, so $\\gcd = 6$. Then\n\n$$\\mathrm{lcm}(18, 24) = \\frac{18 \\cdot 24}{6} = \\frac{432}{6} = 72.$$\n\nThey leave together every **72 minutes** — next at 10:12. The ferry has run 4 times ($72/18$), the bus 3 times ($72/24$).\n\nNow a Bézout twist: can you time a single walk so you arrive $x$ ferry-cycles and $y$ bus-cycles from now landing exactly 6 minutes apart from alignment? Since $\\gcd(18,24) = 6$, Bézout gives integers with $18s + 24t = 6$: from the table, $6 = 24 - 18$, so $(s, t) = (-1, 1)$. Every offset that is a multiple of the gcd (6 minutes) is reachable by combining the two cycles; offsets that aren't multiples of 6 never are — the same divisibility gate that governs Diophantine equations in the next topic.",
+    "domainNotes": [
+      "**Cryptography:** extended Euclid computes the RSA private exponent $d = e^{-1} \\bmod \\varphi(n)$ and the coprimality check $\\gcd(e, \\varphi(n)) = 1$ that says a key exists at all.",
+      "**Computer science:** gcd/lcm are primitives for rational-arithmetic libraries, fraction reduction, hash-ring sizing, and reasoning about interleaved cycles.",
+      "**Engineering:** gear ratios, sampling-rate alignment, and polyrhythm periods all repeat at the lcm of their components.",
+      "**Scheduling:** round-robin and cron alignment, traffic-light coordination, and 'when do these repeat together?' are lcm questions; reachable offsets between two cycles are the multiples of their gcd (Bézout)."
+    ]
+  },
+  "generators": [
+    "nt1-euclid-1", "nt1-euclid-2", "nt1-euclid-3",
+    "nt1-lcm-1", "nt1-lcm-2", "nt1-lcm-3",
+    "nt1-bezout-1", "nt1-bezout-2", "nt1-bezout-3",
+    "nt1-coprime-1", "nt1-coprime-2", "nt1-coprime-3"
+  ],
+  "problems": [
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s01",
+      "concepts": ["euclidean-algorithm"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Run the Euclidean algorithm to find $\\gcd(48, 18)$, writing the remainder sequence.",
+      "steps": [
+        { "instruction": "Divide 48 by 18: remainder? ($48 = 2 \\cdot 18 + r$)", "answer": "12", "accept": [], "hint": "$48 - 36$." },
+        { "instruction": "Divide 18 by 12: remainder?", "answer": "6", "accept": [], "hint": "$18 - 12$." },
+        { "instruction": "Divide 12 by 6: remainder?", "answer": "0", "accept": [], "hint": "6 divides 12 exactly." },
+        { "instruction": "Last nonzero remainder = gcd. So $\\gcd(48, 18) = $ ?", "answer": "6", "accept": [], "hint": "Sequence $12 \\to 6 \\to 0$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$48 = 2 \\cdot 18 + 12$; $18 = 1 \\cdot 12 + 6$; $12 = 2 \\cdot 6 + 0$. Last nonzero remainder 6, so $\\gcd = 6$."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s02",
+      "concepts": ["euclidean-algorithm"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $\\gcd(252, 105)$ with the Euclidean algorithm.",
+      "steps": [
+        { "instruction": "Divide 252 by 105: remainder? ($105 \\cdot 2 = 210$)", "answer": "42", "accept": [], "hint": "$252 - 210$." },
+        { "instruction": "Divide 105 by 42: remainder? ($42 \\cdot 2 = 84$)", "answer": "21", "accept": [], "hint": "$105 - 84$." },
+        { "instruction": "Divide 42 by 21: remainder?", "answer": "0", "accept": [], "hint": "21 divides 42 exactly." },
+        { "instruction": "So $\\gcd(252, 105) = $ ?", "answer": "21", "accept": [], "hint": "Last nonzero remainder." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "" },
+      "solutionNarrative": "$252 = 2 \\cdot 105 + 42$; $105 = 2 \\cdot 42 + 21$; $42 = 2 \\cdot 21 + 0$. So $\\gcd = 21$."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s03",
+      "concepts": ["euclidean-algorithm"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The classic: find $\\gcd(1071, 462)$ — factoring would be annoying, but Euclid doesn't care.",
+      "steps": [
+        { "instruction": "Divide 1071 by 462: remainder? ($462 \\cdot 2 = 924$)", "answer": "147", "accept": [], "hint": "$1071 - 924$." },
+        { "instruction": "Divide 462 by 147: remainder? ($147 \\cdot 3 = 441$)", "answer": "21", "accept": [], "hint": "$462 - 441$." },
+        { "instruction": "Divide 147 by 21: remainder?", "answer": "0", "accept": [], "hint": "$21 \\cdot 7 = 147$." },
+        { "instruction": "So $\\gcd(1071, 462) = $ ?", "answer": "21", "accept": [], "hint": "Last nonzero remainder." }
+      ],
+      "finalAnswer": { "value": "21", "unit": "" },
+      "solutionNarrative": "$1071 = 2 \\cdot 462 + 147$; $462 = 3 \\cdot 147 + 21$; $147 = 7 \\cdot 21 + 0$. Gcd 21 in three lines."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s04",
+      "concepts": ["lcm-and-gcd-product"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\mathrm{lcm}(12, 18)$ using $\\mathrm{lcm} = \\dfrac{ab}{\\gcd}$.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(12, 18)$.", "answer": "6", "accept": [], "hint": "Euclid: $18 = 1 \\cdot 12 + 6$; $12 = 2 \\cdot 6 + 0$." },
+        { "instruction": "Compute $12 \\cdot 18$.", "answer": "216", "accept": [], "hint": "Multiply." },
+        { "instruction": "Divide: $\\mathrm{lcm} = 216 \\div 6 = $ ?", "answer": "36", "accept": [], "hint": "One division." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "" },
+      "solutionNarrative": "$\\gcd = 6$, so $\\mathrm{lcm} = \\frac{12 \\cdot 18}{6} = 36$."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s05",
+      "concepts": ["lcm-and-gcd-product"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use $a \\cdot b = \\gcd \\cdot \\mathrm{lcm}$ to find $\\mathrm{lcm}(24, 36)$.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(24, 36)$.", "answer": "12", "accept": [], "hint": "Euclid: $36 = 1 \\cdot 24 + 12$; $24 = 2 \\cdot 12 + 0$." },
+        { "instruction": "Compute $24 \\cdot 36$.", "answer": "864", "accept": [], "hint": "Multiply." },
+        { "instruction": "Solve $\\mathrm{lcm} = 864 \\div 12$.", "answer": "72", "accept": [], "hint": "$864 / 12$." }
+      ],
+      "finalAnswer": { "value": "72", "unit": "" },
+      "solutionNarrative": "$\\gcd = 12$, so $\\mathrm{lcm} = 864/12 = 72$. Check: $12 \\cdot 72 = 864 = 24 \\cdot 36$."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s06",
+      "concepts": ["lcm-and-gcd-product"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A ferry runs every 18 minutes and a bus every 24 minutes, both leaving at 9:00. After how many minutes do they next leave together, and how many trips does each make by then?",
+      "steps": [
+        { "instruction": "Compute $\\gcd(18, 24)$.", "answer": "6", "accept": [], "hint": "Euclid: $24 = 1 \\cdot 18 + 6$; $18 = 3 \\cdot 6 + 0$." },
+        { "instruction": "Compute $\\mathrm{lcm}(18, 24) = \\dfrac{18 \\cdot 24}{6}$.", "answer": "72", "accept": [], "hint": "$432 \\div 6$." },
+        { "instruction": "How many 18-minute ferry trips in 72 minutes?", "answer": "4", "accept": [], "hint": "$72 \\div 18$." },
+        { "instruction": "How many 24-minute bus trips in 72 minutes?", "answer": "3", "accept": [], "hint": "$72 \\div 24$." }
+      ],
+      "finalAnswer": { "value": "72", "unit": "minutes" },
+      "solutionNarrative": "$\\gcd = 6$, so $\\mathrm{lcm} = 72$: they realign after 72 minutes (10:12) — 4 ferry trips and 3 bus trips."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s07",
+      "concepts": ["bezout-coefficients"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Extended Euclid gives Bézout coefficients $s = 2$, $t = -1$ for $\\gcd(12, 23) = 1$. Verify that $12s + 23t = 1$.",
+      "steps": [
+        { "instruction": "Compute $12 \\cdot 2$.", "answer": "24", "accept": [], "hint": "Just multiply." },
+        { "instruction": "Compute $23 \\cdot (-1)$.", "answer": "-23", "accept": [], "hint": "Keep the sign." },
+        { "instruction": "Add: $24 + (-23) = $ ?", "answer": "1", "accept": [], "hint": "Should equal the gcd." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$12(2) + 23(-1) = 24 - 23 = 1 = \\gcd(12, 23)$: the extended-Euclid pair checks out."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s08",
+      "concepts": ["bezout-coefficients"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find Bézout coefficients for $\\gcd(7, 5) = 1$: run Euclid forward, then back-substitute. Report the coefficients $s$ (on 7) and $t$ (on 5).",
+      "steps": [
+        { "instruction": "Forward: $7 = 1 \\cdot 5 + r$. What is $r$?", "answer": "2", "accept": [], "hint": "$7 - 5$." },
+        { "instruction": "Forward: $5 = 2 \\cdot 2 + r$. What is $r$? (This is the gcd.)", "answer": "1", "accept": [], "hint": "$5 - 4$." },
+        { "instruction": "Back-substitute: $1 = 5 - 2 \\cdot 2 = 5 - 2(7 - 5) = 3 \\cdot 5 - 2 \\cdot 7$. The coefficient $s$ on 7 is?", "answer": "-2", "accept": [], "hint": "Read off $-2 \\cdot 7$." },
+        { "instruction": "The coefficient $t$ on 5 is?", "answer": "3", "accept": [], "hint": "Read off $3 \\cdot 5$." },
+        { "instruction": "Check: $7 \\cdot (-2) + 5 \\cdot 3 = $ ?", "answer": "1", "accept": [], "hint": "$-14 + 15$." }
+      ],
+      "finalAnswer": { "value": "s = -2, t = 3", "unit": "" },
+      "solutionNarrative": "Back-substitution gives $1 = 3 \\cdot 5 - 2 \\cdot 7$, so $s = -2$, $t = 3$; $-14 + 15 = 1$. (Other pairs exist, but this is the algorithm's output.)"
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s09",
+      "concepts": ["bezout-coefficients"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Extended Euclid on 26 and 7 gives $26s + 7t = 1$. Find $s$, $t$, and use $t$ to read off $7^{-1} \\bmod 26$.",
+      "steps": [
+        { "instruction": "Forward: $26 = 3 \\cdot 7 + r$. $r$?", "answer": "5", "accept": [], "hint": "$26 - 21$." },
+        { "instruction": "Forward: $7 = 1 \\cdot 5 + r$. $r$?", "answer": "2", "accept": [], "hint": "$7 - 5$." },
+        { "instruction": "Forward: $5 = 2 \\cdot 2 + r$. $r$? (gcd)", "answer": "1", "accept": [], "hint": "$5 - 4$." },
+        { "instruction": "Back-substitution yields $1 = 3 \\cdot 26 - 11 \\cdot 7$. So the coefficient $s$ on 26 is?", "answer": "3", "accept": [], "hint": "Read off $3 \\cdot 26$." },
+        { "instruction": "And the coefficient $t$ on 7 is?", "answer": "-11", "accept": [], "hint": "Read off $-11 \\cdot 7$." },
+        { "instruction": "Since $7t \\equiv 1 \\pmod{26}$, reduce $t = -11$ into $0..25$ to get $7^{-1} \\bmod 26$.", "answer": "15", "accept": [], "hint": "$-11 + 26 = 15$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "$26(3) + 7(-11) = 78 - 77 = 1$, so $7^{-1} \\equiv -11 \\equiv 15 \\pmod{26}$. Check: $7 \\cdot 15 = 105 = 4 \\cdot 26 + 1$."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s10",
+      "concepts": ["coprime-and-applications"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Are 14 and 15 coprime? (Neither is prime.)",
+      "steps": [
+        { "instruction": "Compute $\\gcd(14, 15)$.", "answer": "1", "accept": [], "hint": "Euclid: $15 = 1 \\cdot 14 + 1$; $14 = 14 \\cdot 1 + 0$." },
+        { "instruction": "Is $\\gcd = 1$ — are they coprime? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Coprime means gcd 1." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\gcd(14, 15) = 1$, so they are coprime — coprimality is about *shared* factors, not primality."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s11",
+      "concepts": ["coprime-and-applications"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "How many integers from 1 to 12 are coprime to 12? (Count the $k$ with $\\gcd(k, 12) = 1$.)",
+      "steps": [
+        { "instruction": "List the $k$ in $1..12$ sharing no factor with 12 and count them. How many?", "answer": "4", "accept": [], "hint": "The coprime residues are 1, 5, 7, 11." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "1, 5, 7, 11 are coprime to 12 — that is 4 of them ($\\varphi(12) = 4$)."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s12",
+      "concepts": ["coprime-and-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A machine dispenses only 3-token and 5-token stacks. Because $\\gcd(3,5) = 1$, large totals are reachable. Make exactly 19 using $x$ threes and $y$ fives.",
+      "steps": [
+        { "instruction": "Confirm coprimality: $\\gcd(3, 5) = $ ?", "answer": "1", "accept": [], "hint": "This is what guarantees a combination exists." },
+        { "instruction": "How many 3-token stacks ($x$) solve $3x + 5y = 19$?", "answer": "3", "accept": ["x=3"], "hint": "$3 \\cdot 3 + 5 \\cdot 2 = 9 + 10 = 19$." },
+        { "instruction": "How many 5-token stacks ($y$)?", "answer": "2", "accept": ["y=2"], "hint": "$19 - 9 = 10 = 5 \\cdot 2$." }
+      ],
+      "finalAnswer": { "value": "x = 3, y = 2", "unit": "" },
+      "solutionNarrative": "$3 \\cdot 3 + 5 \\cdot 2 = 19$. Coprime values reach every sufficiently large total (a Frobenius/Chicken McNugget setup)."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s13",
+      "concepts": ["euclidean-algorithm", "coprime-and-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Reduce the fraction $\\frac{84}{126}$ to lowest terms using the gcd.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(84, 126)$ by Euclid.", "answer": "42", "accept": [], "hint": "$126 = 1 \\cdot 84 + 42$; $84 = 2 \\cdot 42 + 0$." },
+        { "instruction": "Divide numerator by the gcd: $84 \\div 42$.", "answer": "2", "accept": [], "hint": "One division." },
+        { "instruction": "Divide denominator by the gcd: $126 \\div 42$.", "answer": "3", "accept": [], "hint": "One division." }
+      ],
+      "finalAnswer": { "value": "2/3", "unit": "" },
+      "solutionNarrative": "$\\gcd(84, 126) = 42$, so $\\frac{84}{126} = \\frac{2}{3}$ — numerator and denominator are now coprime."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s14",
+      "concepts": ["euclidean-algorithm"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find $\\gcd(20, 8)$ with Euclid.",
+      "steps": [
+        { "instruction": "Divide 20 by 8: remainder?", "answer": "4", "accept": [], "hint": "$20 - 16$." },
+        { "instruction": "Divide 8 by 4: remainder?", "answer": "0", "accept": [], "hint": "4 divides 8 exactly." },
+        { "instruction": "So $\\gcd(20, 8) = $ ?", "answer": "4", "accept": [], "hint": "Last nonzero remainder." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$20 = 2 \\cdot 8 + 4$; $8 = 2 \\cdot 4 + 0$. Gcd 4."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s15",
+      "concepts": ["bezout-coefficients"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the extended-Euclid coefficients for $\\gcd(11, 4) = 1$: integers $s$ (on 11), $t$ (on 4) with $11s + 4t = 1$.",
+      "steps": [
+        { "instruction": "Forward: $11 = 2 \\cdot 4 + r$. $r$?", "answer": "3", "accept": [], "hint": "$11 - 8$." },
+        { "instruction": "Forward: $4 = 1 \\cdot 3 + r$. $r$? (gcd)", "answer": "1", "accept": [], "hint": "$4 - 3$." },
+        { "instruction": "Back-substitute: $1 = 4 - 3 = 4 - (11 - 2 \\cdot 4) = 3 \\cdot 4 - 11$. The coefficient $s$ on 11 is?", "answer": "-1", "accept": [], "hint": "Read off $-1 \\cdot 11$." },
+        { "instruction": "The coefficient $t$ on 4 is?", "answer": "3", "accept": [], "hint": "Read off $3 \\cdot 4$." }
+      ],
+      "finalAnswer": { "value": "s = -1, t = 3", "unit": "" },
+      "solutionNarrative": "$11(-1) + 4(3) = -11 + 12 = 1$, so $s = -1$, $t = 3$."
+    },
+    {
+      "id": "number-theory.gcd-lcm-and-bezout.s16",
+      "concepts": ["lcm-and-gcd-product", "euclidean-algorithm"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two gears have 15 and 20 teeth with marks aligned. After how many teeth pass do the marks realign, and how many full turns does each gear make?",
+      "steps": [
+        { "instruction": "Compute $\\gcd(15, 20)$.", "answer": "5", "accept": [], "hint": "$20 = 1 \\cdot 15 + 5$; $15 = 3 \\cdot 5 + 0$." },
+        { "instruction": "Compute $\\mathrm{lcm}(15, 20) = \\dfrac{15 \\cdot 20}{5}$.", "answer": "60", "accept": [], "hint": "$300 \\div 5$." },
+        { "instruction": "Full turns of the 15-tooth gear in 60 teeth?", "answer": "4", "accept": [], "hint": "$60 \\div 15$." },
+        { "instruction": "Full turns of the 20-tooth gear?", "answer": "3", "accept": [], "hint": "$60 \\div 20$." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "teeth" },
+      "solutionNarrative": "$\\gcd = 5$, so $\\mathrm{lcm} = 60$: marks realign after 60 teeth — 4 turns of the small gear, 3 of the large."
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "id": "numerical-methods.numerical-odes",
+  "subject": "numerical-methods",
+  "title": "Numerical Solutions of ODEs",
+  "prerequisites": ["numerical-methods.root-finding-open", "differential-equations.numerical-methods"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "euler-method",
+      "label": "Euler's method",
+      "microLesson": "Euler's method walks along a solution curve using its slope. Given $y' = f(x, y)$ and a point $(x_n, y_n)$, one step of size $h$ estimates the next value: $y_{n+1} = y_n + h\\,f(x_n, y_n)$; then $x$ advances by $h$. It is the simplest ODE solver — a single slope evaluation per step. Example: for $y' = x + y$ at $(0, 1)$ with $h = 0.1$, the slope is $0 + 1 = 1$, so $y_1 = 1 + 0.1(1) = 1.1$. Repeat the update to march forward many steps."
+    },
+    {
+      "id": "improved-euler-heun",
+      "label": "Improved Euler (Heun's method)",
+      "microLesson": "Euler uses only the slope at the *start* of a step, so it drifts off a curving solution. **Heun's method** (improved Euler) is a **predictor-corrector**: first predict with a plain Euler step, $y^* = y_n + h f(x_n, y_n)$; then correct by averaging the start slope with the slope at the predicted end point, $y_{n+1} = y_n + \\frac{h}{2}\\big[f(x_n, y_n) + f(x_n + h, y^*)\\big]$. Averaging two slopes cancels much of Euler's error, making Heun second-order accurate for the cost of two slope evaluations per step."
+    },
+    {
+      "id": "runge-kutta-4",
+      "label": "The classical RK4 method",
+      "microLesson": "The fourth-order Runge-Kutta method (RK4) is the workhorse of ODE solving. Each step blends **four** slopes: $k_1 = f(x_n, y_n)$ at the start; $k_2 = f(x_n + \\frac h2, y_n + \\frac h2 k_1)$ and $k_3 = f(x_n + \\frac h2, y_n + \\frac h2 k_2)$ at the midpoint; and $k_4 = f(x_n + h, y_n + h k_3)$ at the end. The update is a weighted average: $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$. RK4 is fourth-order accurate — spectacular precision for just four evaluations per step."
+    },
+    {
+      "id": "stability-and-step-size",
+      "label": "Error, order, and step size",
+      "microLesson": "Two errors matter: the **local** error made in a single step, and the **global** error accumulated over all steps to the final point. A method of order $p$ has global error $\\sim h^p$, so **halving $h$ divides the error by $2^p$**: Euler (order 1) improves $2\\times$, Heun (order 2) $4\\times$, RK4 (order 4) $16\\times$. Smaller $h$ means more accuracy but more work; too large an $h$ can make some methods **unstable**, with the numerical solution blowing up while the true one stays bounded."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Marching a solution forward\n\nMost differential equations describing the real world — a tumbling satellite, a chemical reaction, a population under pressure — have **no closed-form solution**. There is no formula to plug a time into. So we **simulate**: start from a known state and step forward, using the slope the equation hands us. You met the plainest such stepper, **Euler's method**, already. This topic builds the two methods that made numerical ODE solving genuinely trustworthy: **Heun's method** and the classical **RK4**.\n\n## Euler's method: one slope per step\n\nA first-order ODE gives the slope of the solution at any point:\n\n$$\\frac{dy}{dx} = f(x, y).$$\n\nEuler takes a straight step in that direction:\n\n$$y_{n+1} = y_n + h\\,f(x_n, y_n),$$\n\nthen advances $x$ by the step size $h$ and repeats.\n\n### Worked example\n\n$y' = x + y$, start $(0, 1)$, $h = 0.2$. Slope $f(0, 1) = 0 + 1 = 1$, so\n\n$$y_1 = 1 + 0.2(1) = 1.2 \\quad\\text{at } x = 0.2.$$\n\nStep again: slope $f(0.2, 1.2) = 0.2 + 1.2 = 1.4$, so $y_2 = 1.2 + 0.2(1.4) = 1.48$ at $x = 0.4$. Simple — but because Euler commits to the *starting* slope for the whole step, it consistently lags a curving solution. The true $y(0.4)$ is about $1.584$; Euler's $1.48$ is already noticeably low.\n\n## Heun's method: predict, then correct\n\nThe flaw in Euler is using one slope for the whole step. **Heun's method** (improved Euler) uses **two** and averages them:\n\n1. **Predict** with a trial Euler step: $\\;y^* = y_n + h\\,f(x_n, y_n)$.\n2. **Correct** by averaging the slope at the start with the slope at the predicted end:\n\n$$y_{n+1} = y_n + \\frac{h}{2}\\Big[\\,f(x_n, y_n) + f(x_n + h,\\, y^*)\\,\\Big].$$\n\n### Worked example\n\nSame problem: $y' = x + y$, $(0, 1)$, $h = 0.2$.\n\n- Start slope: $f_0 = f(0, 1) = 1$.\n- Predictor: $y^* = 1 + 0.2(1) = 1.2$.\n- End slope: $f_1 = f(0.2, 1.2) = 0.2 + 1.2 = 1.4$.\n- Corrector: $y_1 = 1 + \\frac{0.2}{2}(1 + 1.4) = 1 + 0.1(2.4) = 1.24$.\n\nEuler gave $1.2$; Heun gives $1.24$. The true value $y(0.2) \\approx 1.2428$ — Heun is nearly exact, because averaging the two slopes captures the curve's bending that Euler ignored. This predictor-corrector idea costs one extra slope evaluation and buys a jump from first- to **second-order** accuracy.\n\n## RK4: four slopes, fourth-order accuracy\n\nThe **classical Runge-Kutta method (RK4)** takes the averaging idea further, sampling the slope at the start, twice at the midpoint, and once at the end of each step:\n\n$$\\begin{aligned} k_1 &= f(x_n, y_n), \\\\ k_2 &= f\\!\\left(x_n + \\tfrac h2,\\; y_n + \\tfrac h2 k_1\\right), \\\\ k_3 &= f\\!\\left(x_n + \\tfrac h2,\\; y_n + \\tfrac h2 k_2\\right), \\\\ k_4 &= f\\!\\left(x_n + h,\\; y_n + h\\,k_3\\right), \\end{aligned}$$\n\nthen combines them with a weighted average that leans on the midpoint slopes:\n\n$$y_{n+1} = y_n + \\frac{h}{6}\\big(k_1 + 2k_2 + 2k_3 + k_4\\big).$$\n\n### Worked example\n\n$y' = y$, start $(0, 1)$, $h = 0.2$ (true answer $e^{0.2} \\approx 1.22140$).\n\n- $k_1 = f(0, 1) = 1$.\n- $k_2 = f(0.1,\\; 1 + 0.1(1)) = 1.1$.\n- $k_3 = f(0.1,\\; 1 + 0.1(1.1)) = 1.11$.\n- $k_4 = f(0.2,\\; 1 + 0.2(1.11)) = 1.222$.\n- $y_1 = 1 + \\frac{0.2}{6}\\big(1 + 2(1.1) + 2(1.11) + 1.222\\big) = 1 + \\frac{0.2}{6}(6.642) = 1.2214$.\n\nRK4 lands on $1.2214$ versus the true $1.22140$ — correct to four decimals in a single step. That accuracy-per-cost is why RK4 is the default in countless simulators.\n\n## Comparing methods: order and step size\n\nEvery method has a **local** error (per step) and a **global** error (accumulated to the end). If a method has order $p$, its global error scales like $h^p$, so **halving $h$ divides the error by $2^p$**:\n\n| Method | Slopes/step | Order $p$ | Halving $h$ divides error by |\n|--------|-------------|-----------|------------------------------|\n| Euler | 1 | 1 | $2$ |\n| Heun | 2 | 2 | $4$ |\n| RK4 | 4 | 4 | $16$ |\n\nA smaller step is more accurate but costs more steps. And there is a limit: for some equations a too-large $h$ makes a method **unstable** — the numerical solution oscillates and blows up while the true solution stays calm. The cure is a smaller step (or an implicit method), which is why real solvers adapt $h$ on the fly.\n\nThe accuracy gap is easy to see: on $y' = y$ from $(0,1)$, plain Euler with $h=0.5$ produces a polygon that falls below the true $e^x$, while RK4 tracks the curve so closely the points sit right on it.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,2.2],\"yRange\":[0,8],\"grid\":true,\"curves\":[{\"fn\":\"exp(x)\",\"label\":\"true y = eˣ\",\"color\":\"accent\",\"labelAt\":1.7}],\"segments\":[{\"from\":[0,1],\"to\":[0.5,1.5],\"color\":\"warn\"},{\"from\":[0.5,1.5],\"to\":[1,2.25],\"color\":\"warn\"},{\"from\":[1,2.25],\"to\":[1.5,3.375],\"color\":\"warn\"},{\"from\":[1.5,3.375],\"to\":[2,5.0625],\"color\":\"warn\"}],\"points\":[{\"x\":0,\"y\":1,\"color\":\"warn\"},{\"x\":0.5,\"y\":1.5,\"color\":\"warn\"},{\"x\":1,\"y\":2.25,\"color\":\"warn\"},{\"x\":1.5,\"y\":3.375,\"color\":\"warn\"},{\"x\":2,\"y\":5.0625,\"label\":\"Euler: 5.06\",\"color\":\"warn\"},{\"x\":2,\"y\":7.389,\"label\":\"true: 7.39\",\"color\":\"accent\"}],\"caption\":\"Euler with h = 0.5 on y' = y: the polygon (warn) drifts below the true eˣ, ending at 5.06 versus the exact 7.39 — RK4 at the same h would sit on the curve\"}\n```\n\n## Why this matters\n\nEvery orbit propagator, climate model, and circuit simulator is, at bottom, an ODE stepper repeated billions of times. Euler makes the idea clear; Heun and RK4 make it *accurate enough to trust*. Knowing each method's order tells you how small a step you need — the difference between a spacecraft that reaches its target and one that misses by a continent."
+  },
+  "application": {
+    "summary": "Numerical ODE solvers predict the future of any system whose rate of change is known but whose exact solution isn't: an orbiting spacecraft, a cooling reactor, a swinging pendulum, a spreading epidemic. Euler, Heun, and RK4 all march from a known initial state; higher-order methods like RK4 let engineers take bigger steps while keeping the trajectory accurate.",
+    "domains": ["orbital mechanics", "aerospace engineering", "chemical engineering", "epidemiology"],
+    "workedExample": "**Propagating a spacecraft's speed with RK4.**\n\nA thruster-and-drag model gives a probe's speed by $v' = 10 - 0.5v$ (m/s per s), starting from $v(0) = 4$. Mission software must predict $v(0.1)$ accurately in one step, so it uses **RK4** with $h = 0.1$.\n\n- $k_1 = 10 - 0.5(4) = 8$.\n- $k_2 = 10 - 0.5\\big(4 + 0.05(8)\\big) = 10 - 0.5(4.4) = 7.8$.\n- $k_3 = 10 - 0.5\\big(4 + 0.05(7.8)\\big) = 10 - 0.5(4.39) = 7.805$.\n- $k_4 = 10 - 0.5\\big(4 + 0.1(7.805)\\big) = 10 - 0.5(4.7805) = 7.60975$.\n- $v_1 = 4 + \\frac{0.1}{6}\\big(8 + 2(7.8) + 2(7.805) + 7.60975\\big) = 4 + \\frac{0.1}{6}(46.81975) \\approx 4.7803$.\n\nThe probe's speed after $0.1$ s is about **$4.78$ m/s**. A plain Euler step would use only $k_1$: $v_1 = 4 + 0.1(8) = 4.8$, slightly overshooting because it ignores how the slope drops as $v$ climbs. RK4's four-slope blend tracks that changing slope, which over thousands of steps is the difference between an orbit that closes and one that drifts. This is exactly how trajectory-propagation software integrates the equations of motion.",
+    "domainNotes": [
+      "**Orbital mechanics:** propagating position and velocity under gravity (and drag, thrust) is an ODE system integrated with RK4 or higher-order variants.",
+      "**Aerospace:** flight simulators and control loops step the equations of motion in real time, choosing a method whose order and step size meet an accuracy budget.",
+      "**Chemical engineering:** reactor concentration and temperature obey coupled rate ODEs solved step by step, often with stiff-aware implicit methods.",
+      "**Epidemiology:** compartmental models (SIR and its kin) are ODE systems marched forward numerically to forecast an outbreak."
+    ]
+  },
+  "generators": ["nm2-euler-1", "nm2-euler-2", "nm2-euler-3", "nm2-heun-1", "nm2-heun-2", "nm2-heun-3", "nm2-rk4-1", "nm2-rk4-2", "nm2-rk4-3", "nm2-odestab-1", "nm2-odestab-2", "nm2-odestab-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.numerical-odes.s01",
+      "concepts": ["euler-method"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $y' = x + y$ with $y(0) = 1$ and $h = 0.2$, take one Euler step to estimate $y(0.2)$.",
+      "steps": [
+        { "instruction": "Compute the slope $f(0, 1) = 0 + 1$.", "answer": "1", "accept": [], "hint": "Plug $x = 0$, $y = 1$ into $x + y$." },
+        { "instruction": "Apply $y_1 = y_0 + h\\,f = 1 + 0.2(1)$. Round to 2 decimals.", "answer": "1.2", "accept": ["1.20"], "hint": "$1 + 0.2$." }
+      ],
+      "finalAnswer": { "value": "1.2", "unit": "" },
+      "solutionNarrative": "Slope $= 1$; $y_1 = 1 + 0.2(1) = 1.2$. The true value is about $1.243$, so a single Euler step lags the curving solution."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s02",
+      "concepts": ["euler-method"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $y' = 2y$ with $y(0) = 3$ and $h = 0.1$, take one Euler step to estimate $y(0.1)$.",
+      "steps": [
+        { "instruction": "Compute the slope $f = 2y$ at the start: $2(3)$.", "answer": "6", "accept": [], "hint": "$2 \\times 3$." },
+        { "instruction": "Apply $y_1 = 3 + 0.1(6)$. Round to 1 decimal.", "answer": "3.6", "accept": ["3.60"], "hint": "$3 + 0.6$." }
+      ],
+      "finalAnswer": { "value": "3.6", "unit": "" },
+      "solutionNarrative": "Slope $= 6$; $y_1 = 3 + 0.1(6) = 3.6$."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s03",
+      "concepts": ["euler-method"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $y' = x + y$ with $y(0) = 1$ and $h = 0.2$, take two Euler steps to estimate $y(0.4)$.",
+      "steps": [
+        { "instruction": "Step 1 at $(0, 1)$: slope $= 1$, so $y_1 = 1 + 0.2(1)$. Round to 2 decimals.", "answer": "1.2", "accept": ["1.20"], "hint": "$1 + 0.2$." },
+        { "instruction": "Step 2 at $(0.2, 1.2)$: slope $= 0.2 + 1.2 = 1.4$, so $y_2 = 1.2 + 0.2(1.4)$. Round to 2 decimals.", "answer": "1.48", "accept": [], "hint": "$1.2 + 0.28$." }
+      ],
+      "finalAnswer": { "value": "1.48", "unit": "" },
+      "solutionNarrative": "Step 1: $y_1 = 1.2$. Step 2: slope $= 1.4$, $y_2 = 1.2 + 0.28 = 1.48$. The true $y(0.4) \\approx 1.584$, so error compounds across steps."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s04",
+      "concepts": ["euler-method"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A capacitor discharges by $y' = -0.5y$ (volts), starting at $y(0) = 8$. Use two Euler steps with $h = 1$ to estimate $y(2)$.",
+      "plot": { "type": "cartesian", "xRange": [0, 2.3], "yRange": [0, 9], "grid": true, "curves": [{ "fn": "8*exp(-0.5*x)", "label": "true decay", "color": "accent", "labelAt": 1.3 }], "segments": [{ "from": [0, 8], "to": [1, 4], "color": "warn" }, { "from": [1, 4], "to": [2, 2], "color": "warn" }], "points": [{ "x": 0, "y": 8, "color": "warn" }, { "x": 1, "y": 4, "color": "warn" }, { "x": 2, "y": 2, "label": "Euler: 2", "color": "warn" }], "caption": "Two Euler steps (h = 1) on y' = -0.5y from 8: the polygon reaches 2, below the true decay curve" },
+      "steps": [
+        { "instruction": "Step 1: slope $= -0.5(8) = -4$, so $y_1 = 8 + 1(-4)$. Compute it.", "answer": "4", "accept": [], "hint": "$8 - 4$." },
+        { "instruction": "Step 2: slope $= -0.5(4) = -2$, so $y_2 = 4 + 1(-2)$. Compute it.", "answer": "2", "accept": [], "hint": "$4 - 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "volts" },
+      "solutionNarrative": "Step 1: $y_1 = 4$. Step 2: $y_2 = 2$ volts. The true value is $8e^{-1} \\approx 2.94$; the coarse step undershoots, and a smaller $h$ would track the decay better."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s05",
+      "concepts": ["improved-euler-heun"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Take one Heun (improved Euler) step for $y' = 2x$ with $y(0) = 1$ and $h = 0.5$. Predictor: $y^* = y_0 + h f_0$; corrector: $y_1 = y_0 + \\frac{h}{2}(f_0 + f(x_0 + h, y^*))$.",
+      "steps": [
+        { "instruction": "Start slope $f_0 = 2(0) = 0$. Predictor $y^* = 1 + 0.5(0)$.", "answer": "1", "accept": [], "hint": "$1 + 0$." },
+        { "instruction": "End slope $f_1 = 2(0.5) = 1$. Corrector $y_1 = 1 + \\frac{0.5}{2}(0 + 1)$. Round to 2 decimals.", "answer": "1.25", "accept": [], "hint": "$1 + 0.25(1)$." }
+      ],
+      "finalAnswer": { "value": "1.25", "unit": "" },
+      "solutionNarrative": "$f_0 = 0$, $y^* = 1$, $f_1 = 1$; corrector $y_1 = 1 + 0.25(1) = 1.25$. Since $y = x^2 + 1$ exactly, the true $y(0.5) = 1.25$ — Heun is exact here."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s06",
+      "concepts": ["improved-euler-heun"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use Heun's method (one step) for $y' = x + y$, $y(0) = 1$, $h = 0.2$.",
+      "steps": [
+        { "instruction": "Starting slope $f_0 = f(0, 1) = 0 + 1$.", "answer": "1", "accept": [], "hint": "$x + y$ at the start." },
+        { "instruction": "Predictor $y^* = 1 + 0.2(1)$. Round to 1 decimal.", "answer": "1.2", "accept": ["1.20"], "hint": "$1 + 0.2$." },
+        { "instruction": "End slope $f_1 = f(0.2, 1.2) = 0.2 + 1.2 = 1.4$. Corrector $y_1 = 1 + \\frac{0.2}{2}(1 + 1.4)$. Round to 2 decimals.", "answer": "1.24", "accept": [], "hint": "$1 + 0.1(2.4)$." }
+      ],
+      "finalAnswer": { "value": "1.24", "unit": "" },
+      "solutionNarrative": "$f_0 = 1$, $y^* = 1.2$, $f_1 = 1.4$; corrector $y_1 = 1 + 0.1(2.4) = 1.24$. This nearly matches the true $y(0.2) \\approx 1.2428$ — far better than Euler's $1.2$."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s07",
+      "concepts": ["improved-euler-heun"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An object cools by $T' = -0.2(T - 20)$, starting at $T(0) = 70$°. Take one Heun step with $h = 1$ to estimate $T(1)$.",
+      "steps": [
+        { "instruction": "Starting slope $f_0 = -0.2(70 - 20) = -10$. Predictor $T^* = 70 + 1(-10)$.", "answer": "60", "accept": [], "hint": "$70 - 10$." },
+        { "instruction": "End slope $f_1 = -0.2(60 - 20) = -8$. Corrector $T_1 = 70 + \\frac{1}{2}(-10 + -8)$. Compute it.", "answer": "61", "accept": [], "hint": "$70 + 0.5(-18) = 70 - 9$." }
+      ],
+      "finalAnswer": { "value": "61", "unit": "degrees" },
+      "solutionNarrative": "$f_0 = -10$, $T^* = 60$, $f_1 = -8$; corrector $T_1 = 70 - 9 = 61$°. Averaging the two slopes corrects Euler's overshoot (Euler alone gave $60$)."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s08",
+      "concepts": ["runge-kutta-4"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Take one RK4 step for $y' = y$, $y(0) = 1$, $h = 0.2$. Compute the four slopes and combine.",
+      "steps": [
+        { "instruction": "$k_1 = f(0, 1) = 1$. $k_2 = f(0.1, 1 + 0.1(1)) = 1.1$. What is $k_3 = f(0.1, 1 + 0.1(1.1))$?", "answer": "1.11", "accept": [], "hint": "$1 + 0.1(1.1) = 1.11$, and $f = y$." },
+        { "instruction": "$k_4 = f(0.2, 1 + 0.2(1.11)) = 1 + 0.222$. What is $k_4$?", "answer": "1.222", "accept": [], "hint": "$1 + 0.222$." },
+        { "instruction": "Combine: $y_1 = 1 + \\frac{0.2}{6}(1 + 2(1.1) + 2(1.11) + 1.222)$. Round to 4 decimals.", "answer": "1.2214", "accept": [], "hint": "The weighted sum is $6.642$; $\\frac{0.2}{6}(6.642) = 0.2214$." }
+      ],
+      "finalAnswer": { "value": "1.2214", "unit": "" },
+      "solutionNarrative": "$k_1 = 1$, $k_2 = 1.1$, $k_3 = 1.11$, $k_4 = 1.222$; $y_1 = 1 + \\frac{0.2}{6}(6.642) = 1.2214$ — matching $e^{0.2} \\approx 1.22140$ to four decimals in one step."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s09",
+      "concepts": ["runge-kutta-4"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute one RK4 step for $y' = x + y$, $y(0) = 1$, $h = 0.2$.",
+      "steps": [
+        { "instruction": "$k_1 = f(0, 1) = 0 + 1$.", "answer": "1", "accept": [], "hint": "$x + y$ at the start." },
+        { "instruction": "$k_2 = f(0.1, 1 + 0.1(1)) = 0.1 + 1.1$. What is $k_2$?", "answer": "1.2", "accept": ["1.20"], "hint": "$0.1 + 1.1$." },
+        { "instruction": "$k_3 = f(0.1, 1 + 0.1(1.2)) = 0.1 + 1.12 = 1.22$ and $k_4 = f(0.2, 1 + 0.2(1.22)) = 0.2 + 1.244 = 1.444$. Then $y_1 = 1 + \\frac{0.2}{6}(1 + 2(1.2) + 2(1.22) + 1.444)$. Round to 4 decimals.", "answer": "1.2428", "accept": [], "hint": "Weighted sum $= 7.284$; $\\frac{0.2}{6}(7.284) = 0.2428$." }
+      ],
+      "finalAnswer": { "value": "1.2428", "unit": "" },
+      "solutionNarrative": "$k_1 = 1$, $k_2 = 1.2$, $k_3 = 1.22$, $k_4 = 1.444$; $y_1 = 1 + \\frac{0.2}{6}(7.284) = 1.2428$, essentially the exact value."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s10",
+      "concepts": ["runge-kutta-4"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A probe's speed obeys $v' = 10 - 0.5v$ (m/s), $v(0) = 4$. Take one RK4 step with $h = 0.1$ to estimate $v(0.1)$.",
+      "steps": [
+        { "instruction": "$k_1 = 10 - 0.5(4) = 8$. $k_2 = 10 - 0.5(4 + 0.05(8)) = 10 - 0.5(4.4)$. What is $k_2$?", "answer": "7.8", "accept": ["7.80"], "hint": "$10 - 2.2$." },
+        { "instruction": "$k_3 = 10 - 0.5(4 + 0.05(7.8)) = 10 - 0.5(4.39) = 7.805$. Compute $k_4 = 10 - 0.5(4 + 0.1(7.805))$. Round to 4 decimals.", "answer": "7.6098", "accept": ["7.60975"], "hint": "$4 + 0.7805 = 4.7805$; $10 - 0.5(4.7805)$." },
+        { "instruction": "Combine: $v_1 = 4 + \\frac{0.1}{6}(8 + 2(7.8) + 2(7.805) + 7.60975)$. Round to 4 decimals.", "answer": "4.7803", "accept": ["4.7803"], "hint": "Weighted sum $= 46.81975$; $\\frac{0.1}{6}(46.81975) \\approx 0.7803$." }
+      ],
+      "finalAnswer": { "value": "4.7803", "unit": "m/s" },
+      "solutionNarrative": "$k_1 = 8$, $k_2 = 7.8$, $k_3 = 7.805$, $k_4 = 7.60975$; $v_1 = 4 + \\frac{0.1}{6}(46.81975) \\approx 4.7803$ m/s. Euler alone would give $4.8$, overshooting because it ignores the falling slope."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s11",
+      "concepts": ["stability-and-step-size"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The error made in a single step of a numerical method is called the ___ error. (Type one word: local or global.)",
+      "steps": [
+        { "instruction": "Type \"local\" or \"global\".", "answer": "local", "accept": ["local truncation"], "hint": "One step = local; accumulated over all steps = global." }
+      ],
+      "finalAnswer": { "value": "local", "unit": "" },
+      "solutionNarrative": "The per-step error is the local (truncation) error; summed over all steps it becomes the global error. Answer: local."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s12",
+      "concepts": ["stability-and-step-size"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Heun's method has global error of order $h^2$. Its current error is about $0.06$. Estimate the error after you halve the step size.",
+      "steps": [
+        { "instruction": "Halving $h$ scales the error by $(\\frac{1}{2})^2 = \\frac{1}{4}$. By what factor does the error shrink? (Type 4.)", "answer": "4", "accept": [], "hint": "$2^2 = 4$." },
+        { "instruction": "Compute the new error $0.06 / 4$. Round to 4 decimals.", "answer": "0.015", "accept": ["0.0150"], "hint": "Divide by 4." }
+      ],
+      "finalAnswer": { "value": "0.015", "unit": "" },
+      "solutionNarrative": "Global error $\\propto h^2$, so halving $h$ divides it by 4: $0.06 / 4 = 0.015$. RK4, being order 4, would divide by 16 instead."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s13",
+      "concepts": ["stability-and-step-size"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two methods run on the same problem: Euler (order 1) and RK4 (order 4). Both start with error $0.08$ and you halve $h$.",
+      "steps": [
+        { "instruction": "Which method's error shrinks more when $h$ is halved: \"Euler\" or \"RK4\"?", "answer": "RK4", "accept": ["rk4", "runge-kutta-4"], "hint": "Higher order means a steeper error drop." },
+        { "instruction": "RK4 error scales by $\\frac{1}{16}$. Compute its new error $0.08 / 16$. Round to 4 decimals.", "answer": "0.005", "accept": ["0.0050"], "hint": "$0.08 \\div 16$." }
+      ],
+      "finalAnswer": { "value": "0.005", "unit": "" },
+      "solutionNarrative": "RK4 (order 4) divides error by 16 per halving vs Euler's 2: its new error is $0.08 / 16 = 0.005$, an eightfold better improvement from the same step change."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s14",
+      "concepts": ["euler-method", "improved-euler-heun"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $y' = x + y$, $y(0) = 1$, $h = 0.2$: Euler gave $y(0.2) \\approx 1.2$ and Heun gave $1.24$. The true value is $1.2428$. Which is closer? Report the smaller error, $|1.2428 - 1.24|$, to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute Heun's error $|1.2428 - 1.24|$. Round to 4 decimals.", "answer": "0.0028", "accept": [], "hint": "$1.2428 - 1.24$." }
+      ],
+      "finalAnswer": { "value": "0.0028", "unit": "" },
+      "solutionNarrative": "Heun's error is $|1.2428 - 1.24| = 0.0028$, far smaller than Euler's $|1.2428 - 1.2| = 0.0428$. Averaging two slopes buys an order of accuracy."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s15",
+      "concepts": ["stability-and-step-size"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The total error accumulated after many steps, from the start to the final point, is the ___ error. (Type one word: local or global.)",
+      "steps": [
+        { "instruction": "Type \"local\" or \"global\".", "answer": "global", "accept": ["global truncation"], "hint": "Accumulated over all steps = global." }
+      ],
+      "finalAnswer": { "value": "global", "unit": "" },
+      "solutionNarrative": "The accumulated error across all steps is the global error, generally larger than any single local error. Answer: global."
+    },
+    {
+      "id": "numerical-methods.numerical-odes.s16",
+      "concepts": ["runge-kutta-4", "stability-and-step-size"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An orbit propagator uses RK4 (order 4). On a test problem its error is about $0.0032$. To meet a tighter tolerance the engineer halves the step size $h$. Estimate the new error, rounded to 5 decimals.",
+      "steps": [
+        { "instruction": "RK4's error scales like $h^4$, so halving $h$ divides the error by $2^4 = 16$. Compute $0.0032 / 16$. Round to 5 decimals.", "answer": "0.0002", "accept": ["0.00020"], "hint": "$0.0032 \\div 16$." }
+      ],
+      "finalAnswer": { "value": "0.0002", "unit": "" },
+      "solutionNarrative": "Error $\\propto h^4$, so halving $h$ divides it by 16: $0.0032 / 16 = 0.0002$. RK4's fourth-order convergence makes a single step-size cut hugely effective."
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "id": "game-theory.mixed-strategies",
+  "subject": "game-theory",
+  "title": "Mixed Strategies",
+  "prerequisites": ["game-theory.pure-nash-equilibrium", "statistics.random-variables"],
+  "estimatedMinutes": 48,
+  "keyConcepts": [
+    {
+      "id": "expected-payoff",
+      "label": "Expected payoff against a mix",
+      "microLesson": "A **mixed strategy** is a probability distribution over a player's pure strategies — e.g. Column plays Left with probability $q$ and Right with probability $1-q$. A player's **expected payoff** against such a mix is the probability-weighted average of the payoffs, exactly like the expected value of a random variable: if Row plays Top, its expected payoff is $q\\cdot(\\text{payoff vs Left}) + (1-q)\\cdot(\\text{payoff vs Right})$. To choose well, compare the expected payoff of each pure strategy against the opponent's mix and pick the larger."
+    },
+    {
+      "id": "indifference-principle",
+      "label": "The indifference principle",
+      "microLesson": "In a mixed equilibrium, a player only randomizes over strategies that yield the **same** expected payoff — otherwise they'd put all weight on the better one. This gives the key trick: to find one player's equilibrium mix, choose it so the **opponent is indifferent** between their pure strategies. For a $2\\times2$ game, set the opponent's two expected-payoff expressions equal and solve the resulting linear equation for the mixing probability $p$. The equilibrium $p$ makes the opponent willing to randomize."
+    },
+    {
+      "id": "mixed-nash-2x2",
+      "label": "Mixed Nash equilibrium of a 2×2",
+      "microLesson": "A $2\\times2$ game with no pure equilibrium has exactly one **mixed Nash equilibrium**, found by two indifference conditions. Let $p$ = probability Row plays its first strategy and $q$ = probability Column plays its first. Solve for $p$ by making **Column** indifferent, and for $q$ by making **Row** indifferent. Both must lie strictly in $(0,1)$; a value of 0 or 1 signals a pure equilibrium instead. Each player's mix is chosen to neutralize the other — the striking logic of mixed equilibria."
+    },
+    {
+      "id": "value-under-mixing",
+      "label": "The value of the mixed equilibrium",
+      "microLesson": "Once you know the equilibrium mix, the **equilibrium value** for a player is that player's expected payoff at the equilibrium. Because the opponent's mix makes the player indifferent, you can compute the value using *either* of the player's pure strategies against the opponent's equilibrium mix — both give the same number. In a symmetric zero-sum game like Matching Pennies the value is 0 (fair). This value is what the player can guarantee by randomizing correctly, and it is the benchmark for judging whether a game is worth playing."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Why rational players roll dice\n\nSome games have **no** stable pair of pure choices — recall Matching Pennies, where whatever you do, if the opponent can predict it, they beat you. A predictable poker player is bluffed and folded into oblivion; a predictable penalty taker is saved. The escape is to become **unpredictable**: choose your action *at random*, according to a carefully tuned probability. This is a **mixed strategy**, and John Nash's 1950 theorem guarantees that once mixed strategies are allowed, **every finite game has at least one equilibrium**.\n\nA mixed strategy for Column is just a probability distribution over her options: Left with probability $q$, Right with probability $1 - q$. A pure strategy is the special case $q = 0$ or $q = 1$.\n\n## Expected payoff: expectation, reused\n\nAgainst a mixing opponent, a player evaluates each of their own choices by its **expected payoff** — the same probability-weighted average you met as the expected value of a random variable. If Column plays Left with probability $q$, then Row's expected payoff from **Top** is\n\n$$E[\\text{Top}] = q \\cdot u_R(\\text{Top}, \\text{Left}) + (1 - q)\\cdot u_R(\\text{Top}, \\text{Right}),$$\n\nand similarly for Bottom. Row simply picks whichever pure strategy has the higher expected payoff.\n\n**Worked example.** Take Row's payoffs\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, · | 0, · |\n| **Bottom** | 1, · | 3, · |\n\nand suppose Column plays Left with $q = \\tfrac13$. Then\n\n$$E[\\text{Top}] = \\tfrac13(4) + \\tfrac23(0) = \\tfrac43, \\qquad E[\\text{Bottom}] = \\tfrac13(1) + \\tfrac23(3) = \\tfrac73.$$\n\nSince $\\tfrac73 > \\tfrac43$, Row's best response to this mix is **Bottom**.\n\n## The indifference principle: the master trick\n\nHere is the pivotal insight. In a mixed equilibrium, if a player is genuinely randomizing over Top and Bottom, both must give the **same** expected payoff — otherwise the player would abandon the worse one and put all weight on the better. So:\n\n> **A player mixes only among strategies that tie in expected payoff.**\n\nTurn this around to *solve* for the equilibrium. To find **Row's** equilibrium mix $p$ (probability of Top), pick $p$ so that **Column is indifferent** between Left and Right. To find **Column's** mix $q$, pick $q$ so that **Row is indifferent**. Each player's mix is chosen to make the *other* indifferent.\n\n### Worked example — full mixed equilibrium\n\nConsider a Matching-Pennies-style game (Row's payoff, Column's payoff):\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 2, 1 | 0, 3 |\n| **Bottom** | 0, 3 | 2, 1 |\n\n**Solve for $q$ (Column's mix on Left) to make Row indifferent.**\n\n$$E_R[\\text{Top}] = 2q + 0(1-q) = 2q, \\qquad E_R[\\text{Bottom}] = 0\\cdot q + 2(1-q) = 2 - 2q.$$\n\nSet equal: $2q = 2 - 2q \\Rightarrow 4q = 2 \\Rightarrow q = \\tfrac12$.\n\n**Solve for $p$ (Row's mix on Top) to make Column indifferent.** Column's payoffs: Left gives $1$ (vs Top) or $3$ (vs Bottom); Right gives $3$ or $1$.\n\n$$E_C[\\text{Left}] = 1\\cdot p + 3(1-p) = 3 - 2p, \\qquad E_C[\\text{Right}] = 3p + 1(1-p) = 1 + 2p.$$\n\nSet equal: $3 - 2p = 1 + 2p \\Rightarrow 2 = 4p \\Rightarrow p = \\tfrac12$.\n\nThe mixed Nash equilibrium is $p = q = \\tfrac12$: both randomize 50/50. Every mixing probability **must land strictly between 0 and 1** — a $p = 0$ or $1$ would mean a pure strategy, signaling you should look for a pure equilibrium instead.\n\n## The value of the game\n\nWhat does Row actually earn at this equilibrium? Because Column's $q = \\tfrac12$ makes Row indifferent, Row's expected payoff is the same whether we compute it from Top or Bottom:\n\n$$E_R[\\text{Top}] = 2q = 2\\cdot\\tfrac12 = 1.$$\n\nSo Row's **equilibrium value** is $1$. Using Bottom gives $2 - 2(\\tfrac12) = 1$ — the same, confirming indifference. This value is what correct randomizing guarantees Row on average, no matter how cleverly Column plays. In a symmetric zero-sum game the value is $0$: a fair fight.\n\n### Pitfalls\n\n- **Mix to make the *opponent* indifferent, not yourself.** Row's mix $p$ solves Column's indifference; students often solve the wrong equation.\n- **Keep probabilities in $(0,1)$.** A solution outside means there's actually a pure equilibrium.\n- **Reduce fractions and match decimals.** $\\tfrac12 = 0.5$; state rounding if a probability doesn't terminate.\n- **Interpretation.** A mixed equilibrium can describe one player literally randomizing, or a *population* in which a fraction $p$ plays Top — the reading that powers evolutionary game theory."
+  },
+  "application": {
+    "summary": "Mixed strategies are how rational agents stay unpredictable and how populations settle into stable proportions: they explain 50/50 penalty kicks and tennis serves, randomized auditing and inspection, bluffing in poker, patrol scheduling in security, and the stable mix of aggressive and passive types in biology.",
+    "domains": ["sports strategy", "security and auditing", "poker and bluffing", "biology and evolution", "law enforcement and inspection"],
+    "workedExample": "**How often should a goalkeeper dive left?**\n\nA kicker chooses to shoot Left or Right; the keeper dives Left or Right. The kicker scores more when the keeper guesses wrong. Model the kicker's scoring probability (higher = better for kicker, worse for keeper) as a zero-sum game — here are the kicker's payoffs:\n\n| Kicker \\ Keeper | Dive Left | Dive Right |\n|---|---|---|\n| **Kick Left** | 2, -2 | 6, -6 |\n| **Kick Right** | 5, -5 | 1, -1 |\n\n*Step 1 — keeper's mix to make the kicker indifferent.* Let $q$ = probability the keeper dives Left. Kicker's expected payoff:\n$$E[\\text{Kick Left}] = 2q + 6(1-q) = 6 - 4q, \\qquad E[\\text{Kick Right}] = 5q + 1(1-q) = 1 + 4q.$$\nSet equal: $6 - 4q = 1 + 4q \\Rightarrow 5 = 8q \\Rightarrow q = \\tfrac58$.\n\n*Step 2 — interpret.* The keeper should dive Left $\\tfrac58 = 62.5\\%$ of the time — more than half, because the kicker is more dangerous kicking toward the keeper's right (the $6$). Diving Left *too* predictably, though, lets the kicker exploit it; the $\\tfrac58$ mix is the unique rate that keeps the kicker indifferent and therefore unexploitable.\n\n*Step 3 — the value.* The kicker's guaranteed scoring payoff is $E[\\text{Kick Left}] = 6 - 4(\\tfrac58) = 3.5$. Studies of real World Cup penalties find kickers and keepers randomizing at almost exactly these game-theoretic rates — a rare case of textbook theory matching elite human behavior.",
+    "domainNotes": [
+      "**Sports:** empirical studies (Palacios-Huerta) show penalty takers and tennis servers mix at rates statistically indistinguishable from the Nash prediction.",
+      "**Security:** randomized patrol and screening schedules (used by the US Coast Guard and airports via 'ARMOR'/Stackelberg solvers) are mixed strategies that keep attackers guessing.",
+      "**Poker:** optimal play requires bluffing with a precise frequency so opponents can't profitably call or fold — an indifference condition.",
+      "**Biology:** the Hawk-Dove mixed equilibrium predicts the stable fraction of aggressive vs passive individuals in a population (evolutionarily stable strategy).",
+      "**Auditing/inspection:** a tax authority audits a random fraction just high enough to make honesty a best response — an indifference calculation."
+    ]
+  },
+  "generators": [
+    "gt1-exppay-1", "gt1-exppay-2", "gt1-exppay-3",
+    "gt1-indiff-1", "gt1-indiff-2", "gt1-indiff-3",
+    "gt1-mixnash-1", "gt1-mixnash-2", "gt1-mixnash-3",
+    "gt1-value-1", "gt1-value-2", "gt1-value-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.mixed-strategies.s01",
+      "concepts": ["expected-payoff"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell shows Row's payoff. Column plays Left with probability 1/2 and Right with probability 1/2.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, · | 2, · |\n| **Bottom** | 0, · | 6, · |\n\nRow plays Top.",
+      "steps": [
+        { "instruction": "Row's expected payoff from Top: (1/2)(4) + (1/2)(2). Give a fraction or decimal.", "answer": "3", "accept": ["3.0"], "hint": "Average of 4 and 2." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "E[Top] = (1/2)(4) + (1/2)(2) = 2 + 1 = 3."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s02",
+      "concepts": ["expected-payoff"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell shows Row's payoff. Column plays Left with probability 1/3, Right with probability 2/3.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 6, · | 0, · |\n| **Bottom** | 3, · | 3, · |",
+      "steps": [
+        { "instruction": "Expected payoff from Top: (1/3)(6) + (2/3)(0). Give a fraction or decimal.", "answer": "2", "accept": [], "hint": "Only the Left term survives: 6/3." },
+        { "instruction": "Expected payoff from Bottom: (1/3)(3) + (2/3)(3). Give a fraction or decimal.", "answer": "3", "accept": [], "hint": "Both are 3, so the average is 3." },
+        { "instruction": "Which is Row's better response to this mix? Choose Top or Bottom.", "answer": "Bottom", "accept": [], "hint": "Pick the larger expected payoff." }
+      ],
+      "finalAnswer": { "value": "Bottom", "unit": "" },
+      "solutionNarrative": "E[Top] = 2 and E[Bottom] = 3, so Bottom is the better response to Column's mix."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s03",
+      "concepts": ["expected-payoff"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Column mixes: Left with probability 0.3, Right with probability 0.7. Row plays Bottom.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 5, 2 | 1, 8 |\n| **Bottom** | 8, 1 | 3, 4 |",
+      "steps": [
+        { "instruction": "Row's payoff if Column plays Left. (Give a number.)", "answer": "8", "accept": [], "hint": "First entry, row Bottom, column Left." },
+        { "instruction": "Row's payoff if Column plays Right. (Give a number.)", "answer": "3", "accept": [], "hint": "First entry, row Bottom, column Right." },
+        { "instruction": "Expected payoff = 0.3(8) + 0.7(3). Give a decimal.", "answer": "4.5", "accept": ["9/2"], "hint": "2.4 + 2.1." }
+      ],
+      "finalAnswer": { "value": "4.5", "unit": "" },
+      "solutionNarrative": "E[Bottom] = 0.3(8) + 0.7(3) = 2.4 + 2.1 = 4.5."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s04",
+      "concepts": ["indifference-principle"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Column plays Left with probability q so that Row is indifferent between Top and Bottom.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, 0 | 0, 0 |\n| **Bottom** | 0, 0 | 4, 0 |",
+      "steps": [
+        { "instruction": "Row's expected payoff from Top is 4q + 0(1-q) = 4q; from Bottom it is 0·q + 4(1-q) = 4-4q. Set 4q = 4-4q and solve for q. Give a fraction or decimal in (0,1).", "answer": "1/2", "accept": ["0.5"], "hint": "8q = 4." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Setting 4q = 4 - 4q gives 8q = 4, so q = 1/2: at this mix Row is indifferent and willing to randomize."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s05",
+      "concepts": ["indifference-principle"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Row plays Top with probability p. Find the p that makes Column indifferent between Left and Right.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 0, 1 | 0, 3 |\n| **Bottom** | 0, 3 | 0, 1 |",
+      "steps": [
+        { "instruction": "Column's expected payoff from Left is 1·p + 3(1-p); from Right it is 3p + 1(1-p). Set equal and solve for p. Give a fraction or decimal in (0,1).", "answer": "1/2", "accept": ["0.5"], "hint": "3 - 2p = 1 + 2p." },
+        { "instruction": "Then Row plays Bottom with probability 1 - p. Give that probability.", "answer": "1/2", "accept": ["0.5"], "hint": "Subtract p from 1." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Column is indifferent when 3 - 2p = 1 + 2p, i.e. p = 1/2, so Row mixes 1/2 on Top and 1/2 on Bottom."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s06",
+      "concepts": ["indifference-principle"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Penalty kick. The Keeper (Column) dives Left with probability q; choose q to make the Kicker (Row) indifferent. Payoffs are (Kicker's, Keeper's).\n\n| Row \\ Col | Dive Left | Dive Right |\n|---|---|---|\n| **Kick Left** | 2, -2 | 6, -6 |\n| **Kick Right** | 5, -5 | 1, -1 |",
+      "steps": [
+        { "instruction": "Kicker's expected payoff from Kick Left: 2q + 6(1-q). From Kick Right: 5q + 1(1-q). Set equal and solve for q. Give a fraction or decimal in (0,1).", "answer": "5/8", "accept": ["0.625"], "hint": "6 - 4q = 1 + 4q, so 5 = 8q." },
+        { "instruction": "The Keeper dives Right with probability 1 - q. Give it.", "answer": "3/8", "accept": ["0.375"], "hint": "1 - 5/8." }
+      ],
+      "finalAnswer": { "value": "5/8", "unit": "" },
+      "solutionNarrative": "Setting 6 - 4q = 1 + 4q gives q = 5/8: the keeper dives Left 62.5% of the time to keep the kicker indifferent and unexploitable."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s07",
+      "concepts": ["mixed-nash-2x2"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). This game has no pure equilibrium; find the mixed one. Let p = prob Row plays Top, q = prob Column plays Left.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 1, 0 | 0, 1 |\n| **Bottom** | 0, 1 | 1, 0 |",
+      "steps": [
+        { "instruction": "Find p (makes Column indifferent). Column's Left payoff = 0·p + 1(1-p); Right payoff = 1·p + 0(1-p). Set equal, solve for p. Fraction or decimal in (0,1).", "answer": "1/2", "accept": ["0.5"], "hint": "1 - p = p." },
+        { "instruction": "Find q (makes Row indifferent). Row's Top payoff = q; Bottom payoff = 1-q. Set equal, solve for q. Fraction or decimal in (0,1).", "answer": "1/2", "accept": ["0.5"], "hint": "q = 1 - q." }
+      ],
+      "finalAnswer": { "value": "p = 1/2, q = 1/2", "unit": "" },
+      "solutionNarrative": "Both indifference conditions give 1/2, so the mixed Nash equilibrium is p = q = 1/2 — each randomizes to keep the other indifferent."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s08",
+      "concepts": ["mixed-nash-2x2"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Find the mixed Nash equilibrium. p = prob Row plays Top; q = prob Column plays Left.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 3, 2 | 1, 4 |\n| **Bottom** | 1, 4 | 3, 2 |",
+      "steps": [
+        { "instruction": "Solve for p (Column indifferent). Column's Left = 2p + 4(1-p); Right = 4p + 2(1-p). Set equal. Fraction or decimal in (0,1).", "answer": "1/2", "accept": ["0.5"], "hint": "4 - 2p = 2 + 2p." },
+        { "instruction": "Row plays Bottom with probability 1 - p. Give it.", "answer": "1/2", "accept": ["0.5"], "hint": "1 - 1/2." },
+        { "instruction": "Solve for q (Row indifferent). Row's Top = 3q + 1(1-q); Bottom = 1q + 3(1-q). Set equal. Fraction or decimal in (0,1).", "answer": "1/2", "accept": ["0.5"], "hint": "1 + 2q = 3 - 2q." }
+      ],
+      "finalAnswer": { "value": "p = 1/2, q = 1/2", "unit": "" },
+      "solutionNarrative": "By symmetry both mixes are 1/2. Row mixes (1/2, 1/2) and Column mixes q = 1/2 on Left — the unique mixed Nash equilibrium."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s09",
+      "concepts": ["mixed-nash-2x2"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). p = prob Row plays Top; q = prob Column plays Left.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, 1 | 0, 3 |\n| **Bottom** | 0, 3 | 2, 1 |",
+      "steps": [
+        { "instruction": "Does this game have a pure-strategy Nash equilibrium? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Best responses cycle here." },
+        { "instruction": "Solve for p (Column indifferent). Column's Left = 1p + 3(1-p); Right = 3p + 1(1-p). Set equal. Fraction or decimal in (0,1).", "answer": "1/2", "accept": ["0.5"], "hint": "3 - 2p = 1 + 2p." },
+        { "instruction": "Solve for q (Row indifferent). Row's Top = 4q + 0(1-q); Bottom = 0q + 2(1-q). Set equal. Fraction or decimal in (0,1).", "answer": "1/3", "accept": ["0.3333", "0.333"], "hint": "4q = 2 - 2q, so 6q = 2." }
+      ],
+      "finalAnswer": { "value": "p = 1/2, q = 1/3", "unit": "" },
+      "solutionNarrative": "No pure equilibrium exists. Column indifference gives p = 1/2; Row indifference gives 4q = 2 - 2q, so q = 1/3. The mixed Nash equilibrium is p = 1/2, q = 1/3."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s10",
+      "concepts": ["value-under-mixing"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). At the mixed equilibrium Column plays Left with probability q = 1/2. Row is indifferent, so its value equals the expected payoff of either row.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 6, · | 2, · |\n| **Bottom** | 2, · | 6, · |",
+      "steps": [
+        { "instruction": "Row's value using Top: (1/2)(6) + (1/2)(2). Give a fraction or decimal.", "answer": "4", "accept": [], "hint": "Average of 6 and 2." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Row's equilibrium value is (1/2)(6) + (1/2)(2) = 4 — the guaranteed expected payoff of the mixed equilibrium."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s11",
+      "concepts": ["value-under-mixing"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Column's equilibrium mix is q = 1/2 on Left. Verify Row's indifference by computing both rows' expected payoffs.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 5, · | 1, · |\n| **Bottom** | 3, · | 3, · |",
+      "steps": [
+        { "instruction": "Expected payoff of Top: (1/2)(5) + (1/2)(1). Give a fraction or decimal.", "answer": "3", "accept": [], "hint": "Average of 5 and 1." },
+        { "instruction": "Expected payoff of Bottom: (1/2)(3) + (1/2)(3). Should equal the previous value. Give a fraction or decimal.", "answer": "3", "accept": [], "hint": "Both 3." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Both rows return 3 against q = 1/2 — that equality IS Row's indifference, and 3 is Row's equilibrium value."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s12",
+      "concepts": ["value-under-mixing"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Matching Pennies (zero-sum). Each cell is (Row's payoff, Column's payoff). The equilibrium mix is p = q = 1/2.\n\n| Row \\ Col | Heads | Tails |\n|---|---|---|\n| **Heads** | 1, -1 | -1, 1 |\n| **Tails** | -1, 1 | 1, -1 |",
+      "steps": [
+        { "instruction": "Row's expected payoff using Heads against q = 1/2: (1/2)(1) + (1/2)(-1). Give a number.", "answer": "0", "accept": [], "hint": "The +1 and -1 cancel." },
+        { "instruction": "Is this game fair (value 0) or biased toward one player? Type 'fair' or 'biased'.", "answer": "fair", "accept": [], "hint": "The value is 0." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "At p = q = 1/2, Row's expected payoff is (1/2)(1) + (1/2)(-1) = 0. A symmetric zero-sum game has value 0 — a fair game."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s13",
+      "concepts": ["expected-payoff", "indifference-principle"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A tax authority (Column) audits with probability q; a filer (Row) may Cheat or Comply. Payoffs to the filer (Row's, authority's):\n\n| Row \\ Col | Audit | No Audit |\n|---|---|---|\n| **Cheat** | -4, 3 | 6, -2 |\n| **Comply** | 0, 0 | 0, 0 |",
+      "steps": [
+        { "instruction": "Filer's expected payoff from Cheat = -4q + 6(1-q). From Comply = 0. Set Cheat's payoff to 0 to find the audit rate that deters cheating. Solve -4q + 6(1-q) = 0 for q. Fraction or decimal in (0,1).", "answer": "3/5", "accept": ["0.6"], "hint": "6 - 10q = 0." },
+        { "instruction": "So the authority must audit at least what fraction to make the filer indifferent? Give the fraction or decimal.", "answer": "3/5", "accept": ["0.6"], "hint": "It's the q you just found." }
+      ],
+      "finalAnswer": { "value": "3/5", "unit": "" },
+      "solutionNarrative": "Cheat's expected value is 6 - 10q, which hits 0 at q = 3/5. Auditing 60% of filers makes cheating no better than complying — the enforcement threshold."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s14",
+      "concepts": ["mixed-nash-2x2"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A striker and goalie in a shootout, modeled zero-sum. Each cell is (Striker's payoff, Goalie's payoff). p = prob Striker aims Left; q = prob Goalie dives Left.\n\n| Row \\ Col | Dive Left | Dive Right |\n|---|---|---|\n| **Aim Left** | 1, -1 | 4, -4 |\n| **Aim Right** | 3, -3 | 0, 0 |",
+      "steps": [
+        { "instruction": "Solve for q (Striker indifferent). Aim Left = 1q + 4(1-q); Aim Right = 3q + 0(1-q). Set equal. Fraction or decimal in (0,1).", "answer": "2/3", "accept": ["0.6667", "0.667"], "hint": "4 - 3q = 3q, so 4 = 6q." },
+        { "instruction": "Solve for p (Goalie indifferent). Goalie's Dive Left = -1p + -3(1-p); Dive Right = -4p + 0(1-p). Set equal. Fraction or decimal in (0,1).", "answer": "3/4", "accept": ["0.75"], "hint": "-3 + 2p = -4p, so -3 = -6p." }
+      ],
+      "finalAnswer": { "value": "p = 3/4, q = 2/3", "unit": "" },
+      "solutionNarrative": "Striker indifference: 4 - 3q = 3q → q = 2/3. Goalie indifference: -3 + 2p = -4p → p = 3/4. The mixed Nash equilibrium is p = 3/4, q = 2/3."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s15",
+      "concepts": ["expected-payoff"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell shows Row's payoff. Column plays Left with probability 1/4, Right with probability 3/4.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 8, · | 0, · |\n| **Bottom** | 2, · | 2, · |",
+      "steps": [
+        { "instruction": "Expected payoff from Top: (1/4)(8) + (3/4)(0). Give a number.", "answer": "2", "accept": [], "hint": "8/4." },
+        { "instruction": "Expected payoff from Bottom: (1/4)(2) + (3/4)(2). Give a number.", "answer": "2", "accept": [], "hint": "Both are 2." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "E[Top] = 2 and E[Bottom] = 2, so Row is exactly indifferent at this mix — the hallmark of the equilibrium mixing probability."
+    },
+    {
+      "id": "game-theory.mixed-strategies.s16",
+      "concepts": ["indifference-principle", "value-under-mixing"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Find Column's equilibrium mix and Row's value. q = prob Column plays Left.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 2, 3 | 5, 1 |\n| **Bottom** | 4, 1 | 1, 3 |",
+      "steps": [
+        { "instruction": "Solve for q making Row indifferent: 2q + 5(1-q) = 4q + 1(1-q). Fraction or decimal in (0,1).", "answer": "2/3", "accept": ["0.6667", "0.667"], "hint": "5 - 3q = 1 + 3q, so 4 = 6q." },
+        { "instruction": "Row's value = 2q + 5(1-q) with q = 2/3. Give a fraction or decimal rounded to 4 places.", "answer": "3", "accept": ["3.0"], "hint": "2(2/3) + 5(1/3) = 4/3 + 5/3." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Row indifference gives 5 - 3q = 1 + 3q, so q = 2/3. Row's value is 2(2/3) + 5(1/3) = 4/3 + 5/3 = 3."
+    }
+  ]
+}

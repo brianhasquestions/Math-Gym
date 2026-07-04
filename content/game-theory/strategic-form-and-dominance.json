@@ -1,0 +1,266 @@
+{
+  "id": "game-theory.strategic-form-and-dominance",
+  "subject": "game-theory",
+  "title": "Strategic-Form Games and Dominance",
+  "prerequisites": ["statistics.probability-basics"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "payoff-matrices",
+      "label": "Reading a payoff matrix",
+      "microLesson": "A **strategic-form (normal-form) game** lists every player's strategies and the payoff each earns at every combination. For two players we draw a **bimatrix**: rows are Player 1 (Row)'s choices, columns are Player 2 (Column)'s choices, and each cell holds a pair $(a, b)$ — **Row's payoff first, Column's second**. To read a payoff, find the cell for the chosen (row, column) and take the correct entry. In the cell 'Top, Left = $(3, 5)$', Row gets 3 and Column gets 5. Payoffs encode preferences, not necessarily money: higher is simply more preferred."
+    },
+    {
+      "id": "strictly-dominant-and-dominated",
+      "label": "Strict dominance",
+      "microLesson": "Strategy $A$ **strictly dominates** strategy $B$ (for one player) if $A$ yields a strictly higher payoff than $B$ **no matter what the opponents do**. Then $B$ is **strictly dominated** and a rational player never uses it. A strategy that dominates all the player's alternatives is **strictly dominant**. Check dominance column-by-column: compare Row's payoffs in each column; if one row wins every column, it dominates. Crucially, dominance is a property of a single player's payoffs — Row's dominance is read from the first entries, Column's from the second."
+    },
+    {
+      "id": "iterated-elimination",
+      "label": "Iterated elimination (IESDS)",
+      "microLesson": "**Iterated Elimination of Strictly Dominated Strategies (IESDS)** shrinks a game by repeatedly deleting any strictly dominated strategy: once a strategy is gone, a previously undominated strategy may become dominated in the smaller game, so you loop. The strategies that remain are the ones a fully rational player, who knows the opponent is rational, might use. If IESDS leaves a single cell, that profile is the game's prediction. Deleting strictly dominated strategies never removes a Nash equilibrium, so the survivors always contain every equilibrium."
+    },
+    {
+      "id": "best-response",
+      "label": "Best response",
+      "microLesson": "A player's **best response** to a fixed opponent action is the strategy that maximizes that player's own payoff, holding the opponent's choice fixed. To find Row's best response to Column playing Left, look only at the Left column and pick the row with the largest first entry. Best responses are the building block of equilibrium: a Nash equilibrium is exactly a profile where every player is playing a best response to the others. A strategy that is a best response to everything the opponent could do is a (weakly) dominant strategy."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Turning conflict into a table\n\nWhenever two or more decision-makers each control part of an outcome, and each cares about the result, you have a **game**. Chess, price wars, arms races, penalty kicks, and who does the dishes are all games in this technical sense. The genius of **John von Neumann** and **Oskar Morgenstern**, whose 1944 *Theory of Games and Economic Behavior* founded the field, was to strip such situations down to three ingredients: the **players**, the **strategies** each can choose, and the **payoffs** each receives for every combination of choices.\n\nWhen the players choose simultaneously (or at least without seeing each other's move), we record everything in a **strategic-form** — or **normal-form** — game. For two players this is a **payoff bimatrix**.\n\n## Reading the bimatrix\n\nRow chooses a row; Column chooses a column; together they pick a cell. Each cell holds an ordered pair $(a, b)$: by universal convention, **Row's payoff comes first and Column's second**.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 3, 2 | 0, 4 |\n| **Bottom** | 1, 1 | 2, 3 |\n\nIf Row plays Top and Column plays Right, we read the cell $(0, 4)$: Row earns 0, Column earns 4. Payoffs are **utilities** — numbers that rank outcomes from a player's point of view. Bigger is better; the units need not be dollars.\n\nA **strategy profile** is one choice per player, e.g. $(\\text{Top}, \\text{Right})$. The whole of one-shot game theory is about predicting which profiles rational players will land on.\n\n## Best responses: the atom of rationality\n\nSuppose Row somehow knew Column would play Left. Row would then simply pick the row with the highest payoff **in the Left column**. That payoff-maximizing choice is Row's **best response** to Left.\n\nIn the table above, against **Left** Row compares Top ($3$) with Bottom ($1$) and picks **Top**. Against **Right** Row compares Top ($0$) with Bottom ($2$) and picks **Bottom**. Row's best response *changes* with Column's action — that is the normal situation.\n\nColumn's best responses are read the same way but from the **second** entries. Against **Top**, Column compares Left ($2$) with Right ($4$) and picks **Right**; against **Bottom**, Left ($1$) vs Right ($3$) picks **Right**.\n\n## Dominance: when a choice is good no matter what\n\nSometimes a strategy is a best response to *everything* the opponent might do. We say strategy $A$ **strictly dominates** $B$ (for a given player) when $A$'s payoff is strictly larger than $B$'s **in every column** (for Row) or **every row** (for Column):\n\n$$u_i(A, s_{-i}) > u_i(B, s_{-i}) \\quad\\text{for all opponent choices } s_{-i}.$$\n\nA rational player will **never play a strictly dominated strategy** — some other option is always strictly better. In the table, look at Column: Right beats Left in *both* rows ($4 > 2$ and $3 > 1$), so **Right strictly dominates Left** for Column, and Left is strictly dominated. Column has a **strictly dominant** strategy: Right.\n\n### The classic pitfall\n\nDominance is about **one player's own payoffs**. To test whether Row has a dominant strategy, compare *only Row's* numbers (the first entries) across the columns. A very common mistake is to compare a Row payoff with a Column payoff — those live in different players' heads and are never compared. Another pitfall: **dominance is not the same as Nash equilibrium**. A dominant strategy pins down what one player does; an equilibrium requires *both* to be best-responding at once (the next topic).\n\n## Iterated elimination (IESDS)\n\nRational players reason about each other. If Row knows Column will never play a strictly dominated strategy, Row can *delete* that column and re-solve the smaller game — where a previously fine strategy might now be dominated. Repeating this is **Iterated Elimination of Strictly Dominated Strategies**.\n\nWorked example on the table:\n\n1. Column's **Left** is strictly dominated by Right — delete the Left column.\n2. In what remains (only the Right column), Row compares Top ($0$) and Bottom ($2$) and keeps **Bottom**; Top is now dominated — delete it.\n3. One cell survives: $(\\text{Bottom}, \\text{Right}) = (2, 3)$.\n\nWhen IESDS collapses to a single profile, the game is **dominance-solvable** and that profile is the prediction. Two facts make the tool trustworthy: the order of deletions never changes the final survivors for *strict* dominance, and **elimination never deletes a Nash equilibrium** — so whatever survives still contains every equilibrium the game has."
+  },
+  "application": {
+    "summary": "Strategic-form thinking — payoff matrices, best responses, and dominance — is the first pass any economist, strategist, or analyst makes on a competitive situation: strip it to players, choices, and payoffs, delete the strategies no rational party would use, and see what remains.",
+    "domains": ["economics and competition policy", "business strategy", "political science", "military strategy", "auction and market design"],
+    "workedExample": "**Two firms choosing an ad budget.**\n\nFirms A (Row) and B (Column) each decide to **Advertise** heavily or **Refrain**. Advertising is costly but steals customers from a rival who refrains. Profits (A's, B's):\n\n| A \\ B | Refrain | Advertise |\n|---|---|---|\n| **Refrain** | 8, 8 | 2, 9 |\n| **Advertise** | 9, 2 | 4, 4 |\n\n*Step 1 — does A have a dominant strategy?* Compare A's payoffs (first entries) column by column. Against Refrain: Advertise ($9$) beats Refrain ($8$). Against Advertise: Advertise ($4$) beats Refrain ($2$). Advertise wins both columns, so **Advertise strictly dominates** for A.\n\n*Step 2 — B is symmetric.* Against A-Refrain, B's Advertise ($9$) beats Refrain ($8$); against A-Advertise, Advertise ($4$) beats Refrain ($2$). **Advertise strictly dominates** for B too.\n\n*Step 3 — IESDS.* Delete both Refrain strategies; the single survivor is $(\\text{Advertise}, \\text{Advertise}) = (4, 4)$.\n\n*The punchline:* both firms would earn $8$ if they *both* Refrained, but each is individually tempted to advertise, and dominance drags them to the mutually worse $(4, 4)$. This is a **Prisoner's Dilemma** in disguise — the exact logic behind advertising arms races, and why industries lobby for (or against) ad restrictions.",
+    "domainNotes": [
+      "**Economics:** dominance solves the simplest oligopoly and public-goods problems and explains advertising and R&D arms races.",
+      "**Business strategy:** eliminating dominated options (never-optimal product tiers, pricing tiers) is the first cut in competitive analysis.",
+      "**Political science:** voting and platform choices often reduce to dominance once payoffs (votes) are written down.",
+      "**Military strategy:** a strictly dominated deployment is one you can safely assume a rational adversary abandons — narrowing the scenarios to plan for.",
+      "**Market design:** a good mechanism often makes truth-telling a dominant strategy, so participants need not out-guess each other (see auctions)."
+    ]
+  },
+  "generators": [
+    "gt1-payoff-1", "gt1-payoff-2", "gt1-payoff-3",
+    "gt1-dominance-1", "gt1-dominance-2", "gt1-dominance-3",
+    "gt1-iesds-1", "gt1-iesds-2", "gt1-iesds-3",
+    "gt1-br-1", "gt1-br-2", "gt1-br-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.strategic-form-and-dominance.s01",
+      "concepts": ["payoff-matrices"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell lists (Row's payoff, Column's payoff).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 3, 2 | 0, 4 |\n| **Bottom** | 1, 1 | 2, 3 |\n\nWhat is Row's payoff at the outcome (Top, Left)?",
+      "steps": [
+        { "instruction": "Read the cell in row Top, column Left, and take the FIRST number (Row's payoff). (Give a number.)", "answer": "3", "accept": [], "hint": "The cell shows '3, 2'; Row is the first entry." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "At (Top, Left) the cell is '3, 2', so Row's payoff is the first entry, 3."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s02",
+      "concepts": ["payoff-matrices"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 5, 1 | 2, 6 |\n| **Bottom** | 0, 3 | 4, 4 |\n\nWhat is Column's payoff at the outcome (Top, Right)?",
+      "steps": [
+        { "instruction": "Read the cell in row Top, column Right, and take the SECOND number (Column's payoff). (Give a number.)", "answer": "6", "accept": [], "hint": "The cell shows '2, 6'; Column is the second entry." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "At (Top, Right) the cell is '2, 6', so Column's payoff is 6."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s03",
+      "concepts": ["payoff-matrices"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, 7 | 6, 2 |\n| **Bottom** | 3, 3 | 5, 5 |\n\nExamine the outcome (Top, Left).",
+      "steps": [
+        { "instruction": "Row's payoff at (Top, Left). (Give a number.)", "answer": "4", "accept": [], "hint": "First entry of the cell." },
+        { "instruction": "Column's payoff at (Top, Left). (Give a number.)", "answer": "7", "accept": [], "hint": "Second entry of the cell." },
+        { "instruction": "Who does better at this outcome — type 'Row', 'Column', or 'tie'.", "answer": "Column", "accept": ["column"], "hint": "Compare 4 and 7." }
+      ],
+      "finalAnswer": { "value": "Column", "unit": "" },
+      "solutionNarrative": "At (Top, Left) Row gets 4 and Column gets 7, so Column does better."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s04",
+      "concepts": ["payoff-matrices"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). The total (social) payoff of an outcome is the sum of the two players' payoffs.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 6, 5 | 1, 2 |\n| **Bottom** | 3, 0 | 4, 4 |",
+      "steps": [
+        { "instruction": "Total payoff at (Top, Left): add the two numbers in that cell. (Give a number.)", "answer": "11", "accept": [], "hint": "6 + 5." },
+        { "instruction": "Which outcome maximizes the total payoff? Choose one: (Top, Left), (Top, Right), (Bottom, Left), (Bottom, Right).", "answer": "(Top, Left)", "accept": ["Top, Left", "Top Left"], "hint": "The four sums are 11, 3, 3, 8." }
+      ],
+      "finalAnswer": { "value": "(Top, Left)", "unit": "" },
+      "solutionNarrative": "The cell sums are 11, 3, 3, 8; the largest is 11 at (Top, Left), the socially efficient outcome — which need not be an equilibrium."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s05",
+      "concepts": ["strictly-dominant-and-dominated"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 5, 1 | 4, 2 |\n| **Bottom** | 3, 3 | 1, 0 |\n\nFocus on Row's two strategies.",
+      "steps": [
+        { "instruction": "Against Column playing Left, is Top (5) better than Bottom (3)? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "5 vs 3." },
+        { "instruction": "Against Column playing Right, is Top (4) better than Bottom (1)? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "4 vs 1." },
+        { "instruction": "Which of Row's strategies is strictly dominant? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "It wins in both columns." }
+      ],
+      "finalAnswer": { "value": "Top", "unit": "" },
+      "solutionNarrative": "Top beats Bottom in both columns (5 > 3 and 4 > 1), so Top strictly dominates Bottom."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s06",
+      "concepts": ["strictly-dominant-and-dominated"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Analyze Column (the second number in each cell).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 2, 6 | 1, 3 |\n| **Bottom** | 4, 5 | 0, 1 |",
+      "steps": [
+        { "instruction": "In row Top, Column's payoffs are Left: 6 vs Right: 3. Which is larger? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "Compare the second entries in row Top." },
+        { "instruction": "In row Bottom, Column's payoffs are Left: 5 vs Right: 1. Which is larger? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "Compare the second entries in row Bottom." },
+        { "instruction": "Which Column strategy is strictly dominant? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "It won in both rows." }
+      ],
+      "finalAnswer": { "value": "Left", "unit": "" },
+      "solutionNarrative": "Left gives Column the higher payoff in both rows (6 > 3 and 5 > 1), so Left strictly dominates Right for Column."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s07",
+      "concepts": ["strictly-dominant-and-dominated", "best-response"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Determine which players have a strictly dominant strategy.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 5, 3 | 4, 1 |\n| **Bottom** | 2, 0 | 1, 2 |",
+      "steps": [
+        { "instruction": "Does Row have a strictly dominant strategy? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Top gives 5>2 and 4>1." },
+        { "instruction": "Which one? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "The row that wins in both columns." },
+        { "instruction": "Does Column have a strictly dominant strategy? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Column's best column flips: Left in row Top (3>1) but Right in row Bottom (2>0)." }
+      ],
+      "finalAnswer": { "value": "Top", "unit": "" },
+      "solutionNarrative": "Row's Top dominates (5>2, 4>1). Column prefers Left against Top but Right against Bottom, so Column has no strictly dominant strategy — an asymmetric case."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s08",
+      "concepts": ["iterated-elimination"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Solve by IESDS.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 5, 1 | 4, 3 |\n| **Bottom** | 3, 2 | 1, 4 |",
+      "steps": [
+        { "instruction": "Row's Bottom is strictly dominated by Top (5>3 and 4>1) — eliminate it. Which Row strategy survives? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "Keep the dominating row." },
+        { "instruction": "With only Top left, Column picks its best reply: Left (1) vs Right (3). Choose Left or Right.", "answer": "Right", "accept": [], "hint": "3 > 1." }
+      ],
+      "finalAnswer": { "value": "(Top, Right)", "unit": "" },
+      "solutionNarrative": "Eliminating dominated Bottom leaves Top; Column then best-responds with Right (3 > 1). The surviving profile is (Top, Right)."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s09",
+      "concepts": ["iterated-elimination"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Solve by IESDS.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 1, 5 | 3, 4 |\n| **Bottom** | 2, 3 | 4, 1 |",
+      "steps": [
+        { "instruction": "Which player has a strictly dominated strategy to remove first? Type 'Row' or 'Column'.", "answer": "Column", "accept": ["col"], "hint": "Column's Right loses in both rows (4<5 and 1<3)." },
+        { "instruction": "Eliminate Column's Right. Which Column strategy survives? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "Keep the dominant column." },
+        { "instruction": "Now Row best-responds within column Left: Top (1) vs Bottom (2). Choose Top or Bottom.", "answer": "Bottom", "accept": [], "hint": "2 > 1." }
+      ],
+      "finalAnswer": { "value": "(Bottom, Left)", "unit": "" },
+      "solutionNarrative": "Column's Right is strictly dominated; removing it leaves Left. Row best-responds with Bottom (2 > 1). Surviving profile: (Bottom, Left)."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s10",
+      "concepts": ["iterated-elimination"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Fully solve by IESDS.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 6, 2 | 5, 4 |\n| **Bottom** | 3, 1 | 1, 3 |",
+      "steps": [
+        { "instruction": "Round 1 — Row's dominated strategy is removed. Which Row strategy survives? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "Top beats Bottom in both columns (6>3, 5>1)." },
+        { "instruction": "Round 2 — in the single surviving row, which Column strategy is best? Choose Left or Right.", "answer": "Right", "accept": [], "hint": "In row Top, Column: Left 2 vs Right 4." },
+        { "instruction": "At the surviving profile (Top, Right), what is Row's payoff? (Give a number.)", "answer": "5", "accept": [], "hint": "Read the first number in that cell." }
+      ],
+      "finalAnswer": { "value": "(Top, Right)", "unit": "" },
+      "solutionNarrative": "IESDS keeps Row's Top, then Column's Right, giving the unique profile (Top, Right) with payoffs (5, 4)."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s11",
+      "concepts": ["best-response"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Column has committed to Left.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 2, 4 | 7, 1 |\n| **Bottom** | 5, 3 | 3, 6 |\n\nWhat is Row's best response?",
+      "steps": [
+        { "instruction": "Row's payoffs in column Left are Top: 2 and Bottom: 5. Which row is best? Choose Top or Bottom.", "answer": "Bottom", "accept": [], "hint": "Pick the row with the larger first number in column Left." }
+      ],
+      "finalAnswer": { "value": "Bottom", "unit": "" },
+      "solutionNarrative": "Against Left, Row compares 2 (Top) with 5 (Bottom); the best response is Bottom."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s12",
+      "concepts": ["best-response"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Row has committed to Bottom.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, 2 | 1, 5 |\n| **Bottom** | 3, 6 | 2, 1 |\n\nFind Column's best response (use the SECOND number).",
+      "steps": [
+        { "instruction": "Column's payoffs in row Bottom are Left: 6 and Right: 1. Which column is best? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "Larger second number in row Bottom." },
+        { "instruction": "What payoff does Column earn from that best response? (Give a number.)", "answer": "6", "accept": [], "hint": "The second entry of the chosen cell." }
+      ],
+      "finalAnswer": { "value": "Left", "unit": "" },
+      "solutionNarrative": "In row Bottom, Column compares 6 (Left) with 1 (Right); best response is Left, earning 6."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s13",
+      "concepts": ["best-response"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Map out Row's best response to each of Column's actions.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 7, 1 | 2, 5 |\n| **Bottom** | 4, 2 | 6, 3 |",
+      "steps": [
+        { "instruction": "Row's best response if Column plays Left? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "Compare 7 and 4." },
+        { "instruction": "Row's best response if Column plays Right? Choose Top or Bottom.", "answer": "Bottom", "accept": [], "hint": "Compare 2 and 6." },
+        { "instruction": "Since Row's best response is DIFFERENT against Column's two actions, does Row have a strictly dominant strategy? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "A dominant strategy is best no matter what the opponent does." }
+      ],
+      "finalAnswer": { "value": "Top", "unit": "" },
+      "solutionNarrative": "Row best-responds Top to Left and Bottom to Right. The reply changes, so no dominant strategy — Row's best action depends on Column."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s14",
+      "concepts": ["strictly-dominant-and-dominated", "iterated-elimination"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two rival cafes each choose to Advertise or Refrain. Profits (Row cafe's, Column cafe's):\n\n| Row \\ Col | Refrain | Advertise |\n|---|---|---|\n| **Refrain** | 8, 8 | 2, 9 |\n| **Advertise** | 9, 2 | 4, 4 |\n\nFind the dominant strategies and the surviving outcome.",
+      "steps": [
+        { "instruction": "For the Row cafe, does Advertise beat Refrain in both columns (9>8 and 4>2)? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Compare Advertise vs Refrain within each column." },
+        { "instruction": "Each cafe's strictly dominant strategy is? Choose Advertise or Refrain.", "answer": "Advertise", "accept": [], "hint": "It wins in both columns for both players." },
+        { "instruction": "After eliminating Refrain for both, what is the surviving profile — enter Row's strategy: Advertise or Refrain.", "answer": "Advertise", "accept": [], "hint": "Only (Advertise, Advertise) remains." }
+      ],
+      "finalAnswer": { "value": "(Advertise, Advertise)", "unit": "" },
+      "solutionNarrative": "Advertise strictly dominates for both cafes, so IESDS leaves (Advertise, Advertise) at (4, 4) — worse for both than the (8, 8) of mutual Refrain. This advertising arms race is a Prisoner's Dilemma."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s15",
+      "concepts": ["best-response", "payoff-matrices"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two commuters pick a route. Payoffs are (Row commuter's speed, Column commuter's speed).\n\n| Row \\ Col | Highway | Backroad |\n|---|---|---|\n| **Highway** | 2, 2 | 5, 4 |\n| **Backroad** | 4, 5 | 3, 3 |\n\nColumn has chosen Backroad. What is Row's best response?",
+      "steps": [
+        { "instruction": "In column Backroad, Row's payoffs are Highway: 5 and Backroad: 3. Best response? Choose Highway or Backroad.", "answer": "Highway", "accept": [], "hint": "5 > 3." }
+      ],
+      "finalAnswer": { "value": "Highway", "unit": "" },
+      "solutionNarrative": "When Column takes the Backroad, Row's Highway (5) beats Backroad (3), so Row should take the Highway."
+    },
+    {
+      "id": "game-theory.strategic-form-and-dominance.s16",
+      "concepts": ["iterated-elimination", "best-response"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two tech firms pick a standard. Payoffs (Row's, Column's):\n\n| Row \\ Col | Format X | Format Y |\n|---|---|---|\n| **Format X** | 6, 3 | 5, 5 |\n| **Format Y** | 2, 1 | 1, 4 |\n\nSolve by iterated elimination.",
+      "steps": [
+        { "instruction": "Is Format X strictly dominant for the Row firm (6>2 and 5>1)? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Compare Row's payoffs across the two rows." },
+        { "instruction": "Keep Row's Format X. Column now compares Format X (3) vs Format Y (5) in that row. Column's best response? Choose Format X or Format Y.", "answer": "Format Y", "accept": ["y"], "hint": "5 > 3." },
+        { "instruction": "What is Row's payoff at the surviving profile (Format X, Format Y)? (Give a number.)", "answer": "5", "accept": [], "hint": "First entry of that cell." }
+      ],
+      "finalAnswer": { "value": "(Format X, Format Y)", "unit": "" },
+      "solutionNarrative": "Row's Format X dominates; Column then best-responds Format Y (5 > 3). The surviving profile (Format X, Format Y) pays (5, 5)."
+    }
+  ]
+}

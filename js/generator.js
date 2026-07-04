@@ -46,6 +46,15 @@ import { fill as advStat1Fill } from "./gen-advstat1-fill.js";      // as1-  (ad
 import { fill as advStat2Fill } from "./gen-advstat2-fill.js";      // as2-  (adv-stats estimation/Bayes)
 import { fill as advStat3Fill } from "./gen-advstat3-fill.js";      // as3-  (adv-stats t/two-sample/chi-square)
 import { fill as advStat4Fill } from "./gen-advstat4-fill.js";      // as4-  (adv-stats ANOVA/regression/design)
+import { fill as num1Fill } from "./gen-num1-fill.js";              // nm1-  (numerical: error/roots/interpolation)
+import { fill as num2Fill } from "./gen-num2-fill.js";              // nm2-  (numerical: integration/systems/ODEs)
+import { fill as fin1Fill } from "./gen-fin1-fill.js";              // fm1-  (finance: interest/TVM/annuities/loans)
+import { fill as fin2Fill } from "./gen-fin2-fill.js";              // fm2-  (finance: bonds/NPV/depreciation)
+import { fill as gt1Fill } from "./gen-gt1-fill.js";                // gt1-  (game theory: dominance/Nash/mixed/classic)
+import { fill as gt2Fill } from "./gen-gt2-fill.js";                // gt2-  (game theory: zero-sum/sequential/repeated)
+import { fill as gt3Fill } from "./gen-gt3-fill.js";                // gt3-  (game theory: bargaining/auctions/evolutionary)
+import { fill as nt1Fill } from "./gen-nt1-fill.js";                // nt1-  (number theory: primes/gcd/CRT/diophantine)
+import { fill as nt2Fill } from "./gen-nt2-fill.js";                // nt2-  (number theory: arithmetic fns/QR/continued fractions)
 
 // --- Seeded RNG (mulberry32) so sessions are reproducible/debuggable ---
 export function makeRng(seed) {
@@ -2662,7 +2671,8 @@ Object.assign(generators, deFill, linAlgFill,
   discreteFill, statsFill,
   alg2Fill, trig3Fill, calc1bFill, calc2Fill, calc3vFill, lapGsFill, stats2Fill,
   geo2Fill, discrete2Fill, deFill3, alg2bFill, calc2bFill, calc3sFill,
-  advStat1Fill, advStat2Fill, advStat3Fill, advStat4Fill);
+  advStat1Fill, advStat2Fill, advStat3Fill, advStat4Fill,
+  num1Fill, num2Fill, fin1Fill, fin2Fill, gt1Fill, gt2Fill, gt3Fill, nt1Fill, nt2Fill);
 
 export function hasGenerator(template) {
   return Object.prototype.hasOwnProperty.call(generators, template);

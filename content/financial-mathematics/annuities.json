@@ -1,0 +1,263 @@
+{
+  "id": "financial-mathematics.annuities",
+  "subject": "financial-mathematics",
+  "title": "Annuities",
+  "prerequisites": ["financial-mathematics.present-and-future-value", "algebra-2.sequences-and-series"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "fv-ordinary-annuity",
+      "label": "Future value of an ordinary annuity",
+      "microLesson": "An **annuity** is a sequence of equal payments $PMT$ made at regular intervals. In an **ordinary annuity**, payments come at the *end* of each period. The future value — what a stream of deposits grows to — is the sum of a geometric series: $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Depositing \\$1,000 at the end of each year for 5 years at 6% gives $FV = 1000 \\cdot \\dfrac{1.06^5 - 1}{0.06} = \\$5{,}637.09$. Here $i$ is the rate per period and $n$ the number of payments."
+    },
+    {
+      "id": "pv-ordinary-annuity",
+      "label": "Present value of an ordinary annuity",
+      "microLesson": "The **present value** of an ordinary annuity is the lump sum today equivalent to a stream of future payments: $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Receiving \\$2,000 at the end of each year for 6 years, with money worth 5%, is worth $PV = 2000 \\cdot \\dfrac{1 - 1.05^{-6}}{0.05} = \\$10{,}151.38$ today — far less than the \\$12,000 nominal total, because later payments are discounted. This formula prices pensions, leases, and (rearranged) loan payments."
+    },
+    {
+      "id": "annuity-due",
+      "label": "Annuity due",
+      "microLesson": "An **annuity due** pays at the *beginning* of each period instead of the end, so every payment earns (or is discounted over) one extra period. The adjustment is a single factor: multiply the ordinary-annuity result by $(1 + i)$. If an ordinary annuity's future value is \\$5,637.09 at 6%, the same payments made at the start of each period grow to $5637.09 \\times 1.06 = \\$5{,}975.32$. Rent and lease payments, made up front, are classic annuities due."
+    },
+    {
+      "id": "sinking-funds-and-savings",
+      "label": "Sinking funds and savings goals",
+      "microLesson": "A **sinking fund** works backward from a goal: how much must you deposit each period to reach a target future value? Rearrange the future-value formula for $PMT$: $PMT = \\dfrac{FV}{\\big((1+i)^n - 1\\big)/i}$. To have \\$10,000 in 5 years at 6% with end-of-year deposits: $PMT = \\dfrac{10000}{(1.06^5 - 1)/0.06} = \\$1{,}773.96$ per year. Sinking funds fund down payments, tuition, and debt-retirement reserves."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Streams of equal payments\n\nMost real money moves not as one lump but as a **stream** — a paycheck, a monthly savings deposit, a loan payment, a pension. An **annuity** is a sequence of equal payments $PMT$ at regular intervals, and its whole theory is just the geometric-series machinery applied to money. Throughout, $i$ is the **rate per period** and $n$ the **number of payments**.\n\nAn **ordinary annuity** pays at the **end** of each period (the default). An **annuity due** pays at the **beginning**. That one-period shift is the only structural difference, and it turns into a single correction factor.\n\n## Future value: what a stream of deposits grows to\n\nEach deposit sits in the account for a different length of time — the first grows for $n-1$ periods, the last for none. Summing that geometric series gives:\n\n$$\\boxed{\\,FV = PMT \\cdot \\frac{(1+i)^n - 1}{i}\\,}$$\n\n**Worked example.** \\$1,000 at the end of each year for 5 years at 6%:\n$$FV = 1000 \\cdot \\frac{1.06^5 - 1}{0.06} = 1000 \\cdot \\frac{0.338226}{0.06} = 1000 \\cdot 5.637093 = \\$5{,}637.09.$$\nYou deposited \\$5,000 total; the extra \\$637.09 is compound growth on the earlier deposits.\n\n> **Pitfall — rate per period.** For monthly deposits, $i$ is the *monthly* rate (annual $\\div 12$) and $n$ is the *number of months*. A 6% annual rate with monthly deposits uses $i = 0.005$, not $0.06$.\n>\n> **Pitfall — division by $i$.** The formula divides by $i$, so it requires $i \\neq 0$. At a 0% rate the future value is simply $PMT \\times n$ (no growth to sum).\n\n## Present value: the lump sum a stream is worth today\n\nRun each payment backward to today and add. The discounted geometric series collapses to:\n\n$$\\boxed{\\,PV = PMT \\cdot \\frac{1 - (1+i)^{-n}}{i}\\,}$$\n\n**Worked example.** \\$2,000 at the end of each year for 6 years, money worth 5%:\n$$PV = 2000 \\cdot \\frac{1 - 1.05^{-6}}{0.05} = 2000 \\cdot 5.075692 = \\$10{,}151.38.$$\nThe six payments total \\$12,000 nominally, but they are worth only \\$10,151.38 today — the gap is the time value of money. This present-value formula is the one that, rearranged, produces every loan payment in the next topic.\n\nThe bars below show the future value of an ordinary annuity building up as more payments are made:\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 6], \"yRange\": [0, 6000], \"grid\": true, \"curves\": [ { \"fn\": \"1000*((1.06)^x - 1)/0.06\", \"label\": \"FV after x deposits\", \"color\": \"accent\", \"labelAt\": 4.2 } ], \"points\": [ { \"x\": 1, \"y\": 1000, \"label\": \"(1, $1000)\", \"color\": \"dim\" }, { \"x\": 5, \"y\": 5637.09, \"label\": \"(5, $5637.09)\", \"color\": \"warn\" } ], \"caption\": \"Future value of $1000/yr at 6% climbing over 5 deposits\" }\n```\n\n## Annuity due: paying at the start of each period\n\nWhen payments arrive at the **beginning** of each period, every one earns one extra period of interest (for future value) or is discounted one period less (for present value). The correction is a single multiplication:\n\n$$\\boxed{\\,\\text{(annuity due)} = \\text{(ordinary annuity)} \\times (1 + i)\\,}$$\n\n**Worked example.** The ordinary annuity above grew to \\$5,637.09. Made at the *start* of each year, the same deposits grow to\n$$5637.09 \\times 1.06 = \\$5{,}975.32.$$\nThe \\$338.23 difference is one extra period of growth on the whole stream. Rent, leases, and insurance premiums — paid up front — are annuities due.\n\n## Sinking funds: solving for the payment\n\nOften the goal is fixed and the **payment** is the unknown: *how much must I set aside each period to reach a target?* This is a **sinking fund**. Rearrange the future-value formula:\n\n$$\\boxed{\\,PMT = \\frac{FV}{\\dfrac{(1+i)^n - 1}{i}}\\,}$$\n\n**Worked example.** To accumulate \\$10,000 in 5 years at 6% with end-of-year deposits:\n$$PMT = \\frac{10000}{(1.06^5 - 1)/0.06} = \\frac{10000}{5.637093} = \\$1{,}773.96 \\text{ per year}.$$\nFive deposits of \\$1,773.96 total \\$8,869.80 out of pocket; the remaining \\$1,130.20 of the \\$10,000 goal comes from interest. Sinking funds are how you plan a down payment, a tuition fund, or a corporate bond-repayment reserve."
+  },
+  "application": {
+    "summary": "Annuities are the math of any regular payment stream. Future value drives retirement savings and college funds; present value prices pensions, lottery annuity options, leases, and (rearranged) loans; annuity due handles up-front rent and leases; and sinking funds compute the deposit needed to hit a savings goal or retire a debt.",
+    "domains": ["retirement planning", "personal finance", "leasing", "corporate finance"],
+    "workedExample": "**How much will regular retirement saving become?**\n\nYou contribute \\$500 at the end of every month to a retirement account earning 6% per year (0.5% per month) for 30 years. That is an ordinary annuity with $PMT = 500$, $i = 0.005$, and $n = 12 \\times 30 = 360$ payments.\n\n$$FV = 500 \\cdot \\frac{(1.005)^{360} - 1}{0.005} = 500 \\cdot \\frac{6.022575 - 1}{0.005} = 500 \\cdot 1004.515 \\approx \\$502{,}257.$$\n\nYou contributed \\$500 × 360 = \\$180,000 of your own money; the other **\\$322,257** is compound growth. Start ten years later — 240 payments instead of 360 — and the future value falls to about \\$231,000, less than half, even though you skipped only a third of the payments. That gap is why 'start early' is the universal retirement advice: the earliest deposits compound the longest. The same formula, solved for $PMT$, tells you what monthly deposit reaches a target nest egg.",
+    "domainNotes": [
+      "**Retirement:** 401(k) and IRA contributions are ordinary annuities; the future-value formula projects the balance.",
+      "**Leases/rent:** up-front payments are annuities due — multiply the ordinary value by $(1+i)$.",
+      "**Lotteries/pensions:** the 'annuity option' is valued by the present-value formula against the lump-sum option.",
+      "**Corporate finance:** a sinking fund sets aside equal deposits to retire a bond issue at maturity."
+    ]
+  },
+  "generators": ["fm1-fv-ordinary-1", "fm1-fv-ordinary-2", "fm1-fv-ordinary-3", "fm1-pv-ordinary-1", "fm1-pv-ordinary-2", "fm1-pv-ordinary-3", "fm1-annuity-due-1", "fm1-annuity-due-2", "fm1-annuity-due-3", "fm1-sinking-fund-1", "fm1-sinking-fund-2", "fm1-sinking-fund-3"],
+  "problems": [
+    {
+      "id": "financial-mathematics.annuities.s01",
+      "concepts": ["fv-ordinary-annuity"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You deposit \\$1,000 at the end of each year into an account earning 6% per year for 5 years. Find the future value with $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Write the per-period rate $i$ as a decimal.", "answer": "0.06", "accept": [], "hint": "6% as a decimal." },
+        { "instruction": "Compute the annuity factor $\\dfrac{(1+0.06)^{5} - 1}{0.06}$. Enter as a decimal (round to 6 places).", "answer": "5.637093", "accept": ["(1.06^5-1)/0.06"], "hint": "Raise 1.06 to the 5th power, subtract 1, divide by 0.06." },
+        { "instruction": "Multiply by the payment: $FV = 1000 \\cdot 5.637093$. Enter a number rounded to the nearest cent.", "answer": "5637.09", "accept": ["5637.090", "$5637.09"], "hint": "1000 times the factor above." }
+      ],
+      "finalAnswer": { "value": "5637.09", "unit": "dollars" },
+      "solutionNarrative": "$FV = 1000 \\cdot \\dfrac{1.06^5 - 1}{0.06} = \\$5{,}637.09$ — five deposits, each growing until the end."
+    },
+    {
+      "id": "financial-mathematics.annuities.s02",
+      "concepts": ["fv-ordinary-annuity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You contribute \\$100 at the end of each month to a fund earning 6% per year, compounded monthly, for 3 years. Find the future value. Use $i = 6\\%/12$ and $n = 12 \\times 3$ in $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Divide the annual decimal rate by 12." },
+        { "instruction": "Find the number of periods $n = 12 \\times 3$. Enter a whole number.", "answer": "36", "accept": [], "hint": "Months in 3 years." },
+        { "instruction": "Compute $FV = 100 \\cdot \\dfrac{(1.005)^{36} - 1}{0.005}$. Enter a number rounded to the nearest cent.", "answer": "3933.61", "accept": ["3933.610", "$3933.61"], "hint": "Build the annuity factor with the monthly rate, then multiply by 100." }
+      ],
+      "finalAnswer": { "value": "3933.61", "unit": "dollars" },
+      "solutionNarrative": "With a monthly rate 0.005 over 36 deposits, $FV = 100 \\cdot \\dfrac{1.005^{36} - 1}{0.005} = \\$3{,}933.61$."
+    },
+    {
+      "id": "financial-mathematics.annuities.s03",
+      "concepts": ["fv-ordinary-annuity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "You save \\$5,000 at the end of each year at 7% per year for 20 years. Find the future value, then how much of it is investment growth (beyond what you contributed). Use $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the future value $FV = 5000 \\cdot \\dfrac{(1.07)^{20} - 1}{0.07}$. Enter a number rounded to the nearest cent.", "answer": "204977.46", "accept": ["204977.460", "$204977.46"], "hint": "Annuity factor times the payment." },
+        { "instruction": "Find the total you contributed: $5000 \\times 20$. Enter a number rounded to the nearest cent.", "answer": "100000.00", "accept": ["100000", "100000.0", "$100000.00"], "hint": "Payment times number of deposits." },
+        { "instruction": "Subtract contributions from the future value to get the growth. Enter a number rounded to the nearest cent.", "answer": "104977.46", "accept": ["104977.460", "$104977.46"], "hint": "$204977.46 - 100000$." }
+      ],
+      "finalAnswer": { "value": "204977.46", "unit": "dollars" },
+      "solutionNarrative": "$FV = \\$204{,}977.46$ on \\$100,000 of contributions, so \\$104,977.46 is pure investment growth — the payoff of two decades of compounding."
+    },
+    {
+      "id": "financial-mathematics.annuities.s04",
+      "concepts": ["pv-ordinary-annuity"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "An investment will pay you \\$2,000 at the end of each year for 6 years. At 5% per year, what is that income stream worth today? Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Write the per-period rate $i$ as a decimal.", "answer": "0.05", "accept": [], "hint": "5% as a decimal." },
+        { "instruction": "Compute the present-value factor $\\dfrac{1 - (1.05)^{-6}}{0.05}$. Enter as a decimal (round to 6 places).", "answer": "5.075692", "accept": ["(1-1.05^(-6))/0.05"], "hint": "$(1.05)^{-6}$ is 1 divided by $1.05^6$." },
+        { "instruction": "Multiply by the payment: $PV = 2000 \\cdot 5.075692$. Enter a number rounded to the nearest cent.", "answer": "10151.38", "accept": ["10151.380", "$10151.38"], "hint": "2000 times the factor." }
+      ],
+      "finalAnswer": { "value": "10151.38", "unit": "dollars" },
+      "solutionNarrative": "$PV = 2000 \\cdot \\dfrac{1 - 1.05^{-6}}{0.05} = \\$10{,}151.38$ — the lump sum today equivalent to six yearly payments of \\$2,000."
+    },
+    {
+      "id": "financial-mathematics.annuities.s05",
+      "concepts": ["pv-ordinary-annuity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A lottery pays \\$5,000 at the end of each year for 10 years. Money is worth 6% per year. Find the cash value today (the present value of the payments). Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute $(1.06)^{-10}$. Enter as a decimal (round to 6 places).", "answer": "0.558395", "accept": ["1.06^(-10)", "1/1.06^10"], "hint": "Reciprocal of $1.06^{10}$." },
+        { "instruction": "Compute $PV = 5000 \\cdot \\dfrac{1 - (1.06)^{-10}}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "36800.44", "accept": ["36800.440", "$36800.44"], "hint": "Subtract from 1, divide by 0.06, times 5000." }
+      ],
+      "finalAnswer": { "value": "36800.44", "unit": "dollars" },
+      "solutionNarrative": "The stream's present value is $PV = 5000 \\cdot \\dfrac{1 - 1.06^{-10}}{0.06} = \\$36{,}800.44$ — well below the \\$50,000 nominal total, because later payments are discounted."
+    },
+    {
+      "id": "financial-mathematics.annuities.s06",
+      "concepts": ["pv-ordinary-annuity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A pension pays \\$8,000 at the end of each year for 12 years at 5% per year. Find its present value, the nominal total of all payments, and the gap between them (what discounting removes). Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the present value $PV = 8000 \\cdot \\dfrac{1 - (1.05)^{-12}}{0.05}$. Enter a number rounded to the nearest cent.", "answer": "70906.01", "accept": ["70906.010", "$70906.01"], "hint": "Annuity present-value factor times the payment." },
+        { "instruction": "Find the nominal total paid: $8000 \\times 12$. Enter a number rounded to the nearest cent.", "answer": "96000.00", "accept": ["96000", "96000.0", "$96000.00"], "hint": "Payment times number of payments." },
+        { "instruction": "Subtract the present value from the nominal total. Enter a number rounded to the nearest cent.", "answer": "25093.99", "accept": ["25093.990", "$25093.99"], "hint": "$96000 - 70906.01$." }
+      ],
+      "finalAnswer": { "value": "70906.01", "unit": "dollars" },
+      "solutionNarrative": "Present value \\$70,906.01 against a nominal \\$96,000 leaves a \\$25,093.99 gap — the cost of waiting, exactly the time value of money."
+    },
+    {
+      "id": "financial-mathematics.annuities.s07",
+      "concepts": ["annuity-due"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You deposit \\$1,000 at the beginning of each year (an annuity due) at 6% per year for 5 years. Find the future value: compute the ordinary-annuity future value, then multiply by $(1 + i)$ because each deposit earns one extra period. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Ordinary-annuity future value: $1000 \\cdot \\dfrac{(1.06)^{5} - 1}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "5637.09", "accept": ["5637.090", "$5637.09"], "hint": "The end-of-period version first." },
+        { "instruction": "Multiply by $(1 + i) = 1.06$ for the annuity-due adjustment. Enter a number rounded to the nearest cent.", "answer": "5975.32", "accept": ["5975.320", "$5975.32"], "hint": "$5637.09 \\times 1.06$." }
+      ],
+      "finalAnswer": { "value": "5975.32", "unit": "dollars" },
+      "solutionNarrative": "Ordinary FV is \\$5,637.09; paying at the start of each period gives every deposit one more period of growth, so multiply by 1.06: \\$5,975.32."
+    },
+    {
+      "id": "financial-mathematics.annuities.s08",
+      "concepts": ["annuity-due"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Rent of \\$1,200 is paid at the beginning of each year for 8 years. At 7% per year, find the present value of this annuity due. Compute the ordinary present value, then multiply by $(1 + i)$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Ordinary present value: $1200 \\cdot \\dfrac{1 - (1.07)^{-8}}{0.07}$. Enter a number rounded to the nearest cent.", "answer": "7165.56", "accept": ["7165.560", "$7165.56"], "hint": "End-of-period present value first." },
+        { "instruction": "Multiply by $(1 + i) = 1.07$ for the due adjustment. Enter a number rounded to the nearest cent.", "answer": "7667.15", "accept": ["7667.150", "$7667.15"], "hint": "$7165.56 \\times 1.07$." }
+      ],
+      "finalAnswer": { "value": "7667.15", "unit": "dollars" },
+      "solutionNarrative": "Ordinary PV is \\$7,165.56; because payments come at the start of each period, multiply by 1.07 to get the annuity-due value \\$7,667.15."
+    },
+    {
+      "id": "financial-mathematics.annuities.s09",
+      "concepts": ["annuity-due", "fv-ordinary-annuity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Saving \\$2,000 a year at 6% for 10 years, compare paying at the end of each year (ordinary) versus the beginning (due), and find how much MORE the annuity due accumulates. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Ordinary future value: $2000 \\cdot \\dfrac{(1.06)^{10} - 1}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "26361.59", "accept": ["26361.590", "$26361.59"], "hint": "End-of-year deposits." },
+        { "instruction": "Annuity-due future value: multiply the ordinary value by $(1 + 0.06)$. Enter a number rounded to the nearest cent.", "answer": "27943.29", "accept": ["27943.290", "$27943.29"], "hint": "$26361.59 \\times 1.06$." },
+        { "instruction": "Find the extra accumulated by paying early (due minus ordinary). Enter a number rounded to the nearest cent.", "answer": "1581.70", "accept": ["1581.700", "$1581.70"], "hint": "$27943.29 - 26361.59$." }
+      ],
+      "finalAnswer": { "value": "1581.70", "unit": "dollars" },
+      "solutionNarrative": "Ordinary gives \\$26,361.59 and the due gives \\$27,943.29, so starting each year's deposit early adds \\$1,581.70 — one extra period of growth on every contribution."
+    },
+    {
+      "id": "financial-mathematics.annuities.s10",
+      "concepts": ["sinking-funds-and-savings"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "You want \\$10,000 in 5 years by depositing an equal amount at the end of each year into an account earning 6% per year. Solve $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$ for the payment $PMT$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the annuity factor $\\dfrac{(1.06)^{5} - 1}{0.06}$. Enter as a decimal (round to 6 places).", "answer": "5.637093", "accept": ["(1.06^5-1)/0.06"], "hint": "Same factor as future value, before multiplying by PMT." },
+        { "instruction": "Divide the goal by the factor: $PMT = 10000 / 5.637093$. Enter a number rounded to the nearest cent.", "answer": "1773.96", "accept": ["1773.960", "$1773.96"], "hint": "Rearranged formula: the goal divided by the factor." }
+      ],
+      "finalAnswer": { "value": "1773.96", "unit": "dollars" },
+      "solutionNarrative": "$PMT = \\dfrac{10000}{(1.06^5 - 1)/0.06} = \\$1{,}773.96$ per year — the sinking-fund deposit that reaches the goal."
+    },
+    {
+      "id": "financial-mathematics.annuities.s11",
+      "concepts": ["sinking-funds-and-savings"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You want \\$20,000 in 3 years for a down payment, saving at the end of each month in a fund earning 6% per year, compounded monthly. Find the required monthly deposit. Use $i = 6\\%/12$, $n = 12 \\times 3$, and $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Annual decimal rate over 12." },
+        { "instruction": "Find the number of periods $n = 12 \\times 3$. Enter a whole number.", "answer": "36", "accept": [], "hint": "Months in 3 years." },
+        { "instruction": "Compute $PMT = 20000 / \\dfrac{(1.005)^{36} - 1}{0.005}$. Enter a number rounded to the nearest cent.", "answer": "508.44", "accept": ["508.440", "$508.44"], "hint": "Divide the goal by the monthly annuity factor." }
+      ],
+      "finalAnswer": { "value": "508.44", "unit": "dollars" },
+      "solutionNarrative": "The required monthly deposit is $PMT = \\$508.44$, from dividing the \\$20,000 goal by the 36-period annuity factor at the monthly rate 0.005."
+    },
+    {
+      "id": "financial-mathematics.annuities.s12",
+      "concepts": ["sinking-funds-and-savings"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "To have \\$30,000 in 15 years you deposit equally at the end of each year at 6% per year. Find the annual deposit, the total you actually deposit, and how much of the goal is interest. Use $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the deposit $PMT = 30000 / \\dfrac{(1.06)^{15} - 1}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "1288.88", "accept": ["1288.880", "$1288.88"], "hint": "Goal divided by the annuity factor." },
+        { "instruction": "Find the total deposited: $PMT \\times 15$. Enter a number rounded to the nearest cent.", "answer": "19333.24", "accept": ["19333.240", "$19333.24"], "hint": "Payment times the number of deposits." },
+        { "instruction": "Subtract the total deposited from the \\$30,000 goal to find the interest earned. Enter a number rounded to the nearest cent.", "answer": "10666.76", "accept": ["10666.760", "$10666.76"], "hint": "$30000 - 19333.24$." }
+      ],
+      "finalAnswer": { "value": "1288.88", "unit": "dollars" },
+      "solutionNarrative": "Depositing \\$1,288.88 a year totals \\$19,333.24 out of pocket; the remaining \\$10,666.76 of the \\$30,000 goal comes from interest."
+    },
+    {
+      "id": "financial-mathematics.annuities.s13",
+      "concepts": ["fv-ordinary-annuity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$ for $PMT = 500$, $i = 0.08$, $n = 4$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the annuity factor $\\dfrac{(1.08)^{4} - 1}{0.08}$. Enter as a decimal (round to 6 places).", "answer": "4.506112", "accept": ["(1.08^4-1)/0.08"], "hint": "1.08 to the 4th, minus 1, over 0.08." },
+        { "instruction": "Multiply by 500. Enter a number rounded to the nearest cent.", "answer": "2253.06", "accept": ["2253.060", "$2253.06"], "hint": "$500 \\times 4.506112$." }
+      ],
+      "finalAnswer": { "value": "2253.06", "unit": "dollars" },
+      "solutionNarrative": "$FV = 500 \\cdot \\dfrac{1.08^4 - 1}{0.08} = \\$2{,}253.06$."
+    },
+    {
+      "id": "financial-mathematics.annuities.s14",
+      "concepts": ["pv-ordinary-annuity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$ for $PMT = 300$, $i = 0.06$, $n = 5$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the factor $\\dfrac{1 - (1.06)^{-5}}{0.06}$. Enter as a decimal (round to 6 places).", "answer": "4.212364", "accept": ["(1-1.06^(-5))/0.06"], "hint": "$(1.06)^{-5}$ is 1 over $1.06^5$." },
+        { "instruction": "Multiply by 300. Enter a number rounded to the nearest cent.", "answer": "1263.71", "accept": ["1263.710", "$1263.71"], "hint": "$300 \\times 4.212364$." }
+      ],
+      "finalAnswer": { "value": "1263.71", "unit": "dollars" },
+      "solutionNarrative": "$PV = 300 \\cdot \\dfrac{1 - 1.06^{-5}}{0.06} = \\$1{,}263.71$."
+    },
+    {
+      "id": "financial-mathematics.annuities.s15",
+      "concepts": ["annuity-due"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "An ordinary annuity of \\$500 per year at 5% for 6 years has future value $500 \\cdot \\dfrac{(1.05)^6 - 1}{0.05}$. Convert it to an annuity due by multiplying by $(1 + i)$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the ordinary future value $500 \\cdot \\dfrac{(1.05)^{6} - 1}{0.05}$. Enter a number rounded to the nearest cent.", "answer": "3400.96", "accept": ["3400.960", "$3400.96"], "hint": "Annuity factor times 500." },
+        { "instruction": "Multiply by $(1 + 0.05)$ for the due. Enter a number rounded to the nearest cent.", "answer": "3571.00", "accept": ["3571", "3571.0", "$3571.00"], "hint": "$3400.96 \\times 1.05$." }
+      ],
+      "finalAnswer": { "value": "3571.00", "unit": "dollars" },
+      "solutionNarrative": "Ordinary FV \\$3,400.96 times 1.05 gives the annuity-due value \\$3,571.00."
+    },
+    {
+      "id": "financial-mathematics.annuities.s16",
+      "concepts": ["sinking-funds-and-savings"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You want \\$6,000 in 4 years for a vacation, depositing equally at the end of each year at 5% per year. Find the required annual deposit with $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the annuity factor $\\dfrac{(1.05)^{4} - 1}{0.05}$. Enter as a decimal (round to 6 places).", "answer": "4.310125", "accept": ["(1.05^4-1)/0.05"], "hint": "1.05 to the 4th, minus 1, over 0.05." },
+        { "instruction": "Divide the \\$6,000 goal by the factor. Enter a number rounded to the nearest cent.", "answer": "1392.07", "accept": ["1392.070", "$1392.07"], "hint": "$6000 / 4.310125$." }
+      ],
+      "finalAnswer": { "value": "1392.07", "unit": "dollars" },
+      "solutionNarrative": "$PMT = \\dfrac{6000}{(1.05^4 - 1)/0.05} = \\$1{,}392.07$ per year reaches the \\$6,000 goal."
+    }
+  ]
+}

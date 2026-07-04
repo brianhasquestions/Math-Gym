@@ -1,0 +1,257 @@
+{
+  "id": "game-theory.auctions-and-mechanisms",
+  "subject": "game-theory",
+  "title": "Auctions and Mechanism Design",
+  "prerequisites": ["game-theory.mixed-strategies", "statistics.random-variables"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "auction-formats",
+      "label": "The four classic auction formats",
+      "microLesson": "Four formats dominate auction theory. In a **first-price sealed-bid** auction, everyone submits one secret bid; the highest bidder wins and *pays their own bid*. In a **second-price sealed-bid** (Vickrey) auction, the highest bidder wins but pays the *second-highest* bid. An **English** (ascending open) auction raises the price until one bidder remains — strategically equivalent to the second-price auction. A **Dutch** (descending open) auction lowers a high price until someone accepts — strategically equivalent to the first-price auction. Sealed vs. open and first-price vs. second-price are the two axes that classify them."
+    },
+    {
+      "id": "second-price-truthfulness",
+      "label": "Truthfulness in second-price auctions",
+      "microLesson": "The Vickrey (second-price) auction has a remarkable property: **bidding your true value is a dominant strategy**. Because the winner pays the *second*-highest bid, your own bid only decides *whether* you win, never *how much* you pay. Bidding above your value risks winning at a price above what the item is worth to you; bidding below risks losing an item you'd have profited from. Either way you can only hurt yourself, so honesty is optimal no matter what others do. The winner's **surplus** is then value minus price paid: if your value is \\$50 and the second-highest bid is \\$30, you win, pay \\$30, and net \\$20."
+    },
+    {
+      "id": "first-price-bidding",
+      "label": "Equilibrium bidding in first-price auctions",
+      "microLesson": "In a first-price auction you pay your own bid, so bidding your full value guarantees zero surplus — you must **shade** your bid below your value. For $n$ risk-neutral bidders whose values are independent and uniform on $[0, 1]$ (or any common range), the symmetric Bayesian-Nash equilibrium bid is $b(v) = \\dfrac{n-1}{n}\\,v$. With 2 bidders you bid half your value; with 4 bidders you bid three-quarters; as competition grows ($n \\to \\infty$) the shading vanishes and you bid nearly your full value. The optimal shade trades a lower price against a lower chance of winning."
+    },
+    {
+      "id": "expected-revenue-and-efficiency",
+      "label": "Expected revenue and efficiency",
+      "microLesson": "A seller cares about **expected revenue**; society cares about **efficiency** — whether the item goes to the bidder who values it most. All four standard auctions are efficient (the highest-value bidder wins) and, by the **Revenue Equivalence Theorem**, under independent private values with risk-neutral bidders they yield the *same expected revenue*. The intuition: first-price bidders shade down but pay their bid; second-price bidders bid truthfully but pay only the runner-up's value; the two effects cancel in expectation. Revenue from *given* bids is concrete: if the top two values are \\$50 and \\$30, a second-price auction collects \\$30, while a first-price auction collects the winner's (shaded) bid."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Selling to people who won't tell you what it's worth\n\nYou have one item — a painting, a Treasury bond, a slice of radio spectrum, a slot for an ad — and several buyers who each privately know how much it's worth to *them* but certainly won't volunteer that number. An **auction** is a game engineered to sell the item well anyway: to hand it to (ideally) the buyer who values it most, and to extract a good price, using only the bids people are willing to submit. **Mechanism design** is the broader art of building such games so that self-interested play produces the outcome the designer wants. Auctions are its cleanest, most successful application.\n\n## The four formats\n\nTwo yes/no questions classify the classic auctions.\n\n*Open or sealed?* In an **open** auction bidders watch the price and each other; in a **sealed-bid** auction each submits one private bid.\n\n*First or second price?* Does the winner pay **their own** winning bid, or the **runner-up's** bid?\n\nThis gives four formats:\n\n- **First-price sealed-bid:** submit one secret bid; highest bidder wins and pays *their own* bid.\n- **Second-price sealed-bid (Vickrey):** submit one secret bid; highest bidder wins but pays the *second-highest* bid.\n- **English (ascending):** the price rises openly until only one bidder remains, who pays the price at which the last rival dropped out.\n- **Dutch (descending):** a high price ticks *down* until someone shouts \"mine,\" paying that price.\n\nTwo strategic equivalences tie the open formats to the sealed ones. The **English auction ≈ second-price**: staying in until the price reaches your value, then quitting, means the winner effectively pays where the second-last bidder dropped — the second-highest value. The **Dutch auction ≈ first-price**: you commit to a price to accept before knowing you've won, exactly the sealed first-price problem. So there are really *two* strategic worlds, first-price and second-price, wearing four costumes.\n\n## Why honesty wins a Vickrey auction\n\nThe second-price auction hides a beautiful incentive. Claim: **bidding your true value $v$ is a dominant strategy** — optimal regardless of what anyone else does.\n\nHere is the argument. Let $p$ be the highest bid *among your rivals*; you win iff your bid exceeds $p$, and if you win you pay exactly $p$ (not your own bid). So your bid only controls *whether* you win, never the *price*. Consider deviating from truthful bidding:\n\n- **Bidding above $v$:** this only changes outcomes when $v < p < \\text{your bid}$. Then you win an item worth $v$ but pay $p > v$ — a loss. Truthful bidding would have (correctly) let you lose.\n- **Bidding below $v$:** this only changes outcomes when $\\text{your bid} < p < v$. Then you lose an item you'd have won and profited from ($v > p$). Truthful bidding would have won you positive surplus.\n\nIn every case, deviating either does nothing or hurts you. So bid $v$. The winner's **surplus** is then $v - p$ = value minus the second-highest bid.\n\n### Worked second-price example\n\nThree bidders value an item at \\$50, \\$30, and \\$20, and all bid truthfully. The \\$50 bidder wins. The price is the **second-highest** bid, \\$30. The winner's surplus is $50 - 30 = \\$20$. The seller's **revenue** is \\$30 — the runner-up's value, not the winner's.\n\n## First-price auctions: the art of shading\n\nIn a first-price auction you pay your own bid, so bidding your full value $v$ locks in **zero** surplus even when you win. You must **shade** — bid below $v$ — trading a smaller chance of winning for a positive margin when you do.\n\nHow much to shade? Model $n$ **risk-neutral** bidders with values drawn independently and uniformly from a common range, say $[0, 1]$. Look for a **symmetric** equilibrium where everyone uses the same increasing bid function $b(v)$. The classic result:\n\n$$\\boxed{\\,b(v) = \\frac{n-1}{n}\\,v\\,}$$\n\n### Worked first-price derivation\n\nWhy $\\frac{n-1}{n}$? Suppose all rivals use $b(x) = \\beta x$ for some constant $\\beta$, and you have value $v$. Bidding $b$ means pretending your value is $b/\\beta$. You win if all $n-1$ rivals have lower values; with uniform values on $[0,1]$ that probability is $(b/\\beta)^{\\,n-1}$. Your expected surplus is\n\n$$U(b) = (v - b)\\left(\\frac{b}{\\beta}\\right)^{n-1}.$$\n\nMaximize over $b$: take the derivative and set it to zero. Using the product rule,\n\n$$U'(b) = -\\left(\\frac{b}{\\beta}\\right)^{n-1} + (v-b)\\,(n-1)\\,\\frac{b^{\\,n-2}}{\\beta^{\\,n-1}} = 0.$$\n\nMultiply through by $\\beta^{n-1}/b^{n-2}$: $-b + (v - b)(n-1) = 0$, i.e. $(n-1)v = n\\,b$, so $b = \\frac{n-1}{n}v$. For this to be a *symmetric* equilibrium we need $\\beta = \\frac{n-1}{n}$ — and indeed the best response to everyone shading by $\\frac{n-1}{n}$ is to shade by $\\frac{n-1}{n}$ yourself. \n\nSo with $n = 2$ you bid $\\tfrac12 v$; with $n = 4$, $\\tfrac34 v$; with $n = 10$, $\\tfrac{9}{10}v$. **More competition means less shading.** A bidder with value \\$80 in a 4-bidder first-price auction bids $\\tfrac34(80) = \\$60$.\n\n## Revenue and efficiency\n\nA seller wants **revenue**; society wants **efficiency** — the item reaching the highest-value bidder. All four standard formats are efficient: the top-value bidder always wins (in first-price because $b(v)$ is increasing, so the highest value bids highest). \n\nWhat about revenue? The **Revenue Equivalence Theorem** says: with independent private values, risk-neutral bidders, and symmetric bidding, *all four auctions yield the same expected revenue*. The mechanism is a wash. In a second-price auction bidders are truthful but the seller collects only the *runner-up's* value. In a first-price auction bidders shade, but the winner *pays their bid*. The higher truthful bids (paid at second price) and the lower shaded bids (paid at first price) come out equal **in expectation**. For two bidders with uniform $[0,1]$ values, both auctions raise an expected $\\tfrac13$.\n\nComputing revenue from *given* numbers is direct. If the two highest values are \\$50 and \\$30: a **second-price** auction collects the runner-up \\$30; a **first-price** auction collects the winner's *shaded bid* (e.g. with 2 bidders, $\\tfrac12(50) = \\$25$). Any single realization can differ; revenue equivalence is a statement about the *average* over many draws.\n\n## Pitfalls\n\n- **Truthfulness is a second-price property, not a universal one.** \"Bid your value\" is dominant *only* because you pay the runner-up's bid. In a first-price auction bidding your value is a mistake — it guarantees zero surplus. Never carry the Vickrey intuition into a first-price setting.\n- **The winner of a second-price auction does not pay their own bid.** The whole point is they pay the *second-highest* bid. Confusing the two erases the incentive to be honest.\n- **Efficiency ≠ revenue.** An auction can be efficient (right winner) while raising little; and revenue equivalence says format changes don't help revenue under the standard assumptions — to raise revenue you need a **reserve price** or to relax an assumption (risk-averse bidders, correlated values).\n- **Shading depends on $n$.** The factor $\\frac{n-1}{n}$ rises toward 1 as bidders are added. Assuming a fixed shade regardless of competition is wrong."
+  },
+  "application": {
+    "summary": "Auction theory is the working math behind the largest markets built on purpose: government spectrum auctions worth tens of billions, the real-time ad auctions that fund the web, Treasury debt sales, art and commodity houses, and procurement — anywhere a seller must extract value from buyers who hold private information.",
+    "domains": ["spectrum and government asset sales", "online advertising auctions", "financial and Treasury auctions", "procurement and art markets"],
+    "workedExample": "**Second-price logic behind online ad auctions.**\n\nWhen a web page loads, an ad slot is auctioned in milliseconds. Historically Google's search ads used a *generalized second-price* auction, and Vickrey-style designs remain the reference point, precisely because of the truthfulness property: advertisers can enter their genuine value-per-click without gaming, since a second-price rule means their bid sets *whether* they win, not *what* they pay.\n\nSuppose three advertisers value a click at \\$5.00, \\$3.00, and \\$2.00 and bid truthfully. The \\$5.00 advertiser wins the slot. Under the second-price rule the price is the runner-up's bid, \\$3.00 (plus a cent in practice). The winner's surplus per click is $5.00 - 3.00 = \\$2.00$, and the platform's revenue is \\$3.00.\n\nNow contrast the seller's view. Revenue equivalence tells the platform that switching to a first-price sealed auction wouldn't raise expected revenue under the standard assumptions — bidders would simply shade their bids. What *does* raise revenue is a **reserve price** (a floor below which the slot goes unsold), which is why ad platforms tune reserves so carefully. This is mechanism design in production: the auction format is chosen for truthful, low-effort bidding, and revenue is lifted with reserves rather than by fighting the revenue-equivalence result.",
+    "domainNotes": [
+      "**Spectrum auctions:** the FCC and other regulators raised hundreds of billions using carefully designed multi-round ascending (English-style) auctions; the 2020 Nobel Prize honored this auction-design work.",
+      "**Ad auctions:** every search and display ad is sold by auction; second-price / Vickrey-style rules were adopted so advertisers can bid true value-per-click without constant re-optimization.",
+      "**Treasury auctions:** governments sell debt via sealed-bid auctions; the choice between uniform-price and discriminatory (pay-your-bid) rules is a direct first-price-vs-second-price question.",
+      "**Procurement:** reverse auctions (lowest bid wins a contract) apply the same theory with buyers and sellers swapped; shading and truthfulness arguments carry over."
+    ]
+  },
+  "generators": [
+    "gt3-format-1", "gt3-format-2", "gt3-format-3",
+    "gt3-vickrey-1", "gt3-vickrey-2", "gt3-vickrey-3",
+    "gt3-firstprice-1", "gt3-firstprice-2", "gt3-firstprice-3",
+    "gt3-revenue-1", "gt3-revenue-2", "gt3-revenue-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.auctions-and-mechanisms.s01",
+      "concepts": ["auction-formats"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In one classic sealed-bid format, the highest bidder wins and pays the SECOND-highest bid. Name this format. Choose exactly one of: first-price, second-price, English, Dutch.",
+      "steps": [
+        { "instruction": "Which format has the winner pay the second-highest bid? Type one of: first-price, second-price, English, Dutch.", "answer": "second-price", "accept": ["second price", "vickrey", "second-price sealed-bid"], "hint": "It is named for the price the winner pays; also called the Vickrey auction." }
+      ],
+      "finalAnswer": { "value": "second-price", "unit": "" },
+      "solutionNarrative": "Paying the runner-up's bid defines the second-price (Vickrey) sealed-bid auction."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s02",
+      "concepts": ["auction-formats"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In one open format the auctioneer starts at a HIGH price and lowers it until a bidder accepts. Name this format. Choose exactly one of: first-price, second-price, English, Dutch.",
+      "steps": [
+        { "instruction": "Which format uses a descending (high-to-low) price? Type one of: first-price, second-price, English, Dutch.", "answer": "Dutch", "accept": ["dutch auction", "descending"], "hint": "It is named after the flower markets that use it; the price ticks down." }
+      ],
+      "finalAnswer": { "value": "Dutch", "unit": "" },
+      "solutionNarrative": "A descending open auction is the Dutch auction — strategically equivalent to the first-price sealed-bid auction."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s03",
+      "concepts": ["auction-formats"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The open ASCENDING auction (price rises until one bidder remains) is strategically equivalent to which sealed-bid format? Choose exactly one of: first-price, second-price, English, Dutch.",
+      "steps": [
+        { "instruction": "Name the ascending open auction itself. Type one of: first-price, second-price, English, Dutch.", "answer": "English", "accept": ["english auction", "ascending"], "hint": "The rising-price open auction has a country's name." },
+        { "instruction": "The English auction is strategically equivalent to which SEALED format? Type one of: first-price, second-price, English, Dutch.", "answer": "second-price", "accept": ["second price", "vickrey"], "hint": "The winner effectively pays where the last rival dropped out — the second-highest value." }
+      ],
+      "finalAnswer": { "value": "second-price", "unit": "" },
+      "solutionNarrative": "The ascending English auction is equivalent to the second-price sealed-bid auction: the winner pays roughly the second-highest value, where the last competitor quit."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s04",
+      "concepts": ["auction-formats"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Match the descending Dutch auction to its sealed-bid equivalent, and state whether a bidder must commit to a price before knowing they've won.",
+      "steps": [
+        { "instruction": "The Dutch auction is strategically equivalent to which sealed format? Type one of: first-price, second-price, English, Dutch.", "answer": "first-price", "accept": ["first price"], "hint": "In both you commit to a price without observing others' final choices." },
+        { "instruction": "In the Dutch auction, must a bidder decide their accept-price before learning whether they win? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "You shout 'mine' at a price without seeing rivals' unrevealed intentions." }
+      ],
+      "finalAnswer": { "value": "first-price", "unit": "" },
+      "solutionNarrative": "The Dutch (descending) auction is equivalent to the first-price sealed-bid auction: a bidder must commit to an accept-price before knowing the outcome, exactly the sealed first-price problem."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s05",
+      "concepts": ["second-price-truthfulness"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a second-price (Vickrey) auction, what is a bidder's dominant strategy? Choose exactly one of: truthful, not truthful.",
+      "steps": [
+        { "instruction": "Should a bidder bid their true value, or shade it? Type 'truthful' or 'not truthful'.", "answer": "truthful", "accept": ["bid your value", "bid true value", "truthfully"], "hint": "Your bid decides only whether you win, never the price you pay." }
+      ],
+      "finalAnswer": { "value": "truthful", "unit": "" },
+      "solutionNarrative": "Bidding true value is dominant in a second-price auction because the winner pays the runner-up's bid, so your own bid never sets your price."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s06",
+      "concepts": ["second-price-truthfulness"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Three bidders in a second-price auction have values \\$60, \\$45, and \\$25 and all bid truthfully. Find who wins, the price paid, and the winner's surplus.",
+      "steps": [
+        { "instruction": "The winner is the highest bidder. What price do they pay (the second-highest bid)? Give a number.", "answer": "45", "accept": [], "hint": "The second-price rule: pay the runner-up's bid." },
+        { "instruction": "Winner's surplus = value − price = $60 - 45$. Give a number.", "answer": "15", "accept": [], "hint": "The winner values it at 60 and pays 45." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "dollars" },
+      "solutionNarrative": "The \\$60 bidder wins and pays the second-highest bid, \\$45, for a surplus of $60 - 45 = \\$15$. The seller's revenue is \\$45."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s07",
+      "concepts": ["second-price-truthfulness"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "In a second-price auction your value is \\$70. You are tempted to bid \\$90 to be sure of winning. The highest rival bid turns out to be \\$80. Analyze the outcome of overbidding versus truthful bidding.",
+      "steps": [
+        { "instruction": "If you bid \\$90, do you win (your bid \\$90 exceeds the rival's \\$80)? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "You win when your bid is highest." },
+        { "instruction": "You then pay the second-highest bid, \\$80. Your surplus = value − price = $70 - 80$. Give a number.", "answer": "-10", "accept": [], "hint": "You value it at 70 but pay 80." },
+        { "instruction": "Overbidding gave negative surplus. Was truthful bidding (bid \\$70, lose to the \\$80 rival, surplus 0) the better choice? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Zero beats a loss of \\$10." }
+      ],
+      "finalAnswer": { "value": "-10", "unit": "dollars" },
+      "solutionNarrative": "Overbidding to \\$90 wins but forces you to pay the \\$80 runner-up bid, netting $70 - 80 = -\\$10$. Truthful bidding would have lost the item at zero surplus — strictly better. This is exactly why honesty is dominant."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s08",
+      "concepts": ["second-price-truthfulness"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "In a second-price auction your value is \\$50 and the highest competing bid is \\$30. Bidding truthfully, find your surplus if you win.",
+      "steps": [
+        { "instruction": "You win (50 > 30) and pay the second-highest bid \\$30. Surplus = $50 - 30$. Give a number.", "answer": "20", "accept": [], "hint": "Value minus the price paid." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "dollars" },
+      "solutionNarrative": "You win at the runner-up's price \\$30, keeping surplus $50 - 30 = \\$20$."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s09",
+      "concepts": ["first-price-bidding"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a symmetric first-price auction with $n = 2$ risk-neutral bidders (values uniform on a common range), the equilibrium bid is $b(v) = \\tfrac{n-1}{n}\\,v$. Your value is $v = 80$. Find your equilibrium bid.",
+      "steps": [
+        { "instruction": "Compute the shading factor $\\tfrac{n-1}{n} = \\tfrac{1}{2}$, then bid $\\tfrac12 \\times 80$. Give a number.", "answer": "40", "accept": [], "hint": "With 2 bidders you bid half your value." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "" },
+      "solutionNarrative": "With $n = 2$, $b(v) = \\tfrac12 v = \\tfrac12(80) = 40$: you shade to half your value."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s10",
+      "concepts": ["first-price-bidding"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "In a symmetric first-price auction with $n = 4$ risk-neutral bidders, compute the equilibrium bid for a bidder with value $v = 100$ using $b(v) = \\tfrac{n-1}{n}\\,v$.",
+      "steps": [
+        { "instruction": "Shading factor: $\\tfrac{n-1}{n} = \\tfrac{3}{4}$. Give it as a fraction or decimal.", "answer": "3/4", "accept": ["0.75"], "hint": "$\\tfrac{4-1}{4}$." },
+        { "instruction": "Equilibrium bid: $\\tfrac34 \\times 100$. Give a number.", "answer": "75", "accept": [], "hint": "Three-quarters of 100." }
+      ],
+      "finalAnswer": { "value": "75", "unit": "" },
+      "solutionNarrative": "With 4 bidders the shade is $\\tfrac34$, so $b(100) = 75$. More rivals means less shading than the 2-bidder case."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s11",
+      "concepts": ["first-price-bidding"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A contractor bids in a symmetric first-price auction against 4 rivals (so $n = 5$ bidders total), risk-neutral, values uniform on a common range. Their value for the contract is \\$120. Find the equilibrium bid and the surplus if they win at that bid.",
+      "steps": [
+        { "instruction": "Shading factor $\\tfrac{n-1}{n} = \\tfrac{4}{5}$. Give it as a fraction or decimal.", "answer": "4/5", "accept": ["0.8"], "hint": "$\\tfrac{5-1}{5}$." },
+        { "instruction": "Equilibrium bid: $\\tfrac45 \\times 120$. Give a number.", "answer": "96", "accept": [], "hint": "$0.8 \\times 120$." },
+        { "instruction": "Surplus if they win at that bid: value − bid = $120 - 96$. Give a number.", "answer": "24", "accept": [], "hint": "In a first-price auction you pay your own bid." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "dollars" },
+      "solutionNarrative": "With $n = 5$ the shade is $\\tfrac45$, so the bid is $\\tfrac45(120) = 96$. Winning at 96 with value 120 gives surplus $120 - 96 = \\$24$."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s12",
+      "concepts": ["first-price-bidding"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "As the number of bidders $n$ grows very large, the first-price shading factor $\\tfrac{n-1}{n}$ approaches what value?",
+      "steps": [
+        { "instruction": "Evaluate the limit of $\\tfrac{n-1}{n}$ as $n \\to \\infty$. Give a number.", "answer": "1", "accept": [], "hint": "$\\tfrac{n-1}{n} = 1 - \\tfrac1n \\to 1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\tfrac{n-1}{n} = 1 - \\tfrac1n \\to 1$, so with many competitors bidders barely shade and bid close to their full value."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s13",
+      "concepts": ["expected-revenue-and-efficiency"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two bidders in a second-price auction have values \\$40 and \\$25 and bid truthfully. What is the seller's revenue?",
+      "steps": [
+        { "instruction": "Revenue in a second-price auction is the second-highest bid. Give it.", "answer": "25", "accept": [], "hint": "The winner pays the runner-up's value." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "dollars" },
+      "solutionNarrative": "The \\$40 bidder wins but pays the second-highest bid, \\$25, so the seller collects \\$25."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s14",
+      "concepts": ["expected-revenue-and-efficiency"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A single item auction has two bidders with values \\$50 and \\$30. Compare seller revenue under (a) a second-price auction with truthful bids and (b) a first-price auction where each bids $\\tfrac12 v$ (the $n=2$ equilibrium).",
+      "steps": [
+        { "instruction": "Second-price revenue (the runner-up's value). Give a number.", "answer": "30", "accept": [], "hint": "Winner pays the second-highest value." },
+        { "instruction": "First-price winning bid: the \\$50 bidder bids $\\tfrac12 \\times 50$. Give a number.", "answer": "25", "accept": [], "hint": "Half of 50." },
+        { "instruction": "First-price revenue equals that winning bid. Give a number.", "answer": "25", "accept": [], "hint": "The winner pays their own bid." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "dollars" },
+      "solutionNarrative": "Second-price collects the runner-up value \\$30; first-price collects the winner's shaded bid $\\tfrac12(50) = \\$25$. On this single draw they differ — revenue equivalence holds only in expectation over many draws."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s15",
+      "concepts": ["expected-revenue-and-efficiency"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Explain the Revenue Equivalence Theorem's scope. Under independent private values with risk-neutral, symmetric bidders, do the first-price and second-price auctions yield the same EXPECTED revenue? And which single-item outcome do all four standard auctions guarantee?",
+      "steps": [
+        { "instruction": "Do the two auctions yield the same expected revenue under the standard assumptions? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "That is exactly the Revenue Equivalence Theorem." },
+        { "instruction": "Which outcome do all four standard formats guarantee — does the highest-value bidder win (efficiency)? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "In each format the top-value bidder ends up winning." },
+        { "instruction": "To actually RAISE revenue above the equivalence level, a seller commonly adds a price floor. What is that floor called? Choose: reserve, second-price, English, Dutch.", "answer": "reserve", "accept": ["reserve price"], "hint": "A minimum acceptable price below which the item goes unsold." }
+      ],
+      "finalAnswer": { "value": "reserve", "unit": "" },
+      "solutionNarrative": "Under the standard assumptions the formats are revenue-equivalent in expectation and all are efficient (top-value bidder wins). To beat the equivalence, sellers add a reserve price — the lever that actually lifts expected revenue."
+    },
+    {
+      "id": "game-theory.auctions-and-mechanisms.s16",
+      "concepts": ["expected-revenue-and-efficiency", "second-price-truthfulness"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Four advertisers bid truthfully in a second-price ad auction with values (per click) \\$6, \\$4, \\$3, \\$1. Find the winner's payment and the winner's surplus.",
+      "steps": [
+        { "instruction": "The winner (value \\$6) pays the second-highest bid. Give it.", "answer": "4", "accept": [], "hint": "Second-price rule." },
+        { "instruction": "Winner's surplus = $6 - 4$. Give a number.", "answer": "2", "accept": [], "hint": "Value minus price." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "dollars" },
+      "solutionNarrative": "The \\$6 advertiser wins and pays the runner-up's \\$4, netting $6 - 4 = \\$2$ per click; the platform's revenue is \\$4."
+    }
+  ]
+}

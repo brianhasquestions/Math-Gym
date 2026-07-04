@@ -1,0 +1,269 @@
+{
+  "id": "number-theory.continued-fractions",
+  "subject": "number-theory",
+  "title": "Continued Fractions",
+  "prerequisites": ["number-theory.gcd-lcm-and-bezout"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "finite-continued-fractions",
+      "label": "Expanding a rational to a continued fraction",
+      "microLesson": "Every rational $p/q$ has a finite continued fraction $[a_0; a_1, a_2, \\dots, a_n]$, meaning $a_0 + \\cfrac{1}{a_1 + \\cfrac{1}{a_2 + \\cdots}}$. The terms are exactly the quotients from the Euclidean algorithm on $(p, q)$. Example: $\\frac{29}{12}$: $29 = 2\\cdot12 + 5$, $12 = 2\\cdot5 + 2$, $5 = 2\\cdot2 + 1$, $2 = 2\\cdot1$, so $\\frac{29}{12} = [2; 2, 2, 2]$. Read off the quotients $2, 2, 2, 2$ in order."
+    },
+    {
+      "id": "convergents",
+      "label": "Convergents $p_k/q_k$",
+      "microLesson": "Truncating a continued fraction at term $a_k$ gives the $k$-th CONVERGENT $p_k/q_k$, the best rational approximation with denominator $\\le q_k$. Build them with the recurrence $p_k = a_k p_{k-1} + p_{k-2}$ and $q_k = a_k q_{k-1} + q_{k-2}$, seeded by $p_{-1}=1, q_{-1}=0$ (so $p_0 = a_0, q_0 = 1$). For $[3; 7, 15, 1]$ (from $\\pi$): $\\frac{3}{1}, \\frac{22}{7}, \\frac{333}{106}, \\frac{355}{113}$ — the famous approximations of $\\pi$."
+    },
+    {
+      "id": "value-of-a-cf",
+      "label": "Evaluating a continued fraction",
+      "microLesson": "To turn $[a_0; a_1, \\dots, a_n]$ back into a fraction $p/q$, fold from the INNERMOST term outward: start with $a_n$, then repeatedly take the reciprocal and add the next term. Example: $[1; 2, 3] = 1 + \\cfrac{1}{2 + \\frac{1}{3}} = 1 + \\cfrac{1}{7/3} = 1 + \\frac{3}{7} = \\frac{10}{7}$. Each step inverts and adds; a couple of careful fraction additions recover the exact value."
+    },
+    {
+      "id": "rational-approximation",
+      "label": "Best rational approximation",
+      "microLesson": "Convergents are the BEST rational approximations: no fraction with a smaller denominator is closer to the value. The error after the $k$-th convergent is tiny, $\\left|x - \\frac{p_k}{q_k}\\right| < \\frac{1}{q_k q_{k+1}}$. This is why $\\frac{22}{7}$ (error $\\approx 0.00126$) and $\\frac{355}{113}$ (error $\\approx 0.00000027$) are the classic approximations of $\\pi$ — a large next term $a_{k+1}$ signals an especially good convergent, since it makes $q_{k+1}$ jump."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The Euclidean algorithm, written as a tower\n\nYou already know the Euclidean algorithm computes $\\gcd(p, q)$ by repeated division with remainder. A **continued fraction** is nothing more than those same divisions, stacked into a single expression. Every rational number $\\frac{p}{q}$ can be written\n\n$$\\frac{p}{q} = a_0 + \\cfrac{1}{a_1 + \\cfrac{1}{a_2 + \\cfrac{1}{\\ddots + \\cfrac{1}{a_n}}}} = [a_0; a_1, a_2, \\dots, a_n],$$\n\nwhere the $a_i$ are positive integers (with $a_0$ possibly zero or negative). The compact bracket notation $[a_0; a_1, \\dots, a_n]$ — semicolon after the first term, commas after — is how we record it. These objects give the *best possible* rational approximations to any real number, which is why they run everything from calendar design to the gear ratios in mechanical clocks.\n\n## Expanding a rational: it's just Euclid\n\nTo find the continued fraction of $\\frac{p}{q}$, run the Euclidean algorithm and **collect the quotients**.\n\n### Worked expansion: $\\frac{67}{29}$\n\n$$\\begin{aligned}\n67 &= \\mathbf{2}\\cdot 29 + 9 \\\\\n29 &= \\mathbf{3}\\cdot 9 + 2 \\\\\n9 &= \\mathbf{4}\\cdot 2 + 1 \\\\\n2 &= \\mathbf{2}\\cdot 1 + 0.\n\\end{aligned}$$\n\nThe quotients, in order, are $2, 3, 4, 2$, so\n\n$$\\frac{67}{29} = [2; 3, 4, 2].$$\n\nAt each line the quotient is $a_k = \\lfloor \\text{current} \\rfloor$, and the remainder feeds the reciprocal for the next line. The algorithm terminates exactly because the remainders strictly decrease — which is why *every* rational has a **finite** continued fraction, while irrationals get infinite ones.\n\n## Convergents: the approximations along the way\n\nStop the tower early — say after $a_k$ — and evaluate what you have. That rational is the **$k$-th convergent** $\\frac{p_k}{q_k}$. You do not need to collapse the tower each time; there is a clean recurrence. With the conventions $p_{-1} = 1, q_{-1} = 0, p_{-2} = 0, q_{-2} = 1$:\n\n$$p_k = a_k\\,p_{k-1} + p_{k-2}, \\qquad q_k = a_k\\,q_{k-1} + q_{k-2}.$$\n\n### Worked convergents of $[2; 3, 4, 2]$\n\n| $k$ | $a_k$ | $p_k = a_k p_{k-1} + p_{k-2}$ | $q_k = a_k q_{k-1} + q_{k-2}$ | $p_k/q_k$ |\n|---|---|---|---|---|\n| 0 | 2 | $2$ | $1$ | $2$ |\n| 1 | 3 | $3\\cdot2+1 = 7$ | $3\\cdot1+0 = 3$ | $7/3$ |\n| 2 | 4 | $4\\cdot7+2 = 30$ | $4\\cdot3+1 = 13$ | $30/13$ |\n| 3 | 2 | $2\\cdot30+7 = 67$ | $2\\cdot13+3 = 29$ | $67/29$ |\n\nThe last convergent returns the original $\\frac{67}{29}$, as it must. A useful identity to check your arithmetic: consecutive convergents satisfy $p_k q_{k-1} - p_{k-1} q_k = (-1)^{k+1}$ — for instance $30\\cdot3 - 7\\cdot13 = 90 - 91 = -1$.\n\n## Evaluating a continued fraction back to a fraction\n\nGoing the other way — from $[a_0; a_1, \\dots, a_n]$ to $\\frac{p}{q}$ — fold from the **innermost** term outward, at each step inverting and adding.\n\n### Worked evaluation: $[2; 1, 3]$\n\n$$\\begin{aligned}\n\\text{innermost: } & 1 + \\frac{1}{3} = \\frac{4}{3},\\\\\n\\text{then: } & 2 + \\frac{1}{4/3} = 2 + \\frac{3}{4} = \\frac{11}{4}.\n\\end{aligned}$$\n\nSo $[2; 1, 3] = \\frac{11}{4}$. (The convergent recurrence gives the same answer faster, but the fold makes the meaning transparent.)\n\n## Why convergents are the *best* approximations\n\nHere is the theorem that makes continued fractions special. The convergent $\\frac{p_k}{q_k}$ is a **best rational approximation**: no fraction with denominator $\\le q_k$ lies closer to $x$. And the error is controlled sharply:\n\n$$\\left| x - \\frac{p_k}{q_k} \\right| < \\frac{1}{q_k\\, q_{k+1}}.$$\n\nThe expansion of $\\pi$ is $[3; 7, 15, 1, 292, \\dots]$, whose convergents are\n\n$$3,\\quad \\frac{22}{7},\\quad \\frac{333}{106},\\quad \\frac{355}{113},\\quad \\dots$$\n\nThe convergent $\\frac{22}{7}$ is off by only $\\approx 0.00126$; $\\frac{355}{113}$ is off by $\\approx 2.7\\times10^{-7}$ — accurate enough for almost any engineering purpose, with a three-digit denominator. **A large next term is the signal of an unusually good convergent**: the $292$ after $\\frac{355}{113}$ is why that fraction is so astonishingly close (the next $q$ jumps by a factor of 292).\n\n### Pitfall\n\n> The continued fraction of an *integer* is trivial ($[n]$, a single term), and you must never divide by a zero remainder mid-expansion — the algorithm stops the instant the remainder hits 0. When evaluating a fold, invert only nonzero partial values.\n\n## Where continued fractions live\n\nBeyond $\\pi$, continued fractions solve Pell's equation $x^2 - Ny^2 = 1$ (the convergents of $\\sqrt{N}$ hand you the solutions), they underlie the best-rational-approximation step in **Wiener's attack** on RSA with a small private exponent, they explain why the 12-tone musical scale and the Gregorian calendar's leap-year rule are the compromises they are, and they design the tooth counts of precision gear trains. The same four moves you practice here — expand, build convergents, evaluate, approximate — are exactly what those applications call."
+  },
+  "application": {
+    "summary": "Continued fractions turn the Euclidean algorithm into the theory of best rational approximation. Their convergents are the closest fractions for a given denominator size, powering approximations of constants like $\\pi$, solutions of Pell's equation, gear-train and calendar design, and Wiener's attack on weak RSA keys.",
+    "domains": ["pure mathematics", "engineering", "cryptography", "music and calendars"],
+    "workedExample": "**Designing a gear ratio to approximate $\\pi$.**\n\nA planetarium builder needs two meshing gears whose tooth-count ratio approximates $\\pi$ as closely as possible, but no gear can have more than ~120 teeth (bigger gears don't fit). Which ratio should they cut?\n\nExpand $\\pi = [3; 7, 15, 1, 292, \\dots]$ and take convergents until the denominator would exceed the limit:\n\n$$\\frac{3}{1},\\quad \\frac{22}{7},\\quad \\frac{333}{106},\\quad \\frac{355}{113},\\quad \\dots$$\n\nThe convergent $\\frac{355}{113}$ has a denominator of 113 — just under the 120-tooth cap — and approximates $\\pi$ to within $2.7\\times10^{-7}$. A 355-tooth driver meshed with a 113-tooth follower reproduces $\\pi$ to seven decimal places; the next convergent $\\frac{103993}{33102}$ would need impossibly large gears for a barely-better fit. Because convergents are provably the best approximations for their denominator size, the builder can be *certain* no ratio with $\\le 113$ teeth on the follower does better than $\\frac{355}{113}$ — the continued fraction hands them the optimal design directly, with a guarantee no trial-and-error search could provide. This is exactly how 17th- and 18th-century clockmakers cut astronomical gear trains, and how Wiener's RSA attack recovers a small secret exponent from the convergents of the public key.",
+    "domainNotes": [
+      "**Approximation of constants:** convergents give the best rational approximations of $\\pi, e, \\sqrt{2}$; the huge partial quotient 292 in $\\pi$ explains why $355/113$ is so uncannily accurate.",
+      "**Pell's equation:** solutions of $x^2 - Ny^2 = 1$ come directly from the convergents of the continued fraction of $\\sqrt{N}$.",
+      "**Cryptography:** Wiener's attack recovers a small RSA private exponent $d$ by testing the convergents of the public fraction $e/n$ — a real reason to avoid small $d$.",
+      "**Engineering, music, calendars:** precision gear trains, the equal-tempered scale ($2^{7/12} \\approx 3/2$), and the Gregorian leap-year rule are all best-approximation compromises continued fractions make explicit."
+    ]
+  },
+  "generators": [
+    "nt2-cf-1", "nt2-cf-2", "nt2-cf-3",
+    "nt2-conv-1", "nt2-conv-2", "nt2-conv-3",
+    "nt2-value-1", "nt2-value-2", "nt2-value-3",
+    "nt2-approx-1", "nt2-approx-2", "nt2-approx-3"
+  ],
+  "problems": [
+    {
+      "id": "number-theory.continued-fractions.s01",
+      "concepts": ["finite-continued-fractions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Expand $\\frac{7}{3}$ as a continued fraction $[a_0; a_1]$ using the Euclidean algorithm.",
+      "steps": [
+        { "instruction": "Divide: $a_0 = \\lfloor 7/3 \\rfloor = $ ?", "answer": "2", "accept": [], "hint": "$7 = 2\\cdot3 + 1$." },
+        { "instruction": "The remainder is 1; invert $\\frac{3}{1}$. What is $a_1 = \\lfloor 3/1 \\rfloor$?", "answer": "3", "accept": [], "hint": "$3/1 = 3$ exactly, so this is the last term." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$7 = 2\\cdot3 + 1$, $3 = 3\\cdot1 + 0$, so $\\frac{7}{3} = [2; 3]$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s02",
+      "concepts": ["finite-continued-fractions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Expand $\\frac{29}{12}$ as a continued fraction $[a_0; a_1, a_2, a_3]$. Report each term.",
+      "steps": [
+        { "instruction": "$29 = a_0 \\cdot 12 + r$. What is $a_0$?", "answer": "2", "accept": [], "hint": "$29 = 2\\cdot12 + 5$." },
+        { "instruction": "Next: $12 = a_1 \\cdot 5 + r$. What is $a_1$?", "answer": "2", "accept": [], "hint": "$12 = 2\\cdot5 + 2$." },
+        { "instruction": "Next: $5 = a_2 \\cdot 2 + r$. What is $a_2$?", "answer": "2", "accept": [], "hint": "$5 = 2\\cdot2 + 1$." },
+        { "instruction": "Last: $2 = a_3 \\cdot 1 + 0$. What is $a_3$?", "answer": "2", "accept": [], "hint": "$2/1 = 2$, remainder 0 — stop." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "The Euclidean quotients of $(29, 12)$ are $2, 2, 2, 2$, so $\\frac{29}{12} = [2; 2, 2, 2]$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s03",
+      "concepts": ["finite-continued-fractions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Expand $\\frac{67}{29}$ as a continued fraction. Report all four terms $[a_0; a_1, a_2, a_3]$.",
+      "steps": [
+        { "instruction": "$67 = a_0 \\cdot 29 + r$: $a_0 = $ ?", "answer": "2", "accept": [], "hint": "$67 = 2\\cdot29 + 9$." },
+        { "instruction": "$29 = a_1 \\cdot 9 + r$: $a_1 = $ ?", "answer": "3", "accept": [], "hint": "$29 = 3\\cdot9 + 2$." },
+        { "instruction": "$9 = a_2 \\cdot 2 + r$: $a_2 = $ ?", "answer": "4", "accept": [], "hint": "$9 = 4\\cdot2 + 1$." },
+        { "instruction": "$2 = a_3 \\cdot 1 + 0$: $a_3 = $ ?", "answer": "2", "accept": [], "hint": "Remainder hits 0." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Quotients $2, 3, 4, 2$ give $\\frac{67}{29} = [2; 3, 4, 2]$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s04",
+      "concepts": ["convergents"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For the continued fraction $[3; 4, 2]$, compute the first two convergents $\\frac{p_0}{q_0}$ and $\\frac{p_1}{q_1}$.",
+      "steps": [
+        { "instruction": "The zeroth convergent is $\\frac{a_0}{1} = \\frac{3}{1}$. Give it as a fraction.", "answer": "3/1", "accept": ["3"], "hint": "Just $a_0$ over 1." },
+        { "instruction": "The first convergent is $\\frac{a_1 a_0 + 1}{a_1} = \\frac{4\\cdot3 + 1}{4}$. Give it as a fraction.", "answer": "13/4", "accept": [], "hint": "$\\frac{13}{4}$." }
+      ],
+      "finalAnswer": { "value": "13/4", "unit": "" },
+      "solutionNarrative": "$\\frac{p_0}{q_0} = \\frac{3}{1}$ and $\\frac{p_1}{q_1} = \\frac{4\\cdot3+1}{4} = \\frac{13}{4}$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s05",
+      "concepts": ["convergents"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $[2; 3, 4]$, use the recurrence $p_k = a_k p_{k-1} + p_{k-2}$, $q_k = a_k q_{k-1} + q_{k-2}$ to find the convergent $\\frac{p_2}{q_2}$.",
+      "steps": [
+        { "instruction": "First the k=1 convergent: $p_1 = 3\\cdot2 + 1 = $ ?", "answer": "7", "accept": [], "hint": "$p_0 = 2, p_{-1} = 1$." },
+        { "instruction": "$q_1 = 3\\cdot1 + 0 = $ ?", "answer": "3", "accept": [], "hint": "$q_0 = 1, q_{-1} = 0$." },
+        { "instruction": "Now $p_2 = 4\\cdot7 + 2 = $ ?", "answer": "30", "accept": [], "hint": "$4 p_1 + p_0 = 28 + 2$." },
+        { "instruction": "And $q_2 = 4\\cdot3 + 1 = 13$. Give the convergent $\\frac{p_2}{q_2}$ as a fraction.", "answer": "30/13", "accept": [], "hint": "$\\frac{30}{13}$." }
+      ],
+      "finalAnswer": { "value": "30/13", "unit": "" },
+      "solutionNarrative": "$p_2 = 4\\cdot7 + 2 = 30$, $q_2 = 4\\cdot3 + 1 = 13$, so $\\frac{p_2}{q_2} = \\frac{30}{13}$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s06",
+      "concepts": ["convergents", "rational-approximation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "The continued fraction of $\\pi$ starts $[3; 7, 15, 1]$. Compute its convergents to reach the famous $\\frac{355}{113}$.",
+      "steps": [
+        { "instruction": "$\\frac{p_1}{q_1} = \\frac{7\\cdot3 + 1}{7}$. Give this fraction.", "answer": "22/7", "accept": [], "hint": "The classic $\\frac{22}{7} \\approx 3.142857$." },
+        { "instruction": "$p_2 = 15\\cdot22 + 3 = $ ?", "answer": "333", "accept": [], "hint": "$15 p_1 + p_0$, with $p_0 = 3$." },
+        { "instruction": "$q_2 = 15\\cdot7 + 1 = $ ?", "answer": "106", "accept": [], "hint": "$15 q_1 + q_0$, with $q_0 = 1$." },
+        { "instruction": "Finally $p_3 = 1\\cdot333 + 22 = 355$ and $q_3 = 1\\cdot106 + 7 = 113$. Give the convergent $\\frac{p_3}{q_3}$.", "answer": "355/113", "accept": [], "hint": "$\\frac{355}{113} \\approx 3.1415929$." }
+      ],
+      "finalAnswer": { "value": "355/113", "unit": "" },
+      "solutionNarrative": "The convergents are $\\frac{3}{1}, \\frac{22}{7}, \\frac{333}{106}, \\frac{355}{113}$; the last matches $\\pi$ to seven decimals."
+    },
+    {
+      "id": "number-theory.continued-fractions.s07",
+      "concepts": ["value-of-a-cf"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate the continued fraction $[3; 4] = 3 + \\frac{1}{4}$ as a single fraction.",
+      "steps": [
+        { "instruction": "Combine over a common denominator: $3 + \\frac{1}{4} = $ ? (fraction)", "answer": "13/4", "accept": [], "hint": "$\\frac{3\\cdot4 + 1}{4}$." }
+      ],
+      "finalAnswer": { "value": "13/4", "unit": "" },
+      "solutionNarrative": "$[3; 4] = 3 + \\frac{1}{4} = \\frac{13}{4}$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s08",
+      "concepts": ["value-of-a-cf"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $[1; 2, 3]$ back to a fraction, folding from the innermost term.",
+      "steps": [
+        { "instruction": "Innermost: $2 + \\frac{1}{3} = $ ? (fraction)", "answer": "7/3", "accept": [], "hint": "$\\frac{2\\cdot3 + 1}{3}$." },
+        { "instruction": "Now $1 + \\frac{1}{7/3} = 1 + \\frac{3}{7} = $ ? (fraction)", "answer": "10/7", "accept": [], "hint": "Invert $\\frac{7}{3}$ to $\\frac{3}{7}$, then add 1." }
+      ],
+      "finalAnswer": { "value": "10/7", "unit": "" },
+      "solutionNarrative": "$2 + \\frac{1}{3} = \\frac{7}{3}$, then $1 + \\frac{3}{7} = \\frac{10}{7}$, so $[1; 2, 3] = \\frac{10}{7}$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s09",
+      "concepts": ["value-of-a-cf"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $[2; 1, 2, 3]$ to a single fraction, folding from the innermost term.",
+      "steps": [
+        { "instruction": "Innermost: $2 + \\frac{1}{3} = $ ? (fraction)", "answer": "7/3", "accept": [], "hint": "$\\frac{2\\cdot3+1}{3}$." },
+        { "instruction": "Next out: $1 + \\frac{3}{7} = $ ? (fraction)", "answer": "10/7", "accept": [], "hint": "Invert $\\frac{7}{3}$, add 1." },
+        { "instruction": "Finally: $2 + \\frac{7}{10} = $ ? (fraction)", "answer": "27/10", "accept": [], "hint": "Invert $\\frac{10}{7}$ to $\\frac{7}{10}$, add 2." }
+      ],
+      "finalAnswer": { "value": "27/10", "unit": "" },
+      "solutionNarrative": "Folding inward-out: $\\frac{7}{3} \\to \\frac{10}{7} \\to 2 + \\frac{7}{10} = \\frac{27}{10}$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s10",
+      "concepts": ["rational-approximation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A value has continued fraction $[3; 5, 2]$. Its first convergent $\\frac{p_1}{q_1}$ is already a good rational approximation. Give it.",
+      "steps": [
+        { "instruction": "Compute $\\frac{p_1}{q_1} = \\frac{5\\cdot3 + 1}{5}$ as a fraction.", "answer": "16/5", "accept": [], "hint": "$\\frac{16}{5} = 3.2$." }
+      ],
+      "finalAnswer": { "value": "16/5", "unit": "" },
+      "solutionNarrative": "The first convergent of $[3; 5, 2]$ is $\\frac{16}{5}$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s11",
+      "concepts": ["rational-approximation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The continued fraction of $\\pi$ begins $[3; 7]$. Use this convergent as a rational approximation of $\\pi$, and give the approximation error to 4 decimal places (use $\\pi \\approx 3.14159$).",
+      "steps": [
+        { "instruction": "The convergent from $[3; 7]$ is $3 + \\frac{1}{7} = $ ? (fraction)", "answer": "22/7", "accept": [], "hint": "$\\frac{22}{7}$." },
+        { "instruction": "Its decimal value is $22/7 \\approx 3.142857$. The error $|3.142857 - 3.14159|$ rounds to (4 dp):", "answer": "0.0013", "accept": ["0.00126"], "hint": "$3.142857 - 3.141593 \\approx 0.001264$." }
+      ],
+      "finalAnswer": { "value": "22/7", "unit": "" },
+      "solutionNarrative": "$\\frac{22}{7} \\approx 3.142857$ approximates $\\pi \\approx 3.141593$ with error $\\approx 0.0013$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s12",
+      "concepts": ["rational-approximation", "convergents"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The exact value is $\\frac{27}{10} = [2; 1, 2, 3]$. Approximate it by its first convergent $\\frac{3}{1}$ and find the approximation error.",
+      "steps": [
+        { "instruction": "The first convergent of $[2; 1, \\dots]$ is $\\frac{a_1 a_0 + 1}{a_1} = \\frac{1\\cdot2 + 1}{1}$. Give it as a fraction.", "answer": "3/1", "accept": ["3"], "hint": "$\\frac{3}{1} = 3$." },
+        { "instruction": "The error is $\\left|\\frac{27}{10} - \\frac{3}{1}\\right| = \\left|\\frac{27 - 30}{10}\\right| = $ ? (fraction)", "answer": "3/10", "accept": ["0.3"], "hint": "$\\frac{3}{10} = 0.3$." }
+      ],
+      "finalAnswer": { "value": "3/10", "unit": "" },
+      "solutionNarrative": "$\\frac{27}{10} = 2.7$ and the convergent $\\frac{3}{1} = 3$, so the error is $\\frac{3}{10} = 0.3$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s13",
+      "concepts": ["finite-continued-fractions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Expand $\\frac{5}{2}$ as a continued fraction $[a_0; a_1]$.",
+      "steps": [
+        { "instruction": "$5 = a_0 \\cdot 2 + r$: $a_0 = $ ?", "answer": "2", "accept": [], "hint": "$5 = 2\\cdot2 + 1$." },
+        { "instruction": "Invert the remainder: $\\frac{2}{1}$ gives $a_1 = $ ?", "answer": "2", "accept": [], "hint": "$2/1 = 2$, remainder 0." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$\\frac{5}{2} = [2; 2]$, since $5 = 2\\cdot2 + 1$ and $2 = 2\\cdot1$."
+    },
+    {
+      "id": "number-theory.continued-fractions.s14",
+      "concepts": ["convergents"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Verify the convergent identity $p_k q_{k-1} - p_{k-1} q_k = (-1)^{k+1}$ for $[2; 3, 4]$ at $k = 2$, using $\\frac{p_1}{q_1} = \\frac{7}{3}$ and $\\frac{p_2}{q_2} = \\frac{30}{13}$.",
+      "steps": [
+        { "instruction": "Compute $p_2 q_1 = 30 \\cdot 3 = $ ?", "answer": "90", "accept": [], "hint": "$30 \\cdot 3$." },
+        { "instruction": "Compute $p_1 q_2 = 7 \\cdot 13 = $ ?", "answer": "91", "accept": [], "hint": "$7 \\cdot 13$." },
+        { "instruction": "Subtract: $90 - 91 = $ ?", "answer": "-1", "accept": [], "hint": "This should equal $(-1)^{2+1} = -1$." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$p_2 q_1 - p_1 q_2 = 90 - 91 = -1 = (-1)^{3}$, confirming the identity (and that $\\gcd(p_2, q_2) = 1$)."
+    },
+    {
+      "id": "number-theory.continued-fractions.s15",
+      "concepts": ["value-of-a-cf"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $[0; 2] = 0 + \\frac{1}{2}$ as a fraction.",
+      "steps": [
+        { "instruction": "$0 + \\frac{1}{2} = $ ? (fraction)", "answer": "1/2", "accept": ["0.5"], "hint": "The reciprocal of 2." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "$[0; 2] = \\frac{1}{2}$ — a leading term of 0 gives a value below 1."
+    },
+    {
+      "id": "number-theory.continued-fractions.s16",
+      "concepts": ["finite-continued-fractions", "value-of-a-cf"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Expand $\\frac{10}{7}$ to a continued fraction, then evaluate it back to confirm you recover $\\frac{10}{7}$.",
+      "steps": [
+        { "instruction": "$10 = a_0 \\cdot 7 + r$: $a_0 = $ ?", "answer": "1", "accept": [], "hint": "$10 = 1\\cdot7 + 3$." },
+        { "instruction": "$7 = a_1 \\cdot 3 + r$: $a_1 = $ ?", "answer": "2", "accept": [], "hint": "$7 = 2\\cdot3 + 1$." },
+        { "instruction": "$3 = a_2 \\cdot 1 + 0$: $a_2 = $ ?", "answer": "3", "accept": [], "hint": "Remainder hits 0, so $\\frac{10}{7} = [1; 2, 3]$." },
+        { "instruction": "Evaluate back: $[1; 2, 3] = 1 + \\frac{1}{2 + 1/3} = 1 + \\frac{3}{7} = $ ? (fraction)", "answer": "10/7", "accept": [], "hint": "You should recover the original." }
+      ],
+      "finalAnswer": { "value": "10/7", "unit": "" },
+      "solutionNarrative": "$\\frac{10}{7} = [1; 2, 3]$, and folding back gives $1 + \\frac{3}{7} = \\frac{10}{7}$ — a full round trip."
+    }
+  ]
+}

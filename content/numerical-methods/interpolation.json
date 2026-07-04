@@ -1,0 +1,253 @@
+{
+  "id": "numerical-methods.interpolation",
+  "subject": "numerical-methods",
+  "title": "Polynomial Interpolation",
+  "prerequisites": ["numerical-methods.error-and-floating-point", "algebra-2.polynomial-functions"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "linear-interpolation",
+      "label": "Linear interpolation",
+      "microLesson": "The simplest way to estimate a value between two known data points is to draw a straight line between them and read off the height. Given $(x_0, y_0)$ and $(x_1, y_1)$, the estimate at $x$ is $y = y_0 + (y_1 - y_0)\\dfrac{x - x_0}{x_1 - x_0}$ — the starting height plus the slope times how far you've travelled. For points $(2, 5)$ and $(6, 13)$, at $x = 4$: $y = 5 + 8\\cdot\\frac{4-2}{6-2} = 5 + 8\\cdot\\frac12 = 9$. It's the workhorse behind table lookups, texture sampling, and animation."
+    },
+    {
+      "id": "lagrange-form",
+      "label": "The Lagrange form",
+      "microLesson": "Through any $n+1$ points (with distinct x-values) there is exactly one polynomial of degree $\\le n$. The **Lagrange form** builds it as a weighted sum of **basis polynomials**, each equal to $1$ at its own node and $0$ at every other node: $p(x) = \\sum_k y_k L_k(x)$, where $L_k(x) = \\prod_{j\\ne k}\\frac{x - x_j}{x_k - x_j}$. For two points it reproduces the interpolating line; for three points it produces the unique parabola through them. The construction guarantees $p(x_k) = y_k$ at every node by design."
+    },
+    {
+      "id": "newton-divided-differences",
+      "label": "Newton's divided differences",
+      "microLesson": "**Newton's divided-difference** form builds the same interpolating polynomial incrementally, so adding a new data point only appends one term instead of restarting. The coefficients come from a triangular table: first differences $f[x_0,x_1] = \\dfrac{f(x_1)-f(x_0)}{x_1 - x_0}$, then second differences $f[x_0,x_1,x_2] = \\dfrac{f[x_1,x_2]-f[x_0,x_1]}{x_2 - x_0}$, and so on. The polynomial is $p(x) = f[x_0] + f[x_0,x_1](x - x_0) + f[x_0,x_1,x_2](x-x_0)(x-x_1) + \\cdots$."
+    },
+    {
+      "id": "interpolation-error-and-use",
+      "label": "Using interpolation and bounding its error",
+      "microLesson": "Interpolation lets you evaluate a fitted polynomial to estimate values a table doesn't list, and the error has a known bound. For linear interpolation between $x_0$ and $x_1$, the error at $x$ is at most $\\dfrac{|f''|_{\\max}}{2}\\,|x - x_0|\\,|x - x_1|$ — largest in the middle of the gap and zero at the nodes. More nodes usually help, but not always: forcing a high-degree polynomial through many equally-spaced points can produce wild oscillations near the ends (the **Runge phenomenon**), so more data is not automatically more accurate."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The problem: reading between the data\n\nYou have a handful of known points — a table of measurements, a few samples of an expensive function, the keyframes of an animation — and you need a value *between* them, or a smooth formula that reproduces them all. **Polynomial interpolation** finds the unique polynomial passing exactly through your points, then lets you evaluate it anywhere. It's the mathematics behind table lookups, curve fitting, animation, and the integration and differentiation rules of the next topics.\n\n## Start simple: linear interpolation\n\nBetween two points $(x_0, y_0)$ and $(x_1, y_1)$, connect them with a straight line and read off its height at the query $x$:\n\n$$y = y_0 + (y_1 - y_0)\\,\\frac{x - x_0}{x_1 - x_0}.$$\n\nThe fraction $\\frac{x - x_0}{x_1 - x_0}$ is 'how far across the gap you are,' from $0$ at the left node to $1$ at the right. \n\n### Worked example\n\nPoints $(2, 5)$ and $(6, 13)$, query $x = 4$: the query sits $\\frac{4 - 2}{6 - 2} = \\frac12$ of the way across, so $y = 5 + (13 - 5)\\cdot\\frac12 = 5 + 4 = 9$.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[1,7],\"yRange\":[0,15],\"grid\":true,\"segments\":[{\"from\":[2,5],\"to\":[6,13],\"color\":\"accent\"},{\"from\":[4,0],\"to\":[4,9],\"dashed\":true,\"color\":\"muted\"}],\"points\":[{\"x\":2,\"y\":5,\"label\":\"(2, 5)\",\"color\":\"good\"},{\"x\":6,\"y\":13,\"label\":\"(6, 13)\",\"color\":\"good\"},{\"x\":4,\"y\":9,\"label\":\"estimate (4, 9)\",\"color\":\"warn\"}],\"caption\":\"Linear interpolation: the estimate at x = 4 is the height of the line joining the two known points, y = 9.\"}\n```\n\n## Through three or more points: the Lagrange form\n\nA fundamental fact: **through any $n+1$ points with distinct x-values there is exactly one polynomial of degree at most $n$.** Two points → a unique line; three points → a unique parabola. The **Lagrange form** writes that polynomial as a weighted sum of **basis polynomials**:\n\n$$p(x) = \\sum_{k} y_k\\, L_k(x), \\qquad L_k(x) = \\prod_{j \\ne k} \\frac{x - x_j}{x_k - x_j}.$$\n\nEach $L_k$ is cleverly built to equal $1$ at its own node $x_k$ and $0$ at every other node, so the sum automatically satisfies $p(x_k) = y_k$.\n\n### Worked example — parabola through 3 points\n\nTake $(-1, 2)$, $(0, 1)$, $(1, 2)$. By symmetry this is $p(x) = x^2 + 1$: check $p(-1) = 2$, $p(0) = 1$, $p(1) = 2$. ✓ You can also solve directly: with $p(x) = ax^2 + bx + c$, the node at $x = 0$ gives $c = 1$; then $a + b + c = 2$ and $a - b + c = 2$ force $b = 0$, $a = 1$. Either route yields the one and only parabola through the three points.\n\n## Building it incrementally: Newton's divided differences\n\nThe Lagrange form is elegant but must be rebuilt from scratch if a new point arrives. **Newton's divided-difference form** avoids that by building the polynomial term by term. You compute a triangular table:\n\n$$f[x_i, x_{i+1}] = \\frac{f(x_{i+1}) - f(x_i)}{x_{i+1} - x_i}, \\qquad f[x_i, x_{i+1}, x_{i+2}] = \\frac{f[x_{i+1}, x_{i+2}] - f[x_i, x_{i+1}]}{x_{i+2} - x_i}.$$\n\nThe interpolating polynomial is then\n\n$$p(x) = f[x_0] + f[x_0, x_1](x - x_0) + f[x_0, x_1, x_2](x - x_0)(x - x_1) + \\cdots.$$\n\n### Worked example\n\nNodes $(0, 1)$, $(1, 2)$, $(2, 5)$:\n\n| $x$ | $f$ | 1st diff | 2nd diff |\n|-----|-----|----------|----------|\n| 0 | 1 | | |\n| | | $\\frac{2-1}{1-0} = 1$ | |\n| 1 | 2 | | $\\frac{3 - 1}{2 - 0} = 1$ |\n| | | $\\frac{5-2}{2-1} = 3$ | |\n| 2 | 5 | | |\n\nSo $p(x) = 1 + 1\\,(x - 0) + 1\\,(x - 0)(x - 1) = 1 + x + x(x-1) = x^2 + 1$ — the same polynomial the Lagrange form would give, as it must, since the interpolating polynomial is unique.\n\n## Using interpolation, and bounding its error\n\nOnce you have $p(x)$, you *use* it by evaluating it at any query point. But how wrong is the estimate? For **linear** interpolation between $x_0$ and $x_1$, the error at a point $x$ is bounded by\n\n$$|f(x) - p(x)| \\le \\frac{\\max|f''|}{2}\\,|x - x_0|\\,|x - x_1|.$$\n\nThe product $|x - x_0||x - x_1|$ is zero at the nodes (no error there) and largest in the middle — which is why linear interpolation is worst halfway between samples, and why curvier functions (bigger $|f''|$) are harder to interpolate.\n\n## The pitfall: the Runge phenomenon\n\nIntuition says more points give a better fit. **That intuition can fail badly.** Forcing a single high-degree polynomial through many *equally spaced* points can make it oscillate wildly near the ends of the interval — huge swings between the data points even though it hits every node exactly. This is the **Runge phenomenon**, famously seen fitting $f(x) = \\frac{1}{1 + 25x^2}$ on $[-1, 1]$: a degree-10 interpolant overshoots the true function enormously near $\\pm 1$. The cures are to use **lower-degree pieces** (spline interpolation) or to cluster the nodes toward the ends (Chebyshev points). The moral: interpolation is powerful, but blindly raising the degree is not the way to more accuracy."
+  },
+  "application": {
+    "summary": "Interpolation is everywhere a device must fill in values it never measured: reconstructing a smooth signal from samples, resizing and texturing images, animating between keyframes, and reading engineering tables. It is also the foundation on which numerical integration and differentiation formulas are built — you fit a polynomial to samples, then integrate or differentiate that polynomial exactly.",
+    "domains": ["computer graphics", "signal processing", "animation", "engineering"],
+    "workedExample": "**Smooth camera motion from keyframes**\n\nAn animator sets a camera's height at only a few times: $h(0) = 2$ m, $h(2) = 6$ m, $h(4) = 4$ m. The renderer needs a height for *every* frame in between — say at $t = 1$ s and $t = 3$ s — and jumpy linear segments would look robotic, so it fits the unique parabola through the three keyframes.\n\nUsing divided differences on $(0, 2)$, $(2, 6)$, $(4, 4)$: the first differences are $\\frac{6 - 2}{2 - 0} = 2$ and $\\frac{4 - 6}{4 - 2} = -1$; the second difference is $\\frac{-1 - 2}{4 - 0} = -0.75$. So\n\n$$h(t) = 2 + 2\\,t - 0.75\\,t(t - 2).$$\n\nAt $t = 1$: $h = 2 + 2 - 0.75(1)(-1) = 4 + 0.75 = 4.75$ m. At $t = 3$: $h = 2 + 6 - 0.75(3)(1) = 8 - 2.25 = 5.75$ m. The camera glides smoothly through the keyframes with a natural ease-in and ease-out that no straight-line interpolation could give — and the very same polynomial-through-samples idea, applied to color instead of height, is what a GPU does when it filters a texture. When keyframes grow numerous, animators switch to piecewise **splines** precisely to dodge the Runge-style wobble a single high-degree curve would introduce.",
+    "domainNotes": [
+      "**Computer graphics:** bilinear and bicubic texture filtering are 2-D interpolation; smooth shading interpolates vertex values across a triangle.",
+      "**Signal processing:** reconstructing a continuous signal from discrete samples is interpolation; upsampling audio and images relies on it.",
+      "**Animation:** keyframe in-betweening interpolates position, rotation, and color; splines keep motion smooth without Runge oscillation.",
+      "**Engineering:** reading steam tables, material property charts, and calibration curves at unlisted inputs is table interpolation."
+    ]
+  },
+  "generators": ["nm1-linterp-1", "nm1-linterp-2", "nm1-linterp-3", "nm1-lagrange-1", "nm1-lagrange-2", "nm1-lagrange-3", "nm1-divdiff-1", "nm1-divdiff-2", "nm1-divdiff-3", "nm1-interp-error-1", "nm1-interp-error-2", "nm1-interp-error-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.interpolation.s01",
+      "concepts": ["linear-interpolation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Linearly interpolate between $(2, 5)$ and $(6, 13)$ to estimate $y$ at $x = 4$. Use $y = y_0 + (y_1 - y_0)\\frac{x - x_0}{x_1 - x_0}$.",
+      "steps": [
+        { "instruction": "Compute $y = 5 + (13 - 5)\\frac{4 - 2}{6 - 2}$.", "answer": "9", "accept": ["9.0"], "hint": "The fraction is $\\frac{2}{4} = \\frac12$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$y = 5 + 8\\cdot\\frac12 = 9$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s02",
+      "concepts": ["linear-interpolation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A sensor reads $20$ at time $0$ s and $50$ at time $6$ s. Estimate the reading at $t = 2$ s by linear interpolation.",
+      "steps": [
+        { "instruction": "Compute the fraction across: $\\frac{2 - 0}{6 - 0}$. Round to 4 decimals.", "answer": "0.3333", "accept": ["1/3", "0.3334"], "hint": "$\\frac{2}{6}$." },
+        { "instruction": "Now $y = 20 + (50 - 20)\\times\\frac{1}{3}$.", "answer": "30", "accept": ["30.0"], "hint": "$20 + 30\\cdot\\frac13 = 20 + 10$." }
+      ],
+      "finalAnswer": { "value": "30", "unit": "" },
+      "solutionNarrative": "The query is $\\frac13$ across, so $y = 20 + 30\\cdot\\frac13 = 30$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s03",
+      "concepts": ["linear-interpolation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A calibration line passes through $(0, 2)$ and $(5, 12)$. What input $x$ gives the output $y = 8$? (Inverse linear interpolation.)",
+      "steps": [
+        { "instruction": "Solve $x = 0 + (5 - 0)\\frac{8 - 2}{12 - 2}$. Round to 4 decimals.", "answer": "3.0000", "accept": ["3"], "hint": "The fraction of the output range is $\\frac{6}{10} = 0.6$; $5\\cdot 0.6$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$x = 5\\cdot\\frac{6}{10} = 3$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s04",
+      "concepts": ["lagrange-form"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the degree-1 interpolating polynomial through $(0, 1)$ and $(2, 7)$. Write it as $mx + b$.",
+      "steps": [
+        { "instruction": "Slope $m = \\frac{7 - 1}{2 - 0}$. Compute it.", "answer": "3", "accept": [], "hint": "$\\frac{6}{2}$." },
+        { "instruction": "With intercept $b = 1$ (the value at $x = 0$), write the polynomial $mx + b$.", "answer": "3x + 1", "accept": ["3x+1", "1 + 3x"], "hint": "$b = 1$ since $p(0) = 1$." }
+      ],
+      "finalAnswer": { "value": "3x + 1", "unit": "" },
+      "solutionNarrative": "Slope 3, intercept 1: the line is $3x + 1$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s05",
+      "concepts": ["lagrange-form"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the degree-2 polynomial through $(-1, 2)$, $(0, 1)$, $(1, 2)$. Give it expanded as $ax^2 + bx + c$.",
+      "steps": [
+        { "instruction": "From the node at $x = 0$, read off $c$.", "answer": "1", "accept": [], "hint": "$p(0) = c = 1$." },
+        { "instruction": "Using $p(1) = a + b + c = 2$ and $p(-1) = a - b + c = 2$, find $b = \\frac{p(1) - p(-1)}{2}$.", "answer": "0", "accept": [], "hint": "$\\frac{2 - 2}{2} = 0$." },
+        { "instruction": "Find $a = \\frac{p(1) + p(-1)}{2} - c$, then write the polynomial.", "answer": "x^2 + 1", "accept": ["x^2+1", "1 + x^2"], "hint": "$a = \\frac{2 + 2}{2} - 1 = 1$." }
+      ],
+      "finalAnswer": { "value": "x^2 + 1", "unit": "" },
+      "solutionNarrative": "$a = 1$, $b = 0$, $c = 1$: the parabola is $x^2 + 1$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s06",
+      "concepts": ["lagrange-form"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Interpolate $(0, 1)$, $(1, 4)$, $(2, 9)$ with a degree-2 polynomial. Give the expanded result.",
+      "steps": [
+        { "instruction": "The constant term is $p(0)$. What is it?", "answer": "1", "accept": [], "hint": "$p(0) = 1$." },
+        { "instruction": "Solve $a + b + c = 4$ and $4a + 2b + c = 9$ (with $c = 1$) for $b$.", "answer": "2", "accept": [], "hint": "$a + b = 3$ and $4a + 2b = 8 \\Rightarrow 2a + b = 4$; subtract to get $a = 1$, so $b = 2$." },
+        { "instruction": "Find $a$ and write the polynomial expanded.", "answer": "x^2 + 2x + 1", "accept": ["x^2+2x+1", "(x+1)^2"], "hint": "$a = 1$; the polynomial is $x^2 + 2x + 1 = (x+1)^2$." }
+      ],
+      "finalAnswer": { "value": "x^2 + 2x + 1", "unit": "" },
+      "solutionNarrative": "Solving gives $a = 1$, $b = 2$, $c = 1$, so $p(x) = x^2 + 2x + 1 = (x+1)^2$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s07",
+      "concepts": ["newton-divided-differences"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the first divided difference $f[x_0, x_1] = \\frac{f(x_1) - f(x_0)}{x_1 - x_0}$ for $(1, 3)$ and $(4, 12)$.",
+      "steps": [
+        { "instruction": "Compute $\\frac{12 - 3}{4 - 1}$.", "answer": "3", "accept": [], "hint": "$\\frac{9}{3}$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$f[x_0, x_1] = \\frac{9}{3} = 3$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s08",
+      "concepts": ["newton-divided-differences"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Build the divided-difference table for $(0, 1)$, $(2, 5)$, $(4, 17)$. Find both first differences and the second difference.",
+      "steps": [
+        { "instruction": "First difference $f[x_0,x_1] = \\frac{5 - 1}{2 - 0}$.", "answer": "2", "accept": [], "hint": "$\\frac{4}{2}$." },
+        { "instruction": "First difference $f[x_1,x_2] = \\frac{17 - 5}{4 - 2}$.", "answer": "6", "accept": [], "hint": "$\\frac{12}{2}$." },
+        { "instruction": "Second difference $f[x_0,x_1,x_2] = \\frac{6 - 2}{4 - 0}$.", "answer": "1", "accept": [], "hint": "$\\frac{4}{4}$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "First differences 2 and 6; second difference $\\frac{6 - 2}{4} = 1$ — the leading coefficient of the Newton form."
+    },
+    {
+      "id": "numerical-methods.interpolation.s09",
+      "concepts": ["newton-divided-differences"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For nodes $(0, 1)$, $(1, 2)$, $(2, 5)$ the Newton form is $p(x) = 1 + 1\\,x + 1\\,x(x-1)$. Expand it to $ax^2 + bx + c$.",
+      "steps": [
+        { "instruction": "The second divided difference (coefficient of $x(x-1)$) is $\\frac{3 - 1}{2}$. Compute it.", "answer": "1", "accept": [], "hint": "First diffs are 1 and 3; $\\frac{3 - 1}{2}$." },
+        { "instruction": "Expand $1 + x + x(x - 1)$ into $ax^2 + bx + c$.", "answer": "x^2 + 1", "accept": ["x^2+1", "1 + x^2"], "hint": "$x(x-1) = x^2 - x$; add $x$: $x^2$, plus the constant 1." }
+      ],
+      "finalAnswer": { "value": "x^2 + 1", "unit": "" },
+      "solutionNarrative": "$1 + x + (x^2 - x) = x^2 + 1$ — the same unique interpolant the Lagrange form gives."
+    },
+    {
+      "id": "numerical-methods.interpolation.s10",
+      "concepts": ["interpolation-error-and-use"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "An interpolating polynomial is $p(x) = 2x^2 + x + 3$. Use it to estimate the value at $x = 4$.",
+      "steps": [
+        { "instruction": "Evaluate $p(4) = 2\\cdot 4^2 + 4 + 3$.", "answer": "39", "accept": [], "hint": "$2\\cdot 16 + 4 + 3$." }
+      ],
+      "finalAnswer": { "value": "39", "unit": "" },
+      "solutionNarrative": "$p(4) = 32 + 4 + 3 = 39$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s11",
+      "concepts": ["interpolation-error-and-use"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Linear interpolation between $x_0 = 0$ and $x_1 = 4$ has error bounded by $\\frac{|f''|}{2}|x - x_0||x - x_1|$. With $|f''| \\le 6$, bound the error at the midpoint $x = 2$.",
+      "steps": [
+        { "instruction": "Compute $|x - x_0||x - x_1| = |2 - 0||2 - 4|$.", "answer": "4", "accept": [], "hint": "$2 \\times 2$." },
+        { "instruction": "Multiply by $\\frac{6}{2} = 3$ to get the bound.", "answer": "12", "accept": [], "hint": "$3 \\times 4$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$|x-x_0||x-x_1| = 4$; times $\\frac62 = 3$ gives an error bound of $12$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s12",
+      "concepts": ["interpolation-error-and-use"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A table gives $f(1) = 4$ and $f(3) = 8$. Estimate $f(2)$ by linear interpolation, and bound the error given $|f''| \\le 2$.",
+      "steps": [
+        { "instruction": "Linear estimate: $f(2) \\approx 4 + (8 - 4)\\frac{2 - 1}{3 - 1}$.", "answer": "6", "accept": [], "hint": "Midpoint, so the fraction is $\\frac12$; $4 + 4\\cdot\\frac12$." },
+        { "instruction": "Error bound $= \\frac{2}{2}|2 - 1||2 - 3|$. Compute it.", "answer": "1", "accept": [], "hint": "$1\\times 1\\times 1$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$f(2) \\approx 6$, accurate to within $\\frac22\\cdot 1\\cdot 1 = 1$ since $|f''| \\le 2$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s13",
+      "concepts": ["linear-interpolation", "interpolation-error-and-use"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A steam table lists a property as $150$ at $100^\\circ$ and $190$ at $120^\\circ$. Estimate the value at $110^\\circ$ by linear interpolation.",
+      "steps": [
+        { "instruction": "The query is halfway. Compute $150 + (190 - 150)\\frac{110 - 100}{120 - 100}$.", "answer": "170", "accept": [], "hint": "$\\frac{10}{20} = \\frac12$; $150 + 40\\cdot\\frac12$." }
+      ],
+      "finalAnswer": { "value": "170", "unit": "" },
+      "solutionNarrative": "Midway between the entries, the value is $150 + 40\\cdot\\frac12 = 170$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s14",
+      "concepts": ["lagrange-form", "newton-divided-differences"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Both methods must give the same polynomial through $(0, 3)$, $(1, 4)$, $(2, 9)$. Build it via divided differences and expand.",
+      "steps": [
+        { "instruction": "First differences: $f[x_0,x_1] = \\frac{4 - 3}{1}$ and $f[x_1,x_2] = \\frac{9 - 4}{1}$. Enter $f[x_1,x_2]$.", "answer": "5", "accept": [], "hint": "$9 - 4$." },
+        { "instruction": "Second difference $\\frac{5 - 1}{2 - 0}$. Compute it.", "answer": "2", "accept": [], "hint": "$\\frac{4}{2}$." },
+        { "instruction": "Expand $3 + 1\\,x + 2\\,x(x - 1)$ into $ax^2 + bx + c$.", "answer": "2x^2 - x + 3", "accept": ["2x^2-x+3", "3 - x + 2x^2"], "hint": "$2x(x-1) = 2x^2 - 2x$; add $x$: $2x^2 - x$, plus 3." }
+      ],
+      "finalAnswer": { "value": "2x^2 - x + 3", "unit": "" },
+      "solutionNarrative": "The divided differences give $p(x) = 3 + x + 2x(x-1) = 2x^2 - x + 3$."
+    },
+    {
+      "id": "numerical-methods.interpolation.s15",
+      "concepts": ["interpolation-error-and-use"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Why can fitting a single high-degree polynomial through many equally-spaced points make accuracy worse? Name the phenomenon (one word).",
+      "steps": [
+        { "instruction": "Type the name of the wild-oscillation-near-the-ends effect (it starts with R).", "answer": "runge", "accept": ["runge phenomenon", "rungephenomenon"], "hint": "Named after Carl Runge; the fix is splines or Chebyshev nodes." }
+      ],
+      "finalAnswer": { "value": "runge", "unit": "" },
+      "solutionNarrative": "The Runge phenomenon: a high-degree interpolant on equally-spaced nodes oscillates wildly near the interval ends."
+    },
+    {
+      "id": "numerical-methods.interpolation.s16",
+      "concepts": ["lagrange-form"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Using the Lagrange form, the basis polynomial $L_0(x)$ for nodes $x_0 = 1$, $x_1 = 3$ is $L_0(x) = \\frac{x - 3}{1 - 3}$. Evaluate $L_0$ at its own node $x = 1$ and at the other node $x = 3$.",
+      "steps": [
+        { "instruction": "Compute $L_0(1) = \\frac{1 - 3}{1 - 3}$.", "answer": "1", "accept": [], "hint": "$\\frac{-2}{-2}$; a basis polynomial equals 1 at its own node." },
+        { "instruction": "Compute $L_0(3) = \\frac{3 - 3}{1 - 3}$.", "answer": "0", "accept": [], "hint": "The numerator is 0; a basis polynomial is 0 at other nodes." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "$L_0(1) = 1$ and $L_0(3) = 0$ — exactly the design of a Lagrange basis: 1 at its own node, 0 at the others."
+    }
+  ]
+}

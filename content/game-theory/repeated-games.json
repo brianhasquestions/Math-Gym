@@ -1,0 +1,278 @@
+{
+  "id": "game-theory.repeated-games",
+  "subject": "game-theory",
+  "title": "Repeated Games and Cooperation",
+  "prerequisites": ["game-theory.classic-games", "game-theory.sequential-games"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "finite-repetition",
+      "label": "Finite repetition and unraveling",
+      "microLesson": "Playing the Prisoner's Dilemma a FIXED, KNOWN number of times does NOT rescue cooperation. Reason from the last round: it has no future, so both players defect. Knowing the last round is settled, the second-to-last round becomes effectively last — so both defect there too. This **unraveling** cascades all the way back to round 1: defection in every round is the unique subgame-perfect equilibrium. Micro-example: in a 3-round PD with mutual-defection payoff $P=1$, each player earns $3\\times1 = 3$ total, even though mutual cooperation ($R=3$ each) would have paid $9$. A known deadline is poison for cooperation — the escape hatch is an *uncertain* or *infinite* horizon."
+    },
+    {
+      "id": "discounting-and-present-value",
+      "label": "Discounting and present value",
+      "microLesson": "Future payoffs are worth less than present ones. With a **discount factor** $\\delta \\in (0,1)$ per period, a payoff $u$ received $t$ periods from now is worth $\\delta^t u$ today. A constant stream of $u$ every period, starting now, has present value given by the geometric series $\\sum_{t=0}^{\\infty} \\delta^t u = \\dfrac{u}{1-\\delta}$. Micro-example: $\\$3$ per period forever at $\\delta = \\tfrac23$ is worth $\\dfrac{3}{1 - 2/3} = \\dfrac{3}{1/3} = 9$ today. A larger $\\delta$ means more patience and a heavier weight on the future — which is exactly what makes long-run cooperation attractive. (Beware: $\\delta$ is *per period*; a per-year discount is different from a per-round one.)"
+    },
+    {
+      "id": "trigger-strategies",
+      "label": "Trigger strategies and the folk threshold",
+      "microLesson": "A **grim-trigger** strategy says: cooperate as long as everyone has cooperated, but if anyone ever defects, punish by defecting forever. In an infinitely repeated Prisoner's Dilemma with payoffs $T>R>P>S$, cooperation is sustainable under grim trigger exactly when players are patient enough: $\\delta \\ge \\dfrac{T-R}{T-P}$. Micro-example: with $T=5$, $R=3$, $P=1$, the threshold is $\\delta^* = \\dfrac{5-3}{5-1} = \\dfrac{2}{4} = \\tfrac12$ — cooperation holds if $\\delta \\ge \\tfrac12$. The logic: cooperating forever pays $\\frac{R}{1-\\delta}$; a one-shot defection grabs $T$ now but triggers $P$ forever. Cooperation wins when the discounted future punishment outweighs the one-time temptation."
+    },
+    {
+      "id": "folk-theorem-intuition",
+      "label": "The Folk Theorem",
+      "microLesson": "The **Folk Theorem** says that in an infinitely repeated game with patient enough players, essentially ANY per-period payoff profile that gives each player strictly more than their one-shot **minimax** (security) value can be sustained as a subgame-perfect equilibrium. Repetition thus turns a game with one grim prediction into a game with a whole RANGE of possible equilibria — including cooperative ones. Micro-example: in the repeated PD the one-shot floor is mutual defection $P$; any outcome paying each player above $P$ (such as mutual cooperation $R$) is sustainable for high $\\delta$, while nothing below the floor ever is. The theorem explains why long-lived relationships — firms, nations, communities — can sustain cooperation that a one-shot analysis says is impossible."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The shadow of the future\n\nIn the one-shot **Prisoner's Dilemma**, rational players defect — mutual defection is the only Nash equilibrium, even though both would be better off cooperating. Yet the world is full of sustained cooperation: firms hold prices, nations honor treaties, neighbors keep promises. What changes? The answer is *repetition*. When the same players interact again and again, today's choice casts a **shadow of the future** — defect now and you may forfeit a stream of future cooperation. This lecture makes that intuition exact.\n\nRecall the stage game with the ordering $T > R > P > S$: **T**emptation (defect on a cooperator), **R**eward (mutual cooperation), **P**unishment (mutual defection), **S**ucker (cooperate against a defector). A typical set of numbers:\n\n| | Cooperate | Defect |\n| Cooperate | R = 3 | S = 0 |\n| Defect | T = 5 | P = 1 |\n\n(Entries are the row player's payoff.) In one shot, Defect dominates: $T > R$ and $P > S$, so both defect and land at $P = 1$ each, worse than the $R = 3$ each they could have had.\n\n## Finite repetition: the unraveling trap\n\nSurely repeating the game lets cooperation take hold? **Not if the number of rounds is fixed and known.** Suppose the PD is played exactly $n$ times. Reason backward from the **last** round:\n\n- **Round $n$** has no future to protect, so it is just a one-shot PD — both defect.\n- **Round $n-1$**: since round $n$ is already a guaranteed mutual defection no matter what, there is nothing to be gained by cooperating now either — both defect.\n- Continue: each round, once its successor is pinned to defection, becomes effectively the last round, so it too collapses to defection.\n\nThis **unraveling** reaches all the way back to round 1. The unique subgame-perfect equilibrium of the finitely repeated PD is **defect in every single round**. With $n = 3$ and $P = 1$, each player earns $3 \\times 1 = 3$ total, versus the $3 \\times 3 = 9$ that full cooperation would yield. A *known deadline* is poison for cooperation. (This is the same backward-induction logic you used on game trees — a finite repeated game is just a very tall tree.)\n\nThe crucial escape is **uncertainty about the end**. If players never know which round is the last — equivalently, if there is always a positive probability the game continues — backward induction has no anchor to start from, and cooperation can survive. That is why an *indefinite* or *infinite* horizon behaves so differently from a finite one.\n\n## Discounting: valuing the future\n\nTo analyze an infinite horizon we need to add up infinitely many payoffs — which requires **discounting**. A payoff is worth less the longer you wait for it. Let $\\delta \\in (0, 1)$ be the **discount factor** per period: a payoff $u$ received $t$ periods from now is worth $\\delta^t u$ today. (You can read $\\delta$ as pure impatience, or as the probability the relationship survives to the next period — mathematically they play the same role.)\n\nA constant stream of $u$ every period, starting now at $t = 0$, sums as a geometric series:\n\n$$\\sum_{t=0}^{\\infty} \\delta^t u = u(1 + \\delta + \\delta^2 + \\cdots) = \\frac{u}{1 - \\delta}.$$\n\nFor example, $u = 3$ per period at $\\delta = \\tfrac23$ is worth $\\dfrac{3}{1 - 2/3} = \\dfrac{3}{1/3} = 9$ today. Notice how a bigger $\\delta$ inflates the value of the stream: at $\\delta = 0.9$, the same $\\$3$ per period is worth $\\dfrac{3}{0.1} = 30$. **Patience magnifies the future** — and that is precisely the lever that makes cooperation enforceable.\n\n> **Pitfall — per-period vs annual.** $\\delta$ is a *per-round* discount factor. If rounds are months, do not plug in an annual discount rate without converting. Mixing time units is the most common error in these computations.\n\n## Trigger strategies: enforcing cooperation\n\nHow do patient players actually *sustain* cooperation? With a **trigger strategy** — a threat to punish defection. The starkest is **grim trigger**: *cooperate as long as everyone always has; the instant anyone defects, defect forever after.* Because the punishment is permanent and severe, it maximizes deterrence.\n\nWhen is grim trigger self-enforcing? Compare a player's two options, assuming the opponent plays grim trigger:\n\n- **Always cooperate:** earn $R$ every period, present value $\\dfrac{R}{1 - \\delta}$.\n- **Defect once, then suffer punishment:** grab $T$ this period, then earn $P$ forever, present value $T + \\dfrac{\\delta P}{1 - \\delta}$.\n\nCooperation is an equilibrium when it is at least as good:\n\n$$\\frac{R}{1 - \\delta} \\;\\ge\\; T + \\frac{\\delta P}{1 - \\delta}.$$\n\nMultiply through by $(1 - \\delta)$ and rearrange (using $R - P$ and $T - R$):\n\n$$\\delta \\;\\ge\\; \\frac{T - R}{T - P}.$$\n\nThis is the **critical discount factor** $\\delta^*$. Since $T > R > P$, both numerator and denominator are positive and $T - R < T - P$, so $\\delta^*$ always lies strictly in $(0, 1)$ — there is *always* a patience level high enough to rescue cooperation. With $T = 5$, $R = 3$, $P = 1$:\n\n$$\\delta^* = \\frac{5 - 3}{5 - 1} = \\frac{2}{4} = \\frac12.$$\n\nSo if the players value the future at least half as much as the present ($\\delta \\ge \\tfrac12$), grim trigger sustains cooperation; below that, the one-shot temptation $T$ wins and the relationship collapses into permanent defection.\n\n## The Folk Theorem: a universe of equilibria\n\nGrim-trigger cooperation is just one of *many* outcomes repetition makes possible. The **Folk Theorem** — so named because it was 'known to everyone' before anyone published it — states the general principle:\n\n> In an infinitely repeated game with sufficiently patient players, *any* feasible per-period payoff profile that gives every player strictly more than their one-shot **minimax** (security) value can be sustained as a subgame-perfect equilibrium.\n\nThe **minimax value** is the payoff a player can guarantee itself no matter what others do — its floor. In the repeated PD, that floor is mutual defection $P$: no player will ever accept less, because it can always defect and secure at least $P$. But *anything above* the floor — mutual cooperation at $R$, or asymmetric arrangements, or alternating patterns — is sustainable when $\\delta$ is high enough, propped up by the threat of reverting to punishment.\n\nThe conceptual payoff is large. A one-shot analysis of the PD gives a single grim prediction: defect. Repetition converts it into a game with a *continuum* of equilibria, cooperation among them. This is why long-lived relationships behave so differently from fleeting ones — and why building durable, repeated interaction (reputations, ongoing contracts, community ties) is the practical route to cooperation the one-shot game says is impossible.\n\n### Two cautions\n\nFirst, the Folk Theorem is permissive, not predictive: it tells you cooperation *can* be an equilibrium, not that it *will* be — coordinating on *which* equilibrium is a separate problem. Second, everything hinges on the horizon being effectively infinite (or uncertain). Re-impose a known finite deadline and the unraveling of the first section returns with full force. Patience and an open-ended future are the twin engines of cooperation."
+  },
+  "application": {
+    "summary": "Repeated-game theory explains how cooperation emerges among self-interested parties without any external enforcement: tacit price collusion among firms, arms-control restraint between rivals, trust in ongoing business relationships, and norm enforcement in communities. The discount factor sets how patient players must be, and trigger strategies show how the threat of future punishment polices present behavior.",
+    "domains": ["cartels and tacit collusion", "arms control and international restraint", "business relationships and trust", "online reputation and platforms", "community norms and social capital"],
+    "workedExample": "**Will a cartel hold? A discount-factor calculation.** Two suppliers can each hold a high price (cooperate) or secretly undercut (defect). Per-quarter profits form a Prisoner's Dilemma: both hold $\\to R = 8$ each; one undercuts a holder $\\to T = 12$ for the cheat, $S = 2$ for the sucker; both undercut $\\to P = 4$ each. They interact indefinitely and use grim trigger — one whiff of undercutting triggers a permanent price war.\n\n*Step 1 — the temptation.* Undercutting this quarter grabs $T = 12$ instead of $R = 8$, a one-time gain of $4$.\n\n*Step 2 — the punishment.* But it converts all future quarters from $R = 8$ down to $P = 4$, a loss of $4$ every quarter forever after — a stream worth $\\dfrac{\\delta \\cdot 4}{1 - \\delta}$ in today's terms.\n\n*Step 3 — the threshold.* Cooperation holds when the future punishment outweighs the present temptation, i.e. $\\delta \\ge \\dfrac{T - R}{T - P} = \\dfrac{12 - 8}{12 - 4} = \\dfrac{4}{8} = \\tfrac12$.\n\n*Step 4 — the verdict.* If the firms are patient enough that they value next quarter at least half as much as this one ($\\delta \\ge 0.5$), the cartel is self-enforcing: nobody undercuts, because the permanent price war that follows costs more than the one quarter of extra profit. If they are impatient ($\\delta < 0.5$) — say a startup desperate for cash now, or a market expected to vanish soon — the cartel collapses. This is exactly why antitrust authorities watch stable, long-lived, patient oligopolies most closely: the very conditions that make firms good long-term partners also make illegal tacit collusion sustainable. The same arithmetic explains arms-control restraint (the punishment is a renewed arms race), supplier reliability (the punishment is lost future business), and why reputation systems on marketplaces work (the punishment is lost future customers).",
+    "domainNotes": [
+      "**Cartels / collusion:** tacit price-fixing is sustainable exactly when firms are patient ($\\delta \\ge \\frac{T-R}{T-P}$); impatience, many small players, or a foreseeable market end all lower $\\delta$ and break collusion — which regulators exploit.",
+      "**Arms control:** mutual restraint is a repeated-PD cooperation propped up by the threat of a renewed arms race; verification and long horizons raise the effective $\\delta$ and stabilize treaties.",
+      "**Business trust:** honoring informal agreements is rational when the relationship is ongoing; the 'shadow of the future' (repeat business) substitutes for costly formal contracts.",
+      "**Online reputation:** marketplaces and platforms manufacture an infinite horizon via persistent ratings, so a one-time scam forfeits a stream of future transactions — trigger-strategy logic engineered into software.",
+      "**Community norms:** tight-knit, long-lived communities enforce cooperation (lending, sharing, favors) through reputational punishment, an informal grim trigger — social capital is the discount factor made tangible."
+    ]
+  },
+  "generators": [
+    "gt2-finite-1", "gt2-finite-2", "gt2-finite-3",
+    "gt2-discount-1", "gt2-discount-2", "gt2-discount-3",
+    "gt2-trigger-1", "gt2-trigger-2", "gt2-trigger-3",
+    "gt2-folk-1", "gt2-folk-2", "gt2-folk-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.repeated-games.s01",
+      "concepts": ["finite-repetition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A Prisoner's Dilemma is played a FIXED, known 3 times. Stage payoffs (own): mutual cooperation $R = 3$, mutual defection $P = 1$, temptation $T = 5$, sucker $S = 0$. Reason by backward induction from the LAST round.",
+      "steps": [
+        { "instruction": "In the last (round 3) there is no future. Does a rational player \"Cooperate\" or \"Defect\"?", "answer": "Defect", "accept": ["defect"], "hint": "With no future, defecting dominates: $T > R$ and $P > S$." },
+        { "instruction": "Knowing round 3 is a sure mutual defection, what happens in round 2 — \"Cooperate\" or \"Defect\"?", "answer": "Defect", "accept": ["defect"], "hint": "Round 3 is already fixed, so round 2 is effectively the new last round." },
+        { "instruction": "By this unraveling, in how many of the 3 rounds do players cooperate? (A number.)", "answer": "0", "accept": [], "hint": "Backward induction collapses every round to defection." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "rounds" },
+      "solutionNarrative": "The last round has no future, so both defect; that makes round 2 effectively last, and round 1 too. Cooperation survives in 0 of the 3 rounds. A KNOWN finite horizon kills cooperation in the PD."
+    },
+    {
+      "id": "game-theory.repeated-games.s02",
+      "concepts": ["finite-repetition"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A Prisoner's Dilemma with $R = 3$, $P = 1$, $T = 5$, $S = 0$ is repeated exactly 4 times. Backward induction says both defect every round.",
+      "steps": [
+        { "instruction": "What action is played in EVERY round of the subgame-perfect equilibrium — \"Cooperate\" or \"Defect\"?", "answer": "Defect", "accept": ["defect"], "hint": "Unraveling from the last round." },
+        { "instruction": "What total payoff does each player get across all 4 rounds? (A number — sum of the per-round $P$.)", "answer": "4", "accept": [], "hint": "4 rounds times $P = 1$." },
+        { "instruction": "Had both cooperated every round they'd each get 12. Is that MORE than the equilibrium total? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare 12 with 4." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Every round is mutual defection: total $4 \\times 1 = 4$ each. Full cooperation would pay $4 \\times 3 = 12$ — strictly more — yet backward induction rules it out. This is the finite-horizon paradox."
+    },
+    {
+      "id": "game-theory.repeated-games.s03",
+      "concepts": ["finite-repetition"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two firms in a price war know they will interact exactly 5 more quarters, then one exits for good. Each quarter is a Prisoner's Dilemma: cooperate = hold high prices ($R = 8$), defect = undercut ($T = 12$ against a cooperator), mutual undercut $P = 4$, sucker $S = 2$.",
+      "steps": [
+        { "instruction": "Because the horizon is KNOWN and finite, what does backward induction predict for the final quarter — \"Cooperate\" or \"Defect\"?", "answer": "Defect", "accept": ["defect"], "hint": "No future quarter means nothing restrains defection." },
+        { "instruction": "Does the unraveling stop before quarter 1, allowing SOME early cooperation? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Each fixed-defection round makes its predecessor the new last round." },
+        { "instruction": "How many quarters of cooperation does the finite-horizon model predict? (A number.)", "answer": "0", "accept": [], "hint": "The unraveling reaches all the way to quarter 1." },
+        { "instruction": "In reality firms often DO cooperate when the end date is uncertain. Is an UNKNOWN/indefinite horizon what breaks the unraveling? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Without a known last round, backward induction has no anchor." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "quarters" },
+      "solutionNarrative": "A known 5-quarter horizon unravels completely: 0 quarters of cooperation. The escape is uncertainty — if the firms never know which quarter is last, cooperation can be sustained. Finite-known and infinite/uncertain horizons behave oppositely."
+    },
+    {
+      "id": "game-theory.repeated-games.s04",
+      "concepts": ["discounting-and-present-value"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A player receives a payoff of 3 every period forever, starting now (period 0), discounted by $\\delta = \\tfrac23$ per period. The present value is $\\sum_{t=0}^{\\infty} \\delta^t \\cdot 3 = \\dfrac{3}{1-\\delta}$.",
+      "steps": [
+        { "instruction": "Compute $1 - \\delta$. (A fraction or decimal.)", "answer": "1/3", "accept": ["0.333333"], "hint": "$1 - \\tfrac23$." },
+        { "instruction": "Compute the present value $\\dfrac{3}{1-\\delta}$. (A number.)", "answer": "9", "accept": ["3/(1/3)"], "hint": "Divide 3 by $\\tfrac13$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$1 - \\delta = \\tfrac13$, so the present value of $3$ forever is $\\dfrac{3}{1/3} = 9$. The geometric formula $\\frac{u}{1-\\delta}$ collapses an infinite stream into one number."
+    },
+    {
+      "id": "game-theory.repeated-games.s05",
+      "concepts": ["discounting-and-present-value"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A payoff of 4 arrives each period with discount factor $\\delta = \\tfrac12$. Compare a 3-period partial sum to the infinite present value.",
+      "steps": [
+        { "instruction": "Compute the first three discounted terms $4(1 + \\delta + \\delta^2)$ with $\\delta = \\tfrac12$. (A number.)", "answer": "7", "accept": ["7.0"], "hint": "$4(1 + 0.5 + 0.25) = 4 \\times 1.75$." },
+        { "instruction": "Now the infinite sum $\\dfrac{4}{1-\\delta}$. (A number.)", "answer": "8", "accept": [], "hint": "$1 - \\tfrac12 = \\tfrac12$, so $4 \\div \\tfrac12$." },
+        { "instruction": "Is the infinite value LARGER than the 3-period partial sum? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Every extra period adds a positive discounted term." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "The 3-term partial sum is $4(1 + 0.5 + 0.25) = 7$, while the full stream is $\\dfrac{4}{0.5} = 8$. The infinite tail (all periods from 3 on) is what makes the second larger."
+    },
+    {
+      "id": "game-theory.repeated-games.s06",
+      "concepts": ["discounting-and-present-value", "trigger-strategies"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "In an infinitely repeated Prisoner's Dilemma ($R = 3$, $T = 5$, $P = 1$) under grim trigger, a firm weighs cooperating forever against defecting once. Discount factor $\\delta = \\tfrac34$. Present values: cooperate $= \\dfrac{R}{1-\\delta}$; defect-once $= T + \\dfrac{\\delta P}{1-\\delta}$.",
+      "steps": [
+        { "instruction": "Value of cooperating forever, $\\dfrac{R}{1-\\delta}$. (A number.)", "answer": "12", "accept": [], "hint": "$1 - \\tfrac34 = \\tfrac14$, so $3 \\div \\tfrac14$." },
+        { "instruction": "Value of defecting now then punished forever, $T + \\dfrac{\\delta P}{1-\\delta}$. (A number.)", "answer": "8", "accept": [], "hint": "$\\dfrac{\\delta P}{1-\\delta} = \\dfrac{(3/4)(1)}{1/4} = 3$, then add $T = 5$." },
+        { "instruction": "Is cooperation worth at least as much as defecting (sustainable at this $\\delta$)? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare 12 and 8." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "Cooperate-forever is worth $\\dfrac{3}{1/4} = 12$; defect-once is worth $5 + \\dfrac{(3/4)(1)}{1/4} = 5 + 3 = 8$. Since $12 > 8$, cooperation is sustainable at $\\delta = \\tfrac34$. Patience makes the future punishment bite."
+    },
+    {
+      "id": "game-theory.repeated-games.s07",
+      "concepts": ["trigger-strategies"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Under a GRIM-TRIGGER strategy in an infinitely repeated Prisoner's Dilemma, cooperation is sustainable when $\\delta \\ge \\dfrac{T-R}{T-P}$. Here $T = 5$, $R = 3$, $P = 1$.",
+      "steps": [
+        { "instruction": "Compute the numerator $T - R$. (A number.)", "answer": "2", "accept": [], "hint": "$5 - 3$." },
+        { "instruction": "Compute the denominator $T - P$. (A number.)", "answer": "4", "accept": [], "hint": "$5 - 1$." },
+        { "instruction": "Compute the threshold $\\delta^* = \\dfrac{T-R}{T-P}$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "2/4"], "hint": "$2/4$." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "$\\delta^* = \\dfrac{5-3}{5-1} = \\dfrac{2}{4} = \\tfrac12$. If the players value the future at least half as much as the present, grim trigger sustains cooperation; below that, the temptation $T$ wins."
+    },
+    {
+      "id": "game-theory.repeated-games.s08",
+      "concepts": ["trigger-strategies"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two suppliers use grim trigger to hold a cartel price. Stage PD payoffs: $T = 12$ (undercut a cooperator), $R = 8$ (both hold), $P = 4$ (both undercut). Cooperation needs $\\delta \\ge \\dfrac{T-R}{T-P}$. Their actual discount factor is $\\delta = \\tfrac23$.",
+      "steps": [
+        { "instruction": "Compute the threshold $\\delta^* = \\dfrac{T-R}{T-P}$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "4/8"], "hint": "$(12 - 8)/(12 - 4) = 4/8$." },
+        { "instruction": "Is the firms' $\\delta = \\tfrac23$ at least the threshold $\\tfrac12$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare $0.667$ with $0.5$." },
+        { "instruction": "So is the cartel (cooperation) sustainable under grim trigger? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Sustainable exactly when $\\delta \\ge \\delta^*$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Threshold $\\delta^* = 4/8 = \\tfrac12$; the firms' $\\delta = \\tfrac23 \\approx 0.667$ exceeds it, so the cartel holds. Patient firms police each other with the threat of a permanent price war."
+    },
+    {
+      "id": "game-theory.repeated-games.s09",
+      "concepts": ["trigger-strategies"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Derive the grim-trigger condition from scratch for an infinitely repeated PD with $T = 6$, $R = 4$, $P = 1$. Cooperation is an equilibrium when the value of cooperating forever, $\\dfrac{R}{1-\\delta}$, is at least the one-shot deviation value, $T + \\dfrac{\\delta P}{1-\\delta}$, which rearranges to $\\delta \\ge \\dfrac{T-R}{T-P}$.",
+      "steps": [
+        { "instruction": "Compute $T - R$. (A number.)", "answer": "2", "accept": [], "hint": "$6 - 4$." },
+        { "instruction": "Compute $T - P$. (A number.)", "answer": "5", "accept": [], "hint": "$6 - 1$." },
+        { "instruction": "State the critical discount factor $\\delta^*$. (A fraction or decimal.)", "answer": "2/5", "accept": ["0.4"], "hint": "$2/5$." },
+        { "instruction": "Is $\\delta^*$ strictly between 0 and 1 (a valid discount factor)? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "With $T > R > P$, both $T-R$ and $T-P$ are positive and $T-R < T-P$." }
+      ],
+      "finalAnswer": { "value": "2/5", "unit": "" },
+      "solutionNarrative": "Cooperating forever beats a one-shot deviation exactly when $\\delta \\ge \\dfrac{6-4}{6-1} = \\dfrac{2}{5} = 0.4$. Since $0 < T-R < T-P$, the threshold lies strictly in $(0,1)$ — some patience level always rescues cooperation."
+    },
+    {
+      "id": "game-theory.repeated-games.s10",
+      "concepts": ["folk-theorem-intuition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The Folk Theorem says: in an infinitely repeated game with patient players, ANY per-period payoff giving each player MORE than their one-shot (minimax) guarantee can be sustained in equilibrium. In this PD the one-shot guarantee is mutual defection $P = 1$; cooperation pays $R = 3$.",
+      "steps": [
+        { "instruction": "Is the cooperative payoff $R = 3$ strictly above the minimax floor $P = 1$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$3 > 1$?" },
+        { "instruction": "By the Folk Theorem, can mutual cooperation be an equilibrium outcome when players are patient enough? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Any profile above the floor is sustainable for high $\\delta$." },
+        { "instruction": "Could a payoff BELOW the floor $P = 1$ (say 0) ever be forced on a rational player in equilibrium? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "A player can always guarantee at least its minimax value." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Cooperation's $R = 3$ sits above the floor $P = 1$, so the Folk Theorem makes it sustainable for patient players. Nothing below the floor is ever enforceable. The theorem explains why repetition permits a whole RANGE of outcomes, not just defection."
+    },
+    {
+      "id": "game-theory.repeated-games.s11",
+      "concepts": ["folk-theorem-intuition"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A repeated PD models an arms race: restraint = cooperate ($R = 5$), build weapons = defect ($T = 8$ against a restrained rival, $P = 2$ if both build). At discount factor $\\delta = \\tfrac12$, decide whether mutual restraint is sustainable.",
+      "steps": [
+        { "instruction": "Is mutual restraint's payoff $R = 5$ above the mutual-armament floor $P = 2$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Restraint pays more per period than an arms race." },
+        { "instruction": "Compute the grim-trigger threshold $\\delta^* = \\dfrac{T-R}{T-P}$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "3/6"], "hint": "$(8 - 5)/(8 - 2) = 3/6$." },
+        { "instruction": "At $\\delta = \\tfrac12$, is restraint sustainable (is $\\delta \\ge \\delta^*$)? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$\\tfrac12 \\ge \\tfrac12$ holds (weak inequality)." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Restraint ($R = 5$) beats the arms-race floor ($P = 2$), so the Folk Theorem permits it. The threshold is $\\delta^* = 3/6 = \\tfrac12$, and $\\delta = \\tfrac12$ meets it exactly, so restraint is sustainable. Patience, not preferences, decides."
+    },
+    {
+      "id": "game-theory.repeated-games.s12",
+      "concepts": ["folk-theorem-intuition"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A trade agreement is an infinitely repeated PD ($R = 6$ mutual compliance, $P = 2$ mutual-cheating floor, $T = 10$ one-sided cheat). The Folk Theorem: any per-period payoff strictly above the minimax floor $P = 2$ can be an equilibrium for patient enough players.",
+      "steps": [
+        { "instruction": "Is a per-period payoff of 6 (mutual compliance) above the floor and therefore Folk-Theorem sustainable? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$6$ vs floor $2$." },
+        { "instruction": "Is a per-period payoff of 1 (below the floor) ever sustainable? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "No player accepts less than its minimax guarantee of 2." },
+        { "instruction": "Compute the patience threshold to sustain full compliance under grim trigger, $\\delta^* = \\dfrac{T-R}{T-P}$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "4/8"], "hint": "$(10 - 6)/(10 - 2) = 4/8$." },
+        { "instruction": "Does the Folk Theorem imply a UNIQUE equilibrium payoff, or a whole RANGE of them? Answer \"unique\" or \"range\".", "answer": "range", "accept": [], "hint": "Every profile above the floor qualifies — a continuum." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Compliance ($6$) is above the floor, so sustainable for patient players; anything below $P = 2$ never is. Full compliance needs $\\delta \\ge 4/8 = \\tfrac12$. Crucially the Folk Theorem yields a RANGE of equilibria — repetition multiplies possibilities."
+    },
+    {
+      "id": "game-theory.repeated-games.s13",
+      "concepts": ["finite-repetition", "trigger-strategies"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compare two horizons for a PD with $R = 3$, $T = 5$, $P = 1$, $S = 0$. Version A: exactly 10 rounds, known. Version B: infinitely repeated with $\\delta = \\tfrac34$ and grim trigger.",
+      "steps": [
+        { "instruction": "In Version A (known 10 rounds), how many rounds see cooperation in the subgame-perfect equilibrium? (A number.)", "answer": "0", "accept": [], "hint": "Unraveling collapses all 10 rounds to defection." },
+        { "instruction": "Compute the grim-trigger threshold for Version B, $\\delta^* = \\dfrac{T-R}{T-P}$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "2/4"], "hint": "$(5-3)/(5-1)$." },
+        { "instruction": "In Version B, is $\\delta = \\tfrac34$ enough to sustain cooperation? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare $0.75$ with the threshold $0.5$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "The known 10-round game unravels to 0 rounds of cooperation, but the infinite version with $\\delta = \\tfrac34 \\ge \\tfrac12$ sustains full cooperation under grim trigger. Same stage game, opposite outcomes — the horizon is everything."
+    },
+    {
+      "id": "game-theory.repeated-games.s14",
+      "concepts": ["discounting-and-present-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A subscription pays a company \\$5 in profit every month indefinitely, discounted at $\\delta = \\tfrac45$ per month. Find the present value of one customer's stream.",
+      "steps": [
+        { "instruction": "Compute $1 - \\delta$. (A fraction or decimal.)", "answer": "1/5", "accept": ["0.2"], "hint": "$1 - \\tfrac45$." },
+        { "instruction": "Compute the present value $\\dfrac{5}{1-\\delta}$. (A number.)", "answer": "25", "accept": [], "hint": "$5 \\div \\tfrac15$." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "dollars" },
+      "solutionNarrative": "$1 - \\delta = \\tfrac15$, so the customer's lifetime value is $\\dfrac{5}{1/5} = 25$ dollars. This 'lifetime value' calculation is the same geometric sum that prices an infinite cooperation stream."
+    },
+    {
+      "id": "game-theory.repeated-games.s15",
+      "concepts": ["trigger-strategies", "discounting-and-present-value"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two gas stations across the street play a repeated pricing PD: both keep prices high ($R = 10$), one undercuts a high-pricer ($T = 14$, sucker $S = 6$), both cut ($P = 6$). They use grim trigger with $\\delta = \\tfrac13$.",
+      "steps": [
+        { "instruction": "Compute the grim-trigger threshold $\\delta^* = \\dfrac{T-R}{T-P}$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "4/8"], "hint": "$(14 - 10)/(14 - 6) = 4/8$." },
+        { "instruction": "Is the stations' $\\delta = \\tfrac13$ at least the threshold $\\tfrac12$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "$0.333 < 0.5$." },
+        { "instruction": "So can high prices (cooperation) be sustained here? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Sustainable only when $\\delta \\ge \\delta^*$." },
+        { "instruction": "The stations are too impatient. To sustain cooperation, must $\\delta$ RISE to at least $\\tfrac12$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "They need to weight the future more heavily." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "The threshold is $\\delta^* = 4/8 = \\tfrac12$, but the stations' $\\delta = \\tfrac13 < \\tfrac12$, so high prices collapse into a price war. Only if they became patient enough ($\\delta \\ge \\tfrac12$) — through repeat customers or a longer horizon — would tacit collusion hold."
+    },
+    {
+      "id": "game-theory.repeated-games.s16",
+      "concepts": ["folk-theorem-intuition", "finite-repetition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A PD has mutual-defection floor $P = 2$ and mutual-cooperation reward $R = 4$. Consider what repetition changes.",
+      "steps": [
+        { "instruction": "In a ONE-SHOT PD, what is the unique equilibrium action — \"Cooperate\" or \"Defect\"?", "answer": "Defect", "accept": ["defect"], "hint": "Defect dominates in the one-shot game." },
+        { "instruction": "By the Folk Theorem, in the INFINITELY repeated game with patient players, is the cooperative payoff $R = 4$ (above the floor $P = 2$) sustainable? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Above the minimax floor and players patient enough." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "One-shot, the PD forces Defect. But repeated infinitely with patient players, the Folk Theorem makes cooperation ($R = 4 >$ floor $2$) sustainable. Repetition is what transforms a single grim prediction into a range that includes cooperation."
+    }
+  ]
+}

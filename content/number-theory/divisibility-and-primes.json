@@ -1,0 +1,272 @@
+{
+  "id": "number-theory.divisibility-and-primes",
+  "subject": "number-theory",
+  "title": "Divisibility and Primes",
+  "prerequisites": ["discrete-math.proof-techniques"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "divisibility-rules",
+      "label": "Divisibility and the division algorithm",
+      "microLesson": "We write $d \\mid n$ ('$d$ divides $n$') when $n = dq$ for some integer $q$ — no remainder. The **division algorithm** guarantees that for any $n$ and positive $d$ there are unique $q$ and $r$ with $n = dq + r$ and $0 \\le r < d$: for $38$ and $7$, $38 = 5 \\cdot 7 + 3$, so $q = 5$, $r = 3$. Quick tests skip the division: $2 \\mid n$ iff $n$ is even; $3 \\mid n$ (and $9 \\mid n$) iff the digit sum is divisible by 3 (by 9); $5 \\mid n$ iff $n$ ends in 0 or 5; $11 \\mid n$ iff the alternating digit sum is a multiple of 11. Remainders are taken NONNEGATIVE even for negatives: $-38 = -6 \\cdot 7 + 4$, so $-38 \\bmod 7 = 4$."
+    },
+    {
+      "id": "primes-and-sieve",
+      "label": "Primes and the sieve",
+      "microLesson": "A **prime** $p > 1$ has exactly two positive divisors, 1 and $p$; everything else above 1 is **composite**. To test a single $n$, trial-divide only by primes up to $\\sqrt{n}$ — any factor pair has one member that small, so for $n = 97$ you test 2, 3, 5, 7 and stop. To list ALL primes up to a bound, the **Sieve of Eratosthenes** crosses out multiples of each prime in turn (2, 4, 6, ...; then 3, 6, 9, ...), and whatever survives is prime. There are $\\pi(30) = 10$ primes up to 30. Beware numbers like $91 = 7 \\cdot 13$ and $143 = 11 \\cdot 13$ that look prime but aren't."
+    },
+    {
+      "id": "prime-factorization",
+      "label": "Prime factorization",
+      "microLesson": "Every integer $> 1$ breaks into a product of primes. Peel off the smallest prime repeatedly: $120 = 2 \\cdot 60 = 2 \\cdot 2 \\cdot 30 = 2^3 \\cdot 3 \\cdot 5$. Written with exponents, $120 = 2^{3} \\cdot 3 \\cdot 5$ has three distinct primes and $3 + 1 + 1 = 5$ prime factors counted with multiplicity. Because $2^3 \\cdot 3 \\cdot 5$ *evaluates* back to 120, the two forms are the same number — the factorization is a structural claim about how 120 is built, checked prime-by-prime and exponent-by-exponent, not just a value."
+    },
+    {
+      "id": "fundamental-theorem",
+      "label": "The Fundamental Theorem of Arithmetic",
+      "microLesson": "The **Fundamental Theorem of Arithmetic** says every integer $> 1$ factors into primes in EXACTLY ONE way (up to order). That uniqueness makes counting questions well-posed. If $n = p_1^{e_1} p_2^{e_2} \\cdots$, its number of positive divisors is $(e_1 + 1)(e_2 + 1)\\cdots$ — each divisor independently picks a power of each prime from 0 up to its exponent. For $72 = 2^3 \\cdot 3^2$ that is $(3+1)(2+1) = 12$ divisors. A bonus: $n$ is a perfect square exactly when every exponent is even (then the divisor count is odd)."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Where number theory starts\n\nEverything in this subject — gcd, congruences, RSA, the lot — rests on two ideas from this topic: **divisibility** and the **prime building blocks** of the integers. They are elementary, but they are load-bearing, so we state them with the precision a proof demands (you met that discipline in *Proof Techniques*).\n\n## Divisibility and the division algorithm\n\nWe say **$d$ divides $n$**, written $d \\mid n$, when $n = dq$ for some integer $q$ — an *exact* fit, no remainder. So $7 \\mid 42$ because $42 = 7 \\cdot 6$, but $7 \\nmid 38$.\n\nThe workhorse is the **Division Algorithm** (really a theorem):\n\n> For any integer $n$ and any positive integer $d$, there exist **unique** integers $q$ (quotient) and $r$ (remainder) with\n> $$n = dq + r, \\qquad 0 \\le r < d.$$\n\nFor $n = 38$, $d = 7$: $38 = 5 \\cdot 7 + 3$, so $q = 5$ and $r = 3$. Divisibility is just the special case $r = 0$.\n\n**Negatives obey the same rule, with the remainder still nonnegative.** For $n = -38$, $d = 7$: we need $0 \\le r < 7$, so $-38 = -6 \\cdot 7 + 4$ ($q = -6$, $r = 4$). Notice we go *more negative* on the quotient to keep $r$ in range — a point people get wrong constantly, and one that matters the moment you compute mod of a negative.\n\n### Divisibility shortcuts\n\nYou rarely need to divide to test divisibility by small numbers:\n\n| divisor | test |\n|---|---|\n| 2 | last digit even |\n| 3 | digit sum divisible by 3 |\n| 4 | last two digits form a multiple of 4 |\n| 5 | last digit 0 or 5 |\n| 9 | digit sum divisible by 9 |\n| 11 | alternating digit sum ($+ - + - \\cdots$) divisible by 11 |\n\nWhy does the digit-sum rule work? Because $10 \\equiv 1 \\pmod 9$, so a number is congruent to its digit sum mod 9 (and hence mod 3). The alternating rule for 11 comes from $10 \\equiv -1 \\pmod{11}$. These are your first taste of modular arithmetic doing real work.\n\n## Primes: the atoms\n\nA **prime** is an integer $p > 1$ whose only positive divisors are 1 and $p$. Everything else above 1 is **composite** (and 1 is neither — a convention that keeps factorization unique). The first primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, ...\n\n**Testing one number.** If $n = ab$ with $1 < a \\le b$, then $a \\le \\sqrt{n}$. So to check whether $n$ is prime, trial-divide only by primes up to $\\sqrt{n}$. For $n = 97$: $\\sqrt{97} < 10$, test 2, 3, 5, 7 — none divide — so 97 is prime. This $\\sqrt{n}$ bound is why primality testing is cheap while factoring large numbers is hard.\n\n**Listing all primes up to $N$: the Sieve of Eratosthenes.** Write 2 to $N$. Circle 2, cross out every larger multiple of 2. Circle the next survivor (3), cross out its multiples. Repeat; once you pass $\\sqrt{N}$ everything left uncrossed is prime.\n\n$$\\text{Up to } 30:\\quad 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 \\;\\Rightarrow\\; \\pi(30) = 10.$$\n\n**Impostors.** Some composites masquerade as primes: $91 = 7 \\cdot 13$, $143 = 11 \\cdot 13$, $221 = 13 \\cdot 17$. The only defense is honest trial division all the way to $\\sqrt{n}$.\n\n## Prime factorization\n\nEvery integer $> 1$ is a product of primes. Peel off the smallest prime again and again:\n\n$$120 = 2 \\cdot 60 = 2^2 \\cdot 30 = 2^3 \\cdot 15 = 2^3 \\cdot 3 \\cdot 5.$$\n\nWritten with exponents, $120 = 2^{3} \\cdot 3 \\cdot 5$: three **distinct** primes, and $3 + 1 + 1 = 5$ prime factors **counted with multiplicity**. The exponent form $2^3 \\cdot 3 \\cdot 5$ and the value $120$ are the *same number* — the factorization is a claim about structure, verified prime-by-prime and exponent-by-exponent.\n\n## The Fundamental Theorem of Arithmetic\n\n> Every integer greater than 1 can be written as a product of primes, and this factorization is **unique** except for the order of the factors.\n\nUniqueness is what makes the whole subject coherent — it is why 'the prime factorization of $n$' names one thing. It also powers a clean **divisor count**. If\n\n$$n = p_1^{e_1} p_2^{e_2} \\cdots p_k^{e_k},$$\n\nthen the number of positive divisors of $n$ is\n\n$$d(n) = (e_1 + 1)(e_2 + 1)\\cdots(e_k + 1),$$\n\nbecause a divisor is built by independently choosing each prime's power from $0$ up to $e_i$. For $72 = 2^3 \\cdot 3^2$: $d(72) = (3+1)(2+1) = 12$. And $n$ is a **perfect square** exactly when every $e_i$ is even — equivalently, when $d(n)$ is odd (divisors pair up $d \\leftrightarrow n/d$ unless $d = \\sqrt{n}$).\n\n## Honest scaling\n\nWe factor 120 and sieve up to 30. Cryptography factors numbers with hundreds of digits — and the fact that *nobody can do it quickly* is exactly what secures RSA. The definitions are the same; only the difficulty of factoring explodes with size."
+  },
+  "application": {
+    "summary": "Divisibility, primality, and unique factorization are the substrate of the whole subject: the divisor-count formula answers combinatorial counting, primality underlies key generation, and factorization difficulty is the security assumption behind RSA — a link we point at here without re-deriving the crypto.",
+    "domains": ["cryptography", "computer science", "combinatorics", "everyday life"],
+    "workedExample": "**Counting divisors without listing them.**\n\nHow many positive divisors does 360 have? Listing them by hand is error-prone; the Fundamental Theorem makes it a one-liner. Factor: $360 = 2^3 \\cdot 3^2 \\cdot 5$. Each divisor chooses a power of 2 (from $2^0$ to $2^3$: 4 choices), a power of 3 (3 choices), and a power of 5 (2 choices), independently. So\n\n$$d(360) = (3+1)(2+1)(1+1) = 4 \\cdot 3 \\cdot 2 = 24.$$\n\nTwenty-four divisors, counted with certainty, from three small factors — no listing. The same formula tells you 360 is *not* a perfect square (the exponents 3 and 1 are odd), and it is the engine behind questions like 'which number under 100 has the most divisors?' (answer: 60 and 90 and 96 tie... actually 96 = $2^5 \\cdot 3$ gives 12, while 60 = $2^2 \\cdot 3 \\cdot 5$ gives 12 too — the formula settles the contest instantly).",
+    "domainNotes": [
+      "**Cryptography:** RSA key generation begins by picking large primes; its security rests on the *conjectured* hardness of prime factorization — factor the modulus and you break the key. This topic supplies the primality and factorization language; the crypto course supplies the attack.",
+      "**Computer science:** the divisor-count and factorization routines appear in hash design, cycle-length analysis, and fast algorithms; the $\\sqrt{n}$ trial-division bound is a staple interview result.",
+      "**Combinatorics:** counting divisors, counting numbers coprime to $n$, and multiplicative-function arguments all start from unique factorization.",
+      "**Everyday life:** reducing fractions, arranging objects into equal groups, and gear/tiling problems reduce to shared factors and divisor counts."
+    ]
+  },
+  "generators": [
+    "nt1-divisibility-1", "nt1-divisibility-2", "nt1-divisibility-3",
+    "nt1-sieve-1", "nt1-sieve-2", "nt1-sieve-3",
+    "nt1-primefact-1", "nt1-primefact-2", "nt1-primefact-3",
+    "nt1-fundthm-1", "nt1-fundthm-2", "nt1-fundthm-3"
+  ],
+  "problems": [
+    {
+      "id": "number-theory.divisibility-and-primes.s01",
+      "concepts": ["divisibility-rules"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use the division algorithm to write $47 = 6q + r$ with $0 \\le r < 6$.",
+      "steps": [
+        { "instruction": "What is the quotient $q$ (largest number of 6s in 47)?", "answer": "7", "accept": [], "hint": "$6 \\cdot 7 = 42$, and $6 \\cdot 8 = 48$ overshoots." },
+        { "instruction": "What is the remainder $r = 47 - 42$?", "answer": "5", "accept": [], "hint": "$47 - 42$." },
+        { "instruction": "Does 6 divide 47 exactly? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Exact division needs remainder 0." }
+      ],
+      "finalAnswer": { "value": "q = 7, r = 5", "unit": "" },
+      "solutionNarrative": "$47 = 6 \\cdot 7 + 5$, so $q = 7$, $r = 5$; the remainder is nonzero, so $6 \\nmid 47$."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s02",
+      "concepts": ["divisibility-rules"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is 738 divisible by 3? Use the digit-sum rule.",
+      "steps": [
+        { "instruction": "Compute the digit sum $7 + 3 + 8$.", "answer": "18", "accept": [], "hint": "Add the digits." },
+        { "instruction": "Is 18 divisible by 3? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "$18 = 3 \\cdot 6$." },
+        { "instruction": "So is 738 divisible by 3? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "The rule transfers from the digit sum to the number." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Digit sum $7+3+8 = 18$, divisible by 3, so $3 \\mid 738$ (indeed $738 = 3 \\cdot 246$)."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s03",
+      "concepts": ["divisibility-rules"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Test whether 8291 is divisible by 11 using the alternating-digit-sum rule.",
+      "steps": [
+        { "instruction": "Compute the alternating sum from the left: $8 - 2 + 9 - 1$.", "answer": "14", "accept": [], "hint": "Alternate the signs $+ - + -$." },
+        { "instruction": "Is 14 divisible by 11? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "$11 \\cdot 1 = 11$, $11 \\cdot 2 = 22$." },
+        { "instruction": "So is 8291 divisible by 11? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "The rule transfers from the alternating sum." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Alternating sum $8 - 2 + 9 - 1 = 14$, not a multiple of 11, so $11 \\nmid 8291$."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s04",
+      "concepts": ["divisibility-rules"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The division algorithm keeps remainders nonnegative even for negatives. Find $q$ and $r$ with $-43 = 8q + r$ and $0 \\le r < 8$.",
+      "steps": [
+        { "instruction": "First divide the positive 43 by 8: remainder $r$?", "answer": "3", "accept": [], "hint": "$43 = 5 \\cdot 8 + 3$." },
+        { "instruction": "For $-43$, the remainder is $8 - 3$. Compute it.", "answer": "5", "accept": [], "hint": "A negative dividend borrows one more 8, leaving remainder $8 - 3 = 5$." },
+        { "instruction": "What quotient $q$ makes $-43 = 8q + 5$?", "answer": "-6", "accept": [], "hint": "$8 \\cdot (-6) + 5 = -48 + 5 = -43$." }
+      ],
+      "finalAnswer": { "value": "q = -6, r = 5", "unit": "" },
+      "solutionNarrative": "$-43 = 8 \\cdot (-6) + 5$ with $0 \\le 5 < 8$. Keeping $r$ nonnegative pushes the quotient to $-6$, so $-43 \\bmod 8 = 5$."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s05",
+      "concepts": ["primes-and-sieve"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is 83 prime? Trial-divide by primes up to $\\sqrt{83}$.",
+      "steps": [
+        { "instruction": "$\\sqrt{83}$ is just above 9, so the primes to test are 2, 3, 5, 7. Does any divide 83? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "83 is odd, digit sum 11 (not mult. of 3), doesn't end in 0/5, and $7 \\cdot 12 = 84$." },
+        { "instruction": "So is 83 prime or composite? Type 'prime' or 'composite'.", "answer": "prime", "accept": ["p"], "hint": "No small prime divides it." }
+      ],
+      "finalAnswer": { "value": "prime", "unit": "" },
+      "solutionNarrative": "None of 2, 3, 5, 7 (the primes up to $\\sqrt{83} \\approx 9.1$) divides 83, so 83 is prime."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s06",
+      "concepts": ["primes-and-sieve"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the Sieve of Eratosthenes to count the primes up to 30.",
+      "steps": [
+        { "instruction": "You only need to sieve with primes up to $\\sqrt{30}$. The largest such prime is?", "answer": "5", "accept": [], "hint": "$\\sqrt{30} \\approx 5.5$; sieve with 2, 3, 5." },
+        { "instruction": "After crossing out multiples of 2, 3, 5, how many primes remain up to 30?", "answer": "10", "accept": [], "hint": "Survivors: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "Sieving up to 30 leaves 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 — so $\\pi(30) = 10$."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s07",
+      "concepts": ["primes-and-sieve"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "143 looks prime. Confirm it is composite by trial division up to $\\sqrt{143}$.",
+      "steps": [
+        { "instruction": "What is the largest integer $\\le \\sqrt{143}$?", "answer": "11", "accept": [], "hint": "$11^2 = 121 \\le 143 < 144 = 12^2$." },
+        { "instruction": "Testing primes 2, 3, 5, 7, 11: which one divides 143?", "answer": "11", "accept": [], "hint": "$11 \\cdot 13 = 143$." },
+        { "instruction": "Compute the cofactor $143 \\div 11$.", "answer": "13", "accept": [], "hint": "$11 \\cdot 13 = 143$." }
+      ],
+      "finalAnswer": { "value": "143 = 11 * 13", "unit": "" },
+      "solutionNarrative": "$143 = 11 \\cdot 13$. Both factors exceed 10, so a careless check misses it — but trial division to $\\sqrt{143} \\approx 11.96$ catches 11."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s08",
+      "concepts": ["prime-factorization"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the prime factorization of 60, then count its prime factors with multiplicity.",
+      "steps": [
+        { "instruction": "How many times does 2 divide 60? (Halve until odd.)", "answer": "2", "accept": [], "hint": "$60 \\to 30 \\to 15$ (odd) — two halvings." },
+        { "instruction": "What odd number remains ($60 \\div 4$)?", "answer": "15", "accept": [], "hint": "$60 / 2^2$." },
+        { "instruction": "$15 = 3 \\cdot 5$. Counting with multiplicity, how many prime factors does 60 have in total?", "answer": "4", "accept": [], "hint": "$60 = 2^2 \\cdot 3 \\cdot 5$: exponents $2 + 1 + 1$." }
+      ],
+      "finalAnswer": { "value": "60 = 2^2 * 3 * 5", "unit": "" },
+      "solutionNarrative": "$60 = 2^2 \\cdot 3 \\cdot 5$ — four prime factors with multiplicity. Unique factorization guarantees no other decomposition."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s09",
+      "concepts": ["prime-factorization"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Factor 126 into primes and report the exponents.",
+      "steps": [
+        { "instruction": "Exponent of 2 in 126? (How many times does 2 divide it?)", "answer": "1", "accept": [], "hint": "$126 = 2 \\cdot 63$; 63 is odd." },
+        { "instruction": "Now factor 63. What is the exponent of 3?", "answer": "2", "accept": [], "hint": "$63 = 9 \\cdot 7 = 3^2 \\cdot 7$." },
+        { "instruction": "How many DISTINCT primes divide 126?", "answer": "3", "accept": [], "hint": "$126 = 2 \\cdot 3^2 \\cdot 7$." }
+      ],
+      "finalAnswer": { "value": "126 = 2 * 3^2 * 7", "unit": "" },
+      "solutionNarrative": "$126 = 2 \\cdot 3^2 \\cdot 7$: 3 distinct primes, and $1 + 2 + 1 = 4$ factors with multiplicity."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s10",
+      "concepts": ["prime-factorization", "fundamental-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Fully factor 600, then use the exponents to count its positive divisors.",
+      "steps": [
+        { "instruction": "Exponent of 2 in 600? (Halve until odd.)", "answer": "3", "accept": [], "hint": "$600 \\to 300 \\to 150 \\to 75$ (odd)." },
+        { "instruction": "The odd part is 75 = $3 \\cdot 5^2$. What is the exponent of 5?", "answer": "2", "accept": [], "hint": "$75 = 3 \\cdot 25 = 3 \\cdot 5^2$." },
+        { "instruction": "So $600 = 2^3 \\cdot 3 \\cdot 5^2$. Number of divisors = product of (exponent + 1). Compute it.", "answer": "24", "accept": [], "hint": "$(3+1)(1+1)(2+1) = 4 \\cdot 2 \\cdot 3$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "$600 = 2^3 \\cdot 3 \\cdot 5^2$; divisor count $(3+1)(1+1)(2+1) = 24$."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s11",
+      "concepts": ["fundamental-theorem"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $72 = 2^3 \\cdot 3^2$, count its positive divisors with the exponent formula.",
+      "steps": [
+        { "instruction": "Add 1 to the exponent of 2: $3 + 1 = $ ?", "answer": "4", "accept": [], "hint": "The exponent of 2 is 3." },
+        { "instruction": "Add 1 to the exponent of 3: $2 + 1 = $ ?", "answer": "3", "accept": [], "hint": "The exponent of 3 is 2." },
+        { "instruction": "Multiply: number of divisors $= 4 \\cdot 3 = $ ?", "answer": "12", "accept": [], "hint": "Each divisor picks a power of 2 (0..3) and a power of 3 (0..2)." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$(3+1)(2+1) = 12$ divisors of 72."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s12",
+      "concepts": ["fundamental-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The number $n = 2^2 \\cdot 3 \\cdot 5 = 60$ has a unique prime factorization. Answer three counting questions.",
+      "steps": [
+        { "instruction": "How many prime factors does 60 have counted with multiplicity?", "answer": "4", "accept": [], "hint": "Add the exponents $2 + 1 + 1$." },
+        { "instruction": "How many DISTINCT primes divide 60?", "answer": "3", "accept": [], "hint": "The bases 2, 3, 5." },
+        { "instruction": "How many positive divisors does 60 have? Use $(e_i+1)$.", "answer": "12", "accept": [], "hint": "$(2+1)(1+1)(1+1)$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$60 = 2^2 \\cdot 3 \\cdot 5$: 4 factors with multiplicity, 3 distinct, $(2+1)(1+1)(1+1) = 12$ divisors."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s13",
+      "concepts": ["fundamental-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Is 196 a perfect square? A number is a perfect square exactly when every exponent in its prime factorization is even.",
+      "steps": [
+        { "instruction": "Factor 196. Its factorization is $2^2 \\cdot 7^2$. Number of positive divisors?", "answer": "9", "accept": [], "hint": "$(2+1)(2+1)$." },
+        { "instruction": "Are both exponents (2 and 2) even? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Check each exponent." },
+        { "instruction": "So is 196 a perfect square? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "All-even exponents means perfect square (and an odd divisor count)." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$196 = 2^2 \\cdot 7^2 = 14^2$: all exponents even, so 196 is a perfect square, and its divisor count 9 is odd."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s14",
+      "concepts": ["divisibility-rules", "primes-and-sieve"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A packing line must split 91 identical items into equal-size boxes of more than one item each. Can it? (This asks whether 91 is composite.)",
+      "steps": [
+        { "instruction": "Trial-divide 91 by primes up to $\\sqrt{91} \\approx 9.5$. Which prime divides 91?", "answer": "7", "accept": [], "hint": "$7 \\cdot 13 = 91$; the digit-sum and last-digit tests fail, so try 7." },
+        { "instruction": "Compute the cofactor $91 \\div 7$.", "answer": "13", "accept": [], "hint": "$7 \\cdot 13 = 91$." },
+        { "instruction": "So can 91 be split into equal boxes of size > 1? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "91 is composite, so nontrivial equal groups exist." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$91 = 7 \\cdot 13$, so the items split into 7 boxes of 13 (or 13 boxes of 7). 91 is a classic prime-looking composite."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s15",
+      "concepts": ["prime-factorization", "fundamental-theorem"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "How many positive divisors does 360 have? Factor first, then use the exponent formula.",
+      "steps": [
+        { "instruction": "Exponent of 2 in 360 (halve until odd)?", "answer": "3", "accept": [], "hint": "$360 \\to 180 \\to 90 \\to 45$ (odd)." },
+        { "instruction": "The odd part 45 is $3^2 \\cdot 5$. So $360 = 2^3 \\cdot 3^2 \\cdot 5$. Compute the divisor count $(3+1)(2+1)(1+1)$.", "answer": "24", "accept": [], "hint": "$4 \\cdot 3 \\cdot 2$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "" },
+      "solutionNarrative": "$360 = 2^3 \\cdot 3^2 \\cdot 5$, so $d(360) = 4 \\cdot 3 \\cdot 2 = 24$ divisors — counted with certainty, no listing."
+    },
+    {
+      "id": "number-theory.divisibility-and-primes.s16",
+      "concepts": ["divisibility-rules"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A cashier needs to split $135 into equal $5 bills' worth of stacks. Is 135 divisible by 5, and by how? Use the last-digit rule.",
+      "steps": [
+        { "instruction": "Does 135 end in 0 or 5? So is it divisible by 5? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "The last digit is 5." },
+        { "instruction": "Compute $135 \\div 5$.", "answer": "27", "accept": [], "hint": "$5 \\cdot 27 = 135$." }
+      ],
+      "finalAnswer": { "value": "27", "unit": "" },
+      "solutionNarrative": "135 ends in 5, so $5 \\mid 135$, and $135 = 5 \\cdot 27$: exactly 27 stacks."
+    }
+  ]
+}

@@ -1,0 +1,271 @@
+{
+  "id": "game-theory.pure-nash-equilibrium",
+  "subject": "game-theory",
+  "title": "Pure-Strategy Nash Equilibrium",
+  "prerequisites": ["game-theory.strategic-form-and-dominance"],
+  "estimatedMinutes": 42,
+  "keyConcepts": [
+    {
+      "id": "best-response-analysis",
+      "label": "Best-response analysis",
+      "microLesson": "**Best-response analysis** is a mechanical way to find equilibria: in each column mark Row's best response (largest first entry), and in each row mark Column's best response (largest second entry). A cell that receives **both** marks is a profile where each player is simultaneously best-responding — a Nash equilibrium. This 'underlining' method turns equilibrium-hunting into two quick passes over the bimatrix and works even when no strategy is dominant."
+    },
+    {
+      "id": "finding-pure-nash",
+      "label": "Finding pure Nash equilibria",
+      "microLesson": "A **pure-strategy Nash equilibrium** is a strategy profile in which no player can raise their own payoff by unilaterally switching, given what the others do. The test is mutual best response: check each cell — is Row best-responding to Column's column, AND is Column best-responding to Row's row? If yes, it is an equilibrium. A game may have zero, one, or several pure Nash equilibria; you must check every cell and count them. In equilibrium each player's belief about the other is confirmed by the other's actual choice."
+    },
+    {
+      "id": "coordination-and-anticoordination",
+      "label": "Coordination and anti-coordination",
+      "microLesson": "**Coordination games** reward matching: both players prefer to pick the *same* option (e.g. the same technology standard), producing two pure equilibria on the diagonal — the challenge is which one they settle on. **Anti-coordination games** (Chicken, Hawk-Dove) reward mismatching: each wants to do the *opposite* of the other, so the two pure equilibria sit off the diagonal, with exactly one player 'yielding'. Both types have multiple equilibria, which is why coordination is a genuine strategic problem, not a trivial one."
+    },
+    {
+      "id": "no-pure-equilibrium",
+      "label": "When no pure equilibrium exists",
+      "microLesson": "Some games have **no pure-strategy Nash equilibrium**: from every cell, at least one player strictly prefers to deviate, so the best responses chase each other in a cycle. Matching Pennies is the canonical example — Row wants to match, Column wants to mismatch, and no fixed pair of choices is stable. You detect this by checking all cells and finding a profitable deviation from each. Nash's theorem guarantees such a game still has an equilibrium, but only in **mixed** (randomized) strategies — the subject of the next topic."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The idea that won a Nobel Prize\n\nDominance is powerful but limited: most interesting games have *no* dominant strategy, so deleting dominated options leaves several possibilities. We need a sharper prediction. In 1950, in a two-page note, the 21-year-old **John Nash** gave it. His idea, the **Nash equilibrium**, is now the central solution concept of game theory and earned him the 1994 Nobel Prize in Economics.\n\nThe definition is disarmingly simple. A strategy profile is a **Nash equilibrium** if **no player can do better by changing only their own strategy**, holding everyone else's fixed. Each player is simultaneously playing a **best response** to the others. It is a point of mutual consistency: everyone's plan is optimal given everyone else's plan, so no one has a reason to move.\n\n$$(s_1^*, s_2^*) \\text{ is a Nash equilibrium} \\iff u_1(s_1^*, s_2^*) \\ge u_1(s_1, s_2^*)\\ \\forall s_1 \\ \\text{ and } \\ u_2(s_1^*, s_2^*) \\ge u_2(s_1^*, s_2)\\ \\forall s_2.$$\n\n## Best-response analysis: the underlining method\n\nThe fastest way to find *pure* Nash equilibria in a bimatrix is **best-response analysis**:\n\n1. In **each column**, find Row's best payoff (the largest *first* entry) and mark that row.\n2. In **each row**, find Column's best payoff (the largest *second* entry) and mark that column.\n3. Any cell marked **twice** is a Nash equilibrium — both players are best-responding there.\n\nWorked example:\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 3, 3 | 0, 2 |\n| **Bottom** | 2, 0 | 1, 1 |\n\n- Row's best responses: in **Left**, Top ($3$) beats Bottom ($2$) → mark Top-Left's first number. In **Right**, Top ($0$) vs Bottom ($1$) → mark Bottom-Right.\n- Column's best responses: in **Top**, Left ($3$) beats Right ($2$) → mark Top-Left's second number. In **Bottom**, Left ($0$) vs Right ($1$) → mark Bottom-Right.\n- **Top-Left** and **Bottom-Right** are each marked twice. This game has **two** pure Nash equilibria: $(\\text{Top}, \\text{Left})$ and $(\\text{Bottom}, \\text{Right})$.\n\n## Reading a Nash equilibrium as a 'no regret' point\n\nAt $(\\text{Top}, \\text{Left})$ Row earns $3$; deviating to Bottom drops Row to $2$, so Row stays. Column earns $3$; deviating to Right drops Column to $2$, so Column stays. Neither regrets their choice **given the other's** — that mutual no-regret property *is* equilibrium. It does not require the players to like the outcome, only that no unilateral change helps.\n\n## Coordination and anti-coordination\n\nGames with **two** pure equilibria come in two flavors:\n\n- **Coordination games** reward *matching*. Two firms want the same standard; two friends want the same meeting spot. The equilibria lie on the **diagonal** — (A, A) and (B, B) — and the strategic problem is *which* one, since both are stable. When the players also disagree about which is best (you prefer A, I prefer B), it's a **Battle of the Sexes**.\n\n- **Anti-coordination games** reward *mismatching*. In **Chicken**, two drivers speed toward each other; each wants to go Straight only if the other Swerves. The equilibria are **off-diagonal** — (Swerve, Straight) and (Straight, Swerve) — one player yields, and each prefers to be the one who doesn't.\n\n## When there is no pure equilibrium\n\nNot every game has a pure Nash equilibrium. Consider **Matching Pennies**:\n\n| Row \\ Col | Heads | Tails |\n|---|---|---|\n| **Heads** | 1, -1 | -1, 1 |\n| **Tails** | -1, 1 | 1, -1 |\n\nRow wins by matching, Column by mismatching. Try any cell: at $(\\text{Heads}, \\text{Heads})$ Row is happy but Column wants Tails; at $(\\text{Heads}, \\text{Tails})$ Column is happy but Row wants Tails; and so on around a **cycle**. From every cell someone strictly wants to deviate, so **no pure Nash equilibrium exists**.\n\nThis is not a defect in the game — it is real. A predictable penalty-taker gets saved; a predictable poker player gets exploited. Nash's celebrated **existence theorem** says every finite game has *at least one* equilibrium once we allow **mixed strategies** (randomizing over choices). Matching Pennies' equilibrium is to play each side with probability $\\tfrac12$. Building those mixed equilibria is exactly where we go next.\n\n### Pitfalls\n\n- **Check every cell.** A game can have 0, 1, or 2+ pure equilibria; stopping at the first one you find can miss others.\n- **Both players must be best-responding.** A cell where only Row is happy is *not* an equilibrium.\n- **Equilibrium ≠ best outcome.** The Prisoner's Dilemma's unique equilibrium is worse for both players than an available alternative. Equilibrium predicts stability, not optimality."
+  },
+  "application": {
+    "summary": "The Nash equilibrium is the workhorse prediction of modern economics and strategy: wherever independent parties choose simultaneously — firms setting prices, nations arming, drivers choosing routes, standards competing — equilibrium identifies the self-enforcing outcomes nobody has a unilateral reason to abandon.",
+    "domains": ["economics and industrial organization", "technology standards and networks", "traffic and congestion", "international relations", "sports and competition"],
+    "workedExample": "**Which standard wins? A coordination game.**\n\nTwo hardware makers, Row and Column, each adopt format **A** or **B**. They profit only if they match (shared ecosystem); mismatching splits the market and helps neither. Profits (Row's, Column's):\n\n| Row \\ Col | A | B |\n|---|---|---|\n| **A** | 3, 3 | 0, 0 |\n| **B** | 0, 0 | 2, 2 |\n\n*Step 1 — Row's best responses.* Against A, Row picks A ($3 > 0$). Against B, Row picks B ($2 > 0$).\n\n*Step 2 — Column's best responses.* Symmetric: against A pick A, against B pick B.\n\n*Step 3 — mutual best responses.* Both $(\\text{A}, \\text{A})$ and $(\\text{B}, \\text{B})$ are marked twice — **two pure Nash equilibria**. Neither $(\\text{A},\\text{B})$ nor $(\\text{B},\\text{A})$ survives: a lone adopter would switch to match.\n\n*The strategic problem:* both equilibria are stable, but $(\\text{A}, \\text{A})$ pays more. Getting there requires **coordination** — announcements, standards bodies, or an early lead that makes A the 'focal point'. This is precisely how format wars (VHS vs Betamax, Blu-ray vs HD DVD, USB standards) played out: the technically-tied outcome was decided by expectations about which equilibrium everyone else would pick.",
+    "domainNotes": [
+      "**Industrial organization:** Nash equilibrium underlies the Cournot and Bertrand models of how oligopolists set quantities and prices.",
+      "**Technology & networks:** standards adoption is a coordination game; network effects create multiple equilibria and 'lock-in'.",
+      "**Traffic:** commuters choosing routes settle into a Nash (Wardrop) equilibrium where no driver can find a faster path — often worse than the coordinated optimum (Braess's paradox).",
+      "**International relations:** arms races and deterrence are equilibrium analyses; a stable standoff is a Nash profile neither side gains by breaking.",
+      "**Sports:** mixed equilibria (no pure one) explain why penalty takers and servers in tennis must randomize to stay unpredictable."
+    ]
+  },
+  "generators": [
+    "gt1-bra-1", "gt1-bra-2", "gt1-bra-3",
+    "gt1-findnash-1", "gt1-findnash-2", "gt1-findnash-3",
+    "gt1-coord-1", "gt1-coord-2", "gt1-coord-3",
+    "gt1-nopure-1", "gt1-nopure-2", "gt1-nopure-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.pure-nash-equilibrium.s01",
+      "concepts": ["best-response-analysis"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Mark Row's best response in each column.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, 1 | 2, 3 |\n| **Bottom** | 1, 2 | 5, 0 |",
+      "steps": [
+        { "instruction": "Column Left: Row's best response? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "Larger first entry in column Left: 4 vs 1." },
+        { "instruction": "Column Right: Row's best response? Choose Top or Bottom.", "answer": "Bottom", "accept": [], "hint": "Larger first entry in column Right: 2 vs 5." }
+      ],
+      "finalAnswer": { "value": "Top", "unit": "" },
+      "solutionNarrative": "Row's best replies are Top to Left (4>1) and Bottom to Right (5>2). Overlaying Column's best replies then locates the equilibria."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s02",
+      "concepts": ["best-response-analysis"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Find Column's best response in each row (use the second number).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 2, 5 | 6, 3 |\n| **Bottom** | 4, 1 | 3, 4 |",
+      "steps": [
+        { "instruction": "Row Top: Column's best response? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "Larger second entry in row Top: 5 vs 3." },
+        { "instruction": "Row Bottom: Column's best response? Choose Left or Right.", "answer": "Right", "accept": [], "hint": "Larger second entry in row Bottom: 1 vs 4." }
+      ],
+      "finalAnswer": { "value": "Left", "unit": "" },
+      "solutionNarrative": "Column best-responds Left to Top (5>3) and Right to Bottom (4>1). Combined with Row's best responses, this reveals every pure Nash equilibrium."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s03",
+      "concepts": ["best-response-analysis", "finding-pure-nash"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). A cell is a Nash equilibrium exactly when it is a mutual best response.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 5, 4 | 1, 2 |\n| **Bottom** | 3, 1 | 2, 3 |\n\nExamine the cell (Top, Left).",
+      "steps": [
+        { "instruction": "Is Top Row's best response to Left? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "In column Left compare 5 and 3." },
+        { "instruction": "Is Left Column's best response to Top? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "In row Top compare 4 and 2." },
+        { "instruction": "Is (Top, Left) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Only if BOTH players are best-responding." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Top is Row's best reply to Left (5>3) and Left is Column's best reply to Top (4>2), so (Top, Left) is a Nash equilibrium."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s04",
+      "concepts": ["finding-pure-nash"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Find the pure-strategy Nash equilibrium.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, 4 | 1, 3 |\n| **Bottom** | 3, 1 | 2, 2 |",
+      "steps": [
+        { "instruction": "At the equilibrium, what does Row play? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "Find the mutual-best-response cell, then read Row's strategy." },
+        { "instruction": "At the equilibrium, what does Column play? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "Read Column's strategy at that same cell." },
+        { "instruction": "How many pure-strategy Nash equilibria does this game have? (Give an integer.)", "answer": "1", "accept": [], "hint": "Count the mutual-best-response cells." }
+      ],
+      "finalAnswer": { "value": "(Top, Left)", "unit": "" },
+      "solutionNarrative": "At (Top, Left): Row's Top beats Bottom in column Left (4>3), and Column's Left beats Right in row Top (4>3). No other cell is mutual best response, so there is exactly one pure Nash equilibrium."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s05",
+      "concepts": ["finding-pure-nash"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Find ALL pure-strategy Nash equilibria.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 3, 2 | 0, 0 |\n| **Bottom** | 1, 1 | 2, 3 |",
+      "steps": [
+        { "instruction": "How many pure-strategy Nash equilibria are there? (Give an integer.)", "answer": "2", "accept": [], "hint": "Overlay both players' best responses and count coincidences." },
+        { "instruction": "First equilibrium (Row plays Top): what does Column play? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "At (Top, ?), find the mutual best response." },
+        { "instruction": "Second equilibrium (Row plays Bottom): what does Column play? Choose Left or Right.", "answer": "Right", "accept": [], "hint": "At (Bottom, ?), find the mutual best response." }
+      ],
+      "finalAnswer": { "value": "(Top, Left) and (Bottom, Right)", "unit": "" },
+      "solutionNarrative": "Both (Top, Left) and (Bottom, Right) are mutual best responses, so the game has two pure Nash equilibria — a coordination game."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s06",
+      "concepts": ["finding-pure-nash"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 5, 2 | 4, 4 |\n| **Bottom** | 2, 1 | 1, 3 |",
+      "steps": [
+        { "instruction": "Row has a strictly dominant strategy. Which? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "Top beats Bottom in both columns (5>2, 4>1)." },
+        { "instruction": "Given Row will play Top, Column best-responds with? Choose Left or Right.", "answer": "Right", "accept": [], "hint": "In row Top, Column: Left 2 vs Right 4." },
+        { "instruction": "How many pure Nash equilibria does the game have? (Give an integer.)", "answer": "1", "accept": [], "hint": "A dominant strategy pins down a unique equilibrium here." }
+      ],
+      "finalAnswer": { "value": "(Top, Right)", "unit": "" },
+      "solutionNarrative": "Row's dominant Top forces the equilibrium; Column replies Right (4>2), giving the unique Nash equilibrium (Top, Right). A dominant-strategy equilibrium is automatically Nash."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s07",
+      "concepts": ["coordination-and-anticoordination"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two friends must meet but can't communicate; each goes to the Cafe or the Park. They are happy only if they meet. Payoffs (Row's, Column's):\n\n| Row \\ Col | Cafe | Park |\n|---|---|---|\n| **Cafe** | 5, 5 | 0, 0 |\n| **Park** | 0, 0 | 4, 4 |",
+      "steps": [
+        { "instruction": "If Column goes to the Cafe, is Row's best response also Cafe? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "5 (meet) vs 0 (miss)." },
+        { "instruction": "How many pure Nash equilibria (meeting outcomes) are there? (Give an integer.)", "answer": "2", "accept": [], "hint": "Both (Cafe, Cafe) and (Park, Park) are stable." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Meeting at the Cafe (5,5) or the Park (4,4) are both Nash equilibria; missing pays 0. Coordination has two equilibria — the puzzle is which one they both expect."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s08",
+      "concepts": ["coordination-and-anticoordination"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Battle of the Sexes. A couple wants a night out together; Row prefers Opera, Column prefers Boxing. Being apart is worst. Payoffs (Row's, Column's):\n\n| Row \\ Col | Opera | Boxing |\n|---|---|---|\n| **Opera** | 3, 2 | 0, 0 |\n| **Boxing** | 0, 0 | 2, 3 |",
+      "steps": [
+        { "instruction": "Is (Opera, Opera) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Would either deviate to being alone (payoff 0)?" },
+        { "instruction": "Is (Boxing, Boxing) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Check unilateral deviations again." },
+        { "instruction": "How many pure Nash equilibria in total? (Give an integer.)", "answer": "2", "accept": [], "hint": "Count the together-outcomes that survive." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Both (Opera, Opera) and (Boxing, Boxing) are Nash — neither wants to be alone (0). The two equilibria differ in who gets their favorite: coordination with conflict."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s09",
+      "concepts": ["coordination-and-anticoordination"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Chicken. Two drivers race head-on; each may Swerve or go Straight. Both Straight = crash (worst); if exactly one goes Straight, that driver wins. Payoffs (Row's, Column's):\n\n| Row \\ Col | Swerve | Straight |\n|---|---|---|\n| **Swerve** | 3, 3 | 2, 4 |\n| **Straight** | 4, 2 | 1, 1 |",
+      "steps": [
+        { "instruction": "Is (Swerve, Straight) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Row swerves (2), deviating to Straight crashes (1); Column straight (4), deviating to Swerve gives 3." },
+        { "instruction": "Is (Straight, Straight) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "From a crash (1), either would rather have swerved (2)." },
+        { "instruction": "How many pure Nash equilibria does Chicken have? (Give an integer.)", "answer": "2", "accept": [], "hint": "The two off-diagonal 'one yields' outcomes." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "The pure equilibria are the off-diagonal cells (Swerve, Straight) and (Straight, Swerve): each wants the OPPOSITE of the other. Anti-coordination equilibria sit off the diagonal."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s10",
+      "concepts": ["no-pure-equilibrium"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Matching Pennies. Row wins by matching, Column by mismatching (zero-sum). Payoffs (Row's, Column's):\n\n| Row \\ Col | Heads | Tails |\n|---|---|---|\n| **Heads** | 1, -1 | -1, 1 |\n| **Tails** | -1, 1 | 1, -1 |",
+      "steps": [
+        { "instruction": "Start at (Heads, Heads). Row is happy (matched), but would Column want to switch to Tails? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Column prefers a mismatch." },
+        { "instruction": "Does this game have any pure-strategy Nash equilibrium? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Someone always wants to deviate — chase the cycle." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "From any cell one player wants to move, so the best responses cycle: there is NO pure Nash equilibrium (only a mixed 50/50 one)."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s11",
+      "concepts": ["no-pure-equilibrium"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Determine whether a pure-strategy Nash equilibrium exists.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 3, 1 | 1, 3 |\n| **Bottom** | 1, 3 | 3, 1 |",
+      "steps": [
+        { "instruction": "Check each cell for a profitable deviation. Does a pure Nash equilibrium exist? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "A pure NE is a cell where NEITHER player can gain by switching alone." },
+        { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "0", "accept": [], "hint": "Count the mutual-best-response cells." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Row wants to match Column's column while Column wants to mismatch, so best responses cycle: no pure Nash equilibrium (a mixed one still exists)."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s12",
+      "concepts": ["no-pure-equilibrium"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A penalty-kick duel. The Attacker (Row) wins by going where the Defender (Column) does NOT; the Defender wins by matching. Payoffs (Attacker's, Defender's):\n\n| Row \\ Col | Defend Left | Defend Right |\n|---|---|---|\n| **Attack Left** | 0, 3 | 3, 0 |\n| **Attack Right** | 3, 0 | 0, 3 |",
+      "steps": [
+        { "instruction": "Is (Attack Left, Defend Left) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "The Attacker (0) would switch to exploit the gap (3)." },
+        { "instruction": "Does any pure-strategy Nash equilibrium exist? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Predictability is fatal for whoever is being predicted." },
+        { "instruction": "Nash proved every finite game has an equilibrium — in what kind of strategies must it be here? Type 'pure' or 'mixed'.", "answer": "mixed", "accept": [], "hint": "Randomize to stay unpredictable." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Any pure choice can be predicted and beaten, so no pure Nash equilibrium exists. The equilibrium is mixed: each side randomizes 50/50, exactly what real penalty takers do."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s13",
+      "concepts": ["finding-pure-nash", "best-response-analysis"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two firms set Price High or Price Low. Profits (Row's, Column's):\n\n| Row \\ Col | High | Low |\n|---|---|---|\n| **High** | 6, 6 | 1, 8 |\n| **Low** | 8, 1 | 3, 3 |",
+      "steps": [
+        { "instruction": "At the equilibrium, what does Row play? Choose High or Low.", "answer": "Low", "accept": [], "hint": "Low dominates: 8>6 and 3>1." },
+        { "instruction": "At the equilibrium, what does Column play? Choose High or Low.", "answer": "Low", "accept": [], "hint": "By symmetry, Low." },
+        { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "1", "accept": [], "hint": "Only (Low, Low) survives." }
+      ],
+      "finalAnswer": { "value": "(Low, Low)", "unit": "" },
+      "solutionNarrative": "Price Low dominates for both, so the unique Nash equilibrium is (Low, Low) at (3,3) — a Prisoner's Dilemma, worse for both than the (6,6) of colluding on High."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s14",
+      "concepts": ["coordination-and-anticoordination", "finding-pure-nash"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 2, 2 | 0, 0 |\n| **Bottom** | 0, 0 | 1, 1 |\n\nHow many pure Nash equilibria are there, and which pays more?",
+      "steps": [
+        { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "2", "accept": [], "hint": "Both diagonal cells are mutual best responses." },
+        { "instruction": "Which equilibrium pays both players more — enter Row's strategy there: Top or Bottom.", "answer": "Top", "accept": [], "hint": "(Top, Left) pays 2 each vs (Bottom, Right) 1 each." }
+      ],
+      "finalAnswer": { "value": "Top", "unit": "" },
+      "solutionNarrative": "(Top, Left) and (Bottom, Right) are both Nash; (Top, Left) pays 2 each, the payoff-dominant equilibrium of this coordination game."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s15",
+      "concepts": ["finding-pure-nash"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Find the unique pure Nash equilibrium.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 1, 1 | 4, 2 |\n| **Bottom** | 2, 4 | 3, 3 |",
+      "steps": [
+        { "instruction": "At the equilibrium, what does Row play? Choose Top or Bottom.", "answer": "Bottom", "accept": [], "hint": "In column Left, Row prefers Bottom (2>1)." },
+        { "instruction": "At the equilibrium, what does Column play? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "In row Bottom, Column prefers Left (4>3)." },
+        { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "1", "accept": [], "hint": "Check all four cells." }
+      ],
+      "finalAnswer": { "value": "(Bottom, Left)", "unit": "" },
+      "solutionNarrative": "Row's best responses: Bottom to Left (2>1), Top to Right (4>3). Column's: Right to Top (2>1), Left to Bottom (4>3). The marks coincide only at (Bottom, Left), the unique pure Nash equilibrium at payoffs (2, 4)."
+    },
+    {
+      "id": "game-theory.pure-nash-equilibrium.s16",
+      "concepts": ["best-response-analysis", "no-pure-equilibrium"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Use best-response analysis to decide if a pure equilibrium exists.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 2, 3 | 4, 1 |\n| **Bottom** | 5, 2 | 1, 4 |",
+      "steps": [
+        { "instruction": "Row's best response to Left? Choose Top or Bottom.", "answer": "Bottom", "accept": [], "hint": "5 vs 2." },
+        { "instruction": "Column's best response to Bottom? Choose Left or Right.", "answer": "Right", "accept": [], "hint": "In row Bottom, Column: 2 vs 4." },
+        { "instruction": "Does a pure Nash equilibrium exist (any cell marked by BOTH)? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Trace the best-response cycle around the four cells." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Row's best replies are Bottom→Left, Top→Right; Column's are Left→Top, Right→Bottom. The marks never coincide in one cell, so no pure Nash equilibrium exists — the game is cyclic like Matching Pennies."
+    }
+  ]
+}

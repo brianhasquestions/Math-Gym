@@ -1,0 +1,299 @@
+{
+  "id": "game-theory.sequential-games",
+  "subject": "game-theory",
+  "title": "Sequential Games and Backward Induction",
+  "prerequisites": ["game-theory.pure-nash-equilibrium"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "extensive-form",
+      "label": "Extensive form and game trees",
+      "microLesson": "When players move in sequence rather than simultaneously, a matrix hides the timing. The **extensive form** draws the game as a **tree**: each internal node is a decision point owned by one player, each branch is an action, and each **leaf** carries the payoff vector $(u_1, u_2, \\dots)$ reached by that path. Micro-example: an Entrant moves first (Enter / Stay Out); if it enters, an Incumbent moves (Fight / Accommodate); the four combinations lead to four leaves. Reading a game tree means following a path from the root to a leaf and reading off who got what. The tree makes explicit *who moves, when, and knowing what* — information a payoff matrix throws away."
+    },
+    {
+      "id": "backward-induction",
+      "label": "Backward induction",
+      "microLesson": "To solve a sequential game, reason from the **end** backward. At each *last* decision node, the player there picks the action that maximizes its OWN payoff; replace that node with the resulting leaf. Now the second-to-last nodes have become last — repeat, folding the tree branch by branch until only the root remains. Micro-example: if after Enter the Incumbent earns more by Accommodating than Fighting, replace that node with the Accommodate payoffs; the Entrant, foreseeing this, then compares Enter-and-be-accommodated against Stay Out. Backward induction yields a full strategy and the equilibrium **outcome** — the single path actually played, and its payoffs. It formalizes 'think ahead by reasoning backward.'"
+    },
+    {
+      "id": "subgame-perfection",
+      "label": "Subgame perfection and credible threats",
+      "microLesson": "A **subgame** is any node and everything below it. A strategy profile is **subgame perfect** (an SPE) if it prescribes optimal play in *every* subgame — even ones never reached on the equilibrium path. This weeds out **non-credible threats**: promises a player would not actually carry out. Micro-example: an incumbent threatening to 'Fight any entry' may deter entry in a plain Nash equilibrium, but if fighting actually *lowers* the incumbent's payoff once entry has happened, the threat is not credible — backward induction (which builds the SPE) simply ignores it. Credibility is the whole point: in sequential games, only threats a rational player would execute have any force."
+    },
+    {
+      "id": "first-mover-and-commitment",
+      "label": "First-mover advantage and commitment",
+      "microLesson": "Moving first can be an advantage when you can **commit** to an action the opponent must then respond to. By locking in a choice, a leader shapes the follower's best reply in the leader's favor — the logic behind Stackelberg competition, pre-emptive capacity, and 'burning your boats.' Micro-example: a firm that visibly commits to a large output forces its rival to scale back, capturing more profit than in simultaneous play. But first-mover advantage is **not automatic**: in some games moving first *reveals* information or ties your hands unhelpfully, and the follower gains instead. The value of commitment is exactly the payoff difference between leading and following — compute both and compare."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When timing is everything\n\nA payoff matrix quietly assumes both players choose at the same instant, blind to each other. But most real strategic situations unfold *in sequence*: a firm decides whether to enter a market before the incumbent responds; a country issues a threat before its rival acts; you make an opening move in chess and only then see the reply. To capture timing we need a richer picture than a grid — we need a **game tree**, the **extensive form** of the game.\n\n## Reading a game tree\n\nIn a game tree, every internal **node** is a decision point belonging to one player, each **branch** leaving a node is an action, and each **leaf** at the bottom carries the payoff vector reached by the path that led there. Here is a classic **market-entry game**: an Entrant (Player 1) chooses to Enter (L) or Stay Out (R); if it enters, an Incumbent (Player 2) chooses to Fight (a) or Accommodate (b).\n\n```plot\n{ \"type\": \"graph\", \"nodes\": [ { \"id\": \"Root\", \"x\": 0, \"y\": 3, \"color\": \"accent\", \"label\": \"P1\" }, { \"id\": \"N1\", \"x\": 2, \"y\": 4.5, \"color\": \"warn\", \"label\": \"P2\" }, { \"id\": \"N2\", \"x\": 2, \"y\": 1.5, \"color\": \"dim\", \"label\": \"out\" }, { \"id\": \"LA\", \"x\": 4, \"y\": 5.4, \"label\": \"(0,0)\" }, { \"id\": \"LB\", \"x\": 4, \"y\": 3.6, \"label\": \"(2,2)\" }, { \"id\": \"RB\", \"x\": 4, \"y\": 1.5, \"label\": \"(1,5)\" } ], \"edges\": [ { \"from\": \"Root\", \"to\": \"N1\", \"directed\": true, \"label\": \"Enter\" }, { \"from\": \"Root\", \"to\": \"N2\", \"directed\": true, \"label\": \"Stay Out\" }, { \"from\": \"N1\", \"to\": \"LA\", \"directed\": true, \"label\": \"Fight\" }, { \"from\": \"N1\", \"to\": \"LB\", \"directed\": true, \"label\": \"Accommodate\" } ], \"caption\": \"Market entry: Entrant moves first; if it Enters, the Incumbent chooses Fight or Accommodate. Leaves show (Entrant, Incumbent).\" }\n```\n\nThe payoffs: if the Entrant stays out, it earns $1$ and the Incumbent keeps its monopoly worth $5$, so $(1, 5)$. If the Entrant enters and the Incumbent **fights** (a price war), both are bruised: $(0, 0)$. If the Entrant enters and the Incumbent **accommodates** (shares the market), each earns $2$: $(2, 2)$. Reading the tree is just tracing a path and reading two numbers at the leaf.\n\n## Backward induction: solve from the end\n\nHow will this play out? The trick is to reason **backward** from the last decision. Look at the Incumbent's node (it moves *after* the Entrant has already entered). It compares its own payoffs:\n\n- Fight $\\to$ Incumbent earns $0$.\n- Accommodate $\\to$ Incumbent earns $2$.\n\nA rational Incumbent **accommodates** ($2 > 0$). So we can *fold* the tree: replace the Incumbent's node with the outcome $(2, 2)$. Now the Entrant, moving first, foresees this and compares:\n\n- Enter $\\to$ leads to accommodation $\\to$ Entrant earns $2$.\n- Stay Out $\\to$ Entrant earns $1$.\n\nSince $2 > 1$, the Entrant **enters**. The equilibrium **outcome** is (Enter, Accommodate) with payoffs $(2, 2)$. That two-step fold — *last mover first, then work up* — is **backward induction**, and it always produces a complete plan of action plus the single path actually played.\n\n### The mechanical recipe\n\n1. Find every node whose children are all leaves (the last movers).\n2. At each, the owning player picks the action maximizing its own payoff; replace the node with that leaf's payoffs.\n3. The tree is now shorter. Repeat until only the root's choice remains.\n\nEach step is a simple 'which number is bigger for *me*' comparison — the difficulty is only in doing it in the right order.\n\n## Credible vs non-credible threats\n\nWhy can't the Incumbent just *announce* 'I will fight any entry!' to scare the Entrant into staying out? Because the threat is **not credible**. Suppose the Incumbent tries it. The Entrant asks: *if I actually enter, what will the Incumbent really do?* Backward induction already answered — the Incumbent accommodates, because fighting earns $0$ versus accommodating's $2$. The threat to fight is empty: no rational Incumbent would carry it out once entry is a fact.\n\nThis is the difference between a Nash equilibrium and a **subgame-perfect equilibrium (SPE)**. 'Stay Out, and Fight if entered' *is* a Nash equilibrium of the whole game — given the threat, staying out is a best reply, and given staying-out the threat is never tested. But it is **not subgame perfect**, because in the subgame after entry, Fight is not optimal. A **subgame** is any node together with everything below it; an SPE requires optimal play in *every* subgame, including off-path ones. Backward induction builds the SPE automatically and discards non-credible threats by construction.\n\n```plot\n{ \"type\": \"graph\", \"nodes\": [ { \"id\": \"Root\", \"x\": 0, \"y\": 3, \"color\": \"accent\", \"label\": \"P1\" }, { \"id\": \"N1\", \"x\": 2, \"y\": 4.5, \"color\": \"warn\", \"label\": \"P2\" }, { \"id\": \"N2\", \"x\": 2, \"y\": 1.5, \"color\": \"dim\", \"label\": \"out\" }, { \"id\": \"LA\", \"x\": 4, \"y\": 5.4, \"label\": \"(0,0)\", \"color\": \"dim\" }, { \"id\": \"LB\", \"x\": 4, \"y\": 3.6, \"label\": \"(2,2)\", \"color\": \"success\" }, { \"id\": \"RB\", \"x\": 4, \"y\": 1.5, \"label\": \"(1,5)\" } ], \"edges\": [ { \"from\": \"Root\", \"to\": \"N1\", \"directed\": true, \"label\": \"Enter\", \"color\": \"success\" }, { \"from\": \"Root\", \"to\": \"N2\", \"directed\": true, \"label\": \"Stay Out\" }, { \"from\": \"N1\", \"to\": \"LA\", \"directed\": true, \"label\": \"Fight\", \"color\": \"dim\" }, { \"from\": \"N1\", \"to\": \"LB\", \"directed\": true, \"label\": \"Accommodate\", \"color\": \"success\" } ], \"caption\": \"The subgame-perfect path (green): Enter, then Accommodate, reaching (2,2). The Fight branch (dim) is the non-credible threat backward induction discards.\" }\n```\n\n## First-mover advantage and the power of commitment\n\nMoving first is often — but not always — an advantage, and the reason is **commitment**. By acting first and irreversibly, a leader changes the follower's best response. This is the logic of **Stackelberg competition**: a firm that commits to a large output first forces its rival to produce less, and the leader captures a bigger share than it would in simultaneous (Cournot) competition. The general-purpose version is 'burning your boats' — removing your own option to retreat so the enemy knows you must fight, which paradoxically strengthens you.\n\nBut the advantage is **not automatic**. Moving first can *reveal* your plan or *tie your hands* in a way that helps the follower — in some coordination and information games, the second mover, who gets to observe and react, does better. The disciplined way to settle it is to **compute both**: solve the tree with you as leader (your SPE payoff), then solve the tree with the roles reversed (your payoff as follower), and take the difference. A positive gap is a genuine first-mover advantage; a negative one means you would rather move second.\n\n## Where backward induction bites — and where it strains\n\nBackward induction is the workhorse of sequential analysis, but two cautions matter. First, it assumes players are rational *and believe each other to be rational* all the way down the tree — the famous **centipede game** shows real people often deviate. Second, it needs **no ties** at decision nodes to give a clean prediction; a player indifferent between two actions leaves the outcome ambiguous. With those caveats noted, the method is remarkably powerful: from bargaining and auctions to deterrence and R&D races, 'draw the tree, fold from the leaves, keep only credible moves' resolves an enormous range of strategic problems."
+  },
+  "application": {
+    "summary": "Sequential-game reasoning governs any strategic interaction with timing and commitment: market entry and deterrence, Stackelberg pricing and capacity races, bargaining, R&D and patent races, and international deterrence. Backward induction folds the tree to reveal the credible outcome; subgame perfection strips away the empty threats that plain Nash equilibrium tolerates.",
+    "domains": ["market entry and competition", "corporate strategy and commitment", "bargaining and negotiation", "international relations and deterrence", "R&D and innovation races"],
+    "workedExample": "**Deterrence and the incredible threat.** A small firm (the Entrant) is deciding whether to enter a market dominated by a large Incumbent. If it stays out, it keeps its outside option worth $1$ while the Incumbent enjoys its monopoly, worth $5$: payoffs $(1, 5)$. If it enters, the Incumbent chooses: **Fight** a price war, hurting both to $(0, 0)$, or **Accommodate** and split the market at $(2, 2)$.\n\n*Step 1 — draw the tree.* Entrant moves first (Enter / Stay Out); the Incumbent moves only if entry occurs (Fight / Accommodate). Three leaves: $(1,5)$, $(0,0)$, $(2,2)$.\n\n*Step 2 — solve the last subgame.* After entry, the Incumbent compares Fight ($0$) to Accommodate ($2$). It accommodates. Fold that node to $(2, 2)$.\n\n*Step 3 — back to the root.* The Entrant now compares Enter (leading to $(2,2)$, so it earns $2$) against Stay Out (earning $1$). Since $2 > 1$, **it enters**. Subgame-perfect outcome: **(Enter, Accommodate), payoffs $(2, 2)$**.\n\n*Step 4 — why the threat fails.* The Incumbent would *love* the Entrant to stay out — that keeps its monopoly worth $5$. So it announces 'I will fight any entry!' But this is a **non-credible threat**: the Entrant reasons that *if* it enters, the Incumbent's actual best move is to accommodate (2 beats 0). The threat has no teeth, entry happens anyway, and the Incumbent is left with $2$ instead of $5$. To make deterrence work, the Incumbent must *change the game* — e.g. build excess capacity or sign a contract that makes fighting genuinely profitable — turning the empty threat into a credible commitment. That is precisely how firms use pre-emptive investment, and how nations use tripwire forces: not to fight, but to make the threat believable enough that it never has to be carried out.",
+    "domainNotes": [
+      "**Market entry / deterrence:** incumbents deter entry only with CREDIBLE commitments (excess capacity, exclusive contracts); a bare threat to price-war is ignored by backward induction, exactly as the worked example shows.",
+      "**Stackelberg competition:** the firm that commits output first captures a larger share than in simultaneous Cournot play — a concrete first-mover advantage from irreversible commitment.",
+      "**Bargaining:** alternating-offer models (Rubinstein) are solved by backward induction; the ability to make the final credible offer, and patience, determine the split.",
+      "**International relations:** deterrence rests on making retaliation credible — 'burning boats,' tripwire troops, and automatic-response doctrines convert non-credible threats into subgame-perfect ones.",
+      "**R&D races:** committing early to a research path can pre-empt rivals, but if it reveals your target it may help a fast follower — compute leader vs follower payoffs before assuming first is best."
+    ]
+  },
+  "generators": [
+    "gt2-extform-1", "gt2-extform-2", "gt2-extform-3",
+    "gt2-backind-1", "gt2-backind-2", "gt2-backind-3",
+    "gt2-sgp-1", "gt2-sgp-2", "gt2-sgp-3",
+    "gt2-firstmover-1", "gt2-firstmover-2", "gt2-firstmover-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.sequential-games.s01",
+      "concepts": ["extensive-form"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Read the game tree. Player 1 (P1) moves first (L or R); Player 2 (P2) then moves (a or b). Each leaf shows payoffs $(u_1, u_2)$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(3,1)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(1,4)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(2,2)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(4,0)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "P1 moves L/R, then P2 moves a/b; leaves show (P1, P2) payoffs." },
+      "steps": [
+        { "instruction": "If P1 plays L and P2 plays a, what is P1's payoff $u_1$? (A number.)", "answer": "3", "accept": [], "hint": "Follow L then a to leaf (3,1)." },
+        { "instruction": "At that same leaf, what is P2's payoff $u_2$?", "answer": "1", "accept": [], "hint": "Second number in the (3,1) leaf." },
+        { "instruction": "If P1 plays R and P2 plays b, what is P1's payoff $u_1$?", "answer": "4", "accept": [], "hint": "Follow R then b to leaf (4,0)." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Tracing the tree: (L,a) reaches $(3,1)$ so $u_1=3$, $u_2=1$; (R,b) reaches $(4,0)$ so $u_1=4$. The extensive form spells out who moves when and what each leaf pays."
+    },
+    {
+      "id": "game-theory.sequential-games.s02",
+      "concepts": ["extensive-form"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Read the game tree (P1 moves L/R first, then P2 moves a/b; leaves are $(u_1,u_2)$). Focus on P2's incentives at each node.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(3,1)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(1,4)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(2,5)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(4,2)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "After L, P2 chooses between the upper leaves; after R, between the lower leaves." },
+      "steps": [
+        { "instruction": "Suppose P1 played L. P2 compares its own payoff at (L,a) versus (L,b). Which gives P2 more — \"a\" or \"b\"?", "answer": "b", "accept": [], "hint": "Compare P2 payoffs 1 (a) and 4 (b)." },
+        { "instruction": "Given that P2-best response after L, what payoff does P1 end up with? (A number.)", "answer": "1", "accept": [], "hint": "P2 picks b, leading to leaf (1,4)." },
+        { "instruction": "Now suppose P1 played R. Which does P2 prefer — \"a\" or \"b\"?", "answer": "a", "accept": [], "hint": "Compare P2 payoffs 5 (a) and 2 (b)." }
+      ],
+      "finalAnswer": { "value": "a", "unit": "" },
+      "solutionNarrative": "After L, P2 picks b (its $4$ beats $1$), leaving P1 with $1$. After R, P2 picks a (its $5$ beats $2$). P2's choice depends only on P2's own payoffs at that node."
+    },
+    {
+      "id": "game-theory.sequential-games.s03",
+      "concepts": ["extensive-form"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A market-entry tree: an Entrant (P1) chooses Enter (L) or Stay Out (R). An Incumbent (P2) then chooses Fight (a) or Accommodate (b). Leaves are $(u_{\\text{entrant}}, u_{\\text{incumbent}})$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(0,0)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(2,2)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(1,5)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(1,5)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "Enter" }, { "from": "Root", "to": "N2", "directed": true, "label": "Stay Out" }, { "from": "N1", "to": "LA", "directed": true, "label": "Fight" }, { "from": "N1", "to": "LB", "directed": true, "label": "Accommodate" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Entrant moves first; Incumbent then Fights or Accommodates. Leaves show (entrant, incumbent)." },
+      "steps": [
+        { "instruction": "What is the Entrant's payoff at the (Enter, Fight) leaf? (A number.)", "answer": "0", "accept": [], "hint": "Follow Enter then Fight to (0,0)." },
+        { "instruction": "What is the Incumbent's payoff at the (Enter, Accommodate) leaf?", "answer": "2", "accept": [], "hint": "Follow Enter then Accommodate to (2,2), second coordinate." },
+        { "instruction": "Which leaf gives the Incumbent its single highest payoff anywhere? Give the Incumbent's payoff there. (A number.)", "answer": "5", "accept": [], "hint": "Scan all second coordinates — Stay Out gives (1,5)." },
+        { "instruction": "Can the Incumbent unilaterally guarantee that best-for-itself leaf regardless of the Entrant? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "The Entrant controls the first move (Enter vs Stay Out)." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Reading leaves: (Enter, Fight) gives the Entrant $0$; (Enter, Accommodate) gives the Incumbent $2$. The Incumbent's best payoff is $5$ (Stay Out), but it cannot force that — the Entrant moves first. Sequencing is what backward induction exploits."
+    },
+    {
+      "id": "game-theory.sequential-games.s04",
+      "concepts": ["backward-induction"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Fold this tree by backward induction. P1 moves L/R, then P2 moves a/b; leaves are $(u_1,u_2)$. Start at P2's nodes.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(3,1)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(1,4)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(2,5)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(4,2)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Solve last-mover-first: fix P2's best reply in each branch, then let P1 choose." },
+      "steps": [
+        { "instruction": "After L, P2 chooses its better leaf — \"a\" or \"b\"?", "answer": "b", "accept": [], "hint": "P2 payoffs: 1 (a) vs 4 (b)." },
+        { "instruction": "After R, P2 chooses \"a\" or \"b\"?", "answer": "a", "accept": [], "hint": "P2 payoffs: 5 (a) vs 2 (b)." },
+        { "instruction": "After L, P1 would get 1; after R, P1 would get 2. Does P1 play \"L\" or \"R\"?", "answer": "R", "accept": [], "hint": "P1 takes the larger of 1 and 2." }
+      ],
+      "finalAnswer": { "value": "R", "unit": "" },
+      "solutionNarrative": "Fold from the leaves: P2 plays b after L (reaching $(1,4)$) and a after R (reaching $(2,5)$). That makes L worth $1$ and R worth $2$ to P1, so P1 plays R. Backward induction resolves the last movers first."
+    },
+    {
+      "id": "game-theory.sequential-games.s05",
+      "concepts": ["backward-induction"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve this tree completely by backward induction and report the equilibrium OUTCOME payoffs. P1 moves L/R, P2 moves a/b; leaves are $(u_1,u_2)$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(5,2)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(3,6)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(2,1)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(4,3)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Backward induction yields one path from root to a leaf — the equilibrium outcome." },
+      "steps": [
+        { "instruction": "After L, does P2 play \"a\" or \"b\"?", "answer": "b", "accept": [], "hint": "P2 payoffs: 2 (a) vs 6 (b)." },
+        { "instruction": "After R, does P2 play \"a\" or \"b\"?", "answer": "b", "accept": [], "hint": "P2 payoffs: 1 (a) vs 3 (b)." },
+        { "instruction": "P1 now compares L (worth 3) and R (worth 4). Does P1 play \"L\" or \"R\"?", "answer": "R", "accept": [], "hint": "After b in each branch, L gives P1 3 and R gives 4." },
+        { "instruction": "What is the equilibrium outcome as payoffs? Give P1's payoff $u_1$. (A number.)", "answer": "4", "accept": [], "hint": "R then b reaches (4,3)." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "P2 plays b after both L and R. That makes L worth $3$ and R worth $4$ to P1, so P1 plays R, reaching the leaf $(4,3)$. The equilibrium outcome pays P1 $4$ and P2 $3$."
+    },
+    {
+      "id": "game-theory.sequential-games.s06",
+      "concepts": ["backward-induction"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An entry game as a tree: Entrant (P1) plays Enter (L) or Stay Out (R); Incumbent (P2) plays Fight (a) or Accommodate (b). Leaves are $(u_{\\text{entrant}}, u_{\\text{incumbent}})$. Solve by backward induction and beware wishful thinking.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(0,0)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(2,2)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(1,5)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(1,5)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "Enter" }, { "from": "Root", "to": "N2", "directed": true, "label": "Stay Out" }, { "from": "N1", "to": "LA", "directed": true, "label": "Fight" }, { "from": "N1", "to": "LB", "directed": true, "label": "Accommodate" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Entrant vs Incumbent; solve last-mover-first." },
+      "steps": [
+        { "instruction": "After the Entrant plays Enter, does the Incumbent Fight (a) or Accommodate (b)?", "answer": "b", "accept": [], "hint": "Incumbent payoffs: 0 (Fight) vs 2 (Accommodate)." },
+        { "instruction": "Given that, does the Entrant play \"L\" (Enter) or \"R\" (Stay Out)?", "answer": "L", "accept": [], "hint": "Enter leads to (2,2) so Entrant gets 2; Stay Out gives 1." },
+        { "instruction": "What equilibrium payoff does the Entrant actually receive? (A number.)", "answer": "2", "accept": [], "hint": "The folded leaf is (2,2)." },
+        { "instruction": "The Entrant's single best leaf anywhere pays it 2. Could it ever get more by wishing the Incumbent would Fight? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Fighting gives the Entrant only 0 — worse, and the Incumbent won't do it anyway." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "The Incumbent accommodates ($2 > 0$), so the Entrant enters and earns $2$. The Entrant cannot do better by assuming the Incumbent will act against its own interest — backward induction already delivers the reachable best."
+    },
+    {
+      "id": "game-theory.sequential-games.s07",
+      "concepts": ["subgame-perfection"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The subgame-perfect equilibrium (SPE) requires optimal play in EVERY subgame — including branches never reached. P1 moves L/R, P2 moves a/b; leaves $(u_1,u_2)$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(3,4)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(1,1)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(2,0)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(0,3)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "SPE specifies P2's move in BOTH branches, then P1's move." },
+      "steps": [
+        { "instruction": "In the SPE, what must P2 play after L — \"a\" or \"b\"?", "answer": "a", "accept": [], "hint": "P2 payoffs after L: 4 (a) vs 1 (b)." },
+        { "instruction": "In the SPE, what must P2 play after R — \"a\" or \"b\"? (Even if off-path, SPE requires it.)", "answer": "b", "accept": [], "hint": "P2 payoffs after R: 0 (a) vs 3 (b)." },
+        { "instruction": "Given both replies, does P1 play \"L\" or \"R\"?", "answer": "L", "accept": [], "hint": "L leads to (3,4) so P1 gets 3; R leads to (0,3) so P1 gets 0." }
+      ],
+      "finalAnswer": { "value": "L", "unit": "" },
+      "solutionNarrative": "SPE is a full plan: P2 plays a after L and b after R, and P1 plays L for a payoff of $3$. Even the unreached R-branch must specify P2's optimal move — that is what makes it 'subgame perfect'."
+    },
+    {
+      "id": "game-theory.sequential-games.s08",
+      "concepts": ["subgame-perfection"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Entry game tree: Entrant plays Enter (L) / Stay Out (R); Incumbent plays Fight (a) / Accommodate (b). Leaves $(u_{\\text{entrant}}, u_{\\text{incumbent}})$. The Incumbent threatens to Fight if the Entrant enters.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(0,0)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(2,2)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(1,5)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(1,5)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "Enter" }, { "from": "Root", "to": "N2", "directed": true, "label": "Stay Out" }, { "from": "N1", "to": "LA", "directed": true, "label": "Fight" }, { "from": "N1", "to": "LB", "directed": true, "label": "Accommodate" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Is the Incumbent's threat to Fight credible? Check its payoffs after entry." },
+      "steps": [
+        { "instruction": "After the Entrant enters, which action maximizes the Incumbent's payoff — \"Fight\" or \"Accommodate\"?", "answer": "Accommodate", "accept": ["accommodate"], "hint": "Incumbent payoffs: 0 (Fight) vs 2 (Accommodate)." },
+        { "instruction": "So is the threat to Fight credible or not? Answer \"credible\" or \"not credible\".", "answer": "not credible", "accept": ["notcredible"], "hint": "A threat is credible only if carrying it out is actually optimal." },
+        { "instruction": "Does the subgame-perfect equilibrium include the non-credible Fight threat? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "SPE prunes threats a player would not actually carry out." }
+      ],
+      "finalAnswer": { "value": "not credible", "unit": "" },
+      "solutionNarrative": "After entry the Incumbent earns $2$ by accommodating versus $0$ by fighting, so it accommodates. The threat to Fight is NOT credible, and subgame perfection discards it — which is exactly how SPE refines plain Nash equilibrium."
+    },
+    {
+      "id": "game-theory.sequential-games.s09",
+      "concepts": ["subgame-perfection"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Entry game: Entrant plays Enter (L) / Stay Out (R); Incumbent plays Fight (a) / Accommodate (b). Leaves $(u_{\\text{entrant}}, u_{\\text{incumbent}})$. Distinguish the subgame-perfect outcome from an equilibrium propped up by an empty threat.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(-1,-1)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(3,3)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(0,6)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(0,6)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "Enter" }, { "from": "Root", "to": "N2", "directed": true, "label": "Stay Out" }, { "from": "N1", "to": "LA", "directed": true, "label": "Fight" }, { "from": "N1", "to": "LB", "directed": true, "label": "Accommodate" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Backward induction gives the SPE; a Nash equilibrium may rest on a non-credible threat." },
+      "steps": [
+        { "instruction": "Solve the last subgame: after Enter, does the Incumbent play \"Fight\" or \"Accommodate\"?", "answer": "Accommodate", "accept": ["accommodate"], "hint": "Incumbent payoffs: -1 (Fight) vs 3 (Accommodate)." },
+        { "instruction": "Backward-induct to the root: does the Entrant play \"L\" (Enter) or \"R\" (Stay Out)?", "answer": "L", "accept": [], "hint": "Enter leads to (3,3) so Entrant gets 3; Stay Out gives 0." },
+        { "instruction": "What is the Entrant's subgame-perfect payoff? (A number.)", "answer": "3", "accept": [], "hint": "First coordinate of the folded leaf (3,3)." },
+        { "instruction": "The Incumbent loudly promises to Fight any entry. Is that promise credible? Answer \"credible\" or \"not credible\".", "answer": "not credible", "accept": ["notcredible"], "hint": "Fighting gives the Incumbent -1, worse than accommodating's 3." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "The unique SPE path is Enter then Accommodate, paying the Entrant $3$. A promise to Fight is not credible — it would earn the Incumbent $-1$ versus $3$ — so only subgame perfection, not plain Nash, strips out the empty threat."
+    },
+    {
+      "id": "game-theory.sequential-games.s10",
+      "concepts": ["first-mover-and-commitment"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In this tree P1 moves first (L/R), locking in a branch before P2 replies (a/b). Leaves $(u_1,u_2)$. Moving first lets P1 pick the better branch.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(5,1)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(3,4)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(2,2)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(1,5)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "First mover P1 can select the branch with the higher folded payoff." },
+      "steps": [
+        { "instruction": "After L, P2 plays its best reply — \"a\" or \"b\"? (P2 payoffs 1 vs 4.)", "answer": "b", "accept": [], "hint": "4 beats 1, so b." },
+        { "instruction": "Folding, L is worth 3 to P1 (leaf (3,4)) and R is worth 2 (leaf (2,2)). Does P1 choose \"L\" or \"R\"?", "answer": "L", "accept": [], "hint": "Pick the larger folded value." },
+        { "instruction": "What payoff does P1 secure by moving first? (A number.)", "answer": "3", "accept": [], "hint": "The larger of 3 and 2." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "After L, P2 plays b (leaf $(3,4)$), so L is worth $3$ to P1; R folds to $2$. Committing to L first secures P1 the better outcome, $3$ — the essence of a first-mover advantage."
+    },
+    {
+      "id": "game-theory.sequential-games.s11",
+      "concepts": ["first-mover-and-commitment"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two firms decide capacity. As LEADER, Firm 1 commits first (L/R); Firm 2 then best-responds (a/b). Leaves $(u_1,u_2)$ are profits.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "F1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "F2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "F2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(6,2)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(4,5)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(3,3)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(2,4)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Leader commits; follower best-responds. Compare the leader's payoff across options." },
+      "steps": [
+        { "instruction": "After L, does Firm 2 play \"a\" or \"b\"? (F2 payoffs 2 vs 5.)", "answer": "b", "accept": [], "hint": "5 beats 2." },
+        { "instruction": "After R, does Firm 2 play \"a\" or \"b\"? (F2 payoffs 3 vs 4.)", "answer": "b", "accept": [], "hint": "4 beats 3." },
+        { "instruction": "L folds to a profit of 4 for Firm 1; R folds to 2. Which commitment does Firm 1 make — \"L\" or \"R\"?", "answer": "L", "accept": [], "hint": "Pick the larger folded profit." },
+        { "instruction": "What first-mover advantage (in profit) does committing to L give over the worse branch R? (A number.)", "answer": "2", "accept": [], "hint": "$4 - 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Firm 2 plays b in both branches. So L folds to $4$ for Firm 1 and R to $2$; Firm 1 commits to L and earns $4$, a first-mover advantage of $4 - 2 = 2$ over the worse branch. A credible commitment steers the follower's reply."
+    },
+    {
+      "id": "game-theory.sequential-games.s12",
+      "concepts": ["first-mover-and-commitment"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A commitment game. When Firm 1 LEADS it commits first (L/R) and Firm 2 replies (a/b). We compare Firm 1's payoff as leader to its payoff if Firm 2 led instead. Leaves $(u_1,u_2)$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "F1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "F2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "F2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(6,1)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(3,5)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(4,6)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(2,2)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Who benefits from moving first? Compare the two leadership orders." },
+      "steps": [
+        { "instruction": "With Firm 1 leading: after L, F2 plays b (5 vs 1) reaching (3,5); after R, F2 plays a (6 vs 2) reaching (4,6). Which branch does Firm 1 commit to — \"L\" or \"R\"?", "answer": "R", "accept": [], "hint": "L folds to 3 for F1, R folds to 4 — take the larger." },
+        { "instruction": "Firm 1's payoff as leader? (A number.)", "answer": "4", "accept": [], "hint": "R then a reaches (4,6)." },
+        { "instruction": "If instead Firm 2 led, it would pick the branch best for ITSELF, which leaves Firm 1 with 3. Is Firm 1 better off LEADING than following? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare 4 (leading) with 3 (following)." },
+        { "instruction": "What is Firm 1's payoff difference between leading and following (leader minus follower)? (A number.)", "answer": "1", "accept": [], "hint": "$4 - 3$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "Leading, Firm 1 commits to R and earns $4$. If Firm 2 led, it would steer to the branch worth only $3$ for Firm 1. The gap $4 - 3 = 1$ is a genuine first-mover advantage — but note it had to be computed, not assumed."
+    },
+    {
+      "id": "game-theory.sequential-games.s13",
+      "concepts": ["extensive-form", "backward-induction"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A short tree: P1 moves L/R, then P2 moves a/b; leaves $(u_1,u_2)$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(2,3)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(4,1)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(1,2)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(3,5)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Read the leaf, then fold P2's node after R." },
+      "steps": [
+        { "instruction": "What is P2's payoff at leaf (R,b)? (A number.)", "answer": "5", "accept": [], "hint": "Follow R then b to (3,5), second coordinate." },
+        { "instruction": "After R, does P2 prefer \"a\" or \"b\"? (P2 payoffs 2 vs 5.)", "answer": "b", "accept": [], "hint": "5 beats 2." }
+      ],
+      "finalAnswer": { "value": "b", "unit": "" },
+      "solutionNarrative": "At leaf $(R,b)$ P2 earns $5$. After R, P2 compares $2$ (a) and $5$ (b) and chooses b — the first fold of backward induction."
+    },
+    {
+      "id": "game-theory.sequential-games.s14",
+      "concepts": ["backward-induction", "subgame-perfection"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve fully by backward induction and identify the SPE actions. P1 moves L/R, P2 moves a/b; leaves $(u_1,u_2)$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(4,4)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(2,6)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(5,1)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(3,2)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Find P2's reply in each branch, then P1's choice." },
+      "steps": [
+        { "instruction": "After L, does P2 play \"a\" or \"b\"? (P2 payoffs 4 vs 6.)", "answer": "b", "accept": [], "hint": "6 beats 4." },
+        { "instruction": "After R, does P2 play \"a\" or \"b\"? (P2 payoffs 1 vs 2.)", "answer": "b", "accept": [], "hint": "2 beats 1." },
+        { "instruction": "L folds to 2 for P1, R folds to 3. Does P1 play \"L\" or \"R\"?", "answer": "R", "accept": [], "hint": "3 beats 2." },
+        { "instruction": "What is P1's SPE payoff? (A number.)", "answer": "3", "accept": [], "hint": "R then b reaches (3,2)." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "P2 plays b in both branches. L folds to $2$ and R to $3$ for P1, so the SPE is (R, then b) with P1 earning $3$ — and it specifies P2's optimal reply even in the off-path L branch."
+    },
+    {
+      "id": "game-theory.sequential-games.s15",
+      "concepts": ["subgame-perfection", "first-mover-and-commitment"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A deterrence tree: a Challenger (P1) chooses Challenge (L) or Back Down (R); a Defender (P2) then chooses Retaliate (a) or Concede (b). Leaves $(u_{\\text{challenger}}, u_{\\text{defender}})$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(-2,-2)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(3,1)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(0,4)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(0,4)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "Challenge" }, { "from": "Root", "to": "N2", "directed": true, "label": "Back Down" }, { "from": "N1", "to": "LA", "directed": true, "label": "Retaliate" }, { "from": "N1", "to": "LB", "directed": true, "label": "Concede" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "Is the Defender's threat to Retaliate credible? Fold the tree to find out." },
+      "steps": [
+        { "instruction": "After a Challenge, does the Defender Retaliate (a) or Concede (b)?", "answer": "Concede", "accept": ["concede"], "hint": "Defender payoffs: -2 (Retaliate) vs 1 (Concede)." },
+        { "instruction": "Is the Defender's threat to Retaliate credible? Answer \"credible\" or \"not credible\".", "answer": "not credible", "accept": ["notcredible"], "hint": "Retaliating (-2) is worse than conceding (1)." },
+        { "instruction": "Foreseeing a concession, does the Challenger play \"L\" (Challenge) or \"R\" (Back Down)?", "answer": "L", "accept": [], "hint": "Challenge leads to (3,1) so Challenger gets 3; Back Down gives 0." },
+        { "instruction": "What is the Challenger's subgame-perfect payoff? (A number.)", "answer": "3", "accept": [], "hint": "First coordinate of the folded leaf (3,1)." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "The Defender concedes ($1 > -2$), so its retaliation threat is not credible. The Challenger, moving first and foreseeing this, challenges and earns $3$. To deter, the Defender would need to commit — changing the payoffs so retaliation becomes its own best reply."
+    },
+    {
+      "id": "game-theory.sequential-games.s16",
+      "concepts": ["backward-induction"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A buyer (P1) chooses to Buy (L) or Walk (R); a seller (P2) then chooses to give a Good deal (a) or a Bad deal (b). Leaves $(u_{\\text{buyer}}, u_{\\text{seller}})$.",
+      "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "dim", "label": "walk" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(2,1)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(1,3)" }, { "id": "RB", "x": 4, "y": 1.5, "label": "(0,0)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "Buy" }, { "from": "Root", "to": "N2", "directed": true, "label": "Walk" }, { "from": "N1", "to": "LA", "directed": true, "label": "Good deal" }, { "from": "N1", "to": "LB", "directed": true, "label": "Bad deal" } ], "caption": "If the buyer buys, the seller picks Good or Bad deal; walking ends at (0,0)." },
+      "steps": [
+        { "instruction": "After the buyer buys, which does the seller prefer — \"Good deal\" or \"Bad deal\"? (Seller payoffs 1 vs 3.)", "answer": "Bad deal", "accept": ["baddeal", "bad deal"], "hint": "The seller earns 3 from a Bad deal, 1 from a Good deal." },
+        { "instruction": "Foreseeing a Bad deal (buyer gets 1), does the buyer \"Buy\" or \"Walk\"? Walking gives the buyer 0.", "answer": "Buy", "accept": ["buy"], "hint": "Compare 1 (Buy, then Bad deal) with 0 (Walk)." }
+      ],
+      "finalAnswer": { "value": "Buy", "unit": "" },
+      "solutionNarrative": "The seller offers the Bad deal ($3 > 1$). The buyer, anticipating this, still buys because $1 > 0$ from walking. Backward induction predicts (Buy, Bad deal) — even a small surplus beats no deal."
+    }
+  ]
+}

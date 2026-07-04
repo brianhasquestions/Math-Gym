@@ -1,0 +1,260 @@
+{
+  "id": "game-theory.evolutionary-and-applications",
+  "subject": "game-theory",
+  "title": "Evolutionary Games and Applications",
+  "prerequisites": ["game-theory.mixed-strategies"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "evolutionary-stable-strategy",
+      "label": "Evolutionarily stable strategies (ESS)",
+      "microLesson": "In evolutionary game theory, strategies aren't *chosen* — they're carried by a population and rewarded by reproduction. A strategy is an **evolutionarily stable strategy (ESS)** if, once nearly everyone plays it, no rare *mutant* strategy can invade and spread. For a strategy $S$ facing a mutant $T$ in a symmetric game with payoff $E(X, Y)$ (playing $X$ against $Y$), $S$ is ESS when either (i) $E(S,S) > E(T,S)$ — $S$ strictly beats the mutant against the resident population — or (ii) $E(S,S) = E(T,S)$ and $E(S,T) > E(T,T)$. Condition (i) is just a *strict Nash equilibrium* against oneself. Every ESS is a Nash equilibrium, but not every Nash equilibrium is an ESS."
+    },
+    {
+      "id": "replicator-intuition",
+      "label": "Replicator dynamics",
+      "microLesson": "The **replicator dynamic** models how strategy frequencies change over time: a strategy's population share grows exactly when its payoff *exceeds the population average*, and shrinks when it falls below. Fitter-than-average strategies replicate faster — evolution as arithmetic. If in a mixed population strategy A earns 5 and strategy B earns 3 while the population averages 4, then A (above 4) grows and B (below 4) shrinks. The dynamic comes to rest where every surviving strategy earns exactly the average — which is precisely a Nash equilibrium, giving evolution's blind process the same fixed points as rational choice."
+    },
+    {
+      "id": "hawk-dove-polymorphism",
+      "label": "The Hawk–Dove game and polymorphism",
+      "microLesson": "In the **Hawk–Dove** game, animals contest a resource of value $V$. Two Hawks fight and split an expected $\\tfrac{V-C}{2}$ (a costly injury of cost $C$); a Hawk meeting a Dove takes all of $V$; two Doves share $\\tfrac{V}{2}$. When the fight cost exceeds the prize ($C > V$), neither pure strategy is stable — the population settles into a **polymorphism** (a stable mix). The stable fraction of Hawks is the mixed equilibrium $p^* = \\dfrac{V}{C}$. With $V = 2$, $C = 4$, the population stabilizes at $p^* = \\tfrac{2}{4} = 0.5$ Hawks — half the animals aggressive, half peaceful, held in balance by frequency-dependent payoffs."
+    },
+    {
+      "id": "cournot-oligopoly",
+      "label": "Cournot oligopoly",
+      "microLesson": "In the **Cournot** model, firms compete by choosing *quantities*. With two firms, inverse demand $P = a - Q$ (where $Q = q_1 + q_2$) and constant marginal cost $c$, each firm's **best response** is $q_i = \\dfrac{a - c - q_j}{2}$ — produce less when your rival produces more. Solving the two best responses simultaneously gives the symmetric **Cournot–Nash equilibrium** $q_1 = q_2 = \\dfrac{a - c}{3}$, total output $Q = \\dfrac{2(a-c)}{3}$, and price $P = \\dfrac{a + 2c}{3}$. With $a = 12$, $c = 0$: each firm makes $\\tfrac{12}{3} = 4$, total is 8, and $P = 4$. Output lands between monopoly (too little) and perfect competition (efficient) — the classic strategic middle."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Game theory without rational players\n\nEverything so far assumed players who reason: they compute best responses and settle at equilibria. But a spider does not compute, a bacterium does not deliberate, and yet populations of them settle into stable strategic patterns anyway. **Evolutionary game theory** explains why. Replace \"rational choice\" with \"reproduction\": strategies that earn higher payoffs leave more copies, so the population's strategy mix evolves. Astonishingly, this blind process lands on the *same* equilibria that rational analysis predicts — and it hands us a sharper stability concept along the way. The same math then reaches back into economics to describe how *firms* compete on quantity, closing the loop between biology and industry.\n\n## Evolutionarily stable strategies\n\nImagine a large population, almost all playing some strategy $S$, when a small mutant fraction playing $T$ appears. $S$ is an **evolutionarily stable strategy (ESS)** if it resists this invasion: the residents out-reproduce the mutants, and $T$ dies out. Formalizing \"out-reproduce\" in a symmetric game with payoff $E(X, Y)$ (the payoff to playing $X$ against an opponent playing $Y$), $S$ is an ESS against $T$ when one of two conditions holds:\n\n$$\\textbf{(i)}\\;\\; E(S,S) > E(T,S) \\qquad\\text{or}\\qquad \\textbf{(ii)}\\;\\; E(S,S) = E(T,S)\\ \\text{and}\\ E(S,T) > E(T,T).$$\n\nCondition **(i)** says $S$ strictly beats the mutant when both face the overwhelmingly $S$-playing population — this is exactly a *strict Nash equilibrium* against itself. Condition **(ii)** is the tie-breaker: if the mutant does *equally* well against residents, $S$ survives only if it does strictly better than the mutant when they meet each other. \n\n**Key relationship: every ESS is a Nash equilibrium, but not conversely.** ESS is *strictly stronger* — it adds the invasion-resistance requirement that weeds out equilibria a mutant could drift into.\n\n### Checking ESS in a 2×2 game\n\nConsider a symmetric game where each animal plays $A$ or $B$, with payoff matrix (row = focal player, entries = focal player's payoff):\n\n| | opp plays A | opp plays B |\n|---|---|---|\n| **A** | 3 | 1 |\n| **B** | 4 | 2 |\n\nIs $A$ an ESS? Check condition (i): $E(A,A) = 3$ versus $E(B,A) = 4$. Since $3 < 4$, a $B$-mutant does *better* against an all-$A$ population than $A$ does — $A$ is **not** ESS; $B$ invades. Is $B$ an ESS? $E(B,B) = 2$ versus $E(A,B) = 1$. Since $2 > 1$, $B$ strictly beats an $A$-mutant against a $B$-population: $B$ **is** an ESS (here $B$ strictly dominates, the cleanest possible case).\n\n## Replicator dynamics: evolution as arithmetic\n\nESS tells you *where* a population is stable; the **replicator dynamic** tells you how it *moves*. The rule is simple and mechanical: **a strategy's population share grows precisely when its payoff exceeds the population's average payoff, and shrinks when it falls below.** Formally, if strategy $i$ has frequency $x_i$ and fitness $f_i$, and $\\bar f = \\sum_j x_j f_j$ is the average fitness, then\n\n$$\\dot x_i = x_i\\,(f_i - \\bar f).$$\n\nSuppose a population is split between two strategies earning fitnesses 5 and 3, with average fitness 4. The 5-strategy is above average, so its share climbs; the 3-strategy is below, so its share falls. The share that is *growing* is always the one **earning above the average payoff**. The dynamic halts only when every surviving strategy earns exactly the average — no strategy can gain share — which is precisely the condition for a **Nash equilibrium**. Evolution and rationality reach the same resting points by utterly different routes.\n\n## The Hawk–Dove game and stable polymorphism\n\nThe most famous evolutionary game models animal conflict over a resource worth $V$. Two behaviors:\n\n- **Hawk:** escalate and fight. Against a Dove, the Hawk takes the whole resource $V$. Against another Hawk, they fight; the expected payoff is $\\tfrac{V - C}{2}$, where $C$ is the injury cost (each wins half the time, loser pays $C$).\n- **Dove:** display but never fight. Against a Hawk, the Dove flees with 0. Against another Dove, they share: $\\tfrac{V}{2}$ each.\n\nThe payoff matrix:\n\n| | vs Hawk | vs Dove |\n|---|---|---|\n| **Hawk** | $\\frac{V-C}{2}$ | $V$ |\n| **Dove** | $0$ | $\\frac{V}{2}$ |\n\nWhen the prize exceeds the fight cost ($V > C$), Hawk dominates and \"all Hawk\" is the ESS. But the interesting case is a **costly fight, $C > V$**. Now neither pure strategy is stable: in an all-Hawk world, mutual fighting yields the *negative* $\\tfrac{V-C}{2} < 0$, so a peaceful Dove mutant (earning 0 against Hawks) invades; in an all-Dove world, a Hawk mutant grabs the whole $V$ and invades. The population settles at a **mixed / polymorphic** equilibrium — a stable *fraction* of Hawks.\n\n### Solving for the Hawk fraction\n\nAt the mixed equilibrium, Hawk and Dove must earn *equal* expected payoffs (else the better one would grow). Let $p$ be the fraction of Hawks. Then\n\n$$E(\\text{Hawk}) = p\\cdot\\frac{V-C}{2} + (1-p)\\,V, \\qquad E(\\text{Dove}) = p\\cdot 0 + (1-p)\\,\\frac{V}{2}.$$\n\nSet them equal and solve. After simplifying, the resident Hawk fraction is the clean\n\n$$\\boxed{\\,p^* = \\frac{V}{C}\\,}.$$\n\nWith $V = 2$ and $C = 4$, the population stabilizes at $p^* = \\tfrac{2}{4} = 0.5$: half Hawks, half Doves. Raise the injury cost $C$ and the Hawk fraction *falls* — more dangerous fights sustain fewer aggressors. This *frequency-dependent* balance, where each type's success depends on how common it is, is why real populations show stable mixes of aggressive and peaceful individuals rather than one type sweeping to fixation.\n\n## Cournot oligopoly: strategic quantities\n\nThe same equilibrium logic drives one of economics' foundational models. In **Cournot competition**, firms compete not on price but on *how much to produce*. Take two firms facing inverse demand $P = a - Q$, where $Q = q_1 + q_2$ is total output, each with constant marginal cost $c$.\n\nFirm 1's profit is $\\pi_1 = (P - c)\\,q_1 = (a - q_1 - q_2 - c)\\,q_1$. Maximize over $q_1$ (treating $q_2$ as fixed): set $\\frac{\\partial \\pi_1}{\\partial q_1} = a - 2q_1 - q_2 - c = 0$, giving the **best-response function**\n\n$$q_1 = \\frac{a - c - q_2}{2}.$$\n\nThe more your rival produces, the less you should — quantities are *strategic substitutes*. By symmetry firm 2's best response is the mirror image. In equilibrium both produce the same $q$, so substitute $q_2 = q$ into firm 1's best response:\n\n$$q = \\frac{a - c - q}{2} \\;\\Longrightarrow\\; 2q = a - c - q \\;\\Longrightarrow\\; 3q = a - c \\;\\Longrightarrow\\; \\boxed{q = \\frac{a-c}{3}}.$$\n\nTotal output is $Q = \\tfrac{2(a-c)}{3}$ and the price is $P = a - Q = \\tfrac{a + 2c}{3}$.\n\n### Worked Cournot example\n\nLet $a = 12$ and $c = 0$. Each firm produces $q = \\tfrac{12 - 0}{3} = 4$, total output is $Q = 8$, and the price is $P = 12 - 8 = 4$. Each firm's profit is $(P - c)q = (4 - 0)(4) = 16$. Compare: a monopolist would produce only $\\tfrac{a-c}{2} = 6$ and charge 6 (higher price, less output); perfect competition would drive output to $a - c = 12$ at price $c = 0$. Cournot duopoly sits squarely between — more output and a lower price than monopoly, but short of the competitive ideal.\n\n## Pitfalls\n\n- **ESS vs. Nash.** Every ESS is a Nash equilibrium, but not every Nash equilibrium is an ESS. A *weak* (non-strict) Nash equilibrium can fail the ESS invasion test. Don't declare a strategy stable just because it's a best response to itself — check the strict inequality or the tie-breaker.\n- **The growing strategy is the *above-average* one, not merely the highest-payoff one in absolute terms.** In replicator dynamics what matters is a strategy's payoff *relative to the population average*; a strategy can have a high raw payoff yet shrink if the average is higher still.\n- **Hawk fraction is $V/C$, and it needs $C > V$.** The polymorphism formula $p^* = V/C$ only describes a genuine interior mix when fights are costly ($C > V$); if $V > C$ the game has a pure all-Hawk ESS and there is no stable mix.\n- **Cournot needs the best-response *system*, not one firm's optimum.** Solving a single firm's first-order condition gives a best response, not the equilibrium. You must impose symmetry (or solve both equations together) to reach $q = \\tfrac{a-c}{3}$."
+  },
+  "application": {
+    "summary": "Evolutionary game theory explains stable behavioral mixes in biology (aggression, cooperation, sex ratios) without assuming any creature reasons, while its equilibrium engine — shared with Cournot oligopoly — models how firms set output in concentrated industries. Together they show one mathematics governing both natural selection and market competition.",
+    "domains": ["evolutionary biology and animal behavior", "industrial organization and oligopoly", "cultural and social dynamics", "algorithmic and multi-agent systems"],
+    "workedExample": "**Why populations stay a mix of fighters and pacifists.**\n\nField biologists repeatedly find that animal populations settle into a *stable proportion* of aggressive and non-aggressive individuals rather than turning uniformly one way. The Hawk–Dove model explains it. Suppose a contested resource is worth $V = 2$ fitness units, and losing a fight costs $C = 8$. Because the fight cost exceeds the prize ($C > V$), neither pure type is stable.\n\nThe stable fraction of Hawks is $p^* = V/C = 2/8 = 0.25$: a quarter of the population is aggressive, three-quarters peaceful. The balance is *self-correcting*. If Hawks become too common, they mostly meet other Hawks, suffer the costly $\\tfrac{V-C}{2} = \\tfrac{2-8}{2} = -3$ payoff, and their share falls. If Hawks become too rare, they mostly meet Doves, grab the whole $V = 2$, and their share rises. Frequency-dependent selection pins the mix at 25% Hawks.\n\nThis same logic — a strategy's success depending on how common it is — models the coexistence of cooperators and defectors, the roughly 50/50 sex ratio in most species (a classic evolutionary-game result), and even the stable mix of aggressive and cautious strategies in trading algorithms competing in the same market. The economics link is direct: Cournot's quantity equilibrium uses the identical best-response-to-the-population reasoning, which is why the theory of imperfect competition and the theory of animal conflict rest on the same page of mathematics.",
+    "domainNotes": [
+      "**Evolutionary biology:** ESS explains stable aggression levels, altruism, and sex ratios; Maynard Smith's Hawk–Dove model is the canonical case of a costly-conflict polymorphism.",
+      "**Industrial organization:** Cournot (quantity) and its cousin Bertrand (price) competition model oligopoly output, prices, and profits — the backbone of antitrust analysis and market-power estimation.",
+      "**Social dynamics:** replicator dynamics model the spread of conventions, languages, and cooperative norms, where 'fitness' is imitation success rather than reproduction.",
+      "**Multi-agent systems:** learning agents and trading algorithms converge to evolutionary equilibria; ESS provides the stability test for whether a strategy population resists invasion by new algorithms."
+    ]
+  },
+  "generators": [
+    "gt3-ess-1", "gt3-ess-2", "gt3-ess-3",
+    "gt3-replicator-1", "gt3-replicator-2", "gt3-replicator-3",
+    "gt3-hawkdove-1", "gt3-hawkdove-2", "gt3-hawkdove-3",
+    "gt3-cournot-1", "gt3-cournot-2", "gt3-cournot-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.evolutionary-and-applications.s01",
+      "concepts": ["evolutionary-stable-strategy"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "True or false as a relationship: every evolutionarily stable strategy (ESS) is also a Nash equilibrium. Then say whether the converse holds.",
+      "steps": [
+        { "instruction": "Is every ESS a Nash equilibrium? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "ESS adds a requirement on top of Nash." },
+        { "instruction": "Is every Nash equilibrium an ESS (the converse)? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "ESS is strictly stronger; some Nash equilibria fail the invasion test." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Every ESS is a Nash equilibrium, but ESS is strictly stronger — it also demands resistance to invasion by mutants — so the converse fails."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s02",
+      "concepts": ["evolutionary-stable-strategy"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A symmetric 2×2 game has focal-player payoffs:\n\n| | opp A | opp B |\n|---|---|---|\n| **A** | 5 | 1 |\n| **B** | 3 | 2 |\n\nUse condition (i): strategy $A$ is an ESS if $E(A,A) > E(B,A)$. Determine whether $A$ is an ESS.",
+      "steps": [
+        { "instruction": "Read $E(A,A)$ (row A, column A). Give a number.", "answer": "5", "accept": [], "hint": "Focal plays A, opponent plays A." },
+        { "instruction": "Read $E(B,A)$ (row B, column A) — the mutant B against the A-population. Give a number.", "answer": "3", "accept": [], "hint": "Focal plays B, opponent plays A." },
+        { "instruction": "Is $E(A,A) > E(B,A)$, i.e. $5 > 3$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare the two numbers." },
+        { "instruction": "So is $A$ an ESS? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Condition (i) holds, so no B-mutant can invade." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$E(A,A) = 5 > 3 = E(B,A)$, so strategy $A$ strictly beats a $B$-mutant against an all-$A$ population. Condition (i) holds and $A$ is an ESS."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s03",
+      "concepts": ["evolutionary-stable-strategy"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A symmetric 2×2 game has focal-player payoffs:\n\n| | opp A | opp B |\n|---|---|---|\n| **A** | 2 | 5 |\n| **B** | 4 | 1 |\n\nCheck whether either pure strategy is an ESS using condition (i): $E(S,S) > E(T,S)$.",
+      "steps": [
+        { "instruction": "Is $A$ an ESS? Compare $E(A,A) = 2$ with $E(B,A) = 4$: is $2 > 4$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "A B-mutant earns 4 against A-residents, beating A's 2." },
+        { "instruction": "Is $B$ an ESS? Compare $E(B,B) = 1$ with $E(A,B) = 5$: is $1 > 5$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "An A-mutant earns 5 against B-residents, beating B's 1." },
+        { "instruction": "Since neither pure strategy resists invasion, the stable outcome is a MIXED population. Type 'mixed'.", "answer": "mixed", "accept": ["mixed strategy", "polymorphism", "polymorphic"], "hint": "This anti-coordination structure has an interior mixed ESS." }
+      ],
+      "finalAnswer": { "value": "mixed", "unit": "" },
+      "solutionNarrative": "Neither pure strategy satisfies condition (i) — each is invaded by the other — so the ESS is a stable mix (a polymorphism), just like the costly Hawk–Dove game."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s04",
+      "concepts": ["evolutionary-stable-strategy"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a symmetric game, strategy $B$ strictly dominates $A$: $E(B, \\cdot) > E(A, \\cdot)$ against every opponent. Is $B$ an ESS? ",
+      "steps": [
+        { "instruction": "A strictly dominant strategy is a strict best response to itself, satisfying condition (i). Is $B$ an ESS? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Strict dominance implies $E(B,B) > E(A,B)$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "A strictly dominant strategy satisfies $E(B,B) > E(A,B)$, so condition (i) holds and $B$ is an ESS — no mutant can invade."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s05",
+      "concepts": ["replicator-intuition"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a population, strategy A earns fitness 6 and strategy B earns fitness 4, while the population average fitness is 5. Under replicator dynamics, which strategy's share is GROWING? Choose A or B (type the letter word 'A' or 'B').",
+      "steps": [
+        { "instruction": "The growing strategy is the one earning ABOVE the average of 5. Which is it? Type 'A' or 'B'.", "answer": "A", "accept": ["strategy a"], "hint": "A earns 6, which is above 5; B earns 4, which is below." }
+      ],
+      "finalAnswer": { "value": "A", "unit": "" },
+      "solutionNarrative": "A's fitness (6) exceeds the average (5), so its share grows; B's (4) is below average, so B's share shrinks. Above-average pays."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s06",
+      "concepts": ["replicator-intuition"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A population is 60% strategy A (fitness 10) and 40% strategy B (fitness 5). Compute the average fitness, then decide which strategy's share grows under replicator dynamics.",
+      "steps": [
+        { "instruction": "Average fitness: $0.6 \\times 10 + 0.4 \\times 5$. Give a number.", "answer": "8", "accept": [], "hint": "$6 + 2 = 8$." },
+        { "instruction": "A earns 10 versus the average 8. Does A's share grow? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "10 is above 8." },
+        { "instruction": "Which strategy is growing? Type 'A' or 'B'.", "answer": "A", "accept": ["strategy a"], "hint": "The above-average one." }
+      ],
+      "finalAnswer": { "value": "A", "unit": "" },
+      "solutionNarrative": "Average fitness is $0.6(10) + 0.4(5) = 8$. Strategy A (10) is above it and grows; B (5) is below and shrinks."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s07",
+      "concepts": ["replicator-intuition"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Under replicator dynamics the population stops changing when every surviving strategy earns exactly the average payoff. What kind of equilibrium does that rest point correspond to, and if strategy C earns 7 while the average is 7, is C's share growing, shrinking, or stable?",
+      "steps": [
+        { "instruction": "A rest point of the replicator dynamic corresponds to which equilibrium concept from rational game theory? Type 'Nash'.", "answer": "Nash", "accept": ["nash equilibrium"], "hint": "Evolution's fixed points coincide with this classic concept." },
+        { "instruction": "If C earns 7 and the average is also 7, is C's share growing, shrinking, or stable? Type one word.", "answer": "stable", "accept": ["constant", "unchanged"], "hint": "Payoff equal to the average means no change." }
+      ],
+      "finalAnswer": { "value": "stable", "unit": "" },
+      "solutionNarrative": "Rest points of the replicator dynamic are Nash equilibria. A strategy earning exactly the average payoff has zero growth rate, so C's share is stable."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s08",
+      "concepts": ["hawk-dove-polymorphism"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In the Hawk–Dove game with resource value $V = 2$ and fight cost $C = 4$ (note $C > V$), the stable fraction of Hawks is $p^* = V/C$. Compute it.",
+      "steps": [
+        { "instruction": "Compute $p^* = V/C = 2/4$. Give a fraction or decimal.", "answer": "1/2", "accept": ["0.5", "2/4"], "hint": "Divide the value by the cost." }
+      ],
+      "finalAnswer": { "value": "0.5", "unit": "" },
+      "solutionNarrative": "$p^* = V/C = 2/4 = 0.5$: half the population is Hawk, half Dove, held in balance by frequency-dependent payoffs."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s09",
+      "concepts": ["hawk-dove-polymorphism"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Animals contest a resource worth $V = 4$; a lost fight costs $C = 10$. Since $C > V$, the population reaches a stable mix. Find the equilibrium fraction of Hawks $p^* = V/C$, and give it as a decimal.",
+      "steps": [
+        { "instruction": "Confirm $C > V$ so a stable mix exists: is $10 > 4$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The polymorphism formula needs costly fights." },
+        { "instruction": "Compute $p^* = V/C = 4/10$. Give a decimal.", "answer": "0.4", "accept": ["4/10", "2/5"], "hint": "$4 \\div 10$." }
+      ],
+      "finalAnswer": { "value": "0.4", "unit": "" },
+      "solutionNarrative": "Because $C = 10 > 4 = V$, no pure strategy is stable and the Hawk fraction settles at $p^* = V/C = 0.4$ — 40% aggressive."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s10",
+      "concepts": ["hawk-dove-polymorphism"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "In a Hawk–Dove population with $V = 6$, $C = 8$, find the stable Hawk fraction $p^* = V/C$, and reason about what happens to that fraction if the fight cost $C$ rises.",
+      "steps": [
+        { "instruction": "Stable Hawk fraction: $p^* = 6/8$. Give a fraction or decimal.", "answer": "3/4", "accept": ["0.75", "6/8"], "hint": "Simplify $6/8$." },
+        { "instruction": "If the fight cost $C$ increases (with $V$ fixed), does the Hawk fraction $V/C$ rise or fall? Type 'rise' or 'fall'.", "answer": "fall", "accept": ["fall", "decrease", "falls"], "hint": "$V/C$ shrinks as the denominator grows." }
+      ],
+      "finalAnswer": { "value": "0.75", "unit": "" },
+      "solutionNarrative": "$p^* = 6/8 = 0.75$. Because $p^* = V/C$, a larger fight cost $C$ lowers the Hawk fraction — more dangerous fights sustain fewer aggressors."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s11",
+      "concepts": ["cournot-oligopoly"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two firms compete in Cournot quantities with inverse demand $P = a - Q$, $a = 9$, and marginal cost $c = 0$. The symmetric equilibrium output per firm is $q = \\dfrac{a - c}{3}$. Find $q$.",
+      "steps": [
+        { "instruction": "Compute $q = (a - c)/3 = (9 - 0)/3$. Give a number.", "answer": "3", "accept": [], "hint": "Divide $a - c = 9$ by 3." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$q = (a - c)/3 = 9/3 = 3$ per firm."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s12",
+      "concepts": ["cournot-oligopoly"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Cournot duopoly with $P = a - Q$, $a = 12$, $c = 0$. Find each firm's equilibrium output, total output, and the market price.",
+      "steps": [
+        { "instruction": "Per-firm output $q = (12 - 0)/3$. Give a number.", "answer": "4", "accept": [], "hint": "$(a - c)/3$." },
+        { "instruction": "Total output $Q = 2q = 2 \\times 4$. Give a number.", "answer": "8", "accept": [], "hint": "Two firms each make 4." },
+        { "instruction": "Price $P = a - Q = 12 - 8$. Give a number.", "answer": "4", "accept": [], "hint": "Plug total output into demand." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$q = 12/3 = 4$ each, $Q = 8$, and $P = 12 - 8 = 4$. Output and price sit between the monopoly and competitive extremes."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s13",
+      "concepts": ["cournot-oligopoly"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two firms face inverse demand $P = 15 - Q$ with marginal cost $c = 3$. Find each firm's Cournot output, the price, and each firm's profit.",
+      "steps": [
+        { "instruction": "Per-firm output $q = (a - c)/3 = (15 - 3)/3$. Give a number.", "answer": "4", "accept": [], "hint": "$(15 - 3)/3 = 12/3$." },
+        { "instruction": "Total output $Q = 2 \\times 4$, then price $P = 15 - Q = 15 - 8$. Give the price.", "answer": "7", "accept": [], "hint": "$Q = 8$, so $P = 15 - 8$." },
+        { "instruction": "Each firm's profit $(P - c)\\,q = (7 - 3)(4)$. Give a number.", "answer": "16", "accept": [], "hint": "Margin per unit times output." }
+      ],
+      "finalAnswer": { "value": "16", "unit": "" },
+      "solutionNarrative": "$q = (15 - 3)/3 = 4$, $Q = 8$, $P = 15 - 8 = 7$. Each firm earns $(7 - 3)(4) = 16$."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s14",
+      "concepts": ["cournot-oligopoly"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For a Cournot duopoly with $P = a - Q$ and marginal cost $c$, a firm's best response to a rival producing $q_2$ is $q_1 = \\dfrac{a - c - q_2}{2}$. With $a = 12$, $c = 0$, find firm 1's best response when firm 2 produces $q_2 = 2$.",
+      "steps": [
+        { "instruction": "Compute $q_1 = (a - c - q_2)/2 = (12 - 0 - 2)/2$. Give a number.", "answer": "5", "accept": [], "hint": "$(12 - 2)/2 = 10/2$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$q_1 = (12 - 0 - 2)/2 = 5$. The best response falls as the rival produces more — quantities are strategic substitutes."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s15",
+      "concepts": ["evolutionary-stable-strategy", "hawk-dove-polymorphism"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "In the Hawk–Dove game with $V = 2$, $C = 8$, first decide whether pure 'all Hawk' is an ESS, then give the stable Hawk fraction.",
+      "steps": [
+        { "instruction": "Pure all-Hawk is an ESS only if $V > C$. Is $2 > 8$? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Compare V and C." },
+        { "instruction": "Since $C > V$, the ESS is a mix. Compute the Hawk fraction $p^* = V/C = 2/8$. Give a fraction or decimal.", "answer": "1/4", "accept": ["0.25", "2/8"], "hint": "Simplify $2/8$." }
+      ],
+      "finalAnswer": { "value": "0.25", "unit": "" },
+      "solutionNarrative": "Since $V = 2 < 8 = C$, all-Hawk is not an ESS; the stable polymorphism has $p^* = V/C = 2/8 = 0.25$ Hawks."
+    },
+    {
+      "id": "game-theory.evolutionary-and-applications.s16",
+      "concepts": ["cournot-oligopoly"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Cournot duopoly with $P = a - Q$, $a = 24$, $c = 6$. Find each firm's equilibrium output $q = (a - c)/3$.",
+      "steps": [
+        { "instruction": "Compute $q = (24 - 6)/3 = 18/3$. Give a number.", "answer": "6", "accept": [], "hint": "$18/3$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$q = (24 - 6)/3 = 6$ per firm."
+    }
+  ]
+}

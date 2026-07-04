@@ -1,0 +1,268 @@
+{
+  "id": "number-theory.congruences-and-crt",
+  "subject": "number-theory",
+  "title": "Congruences and the Chinese Remainder Theorem",
+  "prerequisites": ["number-theory.gcd-lcm-and-bezout"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "modular-basics",
+      "label": "Congruences and residues",
+      "microLesson": "$a \\equiv b \\pmod m$ means $m \\mid (a - b)$ — equivalently, $a$ and $b$ leave the same remainder mod $m$. The **least nonnegative residue** of $a$ mod $m$ is the unique value in $0..m-1$: $38 \\bmod 7 = 3$, and for negatives keep adding $m$ until you land in range ($-4 \\bmod 7 = 3$). Congruences add and multiply like equations: you may reduce before or after, so $(47 \\cdot 53) \\bmod 10 = (7 \\cdot 3) \\bmod 10 = 1$. Reducing as you go keeps every number small."
+    },
+    {
+      "id": "linear-congruences",
+      "label": "Linear congruences",
+      "microLesson": "A **linear congruence** $ax \\equiv b \\pmod m$ has a solution exactly when $\\gcd(a, m) \\mid b$; then it has exactly $\\gcd(a,m)$ solutions mod $m$. If $\\gcd(a,m) = 1$ there is a unique residue. To solve when the gcd is 1, multiply both sides by $a^{-1}$; when $g = \\gcd(a,m) > 1$ divides $b$, divide the whole congruence (including the modulus) by $g$ and solve the reduced one. So $6x \\equiv 9 \\pmod{15}$: $\\gcd(6,15) = 3 \\mid 9$, reduce to $2x \\equiv 3 \\pmod 5$, giving $x \\equiv 4 \\pmod 5$."
+    },
+    {
+      "id": "inverse-mod",
+      "label": "Modular inverses",
+      "microLesson": "The **inverse** of $a$ mod $m$ is the residue $a^{-1}$ in $0..m-1$ with $a \\cdot a^{-1} \\equiv 1 \\pmod m$ — it plays the role of $\\tfrac1a$ and lets you 'divide.' It exists exactly when $\\gcd(a, m) = 1$. Find it by extended Euclid (the Bézout $s$ reduced into range) or, for small $m$, by testing: $5^{-1} \\bmod 7 = 3$ since $5 \\cdot 3 = 15 \\equiv 1$. No inverse exists when $a$ and $m$ share a factor: 6 has none mod 9, because every multiple of 6 stays divisible by 3 mod 9 and can't hit 1."
+    },
+    {
+      "id": "crt-systems",
+      "label": "The Chinese Remainder Theorem",
+      "microLesson": "The **Chinese Remainder Theorem** (CRT): if the moduli are pairwise coprime, the system $x \\equiv a \\pmod m$, $x \\equiv b \\pmod n$ has a UNIQUE solution mod $mn$. Construct it by writing $x = a + mt$ and solving $a + mt \\equiv b \\pmod n$ for $t$ (needs $m^{-1} \\bmod n$). For $x \\equiv 2 \\pmod 3$, $x \\equiv 3 \\pmod 5$: $x = 2 + 3t$, and $2 + 3t \\equiv 3 \\pmod 5 \\Rightarrow 3t \\equiv 1 \\Rightarrow t \\equiv 2$, so $x = 8$ (unique mod 15). PITFALL: if the moduli share a factor, a solution exists only when the residues agree mod that gcd."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Arithmetic with remainders\n\nOnce you can compute gcds and inverses, you can *solve equations* in modular arithmetic — and stitch several together with the Chinese Remainder Theorem. This is the computational heart of the subject and of RSA.\n\n## Congruences and residues\n\nWe write\n\n$$a \\equiv b \\pmod m \\quad\\Longleftrightarrow\\quad m \\mid (a - b),$$\n\nread '$a$ is congruent to $b$ modulo $m$.' Equivalently, $a$ and $b$ leave the same remainder when divided by $m$. The **least nonnegative residue** of $a$ is the unique representative in $\\{0, 1, \\dots, m-1\\}$: $38 \\bmod 7 = 3$. For negatives, add $m$ until you land in range — $-4 \\bmod 7 = 3$ — the same nonnegative-remainder convention from the division algorithm.\n\nCongruences respect $+$, $-$, $\\times$: if $a \\equiv a'$ and $b \\equiv b'$, then $a + b \\equiv a' + b'$ and $ab \\equiv a'b' \\pmod m$. So you may **reduce at any point**:\n\n$$(47 \\cdot 53) \\bmod 10 = (7 \\cdot 3) \\bmod 10 = 21 \\bmod 10 = 1,$$\n\nnever needing the product 2491. This reduce-as-you-go habit is what keeps big-number modular arithmetic tractable.\n\n## Linear congruences\n\nA **linear congruence** has the form\n\n$$ax \\equiv b \\pmod m.$$\n\n> **Solvability.** $ax \\equiv b \\pmod m$ has a solution **iff** $\\gcd(a, m) \\mid b$. When it does, there are exactly $\\gcd(a, m)$ solutions modulo $m$.\n\nThree cases in practice:\n\n- **$\\gcd(a, m) = 1$:** a unique solution. Multiply both sides by $a^{-1} \\bmod m$. E.g. $5x \\equiv 3 \\pmod 7$: $5^{-1} = 3$, so $x \\equiv 3 \\cdot 3 = 9 \\equiv 2 \\pmod 7$.\n- **$g = \\gcd(a,m) > 1$ and $g \\mid b$:** divide the *entire* congruence — including the modulus — by $g$, then solve the reduced coprime congruence. $6x \\equiv 9 \\pmod{15}$: $g = 3 \\mid 9$, so $2x \\equiv 3 \\pmod 5$, giving $x \\equiv 4 \\pmod 5$ (three solutions mod 15: 4, 9, 14).\n- **$g \\nmid b$:** no solution. $4x \\equiv 3 \\pmod 6$ is impossible, since the left side is always even but 3 is odd mod 6.\n\n## Modular inverses\n\nThe key subroutine is the **inverse**: the residue $a^{-1} \\in 0..m-1$ with\n\n$$a \\cdot a^{-1} \\equiv 1 \\pmod m.$$\n\nIt exists **exactly when $\\gcd(a, m) = 1$**, and it comes straight from Bézout: $as + mt = 1$ gives $as \\equiv 1$, so $a^{-1} = s \\bmod m$. For small $m$ you can just test $1, 2, 3, \\dots$: $5^{-1} \\bmod 7 = 3$ because $5 \\cdot 3 = 15 \\equiv 1$. When $\\gcd(a, m) > 1$ there is **no** inverse — e.g. $6$ mod $9$: every multiple of 6 is divisible by 3, so $6x \\bmod 9 \\in \\{0, 3, 6\\}$, never 1.\n\n## The Chinese Remainder Theorem\n\nSuppose you know a number's remainder against several **pairwise coprime** moduli. CRT says those remainders pin it down uniquely (up to the product of the moduli).\n\n> **CRT (two moduli).** If $\\gcd(m, n) = 1$, then\n> $$x \\equiv a \\pmod m, \\qquad x \\equiv b \\pmod n$$\n> has a **unique** solution modulo $mn$.\n\n**Construction by substitution.** Write $x = a + mt$ (this forces the first congruence). Substitute into the second:\n\n$$a + mt \\equiv b \\pmod n \\;\\Longrightarrow\\; mt \\equiv b - a \\pmod n \\;\\Longrightarrow\\; t \\equiv m^{-1}(b - a) \\pmod n.$$\n\n**Worked example.** $x \\equiv 2 \\pmod 3$, $x \\equiv 3 \\pmod 5$. Set $x = 2 + 3t$. Then $2 + 3t \\equiv 3 \\pmod 5$, i.e. $3t \\equiv 1 \\pmod 5$. Since $3^{-1} \\equiv 2 \\pmod 5$, $t \\equiv 2$, so $x = 2 + 3 \\cdot 2 = 8$. Check: $8 \\bmod 3 = 2$ ✓, $8 \\bmod 5 = 3$ ✓. The solution is **unique mod 15**.\n\n**More than two moduli:** merge pairwise. Solve the first two into one congruence mod $mn$, then merge with the third, and so on.\n\n### The non-coprime pitfall\n\nCRT's uniqueness needs coprime moduli. If $\\gcd(m, n) = d > 1$, the system\n\n$$x \\equiv a \\pmod m, \\qquad x \\equiv b \\pmod n$$\n\nhas a solution **only if** $a \\equiv b \\pmod d$ — the two congruences must *agree* on the shared part. If they agree, there's a unique solution mod $\\mathrm{lcm}(m,n)$; if not, there is none. E.g. $x \\equiv 1 \\pmod 4$ and $x \\equiv 2 \\pmod 6$: here $d = \\gcd(4,6) = 2$, but $1 \\not\\equiv 2 \\pmod 2$, so **no solution**. Always check consistency before constructing.\n\n## Honest scaling\n\nWe solve mod 3, 5, 7. RSA's fast decryption (CRT-RSA) solves mod $p$ and mod $q$ and glues the results with exactly this construction — roughly a 4x speedup on real keys. Same theorem, bigger primes."
+  },
+  "application": {
+    "summary": "Congruences, inverses, and CRT are the computational core of modular arithmetic: solving linear congruences underlies affine-cipher decryption, inverses are RSA private keys, and CRT reconstructs a number from its residues — used in CRT-RSA, calendar math, and residue-number-system arithmetic.",
+    "domains": ["cryptography", "computer science", "calendars", "engineering"],
+    "workedExample": "**A basket-counting puzzle, solved by CRT.**\n\nEggs in a basket come out even in dozens? No — the classic puzzle: when counted 3 at a time, 2 remain; counted 5 at a time, 3 remain; counted 7 at a time, 2 remain. How many eggs (smallest count)?\n\nThat is the system $x \\equiv 2 \\pmod 3$, $x \\equiv 3 \\pmod 5$, $x \\equiv 2 \\pmod 7$, moduli pairwise coprime, so CRT gives a unique answer mod $3 \\cdot 5 \\cdot 7 = 105$.\n\n*Merge the first two.* $x = 2 + 3t$; $2 + 3t \\equiv 3 \\pmod 5 \\Rightarrow 3t \\equiv 1 \\Rightarrow t \\equiv 2 \\pmod 5$, so $x \\equiv 8 \\pmod{15}$.\n\n*Merge with the third.* $x = 8 + 15s$; $8 + 15s \\equiv 2 \\pmod 7 \\Rightarrow s \\equiv (2 - 8) \\cdot 15^{-1} \\pmod 7$. Since $15 \\equiv 1 \\pmod 7$, $15^{-1} \\equiv 1$, so $s \\equiv -6 \\equiv 1 \\pmod 7$, giving $x = 8 + 15 = 23$.\n\n**23 eggs.** Check: $23 \\bmod 3 = 2$, $23 \\bmod 5 = 3$, $23 \\bmod 7 = 2$. ✓ This is Sun Zi's original 3rd-century problem — and structurally identical to how CRT-RSA reconstructs a decryption from its mod-$p$ and mod-$q$ pieces.",
+    "domainNotes": [
+      "**Cryptography:** RSA decryption is a modular inverse and exponentiation; CRT-RSA computes mod $p$ and mod $q$ separately then recombines by CRT for a large speedup. Inverses via extended Euclid are the private-key computation.",
+      "**Computer science:** residue number systems represent big integers by their residues against coprime moduli, enabling carry-free parallel addition/multiplication reconstructed by CRT; hashing and error-correcting codes use congruences.",
+      "**Calendars:** day-of-week, leap-year, and 'what date is 1000 days from now' problems are congruences mod 7, 4, 400; the Doomsday and Zeller algorithms are modular.",
+      "**Engineering:** interleaved sampling and gear/rotor phase reconstruction use CRT to recover an index from its residues against coprime cycle lengths."
+    ]
+  },
+  "generators": [
+    "nt1-modbasic-1", "nt1-modbasic-2", "nt1-modbasic-3",
+    "nt1-lincong-1", "nt1-lincong-2", "nt1-lincong-3",
+    "nt1-inverse-1", "nt1-inverse-2", "nt1-inverse-3",
+    "nt1-crt-1", "nt1-crt-2", "nt1-crt-3"
+  ],
+  "problems": [
+    {
+      "id": "number-theory.congruences-and-crt.s01",
+      "concepts": ["modular-basics"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Reduce $38 \\bmod 7$ to its least nonnegative residue.",
+      "steps": [
+        { "instruction": "Largest multiple of 7 that is $\\le 38$?", "answer": "35", "accept": ["5*7"], "hint": "$7 \\cdot 5 = 35$." },
+        { "instruction": "Subtract: $38 \\bmod 7 = $ ?", "answer": "3", "accept": [], "hint": "$38 - 35$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$38 = 5 \\cdot 7 + 3$, so $38 \\bmod 7 = 3$."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s02",
+      "concepts": ["modular-basics"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the least nonnegative residue of $-23 \\bmod 8$.",
+      "steps": [
+        { "instruction": "How many times must you add 8 to $-23$ to land in $0..7$?", "answer": "3", "accept": [], "hint": "$-23 + 8 = -15$, $+8 = -7$, $+8 = 1$." },
+        { "instruction": "So $-23 \\bmod 8 = $ ?", "answer": "1", "accept": [], "hint": "$-23 + 24 = 1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$-23 + 24 = 1$ lands in $0..7$, so $-23 \\bmod 8 = 1$ (and $8 \\mid (1 - (-23)) = 24$)."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s03",
+      "concepts": ["modular-basics"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve for the least nonnegative residue: $47 \\cdot 53 \\equiv x \\pmod{10}$, reducing as you go.",
+      "steps": [
+        { "instruction": "Reduce $47 \\bmod 10$.", "answer": "7", "accept": [], "hint": "Last digit." },
+        { "instruction": "Reduce $53 \\bmod 10$.", "answer": "3", "accept": [], "hint": "Last digit." },
+        { "instruction": "Multiply and reduce: $(7 \\cdot 3) \\bmod 10 = $ ?", "answer": "1", "accept": [], "hint": "$21 \\bmod 10$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$47 \\equiv 7$, $53 \\equiv 3 \\pmod{10}$; $7 \\cdot 3 = 21 \\equiv 1 \\pmod{10}$ — no need to compute 2491."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s04",
+      "concepts": ["linear-congruences"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $5x \\equiv 3 \\pmod 7$ for the least nonnegative residue. ($\\gcd(5,7) = 1$, so one solution.)",
+      "steps": [
+        { "instruction": "Does a solution exist? $\\gcd(5,7) = 1$ divides 3, so type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Solvable iff $\\gcd(a,m) \\mid b$." },
+        { "instruction": "Test $x = 0..6$: which residue gives $5x \\equiv 3 \\pmod 7$?", "answer": "2", "accept": ["x=2"], "hint": "$5 \\cdot 2 = 10 \\equiv 3 \\pmod 7$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$5 \\cdot 2 = 10 \\equiv 3 \\pmod 7$, so $x = 2$ (unique since $\\gcd(5,7) = 1$)."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s05",
+      "concepts": ["linear-congruences"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Does $4x \\equiv 3 \\pmod 6$ have a solution? Use the $\\gcd(a,m) \\mid b$ test.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(4, 6)$.", "answer": "2", "accept": [], "hint": "Largest common divisor." },
+        { "instruction": "Does 2 divide 3? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "3 is odd." },
+        { "instruction": "So is the congruence solvable? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Solvable iff $\\gcd(a,m) \\mid b$." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$\\gcd(4,6) = 2 \\nmid 3$, so no solution: $4x \\bmod 6$ is always even, never 3."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s06",
+      "concepts": ["linear-congruences"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $6x \\equiv 9 \\pmod{15}$. Here $\\gcd(6,15) = 3$ divides 9, so reduce and solve; give the smallest nonnegative solution.",
+      "steps": [
+        { "instruction": "Confirm solvability: $\\gcd(6, 15) = $ ? (must divide 9)", "answer": "3", "accept": [], "hint": "Both 6 and 15 are multiples of 3." },
+        { "instruction": "Divide through by 3: solve the reduced $2x \\equiv 3 \\pmod 5$ for $x$ in $0..4$.", "answer": "4", "accept": ["x=4"], "hint": "$2 \\cdot 4 = 8 \\equiv 3 \\pmod 5$." },
+        { "instruction": "Verify in the original: $6 \\cdot 4 \\bmod 15 = $ ?", "answer": "9", "accept": [], "hint": "$24 \\bmod 15 = 9$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Divide by 3: $2x \\equiv 3 \\pmod 5$ gives $x \\equiv 4$. Smallest nonnegative solution mod 15 is 4 (others: 9, 14)."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s07",
+      "concepts": ["inverse-mod"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find $5^{-1} \\bmod 7$ — the residue $x$ in $0..6$ with $5x \\equiv 1 \\pmod 7$ — by testing.",
+      "steps": [
+        { "instruction": "The inverse $x$ makes $5x \\bmod 7$ equal to what?", "answer": "1", "accept": [], "hint": "Definition of inverse." },
+        { "instruction": "Test $x = 1, 2, 3, \\dots$: which works?", "answer": "3", "accept": ["x=3"], "hint": "$5 \\cdot 3 = 15 \\equiv 1 \\pmod 7$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$5 \\cdot 3 = 15 \\equiv 1 \\pmod 7$, so $5^{-1} \\bmod 7 = 3$."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s08",
+      "concepts": ["inverse-mod"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $7^{-1} \\bmod 11$ using extended Euclid, in $0..10$.",
+      "steps": [
+        { "instruction": "Check invertibility: $\\gcd(7, 11) = $ ?", "answer": "1", "accept": [], "hint": "11 is prime and doesn't divide 7." },
+        { "instruction": "Find the residue $x$ with $7x \\equiv 1 \\pmod{11}$.", "answer": "8", "accept": ["x=8"], "hint": "$7 \\cdot 8 = 56 = 5 \\cdot 11 + 1$." },
+        { "instruction": "Verify: $7 \\cdot 8 \\bmod 11 = $ ?", "answer": "1", "accept": [], "hint": "$56 - 55 = 1$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$7 \\cdot 8 = 56 \\equiv 1 \\pmod{11}$, so $7^{-1} \\bmod 11 = 8$."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s09",
+      "concepts": ["inverse-mod"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Does 6 have an inverse mod 9? Decide and give the inverse or 'none'.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(6, 9)$.", "answer": "3", "accept": [], "hint": "Largest common divisor." },
+        { "instruction": "An inverse needs gcd 1. Does $6^{-1} \\bmod 9$ exist? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "The gcd is 3." },
+        { "instruction": "So what is $6^{-1} \\bmod 9$? Type 'none'.", "answer": "none", "accept": ["no inverse", "does not exist", "dne"], "hint": "Every multiple of 6 stays divisible by 3 mod 9." }
+      ],
+      "finalAnswer": { "value": "none", "unit": "" },
+      "solutionNarrative": "$\\gcd(6,9) = 3 \\ne 1$, so no inverse: $6x \\bmod 9 \\in \\{0, 3, 6\\}$, never 1."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s10",
+      "concepts": ["crt-systems"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $x \\equiv 2 \\pmod 3$ and $x \\equiv 3 \\pmod 5$ for the smallest nonnegative $x$. (Coprime moduli, unique mod 15.)",
+      "steps": [
+        { "instruction": "Are 3 and 5 coprime (needed for a unique CRT solution)? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "$\\gcd(3,5) = 1$." },
+        { "instruction": "Search $x = 2, 5, 8, 11, 14$ (all $\\equiv 2 \\bmod 3$) for one $\\equiv 3 \\bmod 5$. Which?", "answer": "8", "accept": [], "hint": "$8 \\bmod 5 = 3$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$x = 8$ satisfies $8 \\bmod 3 = 2$ and $8 \\bmod 5 = 3$; unique mod 15."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s11",
+      "concepts": ["crt-systems"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $x \\equiv 3 \\pmod 4$, $x \\equiv 4 \\pmod 7$ by CRT construction. Write $x = 3 + 4t$ and solve for $t$ mod 7.",
+      "steps": [
+        { "instruction": "Substitute: $3 + 4t \\equiv 4 \\pmod 7$, i.e. $4t \\equiv 1 \\pmod 7$. Since $4^{-1} \\equiv 2 \\pmod 7$, find $t$ in $0..6$.", "answer": "2", "accept": ["t=2"], "hint": "$t \\equiv 2 \\cdot 1 = 2 \\pmod 7$." },
+        { "instruction": "Compute $x = 3 + 4 \\cdot 2$ and reduce mod 28 to the smallest nonnegative value.", "answer": "11", "accept": [], "hint": "$3 + 8 = 11$." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "" },
+      "solutionNarrative": "$t = 2$ gives $x = 3 + 8 = 11 \\equiv 11 \\pmod{28}$: $11 \\bmod 4 = 3$, $11 \\bmod 7 = 4$."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s12",
+      "concepts": ["crt-systems"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Sun Zi's problem: a number leaves remainder 2 mod 3, 3 mod 5, and 2 mod 7. Find the smallest such positive number.",
+      "steps": [
+        { "instruction": "Merge the first two: find $x \\bmod 15$ with $\\equiv 2 \\pmod 3$ and $\\equiv 3 \\pmod 5$.", "answer": "8", "accept": [], "hint": "From s10: $x \\equiv 8 \\pmod{15}$." },
+        { "instruction": "Merge with the third: solve $x \\equiv 8 \\pmod{15}$, $x \\equiv 2 \\pmod 7$ for the smallest positive $x$ mod 105.", "answer": "23", "accept": [], "hint": "Search $8, 23, 38, \\dots$ for the one $\\equiv 2 \\bmod 7$." }
+      ],
+      "finalAnswer": { "value": "23", "unit": "" },
+      "solutionNarrative": "Merging: $x \\equiv 8 \\pmod{15}$, then $x = 23$. Check: $23 \\bmod 3 = 2$, $\\bmod 5 = 3$, $\\bmod 7 = 2$. Unique mod 105."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s13",
+      "concepts": ["crt-systems"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A CRT pitfall: solve $x \\equiv 1 \\pmod 4$, $x \\equiv 2 \\pmod 6$. The moduli are NOT coprime — check consistency first.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(4, 6)$.", "answer": "2", "accept": [], "hint": "They share a factor, so plain CRT doesn't apply." },
+        { "instruction": "A solution exists only if the residues agree mod 2. Is $1 \\equiv 2 \\pmod 2$? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "$1 \\bmod 2 = 1$ but $2 \\bmod 2 = 0$." },
+        { "instruction": "So does the system have a solution? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Disagreement mod the gcd means the congruences contradict." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$\\gcd(4,6) = 2$, but $1 \\not\\equiv 2 \\pmod 2$: the congruences are inconsistent, so NO solution. Non-coprime CRT needs matching residues mod the gcd."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s14",
+      "concepts": ["modular-basics", "linear-congruences"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An affine cipher used $y \\equiv 3x + 4 \\pmod{26}$. To decrypt you solve $3x \\equiv y - 4 \\pmod{26}$. For $y = 10$, find $x$ (given $3^{-1} \\equiv 9 \\pmod{26}$).",
+      "steps": [
+        { "instruction": "Compute $y - 4$ for $y = 10$, reduced mod 26.", "answer": "6", "accept": [], "hint": "$10 - 4 = 6$." },
+        { "instruction": "Multiply by the inverse: $x \\equiv 9 \\cdot 6 \\pmod{26}$. Compute $9 \\cdot 6$.", "answer": "54", "accept": [], "hint": "$9 \\cdot 6$." },
+        { "instruction": "Reduce: $54 \\bmod 26 = $ ?", "answer": "2", "accept": [], "hint": "$54 - 52 = 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$3x \\equiv 6 \\pmod{26}$, so $x \\equiv 9 \\cdot 6 = 54 \\equiv 2 \\pmod{26}$. (Check: $3 \\cdot 2 + 4 = 10$.)"
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s15",
+      "concepts": ["modular-basics"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Today is day 3 of the week (Wednesday, with Sunday = 0). What weekday number is it 100 days from now? Compute mod 7.",
+      "steps": [
+        { "instruction": "Compute $100 \\bmod 7$.", "answer": "2", "accept": [], "hint": "$98 = 14 \\cdot 7$." },
+        { "instruction": "Add to today's number and reduce: $(3 + 2) \\bmod 7 = $ ?", "answer": "5", "accept": [], "hint": "Day 5 is Friday." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$100 \\equiv 2 \\pmod 7$, so 100 days after day 3 is day $(3+2) \\bmod 7 = 5$ (Friday)."
+    },
+    {
+      "id": "number-theory.congruences-and-crt.s16",
+      "concepts": ["inverse-mod", "linear-congruences"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $7x \\equiv 5 \\pmod{12}$ using the modular inverse of 7.",
+      "steps": [
+        { "instruction": "Is it solvable? Compute $\\gcd(7, 12)$.", "answer": "1", "accept": [], "hint": "Coprime, so a unique solution." },
+        { "instruction": "Find $7^{-1} \\bmod 12$.", "answer": "7", "accept": ["x=7"], "hint": "$7 \\cdot 7 = 49 \\equiv 1 \\pmod{12}$." },
+        { "instruction": "Multiply: $x \\equiv 7 \\cdot 5 \\pmod{12}$. Reduce $35 \\bmod 12$.", "answer": "11", "accept": [], "hint": "$35 - 24 = 11$." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "" },
+      "solutionNarrative": "$7^{-1} \\equiv 7 \\pmod{12}$, so $x \\equiv 7 \\cdot 5 = 35 \\equiv 11 \\pmod{12}$. Check: $7 \\cdot 11 = 77 = 6 \\cdot 12 + 5$."
+    }
+  ]
+}

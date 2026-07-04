@@ -1,0 +1,246 @@
+{
+  "id": "numerical-methods.error-and-floating-point",
+  "subject": "numerical-methods",
+  "title": "Error, Precision, and Floating Point",
+  "prerequisites": ["algebra.ratios-proportions-percent"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "absolute-and-relative-error",
+      "label": "Absolute and relative error",
+      "microLesson": "Every numerical answer is an approximation, so we measure how wrong it is two ways. **Absolute error** is the raw gap: $|\\text{true} - \\text{approx}|$. **Relative error** scales that gap by the size of the true value: $\\dfrac{|\\text{true} - \\text{approx}|}{|\\text{true}|}$, often reported as a percentage. An absolute error of $1$ is disastrous when the true value is $2$ (50% off) but negligible when it is $1{,}000{,}000$. Relative error is usually the honest measure because it answers 'how many correct digits do I have?'"
+    },
+    {
+      "id": "significant-figures-and-rounding",
+      "label": "Significant figures and rounding",
+      "microLesson": "**Significant figures** are the digits that carry real information, counted from the first nonzero digit. In $0.00450$, the leading zeros are just placeholders — the significant figures are $4$, $5$, and the trailing $0$ (kept because it's written), so three sig figs. **Rounding** to $n$ decimals looks at the next digit: $5$ or more rounds up, $4$ or less rounds down. Rounding $3.14159$ to 2 decimals gives $3.14$; to 3 decimals, $3.142$. Reporting more digits than you actually know is a lie dressed as precision."
+    },
+    {
+      "id": "error-propagation",
+      "label": "How errors propagate",
+      "microLesson": "Errors don't vanish when you compute with imperfect numbers — they spread. The rules are simple: for **addition and subtraction**, the *absolute* errors add. For **multiplication and division**, the *relative* errors add. So if two lengths each carry $\\pm 0.2$, their sum carries $\\pm 0.4$; if two measurements each carry $2\\%$ relative error, their product carries about $4\\%$. Subtraction of nearly-equal numbers is the dangerous case: the absolute errors stay the same size while the result shrinks, so the *relative* error explodes."
+    },
+    {
+      "id": "floating-point-and-machine-epsilon",
+      "label": "Floating point and machine epsilon",
+      "microLesson": "Computers store real numbers in **floating point** — a fixed number of binary digits (the mantissa) times a power of two. Only finitely many values are representable, so almost every number is rounded to the nearest one, introducing **round-off error**. **Machine epsilon** is the gap between $1$ and the next representable number (about $2^{-52} \\approx 2.2 \\times 10^{-16}$ for standard doubles). The nastiest consequence is **catastrophic cancellation**: subtracting two nearly-equal floats cancels the shared leading digits, and the few surviving digits are dominated by earlier round-off."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Why numerical methods keep score of error\n\nA numerical method never hands you *the* answer — it hands you an *approximation*, together with (if you're careful) a sense of how far off it might be. Every later topic in this subject — root finding, interpolation, integration — is really a contest between two forces: how quickly a method gets close, and how much error accumulates while it does. So before any of that, you need a vocabulary for **error** and an honest picture of the **imperfect arithmetic** every computer actually performs.\n\n## Absolute vs. relative error\n\nSuppose the true value of some quantity is $x$ and your computed value is $\\hat{x}$. Two measures of the discrepancy matter:\n\n$$\\text{absolute error} = |x - \\hat{x}|, \\qquad \\text{relative error} = \\frac{|x - \\hat{x}|}{|x|}.$$\n\nAbsolute error is in the same units as $x$; relative error is dimensionless and is usually reported as a percentage. **Relative error is the more honest measure** because it tells you how many correct significant digits you have.\n\n### Worked example\n\nSuppose $x = 250$ and you compute $\\hat{x} = 248$.\n\n- Absolute error: $|250 - 248| = 2$.\n- Relative error: $\\dfrac{2}{250} = 0.008 = 0.8\\%$.\n\nAn absolute error of $2$ sounds small — and here it is, because it's only $0.8\\%$ of the value. But the same absolute error of $2$ against a true value of $3$ would be a $67\\%$ blunder. The number $2$ alone tells you nothing; the ratio does.\n\n## Significant figures and rounding\n\nA **significant figure** is a digit that carries real information, counted from the first nonzero digit onward. Leading zeros are placeholders and don't count; trailing zeros to the right of the decimal point *do* count, because writing them is a claim of precision.\n\n| number | significant figures | count |\n|--------|--------------------|-------|\n| $0.00450$ | $4, 5, 0$ | 3 |\n| $3.140$ | $3, 1, 4, 0$ | 4 |\n| $1200.0$ | $1, 2, 0, 0, 0$ | 5 |\n\nTo **round** to $n$ decimal places, look at the digit just past the cut: $5$ or more rounds the last kept digit up, $4$ or less leaves it. $\\pi = 3.14159\\ldots$ rounds to $3.14$ (2 dp) or $3.1416$ (4 dp). The cardinal sin of numerical work is reporting more digits than you actually know — a computed $\\hat{x} = 2.7182818$ when your method is only good to three digits is dressing up noise as precision.\n\n## How errors propagate through arithmetic\n\nImperfect inputs make imperfect outputs, and the growth follows clean rules:\n\n- **Addition / subtraction:** absolute errors add. If $a = 5 \\pm 0.1$ and $b = 3 \\pm 0.2$, then $a + b = 8 \\pm 0.3$.\n- **Multiplication / division:** relative errors add. If $a$ has $2\\%$ relative error and $b$ has $3\\%$, then $a \\cdot b$ has about $5\\%$.\n\nThe multiplication rule is why the **absolute** error of a product $A = \\ell w$ is $A$ times the summed relative errors: a $10 \\times 6$ plate ($A = 60$) whose sides carry $1\\%$ and $2\\%$ relative error has area error about $60 \\times 0.03 = 1.8$.\n\n## The trap: catastrophic cancellation\n\nSubtraction hides a landmine. When you subtract two numbers that are *nearly equal*, their leading digits cancel, and the result is built almost entirely from the least-reliable trailing digits. Consider two six-significant-figure values:\n\n$$a = 1.23456, \\qquad b = 1.23441, \\qquad a - b = 0.00015.$$\n\nThe inputs each had six good digits, but four of them cancelled — the difference $0.00015$ has only about **two** significant digits of accuracy, and any round-off already sitting in $a$ or $b$ now dominates. This is **catastrophic cancellation**, and it is the single most common way a mathematically-correct formula produces a numerically-garbage answer. The classic fix is to rewrite the formula to avoid the subtraction (for example, rationalizing $\\sqrt{x+1} - \\sqrt{x}$ into $\\dfrac{1}{\\sqrt{x+1} + \\sqrt{x}}$).\n\n## Floating point and machine epsilon\n\nComputers store reals in **floating point**: a sign, a mantissa (a fixed number of binary digits), and an exponent — essentially binary scientific notation. Because the mantissa has finitely many bits, only finitely many numbers are representable, and every other real is **rounded** to the nearest one. That unavoidable rounding is **round-off error**.\n\nThe key constant is **machine epsilon** $\\varepsilon$, the gap between $1$ and the next representable number. For the IEEE-754 double precision used almost everywhere, the mantissa has $52$ fractional bits, so\n\n$$\\varepsilon = 2^{-52} \\approx 2.22 \\times 10^{-16}.$$\n\nThat's why doubles give you roughly 15–16 decimal digits. A smaller toy format with, say, $10$ mantissa bits has $\\varepsilon = 2^{-10} \\approx 0.00098$ — only about three decimal digits. Every arithmetic operation can introduce a fresh round-off of size about $\\varepsilon$ times the result, and those errors accumulate over the millions of operations a real computation performs.\n\n## Why this matters\n\nThe rest of numerical methods is a running negotiation with these facts. Root finders stop when the *relative* error is below a tolerance. Interpolation and integration formulas are chosen partly to *avoid* catastrophic cancellation. And every iteration count you'll compute later assumes that the arithmetic underneath is floating point — accurate, but never exact."
+  },
+  "application": {
+    "summary": "Error analysis is the safety layer of every simulation, measurement, and graphics pipeline. Engineers quote tolerances as relative error; scientists round to the significant figures their instruments justify; and numerical libraries are rewritten specifically to dodge catastrophic cancellation, which has caused real failures from GPS drift to physics-engine jitter.",
+    "domains": ["engineering", "computer graphics", "scientific computing", "finance"],
+    "workedExample": "**Why a rendered normal vector can go haywire**\n\nA graphics engine needs the surface normal at a point, which requires normalizing a vector $\\mathbf{v} = (v_x, v_y, v_z)$ by dividing by its length $\\|\\mathbf{v}\\| = \\sqrt{v_x^2 + v_y^2 + v_z^2}$. Suppose two contributions to one component nearly cancel: $v_x = 1.0000004 - 1.0000000 = 0.0000004$ in single precision, where machine epsilon is about $1.2 \\times 10^{-7}$.\n\nThe true difference is $4 \\times 10^{-7}$, but each input was only stored to about seven significant digits, so the subtraction cancels six of them and leaves a result whose relative error is enormous — potentially $50\\%$ or worse. Divide by the (also slightly wrong) length and the normal points in a visibly wrong direction, producing flickering lighting or seams between triangles.\n\nThe fix is the same one numerical analysts always reach for: **restructure the computation to avoid subtracting nearly-equal quantities**, or carry the calculation in higher precision (doubles) before rounding down. The lesson generalizes: a formula that is exact on paper can still be numerically unusable, and knowing *where* the error enters is what lets you rewrite it.",
+    "domainNotes": [
+      "**Engineering:** manufacturing tolerances are relative-error budgets; a part 'within 0.1%' is judged by relative, not absolute, deviation.",
+      "**Computer graphics:** z-fighting and normal-vector jitter are catastrophic cancellation in disguise; engines use higher precision or reformulated math to fix them.",
+      "**Scientific computing:** reproducibility requires reporting results to only the significant figures the method supports, and tracking round-off across long simulations.",
+      "**Finance:** summing millions of transactions accumulates round-off; specialized (e.g. Kahan) summation controls the drift."
+    ]
+  },
+  "generators": ["nm1-abs-rel-error-1", "nm1-abs-rel-error-2", "nm1-abs-rel-error-3", "nm1-sigfig-round-1", "nm1-sigfig-round-2", "nm1-sigfig-round-3", "nm1-error-prop-1", "nm1-error-prop-2", "nm1-error-prop-3", "nm1-float-1", "nm1-float-2", "nm1-float-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.error-and-floating-point.s01",
+      "concepts": ["absolute-and-relative-error"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A true value is $80$ and a measurement gives $77$. Find the absolute error $|\\text{true} - \\text{approx}|$.",
+      "steps": [
+        { "instruction": "Compute $|80 - 77|$.", "answer": "3", "accept": [], "hint": "Absolute error ignores the sign of the difference." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Absolute error $= |80 - 77| = 3$."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s02",
+      "concepts": ["absolute-and-relative-error"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A quantity's true value is $200$ but it is estimated as $196$. Find the absolute error, then the relative error as a decimal rounded to 4 places.",
+      "steps": [
+        { "instruction": "Compute the absolute error $|200 - 196|$.", "answer": "4", "accept": [], "hint": "Size of the gap." },
+        { "instruction": "Divide by the true value: $\\dfrac{4}{200}$. Round to 4 decimals.", "answer": "0.0200", "accept": ["0.02", "0.020"], "hint": "$4 \\div 200 = 0.02$." }
+      ],
+      "finalAnswer": { "value": "0.02", "unit": "" },
+      "solutionNarrative": "Absolute error $= 4$; relative error $= \\frac{4}{200} = 0.02$, i.e. $2\\%$."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s03",
+      "concepts": ["absolute-and-relative-error"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A machined shaft's target length is $500$ mm, but the delivered part reads $506$ mm. Report the relative error as a percentage, rounded to 2 decimals.",
+      "steps": [
+        { "instruction": "Absolute error $= |500 - 506|$. Compute it.", "answer": "6", "accept": [], "hint": "Size of the discrepancy." },
+        { "instruction": "Relative error $= \\dfrac{6}{500}$; multiply by 100 for a percent. Round to 2 decimals.", "answer": "1.20", "accept": ["1.2"], "hint": "$\\frac{6}{500}\\times 100 = 1.2$." }
+      ],
+      "finalAnswer": { "value": "1.2", "unit": "%" },
+      "solutionNarrative": "Relative error $= \\frac{6}{500}\\times 100 = 1.2\\%$."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s04",
+      "concepts": ["significant-figures-and-rounding"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Round $3.14159$ to 2 decimal places.",
+      "steps": [
+        { "instruction": "Look at the third decimal (1) to decide, then give $3.14159$ to 2 decimals.", "answer": "3.14", "accept": ["3.140"], "hint": "The third decimal is 1, so round down." }
+      ],
+      "finalAnswer": { "value": "3.14", "unit": "" },
+      "solutionNarrative": "$3.14159 \\to 3.14$ (the next digit is 1, so no round-up)."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s05",
+      "concepts": ["significant-figures-and-rounding"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "How many significant figures does $0.00680$ have?",
+      "steps": [
+        { "instruction": "Count significant figures in $0.00680$ (leading zeros don't count; the trailing zero after the decimal does).", "answer": "3", "accept": [], "hint": "Start at the 6; the digits are 6, 8, 0." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$0.00680$ has three significant figures: 6, 8, and the written trailing 0."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s06",
+      "concepts": ["significant-figures-and-rounding"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Round $472.83$ to 3 significant figures.",
+      "steps": [
+        { "instruction": "The first 3 significant figures are 4, 7, 2 (hundreds, tens, units), so round $472.83$ to the nearest whole number.", "answer": "473", "accept": ["473.0"], "hint": "The 4th significant figure is the first decimal, 8, which rounds the units up." }
+      ],
+      "finalAnswer": { "value": "473", "unit": "" },
+      "solutionNarrative": "Three significant figures of $472.83$ is $473$ (the .83 rounds 472 up to 473)."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s07",
+      "concepts": ["error-propagation"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Two measured lengths have absolute errors $0.3$ and $0.5$. When you ADD the lengths, the worst-case absolute error is the sum of the errors. Find it.",
+      "steps": [
+        { "instruction": "Add the two absolute errors: $0.3 + 0.5$.", "answer": "0.8", "accept": ["0.80"], "hint": "Under addition, absolute errors add." }
+      ],
+      "finalAnswer": { "value": "0.8", "unit": "" },
+      "solutionNarrative": "Adding quantities adds their absolute errors: $0.3 + 0.5 = 0.8$."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s08",
+      "concepts": ["error-propagation"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A rectangle's side measurements carry relative errors $0.02$ and $0.03$. When you MULTIPLY to get the area, relative errors add. Find the area's relative error, rounded to 3 decimals.",
+      "steps": [
+        { "instruction": "Add the two relative errors: $0.02 + 0.03$. Round to 3 decimals.", "answer": "0.050", "accept": ["0.05"], "hint": "For products, add RELATIVE errors, not absolute ones." }
+      ],
+      "finalAnswer": { "value": "0.05", "unit": "" },
+      "solutionNarrative": "Multiplication adds relative errors: $0.02 + 0.03 = 0.05$, i.e. about $5\\%$."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s09",
+      "concepts": ["error-propagation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A plate measures $10$ by $6$ (area $= 60$). The length has relative error $0.02$ and the width $0.01$. Estimate the ABSOLUTE error in the area, rounded to 2 decimals.",
+      "steps": [
+        { "instruction": "Add the relative errors: $0.02 + 0.01$. Round to 3 decimals.", "answer": "0.030", "accept": ["0.03"], "hint": "Products add relative errors." },
+        { "instruction": "Multiply the area $60$ by that relative error. Round to 2 decimals.", "answer": "1.80", "accept": ["1.8"], "hint": "$60 \\times 0.03$." }
+      ],
+      "finalAnswer": { "value": "1.8", "unit": "" },
+      "solutionNarrative": "Area's relative error $= 0.03$; absolute error $= 60 \\times 0.03 = 1.8$."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s10",
+      "concepts": ["error-propagation", "absolute-and-relative-error"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two nearly-equal values $a = 5.00$ and $b = 4.98$, each accurate to $\\pm 0.01$ (absolute), are subtracted. Compute $a - b$, then its relative error.",
+      "steps": [
+        { "instruction": "Compute $a - b = 5.00 - 4.98$.", "answer": "0.02", "accept": ["0.020"], "hint": "A small difference of close numbers." },
+        { "instruction": "The absolute errors add to $0.02$. Divide by the result $0.02$ for the relative error.", "answer": "1", "accept": ["1.0", "100%"], "hint": "$\\frac{0.02}{0.02} = 1$ — a $100\\%$ relative error." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$a - b = 0.02$, but the summed absolute error is also $0.02$, so the relative error is $100\\%$ — catastrophic cancellation in miniature."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s11",
+      "concepts": ["floating-point-and-machine-epsilon"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Which floating-point phenomenon is described? 'A finite number of bits cannot represent every real number, so most values are stored as the nearest representable one.' Answer one of: round-off error, catastrophic cancellation, overflow.",
+      "steps": [
+        { "instruction": "Name the phenomenon (round-off error, catastrophic cancellation, or overflow).", "answer": "round-off error", "accept": ["roundoff error", "rounding error", "round off error"], "hint": "It happens on nearly every stored value, not just on subtractions." }
+      ],
+      "finalAnswer": { "value": "round-off error", "unit": "" },
+      "solutionNarrative": "Storing the nearest representable value is round-off error."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s12",
+      "concepts": ["floating-point-and-machine-epsilon"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A toy floating-point format keeps 10 bits after the binary point of the mantissa, so its machine epsilon is $2^{-10}$. Compute $2^{-10}$ as a decimal, rounded to 8 decimals.",
+      "steps": [
+        { "instruction": "Evaluate $2^{-10} = 1/1024$. Round to 8 decimals.", "answer": "0.00097656", "accept": ["1/1024", "2^(-10)", "0.0009765625"], "hint": "$2^{10} = 1024$, so $2^{-10} = 1/1024$." }
+      ],
+      "finalAnswer": { "value": "0.00097656", "unit": "" },
+      "solutionNarrative": "$2^{-10} = 1/1024 \\approx 0.00097656$: about three decimal digits of precision."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s13",
+      "concepts": ["floating-point-and-machine-epsilon"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two 6-significant-figure values are $a = 1.23456$ and $b = 1.23441$. Compute $a - b$, then note how many significant digits survive.",
+      "steps": [
+        { "instruction": "Subtract: $1.23456 - 1.23441$. Round to 5 decimals.", "answer": "0.00015", "accept": ["0.000150"], "hint": "Line up the decimals and subtract." },
+        { "instruction": "The inputs shared their first 4 significant digits, which cancelled. Roughly how many significant digits does the difference keep? ($6 - 4$.)", "answer": "2", "accept": [], "hint": "$6 - 4 = 2$." }
+      ],
+      "finalAnswer": { "value": "0.00015", "unit": "" },
+      "solutionNarrative": "$a - b = 0.00015$; four shared digits cancelled, leaving only about 2 significant digits — catastrophic cancellation."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s14",
+      "concepts": ["floating-point-and-machine-epsilon"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Standard IEEE-754 double precision has a 52-bit mantissa, giving machine epsilon $2^{-52}$. Roughly how many decimal significant digits does that support? (Use $\\log_{10}(2^{52}) \\approx 15.65$.)",
+      "steps": [
+        { "instruction": "$2^{52}$ separates about $10^{15.65}$ values, so the number of reliable decimal digits is about $\\lfloor 15.65 \\rfloor$. State it.", "answer": "15", "accept": [], "hint": "Take the whole-number part of 15.65." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "digits" },
+      "solutionNarrative": "$2^{-52}$ corresponds to about 15–16 decimal digits; taking the floor gives 15 reliable significant digits."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s15",
+      "concepts": ["absolute-and-relative-error", "significant-figures-and-rounding"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A physics constant is $9.81$ m/s² but a student uses the rounded $10$ m/s². Find the absolute error and the relative error (as a percent, 2 decimals).",
+      "steps": [
+        { "instruction": "Absolute error $= |9.81 - 10|$.", "answer": "0.19", "accept": ["0.190"], "hint": "$10 - 9.81 = 0.19$." },
+        { "instruction": "Relative error $= \\dfrac{0.19}{9.81}\\times 100$. Round to 2 decimals.", "answer": "1.94", "accept": ["1.93", "1.9"], "hint": "$0.19 \\div 9.81 \\approx 0.0194$." }
+      ],
+      "finalAnswer": { "value": "1.94", "unit": "%" },
+      "solutionNarrative": "Absolute error $0.19$; relative error $\\frac{0.19}{9.81}\\times 100 \\approx 1.94\\%$ — the convenient round-off costs about 2%."
+    },
+    {
+      "id": "numerical-methods.error-and-floating-point.s16",
+      "concepts": ["error-propagation", "floating-point-and-machine-epsilon"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "To find $\\sqrt{10001} - \\sqrt{10000}$ a student subtracts directly. Instead use the cancellation-free form $\\dfrac{1}{\\sqrt{10001} + \\sqrt{10000}}$ with $\\sqrt{10001} \\approx 100.005$ and $\\sqrt{10000} = 100$. Compute it, rounded to 6 decimals.",
+      "steps": [
+        { "instruction": "Add the two roots: $100.005 + 100$.", "answer": "200.005", "accept": [], "hint": "Denominator of the safe form." },
+        { "instruction": "Compute $\\dfrac{1}{200.005}$. Round to 6 decimals.", "answer": "0.005000", "accept": ["0.005", "0.0050"], "hint": "$1 \\div 200.005 \\approx 0.005$." }
+      ],
+      "finalAnswer": { "value": "0.005", "unit": "" },
+      "solutionNarrative": "Rationalizing turns a cancellation-prone subtraction into $\\frac{1}{\\sqrt{10001}+\\sqrt{10000}} = \\frac{1}{200.005} \\approx 0.005$, keeping full precision the direct subtraction would have destroyed."
+    }
+  ]
+}

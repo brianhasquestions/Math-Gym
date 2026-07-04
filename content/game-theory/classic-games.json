@@ -1,0 +1,271 @@
+{
+  "id": "game-theory.classic-games",
+  "subject": "game-theory",
+  "title": "Classic 2×2 Games",
+  "prerequisites": ["game-theory.pure-nash-equilibrium"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "prisoners-dilemma",
+      "label": "The Prisoner's Dilemma",
+      "microLesson": "The **Prisoner's Dilemma** is the most famous game: each player chooses **Cooperate** or **Defect**, with payoffs ordered $T > R > P > S$ (Temptation > Reward > Punishment > Sucker). Because $T > R$ and $P > S$, **Defect strictly dominates**, so the unique Nash equilibrium is (Defect, Defect). Yet both would be better off at (Cooperate, Cooperate) — a **Pareto-superior** outcome that individual rationality destroys. The dilemma: self-interested play makes everyone worse off. It models arms races, price wars, overfishing, and doping."
+    },
+    {
+      "id": "coordination-games",
+      "label": "Coordination games",
+      "microLesson": "**Coordination games** reward matching. In the **Stag Hunt**, two hunters get a big reward only if both choose Stag; either can safely take a small Hare alone. Both (Stag, Stag) and (Hare, Hare) are Nash equilibria — (Stag, Stag) is **payoff-dominant** (best for both) but risky; (Hare, Hare) is **risk-dominant** (safe). In the **Battle of the Sexes**, both players want to be together but disagree on where, again giving two equilibria. The strategic problem is selecting *which* equilibrium — trust, communication, or a focal point decides it."
+    },
+    {
+      "id": "anti-coordination",
+      "label": "Anti-coordination games",
+      "microLesson": "**Anti-coordination games** reward mismatching. In **Chicken**, two drivers head at each other; each wants to go Straight only if the other Swerves, and mutual Straight is a disastrous crash. In **Hawk-Dove** (its biology twin), animals contest a resource worth $V$ at fighting cost $C > V$; a Hawk beats a Dove but two Hawks bloody each other. The two pure equilibria are **off-diagonal** — exactly one player is aggressive — and each prefers to be the aggressive one. There is also a mixed equilibrium giving the stable Hawk fraction in a population."
+    },
+    {
+      "id": "matching-pennies-and-zero-sum",
+      "label": "Matching Pennies and zero-sum",
+      "microLesson": "**Matching Pennies** is the canonical **zero-sum** game: one player wins exactly what the other loses (payoffs sum to 0 in every cell). Row wins by matching, Column by mismatching, so from any cell someone wants to deviate — there is **no pure Nash equilibrium**. The unique equilibrium is **mixed**: by symmetry each plays each option with probability $\\tfrac12$, and the value of the game is 0 (fair). Zero-sum games are the setting of von Neumann's minimax theorem and model pure competition — pursuit, penalty kicks, and inspection."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Four games that explain half the world\n\nA remarkable fact about $2\\times2$ games is that a handful of them recur everywhere — in economics, biology, politics, and daily life. Learn these four archetypes and you will recognize their skeleton inside a startling range of real conflicts.\n\n## 1. The Prisoner's Dilemma — cooperation's tragedy\n\nTwo suspects are interrogated separately. Each can **Cooperate** (stay silent, loyal to the other) or **Defect** (confess, betray). A typical payoff table (higher = better for that player):\n\n| Row \\ Col | Cooperate | Defect |\n|---|---|---|\n| **Cooperate** | 3, 3 | 0, 5 |\n| **Defect** | 5, 0 | 1, 1 |\n\nThe four payoffs obey the defining order $T(5) > R(3) > P(1) > S(0)$: **Temptation** to defect on a cooperator, **Reward** for mutual cooperation, **Punishment** for mutual defection, **Sucker** for cooperating against a defector.\n\n**Solve it.** For Row, Defect beats Cooperate against Cooperate ($5 > 3$) *and* against Defect ($1 > 0$): **Defect strictly dominates**. Same for Column. So the unique Nash equilibrium is $(\\text{Defect}, \\text{Defect})$ at $(1, 1)$.\n\n**The dilemma.** Both would rather be at $(\\text{Cooperate}, \\text{Cooperate}) = (3, 3)$ — a **Pareto improvement** of $2$ each — but neither can get there unilaterally, and each is tempted to defect. Rational self-interest yields a collectively worse result. This is the logic of arms races, price wars, overfishing, climate free-riding, and doping in sports: everyone defects, everyone loses.\n\n## 2. Coordination games — the problem of agreeing\n\n### Stag Hunt\n\nTwo hunters can bag a **Stag** (a feast) only if *both* commit; either can instead catch a **Hare** alone (a snack) regardless of the other.\n\n| Row \\ Col | Stag | Hare |\n|---|---|---|\n| **Stag** | 5, 5 | 0, 3 |\n| **Hare** | 3, 0 | 3, 3 |\n\nBest-response analysis gives **two** pure equilibria: $(\\text{Stag}, \\text{Stag})$ and $(\\text{Hare}, \\text{Hare})$. $(\\text{Stag}, \\text{Stag})$ is **payoff-dominant** — best for both at $5$ each — but risky: if your partner flakes, Stag earns $0$. $(\\text{Hare}, \\text{Hare})$ is **risk-dominant** — Hare guarantees $3$ no matter what. Whether players reach the better equilibrium is a question of **trust**.\n\n### Battle of the Sexes\n\nA couple wants an evening **together**, but Row prefers Opera and Column prefers Boxing; being apart is worst for both.\n\n| Row \\ Col | Opera | Boxing |\n|---|---|---|\n| **Opera** | 3, 2 | 0, 0 |\n| **Boxing** | 0, 0 | 2, 3 |\n\nAgain **two** equilibria, $(\\text{Opera}, \\text{Opera})$ and $(\\text{Boxing}, \\text{Boxing})$ — the players agree they want to coordinate but **disagree on which** equilibrium. Communication, convention, or a focal point (\"we always do Opera on Fridays\") resolves it.\n\n## 3. Anti-coordination — Chicken and Hawk-Dove\n\n### Chicken\n\nTwo drivers speed toward each other. **Swerve** or go **Straight**? If both go Straight they crash (worst); if one swerves, the \"chicken\" loses face while the other wins.\n\n| Row \\ Col | Swerve | Straight |\n|---|---|---|\n| **Swerve** | 3, 3 | 2, 4 |\n| **Straight** | 4, 2 | 1, 1 |\n\nThe pure equilibria are the two **off-diagonal** cells, $(\\text{Swerve}, \\text{Straight})$ and $(\\text{Straight}, \\text{Swerve})$: exactly one driver yields, and each *prefers to be the one who doesn't*. Mutual Straight is not an equilibrium — from a crash either would rather have swerved. Chicken models brinkmanship, from labor strikes to the Cuban Missile Crisis.\n\n### Hawk-Dove (the biology version)\n\nAnimals contest a resource worth $V$. Playing **Hawk** (fight) against a **Dove** (yield) wins the whole $V$; two Doves split it $V/2$ each; two Hawks fight at cost $C$ and each nets $(V - C)/2$, which is negative when $C > V$. Same off-diagonal equilibria — and a **mixed** equilibrium giving the stable fraction of aggressive individuals in a population, a founding result of evolutionary game theory.\n\n## 4. Matching Pennies — pure competition, zero-sum\n\n| Row \\ Col | Heads | Tails |\n|---|---|---|\n| **Heads** | 1, -1 | -1, 1 |\n| **Tails** | -1, 1 | 1, -1 |\n\nEvery cell sums to $0$: this is a **zero-sum** game, pure conflict, one's gain is the other's loss. Row wins by matching, Column by mismatching, so best responses cycle and there is **no pure equilibrium**. By symmetry the unique equilibrium is **mixed**, each side playing $\\tfrac12$–$\\tfrac12$, with game **value $0$** — a fair fight. Zero-sum games are where **von Neumann's minimax theorem** (1928) lives: each player can guarantee the value by choosing the mix that minimizes their maximum loss. Poker, pursuit, and penalty kicks all live here.\n\n### How to tell them apart\n\n| Game | Equilibria | Signature |\n|---|---|---|\n| Prisoner's Dilemma | 1 pure (Defect, Defect) | dominance; equilibrium is Pareto-inferior |\n| Coordination (Stag Hunt / BoS) | 2 pure, on the diagonal | reward matching; selection problem |\n| Anti-coordination (Chicken / Hawk-Dove) | 2 pure, off the diagonal | reward mismatching; each wants to be aggressor |\n| Matching Pennies | 0 pure, 1 mixed | zero-sum; must randomize |\n\nSpotting which archetype a real situation matches is often 80% of the strategic insight."
+  },
+  "application": {
+    "summary": "The four classic 2×2 games are a diagnostic toolkit: identify whether a real conflict is a Prisoner's Dilemma (cooperation collapses), a coordination game (which equilibrium?), an anti-coordination game (who yields?), or zero-sum (randomize) — and the right intervention (contracts, communication, commitment, unpredictability) follows immediately.",
+    "domains": ["economics and antitrust", "biology and evolution", "international relations", "environmental policy", "business and sports"],
+    "workedExample": "**Two nations and an arms race — a Prisoner's Dilemma.**\n\nEach nation chooses to **Disarm** (Cooperate) or **Arm** (Defect). Arming is costly and dangerous but leaves you vulnerable if you disarm while the rival arms. Payoffs (security & prosperity):\n\n| Row \\ Col | Disarm | Arm |\n|---|---|---|\n| **Disarm** | 3, 3 | 0, 5 |\n| **Arm** | 5, 0 | 1, 1 |\n\n*Step 1 — find the dominant strategy.* For Row, Arm beats Disarm against Disarm ($5 > 3$) and against Arm ($1 > 0$). **Arm strictly dominates**; same for Column.\n\n*Step 2 — the equilibrium.* $(\\text{Arm}, \\text{Arm})$ at $(1, 1)$: both nations bristling with weapons, poorer and no safer.\n\n*Step 3 — the tragedy.* $(\\text{Disarm}, \\text{Disarm}) = (3, 3)$ is a Pareto improvement of $2$ each, but unreachable without enforcement. Real arms-control **treaties, inspections, and verification** are institutions designed to change the payoffs — punishing defection so cooperation becomes an equilibrium. That is exactly how repeated play and enforcement (later topics) rescue cooperation from the dilemma.\n\n*Contrast:* if instead the situation rewarded doing the *opposite* of the rival (a regional power vacuum only one can fill), it would be **Chicken**, and the advice flips from \"build enforcement\" to \"credibly commit / don't blink.\" Diagnosing the archetype is the whole game.",
+    "domainNotes": [
+      "**Antitrust:** cartels are Prisoner's Dilemmas — each firm is tempted to undercut — which is why price-fixing is unstable and why leniency programs (rewarding the first defector) work.",
+      "**Evolution:** Hawk-Dove's mixed equilibrium predicts the observed ratio of aggressive to passive individuals; the Prisoner's Dilemma underlies the evolution of reciprocal altruism.",
+      "**International relations:** arms races are Prisoner's Dilemmas; brinkmanship crises are Chicken; alliance coordination is a Stag Hunt.",
+      "**Environmental policy:** emissions and overfishing are multiplayer Prisoner's Dilemmas ('tragedy of the commons') needing binding agreements.",
+      "**Sports & security:** penalty kicks, serve direction, and randomized inspection are zero-sum / Matching-Pennies problems solved by mixing."
+    ]
+  },
+  "generators": [
+    "gt1-pd-1", "gt1-pd-2", "gt1-pd-3",
+    "gt1-coordg-1", "gt1-coordg-2", "gt1-coordg-3",
+    "gt1-anti-1", "gt1-anti-2", "gt1-anti-3",
+    "gt1-mp-1", "gt1-mp-2", "gt1-mp-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.classic-games.s01",
+      "concepts": ["prisoners-dilemma"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Prisoner's Dilemma. Two suspects each choose Cooperate (stay silent) or Defect (confess). Each cell is (Row's payoff, Column's payoff); higher is better.\n\n| Row \\ Col | Cooperate | Defect |\n|---|---|---|\n| **Cooperate** | 3, 3 | 0, 5 |\n| **Defect** | 5, 0 | 1, 1 |",
+      "steps": [
+        { "instruction": "If Column Cooperates, Row compares Cooperate (3) vs Defect (5). Row's best response? Choose Cooperate or Defect.", "answer": "Defect", "accept": [], "hint": "5 > 3." },
+        { "instruction": "Each player's strictly dominant strategy is? Choose Cooperate or Defect.", "answer": "Defect", "accept": [], "hint": "Defect beats Cooperate in BOTH columns." }
+      ],
+      "finalAnswer": { "value": "Defect", "unit": "" },
+      "solutionNarrative": "Because 5 > 3 and 1 > 0, Defect strictly dominates for both. The dominant-strategy equilibrium is (Defect, Defect) at (1,1) — worse than mutual cooperation (3,3)."
+    },
+    {
+      "id": "game-theory.classic-games.s02",
+      "concepts": ["prisoners-dilemma"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Prisoner's Dilemma. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Cooperate | Defect |\n|---|---|---|\n| **Cooperate** | 4, 4 | 0, 6 |\n| **Defect** | 6, 0 | 2, 2 |",
+      "steps": [
+        { "instruction": "What is the Nash-equilibrium outcome? Enter Row's strategy: Cooperate or Defect.", "answer": "Defect", "accept": [], "hint": "Both play their dominant strategy." },
+        { "instruction": "At (Defect, Defect) each earns 2; at (Cooperate, Cooperate) each earns 4. Which mutual outcome is better for both? Type 'Cooperate' or 'Defect'.", "answer": "Cooperate", "accept": [], "hint": "Compare 4 with 2." },
+        { "instruction": "How much MORE would each earn under mutual cooperation than the equilibrium? (Give a number.)", "answer": "2", "accept": [], "hint": "4 - 2." }
+      ],
+      "finalAnswer": { "value": "Defect", "unit": "" },
+      "solutionNarrative": "Equilibrium (Defect, Defect) pays 2 each, but (Cooperate, Cooperate) pays 4 — a Pareto improvement of 2 per player that self-interest throws away."
+    },
+    {
+      "id": "game-theory.classic-games.s03",
+      "concepts": ["prisoners-dilemma"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Price war (a Prisoner's Dilemma). Two firms choose Price High (collude) or Price Low (compete). Payoffs are profits (Row's, Column's).\n\n| Row \\ Col | Price High | Price Low |\n|---|---|---|\n| **Price High** | 5, 5 | 1, 8 |\n| **Price Low** | 8, 1 | 3, 3 |",
+      "steps": [
+        { "instruction": "Is Price Low a strictly dominant strategy for each firm? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Compare Low vs High in each column: 8>5 and 3>1." },
+        { "instruction": "Nash-equilibrium outcome — enter Row's strategy: Price High or Price Low.", "answer": "Price Low", "accept": ["low"], "hint": "Both defect to the low price." },
+        { "instruction": "Collusive profit is 5; equilibrium profit is 3. How much profit does each firm LOSE by competing? (Give a number.)", "answer": "2", "accept": [], "hint": "5 - 3." }
+      ],
+      "finalAnswer": { "value": "Price Low", "unit": "" },
+      "solutionNarrative": "Price Low dominates, so the equilibrium is (Price Low, Price Low) at 3 each — below the 5 of collusion. Competition destroys 2 profit per firm, which is why cartels are unstable."
+    },
+    {
+      "id": "game-theory.classic-games.s04",
+      "concepts": ["coordination-games"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Stag Hunt. Two hunters can jointly hunt a Stag (big reward, needs both) or individually catch a Hare (small, safe). Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Stag | Hare |\n|---|---|---|\n| **Stag** | 5, 5 | 0, 3 |\n| **Hare** | 3, 0 | 3, 3 |",
+      "steps": [
+        { "instruction": "Is (Stag, Stag) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "5 vs deviating to Hare (3) — nobody gains by switching." },
+        { "instruction": "Is (Hare, Hare) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "If the other hunts Hare, Stag alone earns 0." },
+        { "instruction": "How many pure Nash equilibria? (Give an integer.)", "answer": "2", "accept": [], "hint": "Both diagonal outcomes are self-enforcing." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "(Stag, Stag) — payoff-dominant at 5 each — and (Hare, Hare) — risk-dominant at 3 each — are both Nash. Coordination turns on trust."
+    },
+    {
+      "id": "game-theory.classic-games.s05",
+      "concepts": ["coordination-games"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Battle of the Sexes. A couple wants to be together; Row prefers Ballet, Column prefers Football. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Ballet | Football |\n|---|---|---|\n| **Ballet** | 3, 2 | 0, 0 |\n| **Football** | 0, 0 | 2, 3 |",
+      "steps": [
+        { "instruction": "At the equilibrium Row prefers, both attend which event? Type 'Ballet' or 'Football'.", "answer": "Ballet", "accept": [], "hint": "Row's favorite gives Row 3." },
+        { "instruction": "At the equilibrium Column prefers, both attend which event? Type 'Ballet' or 'Football'.", "answer": "Football", "accept": [], "hint": "Column's favorite gives Column 3." },
+        { "instruction": "Total number of pure Nash equilibria? (Give an integer.)", "answer": "2", "accept": [], "hint": "Both 'together' outcomes qualify." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "(Ballet, Ballet) and (Football, Football) are both Nash — being together beats the (0,0) of being apart. The players agree to coordinate but disagree on which equilibrium."
+    },
+    {
+      "id": "game-theory.classic-games.s06",
+      "concepts": ["coordination-games"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Stag Hunt (trust and risk). Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Stag | Hare |\n|---|---|---|\n| **Stag** | 6, 6 | 0, 3 |\n| **Hare** | 3, 0 | 3, 3 |",
+      "steps": [
+        { "instruction": "Which equilibrium gives BOTH players the highest payoff (payoff-dominant)? Type 'Stag' or 'Hare'.", "answer": "Stag", "accept": [], "hint": "6 each vs 3 each." },
+        { "instruction": "Which single strategy guarantees at least 3 no matter what the other does (risk-dominant)? Type 'Stag' or 'Hare'.", "answer": "Hare", "accept": [], "hint": "Stag risks earning 0 if the partner defects." },
+        { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "2", "accept": [], "hint": "Both diagonal cells." }
+      ],
+      "finalAnswer": { "value": "Stag", "unit": "" },
+      "solutionNarrative": "(Stag, Stag) is payoff-dominant (6 each) but risky; Hare is risk-dominant, guaranteeing 3. Reaching the better equilibrium depends on trust."
+    },
+    {
+      "id": "game-theory.classic-games.s07",
+      "concepts": ["anti-coordination"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Hawk-Dove. Two animals contest a resource worth V = 4. Fighting (Hawk vs Hawk) costs C = 6, so each earns (V-C)/2 = -1. A Hawk facing a Dove takes it all (4); two Doves share (2 each). Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Hawk | Dove |\n|---|---|---|\n| **Hawk** | -1, -1 | 4, 0 |\n| **Dove** | 0, 4 | 2, 2 |",
+      "steps": [
+        { "instruction": "If Column plays Hawk, is Row's best response Dove? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Dove earns 0, Hawk earns -1 — 0 is better." },
+        { "instruction": "If Column plays Dove, is Row's best response Hawk? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Hawk takes 4 vs sharing 2." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Each animal wants the OPPOSITE of its rival: Hawk against a Dove, Dove against a Hawk. Anti-coordination gives two off-diagonal equilibria, (Hawk, Dove) and (Dove, Hawk)."
+    },
+    {
+      "id": "game-theory.classic-games.s08",
+      "concepts": ["anti-coordination"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Chicken. Two drivers race head-on. Straight vs a swerving rival wins (4); both Straight crash (-2 each); both Swerve is mild (1 each). Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Swerve | Straight |\n|---|---|---|\n| **Swerve** | 1, 1 | 0, 4 |\n| **Straight** | 4, 0 | -2, -2 |",
+      "steps": [
+        { "instruction": "Is (Straight, Straight) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "From a crash (-2), either would rather have swerved (0)." },
+        { "instruction": "Is (Swerve, Straight) a Nash equilibrium? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Row swerving gets 0 (deviating to Straight crashes); Column straight gets 4." },
+        { "instruction": "How many pure Nash equilibria does Chicken have? (Give an integer.)", "answer": "2", "accept": [], "hint": "The two off-diagonal outcomes." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "The equilibria are the off-diagonal cells: exactly one driver yields. The mutual-Straight crash shows why brinkmanship is dangerous."
+    },
+    {
+      "id": "game-theory.classic-games.s09",
+      "concepts": ["anti-coordination"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Hawk-Dove. V = 6, C = 10; Hawk-Hawk yields (V-C)/2 = -2 each. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Hawk | Dove |\n|---|---|---|\n| **Hawk** | -2, -2 | 6, 0 |\n| **Dove** | 0, 6 | 3, 3 |",
+      "steps": [
+        { "instruction": "List a pure Nash equilibrium — Row's strategy where Row is aggressive. Type 'Hawk' or 'Dove'.", "answer": "Hawk", "accept": [], "hint": "(Hawk, Dove): Row Hawk takes 6." },
+        { "instruction": "At that (Hawk, Dove) equilibrium, what is Row's payoff? (Give a number.)", "answer": "6", "accept": [], "hint": "A Hawk facing a Dove takes the whole resource." },
+        { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "2", "accept": [], "hint": "(Hawk, Dove) and (Dove, Hawk)." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "The pure equilibria are (Hawk, Dove) and (Dove, Hawk); the Hawk takes V = 6 while the Dove gets 0. A stable population mixes the two — the mixed equilibrium of evolutionary game theory."
+    },
+    {
+      "id": "game-theory.classic-games.s10",
+      "concepts": ["matching-pennies-and-zero-sum"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Matching Pennies (zero-sum). Row wins (+1) on a match, Column wins (+1) on a mismatch. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Heads | Tails |\n|---|---|---|\n| **Heads** | 1, -1 | -1, 1 |\n| **Tails** | -1, 1 | 1, -1 |",
+      "steps": [
+        { "instruction": "Does this game have a pure Nash equilibrium? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Someone always wants to switch." },
+        { "instruction": "In the mixed equilibrium, with what probability does Row play Heads? Give a fraction or decimal.", "answer": "1/2", "accept": ["0.5"], "hint": "By symmetry the two options are equally likely." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "No pure equilibrium exists; the unique equilibrium is mixed, each player choosing Heads and Tails with probability 1/2. Any bias would be exploited."
+    },
+    {
+      "id": "game-theory.classic-games.s11",
+      "concepts": ["matching-pennies-and-zero-sum"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A symmetric zero-sum matching game with stakes 3. Row wins +3 on a match, Column wins +3 on a mismatch. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Heads | Tails |\n|---|---|---|\n| **Heads** | 3, -3 | -3, 3 |\n| **Tails** | -3, 3 | 3, -3 |",
+      "steps": [
+        { "instruction": "Is the sum of the two players' payoffs zero in every cell? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Add the two numbers in each cell." },
+        { "instruction": "Equilibrium probability that Row plays Heads? Fraction or decimal.", "answer": "1/2", "accept": ["0.5"], "hint": "Symmetry forces 50/50." },
+        { "instruction": "Row's expected payoff at the equilibrium (a fair game). (Give a number.)", "answer": "0", "accept": [], "hint": "Wins and losses cancel by symmetry." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Every cell sums to 0 (zero-sum). The equilibrium mix is 1/2–1/2, giving each an expected payoff of 0 — the value of a symmetric zero-sum game."
+    },
+    {
+      "id": "game-theory.classic-games.s12",
+      "concepts": ["matching-pennies-and-zero-sum"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A zero-sum matching game with asymmetric stakes. Row scores 3 on (Heads, Heads) and 1 on (Tails, Tails), 0 otherwise; Column's payoff is the negative. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Heads | Tails |\n|---|---|---|\n| **Heads** | 3, -3 | 0, 0 |\n| **Tails** | 0, 0 | 1, -1 |",
+      "steps": [
+        { "instruction": "Does a pure Nash equilibrium exist? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Row wants to match, Column to mismatch — a cycle." },
+        { "instruction": "Let q = prob Column plays Heads. Row is indifferent when 3q = 1 - q. Solve for q. Fraction or decimal in (0,1).", "answer": "1/4", "accept": ["0.25"], "hint": "3q + q = 1, so 4q = 1." },
+        { "instruction": "Because the (Heads, Heads) win of 3 is larger, does Column play Heads with probability MORE or LESS than 1/2? Type 'more' or 'less'.", "answer": "less", "accept": [], "hint": "Compare 1/4 with 1/2." }
+      ],
+      "finalAnswer": { "value": "1/4", "unit": "" },
+      "solutionNarrative": "Solving 3q = 1 - q gives q = 1/4. Asymmetric stakes tilt the mix away from 50/50: the bigger payoff cell is defended less often so the opponent stays indifferent."
+    },
+    {
+      "id": "game-theory.classic-games.s13",
+      "concepts": ["prisoners-dilemma", "coordination-games"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify the game below by its equilibria. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 2, 2 | 0, 0 |\n| **Bottom** | 0, 0 | 1, 1 |",
+      "steps": [
+        { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "2", "accept": [], "hint": "Both diagonal cells are mutual best responses." },
+        { "instruction": "Is this a coordination game (reward matching) or a Prisoner's Dilemma (dominant defection)? Type 'coordination' or 'dilemma'.", "answer": "coordination", "accept": [], "hint": "Players do best by choosing the same option." }
+      ],
+      "finalAnswer": { "value": "coordination", "unit": "" },
+      "solutionNarrative": "Two diagonal equilibria (Top, Left) and (Bottom, Right) where players match — this is a coordination game, not a Prisoner's Dilemma."
+    },
+    {
+      "id": "game-theory.classic-games.s14",
+      "concepts": ["prisoners-dilemma"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Two nations choose Disarm or Arm. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | Disarm | Arm |\n|---|---|---|\n| **Disarm** | 3, 3 | 0, 5 |\n| **Arm** | 5, 0 | 1, 1 |",
+      "steps": [
+        { "instruction": "Each nation's dominant strategy is? Choose Disarm or Arm.", "answer": "Arm", "accept": [], "hint": "Arm beats Disarm in both columns (5>3, 1>0)." },
+        { "instruction": "The equilibrium (Arm, Arm) pays 1 each; (Disarm, Disarm) pays 3 each. Is (Disarm, Disarm) better for both? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Compare 3 with 1." }
+      ],
+      "finalAnswer": { "value": "Arm", "unit": "" },
+      "solutionNarrative": "Arm strictly dominates, so the equilibrium is (Arm, Arm) at (1,1) — both worse off than the (3,3) of mutual disarmament. This arms race is a Prisoner's Dilemma."
+    },
+    {
+      "id": "game-theory.classic-games.s15",
+      "concepts": ["anti-coordination", "matching-pennies-and-zero-sum"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Distinguish the archetypes. Each cell is (Row's payoff, Column's payoff).\n\n| Row \\ Col | A | B |\n|---|---|---|\n| **A** | 0, 0 | 3, 1 |\n| **B** | 1, 3 | 0, 0 |",
+      "steps": [
+        { "instruction": "Do the players do best by matching (both A or both B) or by mismatching (one A, one B)? Type 'matching' or 'mismatching'.", "answer": "mismatching", "accept": [], "hint": "The nonzero payoffs are off the diagonal." },
+        { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "2", "accept": [], "hint": "The two off-diagonal cells." }
+      ],
+      "finalAnswer": { "value": "mismatching", "unit": "" },
+      "solutionNarrative": "Payoffs reward mismatching, so this is an anti-coordination game with two off-diagonal equilibria (A, B) and (B, A) — the Chicken/Hawk-Dove pattern."
+    },
+    {
+      "id": "game-theory.classic-games.s16",
+      "concepts": ["coordination-games", "matching-pennies-and-zero-sum"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For each game state how many pure Nash equilibria it has. Game 1 (left) and Game 2 (right).\n\nGame 1:\n\n| Row \\ Col | Stag | Hare |\n|---|---|---|\n| **Stag** | 4, 4 | 0, 2 |\n| **Hare** | 2, 0 | 2, 2 |\n\nGame 2:\n\n| Row \\ Col | Heads | Tails |\n|---|---|---|\n| **Heads** | 1, -1 | -1, 1 |\n| **Tails** | -1, 1 | 1, -1 |",
+      "steps": [
+        { "instruction": "Game 1 (Stag Hunt): how many pure Nash equilibria? (Give an integer.)", "answer": "2", "accept": [], "hint": "Both diagonal cells are self-enforcing." },
+        { "instruction": "Game 2 (Matching Pennies): how many pure Nash equilibria? (Give an integer.)", "answer": "0", "accept": [], "hint": "Best responses cycle; none is stable." },
+        { "instruction": "Which game requires a mixed strategy to have any equilibrium? Type 'Game 1' or 'Game 2'.", "answer": "Game 2", "accept": ["2"], "hint": "The one with zero pure equilibria." }
+      ],
+      "finalAnswer": { "value": "Game 2", "unit": "" },
+      "solutionNarrative": "The Stag Hunt has 2 pure equilibria (matching); Matching Pennies has 0 and needs a 1/2–1/2 mixed equilibrium. Counting pure equilibria (2 vs 0) is how you tell coordination from zero-sum."
+    }
+  ]
+}

@@ -224,6 +224,65 @@
         { "id": "cryptography.ecc", "title": "Elliptic Curve Cryptography", "file": "content/cryptography/ecc.json", "status": "ready" },
         { "id": "cryptography.crypto-weaknesses", "title": "How Cryptography Breaks: Attacks and Misuse", "file": "content/cryptography/crypto-weaknesses.json", "status": "ready" }
       ]
+    },
+    {
+      "id": "number-theory",
+      "title": "Number Theory",
+      "blurb": "The pure mathematics of the integers — primes, divisibility, congruences, and the deep patterns that underpin cryptography.",
+      "topics": [
+        { "id": "number-theory.divisibility-and-primes", "title": "Divisibility and Primes", "file": "content/number-theory/divisibility-and-primes.json", "status": "ready" },
+        { "id": "number-theory.gcd-lcm-and-bezout", "title": "GCD, LCM, and Bézout's Identity", "file": "content/number-theory/gcd-lcm-and-bezout.json", "status": "ready" },
+        { "id": "number-theory.congruences-and-crt", "title": "Congruences and the Chinese Remainder Theorem", "file": "content/number-theory/congruences-and-crt.json", "status": "ready" },
+        { "id": "number-theory.diophantine-equations", "title": "Diophantine Equations", "file": "content/number-theory/diophantine-equations.json", "status": "ready" },
+        { "id": "number-theory.arithmetic-functions", "title": "Arithmetic Functions", "file": "content/number-theory/arithmetic-functions.json", "status": "ready" },
+        { "id": "number-theory.quadratic-residues", "title": "Quadratic Residues", "file": "content/number-theory/quadratic-residues.json", "status": "ready" },
+        { "id": "number-theory.continued-fractions", "title": "Continued Fractions", "file": "content/number-theory/continued-fractions.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "numerical-methods",
+      "title": "Numerical Methods",
+      "blurb": "How computers actually do the math — approximating roots, integrals, and solutions when exact answers are out of reach.",
+      "topics": [
+        { "id": "numerical-methods.error-and-floating-point", "title": "Error, Precision, and Floating Point", "file": "content/numerical-methods/error-and-floating-point.json", "status": "ready" },
+        { "id": "numerical-methods.root-finding-bracketing", "title": "Bracketing Methods: Bisection and False Position", "file": "content/numerical-methods/root-finding-bracketing.json", "status": "ready" },
+        { "id": "numerical-methods.root-finding-open", "title": "Open Methods: Newton and Secant", "file": "content/numerical-methods/root-finding-open.json", "status": "ready" },
+        { "id": "numerical-methods.interpolation", "title": "Polynomial Interpolation", "file": "content/numerical-methods/interpolation.json", "status": "ready" },
+        { "id": "numerical-methods.numerical-integration", "title": "Numerical Integration", "file": "content/numerical-methods/numerical-integration.json", "status": "ready" },
+        { "id": "numerical-methods.linear-systems", "title": "Numerical Linear Systems", "file": "content/numerical-methods/linear-systems.json", "status": "ready" },
+        { "id": "numerical-methods.numerical-odes", "title": "Numerical Solutions of ODEs", "file": "content/numerical-methods/numerical-odes.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "financial-mathematics",
+      "title": "Financial Mathematics",
+      "blurb": "The math of money over time — interest, annuities, loans, bonds, and investment decisions.",
+      "topics": [
+        { "id": "financial-mathematics.simple-and-compound-interest", "title": "Simple and Compound Interest", "file": "content/financial-mathematics/simple-and-compound-interest.json", "status": "ready" },
+        { "id": "financial-mathematics.present-and-future-value", "title": "Time Value of Money", "file": "content/financial-mathematics/present-and-future-value.json", "status": "ready" },
+        { "id": "financial-mathematics.annuities", "title": "Annuities", "file": "content/financial-mathematics/annuities.json", "status": "ready" },
+        { "id": "financial-mathematics.loans-and-amortization", "title": "Loans and Amortization", "file": "content/financial-mathematics/loans-and-amortization.json", "status": "ready" },
+        { "id": "financial-mathematics.bonds-and-yields", "title": "Bonds and Yields", "file": "content/financial-mathematics/bonds-and-yields.json", "status": "ready" },
+        { "id": "financial-mathematics.npv-and-irr", "title": "Net Present Value and Capital Budgeting", "file": "content/financial-mathematics/npv-and-irr.json", "status": "ready" },
+        { "id": "financial-mathematics.depreciation-and-inflation", "title": "Depreciation, Inflation, and Real Rates", "file": "content/financial-mathematics/depreciation-and-inflation.json", "status": "ready" }
+      ]
+    },
+    {
+      "id": "game-theory",
+      "title": "Game Theory",
+      "blurb": "The mathematics of strategic decisions — from Nash equilibria and auctions to bargaining, evolution, and the logic of cooperation.",
+      "topics": [
+        { "id": "game-theory.strategic-form-and-dominance", "title": "Strategic-Form Games and Dominance", "file": "content/game-theory/strategic-form-and-dominance.json", "status": "ready" },
+        { "id": "game-theory.pure-nash-equilibrium", "title": "Pure-Strategy Nash Equilibrium", "file": "content/game-theory/pure-nash-equilibrium.json", "status": "ready" },
+        { "id": "game-theory.mixed-strategies", "title": "Mixed Strategies", "file": "content/game-theory/mixed-strategies.json", "status": "ready" },
+        { "id": "game-theory.classic-games", "title": "Classic 2×2 Games", "file": "content/game-theory/classic-games.json", "status": "ready" },
+        { "id": "game-theory.zero-sum-and-minimax", "title": "Zero-Sum Games and Minimax", "file": "content/game-theory/zero-sum-and-minimax.json", "status": "ready" },
+        { "id": "game-theory.sequential-games", "title": "Sequential Games and Backward Induction", "file": "content/game-theory/sequential-games.json", "status": "ready" },
+        { "id": "game-theory.repeated-games", "title": "Repeated Games and Cooperation", "file": "content/game-theory/repeated-games.json", "status": "ready" },
+        { "id": "game-theory.bargaining-and-cooperative", "title": "Bargaining and Cooperative Games", "file": "content/game-theory/bargaining-and-cooperative.json", "status": "ready" },
+        { "id": "game-theory.auctions-and-mechanisms", "title": "Auctions and Mechanism Design", "file": "content/game-theory/auctions-and-mechanisms.json", "status": "ready" },
+        { "id": "game-theory.evolutionary-and-applications", "title": "Evolutionary Games and Applications", "file": "content/game-theory/evolutionary-and-applications.json", "status": "ready" }
+      ]
     }
   ]
 }

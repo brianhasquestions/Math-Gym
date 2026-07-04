@@ -1,0 +1,263 @@
+{
+  "id": "financial-mathematics.depreciation-and-inflation",
+  "subject": "financial-mathematics",
+  "title": "Depreciation, Inflation, and Real Rates",
+  "prerequisites": ["financial-mathematics.simple-and-compound-interest"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "straight-line-depreciation",
+      "label": "Straight-line depreciation",
+      "microLesson": "An asset loses value as it is used. **Straight-line depreciation** spreads the loss evenly: the annual depreciation is $\\dfrac{\\text{cost} - \\text{salvage}}{\\text{life}}$, where *salvage* is the estimated end-of-life value and *life* is the number of years. The **book value after $k$ years** is the cost minus $k$ years of depreciation: $\\text{cost} - k \\cdot (\\text{annual depreciation})$. Book value falls in equal steps down to the salvage value at the end of life."
+    },
+    {
+      "id": "declining-balance",
+      "label": "Double-declining-balance depreciation",
+      "microLesson": "**Declining-balance** depreciation takes a fixed *percent* of the remaining book value each year, so early years lose the most. The **double-declining** rate is $d = \\dfrac{2}{\\text{life}}$. Each year, book value is multiplied by $(1 - d)$, so after $k$ years $\\text{book value} = \\text{cost} \\cdot (1-d)^k$. Never depreciate below the salvage value — floor the book value at salvage if the formula would drop under it."
+    },
+    {
+      "id": "inflation-and-real-value",
+      "label": "Inflation and purchasing power",
+      "microLesson": "**Inflation** erodes what a dollar buys. If prices rise at rate $i$ per year, an item costing $P$ today will cost $P \\cdot (1+i)^n$ in $n$ years (its **future nominal cost**). Equivalently, a fixed amount of money loses purchasing power: $\\$1$ today buys only $\\dfrac{1}{(1+i)^n}$ worth of goods after $n$ years. **Real value** strips inflation out; **nominal value** is the raw dollar figure. Retirement and savings planning must use real values to be meaningful."
+    },
+    {
+      "id": "fisher-real-rate",
+      "label": "The Fisher real interest rate",
+      "microLesson": "Earning 6% while prices rise 4% does not make you 6% richer in real terms. The **Fisher equation** gives the true (real) rate: $1 + r_{\\text{real}} = \\dfrac{1 + r_{\\text{nominal}}}{1 + i}$, so $r_{\\text{real}} = \\dfrac{1 + r_{\\text{nominal}}}{1 + i} - 1$. A quick approximation is $r_{\\text{real}} \\approx r_{\\text{nominal}} - i$, but the exact formula divides rather than subtracts. Always convert percents to decimals first, compute, then convert back to a percent."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Two forces that shrink value\n\nMoney and assets lose value in two very different ways. **Depreciation** is the accounting fall in an asset's worth as it wears out. **Inflation** is the rise in prices that erodes what each dollar buys. Both matter for real decisions — a business writing off equipment, a saver planning for retirement — and both are governed by clean formulas.\n\n## Straight-line depreciation: equal steps down\n\nThe simplest method spreads an asset's total loss evenly over its useful life. If an asset costs $C$, has an estimated **salvage value** $S$ at the end, and a useful **life** of $L$ years, then each year it loses the same amount:\n\n$$\\boxed{\\;\\text{Annual depreciation} = \\frac{C - S}{L}\\;}$$\n\nThe **book value after $k$ years** is the cost minus $k$ years of that depreciation:\n\n$$\\text{Book value}_k = C - k\\cdot\\frac{C - S}{L}.$$\n\n### Worked example\n\nA machine costs \\$12,000, has a salvage value of \\$2,000, and a 5-year life.\n\n- Annual depreciation: $\\dfrac{12000 - 2000}{5} = \\dfrac{10000}{5} = \\$2{,}000$ per year.\n- Book value after 3 years: $12000 - 3\\cdot 2000 = 12000 - 6000 = \\$6{,}000$.\n\nBy the end of year 5 the book value reaches exactly the \\$2,000 salvage value, as it should.\n\n## Declining-balance: front-loaded loss\n\nMany assets — cars especially — lose value fastest when new. **Double-declining-balance** captures that by taking a fixed *percentage* of the *remaining* book value each year. The rate is double the straight-line rate:\n\n$$\\boxed{\\;d = \\frac{2}{L}\\;}$$\n\nEach year the book value is multiplied by $(1 - d)$, so after $k$ years:\n\n$$\\text{Book value}_k = C\\cdot(1 - d)^k.$$\n\n### Worked example\n\nA \\$20,000 car with a 5-year life: $d = \\tfrac{2}{5} = 0.4$, so each year keeps $1 - 0.4 = 0.6$ of its value.\n\n- After 1 year: $20000\\cdot 0.6 = \\$12{,}000$.\n- After 2 years: $20000\\cdot 0.6^2 = 20000\\cdot 0.36 = \\$7{,}200$.\n- After 3 years: $20000\\cdot 0.6^3 = 20000\\cdot 0.216 = \\$4{,}320$.\n\n**Important floor:** never let book value drop below the salvage value. If the formula would put it under salvage, stop at salvage instead.\n\n## Inflation: the quiet tax on money\n\nInflation raises prices at a rate $i$ per year. An item costing $P$ today will cost more later:\n\n$$\\boxed{\\;\\text{Future cost} = P\\cdot(1 + i)^{n}\\;}$$\n\nA \\$100 grocery bill at 3% inflation costs $100\\cdot 1.03^{5} = \\$115.93$ in five years. The flip side is **purchasing power**: a fixed pile of cash buys less over time. \\$1,000 stuffed under a mattress still reads \\$1,000 after 5 years — that's its **nominal** value — but at 3% inflation it buys only $1000/1.03^{5} = \\$862.61$ worth of today's goods. That \\$862.61 is its **real** value.\n\nThe distinction between **nominal** (the raw dollar figure) and **real** (adjusted for inflation) is the single most important idea in long-horizon financial planning. A retirement number that ignores inflation is a fantasy.\n\n## The Fisher equation: your true return\n\nSuppose your savings earn a **nominal** 6% but prices rise 4%. Are you 6% richer? No — most of that gain just keeps pace with prices. The **real** rate of return uses division, not subtraction:\n\n$$\\boxed{\\;1 + r_{\\text{real}} = \\frac{1 + r_{\\text{nominal}}}{1 + i}\\;}\\qquad r_{\\text{real}} = \\frac{1 + r_{\\text{nominal}}}{1 + i} - 1.$$\n\nWith $r_{\\text{nominal}} = 0.06$ and $i = 0.04$:\n\n$$r_{\\text{real}} = \\frac{1.06}{1.04} - 1 = 1.019231 - 1 = 0.019231 = 1.92\\%.$$\n\nThe rough shortcut $r_{\\text{real}} \\approx r_{\\text{nominal}} - i = 6\\% - 4\\% = 2\\%$ is close but not exact — the true real rate is a hair under 2%. For low rates the approximation is fine; for high inflation it drifts, so learn the exact division formula.\n\n## Pitfalls\n\n- **Nominal vs. real.** A nominal gain can be a real loss: earning 3% while inflation runs 5% leaves you *poorer* in purchasing power.\n- **Subtracting instead of dividing.** The Fisher real rate divides $(1+r)$ by $(1+i)$; only for small rates does simple subtraction approximate it.\n- **Depreciating below salvage.** Declining balance can mathematically fall under the salvage value — floor it at salvage.\n- **Straight-line vs. declining balance.** They give the same total depreciation over the full life but very different book values in between; declining balance is front-loaded."
+  },
+  "application": {
+    "summary": "Depreciation drives how businesses expense equipment on their books and taxes, and how quickly a car or laptop loses resale value. Inflation and real rates determine whether savings actually grow, how much a retiree truly needs, and whether an investment beats the rising cost of living. Together they separate the illusion of nominal dollars from real purchasing power.",
+    "domains": ["personal finance", "corporate finance", "retirement planning"],
+    "workedExample": "**Will the retirement nest egg keep up?**\n\nA saver expects a \\$50,000 annual budget in today's dollars and plans to retire in 20 years, with inflation at 3%. What will that same lifestyle cost then, and if their savings earn a nominal 6%, what is the real growth rate?\n\nFuture nominal cost of the lifestyle: $50000\\cdot 1.03^{20} = 50000\\cdot 1.806111 = \\$90{,}305.56$. The budget nearly doubles in raw dollars just to stand still — the classic inflation trap that sinks plans built on today's numbers.\n\nReal return on the savings, by the Fisher equation: $\\dfrac{1.06}{1.03} - 1 = 1.029126 - 1 = 2.91\\%$. So the portfolio truly grows about 2.9% per year in purchasing power, not the headline 6%. Planning on the nominal 6% would badly overstate how much the money buys. The same lens tells a business whether a machine's after-inflation savings justify its cost, and helps anyone compare a raise to the rising cost of living.",
+    "domainNotes": [
+      "**Personal finance:** a car's resale value via declining balance, and whether a savings rate actually beats inflation.",
+      "**Corporate finance:** depreciating equipment for the books and taxes, choosing straight-line versus accelerated methods.",
+      "**Retirement planning:** inflating future expenses to real terms and using the Fisher real rate so a nest egg is sized in genuine purchasing power."
+    ]
+  },
+  "generators": ["fm2-straight-line-1", "fm2-straight-line-2", "fm2-straight-line-3", "fm2-declining-balance-1", "fm2-declining-balance-2", "fm2-declining-balance-3", "fm2-inflation-real-1", "fm2-inflation-real-2", "fm2-inflation-real-3", "fm2-fisher-rate-1", "fm2-fisher-rate-2", "fm2-fisher-rate-3"],
+  "problems": [
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s01",
+      "concepts": ["straight-line-depreciation"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A machine costs \\$10,000, has a salvage value of \\$2,000, and a useful life of 4 years. Find the annual straight-line depreciation using $\\dfrac{\\text{cost} - \\text{salvage}}{\\text{life}}$.",
+      "steps": [
+        { "instruction": "Compute the depreciable amount: cost minus salvage, $10000 - 2000$ (give a number).", "answer": "8000", "accept": [], "hint": "$10000 - 2000$." },
+        { "instruction": "Divide by the 4-year life for the annual depreciation (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "2000.00", "accept": ["2000"], "hint": "$8000 \\div 4$." }
+      ],
+      "finalAnswer": { "value": "2000.00", "unit": "dollars per year" },
+      "solutionNarrative": "The depreciable amount is $10000 - 2000 = \\$8{,}000$, spread over 4 years: $8000/4 = \\$2{,}000$ per year."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s02",
+      "concepts": ["straight-line-depreciation"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A \\$12,000 machine has a salvage value of \\$2,000 and a 5-year life. Find its book value after 3 years using straight-line depreciation.",
+      "steps": [
+        { "instruction": "Annual depreciation: $(12000 - 2000)/5$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "2000.00", "accept": ["2000"], "hint": "$10000 \\div 5$." },
+        { "instruction": "Total depreciation over 3 years: $3 \\times 2000$ (give a number).", "answer": "6000", "accept": [], "hint": "$3 \\times 2000$." },
+        { "instruction": "Book value: cost minus 3 years of depreciation, $12000 - 6000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "6000.00", "accept": ["6000"], "hint": "$12000 - 6000$." }
+      ],
+      "finalAnswer": { "value": "6000.00", "unit": "dollars" },
+      "solutionNarrative": "Annual depreciation is $10000/5 = \\$2{,}000$; after 3 years the book value is $12000 - 3\\cdot 2000 = \\$6{,}000$."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s03",
+      "concepts": ["straight-line-depreciation"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A delivery van costs \\$35,000, has a salvage value of \\$5,000, and an 8-year life. Find its book value after 6 years using straight-line depreciation.",
+      "steps": [
+        { "instruction": "Annual depreciation: $(35000 - 5000)/8$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "3750.00", "accept": ["3750"], "hint": "$30000 \\div 8$." },
+        { "instruction": "Total depreciation over 6 years: $6 \\times 3750$ (give a number).", "answer": "22500", "accept": [], "hint": "$6 \\times 3750$." },
+        { "instruction": "Book value: $35000 - 22500$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "12500.00", "accept": ["12500"], "hint": "$35000 - 22500$." }
+      ],
+      "finalAnswer": { "value": "12500.00", "unit": "dollars" },
+      "solutionNarrative": "Annual depreciation is $30000/8 = \\$3{,}750$; after 6 years the book value is $35000 - 6\\cdot 3750 = \\$12{,}500$."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s04",
+      "concepts": ["declining-balance"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A \\$10,000 asset has a 5-year life and is depreciated by the double-declining-balance method. Find the depreciation rate $d = 2/\\text{life}$ and the book value after 1 year.",
+      "steps": [
+        { "instruction": "Compute the double-declining rate $d = 2/5$ (give the decimal).", "answer": "0.4", "accept": ["0.40", "2/5"], "hint": "$2 \\div 5$." },
+        { "instruction": "Each year keeps $(1 - d)$ of value. Compute $1 - 0.4$ (give the decimal).", "answer": "0.6", "accept": ["0.60"], "hint": "$1 - 0.4$." },
+        { "instruction": "Book value after 1 year: $10000 \\times 0.6$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "6000.00", "accept": ["6000"], "hint": "$10000 \\times 0.6$." }
+      ],
+      "finalAnswer": { "value": "6000.00", "unit": "dollars" },
+      "solutionNarrative": "The rate is $d = 2/5 = 0.4$, so each year keeps $0.6$; after 1 year the book value is $10000\\cdot 0.6 = \\$6{,}000$."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s05",
+      "concepts": ["declining-balance"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A \\$20,000 car with a 5-year life is depreciated by double-declining balance ($d = 0.4$). Find its book value after 3 years using $\\text{book value} = \\text{cost}\\cdot(1-d)^k$.",
+      "steps": [
+        { "instruction": "The yearly retention factor is $1 - 0.4 = 0.6$. Compute $0.6^3$ (round to 4 decimal places).", "answer": "0.216", "accept": ["0.2160"], "hint": "$0.6 \\times 0.6 \\times 0.6$." },
+        { "instruction": "Book value after 3 years: $20000 \\times 0.216$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "4320.00", "accept": ["4320"], "hint": "$20000 \\times 0.216$." }
+      ],
+      "finalAnswer": { "value": "4320.00", "unit": "dollars" },
+      "solutionNarrative": "$0.6^3 = 0.216$, so the book value after 3 years is $20000\\cdot 0.216 = \\$4{,}320$ — the front-loaded loss leaves it far below the straight-line value."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s06",
+      "concepts": ["declining-balance"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A \\$15,000 machine with a 4-year life is depreciated by double-declining balance, with a salvage value of \\$1,500. Find the book value after 2 years, and check it does not fall below salvage.",
+      "steps": [
+        { "instruction": "Double-declining rate $d = 2/4$ (give the decimal).", "answer": "0.5", "accept": ["0.50", "1/2"], "hint": "$2 \\div 4$." },
+        { "instruction": "Yearly retention factor $1 - 0.5$ (give the decimal).", "answer": "0.5", "accept": ["0.50"], "hint": "$1 - 0.5$." },
+        { "instruction": "Book value after 2 years: $15000 \\times 0.5^2 = 15000 \\times 0.25$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "3750.00", "accept": ["3750"], "hint": "$15000 \\times 0.25$." },
+        { "instruction": "Is \\$3,750 above the \\$1,500 salvage floor? Answer exactly one of: yes, no.", "answer": "yes", "accept": ["above"], "hint": "Compare 3750 to 1500." }
+      ],
+      "finalAnswer": { "value": "3750.00", "unit": "dollars" },
+      "solutionNarrative": "$d = 2/4 = 0.5$, so book value after 2 years is $15000\\cdot 0.5^2 = 15000\\cdot 0.25 = \\$3{,}750$, still above the \\$1,500 salvage floor, so no adjustment is needed."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s07",
+      "concepts": ["inflation-and-real-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "An item costs \\$100 today. With inflation at 3% per year, what will it cost in 2 years? Use $\\text{future cost} = P\\cdot(1+i)^n$ with $P=100$, $i=0.03$, $n=2$.",
+      "steps": [
+        { "instruction": "Compute the inflation factor $1.03^2$ (round to 4 decimal places).", "answer": "1.0609", "accept": [], "hint": "$1.03 \\times 1.03$." },
+        { "instruction": "Multiply by \\$100 for the future cost (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "106.09", "accept": [], "hint": "$100 \\times 1.0609$." }
+      ],
+      "finalAnswer": { "value": "106.09", "unit": "dollars" },
+      "solutionNarrative": "$100\\cdot 1.03^2 = 100\\cdot 1.0609 = \\$106.09$ — the same item costs more in future dollars."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s08",
+      "concepts": ["inflation-and-real-value"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You keep \\$1,000 in cash for 5 years while inflation runs 3% per year. What is its real value (purchasing power in today's dollars)? Use $\\text{real value} = \\dfrac{1000}{(1+i)^n}$.",
+      "steps": [
+        { "instruction": "Compute the inflation factor $1.03^5$ (round to 6 decimal places).", "answer": "1.159274", "accept": [], "hint": "Multiply 1.03 by itself 5 times." },
+        { "instruction": "Divide \\$1,000 by that factor for the real value (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "862.61", "accept": [], "hint": "$1000 / 1.159274$." }
+      ],
+      "finalAnswer": { "value": "862.61", "unit": "dollars" },
+      "solutionNarrative": "The nominal \\$1,000 still reads \\$1,000, but $1000/1.03^5 = \\$862.61$ of today's purchasing power — inflation quietly ate about \\$137."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s09",
+      "concepts": ["inflation-and-real-value"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A retiree wants a \\$50,000 annual budget in today's dollars. With inflation at 3% per year, what will that same lifestyle cost in 20 years (its future nominal cost)?",
+      "steps": [
+        { "instruction": "Compute the inflation factor $1.03^{20}$ (round to 6 decimal places).", "answer": "1.806111", "accept": [], "hint": "$1.03$ raised to the 20th power." },
+        { "instruction": "Multiply by \\$50,000 for the future nominal cost (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "90305.56", "accept": ["90305.55"], "hint": "$50000 \\times 1.806111$." }
+      ],
+      "finalAnswer": { "value": "90305.56", "unit": "dollars" },
+      "solutionNarrative": "$50000\\cdot 1.03^{20} = 50000\\cdot 1.806111 = \\$90{,}305.56$ — the budget nearly doubles in raw dollars just to buy the same lifestyle, the core reason retirement plans must use real values."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s10",
+      "concepts": ["fisher-real-rate"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Your savings earn a nominal 6% while inflation is 4%. Find the real rate with the Fisher equation $r_{\\text{real}} = \\dfrac{1 + r_{\\text{nominal}}}{1 + i} - 1$. Give the real rate as a percent (round to 2 decimals).",
+      "steps": [
+        { "instruction": "Form the ratio $\\dfrac{1.06}{1.04}$ (round to 6 decimal places).", "answer": "1.019231", "accept": [], "hint": "$1.06 \\div 1.04$." },
+        { "instruction": "Subtract 1 (round to 6 decimal places).", "answer": "0.019231", "accept": [], "hint": "$1.019231 - 1$." },
+        { "instruction": "Convert to a percent and round to 2 decimals. Enter the real rate as a percent (a number, no % sign).", "answer": "1.92", "accept": [], "hint": "$0.019231 \\times 100 = 1.9231$, rounded to $1.92$." }
+      ],
+      "finalAnswer": { "value": "1.92", "unit": "percent" },
+      "solutionNarrative": "$r_{\\text{real}} = \\dfrac{1.06}{1.04} - 1 = 0.019231 = 1.92\\%$ — a hair under the rough $6\\% - 4\\% = 2\\%$ shortcut, because Fisher divides rather than subtracts."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s11",
+      "concepts": ["fisher-real-rate"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An investment earns a nominal 8% while inflation runs 3%. Find the real rate with the Fisher equation. Give it as a percent (round to 2 decimals).",
+      "steps": [
+        { "instruction": "Form the ratio $\\dfrac{1.08}{1.03}$ (round to 6 decimal places).", "answer": "1.048544", "accept": [], "hint": "$1.08 \\div 1.03$." },
+        { "instruction": "Subtract 1 (round to 6 decimal places).", "answer": "0.048544", "accept": [], "hint": "$1.048544 - 1$." },
+        { "instruction": "Convert to a percent, round to 2 decimals. Enter the real rate as a percent (a number, no % sign).", "answer": "4.85", "accept": [], "hint": "$0.048544 \\times 100 = 4.8544$, rounded to $4.85$." }
+      ],
+      "finalAnswer": { "value": "4.85", "unit": "percent" },
+      "solutionNarrative": "$r_{\\text{real}} = \\dfrac{1.08}{1.03} - 1 = 0.048544 = 4.85\\%$, slightly below the $8\\% - 3\\% = 5\\%$ approximation."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s12",
+      "concepts": ["fisher-real-rate"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "During high inflation, a bond pays a nominal 12% while inflation is 9%. The rough shortcut says 3%, but find the exact Fisher real rate. Give it as a percent (round to 2 decimals).",
+      "steps": [
+        { "instruction": "Form the ratio $\\dfrac{1.12}{1.09}$ (round to 6 decimal places).", "answer": "1.027523", "accept": [], "hint": "$1.12 \\div 1.09$." },
+        { "instruction": "Subtract 1 (round to 6 decimal places).", "answer": "0.027523", "accept": [], "hint": "$1.027523 - 1$." },
+        { "instruction": "Convert to a percent, round to 2 decimals. Enter the real rate as a percent (a number, no % sign).", "answer": "2.75", "accept": [], "hint": "$0.027523 \\times 100 = 2.7523$, rounded to $2.75$." }
+      ],
+      "finalAnswer": { "value": "2.75", "unit": "percent" },
+      "solutionNarrative": "$r_{\\text{real}} = \\dfrac{1.12}{1.09} - 1 = 0.027523 = 2.75\\%$ — notably below the $12\\% - 9\\% = 3\\%$ shortcut, showing the approximation drifts when inflation is high."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s13",
+      "concepts": ["straight-line-depreciation", "declining-balance"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A \\$10,000 asset has a 5-year life and zero salvage. Compare methods after 1 year: straight-line book value versus double-declining-balance book value.",
+      "steps": [
+        { "instruction": "Straight-line annual depreciation: $(10000 - 0)/5$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "2000.00", "accept": ["2000"], "hint": "$10000 \\div 5$." },
+        { "instruction": "Straight-line book value after 1 year: $10000 - 2000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "8000.00", "accept": ["8000"], "hint": "$10000 - 2000$." },
+        { "instruction": "Double-declining book value after 1 year: $10000\\times(1 - 2/5)$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "6000.00", "accept": ["6000"], "hint": "$10000 \\times 0.6$." },
+        { "instruction": "Which method shows a lower book value after year 1? Answer exactly one of: straight-line, declining-balance.", "answer": "declining-balance", "accept": ["declining balance", "double-declining"], "hint": "The front-loaded method depreciates faster early on." }
+      ],
+      "finalAnswer": { "value": "declining-balance", "unit": "" },
+      "solutionNarrative": "Straight-line leaves \\$8,000 after year 1; double-declining leaves $10000\\cdot 0.6 = \\$6{,}000$. Declining balance is lower because it front-loads the loss."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s14",
+      "concepts": ["inflation-and-real-value"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A \\$50 item rises with 5% inflation for 1 year. What will it cost? Use $P\\cdot(1+i)^n$ with $P=50$, $i=0.05$, $n=1$.",
+      "steps": [
+        { "instruction": "The inflation factor for 1 year is $1.05$. Multiply: $50 \\times 1.05$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "52.50", "accept": ["52.5"], "hint": "$50 \\times 1.05$." }
+      ],
+      "finalAnswer": { "value": "52.50", "unit": "dollars" },
+      "solutionNarrative": "$50\\cdot 1.05 = \\$52.50$ after one year of 5% inflation."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s15",
+      "concepts": ["fisher-real-rate"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A savings account earns a nominal 5% while inflation is 2%. Find the real rate with the Fisher equation. Give it as a percent (round to 2 decimals).",
+      "steps": [
+        { "instruction": "Form the ratio $\\dfrac{1.05}{1.02}$ (round to 6 decimal places).", "answer": "1.029412", "accept": [], "hint": "$1.05 \\div 1.02$." },
+        { "instruction": "Subtract 1, then multiply by 100 and round to 2 decimals. Enter the real rate as a percent (a number, no % sign).", "answer": "2.94", "accept": [], "hint": "$1.029412 - 1 = 0.029412$; times 100 is $2.9412$, rounded to $2.94$." }
+      ],
+      "finalAnswer": { "value": "2.94", "unit": "percent" },
+      "solutionNarrative": "$r_{\\text{real}} = \\dfrac{1.05}{1.02} - 1 = 0.029412 = 2.94\\%$, just under the $5\\% - 2\\% = 3\\%$ shortcut."
+    },
+    {
+      "id": "financial-mathematics.depreciation-and-inflation.s16",
+      "concepts": ["declining-balance"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A \\$8,000 asset has a 4-year life and is depreciated by double-declining balance. Find the depreciation rate $d = 2/\\text{life}$ and the book value after 1 year.",
+      "steps": [
+        { "instruction": "Compute $d = 2/4$ (give the decimal).", "answer": "0.5", "accept": ["0.50", "1/2"], "hint": "$2 \\div 4$." },
+        { "instruction": "Book value after 1 year: $8000\\times(1 - 0.5)$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "4000.00", "accept": ["4000"], "hint": "$8000 \\times 0.5$." }
+      ],
+      "finalAnswer": { "value": "4000.00", "unit": "dollars" },
+      "solutionNarrative": "$d = 2/4 = 0.5$, so the book value after 1 year is $8000\\cdot 0.5 = \\$4{,}000$."
+    }
+  ]
+}

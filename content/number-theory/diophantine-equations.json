@@ -1,0 +1,275 @@
+{
+  "id": "number-theory.diophantine-equations",
+  "subject": "number-theory",
+  "title": "Diophantine Equations",
+  "prerequisites": ["number-theory.gcd-lcm-and-bezout"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "linear-diophantine-solvability",
+      "label": "Solvability of ax + by = c",
+      "microLesson": "A **linear Diophantine equation** $ax + by = c$ asks for INTEGER solutions. It has one exactly when $\\gcd(a, b) \\mid c$ — because $ax + by$ is always a multiple of $g = \\gcd(a,b)$, so it can only equal $c$ if $g$ divides $c$. Then there are infinitely many solutions. Example: $6x + 10y = 14$ is solvable since $\\gcd(6,10) = 2 \\mid 14$; but $6x + 10y = 15$ is impossible — the left side is always even. First move on any such problem: compute the gcd and test divisibility."
+    },
+    {
+      "id": "particular-solution",
+      "label": "Finding a particular solution",
+      "microLesson": "Once solvability is confirmed, find ONE solution $(x_0, y_0)$. Small cases yield to inspection ($3x + 5y = 19$: try $x = 3$, then $y = 2$). In general, run **extended Euclid** to get $as + bt = g$, then scale by $c/g$: $x_0 = s \\cdot \\tfrac{c}{g}$, $y_0 = t \\cdot \\tfrac{c}{g}$. For $7x + 5y = 3$: extended Euclid gives $7(-2) + 5(3) = 1$, so scaling by 3, $(x_0, y_0) = (-6, 9)$. Always verify: $7(-6) + 5(9) = -42 + 45 = 3$. The particular solution is not unique — it depends on the algorithm's output."
+    },
+    {
+      "id": "general-solution",
+      "label": "The general solution",
+      "microLesson": "From one solution $(x_0, y_0)$, ALL solutions are $x = x_0 + \\dfrac{b}{g}\\,t$, $y = y_0 - \\dfrac{a}{g}\\,t$ for every integer $t$, where $g = \\gcd(a,b)$. The increments are $\\tfrac{b}{g}$ (added to $x$) and $\\tfrac{a}{g}$ (subtracted from $y$) — using $b$ and $a$ instead of $b/g$ and $a/g$ is the classic mistake. For $6x + 10y = 14$ with $g = 2$: increments are $10/2 = 5$ and $6/2 = 3$, so $x = x_0 + 5t$, $y = y_0 - 3t$. This parametrization also finds the solution with smallest positive $x$, or all nonnegative solutions."
+    },
+    {
+      "id": "pythagorean-triples",
+      "label": "Pythagorean triples",
+      "microLesson": "A **Pythagorean triple** is integers with $a^2 + b^2 = c^2$: $(3,4,5)$, $(5,12,13)$, $(8,15,17)$. **Euclid's formula** generates them from integers $m > n > 0$: $a = m^2 - n^2$, $b = 2mn$, $c = m^2 + n^2$. With $m = 2, n = 1$ you get $(3, 4, 5)$; with $m = 3, n = 2$, $(5, 12, 13)$. The triple is **primitive** (entries share no common factor) exactly when $m, n$ are coprime and not both odd. Every primitive triple arises this way — a complete parametrization of a nonlinear Diophantine equation."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Equations where only whole answers count\n\nA **Diophantine equation** demands *integer* solutions. That restriction changes everything: $2x + 4y = 7$ has infinitely many real solutions but not a single integer one. The theory of the linear case is completely settled by the gcd, and it is Bézout's identity doing the work.\n\n## When does $ax + by = c$ have an integer solution?\n\nLet $g = \\gcd(a, b)$. Every value of $ax + by$ is a multiple of $g$ (since $g$ divides both $a$ and $b$). So:\n\n> **Solvability.** $ax + by = c$ has an integer solution **iff** $g = \\gcd(a, b)$ divides $c$.\n\n- $6x + 10y = 14$: $g = 2$, and $2 \\mid 14$ — **solvable**.\n- $6x + 10y = 15$: $g = 2$, but $2 \\nmid 15$ — **impossible** (left side always even, 15 is odd).\n\nThe very first step on any linear Diophantine problem is: compute $g$ and check $g \\mid c$.\n\n## A particular solution\n\nWhen it's solvable, find one solution $(x_0, y_0)$. Two routes:\n\n**Inspection** works for small numbers. $3x + 5y = 19$: try $x = 3$, then $5y = 10$, $y = 2$. Done.\n\n**Extended Euclid** is the systematic method. It produces $as + bt = g$; multiply through by $\\tfrac{c}{g}$:\n\n$$a\\Big(s \\cdot \\tfrac{c}{g}\\Big) + b\\Big(t \\cdot \\tfrac{c}{g}\\Big) = c \\;\\Longrightarrow\\; x_0 = s \\cdot \\tfrac{c}{g}, \\quad y_0 = t \\cdot \\tfrac{c}{g}.$$\n\n*Example.* $7x + 5y = 3$. Extended Euclid: $7(-2) + 5(3) = 1$. Scale by $3$: $x_0 = -6$, $y_0 = 9$. **Verify:** $7(-6) + 5(9) = -42 + 45 = 3$. ✓ (A negative coordinate is fine.)\n\n## Every solution: the general form\n\nGiven one solution, you get them all by walking along the line in integer steps that keep both coordinates integers:\n\n$$\\boxed{\\;x = x_0 + \\frac{b}{g}\\,t, \\qquad y = y_0 - \\frac{a}{g}\\,t\\;}\\qquad (t \\in \\mathbb{Z}).$$\n\nCheck it: the change in $a x + b y$ is $a \\cdot \\tfrac{b}{g} t - b \\cdot \\tfrac{a}{g} t = 0$, so every $t$ stays a solution. The **increments** are $\\tfrac{b}{g}$ and $\\tfrac{a}{g}$ — *divided by the gcd*. Forgetting to divide is the single most common error here.\n\n*Example.* $6x + 10y = 14$, $g = 2$. A particular solution: $x_0 = 4, y_0 = -1$ (check $24 - 10 = 14$). Increments $\\tfrac{10}{2} = 5$ and $\\tfrac{6}{2} = 3$:\n\n$$x = 4 + 5t, \\qquad y = -1 - 3t.$$\n\nThis parametrization answers refined questions: the smallest **positive** $x$ (reduce $x_0$ modulo the increment 5, giving $x = 4$, $y = -1$; or step to $x = 4 - 5 = -1$... take $t$ to land $x$ in $1..5$), or all solutions with both coordinates $\\ge 0$.\n\n## A nonlinear case: Pythagorean triples\n\nNot all Diophantine equations are linear. The most famous nonlinear one is\n\n$$a^2 + b^2 = c^2,$$\n\nwhose positive-integer solutions are **Pythagorean triples**: $(3,4,5)$, $(5,12,13)$, $(8,15,17)$, $(7,24,25)$. Remarkably, they have a complete parametrization — **Euclid's formula**. For integers $m > n > 0$:\n\n$$a = m^2 - n^2, \\qquad b = 2mn, \\qquad c = m^2 + n^2.$$\n\nCheck: $a^2 + b^2 = (m^2 - n^2)^2 + (2mn)^2 = m^4 + 2m^2 n^2 + n^4 = (m^2 + n^2)^2 = c^2$. With $m = 2, n = 1$: $(3, 4, 5)$. With $m = 3, n = 2$: $(5, 12, 13)$. The triple is **primitive** (its three entries share no common factor) exactly when $m$ and $n$ are coprime and not both odd; otherwise you get a scaled copy, like $m=3,n=1 \\to (8,6,10) = 2 \\cdot (4,3,5)$. Every primitive triple comes from this formula — a clean, complete solution set for a nonlinear Diophantine equation, which is rare and beautiful.\n\n## Honest scaling\n\nLinear Diophantine solving *is* the extended Euclidean algorithm you already know, dressed for a word problem — postage stamps, coins, mixing volumes. The same gcd gate that decides solvability here decides whether a linear congruence or a CRT system has answers. It is all one idea: **$ax + by$ ranges over exactly the multiples of $\\gcd(a,b)$.**"
+  },
+  "application": {
+    "summary": "Linear Diophantine equations answer integer-constraint questions — making exact change, mixing whole units, stamp/coin combinations — with the gcd deciding solvability and Bézout giving the solutions. Pythagorean triples parametrize integer right triangles, used in construction, graphics, and lattice geometry.",
+    "domains": ["operations and logistics", "finance", "computer graphics", "construction"],
+    "workedExample": "**Making exact postage with two stamp values.**\n\nYou have only 5-cent and 8-cent stamps. Can you make exactly 39 cents, and how? This is $5x + 8y = 39$ in nonnegative integers.\n\n*Solvable?* $\\gcd(5, 8) = 1$, and $1 \\mid 39$ — yes. (Coprime values can make *every* sufficiently large amount.)\n\n*A particular solution.* By inspection or extended Euclid: $5(3) + 8(3) = 39$? That's $15 + 24 = 39$ ✓, so $(x_0, y_0) = (3, 3)$.\n\n*All solutions.* With $g = 1$, increments are $8$ and $5$: $x = 3 + 8t$, $y = 3 - 5t$. The only $t$ keeping BOTH nonnegative is $t = 0$, giving $(3, 3)$ — three 5-cent and three 8-cent stamps. If we'd wanted 40 cents ($5x + 8y = 40$): $(8, 0)$ and $(0, 5)$ both work, and the general form $x = 8 + 8t$, $y = 0 - 5t$... take $t = -1$ for $(0, 5)$. The parametrization enumerates every valid combination and no invalid one — exactly what an inventory or change-making routine needs.",
+    "domainNotes": [
+      "**Operations and logistics:** making exact quantities from fixed pack sizes, loading mixed pallets to a target weight, and change-making are nonnegative linear Diophantine problems; the Frobenius ('Chicken McNugget') number is the largest unreachable total.",
+      "**Finance:** settling an amount with two coin/bill denominations, or splitting a payment into two installment sizes, is $ax + by = c$ over nonnegative integers.",
+      "**Computer graphics:** Bresenham-style line rasterization and lattice-point enumeration walk integer solutions along a line; Pythagorean triples give exact integer right angles.",
+      "**Construction and design:** the 3-4-5 (and 5-12-13) triple lays out exact right angles with a tape measure; Euclid's formula generates any integer right triangle needed for framing or tiling."
+    ]
+  },
+  "generators": [
+    "nt1-diophsolv-1", "nt1-diophsolv-2", "nt1-diophsolv-3",
+    "nt1-particular-1", "nt1-particular-2", "nt1-particular-3",
+    "nt1-general-1", "nt1-general-2", "nt1-general-3",
+    "nt1-pythag-1", "nt1-pythag-2", "nt1-pythag-3"
+  ],
+  "problems": [
+    {
+      "id": "number-theory.diophantine-equations.s01",
+      "concepts": ["linear-diophantine-solvability"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Does $6x + 10y = 14$ have an integer solution? Use the $\\gcd(a,b) \\mid c$ test.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(6, 10)$.", "answer": "2", "accept": [], "hint": "Both are even." },
+        { "instruction": "Does 2 divide 14? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "$14 = 2 \\cdot 7$." },
+        { "instruction": "So is the equation solvable? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Solvable iff $\\gcd(a,b) \\mid c$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\gcd(6,10) = 2 \\mid 14$, so integer solutions exist."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s02",
+      "concepts": ["linear-diophantine-solvability"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Does $6x + 10y = 15$ have an integer solution?",
+      "steps": [
+        { "instruction": "Compute $\\gcd(6, 10)$.", "answer": "2", "accept": [], "hint": "Both even." },
+        { "instruction": "Does 2 divide 15? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "15 is odd." },
+        { "instruction": "So is the equation solvable? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "The left side is always even." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$\\gcd(6,10) = 2 \\nmid 15$, so NO integer solution: $6x + 10y$ is always even, never 15."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s03",
+      "concepts": ["linear-diophantine-solvability"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $9x + 12y = 30$, determine solvability and reduce the equation by the gcd.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(9, 12)$.", "answer": "3", "accept": [], "hint": "Euclid: $12 = 1 \\cdot 9 + 3$; $9 = 3 \\cdot 3 + 0$." },
+        { "instruction": "Is 30 divisible by 3 (so the equation is solvable)? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "$30 = 3 \\cdot 10$." },
+        { "instruction": "Divide through by 3: the reduced right-hand side $30 \\div 3 = $ ?", "answer": "10", "accept": [], "hint": "The reduced equation is $3x + 4y = 10$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\gcd(9,12) = 3 \\mid 30$, so solvable; dividing gives $3x + 4y = 10$ with coprime coefficients."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s04",
+      "concepts": ["linear-diophantine-solvability"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A trap: $8x + 12y = 30$ with non-coprime coefficients. Decide whether ANY integer solution exists.",
+      "steps": [
+        { "instruction": "Compute $\\gcd(8, 12)$.", "answer": "4", "accept": [], "hint": "Both divisible by 4." },
+        { "instruction": "Compute $30 \\bmod 4$.", "answer": "2", "accept": [], "hint": "$28 = 7 \\cdot 4$, remainder 2." },
+        { "instruction": "So does $8x + 12y = 30$ have an integer solution? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Nonzero remainder means impossible." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$\\gcd(8,12) = 4$ but $30 \\bmod 4 = 2 \\ne 0$: the left side is always a multiple of 4, so it can never equal 30. No solution."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s05",
+      "concepts": ["particular-solution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find one integer solution $(x, y)$ of $3x + 5y = 19$ by inspection.",
+      "steps": [
+        { "instruction": "Try $x = 3$. Then $5y = 19 - 9 = 10$. Solve for $y$.", "answer": "2", "accept": ["y=2"], "hint": "$10 \\div 5$." },
+        { "instruction": "State the $x$-value of this solution.", "answer": "3", "accept": ["x=3"], "hint": "You chose $x = 3$." }
+      ],
+      "finalAnswer": { "value": "x = 3, y = 2", "unit": "" },
+      "solutionNarrative": "$3(3) + 5(2) = 9 + 10 = 19$, so $(x, y) = (3, 2)$ is a particular solution."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s06",
+      "concepts": ["particular-solution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use extended Euclid to find a particular solution of $7x + 5y = 3$. Report the $x$ and $y$ the method produces.",
+      "steps": [
+        { "instruction": "Extended Euclid gives $7(-2) + 5(3) = 1$. Scale by 3: $x_0 = 3 \\cdot (-2)$. What is $x_0$?", "answer": "-6", "accept": ["x=-6"], "hint": "$3 \\cdot (-2)$." },
+        { "instruction": "And $y_0 = 3 \\cdot 3$. What is $y_0$?", "answer": "9", "accept": ["y=9"], "hint": "$3 \\cdot 3$." },
+        { "instruction": "Check: $7 \\cdot (-6) + 5 \\cdot 9 = $ ?", "answer": "3", "accept": [], "hint": "$-42 + 45$." }
+      ],
+      "finalAnswer": { "value": "x = -6, y = 9", "unit": "" },
+      "solutionNarrative": "Scaling the Bézout pair $(-2, 3)$ by 3 gives $(x_0, y_0) = (-6, 9)$: $7(-6) + 5(9) = 3$."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s07",
+      "concepts": ["particular-solution"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find a particular solution of $6x + 9y = 21$. First divide by $\\gcd(6,9) = 3$, then solve.",
+      "steps": [
+        { "instruction": "Confirm $\\gcd(6,9) = 3$ divides 21: compute $21 \\div 3$.", "answer": "7", "accept": [], "hint": "The reduced equation is $2x + 3y = 7$." },
+        { "instruction": "Solve $2x + 3y = 7$ by inspection. Take $x = 2$; then what is $y$?", "answer": "1", "accept": ["y=1"], "hint": "$3y = 7 - 4 = 3$." },
+        { "instruction": "State the $x$-value ($x = 2$ also solves the original).", "answer": "2", "accept": ["x=2"], "hint": "Check: $6(2) + 9(1) = 21$." }
+      ],
+      "finalAnswer": { "value": "x = 2, y = 1", "unit": "" },
+      "solutionNarrative": "Divide by 3: $2x + 3y = 7$ gives $(2, 1)$, and $6(2) + 9(1) = 21$."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s08",
+      "concepts": ["general-solution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $3x + 5y = 19$ with particular solution $(3, 2)$, the general solution uses increments $\\frac{5}{g}$ on $x$ and $\\frac{3}{g}$ on $y$, where $g = \\gcd(3,5)$. Find them.",
+      "steps": [
+        { "instruction": "Compute $g = \\gcd(3, 5)$.", "answer": "1", "accept": [], "hint": "Coprime." },
+        { "instruction": "The increment on $x$ is $5 / g$. Compute it.", "answer": "5", "accept": [], "hint": "$5 \\div 1$." },
+        { "instruction": "The increment on $y$ is $3 / g$ (subtracted). Compute it.", "answer": "3", "accept": [], "hint": "$3 \\div 1$." }
+      ],
+      "finalAnswer": { "value": "x = 3 + 5t, y = 2 - 3t", "unit": "" },
+      "solutionNarrative": "$g = 1$, so all solutions are $x = 3 + 5t$, $y = 2 - 3t$ for integer $t$."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s09",
+      "concepts": ["general-solution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The equation $6x + 10y = 14$ has particular solution $(4, -1)$. Its general solution uses increments $\\frac{10}{g}$ and $\\frac{6}{g}$ with $g = \\gcd(6,10)$. Find $g$ and both increments.",
+      "steps": [
+        { "instruction": "Compute $g = \\gcd(6, 10)$.", "answer": "2", "accept": [], "hint": "Both even." },
+        { "instruction": "Increment on $x$: $10 / 2 = $ ?", "answer": "5", "accept": [], "hint": "$10 \\div 2$." },
+        { "instruction": "Increment on $y$: $6 / 2 = $ ?", "answer": "3", "accept": [], "hint": "$6 \\div 2$." }
+      ],
+      "finalAnswer": { "value": "x = 4 + 5t, y = -1 - 3t", "unit": "" },
+      "solutionNarrative": "$g = 2$, so $x = 4 + 5t$, $y = -1 - 3t$. Using $10/2$ and $6/2$ (not 10 and 6) is essential — the classic pitfall."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s10",
+      "concepts": ["general-solution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Using the general solution of $5x + 3y = 40$ (particular $(x_0, y_0) = (8, 0)$; increments $x \\mathbin{+}= 3$, $y \\mathbin{-}= 5$), find the solution with the smallest positive $x$.",
+      "steps": [
+        { "instruction": "The $x$-values run $\\dots, 5, 8, 11, \\dots$ in steps of 3. What is the smallest POSITIVE $x$?", "answer": "2", "accept": [], "hint": "Reduce 8 modulo 3 into $1..3$: $8 \\to 5 \\to 2$." },
+        { "instruction": "The corresponding $y$ (from $5x + 3y = 40$): compute it.", "answer": "10", "accept": ["y=10"], "hint": "$y = (40 - 5 \\cdot 2)/3 = 30/3$." }
+      ],
+      "finalAnswer": { "value": "x = 2, y = 10", "unit": "" },
+      "solutionNarrative": "Stepping $x$ down by 3 from 8: $8 \\to 5 \\to 2$ (smallest positive), giving $y = 10$: $5(2) + 3(10) = 40$."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s11",
+      "concepts": ["pythagorean-triples"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Verify that $(5, 12, 13)$ is a Pythagorean triple.",
+      "steps": [
+        { "instruction": "Compute $5^2 + 12^2$.", "answer": "169", "accept": [], "hint": "$25 + 144$." },
+        { "instruction": "Compute $13^2$.", "answer": "169", "accept": [], "hint": "$13 \\cdot 13$." },
+        { "instruction": "Equal — is it a Pythagorean triple? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Both are 169." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$5^2 + 12^2 = 169 = 13^2$, so $(5, 12, 13)$ is a Pythagorean triple."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s12",
+      "concepts": ["pythagorean-triples"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use Euclid's formula with $m = 3$, $n = 2$ to build a Pythagorean triple: $a = m^2 - n^2$, $b = 2mn$, $c = m^2 + n^2$.",
+      "steps": [
+        { "instruction": "Compute $a = 3^2 - 2^2$.", "answer": "5", "accept": [], "hint": "$9 - 4$." },
+        { "instruction": "Compute $b = 2 \\cdot 3 \\cdot 2$.", "answer": "12", "accept": [], "hint": "$2mn$." },
+        { "instruction": "Compute $c = 3^2 + 2^2$.", "answer": "13", "accept": [], "hint": "$9 + 4$." }
+      ],
+      "finalAnswer": { "value": "(5, 12, 13)", "unit": "" },
+      "solutionNarrative": "Euclid's formula gives $(5, 12, 13)$, and $5^2 + 12^2 = 169 = 13^2$."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s13",
+      "concepts": ["pythagorean-triples"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "With $m = 4$, $n = 2$, build the triple, verify it, and decide whether it is PRIMITIVE (entries share no common factor).",
+      "steps": [
+        { "instruction": "Compute $c = 4^2 + 2^2$ (hypotenuse).", "answer": "20", "accept": [], "hint": "$16 + 4$." },
+        { "instruction": "The legs are $a = 16 - 4 = 12$ and $b = 2 \\cdot 4 \\cdot 2 = 16$. Compute $12^2 + 16^2$ (should equal $20^2$).", "answer": "400", "accept": [], "hint": "$144 + 256 = 400 = 20^2$." },
+        { "instruction": "Compute $\\gcd(12, 16)$ to test primitivity.", "answer": "4", "accept": [], "hint": "Both divisible by 4." },
+        { "instruction": "Is $(12, 16, 20)$ primitive? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "The entries share the factor 4." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$(12, 16, 20) = 4 \\cdot (3, 4, 5)$ is NOT primitive — $m = 4, n = 2$ are not coprime, so the formula yields a scaled copy."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s14",
+      "concepts": ["linear-diophantine-solvability", "particular-solution"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "You have 5-cent and 8-cent stamps. Can you make exactly 39 cents, and how? Solve $5x + 8y = 39$ in nonnegative integers.",
+      "steps": [
+        { "instruction": "Solvable? Compute $\\gcd(5, 8)$.", "answer": "1", "accept": [], "hint": "Coprime, and $1 \\mid 39$." },
+        { "instruction": "Find nonnegative $x$ (number of 5-cent stamps) with $5x + 8y = 39$. Try $x = 3$: then $8y = 24$, so this works. State $x$.", "answer": "3", "accept": ["x=3"], "hint": "$5 \\cdot 3 = 15$, leaving $24 = 8 \\cdot 3$." },
+        { "instruction": "How many 8-cent stamps ($y$)?", "answer": "3", "accept": ["y=3"], "hint": "$39 - 15 = 24 = 8 \\cdot 3$." }
+      ],
+      "finalAnswer": { "value": "x = 3, y = 3", "unit": "" },
+      "solutionNarrative": "$5(3) + 8(3) = 39$: three of each stamp. Coprime values make every large amount reachable."
+    },
+    {
+      "id": "number-theory.diophantine-equations.s15",
+      "concepts": ["general-solution", "particular-solution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A recipe needs exactly 23 liters made from 4-liter and 7-liter jugs poured in full: $4x + 7y = 23$. Find the nonnegative solution.",
+      "steps": [
+        { "instruction": "Solvable? $\\gcd(4, 7) = $ ?", "answer": "1", "accept": [], "hint": "Coprime." },
+        { "instruction": "Find nonnegative $x$ (4-liter pours). Try $x = 4$: $4 \\cdot 4 = 16$, leaving $7 = 7 \\cdot 1$. State $x$.", "answer": "4", "accept": ["x=4"], "hint": "$23 - 16 = 7$." },
+        { "instruction": "How many 7-liter pours ($y$)?", "answer": "1", "accept": ["y=1"], "hint": "$7 = 7 \\cdot 1$." }
+      ],
+      "finalAnswer": { "value": "x = 4, y = 1", "unit": "" },
+      "solutionNarrative": "$4(4) + 7(1) = 23$: four 4-liter pours and one 7-liter pour. (The general solution $x = 4 + 7t$, $y = 1 - 4t$ has this as its only nonnegative member.)"
+    },
+    {
+      "id": "number-theory.diophantine-equations.s16",
+      "concepts": ["pythagorean-triples"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A carpenter uses the 3-4-5 rule to make a right angle: mark 3 units on one edge, 4 on the other; the diagonal should be 5. Verify $3^2 + 4^2 = 5^2$.",
+      "steps": [
+        { "instruction": "Compute $3^2 + 4^2$.", "answer": "25", "accept": [], "hint": "$9 + 16$." },
+        { "instruction": "Compute $5^2$.", "answer": "25", "accept": [], "hint": "$5 \\cdot 5$." },
+        { "instruction": "Equal, so the corner is a true right angle? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "The converse of the Pythagorean theorem." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$3^2 + 4^2 = 25 = 5^2$, so the 3-4-5 corner is exactly square — an integer triple doing real carpentry."
+    }
+  ]
+}

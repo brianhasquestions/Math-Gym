@@ -1,0 +1,282 @@
+{
+  "id": "game-theory.zero-sum-and-minimax",
+  "subject": "game-theory",
+  "title": "Zero-Sum Games and Minimax",
+  "prerequisites": ["game-theory.mixed-strategies"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "zero-sum-payoffs",
+      "label": "Zero-sum payoff matrices",
+      "microLesson": "A game is **zero-sum** when the players' payoffs always add to zero: whatever one wins, the other loses. That lets a single matrix describe everything. By convention the entries are the ROW player's payoff; the COLUMN player receives the negative. The row player wants each entry LARGE (it maximizes), the column player wants it SMALL (it minimizes). Micro-example: in the matrix $\\begin{smallmatrix} 3 & -1 \\\\ -2 & 4 \\end{smallmatrix}$, the top-left cell pays the row player $3$ and the column player $-3$. Reading a cell is just reading two numbers that sum to zero. Poker (ignoring the rake), matching pennies, and most head-to-head competitions are zero-sum."
+    },
+    {
+      "id": "maximin-and-minimax",
+      "label": "Maximin and minimax values",
+      "microLesson": "Each player hedges against the worst. The row player computes, for each of its rows, the WORST (minimum) entry it could be pushed to, then picks the row with the LARGEST such worst-case — its **maximin**. The column player computes, for each column, the LARGEST entry (its worst case, since it pays out), then picks the column with the SMALLEST such value — its **minimax**. Micro-example: for $\\begin{smallmatrix} 4 & 1 \\\\ 2 & 3 \\end{smallmatrix}$, row minimums are $1$ and $2$ so maximin $=2$; column maximums are $4$ and $3$ so minimax $=3$. Maximin is the payoff the row player can guarantee; minimax is the most the column player can be forced to give. Always $\\text{maximin} \\le \\text{minimax}$."
+    },
+    {
+      "id": "saddle-points",
+      "label": "Saddle points and the value of a game",
+      "microLesson": "When maximin EQUALS minimax, the shared number is the **value** of the game and the cell that achieves it is a **saddle point** — simultaneously the smallest entry in its row and the largest in its column. At a saddle, pure strategies suffice: neither player can improve by deviating alone, so it is a Nash equilibrium in pure strategies. Micro-example: in $\\begin{smallmatrix} 5 & 8 \\\\ 1 & 3 \\end{smallmatrix}$, maximin $= \\min(5,8)=5$ matches minimax $=\\min(5,3)... $ wait — row mins are $5,1$ so maximin $=5$; column maxes are $5,8$ so minimax $=5$: the $(1,1)$ cell with value $5$ is the saddle. If maximin $<$ minimax there is NO pure saddle and the players must randomize."
+    },
+    {
+      "id": "mixed-value-2x2",
+      "label": "Mixed value of a 2×2 game",
+      "microLesson": "When a $2\\times2$ zero-sum game has NO saddle, the row player randomizes to make itself indifferent to the column player's choice. With entries $\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}$, the **value** is $v = \\dfrac{ad - bc}{a + d - b - c}$ and the row player plays the top row (Up) with probability $p = \\dfrac{d - c}{a + d - b - c}$. Micro-example: matching pennies $\\begin{smallmatrix} 1 & -1 \\\\ -1 & 1 \\end{smallmatrix}$ gives $v = \\frac{1-1}{1+1+1+1}=0$ and $p = \\frac{1+1}{4}=\\tfrac12$ — mix 50/50 for a fair game. The optimal mix is precisely what makes you unexploitable: a rational opponent can do no better than the value against it."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Pure competition, distilled to one matrix\n\nSome games are pure conflict: every dollar you win is a dollar your opponent loses. Poker at the table, a penalty kick, a tennis serve aimed left or right, two armies choosing where to concentrate force — in all of them the interests are exactly opposed. Game theorists call these **zero-sum games**, and they have a beautiful property: because the two payoffs always sum to zero, a *single* matrix captures the whole game. By convention the entries are the **row player's** payoff; the **column player** silently receives the negative of each. The row player wants big numbers (it **maximizes**); the column player wants small numbers (it **minimizes**).\n\nHere is a $2\\times2$ example, with the row player's actions **Up**/**Down** and the column player's **Left**/**Right**:\n\n| | Left | Right |\n| Up | 4 | 1 |\n| Down | 2 | 3 |\n\nThe $(\\text{Up},\\text{Left})$ cell pays the row player $4$, so the column player gets $-4$. That is all the information in the game.\n\n## Playing it safe: maximin and minimax\n\nNeither player controls the whole matrix — the row player picks only the **row**, the column player picks only the **column**. So each reasons about the worst that could happen.\n\n**The row player's maximin.** For each row, ask: *if the column player were out to hurt me, what is the smallest entry I could be pushed to?* Then choose the row whose worst case is best.\n\n- Row Up's worst case: $\\min(4, 1) = 1$.\n- Row Down's worst case: $\\min(2, 3) = 2$.\n- The row player picks the larger of these worst cases: **maximin** $= \\max(1, 2) = 2$ (play Down).\n\nMaximin is a *guarantee*: by playing Down, the row player is assured at least $2$, whatever the column player does.\n\n**The column player's minimax.** The column player pays out these entries, so for each column it asks: *what is the largest I might have to pay?* Then it chooses the column whose worst case is smallest.\n\n- Column Left's worst case (for the column player): $\\max(4, 2) = 4$.\n- Column Right's worst case: $\\max(1, 3) = 3$.\n- The column player picks the smaller: **minimax** $= \\min(4, 3) = 3$ (play Right).\n\nMinimax is the column player's guarantee that it will never lose more than $3$. A foundational fact holds in every zero-sum game:\n\n$$\\text{maximin} \\;\\le\\; \\text{minimax}.$$\n\nThe safest-guaranteed floor never exceeds the worst-forced ceiling. Here $2 \\le 3$.\n\n## Saddle points: when pure strategies are enough\n\nSometimes the two values **coincide**. When $\\text{maximin} = \\text{minimax}$, that shared number is the **value of the game**, and the cell that achieves it is a **saddle point** — an entry that is *simultaneously the smallest in its row and the largest in its column*. Consider:\n\n| | Left | Right |\n| Up | 5 | 8 |\n| Down | 1 | 3 |\n\nRow minimums are $5$ (Up) and $1$ (Down), so maximin $= 5$. Column maximums are $5$ (Left) and $8$ (Right), so minimax $= 5$. They agree, and the $(\\text{Up}, \\text{Left})$ cell — value $5$ — is the saddle. At a saddle **neither player can improve by deviating alone**: it is a pure-strategy Nash equilibrium. The row player plays Up, the column player plays Left, and the game is worth $5$ to the row player.\n\nThe name comes from the geometry: like a horse's saddle, the surface curves up in one direction (across the row it is a minimum) and down in the other (down the column it is a maximum). Not every game has one — and that is exactly when randomization enters.\n\n## No saddle? Then you must mix\n\nWhen maximin $<$ minimax there is **no pure saddle**, and a player who commits to a single row or column can be exploited. The classic example is **matching pennies**:\n\n| | Heads | Tails |\n| Heads | 1 | -1 |\n| Tails | -1 | 1 |\n\nRow minimums are both $-1$ (maximin $= -1$); column maximums are both $1$ (minimax $= 1$). Since $-1 < 1$, no pure strategy is safe — whatever pure choice you make, the opponent can beat it. The resolution is a **mixed strategy**: randomize so your opponent cannot predict you.\n\nFor a $2\\times2$ zero-sum game with entries\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix},$$\n\nthe row player chooses the mixing probability that makes the column player **indifferent** between its two columns. Working that out gives the compact formulas\n\n$$v = \\frac{ad - bc}{a + d - b - c}, \\qquad P(\\text{Up}) = \\frac{d - c}{a + d - b - c},$$\n\nwhere $v$ is the **value** of the game (the row player's guaranteed expected payoff) and $P(\\text{Up})$ is the optimal probability on the top row. For matching pennies, $v = \\frac{1 - 1}{1 + 1 + 1 + 1} = 0$ and $P(\\text{Heads}) = \\frac{1 + 1}{4} = \\tfrac12$ — mix 50/50, and the game is fair.\n\n### A pitfall worth flagging\n\nThe mixed-value formula is **only valid when there is no saddle point**. If you blindly apply it to a game that *does* have a saddle, the denominator or the probability can fall outside $[0,1]$ and the 'value' it reports is meaningless. So the discipline is always: **first check for a saddle** (compare maximin and minimax). If they are equal, read the value straight off the saddle and use pure strategies. Only if they differ do you reach for the mixing formula.\n\n## The minimax theorem, in one breath\n\nVon Neumann's **minimax theorem** (1928) guarantees that *every* finite zero-sum game has a value — a number $v$ that the row player can guarantee to win at least, and the column player can guarantee to lose at most — provided both are allowed to mix. Pure-strategy saddle points are the special case where mixing is unnecessary. This single theorem launched the mathematical study of games, and it is why 'play to minimize your maximum loss' — **minimax** — became the watchword for decision-making under pure adversarial uncertainty."
+  },
+  "application": {
+    "summary": "Zero-sum reasoning is the math of pure competition: security and adversarial ML (worst-case robustness), competitive pricing and bidding wars, sports strategy (serve/return direction, play-calling), and military planning. Maximin gives you a guaranteed floor; the mixed-strategy value tells you exactly how to randomize so a smart opponent cannot exploit you.",
+    "domains": ["security and adversarial ML", "competitive business strategy", "sports analytics", "military and defense planning", "auditing and inspection games"],
+    "workedExample": "**A penalty kick, solved.** A striker can shoot Left or Right; the goalkeeper can dive Left or Right. Model the striker as the row player, with entries = the striker's scoring probability (in percent). Suppose:\n\n| | Keeper Left | Keeper Right |\n| Shoot Left | 40 | 90 |\n| Shoot Right | 80 | 30 |\n\n*Step 1 — check for a saddle.* Row minimums: Shoot Left $\\to \\min(40, 90) = 40$; Shoot Right $\\to \\min(80, 30) = 30$. Maximin $= 40$. Column maximums: Keeper Left $\\to \\max(40, 80) = 80$; Keeper Right $\\to \\max(90, 30) = 90$. Minimax $= 80$. Since $40 < 80$, there is **no saddle** — a striker who always shoots the same way gets read and stopped. The kicker must mix.\n\n*Step 2 — apply the $2\\times2$ formulas* with $a = 40$, $b = 90$, $c = 80$, $d = 30$. Denominator $a + d - b - c = 40 + 30 - 90 - 80 = -100$. Value $v = \\dfrac{ad - bc}{-100} = \\dfrac{40\\cdot30 - 90\\cdot80}{-100} = \\dfrac{1200 - 7200}{-100} = \\dfrac{-6000}{-100} = 60$. So with optimal play the striker scores about **60%** of the time.\n\n*Step 3 — the mixing probability.* $P(\\text{Shoot Left}) = \\dfrac{d - c}{a + d - b - c} = \\dfrac{30 - 80}{-100} = \\dfrac{-50}{-100} = \\tfrac12$. The striker should shoot Left **half** the time. That 50/50 randomization is what makes the keeper indifferent — and empirical studies of real penalty kicks find pros mix remarkably close to their game-theoretic optima. The lesson generalizes: against a thinking adversary, the *unpredictable* strategy is the *optimal* one.",
+    "domainNotes": [
+      "**Security / adversarial ML:** training a classifier against a worst-case attacker is a zero-sum game; the robust model is the maximin strategy, guaranteeing performance no matter which attack is chosen.",
+      "**Competitive strategy:** two firms fighting for a fixed market share play (approximately) zero-sum; minimax pricing caps your worst-case loss when the rival's move is unknown.",
+      "**Sports:** serve direction, pitch selection, and run/pass play-calling are mixed-strategy problems — predictable players get exploited, so optimal play is deliberate randomization near the game value.",
+      "**Defense planning:** allocating limited defenses across targets an attacker will probe is a saddle-point / minimax problem; you protect the position that minimizes your maximum vulnerability.",
+      "**Inspection games:** an auditor choosing whom to inspect versus an agent choosing whether to cheat is zero-sum; the mixing probability sets the audit rate that makes cheating unprofitable."
+    ]
+  },
+  "generators": [
+    "gt2-zerosum-1", "gt2-zerosum-2", "gt2-zerosum-3",
+    "gt2-maximin-1", "gt2-maximin-2", "gt2-maximin-3",
+    "gt2-saddle-1", "gt2-saddle-2", "gt2-saddle-3",
+    "gt2-mixedval-1", "gt2-mixedval-2", "gt2-mixedval-3"
+  ],
+  "problems": [
+    {
+      "id": "game-theory.zero-sum-and-minimax.s01",
+      "concepts": ["zero-sum-payoffs"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A zero-sum game has this payoff matrix (entries are the ROW player's payoff; the column player receives the negative):\n\n| | Left | Right |\n| Up | 3 | -1 |\n| Down | -2 | 4 |",
+      "steps": [
+        { "instruction": "If the row player plays Up and the column player plays Left, what is the ROW player's payoff? (A number.)", "answer": "3", "accept": [], "hint": "Top-left entry." },
+        { "instruction": "In that same cell, what does the COLUMN player receive? (The negative of the row payoff.)", "answer": "-3", "accept": [], "hint": "Zero-sum: the two payoffs add to 0." },
+        { "instruction": "If the row player plays Down and the column player plays Right, what is the ROW player's payoff?", "answer": "4", "accept": [], "hint": "Bottom-right entry." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "One matrix says it all: (Up, Left) pays the row player $3$, so the column player gets $-3$; (Down, Right) pays the row player $4$. In a zero-sum game every gain is exactly the other side's loss."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s02",
+      "concepts": ["zero-sum-payoffs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A zero-sum game (entries = ROW player's payoff):\n\n| | Left | Right |\n| Up | 6 | 2 |\n| Down | 1 | 5 |\n\nThe row player wants the LARGEST payoff; the column player wants it SMALL.",
+      "steps": [
+        { "instruction": "If the column player is committed to Left, which row does the row player prefer — \"Up\" or \"Down\"?", "answer": "Up", "accept": ["up"], "hint": "Compare the Left-column entries 6 and 1." },
+        { "instruction": "What payoff does the row player get from that best response to Left? (A number.)", "answer": "6", "accept": [], "hint": "The larger of 6 and 1." },
+        { "instruction": "If the column player is committed to Right, which row does the row player prefer — \"Up\" or \"Down\"?", "answer": "Down", "accept": ["down"], "hint": "Compare the Right-column entries 2 and 5." }
+      ],
+      "finalAnswer": { "value": "Down", "unit": "" },
+      "solutionNarrative": "Against a fixed column the row player just takes the larger entry: against Left, $6 > 1$ picks Up; against Right, $5 > 2$ picks Down. Best responses are read straight off the single zero-sum matrix."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s03",
+      "concepts": ["zero-sum-payoffs"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two rival firms each pick a price move. The table is Firm R's profit change in \\$M (zero-sum: Firm C's change is the negative). Rows are Firm R's moves, columns are Firm C's:\n\n| | Left | Right |\n| Up | 5 | -2 |\n| Down | -3 | 4 |",
+      "steps": [
+        { "instruction": "What is the single BEST (largest) outcome anywhere in the table for Firm R? (A number.)", "answer": "5", "accept": [], "hint": "Scan every entry for the maximum." },
+        { "instruction": "In that best-for-R cell, what is Firm C's profit change? (Negative of R's.)", "answer": "-5", "accept": [], "hint": "Zero-sum: $-(5)$." },
+        { "instruction": "What is the WORST (smallest) outcome anywhere in the table for Firm R?", "answer": "-3", "accept": [], "hint": "Scan for the minimum entry." },
+        { "instruction": "Firm R cannot simply pick the cell with its best outcome. Whose choice controls which COLUMN is played — \"Firm R\" or \"Firm C\"?", "answer": "Firm C", "accept": ["firmc", "c", "firm c"], "hint": "R controls the row; the opponent controls the column." }
+      ],
+      "finalAnswer": { "value": "-3", "unit": "" },
+      "solutionNarrative": "R's best cell pays $5$ (C loses $5$); R's worst pays $-3$. But R only picks the row while Firm C picks the column, so R cannot force its favorite cell. That tension is exactly what maximin resolves."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s04",
+      "concepts": ["maximin-and-minimax"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A zero-sum game (entries = ROW player's payoff):\n\n| | Left | Right |\n| Up | 4 | 1 |\n| Down | 2 | 3 |\n\nThe row player reasons pessimistically: each row could be pushed to its WORST (smallest) value.",
+      "steps": [
+        { "instruction": "Row Up's worst-case (minimum) payoff? (A number.)", "answer": "1", "accept": [], "hint": "The smaller of 4 and 1." },
+        { "instruction": "Row Down's worst-case (minimum) payoff?", "answer": "2", "accept": [], "hint": "The smaller of 2 and 3." },
+        { "instruction": "The row player's MAXIMIN is the LARGER of those two worst-cases. What is it? (A number.)", "answer": "2", "accept": [], "hint": "max of the two row-minimums." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Row minimums are $1$ (Up) and $2$ (Down); the maximin is the larger, $2$. By playing Down the row player guarantees itself at least $2$ regardless of the column player."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s05",
+      "concepts": ["maximin-and-minimax"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The same zero-sum game (entries = ROW player's payoff):\n\n| | Left | Right |\n| Up | 4 | 1 |\n| Down | 2 | 3 |\n\nNow take the COLUMN player's view: it pays out these entries, so for each column the row player will push the payoff to that column's LARGEST value.",
+      "steps": [
+        { "instruction": "Column Left's worst-case for the column player (its MAXIMUM entry)? (A number.)", "answer": "4", "accept": [], "hint": "The larger of 4 and 2." },
+        { "instruction": "Column Right's worst-case (its MAXIMUM entry)?", "answer": "3", "accept": [], "hint": "The larger of 1 and 3." },
+        { "instruction": "The column player's MINIMAX is the SMALLER of those two column-maximums. What is it?", "answer": "3", "accept": [], "hint": "min of the two column-maximums." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Column maximums are $4$ (Left) and $3$ (Right); the minimax is the smaller, $3$. Note maximin $= 2 \\le 3 =$ minimax — the guaranteed floor never exceeds the forced ceiling."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s06",
+      "concepts": ["maximin-and-minimax", "saddle-points"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 3×3 zero-sum battle. Two commanders each pick a front; the table is the row commander's payoff (entries = ROW player's payoff):\n\n| | Left | Center | Right |\n| Up | 3 | 6 | 4 |\n| Middle | 5 | 7 | 8 |\n| Down | 2 | 1 | 6 |",
+      "steps": [
+        { "instruction": "List each row's minimum, then take the LARGEST. What is the maximin value? (A number.)", "answer": "5", "accept": [], "hint": "Row minimums: 3, 5, 1 — take the max." },
+        { "instruction": "Which row achieves the maximin — \"Up\", \"Middle\", or \"Down\"?", "answer": "Middle", "accept": ["middle"], "hint": "The row whose minimum equals 5." },
+        { "instruction": "List each column's maximum, then take the SMALLEST. What is the minimax value?", "answer": "5", "accept": [], "hint": "Column maximums: 5, 7, 8 — take the min." },
+        { "instruction": "Do maximin and minimax coincide, signaling a saddle point? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Compare 5 and 5." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Row minimums $3, 5, 1$ give maximin $= 5$ (row Middle); column maximums $5, 7, 8$ give minimax $= 5$. They coincide, so the $(\\text{Middle}, \\text{Left})$ cell of value $5$ is a saddle point — pure strategies suffice."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s07",
+      "concepts": ["saddle-points"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A zero-sum game (entries = ROW player's payoff):\n\n| | Left | Right |\n| Up | 5 | 8 |\n| Down | 1 | 3 |\n\nA saddle point (pure value) exists exactly when maximin equals minimax.",
+      "steps": [
+        { "instruction": "The maximin here is 5 and the minimax is 5. Is there a saddle point? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Equal maximin and minimax means yes." },
+        { "instruction": "What is the game's value (the common payoff at the saddle)? (A number.)", "answer": "5", "accept": [], "hint": "It equals the shared maximin/minimax." },
+        { "instruction": "Which ROW is the saddle in — \"Up\" or \"Down\"?", "answer": "Up", "accept": ["up"], "hint": "Row Up's minimum equals the value 5." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Maximin $= 5 =$ minimax, so the $(\\text{Up}, \\text{Left})$ cell is a saddle and the value of the game is $5$. That entry is the smallest in its row and the largest in its column, so neither player gains by deviating alone."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s08",
+      "concepts": ["saddle-points"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A zero-sum game (entries = ROW player's payoff):\n\n| | Left | Right |\n| Up | 2 | -1 |\n| Down | -1 | 1 |\n\nDecide whether a pure-strategy saddle point exists.",
+      "steps": [
+        { "instruction": "Compute the maximin (max of the row minimums). (A number.)", "answer": "-1", "accept": [], "hint": "Row minimums: -1 and -1." },
+        { "instruction": "Compute the minimax (min of the column maximums).", "answer": "1", "accept": [], "hint": "Column maximums: 2 and 1." },
+        { "instruction": "Is there a saddle point? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Only if the two values are equal — here $-1 \\ne 1$." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Maximin $= -1$ sits strictly below minimax $= 1$, so NO pure saddle exists. Committing to any single row can be exploited — the players must mix (this is a matching-pennies-type game)."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s09",
+      "concepts": ["saddle-points"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 3×3 zero-sum inspection game (entries = ROW auditor's payoff):\n\n| | Left | Center | Right |\n| Up | 4 | 7 | 5 |\n| Middle | 6 | 8 | 9 |\n| Down | 3 | 2 | 7 |\n\nFind the saddle point and name its cell.",
+      "steps": [
+        { "instruction": "Is there a saddle point (does maximin equal minimax)? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Row minimums 4, 6, 2 give maximin 6; column maximums 6, 8, 9 give minimax 6." },
+        { "instruction": "What is the value of the game? (A number.)", "answer": "6", "accept": [], "hint": "The shared maximin/minimax value." },
+        { "instruction": "Which ROW is the saddle in — \"Up\", \"Middle\", or \"Down\"?", "answer": "Middle", "accept": ["middle"], "hint": "The maximin-achieving row." },
+        { "instruction": "Which COLUMN is the saddle in — \"Left\", \"Center\", or \"Right\"?", "answer": "Left", "accept": ["left"], "hint": "The minimax-achieving column." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "Maximin $=$ minimax $= 6$, so the saddle sits at $(\\text{Middle}, \\text{Left})$: that $6$ is the smallest in row Middle and the largest in column Left, so neither player gains by deviating alone."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s10",
+      "concepts": ["mixed-value-2x2"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The matching-pennies game (entries = ROW player's payoff):\n\n| | Heads | Tails |\n| Heads | 1 | -1 |\n| Tails | -1 | 1 |\n\nThis has no saddle point.",
+      "steps": [
+        { "instruction": "Does this game have a pure saddle point? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Maximin $-1$ is below minimax $1$." },
+        { "instruction": "By symmetry, with what probability should the row player play Heads? (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5"], "hint": "Equal weight on the two rows." },
+        { "instruction": "What is the value of this symmetric game? (A number.)", "answer": "0", "accept": [], "hint": "Wins and losses cancel by symmetry." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "With no saddle, both players mix 50/50; the value is $0$ — a fair game. Any predictable bias would be exploited, so unpredictability IS the optimal strategy."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s11",
+      "concepts": ["mixed-value-2x2"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A 2×2 zero-sum game with NO saddle (entries = ROW player's payoff), labelled $a$ (Up,Left), $b$ (Up,Right), $c$ (Down,Left), $d$ (Down,Right):\n\n| | Left | Right |\n| Up | 2 | 5 |\n| Down | 4 | 1 |\n\nUse $v = \\dfrac{ad-bc}{a+d-b-c}$ and $P(\\text{Up}) = \\dfrac{d-c}{a+d-b-c}$.",
+      "steps": [
+        { "instruction": "Compute the common denominator $a+d-b-c$. (A number.)", "answer": "-6", "accept": [], "hint": "$2 + 1 - 5 - 4$." },
+        { "instruction": "Compute the value $v = (ad-bc)/(a+d-b-c)$. (A fraction or decimal.)", "answer": "3", "accept": ["18/6", "3.0"], "hint": "Numerator $= 2\\cdot1 - 5\\cdot4 = 2 - 20 = -18$; divide by $-6$." },
+        { "instruction": "Compute $P(\\text{Up}) = (d-c)/(a+d-b-c)$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "-3/-6"], "hint": "$(1 - 4)/(-6) = -3/-6$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Denominator $= 2 + 1 - 5 - 4 = -6$. Value $v = (2 - 20)/(-6) = -18/-6 = 3$, and $P(\\text{Up}) = (1 - 4)/(-6) = -3/-6 = \\tfrac12$. No saddle means the value is reached only by mixing."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s12",
+      "concepts": ["mixed-value-2x2"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A penalty kick, striker as row player (entries = striker's scoring % ):\n\n| | Keeper Left | Keeper Right |\n| Shoot Left | 40 | 90 |\n| Shoot Right | 80 | 30 |\n\nHere $a=40$, $b=90$, $c=80$, $d=30$.",
+      "steps": [
+        { "instruction": "Confirm no saddle: is maximin strictly less than minimax? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Row minimums 40, 30 give maximin 40; column maximums 80, 90 give minimax 80." },
+        { "instruction": "Compute the denominator $a+d-b-c$. (A number.)", "answer": "-100", "accept": [], "hint": "$40 + 30 - 90 - 80$." },
+        { "instruction": "Compute the value $v = (ad-bc)/(a+d-b-c)$. (A number.)", "answer": "60", "accept": ["-6000/-100", "60.0"], "hint": "Numerator $= 40\\cdot30 - 90\\cdot80 = 1200 - 7200 = -6000$." },
+        { "instruction": "Compute $P(\\text{Shoot Left}) = (d-c)/(a+d-b-c)$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "-50/-100"], "hint": "$(30 - 80)/(-100) = -50/-100$." }
+      ],
+      "finalAnswer": { "value": "60", "unit": "" },
+      "solutionNarrative": "Maximin $40 <$ minimax $80$, so no saddle. Denominator $= -100$; value $= -6000/-100 = 60$; $P(\\text{Shoot Left}) = -50/-100 = \\tfrac12$. Optimal play scores about 60% — and the striker shoots each way half the time so the keeper can never read the shot."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s13",
+      "concepts": ["zero-sum-payoffs", "maximin-and-minimax"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A zero-sum game (entries = ROW player's payoff):\n\n| | Left | Right |\n| Up | 7 | 3 |\n| Down | 2 | 6 |",
+      "steps": [
+        { "instruction": "What does the column player receive in the (Up, Left) cell? (Negative of the row payoff 7.)", "answer": "-7", "accept": [], "hint": "Zero-sum." },
+        { "instruction": "What is the row player's maximin (max of the row minimums 3 and 2)? (A number.)", "answer": "3", "accept": [], "hint": "Row minimums are 3 (Up) and 2 (Down)." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "The column player gets $-7$ in the top-left cell. Row minimums are $3$ and $2$, so maximin $= 3$: the row player guarantees at least $3$ by playing Up."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s14",
+      "concepts": ["saddle-points", "maximin-and-minimax"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two networks schedule a show against each other for one time slot (entries = Network R's audience share advantage):\n\n| | Left | Right |\n| Up | 3 | 7 |\n| Down | 2 | 4 |",
+      "steps": [
+        { "instruction": "Compute the maximin (max of the row minimums). (A number.)", "answer": "3", "accept": [], "hint": "Row minimums: 3 and 2." },
+        { "instruction": "Compute the minimax (min of the column maximums).", "answer": "3", "accept": [], "hint": "Column maximums: 3 and 7." },
+        { "instruction": "Is there a saddle point? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Equal maximin and minimax." },
+        { "instruction": "What is the value of the game? (A number.)", "answer": "3", "accept": [], "hint": "The shared value." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Maximin $= 3 =$ minimax, so the $(\\text{Up}, \\text{Left})$ cell is a saddle with value $3$. Network R plays Up, secures a $3$-point share advantage, and cannot be exploited — no randomization needed."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s15",
+      "concepts": ["mixed-value-2x2", "saddle-points"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A 2×2 zero-sum game (entries = ROW player's payoff), $a=1$ (Up,Left), $b=4$, $c=3$, $d=2$:\n\n| | Left | Right |\n| Up | 1 | 4 |\n| Down | 3 | 2 |\n\nFirst check for a saddle, then find the value and mixing if none exists.",
+      "steps": [
+        { "instruction": "Compute the maximin (max of row minimums). (A number.)", "answer": "2", "accept": [], "hint": "Row minimums: 1 (Up) and 2 (Down)." },
+        { "instruction": "Compute the minimax (min of column maximums).", "answer": "3", "accept": [], "hint": "Column maximums: 3 (Left) and 4 (Right)." },
+        { "instruction": "Since $2 \\ne 3$, no saddle. Compute the value $v = (ad-bc)/(a+d-b-c)$. (A fraction or decimal.)", "answer": "5/2", "accept": ["2.5", "-10/-4"], "hint": "Denominator $= 1 + 2 - 4 - 3 = -4$; numerator $= 1\\cdot2 - 4\\cdot3 = -10$." },
+        { "instruction": "Compute $P(\\text{Up}) = (d-c)/(a+d-b-c)$. (A fraction or decimal.)", "answer": "1/4", "accept": ["0.25", "-1/-4"], "hint": "$(2 - 3)/(-4) = -1/-4$." }
+      ],
+      "finalAnswer": { "value": "5/2", "unit": "" },
+      "solutionNarrative": "Maximin $2 <$ minimax $3$, so no saddle. Denominator $= -4$; value $= -10/-4 = \\tfrac52 = 2.5$; $P(\\text{Up}) = -1/-4 = \\tfrac14$. The row player plays Up only a quarter of the time, mixing to reach the value $2.5$."
+    },
+    {
+      "id": "game-theory.zero-sum-and-minimax.s16",
+      "concepts": ["mixed-value-2x2"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Two firms choose an aggressive or cautious ad campaign; it is zero-sum in market-share points (entries = Firm R's gain), $a=3$ (Up,Left), $b=-2$, $c=-4$, $d=5$:\n\n| | Left | Right |\n| Up | 3 | -2 |\n| Down | -4 | 5 |\n\nNo saddle exists here.",
+      "steps": [
+        { "instruction": "Compute the denominator $a+d-b-c$. (A number.)", "answer": "14", "accept": [], "hint": "$3 + 5 - (-2) - (-4) = 3 + 5 + 2 + 4$." },
+        { "instruction": "Compute the value $v = (ad-bc)/(a+d-b-c)$. (A fraction or decimal.)", "answer": "1/2", "accept": ["0.5", "7/14"], "hint": "Numerator $= 3\\cdot5 - (-2)(-4) = 15 - 8 = 7$." },
+        { "instruction": "Compute $P(\\text{Up}) = (d-c)/(a+d-b-c)$. (A fraction or decimal.)", "answer": "9/14", "accept": [], "hint": "$(5 - (-4))/14 = 9/14$." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "Denominator $= 3 + 5 + 2 + 4 = 14$. Value $= 7/14 = \\tfrac12$, and Firm R plays the aggressive (Up) campaign with probability $9/14$. The positive value means R has a slight structural edge, realized only by mixing."
+    }
+  ]
+}

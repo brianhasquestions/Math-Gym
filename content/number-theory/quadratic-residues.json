@@ -1,0 +1,271 @@
+{
+  "id": "number-theory.quadratic-residues",
+  "subject": "number-theory",
+  "title": "Quadratic Residues",
+  "prerequisites": ["number-theory.congruences-and-crt"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "qr-basics",
+      "label": "Quadratic residues mod $p$",
+      "microLesson": "An integer $a$ (not divisible by $p$) is a QUADRATIC RESIDUE mod $p$ if $x^2 \\equiv a \\pmod p$ has a solution; otherwise it is a non-residue. To list the QRs mod a prime $p$, square $1, 2, \\dots, p-1$ and reduce. Example mod 7: $1^2=1$, $2^2=4$, $3^2=2$, $4^2=2$, $5^2=4$, $6^2=1$, so the QRs are $\\{1, 2, 4\\}$. Exactly half of the nonzero residues — $(p-1)/2$ of them — are QRs, and each QR has exactly two square roots, $x$ and $p-x$."
+    },
+    {
+      "id": "legendre-symbol",
+      "label": "The Legendre symbol $\\left(\\frac{a}{p}\\right)$",
+      "microLesson": "For an odd prime $p$ and $p \\nmid a$, the Legendre symbol is $+1$ if $a$ is a QR mod $p$, and $-1$ if not. Euler's criterion computes it: $\\left(\\frac{a}{p}\\right) \\equiv a^{(p-1)/2} \\pmod p$, where the result is either $1$ or $p-1 \\equiv -1$. Example: $\\left(\\frac{2}{7}\\right)$: $2^{3} = 8 \\equiv 1 \\pmod 7$, so the symbol is $+1$ (indeed $3^2 = 9 \\equiv 2$). The modulus MUST be an odd prime for the symbol to be defined."
+    },
+    {
+      "id": "eulers-criterion-and-properties",
+      "label": "Euler's criterion and symbol properties",
+      "microLesson": "Euler's criterion $a^{(p-1)/2} \\equiv \\left(\\frac{a}{p}\\right) \\pmod p$ makes the symbol MULTIPLICATIVE: $\\left(\\frac{ab}{p}\\right) = \\left(\\frac{a}{p}\\right)\\left(\\frac{b}{p}\\right)$, so a product of QRs is a QR and QR·non-residue is a non-residue. Two supplementary laws: $\\left(\\frac{-1}{p}\\right) = +1$ iff $p \\equiv 1 \\pmod 4$, and $\\left(\\frac{2}{p}\\right) = +1$ iff $p \\equiv \\pm 1 \\pmod 8$. These let you split and simplify symbols quickly."
+    },
+    {
+      "id": "reciprocity-light",
+      "label": "Quadratic reciprocity",
+      "microLesson": "Gauss's law of quadratic reciprocity links the symbols of two distinct odd primes: $\\left(\\frac{p}{q}\\right)\\left(\\frac{q}{p}\\right) = (-1)^{\\frac{p-1}{2}\\cdot\\frac{q-1}{2}}$. In words: $\\left(\\frac{p}{q}\\right) = \\left(\\frac{q}{p}\\right)$ UNLESS both $p \\equiv q \\equiv 3 \\pmod 4$, in which case they differ by a sign. This lets you FLIP a hard symbol into an easier one with a smaller modulus. Example: $\\left(\\frac{5}{7}\\right) = \\left(\\frac{7}{5}\\right) = \\left(\\frac{2}{5}\\right) = -1$ (since $5 \\equiv 1 \\bmod 4$, no sign flip)."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Which numbers are perfect squares on a clock?\n\nOn the ordinary number line, the squares $1, 4, 9, 16, \\dots$ are easy to spot. But modulo a prime $p$, squaring *wraps around*, and the question 'is $a$ a square here?' becomes genuinely subtle — and genuinely useful. An integer $a$ with $p \\nmid a$ is a **quadratic residue** (QR) mod $p$ if\n\n$$x^2 \\equiv a \\pmod{p}$$\n\nhas a solution, and a **non-residue** if it does not. This single yes/no fact controls whether square roots exist mod $p$, and it is the arithmetic behind primality tests, cryptographic protocols, and the deepest reciprocity laws in number theory.\n\n## Listing the residues\n\nTo find every QR mod $p$, just square each nonzero residue and reduce. Mod 7:\n\n$$1^2 \\equiv 1,\\quad 2^2 \\equiv 4,\\quad 3^2 \\equiv 2,\\quad 4^2 \\equiv 2,\\quad 5^2 \\equiv 4,\\quad 6^2 \\equiv 1.$$\n\nThe distinct values are $\\{1, 2, 4\\}$ — the quadratic residues mod 7 — and $\\{3, 5, 6\\}$ are the non-residues. Two things are always true for an odd prime:\n\n- **Exactly $(p-1)/2$ nonzero residues are QRs.** The map $x \\mapsto x^2$ sends $x$ and $-x$ to the same value, folding $p-1$ inputs onto $(p-1)/2$ outputs.\n- **Each QR has exactly two square roots**, $x$ and $p - x$. Above, $2$ has roots $3$ and $4 = 7-3$.\n\n## The Legendre symbol\n\nWe package the QR question into a symbol. For an **odd prime** $p$ and $p \\nmid a$:\n\n$$\\left(\\frac{a}{p}\\right) = \\begin{cases} +1 & a \\text{ is a quadratic residue mod } p, \\\\ -1 & a \\text{ is a non-residue.} \\end{cases}$$\n\n(The symbol is $0$ when $p \\mid a$.) The requirement that $p$ be an **odd prime** is not decoration: Euler's criterion below needs $(p-1)/2$ to make sense, and mod 2 or mod a composite the whole theory changes.\n\n## Euler's criterion: computing the symbol\n\nThe computational engine is **Euler's criterion**:\n\n$$\\left(\\frac{a}{p}\\right) \\equiv a^{(p-1)/2} \\pmod{p},$$\n\nwhere the right side is guaranteed to be $1$ or $p-1$ (which represents $-1$). It follows from Fermat: $a^{p-1} \\equiv 1$, so $a^{(p-1)/2}$ is a square root of 1, hence $\\pm 1$; and it equals $+1$ exactly when $a$ is a square.\n\n### Worked evaluation: $\\left(\\frac{3}{11}\\right)$\n\nHere $p = 11$, so $(p-1)/2 = 5$. Compute $3^5 \\bmod 11$ by squaring:\n\n$$3^2 = 9,\\qquad 3^4 = 9^2 = 81 \\equiv 4,\\qquad 3^5 = 3^4 \\cdot 3 = 4 \\cdot 3 = 12 \\equiv 1 \\pmod{11}.$$\n\nSince $3^5 \\equiv 1$, we get $\\left(\\frac{3}{11}\\right) = +1$: $3$ is a quadratic residue mod 11 (indeed $5^2 = 25 \\equiv 3$). Had the power come out $10 \\equiv -1$, the symbol would be $-1$.\n\n## Properties that do the heavy lifting\n\nEuler's criterion instantly gives **multiplicativity**:\n\n$$\\left(\\frac{ab}{p}\\right) = \\left(\\frac{a}{p}\\right)\\left(\\frac{b}{p}\\right).$$\n\nSo the product of two residues is a residue, a residue times a non-residue is a non-residue, and two non-residues multiply to a residue ($(-1)(-1) = 1$). Two **supplementary laws** handle the special tops $-1$ and $2$:\n\n$$\\left(\\frac{-1}{p}\\right) = (-1)^{(p-1)/2} = \\begin{cases} +1 & p \\equiv 1 \\pmod 4 \\\\ -1 & p \\equiv 3 \\pmod 4, \\end{cases}\\qquad \\left(\\frac{2}{p}\\right) = \\begin{cases} +1 & p \\equiv \\pm 1 \\pmod 8 \\\\ -1 & p \\equiv \\pm 3 \\pmod 8. \\end{cases}$$\n\n### Pitfall\n\n> The Legendre symbol $\\left(\\frac{a}{p}\\right)$ and Euler's criterion require $p$ to be an **odd prime**. Do not apply them with an even modulus or a composite modulus — for composites you need the Jacobi symbol, which is a different (weaker) object.\n\n## Quadratic reciprocity: the crown jewel\n\nGauss's **law of quadratic reciprocity** relates the two directions of the symbol for distinct odd primes $p, q$:\n\n$$\\left(\\frac{p}{q}\\right)\\left(\\frac{q}{p}\\right) = (-1)^{\\frac{p-1}{2}\\cdot\\frac{q-1}{2}}.$$\n\nThe sign is $-1$ only when **both** $p \\equiv 3$ and $q \\equiv 3 \\pmod 4$; otherwise the two symbols are equal. This is the flip that turns a symbol with a large top into one with a smaller top.\n\n### Worked flip: $\\left(\\frac{7}{11}\\right)$\n\nBoth $7 \\equiv 3$ and $11 \\equiv 3 \\pmod 4$, so the sign factor is $-1$:\n\n$$\\left(\\frac{7}{11}\\right) = -\\left(\\frac{11}{7}\\right) = -\\left(\\frac{4}{7}\\right).$$\n\nNow $4 = 2^2$ is a perfect square, so $\\left(\\frac{4}{7}\\right) = +1$, giving $\\left(\\frac{7}{11}\\right) = -1$. Check by Euler: $7^5 \\bmod 11 = 10 \\equiv -1$. ✓ The reciprocity route replaced a fifth-power computation with a reduction and a glance.\n\n## Where this leads\n\nQuadratic residues are the simplest case of a vast theory (higher reciprocity, class field theory), and they show up wherever square roots mod $p$ matter: the Solovay–Strassen and Miller–Rabin primality tests, the Rabin cryptosystem (whose security rests on the hardness of taking square roots mod $n = pq$), and the Goldwasser–Micali encryption scheme, whose semantic security is precisely the difficulty of distinguishing residues from non-residues without the factorization. The clean, computable Legendre symbol is the doorway to all of it."
+  },
+  "application": {
+    "summary": "Quadratic residues decide when square roots exist modulo a prime. The Legendre symbol, computed by Euler's criterion and simplified by quadratic reciprocity, is the workhorse behind probabilistic primality tests, the Rabin and Goldwasser–Micali cryptosystems, and the theory of reciprocity laws.",
+    "domains": ["cryptography", "pure mathematics", "computer science", "algorithms"],
+    "workedExample": "**Distinguishing residues — the seed of Goldwasser–Micali.**\n\nThe Goldwasser–Micali cipher encrypts a single bit by choosing a residue for a 0 and a non-residue for a 1, mod $n = pq$. To decrypt, the holder of $p$ and $q$ checks each Legendre symbol; an attacker without the factorization cannot tell the two cases apart. Here is the residue check that powers it, at prime scale.\n\nIs $6$ a quadratic residue mod 19? Use multiplicativity and the supplementary law:\n\n$$\\left(\\frac{6}{19}\\right) = \\left(\\frac{2}{19}\\right)\\left(\\frac{3}{19}\\right).$$\n\nSince $19 \\equiv 3 \\pmod 8$, we have $\\left(\\frac{2}{19}\\right) = -1$. For $\\left(\\frac{3}{19}\\right)$, reciprocity (both $3, 19 \\equiv 3 \\bmod 4$, so a sign flip) gives $\\left(\\frac{3}{19}\\right) = -\\left(\\frac{19}{3}\\right) = -\\left(\\frac{1}{3}\\right) = -1$. Multiplying: $\\left(\\frac{6}{19}\\right) = (-1)(-1) = +1$, so 6 IS a residue (indeed $5^2 = 25 \\equiv 6 \\pmod{19}$).\n\nThat verdict — computed with two lookups and a multiply, never a brute-force search — is exactly the operation the private key performs to read each encrypted bit. The security gap is that mod a composite $n=pq$, the same verdict is out of reach without $p$ and $q$.",
+    "domainNotes": [
+      "**Primality testing:** the Solovay–Strassen test checks whether $a^{(n-1)/2} \\equiv \\left(\\frac{a}{n}\\right) \\pmod n$ (Jacobi symbol); composites fail for at least half the bases.",
+      "**Rabin cryptosystem:** encryption is $c = m^2 \\bmod n$; decryption takes square roots mod $n = pq$, which is as hard as factoring $n$.",
+      "**Goldwasser–Micali:** semantic security equals the quadratic residuosity assumption — telling residues from non-residues mod a composite without its factorization.",
+      "**Pure theory:** quadratic reciprocity is the first of the reciprocity laws that grow into class field theory; Gauss called it the 'golden theorem' and gave eight proofs."
+    ]
+  },
+  "generators": [
+    "nt2-qrbasic-1", "nt2-qrbasic-2", "nt2-qrbasic-3",
+    "nt2-legendre-1", "nt2-legendre-2", "nt2-legendre-3",
+    "nt2-euler-1", "nt2-euler-2", "nt2-euler-3",
+    "nt2-recip-1", "nt2-recip-2", "nt2-recip-3"
+  ],
+  "problems": [
+    {
+      "id": "number-theory.quadratic-residues.s01",
+      "concepts": ["qr-basics"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "List the quadratic residues mod 5 by squaring, then decide whether 3 is a QR mod 5.",
+      "steps": [
+        { "instruction": "Compute $2^2 \\bmod 5$.", "answer": "4", "accept": [], "hint": "$4 \\bmod 5$." },
+        { "instruction": "The QRs mod 5 are $\\{1, 4\\}$. Is 3 in that set? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "$1^2=1, 2^2=4, 3^2=4, 4^2=1$ — only 1 and 4 appear." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "Squaring gives QRs $\\{1, 4\\}$ mod 5, so 3 is a non-residue."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s02",
+      "concepts": ["qr-basics"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Work with the quadratic residues mod 11.",
+      "steps": [
+        { "instruction": "Compute $5^2 \\bmod 11$.", "answer": "3", "accept": [], "hint": "$25 = 22 + 3$." },
+        { "instruction": "How many nonzero quadratic residues does an odd prime $p = 11$ have? (i.e. $(p-1)/2$)", "answer": "5", "accept": [], "hint": "$(11-1)/2$. The QRs are $\\{1, 3, 4, 5, 9\\}$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$5^2 \\equiv 3 \\pmod{11}$, and there are $(p-1)/2 = 5$ QRs mod 11: $\\{1, 3, 4, 5, 9\\}$."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s03",
+      "concepts": ["qr-basics"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "4 is a quadratic residue mod 13. Find both of its square roots (they form a $\\pm$ pair $x$ and $13 - x$).",
+      "steps": [
+        { "instruction": "Find the smaller root $x$ with $x^2 \\equiv 4 \\pmod{13}$, $x$ in $1..6$.", "answer": "2", "accept": [], "hint": "$2^2 = 4$." },
+        { "instruction": "The other root is $13 - 2 = $ ?", "answer": "11", "accept": [], "hint": "$11^2 = 121 = 9\\cdot13 + 4 \\equiv 4$." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "" },
+      "solutionNarrative": "$2^2 \\equiv 4$ and $11^2 \\equiv 4 \\pmod{13}$: the two square roots of 4 are 2 and $11 = 13 - 2$."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s04",
+      "concepts": ["legendre-symbol"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the Legendre symbol $\\left(\\frac{2}{7}\\right)$ using Euler's criterion (answer $+1$ or $-1$).",
+      "steps": [
+        { "instruction": "The exponent is $(7-1)/2 = $ ?", "answer": "3", "accept": [], "hint": "Half of 6." },
+        { "instruction": "Compute $2^3 \\bmod 7$.", "answer": "1", "accept": [], "hint": "$8 = 7 + 1$." },
+        { "instruction": "A result of 1 means the symbol is $+1$. So $\\left(\\frac{2}{7}\\right) = $ ?", "answer": "1", "accept": [], "hint": "$2^3 \\equiv 1$, so 2 is a QR." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$2^3 = 8 \\equiv 1 \\pmod 7$, so $\\left(\\frac{2}{7}\\right) = +1$ (indeed $3^2 = 9 \\equiv 2$)."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s05",
+      "concepts": ["legendre-symbol"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\left(\\frac{3}{11}\\right)$ via Euler's criterion.",
+      "steps": [
+        { "instruction": "Exponent $(11-1)/2 = $ ?", "answer": "5", "accept": [], "hint": "Half of 10." },
+        { "instruction": "Compute $3^4 \\bmod 11$ (square twice: $3^2 = 9$, then $9^2$).", "answer": "4", "accept": [], "hint": "$81 = 77 + 4$." },
+        { "instruction": "So $3^5 = 3^4 \\cdot 3 \\equiv 4 \\cdot 3 = 12 \\bmod 11 = $ ?", "answer": "1", "accept": [], "hint": "$12 - 11 = 1$." },
+        { "instruction": "The power is 1, so $\\left(\\frac{3}{11}\\right) = $ ?", "answer": "1", "accept": [], "hint": "1 means $+1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$3^5 \\equiv 1 \\pmod{11}$, so $\\left(\\frac{3}{11}\\right) = +1$ ($5^2 = 25 \\equiv 3$)."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s06",
+      "concepts": ["legendre-symbol"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $\\left(\\frac{5}{13}\\right)$ via Euler's criterion, watching for the $-1$ outcome.",
+      "steps": [
+        { "instruction": "Exponent $(13-1)/2 = $ ?", "answer": "6", "accept": [], "hint": "Half of 12." },
+        { "instruction": "Compute $5^2 \\bmod 13$.", "answer": "12", "accept": [], "hint": "$25 = 13 + 12$; note $12 \\equiv -1$." },
+        { "instruction": "So $5^6 = (5^2)^3 \\equiv 12^3 \\equiv (-1)^3 \\pmod{13}$. As a residue in $0..12$, that is:", "answer": "12", "accept": [], "hint": "$(-1)^3 = -1 \\equiv 12$." },
+        { "instruction": "A power of $12 \\equiv -1$ means the symbol is:", "answer": "-1", "accept": [], "hint": "Non-residue." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$5^2 \\equiv -1 \\pmod{13}$, so $5^6 \\equiv (-1)^3 = -1$, giving $\\left(\\frac{5}{13}\\right) = -1$: 5 is a non-residue mod 13."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s07",
+      "concepts": ["eulers-criterion-and-properties"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is $-1$ a quadratic residue mod 13? Use the rule $\\left(\\frac{-1}{p}\\right) = +1$ iff $p \\equiv 1 \\pmod 4$.",
+      "steps": [
+        { "instruction": "Compute $13 \\bmod 4$.", "answer": "1", "accept": [], "hint": "$13 = 12 + 1$." },
+        { "instruction": "Since $13 \\equiv 1 \\pmod 4$, $\\left(\\frac{-1}{13}\\right) = $ ? (Give $+1$ or $-1$.)", "answer": "1", "accept": [], "hint": "$p \\equiv 1 \\Rightarrow +1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$13 \\equiv 1 \\pmod 4$, so $\\left(\\frac{-1}{13}\\right) = +1$; indeed $5^2 = 25 \\equiv -1 \\pmod{13}$."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s08",
+      "concepts": ["eulers-criterion-and-properties", "legendre-symbol"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use multiplicativity to find $\\left(\\frac{6}{7}\\right)$ from $\\left(\\frac{2}{7}\\right)$ and $\\left(\\frac{3}{7}\\right)$.",
+      "steps": [
+        { "instruction": "$\\left(\\frac{2}{7}\\right)$: since $7 \\equiv -1 \\pmod 8$, this is:", "answer": "1", "accept": [], "hint": "$p \\equiv \\pm 1 \\pmod 8 \\Rightarrow +1$." },
+        { "instruction": "$\\left(\\frac{3}{7}\\right)$ via Euler: $3^3 \\bmod 7 = 27 \\bmod 7 = $ ?", "answer": "6", "accept": [], "hint": "$27 = 21 + 6$; $6 \\equiv -1$." },
+        { "instruction": "So $\\left(\\frac{3}{7}\\right) = -1$. Multiply: $\\left(\\frac{6}{7}\\right) = (1)(-1) = $ ?", "answer": "-1", "accept": [], "hint": "Product of the two symbols." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$\\left(\\frac{2}{7}\\right) = +1$ and $\\left(\\frac{3}{7}\\right) = -1$, so $\\left(\\frac{6}{7}\\right) = -1$: 6 is a non-residue mod 7."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s09",
+      "concepts": ["eulers-criterion-and-properties"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\left(\\frac{2}{17}\\right)$ using the supplementary law for 2.",
+      "steps": [
+        { "instruction": "Compute $17 \\bmod 8$.", "answer": "1", "accept": [], "hint": "$17 = 16 + 1$." },
+        { "instruction": "Is $17 \\equiv \\pm 1 \\pmod 8$? So $\\left(\\frac{2}{17}\\right) = $ ? (Give $+1$ or $-1$.)", "answer": "1", "accept": [], "hint": "$r = 1$ qualifies, giving $+1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$17 \\equiv 1 \\pmod 8$, so $\\left(\\frac{2}{17}\\right) = +1$ (indeed $6^2 = 36 \\equiv 2 \\pmod{17}$)."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s10",
+      "concepts": ["reciprocity-light"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use quadratic reciprocity to relate $\\left(\\frac{5}{7}\\right)$ to $\\left(\\frac{7}{5}\\right)$, then evaluate.",
+      "steps": [
+        { "instruction": "Is either of 5, 7 congruent to 1 mod 4? ($5 \\bmod 4 = 1$.) So there is NO sign flip and $\\left(\\frac{5}{7}\\right) = \\left(\\frac{7}{5}\\right)$. Reduce the top: $7 \\bmod 5 = $ ?", "answer": "2", "accept": [], "hint": "$\\left(\\frac{7}{5}\\right) = \\left(\\frac{2}{5}\\right)$." },
+        { "instruction": "Evaluate $\\left(\\frac{2}{5}\\right)$: since $5 \\equiv \\pm 3 \\pmod 8$ (namely $5$), the value is:", "answer": "-1", "accept": [], "hint": "$5 \\bmod 8 = 5$, so $\\left(\\frac{2}{5}\\right) = -1$." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$5 \\equiv 1 \\pmod 4$, so no sign flip: $\\left(\\frac{5}{7}\\right) = \\left(\\frac{7}{5}\\right) = \\left(\\frac{2}{5}\\right) = -1$."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s11",
+      "concepts": ["reciprocity-light"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\left(\\frac{7}{11}\\right)$ using quadratic reciprocity.",
+      "steps": [
+        { "instruction": "Both $7 \\equiv 3$ and $11 \\equiv 3 \\pmod 4$. The sign factor $(-1)^{\\frac{7-1}{2}\\cdot\\frac{11-1}{2}}$ is:", "answer": "-1", "accept": [], "hint": "$3 \\cdot 5 = 15$ is odd, so $(-1)^{15} = -1$." },
+        { "instruction": "So $\\left(\\frac{7}{11}\\right) = -\\left(\\frac{11}{7}\\right) = -\\left(\\frac{4}{7}\\right)$. Now $4 = 2^2$ is a perfect square, so $\\left(\\frac{4}{7}\\right) = $ ?", "answer": "1", "accept": [], "hint": "A square is always a QR." },
+        { "instruction": "Combine: $\\left(\\frac{7}{11}\\right) = -1 \\cdot 1 = $ ?", "answer": "-1", "accept": [], "hint": "Sign times the flipped symbol." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "Both primes are $3 \\bmod 4$, so a sign flip: $\\left(\\frac{7}{11}\\right) = -\\left(\\frac{4}{7}\\right) = -1$. Euler check: $7^5 \\equiv 10 \\equiv -1 \\pmod{11}$."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s12",
+      "concepts": ["reciprocity-light", "eulers-criterion-and-properties"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\left(\\frac{5}{19}\\right)$ using the full reciprocity workflow: flip, reduce, evaluate.",
+      "steps": [
+        { "instruction": "Since $5 \\equiv 1 \\pmod 4$, the sign factor is $+1$ (no flip). So $\\left(\\frac{5}{19}\\right) = \\left(\\frac{19}{5}\\right)$. Reduce: $19 \\bmod 5 = $ ?", "answer": "4", "accept": [], "hint": "$19 = 15 + 4$." },
+        { "instruction": "Now $\\left(\\frac{4}{5}\\right)$: since $4 = 2^2$ is a perfect square, its value is:", "answer": "1", "accept": [], "hint": "Squares are residues." },
+        { "instruction": "So $\\left(\\frac{5}{19}\\right) = $ ?", "answer": "1", "accept": [], "hint": "$+1$ times $+1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$5 \\equiv 1 \\pmod 4$, so $\\left(\\frac{5}{19}\\right) = \\left(\\frac{19}{5}\\right) = \\left(\\frac{4}{5}\\right) = +1$: 5 is a residue mod 19 (indeed $9^2 = 81 \\equiv 5$)."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s13",
+      "concepts": ["qr-basics"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "List the quadratic residues mod 7 and confirm there are exactly $(7-1)/2 = 3$ of them.",
+      "steps": [
+        { "instruction": "Compute $3^2 \\bmod 7$.", "answer": "2", "accept": [], "hint": "$9 = 7 + 2$." },
+        { "instruction": "The distinct squares are $\\{1, 2, 4\\}$. How many QRs is that?", "answer": "3", "accept": [], "hint": "Count the set; it matches $(p-1)/2$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$1, 4, 2, 2, 4, 1$ are the squares of $1..6$ mod 7, giving QRs $\\{1, 2, 4\\}$ — exactly $(7-1)/2 = 3$."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s14",
+      "concepts": ["legendre-symbol"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\left(\\frac{10}{13}\\right)$ by first reducing, then applying Euler's criterion.",
+      "steps": [
+        { "instruction": "$10 \\bmod 13 = 10$ (already reduced). Compute $10^2 \\bmod 13$.", "answer": "9", "accept": [], "hint": "$100 = 91 + 9$." },
+        { "instruction": "Then $10^6 = (10^2)^3 \\equiv 9^3 \\pmod{13}$. Compute $9^2 \\bmod 13$.", "answer": "3", "accept": [], "hint": "$81 = 78 + 3$." },
+        { "instruction": "So $9^3 = 9^2 \\cdot 9 \\equiv 3 \\cdot 9 = 27 \\bmod 13 = $ ?", "answer": "1", "accept": [], "hint": "$27 = 26 + 1$." },
+        { "instruction": "The power is 1, so $\\left(\\frac{10}{13}\\right) = $ ?", "answer": "1", "accept": [], "hint": "$+1$: 10 is a residue." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$10^6 \\equiv 1 \\pmod{13}$, so $\\left(\\frac{10}{13}\\right) = +1$ (indeed $6^2 = 36 \\equiv 10 \\pmod{13}$)."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s15",
+      "concepts": ["eulers-criterion-and-properties"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is $-1$ a quadratic residue mod 7?",
+      "steps": [
+        { "instruction": "Compute $7 \\bmod 4$.", "answer": "3", "accept": [], "hint": "$7 = 4 + 3$." },
+        { "instruction": "Since $7 \\equiv 3 \\pmod 4$, $\\left(\\frac{-1}{7}\\right) = $ ? (Give $+1$ or $-1$.)", "answer": "-1", "accept": [], "hint": "$p \\equiv 3 \\Rightarrow -1$." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$7 \\equiv 3 \\pmod 4$, so $\\left(\\frac{-1}{7}\\right) = -1$: $-1 \\equiv 6$ is a non-residue mod 7."
+    },
+    {
+      "id": "number-theory.quadratic-residues.s16",
+      "concepts": ["reciprocity-light"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\left(\\frac{3}{13}\\right)$ using reciprocity, then confirm with Euler's criterion.",
+      "steps": [
+        { "instruction": "Since $13 \\equiv 1 \\pmod 4$, the sign factor is $+1$. So $\\left(\\frac{3}{13}\\right) = \\left(\\frac{13}{3}\\right)$. Reduce: $13 \\bmod 3 = $ ?", "answer": "1", "accept": [], "hint": "$13 = 12 + 1$." },
+        { "instruction": "$\\left(\\frac{1}{3}\\right)$ is always $+1$ (1 is a square). So the reciprocity answer for $\\left(\\frac{3}{13}\\right)$ is:", "answer": "1", "accept": [], "hint": "$+1 \\cdot +1$." },
+        { "instruction": "Confirm via Euler: $3^6 \\bmod 13$. First $3^3 = 27 \\bmod 13 = $ ?", "answer": "1", "accept": [], "hint": "$27 = 26 + 1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\left(\\frac{3}{13}\\right) = \\left(\\frac{13}{3}\\right) = \\left(\\frac{1}{3}\\right) = +1$; and $3^6 = (3^3)^2 \\equiv 1^2 = 1 \\pmod{13}$ confirms it (indeed $4^2 = 16 \\equiv 3$)."
+    }
+  ]
+}

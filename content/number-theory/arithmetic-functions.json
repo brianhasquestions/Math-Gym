@@ -1,0 +1,272 @@
+{
+  "id": "number-theory.arithmetic-functions",
+  "subject": "number-theory",
+  "title": "Arithmetic Functions",
+  "prerequisites": ["number-theory.divisibility-and-primes", "number-theory.congruences-and-crt"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "euler-totient",
+      "label": "Euler's totient $\\varphi(n)$",
+      "microLesson": "$\\varphi(n)$ counts the integers in $1..n$ that are coprime to $n$. Read it straight off the prime factorization: $\\varphi(n) = n\\prod_{p \\mid n}\\left(1 - \\frac{1}{p}\\right)$. For a prime, $\\varphi(p) = p-1$; for a prime power, $\\varphi(p^k) = p^k - p^{k-1}$. Example: $\\varphi(12) = \\varphi(2^2 \\cdot 3) = 12(1-\\tfrac12)(1-\\tfrac13) = 12 \\cdot \\tfrac12 \\cdot \\tfrac23 = 4$, and indeed $1, 5, 7, 11$ are the four units mod 12."
+    },
+    {
+      "id": "divisor-functions",
+      "label": "Divisor functions $d(n)$ and $\\sigma(n)$",
+      "microLesson": "Write $n = p_1^{e_1}\\cdots p_r^{e_r}$. The number of divisors is $d(n) = \\prod (e_i + 1)$, because each divisor picks an exponent $0..e_i$ for each prime. The sum of divisors is $\\sigma(n) = \\prod \\frac{p_i^{e_i+1}-1}{p_i-1}$, a product of geometric sums. Example: $18 = 2 \\cdot 3^2$ gives $d(18) = 2 \\cdot 3 = 6$ and $\\sigma(18) = (1+2)(1+3+9) = 3 \\cdot 13 = 39$ (divisors $1,2,3,6,9,18$)."
+    },
+    {
+      "id": "multiplicativity",
+      "label": "Multiplicative functions",
+      "microLesson": "A function $f$ is multiplicative when $f(mn) = f(m)f(n)$ for every COPRIME pair $m, n$ (coprimality is required — it fails otherwise). $\\varphi$, $d$, and $\\sigma$ are all multiplicative. This is why you compute them one prime power at a time and multiply: $\\varphi(72) = \\varphi(8)\\varphi(9) = 4 \\cdot 6 = 24$, since $\\gcd(8,9)=1$. A multiplicative function is pinned down entirely by its values on prime powers."
+    },
+    {
+      "id": "perfect-and-special-numbers",
+      "label": "Perfect, abundant, and deficient numbers",
+      "microLesson": "Compare $\\sigma(n)$ to $2n$. If $\\sigma(n) = 2n$ the number is PERFECT (its proper divisors sum to itself): $6 = 1+2+3$, and $\\sigma(6) = 12 = 2\\cdot6$. If $\\sigma(n) > 2n$ it is ABUNDANT (like 12: $\\sigma=28>24$); if $\\sigma(n) < 2n$ it is DEFICIENT (like every prime). Euclid's rule: whenever $2^p - 1$ is a Mersenne prime, $2^{p-1}(2^p-1)$ is perfect — that gives $6, 28, 496, 8128, \\dots$"
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Functions that read a number's fingerprint\n\nEvery positive integer has a unique prime factorization — its fingerprint. **Arithmetic functions** are the tools that read that fingerprint and report something useful: how many numbers below $n$ are coprime to it, how many divisors it has, what those divisors sum to. Three of them ($\\varphi$, $d$, $\\sigma$) run the number theory behind RSA, behind pseudorandom generators, and behind the ancient hunt for 'perfect' numbers. They all share one structural gift: they are **multiplicative**, so a hard computation on a big number collapses into easy computations on its prime powers.\n\n## Euler's totient $\\varphi(n)$\n\n$$\\varphi(n) = \\#\\{\\,a : 1 \\le a \\le n,\\ \\gcd(a, n) = 1\\,\\}$$\n\nThis counts the **units** mod $n$ — the residues that have a multiplicative inverse. The formula comes straight from the factorization:\n\n$$\\varphi(n) = n \\prod_{p \\mid n}\\left(1 - \\frac{1}{p}\\right).$$\n\nThe special cases you use constantly:\n\n- **Prime:** $\\varphi(p) = p - 1$ (everything below $p$ is coprime to it).\n- **Prime power:** $\\varphi(p^k) = p^k - p^{k-1}$ (strike out the $p^{k-1}$ multiples of $p$).\n\n### Worked example: $\\varphi(360)$\n\nFactor: $360 = 2^3 \\cdot 3^2 \\cdot 5$. Then\n\n$$\\varphi(360) = \\varphi(2^3)\\,\\varphi(3^2)\\,\\varphi(5) = (8 - 4)(9 - 3)(5 - 1) = 4 \\cdot 6 \\cdot 4 = 96.$$\n\nEquivalently $360 \\cdot \\tfrac12 \\cdot \\tfrac23 \\cdot \\tfrac45 = 96$. Ninety-six of the numbers from 1 to 360 share no factor with 360.\n\n## Counting and summing divisors: $d(n)$ and $\\sigma(n)$\n\nWrite $n = p_1^{e_1} \\cdots p_r^{e_r}$. A divisor of $n$ is built by choosing, for each prime $p_i$, an exponent from $0$ to $e_i$. That gives\n\n$$d(n) = \\prod_{i=1}^{r} (e_i + 1)$$\n\ndivisors in total. Summing all of them factors the same way, each prime contributing a geometric series:\n\n$$\\sigma(n) = \\prod_{i=1}^{r} \\left(1 + p_i + p_i^2 + \\cdots + p_i^{e_i}\\right) = \\prod_{i=1}^{r} \\frac{p_i^{e_i+1} - 1}{p_i - 1}.$$\n\n### Worked example: $d(600)$ and $\\sigma(600)$\n\n$600 = 2^3 \\cdot 3 \\cdot 5^2$. So\n\n$$d(600) = (3+1)(1+1)(2+1) = 4 \\cdot 2 \\cdot 3 = 24,$$\n$$\\sigma(600) = \\underbrace{(1+2+4+8)}_{15}\\,\\underbrace{(1+3)}_{4}\\,\\underbrace{(1+5+25)}_{31} = 15 \\cdot 4 \\cdot 31 = 1860.$$\n\nTwenty-four divisors, summing to 1860 — computed without ever listing them.\n\n## Multiplicativity: the reason it all factors\n\nA function $f : \\mathbb{Z}^+ \\to \\mathbb{C}$ is **multiplicative** if\n\n$$\\gcd(m, n) = 1 \\ \\Longrightarrow\\ f(mn) = f(m)\\,f(n).$$\n\n(If it holds for *all* $m, n$ it is called *completely* multiplicative; $\\varphi, d, \\sigma$ are multiplicative but not completely so.) Every multiplicative function satisfies $f(1) = 1$, and — crucially — is **determined entirely by its values on prime powers**, since\n\n$$f(p_1^{e_1} \\cdots p_r^{e_r}) = f(p_1^{e_1}) \\cdots f(p_r^{e_r}).$$\n\nThat is exactly why the boxed formulas above are products over primes. **The coprimality hypothesis is not optional.** $\\varphi(2 \\cdot 2) = \\varphi(4) = 2$, but $\\varphi(2)\\varphi(2) = 1 \\cdot 1 = 1$: the rule breaks the moment the factors share a prime. Always split into *coprime* blocks.\n\n### Pitfall\n\n> To use $\\varphi(mn) = \\varphi(m)\\varphi(n)$ (or the same for $d$, $\\sigma$), $m$ and $n$ must be coprime. Split $72$ as $8 \\cdot 9$ (coprime) — never as $6 \\cdot 12$ (they share a 2 and a 3).\n\n## Perfect numbers and their cousins\n\nCompare a number to the sum of its own divisors. Using $\\sigma(n)$, which *includes* $n$ itself, the proper-divisor sum is $\\sigma(n) - n$, so:\n\n- **Perfect:** $\\sigma(n) = 2n$. The proper divisors reconstruct the number. $6, 28, 496, 8128, \\dots$\n- **Abundant:** $\\sigma(n) > 2n$. Divisors overshoot; the smallest is $12$.\n- **Deficient:** $\\sigma(n) < 2n$. Divisors fall short; every prime and every prime power is deficient.\n\n**Euclid–Euler theorem.** If $2^p - 1$ is prime (a *Mersenne prime*), then $N = 2^{p-1}(2^p - 1)$ is perfect, and every *even* perfect number arises this way. Check $p = 3$: $2^3 - 1 = 7$ is prime, so $N = 4 \\cdot 7 = 28$, and $\\sigma(28) = \\sigma(4)\\sigma(7) = 7 \\cdot 8 = 56 = 2 \\cdot 28$. Whether any *odd* perfect number exists is one of the oldest open problems in mathematics.\n\n## Why these functions matter downstream\n\n$\\varphi(n)$ is the exponent that Euler's theorem reduces powers by, so it governs the size of the multiplicative group mod $n$ — the arena where Diffie–Hellman and RSA live. When those keys are chosen as $n = pq$, the value $\\varphi(n) = (p-1)(q-1)$ is trivial to compute if you know $p$ and $q$ and (apparently) hopeless otherwise: that asymmetry is the whole game. The divisor functions, meanwhile, are the first non-trivial multiplicative functions you meet, and the training ground for Dirichlet series and analytic number theory."
+  },
+  "application": {
+    "summary": "Arithmetic functions read a number's prime fingerprint: $\\varphi$ sizes the group of units (the backbone of Euler's theorem and RSA), while $d$ and $\\sigma$ count and sum divisors — the first multiplicative functions and the entry point to analytic number theory. Perfect numbers connect $\\sigma$ to a 2000-year-old quest.",
+    "domains": ["cryptography", "pure mathematics", "computer science", "history of mathematics"],
+    "workedExample": "**Sizing an RSA key's group without factoring shortcuts.**\n\nSuppose a toy RSA modulus is $n = 3233 = 61 \\cdot 53$. The decryption exponent is computed mod $\\varphi(n)$, so we need $\\varphi(3233)$.\n\nBecause 61 and 53 are distinct primes and $\\varphi$ is multiplicative,\n\n$$\\varphi(3233) = \\varphi(61)\\,\\varphi(53) = 60 \\cdot 52 = 3120.$$\n\nThat single number — the count of units mod 3233 — is what makes the private key exist and the whole scheme reversible. The punchline that motivates real key sizes: computing $\\varphi(pq) = (p-1)(q-1)$ took one multiplication *because we were handed the factors*. An attacker who sees only $n = 3233$ must first factor it. At 2048 bits that factoring step is, as far as anyone knows, infeasible — so $\\varphi(n)$ stays secret even though its formula is a one-liner. Arithmetic functions don't just describe numbers; here one of them is the trapdoor.",
+    "domainNotes": [
+      "**Cryptography:** RSA key generation needs $\\varphi(n) = (p-1)(q-1)$; its secrecy rests on the hardness of factoring $n$. $\\varphi$ also fixes the order of the unit group in Diffie–Hellman.",
+      "**Pseudorandom generators:** the period of a linear congruential or power generator mod $n$ is controlled by $\\varphi(n)$ and the multiplicative order of the multiplier.",
+      "**Analytic number theory:** $d(n)$ and $\\sigma(n)$ are the prototypes for Dirichlet series; $\\sum d(n)/n^s = \\zeta(s)^2$ and $\\sum \\sigma(n)/n^s = \\zeta(s)\\zeta(s-1)$.",
+      "**History and recreation:** perfect numbers date to Euclid; the Mersenne-prime search (GIMPS) that finds new ones is a distributed-computing landmark, and 'odd perfect number?' remains unsolved."
+    ]
+  },
+  "generators": [
+    "nt2-totient-1", "nt2-totient-2", "nt2-totient-3",
+    "nt2-divfun-1", "nt2-divfun-2", "nt2-divfun-3",
+    "nt2-mult-1", "nt2-mult-2", "nt2-mult-3",
+    "nt2-perfect-1", "nt2-perfect-2", "nt2-perfect-3"
+  ],
+  "problems": [
+    {
+      "id": "number-theory.arithmetic-functions.s01",
+      "concepts": ["euler-totient"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\varphi(7)$ and $\\varphi(9)$.",
+      "steps": [
+        { "instruction": "7 is prime, so $\\varphi(7) = 7 - 1$. What is it?", "answer": "6", "accept": [], "hint": "Every one of $1..6$ is coprime to 7." },
+        { "instruction": "$9 = 3^2$, so $\\varphi(9) = 9 - 3$. What is it?", "answer": "6", "accept": [], "hint": "Strike out the multiples of 3: only 3, 6, 9 fail." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$\\varphi(7) = 6$ (prime) and $\\varphi(9) = 9 - 3 = 6$ (prime power)."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s02",
+      "concepts": ["euler-totient"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute $\\varphi(12)$ from the factorization $12 = 2^2 \\cdot 3$.",
+      "steps": [
+        { "instruction": "Compute $\\varphi(2^2) = 4 - 2$.", "answer": "2", "accept": [], "hint": "Only 1 and 3 are coprime to 4." },
+        { "instruction": "Compute $\\varphi(3) = 3 - 1$.", "answer": "2", "accept": [], "hint": "1 and 2 are coprime to 3." },
+        { "instruction": "Multiply (coprime blocks): $\\varphi(12) = 2 \\cdot 2 = $ ?", "answer": "4", "accept": [], "hint": "The units mod 12 are 1, 5, 7, 11." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$\\varphi(12) = \\varphi(4)\\varphi(3) = 2 \\cdot 2 = 4$: exactly 1, 5, 7, 11 are coprime to 12."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s03",
+      "concepts": ["euler-totient", "multiplicativity"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $\\varphi(360)$ using $360 = 2^3 \\cdot 3^2 \\cdot 5$.",
+      "steps": [
+        { "instruction": "Compute $\\varphi(2^3) = 8 - 4$.", "answer": "4", "accept": [], "hint": "$2^3 - 2^2$." },
+        { "instruction": "Compute $\\varphi(3^2) = 9 - 3$.", "answer": "6", "accept": [], "hint": "$3^2 - 3$." },
+        { "instruction": "Compute $\\varphi(5) = 5 - 1$.", "answer": "4", "accept": [], "hint": "5 is prime." },
+        { "instruction": "Multiply across the coprime prime powers: $4 \\cdot 6 \\cdot 4 = $ ?", "answer": "96", "accept": [], "hint": "$4 \\cdot 6 = 24$, then $\\times 4$." }
+      ],
+      "finalAnswer": { "value": "96", "unit": "" },
+      "solutionNarrative": "$\\varphi(360) = \\varphi(8)\\varphi(9)\\varphi(5) = 4 \\cdot 6 \\cdot 4 = 96$."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s04",
+      "concepts": ["divisor-functions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $12 = 2^2 \\cdot 3$, find the number of divisors $d(12)$ and their sum $\\sigma(12)$.",
+      "steps": [
+        { "instruction": "The exponents are 2 and 1, so $d(12) = (2+1)(1+1)$. What is it?", "answer": "6", "accept": [], "hint": "Divisors: 1, 2, 3, 4, 6, 12." },
+        { "instruction": "Sum them: $\\sigma(12) = 1+2+3+4+6+12 = $ ?", "answer": "28", "accept": [], "hint": "Add all six divisors." }
+      ],
+      "finalAnswer": { "value": "28", "unit": "" },
+      "solutionNarrative": "$d(12) = 3 \\cdot 2 = 6$ and $\\sigma(12) = 28$ (divisors 1, 2, 3, 4, 6, 12)."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s05",
+      "concepts": ["divisor-functions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $8 = 2^3$, compute $d(8)$ and $\\sigma(8)$ using the prime-power formulas.",
+      "steps": [
+        { "instruction": "$d(2^3) = 3 + 1 = $ ?", "answer": "4", "accept": [], "hint": "Divisors $2^0, 2^1, 2^2, 2^3$." },
+        { "instruction": "$\\sigma(2^3) = 1 + 2 + 4 + 8 = $ ?", "answer": "15", "accept": [], "hint": "Or $\\frac{2^4 - 1}{2 - 1} = 15$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "$d(8) = 4$ and $\\sigma(8) = \\frac{2^4-1}{1} = 15$."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s06",
+      "concepts": ["divisor-functions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $600 = 2^3 \\cdot 3 \\cdot 5^2$, compute $d(600)$ and $\\sigma(600)$ by multiplying per-prime factors.",
+      "steps": [
+        { "instruction": "$d(600) = (3+1)(1+1)(2+1) = $ ?", "answer": "24", "accept": [], "hint": "$4 \\cdot 2 \\cdot 3$." },
+        { "instruction": "The 2-part of $\\sigma$: $1 + 2 + 4 + 8 = $ ?", "answer": "15", "accept": [], "hint": "$\\frac{2^4-1}{1}$." },
+        { "instruction": "The 5-part of $\\sigma$: $1 + 5 + 25 = $ ?", "answer": "31", "accept": [], "hint": "$\\frac{5^3-1}{4}$." },
+        { "instruction": "Combine with the 3-part $(1+3)=4$: $\\sigma(600) = 15 \\cdot 4 \\cdot 31 = $ ?", "answer": "1860", "accept": [], "hint": "$15 \\cdot 4 = 60$, then $\\times 31$." }
+      ],
+      "finalAnswer": { "value": "1860", "unit": "" },
+      "solutionNarrative": "$d(600) = 4 \\cdot 2 \\cdot 3 = 24$ and $\\sigma(600) = 15 \\cdot 4 \\cdot 31 = 1860$."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s07",
+      "concepts": ["multiplicativity"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use $\\varphi(mn) = \\varphi(m)\\varphi(n)$ for coprime $m, n$ to compute $\\varphi(15)$ from $15 = 3 \\cdot 5$.",
+      "steps": [
+        { "instruction": "$\\varphi(3) = $ ?", "answer": "2", "accept": [], "hint": "3 is prime." },
+        { "instruction": "$\\varphi(5) = $ ?", "answer": "4", "accept": [], "hint": "5 is prime." },
+        { "instruction": "Multiply (since $\\gcd(3,5)=1$): $\\varphi(15) = 2 \\cdot 4 = $ ?", "answer": "8", "accept": [], "hint": "The units mod 15 are 1,2,4,7,8,11,13,14." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$\\gcd(3,5)=1$, so $\\varphi(15) = \\varphi(3)\\varphi(5) = 2 \\cdot 4 = 8$."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s08",
+      "concepts": ["multiplicativity"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Is the function $f(n) = n + 1$ multiplicative? Test it on the coprime pair $2$ and $3$.",
+      "steps": [
+        { "instruction": "Compute $f(2 \\cdot 3) = f(6) = 6 + 1$.", "answer": "7", "accept": [], "hint": "Just add 1 to 6." },
+        { "instruction": "Compute $f(2) \\cdot f(3) = 3 \\cdot 4$.", "answer": "12", "accept": [], "hint": "$f(2) = 3$, $f(3) = 4$." },
+        { "instruction": "Since $7 \\ne 12$, is $f$ multiplicative? Type exactly 'multiplicative' or 'not multiplicative'.", "answer": "not multiplicative", "accept": ["not-multiplicative"], "hint": "A single counterexample settles it — and $f(1) = 2 \\ne 1$ already doomed it." }
+      ],
+      "finalAnswer": { "value": "not multiplicative", "unit": "" },
+      "solutionNarrative": "$f(6) = 7$ but $f(2)f(3) = 12$, so $f(n) = n+1$ is not multiplicative (and $f(1) = 2 \\ne 1$)."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s09",
+      "concepts": ["multiplicativity", "euler-totient"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A student writes $\\varphi(36) = \\varphi(6)\\varphi(6) = 2 \\cdot 2 = 4$. This is WRONG. Find the correct value and explain the error.",
+      "steps": [
+        { "instruction": "Why is the split $36 = 6 \\cdot 6$ illegal for multiplicativity? Because $\\gcd(6,6) = $ ?", "answer": "6", "accept": [], "hint": "The two factors are identical, so they share every factor." },
+        { "instruction": "Use a COPRIME split $36 = 4 \\cdot 9$. Compute $\\varphi(4)$.", "answer": "2", "accept": [], "hint": "Units mod 4 are 1, 3." },
+        { "instruction": "Compute $\\varphi(9)$.", "answer": "6", "accept": [], "hint": "$9 - 3$." },
+        { "instruction": "Multiply: $\\varphi(36) = 2 \\cdot 6 = $ ?", "answer": "12", "accept": [], "hint": "Now the blocks are coprime, so multiplication is valid." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$\\gcd(6,6) = 6 \\ne 1$, so $\\varphi(6\\cdot6) \\ne \\varphi(6)^2$. Splitting into coprime blocks $36 = 4 \\cdot 9$ gives $\\varphi(36) = \\varphi(4)\\varphi(9) = 2 \\cdot 6 = 12$."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s10",
+      "concepts": ["perfect-and-special-numbers"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Show that 6 is a perfect number by comparing $\\sigma(6)$ to $2 \\cdot 6$.",
+      "steps": [
+        { "instruction": "Sum all divisors of 6 (1, 2, 3, 6): $\\sigma(6) = $ ?", "answer": "12", "accept": [], "hint": "$1 + 2 + 3 + 6$." },
+        { "instruction": "Compare with $2 \\cdot 6 = 12$. Is 6 perfect, abundant, or deficient? Type exactly one of those.", "answer": "perfect", "accept": [], "hint": "$\\sigma(n) = 2n$ means perfect." }
+      ],
+      "finalAnswer": { "value": "perfect", "unit": "" },
+      "solutionNarrative": "$\\sigma(6) = 12 = 2 \\cdot 6$, so 6 is perfect: its proper divisors $1+2+3$ rebuild it."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s11",
+      "concepts": ["perfect-and-special-numbers"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify 12 by comparing $\\sigma(12)$ with $2 \\cdot 12$.",
+      "steps": [
+        { "instruction": "Compute $\\sigma(12)$ (sum of 1, 2, 3, 4, 6, 12).", "answer": "28", "accept": [], "hint": "Add all six divisors." },
+        { "instruction": "Compute the abundance $\\sigma(12) - 2 \\cdot 12 = 28 - 24$.", "answer": "4", "accept": [], "hint": "$2 \\cdot 12 = 24$." },
+        { "instruction": "A positive abundance means which class? Type 'perfect', 'abundant', or 'deficient'.", "answer": "abundant", "accept": [], "hint": "Divisors overshoot $2n$." }
+      ],
+      "finalAnswer": { "value": "abundant", "unit": "" },
+      "solutionNarrative": "$\\sigma(12) = 28 > 24 = 2 \\cdot 12$, so 12 is abundant — the smallest abundant number."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s12",
+      "concepts": ["perfect-and-special-numbers", "divisor-functions"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Verify Euclid's rule for $p = 5$: since $2^5 - 1 = 31$ is prime, $N = 2^4 \\cdot 31 = 496$ should be perfect.",
+      "steps": [
+        { "instruction": "Confirm the Mersenne prime: $2^5 - 1 = $ ?", "answer": "31", "accept": [], "hint": "$32 - 1$." },
+        { "instruction": "Compute $\\sigma(2^4) = 1 + 2 + 4 + 8 + 16$.", "answer": "31", "accept": [], "hint": "$\\frac{2^5 - 1}{1}$." },
+        { "instruction": "Since 31 is prime, $\\sigma(31) = 31 + 1 = $ ?", "answer": "32", "accept": [], "hint": "A prime has divisors 1 and itself." },
+        { "instruction": "So $\\sigma(496) = 31 \\cdot 32 = 992$. Is that equal to $2 \\cdot 496$? Type 'perfect', 'abundant', or 'deficient'.", "answer": "perfect", "accept": [], "hint": "$2 \\cdot 496 = 992$." }
+      ],
+      "finalAnswer": { "value": "perfect", "unit": "" },
+      "solutionNarrative": "$\\sigma(496) = \\sigma(2^4)\\sigma(31) = 31 \\cdot 32 = 992 = 2 \\cdot 496$, so 496 is perfect, exactly as Euclid's rule predicts."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s13",
+      "concepts": ["euler-totient"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute $\\varphi(10)$ directly by listing the numbers in $1..10$ coprime to 10.",
+      "steps": [
+        { "instruction": "The numbers coprime to 10 are 1, 3, 7, 9. How many is that?", "answer": "4", "accept": [], "hint": "Count the listed units." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "1, 3, 7, 9 are coprime to 10, so $\\varphi(10) = 4$ (matching $\\varphi(2)\\varphi(5) = 1 \\cdot 4$)."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s14",
+      "concepts": ["divisor-functions"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "How many divisors does a prime $p = 13$ have, and what is their sum?",
+      "steps": [
+        { "instruction": "A prime has exactly the divisors 1 and itself, so $d(13) = $ ?", "answer": "2", "accept": [], "hint": "Just 1 and 13." },
+        { "instruction": "$\\sigma(13) = 1 + 13 = $ ?", "answer": "14", "accept": [], "hint": "Sum the two divisors." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "" },
+      "solutionNarrative": "$d(13) = 2$ and $\\sigma(13) = 14$; every prime is deficient since $\\sigma(p) = p + 1 < 2p$."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s15",
+      "concepts": ["multiplicativity", "divisor-functions"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use multiplicativity of $d$ to compute $d(60)$ from $60 = 4 \\cdot 15$ (a coprime split).",
+      "steps": [
+        { "instruction": "$d(4) = d(2^2) = 2 + 1 = $ ?", "answer": "3", "accept": [], "hint": "Divisors 1, 2, 4." },
+        { "instruction": "$d(15) = d(3 \\cdot 5) = 2 \\cdot 2 = $ ?", "answer": "4", "accept": [], "hint": "Divisors 1, 3, 5, 15." },
+        { "instruction": "Since $\\gcd(4,15)=1$: $d(60) = 3 \\cdot 4 = $ ?", "answer": "12", "accept": [], "hint": "$60 = 2^2 \\cdot 3 \\cdot 5$, so $(2+1)(1+1)(1+1) = 12$ too." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$d(60) = d(4)d(15) = 3 \\cdot 4 = 12$, agreeing with $(2+1)(1+1)(1+1)$ from $60 = 2^2 \\cdot 3 \\cdot 5$."
+    },
+    {
+      "id": "number-theory.arithmetic-functions.s16",
+      "concepts": ["perfect-and-special-numbers"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Classify 15 by comparing $\\sigma(15)$ with $2 \\cdot 15$.",
+      "steps": [
+        { "instruction": "Compute $\\sigma(15)$ (divisors 1, 3, 5, 15).", "answer": "24", "accept": [], "hint": "$1 + 3 + 5 + 15$." },
+        { "instruction": "Compare with $2 \\cdot 15 = 30$. Type 'perfect', 'abundant', or 'deficient'.", "answer": "deficient", "accept": [], "hint": "$24 < 30$." }
+      ],
+      "finalAnswer": { "value": "deficient", "unit": "" },
+      "solutionNarrative": "$\\sigma(15) = 24 < 30 = 2 \\cdot 15$, so 15 is deficient."
+    }
+  ]
+}

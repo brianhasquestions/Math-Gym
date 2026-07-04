@@ -1,0 +1,254 @@
+{
+  "id": "numerical-methods.numerical-integration",
+  "subject": "numerical-methods",
+  "title": "Numerical Integration",
+  "prerequisites": ["numerical-methods.interpolation", "calculus-2.definite-integrals"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "riemann-and-midpoint",
+      "label": "Rectangles: Riemann and midpoint sums",
+      "microLesson": "The simplest way to approximate the area under a curve is to slice $[a,b]$ into $n$ strips of width $\\Delta x = \\frac{b-a}{n}$ and stack a rectangle on each. The height comes from the function at the strip's **left** edge, **right** edge, or **midpoint**. Estimate $= \\Delta x \\sum f(x_i)$. For $f(x)=x^2$ on $[0,2]$ with $n=2$ ($\\Delta x = 1$): the left sum uses $f(0)+f(1) = 0+1 = 1$; the right sum uses $f(1)+f(2) = 1+4 = 5$; the midpoint sum uses $f(0.5)+f(1.5) = 0.25+2.25 = 2.5$. The midpoint's over- and under-shoots cancel, so it is usually the best of the three."
+    },
+    {
+      "id": "trapezoidal-rule",
+      "label": "The trapezoidal rule",
+      "microLesson": "Instead of a flat-topped rectangle, connect the two endpoints of each strip with a straight line, making a trapezoid. One trapezoid on $[a,b]$ gives $T = \\frac{b-a}{2}[f(a)+f(b)]$. For $n$ strips of width $\\Delta x$ the **composite** rule is $T = \\Delta x\\left[\\frac{f_0+f_n}{2} + f_1 + f_2 + \\dots + f_{n-1}\\right]$ — endpoints count once, interior points count twice. It hugs a curve far better than rectangles because it follows the slope between samples."
+    },
+    {
+      "id": "simpsons-rule",
+      "label": "Simpson's rule",
+      "microLesson": "Simpson's rule fits a **parabola** through each consecutive triple of points, capturing curvature that straight lines miss. It needs an **even** number of strips $n$. The composite formula weights the samples $1, 4, 2, 4, 2, \\dots, 4, 1$: $S = \\frac{h}{3}\\big(f_0 + 4f_1 + 2f_2 + 4f_3 + \\dots + 4f_{n-1} + f_n\\big)$ where $h = \\Delta x$. Because parabolas match cubics too, Simpson is exact for any polynomial of degree $\\le 3$ — spectacular accuracy for so little work."
+    },
+    {
+      "id": "integration-error-and-comparison",
+      "label": "Error and choosing a rule",
+      "microLesson": "Each rule carries an error that shrinks as $h$ does, but at different rates. The trapezoidal error scales like $h^2$ (halving $h$ cuts error by $4\\times$); Simpson's scales like $h^4$ (halving $h$ cuts error by $16\\times$). So on a smooth curve, Simpson beats the trapezoidal rule, which beats one-sided Riemann sums. To measure error against a known exact value: error $= |\\text{estimate} - \\text{exact}|$. The trapezoidal rule overestimates a concave-up curve and underestimates a concave-down one."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When the antiderivative won't cooperate\n\nThe Fundamental Theorem of Calculus is a beautiful machine: find an antiderivative $F$, and $\\int_a^b f\\,dx = F(b) - F(a)$. But it only works when you *can* find $F$. For most functions that show up in practice — $e^{-x^2}$ (the bell curve), $\\frac{\\sin x}{x}$, or a stream of sensor readings with no formula at all — there **is no elementary antiderivative**. The area is perfectly real; we simply cannot write it in closed form.\n\n**Numerical integration** (also called *quadrature*) computes that area anyway, by sampling $f$ at a handful of points and combining the samples cleverly. This is exactly what every calculator's $\\int$ button, every statistics package computing a probability, and every physics simulation integrating a force actually does.\n\n## Step 1: rectangles (Riemann sums)\n\nSlice $[a, b]$ into $n$ equal strips of width\n\n$$\\Delta x = \\frac{b - a}{n},$$\n\nand approximate each strip by a rectangle. The rectangle's height is $f$ at the strip's **left** edge, **right** edge, or **midpoint**:\n\n$$\\text{estimate} = \\Delta x\\,\\big(f(x_1) + f(x_2) + \\dots\\big).$$\n\n### Worked example — three flavors\n\nTake $f(x) = x^2$ on $[0, 2]$ with $n = 2$, so $\\Delta x = 1$ and the strips are $[0,1]$ and $[1,2]$.\n\n- **Left sum:** heights at $x = 0, 1$: $f(0) + f(1) = 0 + 1 = 1$. Estimate $= 1 \\cdot 1 = 1$.\n- **Right sum:** heights at $x = 1, 2$: $f(1) + f(2) = 1 + 4 = 5$. Estimate $= 5$.\n- **Midpoint sum:** heights at $x = 0.5, 1.5$: $0.25 + 2.25 = 2.5$. Estimate $= 2.5$.\n\nThe exact value is $\\int_0^2 x^2\\,dx = \\frac{8}{3} \\approx 2.667$. The one-sided sums straddle it ($1$ and $5$); the **midpoint** sum ($2.5$) is much closer, because on each strip its overshoot on one half cancels its undershoot on the other.\n\n## Step 2: trapezoids\n\nA rectangle wastes the fact that we know the height at *both* ends of a strip. Connect those two heights with a straight line and the strip becomes a **trapezoid**:\n\n$$T_{\\text{one strip}} = \\frac{b - a}{2}\\big[f(a) + f(b)\\big].$$\n\nString $n$ of them together and the shared interior points get counted twice, giving the **composite trapezoidal rule**:\n\n$$T = \\Delta x\\left[\\frac{f_0 + f_n}{2} + f_1 + f_2 + \\dots + f_{n-1}\\right].$$\n\n### Worked example\n\n$f(x) = x^2$ on $[0, 4]$, $n = 4$, $\\Delta x = 1$. Samples: $f_0 = 0, f_1 = 1, f_2 = 4, f_3 = 9, f_4 = 16$.\n\n$$T = 1\\left[\\frac{0 + 16}{2} + 1 + 4 + 9\\right] = 8 + 14 = 22.$$\n\nThe exact value is $\\frac{64}{3} \\approx 21.33$. The trapezoidal rule slightly **overestimates** — expected, since $x^2$ is concave up and each chord lies *above* the curve.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[-0.3,4.4],\"yRange\":[0,18],\"grid\":true,\"curves\":[{\"fn\":\"x^2\",\"label\":\"y = x²\",\"color\":\"accent\",\"labelAt\":3.4,\"fillRange\":[0,4]}],\"segments\":[{\"from\":[0,0],\"to\":[1,1],\"color\":\"warn\"},{\"from\":[1,1],\"to\":[2,4],\"color\":\"warn\"},{\"from\":[2,4],\"to\":[3,9],\"color\":\"warn\"},{\"from\":[3,9],\"to\":[4,16],\"color\":\"warn\"}],\"points\":[{\"x\":0,\"y\":0,\"color\":\"warn\"},{\"x\":1,\"y\":1,\"color\":\"warn\"},{\"x\":2,\"y\":4,\"color\":\"warn\"},{\"x\":3,\"y\":9,\"color\":\"warn\"},{\"x\":4,\"y\":16,\"color\":\"warn\"}],\"caption\":\"Composite trapezoidal rule on x² over [0,4]: the four chords (warn) sit just above the shaded true area, so T = 22 overestimates the exact 21.33\"}\n```\n\n## Step 3: parabolas (Simpson's rule)\n\nWhy settle for straight chords when a curve bends? **Simpson's rule** fits a parabola through each consecutive *triple* of points, so it tracks curvature. It requires an **even** number of strips. The composite rule alternates weights $4$ and $2$ on the interior, with $1$ on each end:\n\n$$S = \\frac{h}{3}\\big(f_0 + 4f_1 + 2f_2 + 4f_3 + \\dots + 4f_{n-1} + f_n\\big), \\qquad h = \\Delta x.$$\n\n### Worked example\n\nSame problem: $f(x) = x^2$ on $[0, 4]$, $n = 4$, $h = 1$, samples $0, 1, 4, 9, 16$.\n\n$$S = \\frac{1}{3}\\big(0 + 4(1) + 2(4) + 4(9) + 16\\big) = \\frac{1}{3}(0 + 4 + 8 + 36 + 16) = \\frac{64}{3} \\approx 21.33.$$\n\n**Exactly right.** Simpson is exact for any polynomial up to degree 3, so it nails $x^2$ with zero error — while the trapezoidal rule missed by $0.67$.\n\n## Comparing the rules\n\nThe error of each rule shrinks with $h$, but the *rate* is what separates them:\n\n| Rule | Error order | Halving $h$ cuts error by | Exact for |\n|------|-------------|---------------------------|-----------|\n| Left/right Riemann | $h^1$ | $2\\times$ | constants |\n| Midpoint / Trapezoidal | $h^2$ | $4\\times$ | linear |\n| Simpson | $h^4$ | $16\\times$ | cubics |\n\nThe lesson: for a smooth integrand, **Simpson's rule gives dramatically more accuracy for the same number of samples.** When you only have data (no formula) the same rules apply directly to the tabulated values — provided the samples are equally spaced.\n\n## Why this matters\n\nEvery time software reports the area under a curve — a probability from a normal distribution, the impulse delivered by a thrust profile, the energy under a power curve — it is running one of these rules on sampled values. Understanding their error orders tells you how many samples you need to trust the answer, which is the difference between a simulation that converges and one that quietly lies."
+  },
+  "application": {
+    "summary": "Numerical integration turns a set of measurements or an unintegrable formula into a total: distance from a velocity trace, impulse from a thrust curve, charge delivered by a current, or a probability from a bell curve. Engineers and scientists reach for the trapezoidal and Simpson's rules constantly because real data rarely comes with an antiderivative.",
+    "domains": ["aerospace engineering", "physics", "statistics", "signal processing"],
+    "workedExample": "**Impulse from a rocket's thrust curve.**\n\nA model rocket's motor is fired on a test stand and its thrust (newtons) is logged every $0.5$ s for the two-second burn:\n\n| $t$ (s) | 0.0 | 0.5 | 1.0 | 1.5 | 2.0 |\n|---------|-----|-----|-----|-----|-----|\n| thrust (N) | 0 | 12 | 16 | 10 | 0 |\n\nThe **impulse** (which sets the rocket's change in momentum) is the area under the thrust curve, $J = \\int_0^2 F\\,dt$. There is no formula for $F(t)$ — only these five readings — so we integrate numerically with Simpson's rule ($n = 4$, $h = 0.5$, weights $1, 4, 2, 4, 1$):\n\n$$J = \\frac{0.5}{3}\\big(0 + 4(12) + 2(16) + 4(10) + 0\\big) = \\frac{0.5}{3}(48 + 32 + 40) = \\frac{0.5}{3}(120) = 20\\ \\text{N·s}.$$\n\nThe motor delivers about **20 newton-seconds of impulse**. Divide by the rocket's mass to get its burnout speed. The trapezoidal rule on the same data gives $\\frac{0.5}{2}[(0+0) + 2(12+16+10)] = 0.25(76) = 19\\ \\text{N·s}$ — close, but Simpson's parabolic fit better captures the rounded peak. This is precisely how thrust curves are certified in practice.",
+    "domainNotes": [
+      "**Aerospace:** integrating a thrust or drag profile over time for impulse, or over a wing for lift, from wind-tunnel data.",
+      "**Physics:** work as the area under a force-vs-distance curve; charge as the area under a current-vs-time curve.",
+      "**Statistics:** probabilities are areas under a density curve (e.g. the normal distribution), computed by quadrature since the bell curve has no elementary antiderivative.",
+      "**Signal processing:** energy of a signal is the integral of its squared amplitude, evaluated numerically from sampled data."
+    ]
+  },
+  "generators": ["nm2-riemann-1", "nm2-riemann-2", "nm2-riemann-3", "nm2-trapezoidal-1", "nm2-trapezoidal-2", "nm2-trapezoidal-3", "nm2-simpson-1", "nm2-simpson-2", "nm2-simpson-3", "nm2-intcompare-1", "nm2-intcompare-2", "nm2-intcompare-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.numerical-integration.s01",
+      "concepts": ["riemann-and-midpoint"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Estimate $\\int_0^3 x^2\\,dx$ with a **left** Riemann sum using $n = 3$ rectangles of width $\\Delta x = 1$.",
+      "steps": [
+        { "instruction": "The left edges are $x = 0, 1, 2$. Evaluate $f(x) = x^2$ at each and add the heights $0 + 1 + 4$.", "answer": "5", "accept": [], "hint": "Square each left edge and sum." },
+        { "instruction": "Multiply the height sum by $\\Delta x = 1$ to get the estimate.", "answer": "5", "accept": [], "hint": "$5 \\times 1$." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "Left heights $0 + 1 + 4 = 5$; times $\\Delta x = 1$ gives an estimate of $5$. The exact value is $9$, so a coarse left sum on a rising curve underestimates."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s02",
+      "concepts": ["riemann-and-midpoint"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Estimate $\\int_0^3 x^2\\,dx$ with a **right** Riemann sum using $n = 3$ rectangles of width $\\Delta x = 1$.",
+      "steps": [
+        { "instruction": "The right edges are $x = 1, 2, 3$. Add the heights $1 + 4 + 9$.", "answer": "14", "accept": [], "hint": "Square each right edge and add." },
+        { "instruction": "Multiply by $\\Delta x = 1$.", "answer": "14", "accept": [], "hint": "$14 \\times 1$." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "" },
+      "solutionNarrative": "Right heights $1 + 4 + 9 = 14$; the estimate is $14$. On a rising curve the right sum overestimates (exact is $9$), so the truth lies between the left sum $5$ and this $14$."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s03",
+      "concepts": ["riemann-and-midpoint"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Estimate $\\int_0^2 x^2\\,dx$ with the **midpoint rule**, $n = 2$ rectangles of width $\\Delta x = 1$.",
+      "plot": { "type": "cartesian", "xRange": [-0.3, 2.4], "yRange": [0, 5], "grid": true, "curves": [{ "fn": "x^2", "label": "y = x²", "color": "accent", "labelAt": 1.9, "fillRange": [0, 2] }], "points": [{ "x": 0.5, "y": 0.25, "color": "success", "label": "f(0.5)=0.25" }, { "x": 1.5, "y": 2.25, "color": "success", "label": "f(1.5)=2.25" }], "caption": "Midpoint rule on x² over [0,2]: sampling at the strip centers 0.5 and 1.5 gives an estimate of 2.5, close to the exact 8/3 ≈ 2.667" },
+      "steps": [
+        { "instruction": "The midpoints are $x = 0.5, 1.5$. Add the heights $f(0.5) + f(1.5) = 0.25 + 2.25$.", "answer": "2.5", "accept": ["2.50"], "hint": "Square each midpoint." },
+        { "instruction": "Multiply by $\\Delta x = 1$.", "answer": "2.5", "accept": ["2.50"], "hint": "$2.5 \\times 1$." }
+      ],
+      "finalAnswer": { "value": "2.5", "unit": "" },
+      "solutionNarrative": "Midpoint heights $0.25 + 2.25 = 2.5$; the estimate is $2.5$, far closer to the exact $8/3 \\approx 2.667$ than either one-sided sum."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s04",
+      "concepts": ["riemann-and-midpoint"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A car's speed (m/s) is $v(t) = 4t$. Estimate the distance traveled on $[0, 3]$ s with the midpoint rule, $\\Delta t = 1$ (distance $= \\int_0^3 v\\,dt$).",
+      "steps": [
+        { "instruction": "The midpoints are $t = 0.5, 1.5, 2.5$. Add the velocities $4(0.5) + 4(1.5) + 4(2.5)$.", "answer": "18", "accept": [], "hint": "$2 + 6 + 10$." },
+        { "instruction": "Multiply by $\\Delta t = 1$ for the distance.", "answer": "18", "accept": [], "hint": "$18 \\times 1$." }
+      ],
+      "finalAnswer": { "value": "18", "unit": "meters" },
+      "solutionNarrative": "Midpoint velocities $2 + 6 + 10 = 18$; distance $\\approx 18$ m. Because $v$ is linear, the midpoint rule is exact here — it matches $\\int_0^3 4t\\,dt = 18$."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s05",
+      "concepts": ["trapezoidal-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use a **single** trapezoid to estimate $\\int_0^2 x^2\\,dx$. The rule is $T = \\frac{b-a}{2}[f(a) + f(b)]$.",
+      "steps": [
+        { "instruction": "Add the endpoint heights $f(0) + f(2) = 0 + 4$.", "answer": "4", "accept": [], "hint": "$0^2 + 2^2$." },
+        { "instruction": "Apply $T = \\frac{2}{2}(4)$.", "answer": "4", "accept": [], "hint": "$1 \\times 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Heights $0 + 4 = 4$; $T = \\frac{2}{2}(4) = 4$. The exact value is $8/3 \\approx 2.667$, so one big trapezoid overshoots badly — more strips are needed."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s06",
+      "concepts": ["trapezoidal-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use the **composite** trapezoidal rule with $n = 4$ ($\\Delta x = 1$) to estimate $\\int_0^4 x^2\\,dx$. Formula: $T = \\Delta x\\left[\\frac{f_0 + f_n}{2} + \\sum_{i=1}^{n-1} f_i\\right]$.",
+      "plot": { "type": "cartesian", "xRange": [-0.3, 4.4], "yRange": [0, 18], "grid": true, "curves": [{ "fn": "x^2", "label": "y = x²", "color": "accent", "labelAt": 3.4, "fillRange": [0, 4] }], "segments": [{ "from": [0, 0], "to": [1, 1], "color": "warn" }, { "from": [1, 1], "to": [2, 4], "color": "warn" }, { "from": [2, 4], "to": [3, 9], "color": "warn" }, { "from": [3, 9], "to": [4, 16], "color": "warn" }], "caption": "Four trapezoids over [0,4]: the chords lie above the concave-up curve, so T = 22 overestimates the exact 21.33" },
+      "steps": [
+        { "instruction": "Add the interior heights $f_1 + f_2 + f_3 = 1 + 4 + 9$.", "answer": "14", "accept": [], "hint": "Square $1, 2, 3$ and add." },
+        { "instruction": "The endpoints average to $\\frac{f_0 + f_4}{2} = \\frac{0 + 16}{2}$. What is that?", "answer": "8", "accept": [], "hint": "$\\frac{16}{2}$." },
+        { "instruction": "Add the endpoint-average to the interior sum and multiply by $\\Delta x = 1$: $(8 + 14)(1)$.", "answer": "22", "accept": [], "hint": "$8 + 14$." }
+      ],
+      "finalAnswer": { "value": "22", "unit": "" },
+      "solutionNarrative": "Interior $= 14$, endpoint-average $= 8$; $T = (8 + 14)(1) = 22$. The exact value is $64/3 \\approx 21.33$, so the trapezoidal rule overestimates the concave-up curve by about $0.67$."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s07",
+      "concepts": ["trapezoidal-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Water flows into a tank at these measured rates (L/min), one every $\\Delta t = 2$ min: $3, 7, 9, 5$. Use the composite trapezoidal rule over 3 intervals to estimate the total liters added.",
+      "steps": [
+        { "instruction": "Add the interior readings (all but the first and last): $7 + 9$.", "answer": "16", "accept": [], "hint": "Sum the two middle values." },
+        { "instruction": "Apply $T = \\frac{\\Delta t}{2}[(r_0 + r_3) + 2(\\text{interior})] = \\frac{2}{2}[(3 + 5) + 2(16)]$. Compute it.", "answer": "40", "accept": [], "hint": "Inside the bracket: $8 + 32 = 40$, times $\\frac{2}{2} = 1$." }
+      ],
+      "finalAnswer": { "value": "40", "unit": "liters" },
+      "solutionNarrative": "Interior sum $= 16$; $T = \\frac{2}{2}[(3+5) + 2(16)] = 40$ liters added over the 6 minutes."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s08",
+      "concepts": ["simpsons-rule"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use **Simpson's rule** with $n = 2$ to estimate $\\int_0^2 x^2\\,dx$. Here $h = 1$ and $S = \\frac{h}{3}(f_0 + 4f_1 + f_2)$.",
+      "steps": [
+        { "instruction": "Evaluate $f_0 = f(0)$, $f_1 = f(1)$, $f_2 = f(2)$, then form $f_0 + 4f_1 + f_2 = 0 + 4(1) + 4$.", "answer": "8", "accept": [], "hint": "$0 + 4 + 4$." },
+        { "instruction": "Multiply by $\\frac{h}{3} = \\frac{1}{3}$. Compute $S$ (round to 3 decimals).", "answer": "2.667", "accept": ["2.6667", "8/3"], "hint": "$\\frac{8}{3}$." }
+      ],
+      "finalAnswer": { "value": "2.667", "unit": "" },
+      "solutionNarrative": "$f_0 + 4f_1 + f_2 = 8$; $S = \\frac{1}{3}(8) = \\frac{8}{3} \\approx 2.667$ — exactly the true value, since Simpson's rule is exact for quadratics."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s09",
+      "concepts": ["simpsons-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Use **composite Simpson's rule** with $n = 4$ ($h = 1$) to estimate $\\int_0^4 x^2\\,dx$. Weights: $1, 4, 2, 4, 1$.",
+      "steps": [
+        { "instruction": "With $f = [0, 1, 4, 9, 16]$, form $f_0 + 4f_1 + 2f_2 + 4f_3 + f_4 = 0 + 4(1) + 2(4) + 4(9) + 16$.", "answer": "64", "accept": [], "hint": "$0 + 4 + 8 + 36 + 16$." },
+        { "instruction": "Multiply by $\\frac{h}{3} = \\frac{1}{3}$. Round to 3 decimals.", "answer": "21.333", "accept": ["64/3", "21.3333"], "hint": "$\\frac{64}{3}$." }
+      ],
+      "finalAnswer": { "value": "21.333", "unit": "" },
+      "solutionNarrative": "Weighted sum $= 64$; $S = \\frac{1}{3}(64) = \\frac{64}{3} \\approx 21.333$, the exact value — Simpson nails polynomials of degree $\\le 3$, while the trapezoidal rule gave $22$."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s10",
+      "concepts": ["simpsons-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A rocket motor's thrust (N) is logged every $h = 0.5$ s: $f = [0, 12, 16, 10, 0]$. Estimate the impulse $\\int F\\,dt$ with composite Simpson's rule ($n = 4$, weights $1, 4, 2, 4, 1$).",
+      "steps": [
+        { "instruction": "Form $f_0 + 4f_1 + 2f_2 + 4f_3 + f_4 = 0 + 4(12) + 2(16) + 4(10) + 0$.", "answer": "120", "accept": [], "hint": "$48 + 32 + 40$." },
+        { "instruction": "Multiply by $\\frac{h}{3} = \\frac{0.5}{3}$. Round to 3 decimals.", "answer": "20", "accept": ["20.000", "20.0"], "hint": "$\\frac{0.5}{3} \\times 120 = \\frac{60}{3}$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "N·s" },
+      "solutionNarrative": "Weighted sum $= 120$; $S = \\frac{0.5}{3}(120) = 20$ N·s of impulse. Simpson's parabolic fit captures the rounded thrust peak better than the trapezoidal estimate of 19 N·s."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s11",
+      "concepts": ["integration-error-and-comparison"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "On the same grid of points for a smooth curve, which is generally more accurate: the trapezoidal rule or Simpson's rule? (Type the rule name exactly.)",
+      "steps": [
+        { "instruction": "Type \"the trapezoidal rule\" or \"Simpson's rule\".", "answer": "Simpson's rule", "accept": ["simpsons rule", "simpson's rule", "simpson"], "hint": "One rule fits parabolas through triples of points; the other only straight lines." }
+      ],
+      "finalAnswer": { "value": "Simpson's rule", "unit": "" },
+      "solutionNarrative": "Simpson's rule is more accurate: its parabolic segments track curvature (error $\\sim h^4$) that the trapezoidal rule's straight chords (error $\\sim h^2$) miss."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s12",
+      "concepts": ["integration-error-and-comparison"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The single-trapezoid estimate of $\\int_0^2 x^2\\,dx$ is $T = 4$; the exact value is $\\frac{8}{3} \\approx 2.6667$. Find the error $|T - \\text{exact}|$, rounded to 4 decimals.",
+      "steps": [
+        { "instruction": "Compute $|4 - 2.6667|$. Round to 4 decimals.", "answer": "1.3333", "accept": ["1.3333"], "hint": "$4 - 2.6667$." }
+      ],
+      "finalAnswer": { "value": "1.3333", "unit": "" },
+      "solutionNarrative": "Error $= |4 - 2.6667| = 1.3333$. One trapezoid overestimates the concave-up curve heavily; splitting into more strips would shrink this fast."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s13",
+      "concepts": ["integration-error-and-comparison"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The trapezoidal rule's error scales like $h^2$. A calculation currently has an error of about $0.08$. Estimate the error after you **halve** the step size $h$.",
+      "steps": [
+        { "instruction": "Halving $h$ multiplies the error by $(\\frac{1}{2})^2 = \\frac{1}{4}$. By what factor does the error shrink? (Type the number 4.)", "answer": "4", "accept": [], "hint": "$2^2 = 4$." },
+        { "instruction": "Divide the current error by 4: $\\frac{0.08}{4}$. Round to 3 decimals.", "answer": "0.02", "accept": ["0.020"], "hint": "$0.08 / 4$." }
+      ],
+      "finalAnswer": { "value": "0.02", "unit": "" },
+      "solutionNarrative": "Error $\\propto h^2$, so halving $h$ divides the error by 4: $0.08 / 4 = 0.02$. Simpson's rule, scaling like $h^4$, would divide by 16 instead."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s14",
+      "concepts": ["riemann-and-midpoint", "trapezoidal-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $\\int_0^2 x^2\\,dx$: the midpoint rule ($n = 2$) gave $2.5$ and a single trapezoid gave $4$. The exact value is $\\frac{8}{3} \\approx 2.667$. Which estimate has the smaller error? Report that smaller error, $|2.667 - 2.5|$, to 3 decimals.",
+      "steps": [
+        { "instruction": "Compute the midpoint error $|2.667 - 2.5|$. Round to 3 decimals.", "answer": "0.167", "accept": ["0.1670"], "hint": "$2.667 - 2.5$." }
+      ],
+      "finalAnswer": { "value": "0.167", "unit": "" },
+      "solutionNarrative": "The midpoint error is $|2.667 - 2.5| = 0.167$, much smaller than the trapezoid's $|4 - 2.667| = 1.333$. The midpoint rule's cancelling over/undershoots beat one coarse trapezoid."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s15",
+      "concepts": ["simpsons-rule"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Why does Simpson's rule require an **even** number of subintervals $n$? Answer in one word describing what it groups the points into.",
+      "steps": [
+        { "instruction": "Simpson fits a parabola through each consecutive group of how many points? (Type the number.)", "answer": "3", "accept": ["three"], "hint": "A parabola is determined by three points." },
+        { "instruction": "Because it consumes points in pairs of subintervals (one parabola per two strips), $n$ must be even or odd? Type \"even\" or \"odd\".", "answer": "even", "accept": [], "hint": "Two strips per parabola means the strip count must divide by 2." }
+      ],
+      "finalAnswer": { "value": "even", "unit": "" },
+      "solutionNarrative": "Each parabola spans a triple of points, i.e. two subintervals, so the subintervals pair up and $n$ must be even. With an odd $n$ the last strip is left without a partner."
+    },
+    {
+      "id": "numerical-methods.numerical-integration.s16",
+      "concepts": ["integration-error-and-comparison", "trapezoidal-rule"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An engineer estimates the area under a smooth pressure curve with the trapezoidal rule and gets an error near $0.048$. She then switches to Simpson's rule at the same spacing, whose error scales like $h^4$ rather than $h^2$. Suppose halving $h$ under Simpson divides its error by 16, and her Simpson error before halving was $0.003$. What is the Simpson error after halving $h$? Round to 5 decimals.",
+      "steps": [
+        { "instruction": "Divide the Simpson error by 16: $\\frac{0.003}{16}$. Round to 5 decimals.", "answer": "0.00019", "accept": ["0.000188"], "hint": "$0.003 / 16 = 0.0001875$." }
+      ],
+      "finalAnswer": { "value": "0.00019", "unit": "" },
+      "solutionNarrative": "Simpson's error $\\propto h^4$, so halving $h$ divides it by 16: $0.003 / 16 = 0.0001875 \\approx 0.00019$. Its fourth-order convergence crushes error far faster than the trapezoidal rule's second-order."
+    }
+  ]
+}
