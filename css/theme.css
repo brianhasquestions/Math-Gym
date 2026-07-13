@@ -13,8 +13,8 @@
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* ============================ Matrix Terminal (default) ============================ */
-:root, :root[data-theme="terminal"] {
+/* ============================ Matrix Terminal ============================ */
+:root[data-theme="terminal"] {
   --bg: #020602;
   --surface: #050b05;
   --surface-2: #081208;
@@ -37,8 +37,11 @@
   --font-ui: var(--font-mono);
 }
 
-/* ============================ Daylight Blue (white + blue) ============================ */
-:root[data-theme="light"] {
+/* ================== Daylight Blue (white + blue — default) ================== */
+/* The bare :root fallback lives here so the site is light even if the
+   theme attribute never gets set (JS blocked). Terminal/slate still win when
+   data-theme is present because their selectors are more specific. */
+:root, :root[data-theme="light"] {
   --bg: #f5f8fc;
   --surface: #ffffff;
   --surface-2: #eef3fa;

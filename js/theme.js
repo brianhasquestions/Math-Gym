@@ -3,7 +3,7 @@
 // just records the choice and sets the `data-theme` attribute on <html>.
 
 const KEY = "mathgym.theme";
-const DEFAULT = "terminal";
+const DEFAULT = "light";
 
 // localStorage GETTERS throw SecurityError when storage is blocked (strict
 // privacy modes, some embedded webviews). Every page calls applyTheme() first,
@@ -17,8 +17,8 @@ function safeSet(key, val) {
 }
 
 export const THEMES = [
-  { id: "terminal", label: "Matrix Terminal", swatch: "#00ff41" },
   { id: "light", label: "Daylight Blue", swatch: "#2563eb" },
+  { id: "terminal", label: "Matrix Terminal", swatch: "#00ff41" },
   { id: "slate", label: "Slate Dark", swatch: "#3b82f6" },
 ];
 
@@ -52,7 +52,7 @@ export function logoMarkup() {
 
 // Build and install an SVG favicon matching the current theme.
 export function applyFavicon() {
-  const f = FAVICON[getTheme()] || FAVICON.terminal;
+  const f = FAVICON[getTheme()] || FAVICON.light;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">` +
     `<rect x="2" y="2" width="28" height="28" rx="${f.rx}" fill="${f.badge}"/>` +
     `<path d="M6 16.5 l3 0 l3.6 7 l5.4 -14 l8 0" fill="none" stroke="${f.mark}" ` +
