@@ -1,0 +1,267 @@
+{
+  "id": "calculus-3.polar-cylindrical-spherical",
+  "subject": "calculus-3",
+  "title": "Polar, Cylindrical, and Spherical Integrals",
+  "prerequisites": ["calculus-3.multiple-integrals", "trigonometry.polar-coordinates"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "polar-double-integrals",
+      "label": "Double integrals in polar coordinates",
+      "microLesson": "Over a disk or annulus, Cartesian bounds are ugly ($y$ runs between two square roots) but polar bounds are constants: $r$ from $a$ to $b$, $\\theta$ from $0$ to $2\\pi$. The price of the change is the **Jacobian factor** $r$: the area element is $dA = r\\,dr\\,d\\theta$, never just $dr\\,d\\theta$, because a polar 'rectangle' far from the origin is wider than one near it. So $\\iint_R f\\,dA = \\int_{\\theta_1}^{\\theta_2}\\!\\int_a^b f\\,r\\,dr\\,d\\theta$. Example: the area of the disk $r \\le 2$ is $\\int_0^{2\\pi}\\!\\int_0^2 r\\,dr\\,d\\theta = 2\\pi \\cdot 2 = 4\\pi$."
+    },
+    {
+      "id": "converting-coordinates",
+      "label": "Converting between Cartesian and polar",
+      "microLesson": "The dictionary is $x = r\\cos\\theta$, $y = r\\sin\\theta$, and the workhorse identity $x^2 + y^2 = r^2$. A circle $x^2 + y^2 = 9$ becomes simply $r = 3$; an integrand like $x^2 + y^2$ becomes $r^2$, and $\\sqrt{x^2+y^2}$ becomes $r$. To convert an integral: rewrite the region's boundary in $r$ and $\\theta$, rewrite the integrand with the dictionary, and append the Jacobian $r$. Any region or integrand built from circles and distances-from-the-origin is begging for polar."
+    },
+    {
+      "id": "cylindrical-integrals",
+      "label": "Triple integrals in cylindrical coordinates",
+      "microLesson": "Cylindrical coordinates are polar plus an untouched $z$: a point is $(r, \\theta, z)$, and the volume element is $dV = r\\,dz\\,dr\\,d\\theta$ — the same Jacobian $r$ as in polar. They shine for solids with an axis of symmetry: cylinders, cones, and paraboloids. The volume of a cylinder of radius $R$ and height $h$ is $\\int_0^{2\\pi}\\!\\int_0^R\\!\\int_0^h r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\tfrac{R^2}{2} \\cdot h = \\pi R^2 h$, recovering the familiar formula in three easy layers."
+    },
+    {
+      "id": "spherical-integrals",
+      "label": "Triple integrals in spherical coordinates",
+      "microLesson": "Spherical coordinates locate a point by distance from the origin $\\rho$, the angle down from the positive $z$-axis $\\varphi$ (from $0$ to $\\pi$), and the same $\\theta$ as before. The volume element is $dV = \\rho^2 \\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$ — both factors are mandatory. For a full ball of radius $a$ the three integrals separate: $\\int_0^a \\rho^2 d\\rho = \\tfrac{a^3}{3}$, $\\int_0^\\pi \\sin\\varphi\\,d\\varphi = 2$, $\\int_0^{2\\pi} d\\theta = 2\\pi$, and their product is $\\tfrac{4}{3}\\pi a^3$ — the sphere volume formula, derived in three lines."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The right coordinates make hard integrals easy\n\nTry to compute the area of the disk $x^2 + y^2 \\le 4$ as a Cartesian double integral and you get $\\int_{-2}^{2}\\int_{-\\sqrt{4-x^2}}^{\\sqrt{4-x^2}} dy\\,dx$ — square roots in the bounds, a trig substitution waiting to happen. The region is round; the coordinates are square. This topic is about matching the coordinate system to the region: **polar** for round flat regions, **cylindrical** for solids with an axis, **spherical** for solids built around a center point.\n\nEvery change of coordinates comes with one non-negotiable tax: a **Jacobian factor** that corrects for how the new coordinate grid stretches area or volume.\n\n## Polar double integrals: $dA = r\\,dr\\,d\\theta$\n\nIn polar coordinates a small 'rectangle' has sides $dr$ (radially) and $r\\,d\\theta$ (along the arc) — the arc side grows with $r$. So the area element is\n\n$$dA = r\\,dr\\,d\\theta,$$\n\nand a double integral over a round region $R$ becomes\n\n$$\\iint_R f\\,dA = \\int_{\\theta_1}^{\\theta_2}\\!\\int_{r_1}^{r_2} f \\cdot r\\,dr\\,d\\theta.$$\n\n### Worked example: area of a disk\n\n$$\\int_0^{2\\pi}\\!\\int_0^2 r\\,dr\\,d\\theta = \\int_0^{2\\pi} \\left[\\tfrac{r^2}{2}\\right]_0^2 d\\theta = \\int_0^{2\\pi} 2\\,d\\theta = 4\\pi.$$\n\nAn **annulus** $a \\le r \\le b$ just changes the inner bounds: its area is $2\\pi \\cdot \\tfrac{b^2 - a^2}{2} = \\pi(b^2 - a^2)$.\n\n```plot\n{ \"xRange\": [-3.2, 3.2], \"yRange\": [-0.4, 3.2], \"curves\": [ { \"fn\": \"sqrt(9 - x^2)\", \"label\": \"r = 3\", \"labelAt\": 1.6, \"color\": \"accent\", \"fillRange\": [-3, 3] } ], \"caption\": \"The upper half of the disk r <= 3. In polar the whole disk is just 0 <= r <= 3, 0 <= theta <= 2*pi — constant bounds, no square roots.\" }\n```\n\n## Converting Cartesian integrals to polar\n\nThe dictionary:\n\n$$x = r\\cos\\theta, \\qquad y = r\\sin\\theta, \\qquad x^2 + y^2 = r^2.$$\n\nThree-step recipe:\n\n1. **Region:** rewrite the boundary. $x^2 + y^2 = 9$ becomes $r = 3$; the first quadrant becomes $0 \\le \\theta \\le \\tfrac{\\pi}{2}$.\n2. **Integrand:** substitute. $x^2 + y^2 \\to r^2$, and $\\sqrt{x^2+y^2} \\to r$.\n3. **Jacobian:** append the factor $r$. Forgetting it is the single most common error in the topic.\n\n### Worked example\n\n$$\\iint_{x^2+y^2 \\le 4} (x^2 + y^2)\\,dA = \\int_0^{2\\pi}\\!\\int_0^2 r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi\\left[\\tfrac{r^4}{4}\\right]_0^2 = 2\\pi \\cdot 4 = 8\\pi.$$\n\nThe integrand contributed $r^2$; the area element contributed one more $r$; together the inner integrand is $r^3$.\n\n## Cylindrical coordinates: polar with a $z$\n\nA point is $(r, \\theta, z)$ and the volume element is\n\n$$dV = r\\,dz\\,dr\\,d\\theta.$$\n\nUse cylindrical whenever the solid has an axis of symmetry — cylinders, cones ($z = \\tfrac{h}{R}r$), paraboloids ($z = a^2 - r^2$). Work inside-out: $z$ first (its bounds are usually surfaces in $r$), then $r$, then $\\theta$.\n\n### Worked example: volume of a cylinder\n\nRadius $R = 2$, height $h = 5$:\n\n$$V = \\int_0^{2\\pi}\\!\\int_0^2\\!\\int_0^5 r\\,dz\\,dr\\,d\\theta = \\int_0^{2\\pi}\\!\\int_0^2 5r\\,dr\\,d\\theta = \\int_0^{2\\pi} 10\\,d\\theta = 20\\pi = \\pi R^2 h. $$\n\n## Spherical coordinates: $\\rho$, $\\varphi$, $\\theta$\n\nFor solids organized around a **point** — balls, shells, ice-cream cones — use spherical coordinates: $\\rho \\ge 0$ is distance from the origin, $\\varphi \\in [0, \\pi]$ is the angle measured down from the positive $z$-axis, and $\\theta$ is the usual longitude. The volume element is\n\n$$dV = \\rho^2 \\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta,$$\n\nand BOTH pieces of the Jacobian — the $\\rho^2$ and the $\\sin\\varphi$ — are mandatory.\n\n### Worked example: volume of a ball of radius $a$\n\nThe bounds are constants, so the triple integral factors into three independent ones:\n\n$$V = \\int_0^{2\\pi}\\!\\!d\\theta \\int_0^{\\pi} \\sin\\varphi\\,d\\varphi \\int_0^a \\rho^2\\,d\\rho = (2\\pi)(2)\\left(\\tfrac{a^3}{3}\\right) = \\tfrac{4}{3}\\pi a^3.$$\n\nCapping $\\varphi$ at something smaller than $\\pi$ carves out a cone: with $\\varphi \\le \\tfrac{\\pi}{3}$, the middle factor becomes $\\int_0^{\\pi/3}\\sin\\varphi\\,d\\varphi = 1 - \\cos\\tfrac{\\pi}{3} = \\tfrac{1}{2}$, and you get the 'ice-cream cone' volume $\\tfrac{\\pi a^3}{3}$.\n\n## Choosing the coordinate system\n\n| Region looks like | Use | Volume/area element |\n|---|---|---|\n| disk, annulus, circular sector (flat) | polar | $r\\,dr\\,d\\theta$ |\n| cylinder, cone, paraboloid (axis symmetry) | cylindrical | $r\\,dz\\,dr\\,d\\theta$ |\n| ball, spherical shell, cone from a point | spherical | $\\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$ |\n\n## Common pitfalls\n\n- **Dropping the Jacobian**: $dA = r\\,dr\\,d\\theta$, $dV = r\\,dz\\,dr\\,d\\theta$, $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$. No exceptions.\n- **Mixing up $\\varphi$ ranges**: $\\varphi$ runs $0$ to $\\pi$ only (top of the $z$-axis to the bottom); $\\theta$ does the full $0$ to $2\\pi$ lap.\n- **Using $r$ for $\\rho$**: in cylindrical, $r$ is distance from the **axis**; in spherical, $\\rho$ is distance from the **origin**. On the $xy$-plane they agree; elsewhere they don't.\n- **Forgetting that a half or quarter region trims $\\theta$**: the upper half-disk is $0 \\le \\theta \\le \\pi$, not $2\\pi$."
+  },
+  "application": {
+    "summary": "Round regions and symmetric solids dominate the physical world: tanks, pipes, planets, lenses, antennas. Polar, cylindrical, and spherical integrals turn their volumes, masses, and averages into products of one-dimensional integrals — the sphere volume formula, the mass of a density-graded disk, and satellite-dish volumes all fall out in a few lines once the coordinates match the shape.",
+    "domains": ["mechanical engineering", "astronomy", "electromagnetics", "manufacturing"],
+    "workedExample": "**Mass of a density-graded brake disk**\n\nA circular brake disk of radius $2$ dm is denser toward the rim: its areal density is $\\rho(r) = 3r$ kg per square dm at distance $r$ from the center. What is its total mass?\n\n$$M = \\iint_{r \\le 2} 3r\\,dA = \\int_0^{2\\pi}\\!\\int_0^2 3r \\cdot r\\,dr\\,d\\theta = \\int_0^{2\\pi}\\!\\int_0^2 3r^2\\,dr\\,d\\theta.$$\n\nInner integral: $\\int_0^2 3r^2\\,dr = \\left[r^3\\right]_0^2 = 8$. Outer: $\\int_0^{2\\pi} 8\\,d\\theta = 16\\pi \\approx 50.3$ kg.\n\nIn Cartesian coordinates the same computation needs $\\sqrt{x^2+y^2}$ under a double integral with square-root bounds — a mess. The polar version is two power-rule integrals. The identical pattern computes the moment of inertia ($\\rho r^2$ instead of $\\rho$), the charge on a disk antenna, or the total rainfall over a circular catchment.",
+    "domainNotes": [
+      "**Mechanical engineering:** moments of inertia of disks, flywheels, and shafts are polar/cylindrical integrals of $r^2 \\rho$.",
+      "**Astronomy:** the mass of a planet with radially varying density $\\rho(\\rho)$ is a spherical integral that separates into a single 1-D integral.",
+      "**Electromagnetics:** charge on disks and spheres, and fields with axial or central symmetry, are set up in cylindrical or spherical coordinates by default.",
+      "**Manufacturing:** volumes of turned parts (cones, domes, paraboloid dishes) come from cylindrical shells in a few lines."
+    ]
+  },
+  "generators": [
+    "c3q-polar-1", "c3q-polar-2", "c3q-polar-3",
+    "c3q-convert-1", "c3q-convert-2", "c3q-convert-3",
+    "c3q-cyl-1", "c3q-cyl-2", "c3q-cyl-3",
+    "c3q-sph-1", "c3q-sph-2", "c3q-sph-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s01",
+      "concepts": ["polar-double-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the area of the disk $r \\le 2$ using the polar double integral $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^2 r\\,dr\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Do the inner integral: $\\int_0^2 r\\,dr$.", "answer": "2", "accept": ["4/2"], "hint": "$\\tfrac{r^2}{2}$ evaluated from 0 to 2." },
+        { "instruction": "Multiply by the $\\theta$-integral $\\int_0^{2\\pi} d\\theta = 2\\pi$. Give the area as a multiple of $\\pi$ (type it like 4pi).", "answer": "4*pi", "accept": ["4pi", "12.566"], "hint": "$2 \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "4pi", "unit": "" },
+      "solutionNarrative": "Inner: $\\int_0^2 r\\,dr = 2$. Outer: $2 \\cdot 2\\pi = 4\\pi$ — the area of a radius-2 disk."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s02",
+      "concepts": ["polar-double-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^3 r\\,dr\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Inner integral: $\\int_0^3 r\\,dr$.", "answer": "9/2", "accept": ["4.5"], "hint": "$\\tfrac{r^2}{2}\\big|_0^3$." },
+        { "instruction": "Multiply by $2\\pi$. (Type it like 9pi.)", "answer": "9*pi", "accept": ["9pi", "28.274"], "hint": "$\\tfrac{9}{2} \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "9pi", "unit": "" },
+      "solutionNarrative": "$\\int_0^3 r\\,dr = \\tfrac{9}{2}$; times $2\\pi$ gives $9\\pi$, the area of the radius-3 disk."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s03",
+      "concepts": ["polar-double-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the area of the annulus $1 \\le r \\le 3$ via $\\displaystyle\\int_0^{2\\pi}\\!\\int_1^3 r\\,dr\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Inner integral: $\\int_1^3 r\\,dr = \\tfrac{r^2}{2}\\big|_1^3$.", "answer": "4", "accept": ["8/2"], "hint": "$\\tfrac{9}{2} - \\tfrac{1}{2}$." },
+        { "instruction": "Multiply by $2\\pi$. (Type it like 8pi.)", "answer": "8*pi", "accept": ["8pi", "25.133"], "hint": "$4 \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "8pi", "unit": "" },
+      "solutionNarrative": "$\\int_1^3 r\\,dr = 4$; the annulus area is $8\\pi = \\pi(3^2 - 1^2)$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s04",
+      "concepts": ["polar-double-integrals"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the volume under the paraboloid $z = 4 - r^2$ over the disk $r \\le 2$: $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^2 (4 - r^2)\\,r\\,dr\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Expand the inner integrand $(4 - r^2)\\,r$ as a polynomial in $r$.", "answer": "4r - r^3", "accept": ["4*r - r^3", "-r^3 + 4r"], "hint": "Distribute the $r$." },
+        { "instruction": "Compute the inner integral $\\int_0^2 (4r - r^3)\\,dr$.", "answer": "4", "accept": ["8 - 4"], "hint": "$2r^2 - \\tfrac{r^4}{4}$ from 0 to 2 is $8 - 4$." },
+        { "instruction": "Multiply by $2\\pi$. (Type it like 8pi.)", "answer": "8*pi", "accept": ["8pi", "25.133"], "hint": "$4 \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "8pi", "unit": "" },
+      "solutionNarrative": "The integrand times the Jacobian is $4r - r^3$; its integral over $[0,2]$ is $4$, and the $\\theta$-lap contributes $2\\pi$, giving $8\\pi$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s05",
+      "concepts": ["converting-coordinates"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Convert the circle $x^2 + y^2 = 25$ to a polar equation.",
+      "steps": [
+        { "instruction": "Use $x^2 + y^2 = r^2$: the equation becomes $r^2 = 25$. Solve for $r$ (radii are nonnegative).", "answer": "r = 5", "accept": ["5", "r=5"], "hint": "Take the positive square root." }
+      ],
+      "finalAnswer": { "value": "r = 5", "unit": "" },
+      "solutionNarrative": "$x^2 + y^2 = r^2$, so $r^2 = 25$ and $r = 5$: a circle is a constant-$r$ curve in polar."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s06",
+      "concepts": ["converting-coordinates"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert the Cartesian point $(3, 3)$ to polar coordinates $(r, \\theta)$, with $\\theta$ in degrees.",
+      "steps": [
+        { "instruction": "Compute $r = \\sqrt{x^2 + y^2}$. (Type it like 3*sqrt(2).)", "answer": "3*sqrt(2)", "accept": ["sqrt(18)", "4.2426"], "hint": "$\\sqrt{9 + 9} = \\sqrt{18}$." },
+        { "instruction": "The point lies on the line $y = x$ in the first quadrant. What is $\\theta$ in degrees?", "answer": "45", "accept": [], "hint": "$\\tan\\theta = \\tfrac{3}{3} = 1$." }
+      ],
+      "finalAnswer": { "value": "(3sqrt(2), 45 degrees)", "unit": "" },
+      "solutionNarrative": "$r = \\sqrt{18} = 3\\sqrt{2}$ and $\\theta = 45^\\circ$ since the point sits on $y = x$ in the first quadrant."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s07",
+      "concepts": ["converting-coordinates"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Convert $\\displaystyle\\iint_{x^2 + y^2 \\le 4} (x^2 + y^2)\\,dA$ to polar and evaluate it.",
+      "steps": [
+        { "instruction": "Rewrite the integrand $x^2 + y^2$ in polar (a power of $r$).", "answer": "r^2", "accept": ["r*r"], "hint": "That is the dictionary identity itself." },
+        { "instruction": "Append the Jacobian: the full inner integrand $r^2 \\cdot r$ is what power of $r$?", "answer": "r^3", "accept": [], "hint": "Integrand times area-element factor $r$." },
+        { "instruction": "Evaluate $\\int_0^{2\\pi}\\!\\int_0^2 r^3\\,dr\\,d\\theta$. (Type it like 8pi.)", "answer": "8*pi", "accept": ["8pi", "25.133"], "hint": "$\\int_0^2 r^3 dr = 4$, then times $2\\pi$." }
+      ],
+      "finalAnswer": { "value": "8pi", "unit": "" },
+      "solutionNarrative": "The integrand becomes $r^2$, the Jacobian adds one more $r$, and $2\\pi \\int_0^2 r^3\\,dr = 2\\pi \\cdot 4 = 8\\pi$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s08",
+      "concepts": ["converting-coordinates"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\iint_{x^2+y^2 \\le 1} \\sqrt{x^2 + y^2}\\,dA$ by converting to polar.",
+      "steps": [
+        { "instruction": "Rewrite the integrand $\\sqrt{x^2+y^2}$ in polar.", "answer": "r", "accept": [], "hint": "$\\sqrt{r^2} = r$ (radii are nonnegative)." },
+        { "instruction": "Multiply by the Jacobian $r$: the inner integrand is what power of $r$?", "answer": "r^2", "accept": ["r*r"], "hint": "$r \\cdot r$." },
+        { "instruction": "Compute $\\int_0^1 r^2\\,dr$ as a fraction.", "answer": "1/3", "accept": ["0.3333"], "hint": "$\\tfrac{r^3}{3}\\big|_0^1$." },
+        { "instruction": "Multiply by $2\\pi$. (Type it like 2pi/3.)", "answer": "2*pi/3", "accept": ["2pi/3", "2.0944"], "hint": "$\\tfrac{1}{3} \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "2pi/3", "unit": "" },
+      "solutionNarrative": "$\\sqrt{x^2+y^2} = r$; with the Jacobian the integrand is $r^2$, so the value is $2\\pi \\cdot \\tfrac{1}{3} = \\tfrac{2\\pi}{3}$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s09",
+      "concepts": ["cylindrical-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the volume of the cylinder $r \\le 2$, $0 \\le z \\le 5$ via $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^2\\!\\int_0^5 r\\,dz\\,dr\\,d\\theta$.",
+      "steps": [
+        { "instruction": "The inner $z$-integral gives $\\int_0^5 r\\,dz = 5r$. Now compute $\\int_0^2 5r\\,dr$.", "answer": "10", "accept": [], "hint": "$\\tfrac{5r^2}{2}\\big|_0^2 = \\tfrac{5 \\cdot 4}{2}$." },
+        { "instruction": "Multiply by $2\\pi$. (Type it like 20pi.)", "answer": "20*pi", "accept": ["20pi", "62.832"], "hint": "$10 \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "20pi", "unit": "" },
+      "solutionNarrative": "Layer by layer: $5r$, then $10$, then $20\\pi$ — which matches $\\pi R^2 h = \\pi \\cdot 4 \\cdot 5$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s10",
+      "concepts": ["cylindrical-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the volume of the solid inside $r \\le 3$ bounded below by $z = 0$ and above by the cone $z = r$: $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^3\\!\\int_0^{r} r\\,dz\\,dr\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Do the $z$-integral: $\\int_0^{r} r\\,dz$ (a power of $r$).", "answer": "r^2", "accept": ["r*r"], "hint": "The integrand $r$ is constant in $z$; the interval has length $r$." },
+        { "instruction": "Compute $\\int_0^3 r^2\\,dr$.", "answer": "9", "accept": ["27/3"], "hint": "$\\tfrac{r^3}{3}\\big|_0^3$." },
+        { "instruction": "Multiply by $2\\pi$. (Type it like 18pi.)", "answer": "18*pi", "accept": ["18pi", "56.549"], "hint": "$9 \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "18pi", "unit": "" },
+      "solutionNarrative": "The $z$-layer contributes a factor $r$, making the integrand $r^2$; then $\\int_0^3 r^2 dr = 9$ and the answer is $18\\pi$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s11",
+      "concepts": ["cylindrical-integrals"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A cylindrical tank ($r \\le 2$, $0 \\le z \\le 3$, meters) holds sediment whose density is $\\delta = z$ kg/m³ (denser near the top). Its total mass is $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^2\\!\\int_0^3 z\\,r\\,dz\\,dr\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Compute the $z$-factor $\\int_0^3 z\\,dz$ as a fraction.", "answer": "9/2", "accept": ["4.5"], "hint": "$\\tfrac{z^2}{2}\\big|_0^3$." },
+        { "instruction": "Compute the $r$-factor $\\int_0^2 r\\,dr$.", "answer": "2", "accept": ["4/2"], "hint": "$\\tfrac{r^2}{2}\\big|_0^2$." },
+        { "instruction": "Multiply the three factors: $\\tfrac{9}{2} \\cdot 2 \\cdot 2\\pi$. (Type it like 18pi.)", "answer": "18*pi", "accept": ["18pi", "56.549"], "hint": "The bounds are constants, so the triple integral is a product." }
+      ],
+      "finalAnswer": { "value": "18pi", "unit": "kg" },
+      "solutionNarrative": "Constant bounds let the integral factor: $\\tfrac{9}{2} \\cdot 2 \\cdot 2\\pi = 18\\pi \\approx 56.5$ kg."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s12",
+      "concepts": ["spherical-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the volume of the ball $\\rho \\le 3$ via $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^{\\pi}\\!\\int_0^3 \\rho^2 \\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Compute the $\\rho$-factor $\\int_0^3 \\rho^2\\,d\\rho$.", "answer": "9", "accept": ["27/3"], "hint": "$\\tfrac{\\rho^3}{3}\\big|_0^3$." },
+        { "instruction": "Compute the $\\varphi$-factor $\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi$.", "answer": "2", "accept": [], "hint": "$-\\cos\\varphi\\big|_0^{\\pi} = 1 - (-1)$." },
+        { "instruction": "Multiply the three factors: $9 \\cdot 2 \\cdot 2\\pi$. (Type it like 36pi.)", "answer": "36*pi", "accept": ["36pi", "113.097"], "hint": "Constant bounds — the integral is a product." }
+      ],
+      "finalAnswer": { "value": "36pi", "unit": "" },
+      "solutionNarrative": "$9 \\cdot 2 \\cdot 2\\pi = 36\\pi$, which is exactly $\\tfrac{4}{3}\\pi \\cdot 3^3$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s13",
+      "concepts": ["spherical-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the volume of the spherical shell $1 \\le \\rho \\le 2$.",
+      "steps": [
+        { "instruction": "Compute the $\\rho$-factor $\\int_1^2 \\rho^2\\,d\\rho$ as a fraction.", "answer": "7/3", "accept": ["2.3333"], "hint": "$\\tfrac{8}{3} - \\tfrac{1}{3}$." },
+        { "instruction": "Multiply by the $\\varphi$-factor 2 and the $\\theta$-factor $2\\pi$. (Type it like 28pi/3.)", "answer": "28*pi/3", "accept": ["28pi/3", "29.322"], "hint": "$\\tfrac{7}{3} \\cdot 2 \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "28pi/3", "unit": "" },
+      "solutionNarrative": "$\\tfrac{7}{3} \\cdot 2 \\cdot 2\\pi = \\tfrac{28\\pi}{3}$ — the difference of the two ball volumes $\\tfrac{4}{3}\\pi(2^3 - 1^3)$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s14",
+      "concepts": ["spherical-integrals"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the volume of the 'ice-cream cone' $\\rho \\le 2$, $0 \\le \\varphi \\le \\tfrac{\\pi}{3}$: $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^{\\pi/3}\\!\\int_0^2 \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Compute the $\\rho$-factor $\\int_0^2 \\rho^2\\,d\\rho$ as a fraction.", "answer": "8/3", "accept": ["2.6667"], "hint": "$\\tfrac{\\rho^3}{3}\\big|_0^2$." },
+        { "instruction": "Compute the $\\varphi$-factor $\\int_0^{\\pi/3} \\sin\\varphi\\,d\\varphi = 1 - \\cos\\tfrac{\\pi}{3}$ as a fraction.", "answer": "1/2", "accept": ["0.5"], "hint": "$\\cos\\tfrac{\\pi}{3} = \\tfrac{1}{2}$." },
+        { "instruction": "Multiply the three factors: $\\tfrac{8}{3} \\cdot \\tfrac{1}{2} \\cdot 2\\pi$. (Type it like 8pi/3.)", "answer": "8*pi/3", "accept": ["8pi/3", "8.3776"], "hint": "$\\tfrac{8}{3} \\cdot \\tfrac{1}{2} = \\tfrac{4}{3}$, then times $2\\pi$." }
+      ],
+      "finalAnswer": { "value": "8pi/3", "unit": "" },
+      "solutionNarrative": "The factors are $\\tfrac{8}{3}$, $\\tfrac{1}{2}$, and $2\\pi$; their product is $\\tfrac{8\\pi}{3}$."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s15",
+      "concepts": ["converting-coordinates"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "You must integrate a density over a solid ball centered at the origin. Which coordinate system matches the region best?",
+      "steps": [
+        { "instruction": "Answer with one of: polar, cylindrical, spherical.", "answer": "spherical", "accept": ["Spherical"], "hint": "The region is organized around a single center point, not an axis." }
+      ],
+      "finalAnswer": { "value": "spherical", "unit": "" },
+      "solutionNarrative": "A ball is described by $\\rho \\le a$ alone in spherical coordinates — all bounds constant. Cylindrical would need a square root in the $z$-bounds, and polar is only two-dimensional."
+    },
+    {
+      "id": "calculus-3.polar-cylindrical-spherical.s16",
+      "concepts": ["polar-double-integrals"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A circular brake disk of radius 2 dm has areal density $\\rho(r) = 3r$ kg/dm². Compute its total mass $\\displaystyle\\int_0^{2\\pi}\\!\\int_0^2 3r \\cdot r\\,dr\\,d\\theta$.",
+      "steps": [
+        { "instruction": "Write the inner integrand $3r \\cdot r$ as a single term in $r$.", "answer": "3r^2", "accept": ["3*r^2"], "hint": "Density times the Jacobian $r$." },
+        { "instruction": "Compute $\\int_0^2 3r^2\\,dr$.", "answer": "8", "accept": [], "hint": "$r^3\\big|_0^2$." },
+        { "instruction": "Multiply by $2\\pi$. (Type it like 16pi.)", "answer": "16*pi", "accept": ["16pi", "50.265"], "hint": "$8 \\cdot 2\\pi$." }
+      ],
+      "finalAnswer": { "value": "16pi", "unit": "kg" },
+      "solutionNarrative": "The Jacobian turns the density $3r$ into $3r^2$; $\\int_0^2 3r^2 dr = 8$, so the mass is $16\\pi \\approx 50.3$ kg."
+    }
+  ]
+}

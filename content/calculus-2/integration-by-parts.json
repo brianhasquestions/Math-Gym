@@ -41,7 +41,7 @@
       "**Economics (consumer/producer accumulation):** marginal quantities multiplied by a weighting factor accumulate via parts into totals."
     ]
   },
-  "generators": ["parts-xex-v1", "parts-lnx-v1", "parts-formula-v1"],
+  "generators": ["parts-xex-v1", "parts-lnx-v1", "parts-formula-v1", "c2l-parts-formula-d1", "c2l-poly-exp-d1", "c2l-log-integrals-d1", "c2l-log-integrals-d3", "c2l-parts-apps-d1", "c2l-parts-apps-d3"],
   "problems": [
     {
       "id": "calculus-2.integration-by-parts.s01",

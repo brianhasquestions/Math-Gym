@@ -1,0 +1,258 @@
+{
+  "id": "numerical-methods.numerical-differentiation",
+  "subject": "numerical-methods",
+  "title": "Numerical Differentiation",
+  "prerequisites": ["numerical-methods.error-and-floating-point", "calculus-1.differentiation-rules"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "forward-backward-difference",
+      "label": "Forward and backward differences",
+      "microLesson": "When a function is known only at sample points — or is too messy to differentiate by hand — replace the derivative's limit with a small finite step: the **forward difference** $D_+ = \\dfrac{f(x+h) - f(x)}{h}$ or the **backward difference** $D_- = \\dfrac{f(x) - f(x-h)}{h}$. Each is the slope of a secant line through two nearby samples. For $f(x) = x^2$ at $x = 2$ with $h = 0.5$: $D_+ = \\frac{6.25 - 4}{0.5} = 4.5$ against the true $f'(2) = 4$. The miss of $0.5$ equals $h$ exactly — one-sided differences carry an error proportional to $h$, i.e. they are **first-order** accurate."
+    },
+    {
+      "id": "central-difference",
+      "label": "The central difference",
+      "microLesson": "Straddle the target point symmetrically and the error collapses: the **central difference** $D_c = \\dfrac{f(x+h) - f(x-h)}{2h}$ has error proportional to $h^2$, not $h$ — **second-order** accuracy, because the symmetric secant cancels the leading Taylor error term. For $f(x) = x^3$ at $x = 1$ with $h = 0.5$: $D_c = \\frac{3.375 - 0.125}{1} = 3.25$ versus the true $3$, an error of exactly $h^2 = 0.25$. Halve $h$ and a one-sided error halves, but a central error drops by a factor of four. On quadratics the central difference is exactly right."
+    },
+    {
+      "id": "second-derivative",
+      "label": "The second-derivative formula",
+      "microLesson": "Three equally spaced samples estimate curvature: $f''(x) \\approx \\dfrac{f(x+h) - 2f(x) + f(x-h)}{h^2}$, again accurate to $O(h^2)$. The numerator is a 'difference of differences' — how much the slope changes across the point — and its sign reads concavity straight off tabulated data: positive means concave up. For $f(x) = x^2$ any spacing gives exactly $2$, matching $f'' = 2$. This stencil is the seed of finite-difference methods: entire differential equations are solved by replacing every derivative in them with formulas like this one."
+    },
+    {
+      "id": "richardson-and-error",
+      "label": "Error orders, Richardson, and the h trade-off",
+      "microLesson": "Every difference formula has a truncation error $O(h^p)$: $p = 1$ for one-sided, $p = 2$ for central formulas. Knowing $p$ buys you two things. First, **Richardson extrapolation**: combine two step sizes as $R = \\dfrac{4D(h/2) - D(h)}{3}$ and the $h^2$ error terms cancel, jumping to $O(h^4)$ accuracy for free. Second, a warning: in floating point, shrinking $h$ eventually backfires, because subtracting nearly equal numbers amplifies rounding error like $\\varepsilon/h$. Total error $\\approx h^2 + \\varepsilon/h$ is U-shaped — there is an optimal $h$, and refining beyond it makes answers WORSE."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The problem: a derivative with no formula\n\nCalculus gives $f'(x)$ as a limit of difference quotients as $h \\to 0$. But a computer cannot take limits, and often you do not even have a formula — just sensor logs, table entries, or an expensive simulation you can only sample. **Numerical differentiation** freezes the limit at a small finite $h$ and asks: how wrong is that, and how do we make it less wrong?\n\n## One-sided differences: first-order accuracy\n\nThe two obvious estimates use a neighbor on one side:\n\n$$D_+ = \\frac{f(x+h) - f(x)}{h} \\qquad\\text{(forward)}, \\qquad D_- = \\frac{f(x) - f(x-h)}{h} \\qquad\\text{(backward)}.$$\n\nEach is a secant slope. Taylor expansion shows the miss: $D_+ = f'(x) + \\frac{h}{2}f''(x) + \\cdots$, so the error shrinks **proportionally to $h$** — these formulas are $O(h)$, or **first-order** accurate. Halve the step, halve the error.\n\n### Worked example\n\n$f(x) = x^2$ at $x = 3$, $h = 0.2$: $D_+ = \\frac{10.24 - 9}{0.2} = 6.2$ and $D_- = \\frac{9 - 7.84}{0.2} = 5.8$, straddling the true $f'(3) = 6$ by $\\pm 0.2$ — exactly $h$, as the Taylor term $\\frac{h}{2}f'' = \\frac{0.2}{2}\\cdot 2$ predicts.\n\n## The central difference: symmetry buys an order\n\nAverage the two one-sided estimates — equivalently, take the secant through the two flanking points:\n\n$$\\boxed{\\,D_c = \\frac{f(x+h) - f(x-h)}{2h} = f'(x) + \\frac{h^2}{6}f'''(x) + \\cdots\\,}$$\n\nThe even-symmetric stencil cancels the $\\frac{h}{2}f''$ term entirely, leaving an $O(h^2)$ — **second-order** — error. Halving $h$ now cuts the error by a factor of **4**. And since the leading error involves $f'''$, the central difference is *exact* on any quadratic.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,4],\"yRange\":[-4,16],\"grid\":true,\"curves\":[{\"fn\":\"x^2\",\"label\":\"f(x) = x²\",\"color\":\"muted\",\"labelAt\":3.6},{\"fn\":\"5*x - 6\",\"label\":\"forward secant, slope 5\",\"color\":\"warn\",\"labelAt\":2.9},{\"fn\":\"4*x - 3\",\"label\":\"central secant, slope 4\",\"color\":\"accent\",\"labelAt\":1.2}],\"points\":[{\"x\":1,\"y\":1,\"label\":\"(1, 1)\",\"color\":\"good\"},{\"x\":2,\"y\":4,\"label\":\"(2, 4)\",\"color\":\"good\"},{\"x\":3,\"y\":9,\"label\":\"(3, 9)\",\"color\":\"good\"}],\"caption\":\"Estimating f'(2) = 4 for f = x² with h = 1: the forward secant (slope 5) misses; the symmetric central secant (slope 4) is exact for a quadratic.\"}\n```\n\n### Worked example\n\n$f(x) = x^3$ at $x = 2$, $h = 0.1$: $D_c = \\frac{9.261 - 6.859}{0.2} = 12.01$ versus the true $12$ — error $0.01 = h^2$. The forward difference at the same $h$ gives $12.61$, an error 61 times larger.\n\n## Curvature from three points: the second derivative\n\nDifference the differences and you get curvature:\n\n$$f''(x) \\approx \\frac{f(x+h) - 2f(x) + f(x-h)}{h^2}, \\qquad \\text{error } O(h^2).$$\n\nThe $1, -2, 1$ stencil measures how the slope changes across $x$: positive output means concave up. It is exact for quadratics and even for cubics (the odd error term cancels); on $f(x) = x^4$ at $x = 1$ with $h = 0.5$ it gives $\\frac{5.0625 - 2 + 0.0625}{0.25} = 12.5$ versus the true $12$ — error $2h^2 = 0.5$. This little stencil, tiled across a grid, is how computers solve heat, wave, and Poisson equations.\n\n## Richardson extrapolation: two estimates, one better answer\n\nBecause the central difference's error is (almost exactly) $Ch^2$, computing it at two step sizes lets you cancel that error algebraically. If $D(h) \\approx f' + Ch^2$ and $D(h/2) \\approx f' + \\frac{C h^2}{4}$, then\n\n$$\\boxed{\\,R = \\frac{4D(h/2) - D(h)}{3} = f' + O(h^4).\\,}$$\n\n### Worked example\n\nFor $f(x) = x^3$ at $x = 1$: $D(0.5) = 3.25$ and $D(0.25) = 3.0625$. Then $R = \\frac{4(3.0625) - 3.25}{3} = \\frac{9}{3} = 3$ — the exact derivative, because for $x^3$ the $h^2$ term was the entire error. The same trick applied to integration rules is called Romberg integration.\n\n## The pitfall: smaller h is not always better\n\nTruncation error shrinks as $h$ shrinks — but the numerator $f(x+h) - f(x-h)$ subtracts two nearly equal numbers, and floating-point **cancellation** amplifies rounding noise like $\\varepsilon/h$. The total error behaves like\n\n$$E(h) \\approx h^2 + \\frac{\\varepsilon}{h},$$\n\na U-shaped curve: refining $h$ helps until the rounding term takes over, after which every further refinement makes the answer WORSE. With $E(h) = h^2 + 0.002/h$: $E(0.1) = 0.03$ but $E(0.01) = 0.2001$ — a hundred-fold smaller step, a seven-fold larger error. In practice: use central differences at a moderate $h$, and buy extra accuracy with Richardson extrapolation rather than with ever-smaller steps. This truncation-versus-rounding tension is floating-point error analysis showing up exactly where the theory said it would."
+  },
+  "application": {
+    "summary": "Numerical differentiation turns sampled data into rates: velocity and acceleration from position logs, gradients for optimization and machine learning when formulas are unavailable, sensitivity estimates in engineering models, and the finite-difference stencils that discretize the differential equations of physics.",
+    "domains": ["motion tracking", "scientific computing", "optimization", "engineering"],
+    "workedExample": "**Velocity and acceleration from a drop test**\n\nA motion-capture rig logs the distance fallen by a dropped instrument package: $s(0) = 0$, $s(1) = 4.9$, $s(2) = 19.6$ meters. The analyst wants the velocity at $t = 1$ s.\n\nThe forward difference gives $\\frac{19.6 - 4.9}{1} = 14.7$ m/s and the backward difference $\\frac{4.9 - 0}{1} = 4.9$ m/s — wildly different, each polluted by an $O(h)$ error with $h = 1$ s. The central difference uses both neighbors: $$v(1) \\approx \\frac{s(2) - s(0)}{2} = \\frac{19.6}{2} = 9.8 \\text{ m/s},$$ which is *exactly* right, because free-fall distance $s = 4.9t^2$ is quadratic and the central difference is exact on quadratics. The second-derivative stencil confirms the physics: $$a \\approx \\frac{19.6 - 2(4.9) + 0}{1^2} = 9.8 \\text{ m/s}^2,$$ recovering the gravitational acceleration from three data points. Real rigs sample far faster, but then face the trade-off: at millisecond steps the position differences shrink toward the sensor's noise floor, and rounding/noise error $\\sim \\varepsilon/h$ takes over. Practical pipelines therefore use central differences at a moderate step, or smooth first and differentiate the fit — precisely the truncation-versus-noise balance this topic quantifies.",
+    "domainNotes": [
+      "**Motion tracking:** velocity and acceleration are computed from sampled positions with central differences; too-fine sampling amplifies sensor noise.",
+      "**Scientific computing:** finite-difference stencils replace derivatives in heat, wave, and fluid equations — the second-derivative formula is the 1-D Laplacian.",
+      "**Optimization:** when gradients have no formula, solvers estimate them by finite differences, choosing h to balance truncation against rounding.",
+      "**Engineering:** sensitivity analysis perturbs a design parameter by h and differences the simulation outputs to estimate d(output)/d(parameter)."
+    ]
+  },
+  "generators": ["nm3-fwd-1", "nm3-fwd-2", "nm3-fwd-3", "nm3-central-1", "nm3-central-2", "nm3-central-3", "nm3-second-1", "nm3-second-2", "nm3-second-3", "nm3-richardson-1", "nm3-richardson-2", "nm3-richardson-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.numerical-differentiation.s01",
+      "concepts": ["forward-backward-difference"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Estimate $f'(2)$ for $f(x) = x^2$ with the forward difference $D_+ = \\dfrac{f(x+h) - f(x)}{h}$, using $h = 0.5$.",
+      "steps": [
+        { "instruction": "Evaluate $f(2.5) = 2.5^2$.", "answer": "6.25", "accept": [], "hint": "Square 2.5." },
+        { "instruction": "Form the quotient $D_+ = \\dfrac{6.25 - 4}{0.5}$.", "answer": "4.5", "accept": ["9/2"], "hint": "$2.25 / 0.5$." }
+      ],
+      "finalAnswer": { "value": "4.5", "unit": "" },
+      "solutionNarrative": "$D_+ = \\frac{6.25 - 4}{0.5} = 4.5$, overshooting the true $f'(2) = 4$ by exactly $h = 0.5$ — the signature first-order error."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s02",
+      "concepts": ["forward-backward-difference"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2$ at $x = 3$ with $h = 0.2$, compute the forward difference, the backward difference, and the forward difference's error against the true $f'(3) = 6$.",
+      "steps": [
+        { "instruction": "$D_+ = \\dfrac{f(3.2) - f(3)}{0.2} = \\dfrac{10.24 - 9}{0.2} = $ ?", "answer": "6.2", "accept": [], "hint": "$1.24 / 0.2$." },
+        { "instruction": "$D_- = \\dfrac{f(3) - f(2.8)}{0.2} = \\dfrac{9 - 7.84}{0.2} = $ ?", "answer": "5.8", "accept": [], "hint": "$1.16 / 0.2$." },
+        { "instruction": "Error of $D_+$: $|6.2 - 6| = $ ?", "answer": "0.2", "accept": ["1/5"], "hint": "The estimates straddle the true value by $\\pm h$." }
+      ],
+      "finalAnswer": { "value": "0.2", "unit": "" },
+      "solutionNarrative": "$D_+ = 6.2$ and $D_- = 5.8$ straddle the true 6 symmetrically; each errs by $h = 0.2$. Averaging them would give the central estimate 6 — exact here."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s03",
+      "concepts": ["forward-backward-difference"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A data logger records $f(0) = 2$, $f(0.5) = 3.25$, $f(1) = 5$ (spacing $h = 0.5$). Estimate $f'(0.5)$ with both one-sided formulas and state their order of accuracy.",
+      "steps": [
+        { "instruction": "Forward: $D_+ = \\dfrac{5 - 3.25}{0.5} = $ ?", "answer": "3.5", "accept": ["7/2"], "hint": "$1.75/0.5$." },
+        { "instruction": "Backward: $D_- = \\dfrac{3.25 - 2}{0.5} = $ ?", "answer": "2.5", "accept": ["5/2"], "hint": "$1.25/0.5$." },
+        { "instruction": "One-sided differences have truncation error $O(h^p)$ with $p = $ ? (Enter the number.)", "answer": "1", "accept": [], "hint": "Halving h halves the error." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$D_+ = 3.5$, $D_- = 2.5$, both first-order ($p = 1$). Their average, 3, is the second-order central estimate — usually the better bet."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s04",
+      "concepts": ["central-difference"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Estimate $f'(2)$ for $f(x) = x^2$ with the central difference $D_c = \\dfrac{f(x+h) - f(x-h)}{2h}$, using $h = 0.25$.",
+      "steps": [
+        { "instruction": "Compute the numerator $f(2.25) - f(1.75) = 5.0625 - 3.0625$.", "answer": "2", "accept": ["2.0"], "hint": "Evaluate both squares first." },
+        { "instruction": "Divide by $2h = 0.5$: $D_c = $ ?", "answer": "4", "accept": ["4.0"], "hint": "$2 / 0.5$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$D_c = \\frac{2}{0.5} = 4$ — exactly $f'(2)$, because the central difference is exact on quadratics."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s05",
+      "concepts": ["central-difference"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^3$ at $x = 1$ with $h = 0.5$, compute the central difference $D_c = \\dfrac{f(1.5) - f(0.5)}{1}$ and its error against the true $f'(1) = 3$.",
+      "steps": [
+        { "instruction": "$D_c = \\dfrac{3.375 - 0.125}{1} = $ ?", "answer": "3.25", "accept": ["13/4"], "hint": "$1.5^3 = 3.375$ and $0.5^3 = 0.125$." },
+        { "instruction": "Error $= |3.25 - 3| = $ ?", "answer": "0.25", "accept": ["1/4"], "hint": "For $x^3$ the central error is exactly $h^2$." }
+      ],
+      "finalAnswer": { "value": "0.25", "unit": "" },
+      "solutionNarrative": "$D_c = 3.25$ versus the true 3: error $0.25 = h^2$ exactly — second-order accuracy on display."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s06",
+      "concepts": ["central-difference"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^3$ at $x = 2$ with $h = 0.1$ (true $f'(2) = 12$): $f(2.1) = 9.261$, $f(1.9) = 6.859$, $f(2) = 8$. Compare the forward and central estimates.",
+      "steps": [
+        { "instruction": "Forward: $D_+ = \\dfrac{9.261 - 8}{0.1} = $ ?", "answer": "12.61", "accept": [], "hint": "$1.261/0.1$." },
+        { "instruction": "Central: $D_c = \\dfrac{9.261 - 6.859}{0.2} = $ ?", "answer": "12.01", "accept": [], "hint": "$2.402/0.2$." },
+        { "instruction": "Which estimate is more accurate? Answer with one of: forward, central.", "answer": "central", "accept": [], "hint": "Errors: 0.61 versus 0.01." }
+      ],
+      "finalAnswer": { "value": "central", "unit": "" },
+      "solutionNarrative": "Forward errs by 0.61, central by 0.01 — a 61-fold win for symmetry at the same cost of two function evaluations."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s07",
+      "concepts": ["second-derivative"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Estimate $f''(2)$ for $f(x) = x^2$ with $\\dfrac{f(x+h) - 2f(x) + f(x-h)}{h^2}$, using $h = 0.5$: the values are $f(1.5) = 2.25$, $f(2) = 4$, $f(2.5) = 6.25$.",
+      "steps": [
+        { "instruction": "Numerator: $6.25 - 2\\cdot 4 + 2.25 = $ ?", "answer": "0.5", "accept": ["1/2"], "hint": "$6.25 - 8 + 2.25$." },
+        { "instruction": "Divide by $h^2 = 0.25$: $f''(2) \\approx $ ?", "answer": "2", "accept": ["2.0"], "hint": "$0.5 / 0.25$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$\\frac{0.5}{0.25} = 2$, matching $f''(x) = 2$ exactly — the stencil has zero error on quadratics."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s08",
+      "concepts": ["second-derivative"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A table gives $f(1) = 3$, $f(1.5) = 5.25$, $f(2) = 8.5$ with spacing $h = 0.5$. Estimate $f''(1.5)$ with the central second-derivative formula.",
+      "steps": [
+        { "instruction": "Numerator: $8.5 - 2\\cdot 5.25 + 3 = $ ?", "answer": "1", "accept": ["1.0"], "hint": "$8.5 - 10.5 + 3$." },
+        { "instruction": "Divide by $h^2 = 0.25$: $f''(1.5) \\approx $ ?", "answer": "4", "accept": ["4.0"], "hint": "$1/0.25$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "The $1, -2, 1$ combination gives 1; dividing by $h^2 = 0.25$ estimates $f'' \\approx 4$ — positive, so the tabulated curve is concave up there."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s09",
+      "concepts": ["second-derivative"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^4$ at $x = 1$ with $h = 0.5$: $f(0.5) = 0.0625$, $f(1) = 1$, $f(1.5) = 5.0625$. Apply the second-derivative formula and find its error against the true $f''(x) = 12x^2$.",
+      "steps": [
+        { "instruction": "$f'' \\approx \\dfrac{5.0625 - 2 + 0.0625}{0.25} = $ ?", "answer": "12.5", "accept": ["25/2"], "hint": "Numerator $3.125$, then divide by $0.25$." },
+        { "instruction": "True value: $12\\cdot 1^2 = $ ?", "answer": "12", "accept": [], "hint": "Differentiate $x^4$ twice." },
+        { "instruction": "Error $= |12.5 - 12| = $ ?", "answer": "0.5", "accept": ["1/2"], "hint": "For $x^4$ the error is exactly $2h^2$." }
+      ],
+      "finalAnswer": { "value": "0.5", "unit": "" },
+      "solutionNarrative": "The stencil gives 12.5 against the true 12: error $0.5 = 2h^2$, which would drop to $0.125$ if $h$ were halved — second-order convergence."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s10",
+      "concepts": ["richardson-and-error"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The central difference $\\dfrac{f(x+h) - f(x-h)}{2h}$ has truncation error $O(h^p)$. What is $p$?",
+      "steps": [
+        { "instruction": "Enter the order $p$.", "answer": "2", "accept": [], "hint": "Symmetry cancels the $O(h)$ term; halving h quarters the error." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "The central difference is second-order: $p = 2$. Halving the step divides its error by 4, versus only 2 for one-sided formulas."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s11",
+      "concepts": ["richardson-and-error"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Central differences for $f(x) = x^3$ at $x = 1$ gave $D(0.5) = 3.25$ and $D(0.25) = 3.0625$. Apply Richardson extrapolation $R = \\dfrac{4D(h/2) - D(h)}{3}$.",
+      "steps": [
+        { "instruction": "Compute $4D(h/2) = 4\\cdot 3.0625$.", "answer": "12.25", "accept": ["49/4"], "hint": "Just multiply." },
+        { "instruction": "$R = \\dfrac{12.25 - 3.25}{3} = $ ?", "answer": "3", "accept": ["3.0"], "hint": "$9/3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$R = \\frac{12.25 - 3.25}{3} = 3$ — the exact derivative, since Richardson cancels the entire $h^2$ error that both estimates carried."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s12",
+      "concepts": ["richardson-and-error"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "In floating point, a central difference has total error about $E(h) = h^2 + \\dfrac{0.002}{h}$ (truncation plus rounding). Evaluate $E(0.1)$ and $E(0.01)$, then decide which step size is better.",
+      "steps": [
+        { "instruction": "$E(0.1) = 0.01 + 0.02 = $ ?", "answer": "0.03", "accept": [], "hint": "$0.1^2 = 0.01$ and $0.002/0.1 = 0.02$." },
+        { "instruction": "$E(0.01) = 0.0001 + 0.2 = $ ?", "answer": "0.2001", "accept": [], "hint": "The rounding term explodes as h shrinks." },
+        { "instruction": "Which step size gives the smaller total error — the larger or the smaller one? Answer with one of: larger, smaller.", "answer": "larger", "accept": [], "hint": "Past the optimum, refining h makes things worse." }
+      ],
+      "finalAnswer": { "value": "larger", "unit": "" },
+      "solutionNarrative": "$E(0.1) = 0.03$ but $E(0.01) = 0.2001$: the LARGER step wins. Total error is U-shaped in h — beyond the sweet spot, cancellation noise dominates."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s13",
+      "concepts": ["central-difference"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A table lists $f(1) = 3$, $f(2) = 7$, $f(3) = 13$. Estimate $f'(2)$ with the central difference (spacing $h = 1$).",
+      "steps": [
+        { "instruction": "$D_c = \\dfrac{f(3) - f(1)}{2} = \\dfrac{13 - 3}{2} = $ ?", "answer": "5", "accept": ["5.0"], "hint": "Skip the middle value; use the flanking ones." }
+      ],
+      "finalAnswer": { "value": "5", "unit": "" },
+      "solutionNarrative": "$D_c = \\frac{13 - 3}{2} = 5$ — the slope of the secant through the two neighbors of $x = 2$."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s14",
+      "concepts": ["second-derivative"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Sampled every 2 seconds, a cooling curve reads $f(0) = 10$, $f(2) = 6$, $f(4) = 4$. Estimate $f''(2)$ with the central second-derivative formula ($h = 2$).",
+      "steps": [
+        { "instruction": "Numerator: $4 - 2\\cdot 6 + 10 = $ ?", "answer": "2", "accept": [], "hint": "$4 - 12 + 10$." },
+        { "instruction": "Divide by $h^2 = 4$: $f''(2) \\approx $ ?", "answer": "0.5", "accept": ["1/2"], "hint": "$2/4$." }
+      ],
+      "finalAnswer": { "value": "0.5", "unit": "" },
+      "solutionNarrative": "$f'' \\approx \\frac{2}{4} = 0.5 > 0$: the cooling curve is concave up — it drops fast at first and levels off, exactly what the positive second difference detects."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s15",
+      "concepts": ["richardson-and-error", "forward-backward-difference"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "A forward difference currently has error about $0.4$, and a central difference about $0.08$. Predict each error after the step size $h$ is halved, using their orders $O(h)$ and $O(h^2)$.",
+      "steps": [
+        { "instruction": "Forward is first-order: halving h halves the error. New error $= 0.4/2 = $ ?", "answer": "0.2", "accept": ["1/5"], "hint": "Divide by $2^1$." },
+        { "instruction": "Central is second-order: halving h quarters the error. New error $= 0.08/4 = $ ?", "answer": "0.02", "accept": [], "hint": "Divide by $2^2 = 4$." }
+      ],
+      "finalAnswer": { "value": "0.02", "unit": "" },
+      "solutionNarrative": "Order p means halving h divides the error by $2^p$: the forward error drops to 0.2, the central to 0.02 — the gap between the methods widens with every refinement."
+    },
+    {
+      "id": "numerical-methods.numerical-differentiation.s16",
+      "concepts": ["forward-backward-difference", "central-difference"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A falling object's logged distances are $s(0) = 0$, $s(1) = 4.9$, $s(2) = 19.6$ m. Estimate the velocity at $t = 1$ s with the forward difference, then with the central difference.",
+      "steps": [
+        { "instruction": "Forward: $\\dfrac{s(2) - s(1)}{1} = \\dfrac{19.6 - 4.9}{1} = $ ?", "answer": "14.7", "accept": [], "hint": "Subtract the readings." },
+        { "instruction": "Central: $\\dfrac{s(2) - s(0)}{2} = \\dfrac{19.6 - 0}{2} = $ ?", "answer": "9.8", "accept": [], "hint": "Use the flanking samples." }
+      ],
+      "finalAnswer": { "value": "9.8", "unit": "m/s" },
+      "solutionNarrative": "Forward gives 14.7 m/s but central gives 9.8 m/s — exactly right, since $s = 4.9t^2$ is quadratic and the central difference is exact on quadratics."
+    }
+  ]
+}

@@ -41,7 +41,7 @@
       "**Math/everyday:** converting any repeating decimal into an exact fraction via a geometric series."
     ]
   },
-  "generators": ["geom-series-sum-v1", "geom-converge-v1", "pseries-v1", "repeating-decimal-v1"],
+  "generators": ["geom-series-sum-v1", "geom-converge-v1", "pseries-v1", "repeating-decimal-v1", "c2l-conv-tests-d1", "c2l-conv-tests-d3", "c2l-pseries-d1", "c2l-pseries-d3", "c2l-series-apps-d1"],
   "problems": [
     {
       "id": "calculus-2.series-and-convergence.s01",

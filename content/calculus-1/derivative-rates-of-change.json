@@ -41,7 +41,7 @@
       "**Everyday life:** the slope of a distance-time graph is speed; a steeper graph means you're moving faster at that instant."
     ]
   },
-  "generators": ["deriv-from-def-v1", "slope-at-point-v1", "avg-velocity-v1", "marginal-cost-v1"],
+  "generators": ["deriv-from-def-v1", "slope-at-point-v1", "avg-velocity-v1", "marginal-cost-v1", "c1l-slopetan-d1", "c1l-avginst-d1", "c1l-avginst-d3", "c1l-interp-d3"],
   "problems": [
     {
       "id": "calculus-1.derivative-rates-of-change.s01",

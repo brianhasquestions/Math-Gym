@@ -41,7 +41,7 @@
       "**Operations:** modeling how a population flows between states (employed/unemployed, brand A/brand B) month over month."
     ]
   },
-  "generators": ["transform-apply-v1", "rotation-v1"],
+  "generators": ["transform-apply-v1", "rotation-v1", "mpl-rrs-d3", "mpl-compose-d2", "mpl-compose-d3", "mpl-markov-d1", "mpl-markov-d2", "mpl-steady-state-d3", "mxa-apply-2", "mxa-apply-3", "mxa-stdmat-1", "mxa-classify-3", "mxa-compose-1", "mxa-compose-2", "mxa-compose-3", "mxa-area-1", "mxa-area-2", "mxa-area-3"],
   "problems": [
     {
       "id": "matrix-algebra.matrix-transformations.s01",

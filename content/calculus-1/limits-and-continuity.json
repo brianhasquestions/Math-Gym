@@ -41,7 +41,7 @@
       "**Biology:** a population or drug concentration leveling off toward a carrying capacity or steady-state value."
     ]
   },
-  "generators": ["limit-sub-v1", "limit-factor-v1", "limit-infinity-v1", "continuity-hole-v1", "limit-diffquotient-v1"],
+  "generators": ["limit-sub-v1", "limit-factor-v1", "limit-infinity-v1", "continuity-hole-v1", "limit-diffquotient-v1", "c1l-evallim-d3", "c1l-cont-d1", "c1l-cont-d3", "c1l-limapp-d1"],
   "problems": [
     {
       "id": "calculus-1.limits-and-continuity.s01",

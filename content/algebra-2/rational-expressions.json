@@ -41,7 +41,7 @@
       "**Finance:** cost per person is (fixed bill) / (number of people) — undefined for zero people, and it drops as the group grows."
     ]
   },
-  "generators": ["excluded-value-v1", "simplify-rational-v1", "eval-rational-v1", "solve-rational-eq-v1"],
+  "generators": ["excluded-value-v1", "simplify-rational-v1", "eval-rational-v1", "solve-rational-eq-v1", "a2l-excluded-d2", "a2l-excluded-d3", "a2l-simplify-rational-d1", "a2l-simplify-rational-d3", "a2l-eval-rational-d1", "a2l-eval-rational-d3"],
   "problems": [
     {
       "id": "algebra-2.rational-expressions.s01",

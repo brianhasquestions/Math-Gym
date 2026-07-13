@@ -1,0 +1,280 @@
+{
+  "id": "algebra-2.function-transformations",
+  "subject": "algebra-2",
+  "title": "Function Transformations",
+  "prerequisites": ["algebra-2.functions"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "shifts",
+      "label": "Vertical and horizontal shifts",
+      "microLesson": "Adding OUTSIDE the function slides the graph vertically: $f(x) + k$ moves every point up $k$ (down if $k < 0$). Adding INSIDE slides it horizontally — and backwards from what you'd guess: $f(x - h)$ moves the graph **right** $h$, because the input must be $h$ units bigger to feed $f$ the same value. So $g(x) = (x - 3)^2 + 2$ is $y = x^2$ shifted right 3 and up 2, with vertex at $(3, 2)$. Outside acts on $y$ and behaves normally; inside acts on $x$ and does the opposite of its sign."
+    },
+    {
+      "id": "reflections",
+      "label": "Reflections",
+      "microLesson": "A minus sign OUTSIDE flips the graph over the **x-axis**: $-f(x)$ turns every point $(x, y)$ into $(x, -y)$ — peaks become valleys. A minus sign INSIDE flips over the **y-axis**: $f(-x)$ turns $(x, y)$ into $(-x, y)$ — the graph mirrors left-to-right. The same outside/inside rule applies: outside changes $y$, inside changes $x$. To reflect a formula over the y-axis, substitute $-x$ for every $x$ and simplify: $f(x) = x^2 + 2x$ becomes $f(-x) = x^2 - 2x$."
+    },
+    {
+      "id": "stretches",
+      "label": "Stretches and compressions",
+      "microLesson": "Multiplying OUTSIDE scales vertically: $a \\cdot f(x)$ stretches the graph taller by factor $a$ when $a > 1$, and compresses it flatter when $0 < a < 1$; a point $(x, y)$ moves to $(x, ay)$. Multiplying INSIDE scales horizontally and, as always with inside changes, does the opposite: $f(bx)$ with $b > 1$ **compresses** the graph toward the y-axis, sending $(x, y)$ to $(x/b, y)$, while $f(x/b)$ stretches it wider by factor $b$. Vertical factors read straight off; horizontal factors are reciprocals."
+    },
+    {
+      "id": "combining-transformations",
+      "label": "Combining transformations",
+      "microLesson": "In $g(x) = a \\cdot f(x - h) + k$, apply the transformations in function-machine order: shift right $h$ (inside), then stretch by $a$ and reflect if $a < 0$ (multiply), then shift up $k$ (add last). Order matters between stretch and vertical shift: stretching AFTER shifting up would also stretch the shift. A point $(p, q)$ on $f$ lands at $(p + h,\\; aq + k)$ on $g$. This template is exactly vertex form of a parabola: $a(x - h)^2 + k$ is $y = x^2$ shifted to vertex $(h, k)$ and scaled by $a$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## One graph, endless variations\n\nOnce you know the graph of $y = x^2$, you should never have to re-plot $y = (x-3)^2 + 2$ point by point — it is the SAME parabola, picked up and moved. **Function transformations** are the grammar of moving graphs: four verbs (shift, reflect, stretch, compress) and one crucial distinction — does the change happen **inside** the parentheses or **outside**?\n\n> **Outside the function acts on $y$ and behaves exactly as written. Inside the function acts on $x$ and does the opposite of what it says.**\n\nEvery rule below is an instance of that sentence.\n\n## Shifts\n\n| Formula | Effect | A point $(x, y)$ goes to |\n|---|---|---|\n| $f(x) + k$ | up $k$ | $(x, y + k)$ |\n| $f(x) - k$ | down $k$ | $(x, y - k)$ |\n| $f(x - h)$ | RIGHT $h$ | $(x + h, y)$ |\n| $f(x + h)$ | LEFT $h$ | $(x - h, y)$ |\n\nThe outside ones are no surprise. The inside ones are backwards: why does $f(x - 3)$ move **right**? Because to get the old output $f(0)$, the new function needs input $x = 3$ — everything happens 3 units later. \n\n```plot\n{ \"xRange\": [-4, 8], \"yRange\": [-1, 10], \"curves\": [ { \"fn\": \"x^2\", \"label\": \"y = x^2\", \"labelAt\": -2.6, \"color\": \"dim\" }, { \"fn\": \"(x-3)^2 + 2\", \"label\": \"y = (x-3)^2 + 2\", \"labelAt\": 5.4, \"color\": \"accent\" } ], \"points\": [ { \"x\": 0, \"y\": 0, \"label\": \"(0,0)\", \"color\": \"dim\" }, { \"x\": 3, \"y\": 2, \"label\": \"(3,2)\", \"color\": \"accent\" } ], \"caption\": \"y = x^2 shifted right 3 and up 2: the vertex rides from (0,0) to (3,2).\" }\n```\n\n## Reflections\n\n- $-f(x)$ (minus **outside**): flip over the **x-axis**. $(x, y) \\to (x, -y)$.\n- $f(-x)$ (minus **inside**): flip over the **y-axis**. $(x, y) \\to (-x, y)$.\n\nTo reflect a formula over the y-axis, substitute $-x$ everywhere and simplify. For $f(x) = x^2 + 2x$:\n\n$$f(-x) = (-x)^2 + 2(-x) = x^2 - 2x.$$\n\nEven powers survive unchanged; odd powers flip sign.\n\n```plot\n{ \"xRange\": [-5, 5], \"yRange\": [-6, 6], \"curves\": [ { \"fn\": \"x^2 - 4\", \"label\": \"f(x)\", \"labelAt\": 2.4, \"color\": \"accent\" }, { \"fn\": \"-(x^2 - 4)\", \"label\": \"-f(x)\", \"labelAt\": -2.6, \"color\": \"warn\" } ], \"caption\": \"Multiplying the OUTPUT by -1 flips the parabola over the x-axis: valleys become peaks.\" }\n```\n\n## Stretches and compressions\n\n| Formula | Effect | A point $(x, y)$ goes to |\n|---|---|---|\n| $a f(x)$, $a > 1$ | vertical stretch by $a$ | $(x, ay)$ |\n| $a f(x)$, $0 < a < 1$ | vertical compression | $(x, ay)$ |\n| $f(bx)$, $b > 1$ | horizontal COMPRESSION by $\\tfrac{1}{b}$ | $\\left(\\tfrac{x}{b}, y\\right)$ |\n| $f(x/b)$, $b > 1$ | horizontal STRETCH by $b$ | $(bx, y)$ |\n\nSame inside/outside logic: the outside factor $a$ scales $y$ directly; the inside factor $b$ scales $x$ by its **reciprocal**. A drum recording played at $f(2t)$ plays twice as fast — the waveform is squeezed, not stretched.\n\n## Combining: the master template\n\n$$g(x) = a \\cdot f(x - h) + k$$\n\nRead it like the order of operations acting on $f$'s output:\n\n1. **Inside first**: shift right $h$ (left if the sign is $+$).\n2. **Multiply**: stretch vertically by $|a|$; if $a < 0$, also reflect over the x-axis.\n3. **Add last**: shift up $k$ (down if negative).\n\nA point $(p, q)$ on $y = f(x)$ lands at\n\n$$(p + h, \\; aq + k).$$\n\nWhy stretch **before** the vertical shift? Because in $a f(x-h) + k$ the multiplication happens before the addition. If you shifted up first and then stretched, the stretch would multiply your shift too — $a(f(x) + k) = af(x) + ak$, which is a different function.\n\n### Vertex form is transformations in disguise\n\nApply the template to $f(x) = x^2$ and you get **vertex form**:\n\n$$g(x) = a(x - h)^2 + k,$$\n\nthe parabola with vertex $(h, k)$, opening down when $a < 0$, skinny when $|a| > 1$, wide when $|a| < 1$. Writing a transformed formula is just filling in $a$, $h$, $k$ — e.g. 'shift $x^2$ right 1, stretch by 2, up 3' is $2(x-1)^2 + 3$.\n\n### Inside combos: factor first\n\nWhen a stretch and a shift both live inside, like $f(2x - 6)$, factor the inside before reading it: $f(2(x - 3))$ — compress horizontally by $\\tfrac{1}{2}$, THEN shift right 3. Reading the $-6$ as 'right 6' is the classic trap.\n\n## Common pitfalls\n\n- **Inside signs read backwards**: $f(x + 4)$ moves LEFT, $f(x - 4)$ moves RIGHT.\n- **Horizontal factors are reciprocals**: $f(3x)$ squeezes to a third of the width; it does not triple it.\n- **Order between stretch and vertical shift**: $2f(x) + 3$ stretches first, then lifts; $2(f(x) + 3)$ is something else entirely.\n- **Unfactored insides**: $f(2x - 6) = f(2(x-3))$ shifts right 3, not right 6."
+  },
+  "application": {
+    "summary": "Transformations are how one master curve serves a thousand jobs: audio engineers shift and scale a waveform, physicists slide a projectile arc to a new launch point, statisticians standardize any bell curve to THE bell curve, and game developers move one sprite arc everywhere on screen — all with a, h, k knobs instead of new formulas.",
+    "domains": ["audio engineering", "physics", "statistics", "game development"],
+    "workedExample": "**Re-aiming a water fountain.**\n\nA park fountain's stock nozzle throws water in the arc $y = -x^2$ (in feet, with the nozzle at the origin — an upside-down parabola). The city wants the SAME arc but launched from a planter 4 ft to the right and 6 ft up, and half as tall. What's the new arc's equation, and where does its peak sit?\n\nBuild $g(x) = a \\cdot f(x - h) + k$ with $f(x) = -x^2$:\n\n- Half as tall: $a = \\tfrac{1}{2}$.\n- 4 ft right: $h = 4$. 6 ft up: $k = 6$.\n\n$$g(x) = \\tfrac{1}{2} \\cdot \\left(-(x - 4)^2\\right) + 6 = -\\tfrac{1}{2}(x - 4)^2 + 6.$$\n\nThe old peak $(0, 0)$ lands at $(0 + 4, \\; \\tfrac{1}{2}\\cdot 0 + 6) = (4, 6)$ — read straight off the point-mapping rule $(p, q) \\to (p + h, aq + k)$. No re-deriving physics, no new curve: three knobs re-aimed the fountain.",
+    "domainNotes": [
+      "**Audio engineering:** a gain knob is $a \\cdot f(t)$ (vertical stretch), a delay is $f(t - h)$ (shift right), pitch-shifting is $f(bt)$ (horizontal compression).",
+      "**Physics:** every projectile arc is one parabola transformed — launch point sets $(h, k)$, launch speed sets the stretch.",
+      "**Statistics:** standardizing a normal curve with $z = \\tfrac{x - \\mu}{\\sigma}$ is a horizontal shift by $\\mu$ and stretch by $\\sigma$ mapping any bell onto the standard one.",
+      "**Game development:** one jump-arc function, transformed per character position and jump height, animates every jump in the game."
+    ]
+  },
+  "generators": [
+    "a2v-shift-1", "a2v-shift-2", "a2v-shift-3",
+    "a2v-reflect-1", "a2v-reflect-2", "a2v-reflect-3",
+    "a2v-stretch-1", "a2v-stretch-2", "a2v-stretch-3",
+    "a2v-combine-1", "a2v-combine-2", "a2v-combine-3"
+  ],
+  "problems": [
+    {
+      "id": "algebra-2.function-transformations.s01",
+      "concepts": ["shifts"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The graph of $g(x) = x^2 + 3$ is the graph of $y = x^2$ shifted in one direction. Which direction, and by how much?",
+      "steps": [
+        { "instruction": "The $+3$ sits OUTSIDE the squaring, so it acts on $y$. Which way does the graph move? Answer with one of: up, down, left, right.", "answer": "up", "accept": ["shifted up", "upward"], "hint": "Outside changes behave exactly as written: adding raises the graph." },
+        { "instruction": "By how many units?", "answer": "3", "accept": [], "hint": "Every output gains 3." }
+      ],
+      "finalAnswer": { "value": "up 3", "unit": "" },
+      "solutionNarrative": "$x^2 + 3$ adds 3 to every output: the parabola shifts up 3 units."
+    },
+    {
+      "id": "algebra-2.function-transformations.s02",
+      "concepts": ["shifts"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $g(x) = f(x - 4)$. The point $(2, 5)$ is on the graph of $f$. Which direction does the graph shift, and where does the point land?",
+      "steps": [
+        { "instruction": "The $-4$ is INSIDE the function, so it acts on $x$ — backwards. Which way does the graph move? Answer with one of: up, down, left, right.", "answer": "right", "accept": ["shifted right", "to the right"], "hint": "Inside changes do the opposite of their sign: minus moves right." },
+        { "instruction": "Where does $(2, 5)$ land? Write the image in the form <x, y> (e.g. <3, -2>).", "answer": "<6, 5>", "accept": ["(6, 5)", "6, 5"], "hint": "Add 4 to the x-coordinate; y is untouched." }
+      ],
+      "finalAnswer": { "value": "<6, 5>", "unit": "" },
+      "solutionNarrative": "$f(x-4)$ shifts the graph right 4, carrying $(2, 5)$ to $(6, 5)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s03",
+      "concepts": ["shifts"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Write the formula for $y = x^2$ shifted LEFT 2 and DOWN 5, and give the new vertex.",
+      "plot": { "xRange": [-7, 4], "yRange": [-6, 6], "curves": [ { "fn": "x^2", "label": "y = x^2", "labelAt": 2, "color": "dim" }, { "fn": "(x+2)^2 - 5", "label": "y = (x+2)^2 - 5", "labelAt": -5.4, "color": "accent" } ], "points": [ { "x": -2, "y": -5, "label": "vertex", "color": "accent" } ], "caption": "Left 2 and down 5: the vertex slides from (0,0) to (-2,-5)." },
+      "steps": [
+        { "instruction": "Where does the vertex $(0, 0)$ land? Write it in the form <x, y> (e.g. <3, -2>).", "answer": "<-2, -5>", "accept": ["(-2, -5)", "-2, -5"], "hint": "Left 2 subtracts from x; down 5 subtracts from y." },
+        { "instruction": "Write the transformed formula. (Type it like (x + 2)^2 - 5.)", "answer": "(x + 2)^2 - 5", "accept": ["(x+2)^2-5", "x^2 + 4x - 1"], "hint": "LEFT 2 means $+2$ inside; DOWN 5 means $-5$ outside." }
+      ],
+      "finalAnswer": { "value": "(x + 2)^2 - 5", "unit": "" },
+      "solutionNarrative": "Left 2 puts $+2$ inside, down 5 puts $-5$ outside: $g(x) = (x+2)^2 - 5$, vertex $(-2, -5)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s04",
+      "concepts": ["shifts"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The graph of $g(x) = (x - 6)^2 + 1$ is a shifted copy of $y = x^2$. Read off both shifts, then track the point $(0, 0)$.",
+      "steps": [
+        { "instruction": "The inside is $x - 6$. How far RIGHT does the graph shift?", "answer": "6", "accept": [], "hint": "Inside minus moves right by that amount." },
+        { "instruction": "The outside adds 1. How far UP?", "answer": "1", "accept": [], "hint": "Outside additions act on y as written." },
+        { "instruction": "Where does the origin-vertex $(0, 0)$ land? Write it in the form <x, y> (e.g. <3, -2>).", "answer": "<6, 1>", "accept": ["(6, 1)", "6, 1"], "hint": "$(0 + 6, 0 + 1)$." }
+      ],
+      "finalAnswer": { "value": "<6, 1>", "unit": "" },
+      "solutionNarrative": "Right 6 (inside $-6$) and up 1 (outside $+1$): the vertex moves to $(6, 1)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s05",
+      "concepts": ["reflections"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $g(x) = -f(x)$, and suppose $(3, 7)$ is on the graph of $f$. Which axis does the graph flip over, and where does the point land?",
+      "steps": [
+        { "instruction": "The minus sign is OUTSIDE, acting on the output. Which axis is the mirror? Answer with one of: x-axis, y-axis.", "answer": "x-axis", "accept": ["x axis", "the x-axis"], "hint": "Outside minus negates y — that flips over the x-axis." },
+        { "instruction": "Where does $(3, 7)$ land? Write it in the form <x, y> (e.g. <3, -2>).", "answer": "<3, -7>", "accept": ["(3, -7)", "3, -7"], "hint": "Keep x; negate y." }
+      ],
+      "finalAnswer": { "value": "<3, -7>", "unit": "" },
+      "solutionNarrative": "$-f(x)$ reflects over the x-axis: $(3, 7) \\to (3, -7)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s06",
+      "concepts": ["reflections"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $g(x) = f(-x)$, and suppose $(-2, 5)$ is on the graph of $f$. Which axis is the mirror, and where does the point land?",
+      "steps": [
+        { "instruction": "The minus sign is INSIDE, acting on the input. Which axis is the mirror? Answer with one of: x-axis, y-axis.", "answer": "y-axis", "accept": ["y axis", "the y-axis"], "hint": "Inside minus negates x — a left-right mirror." },
+        { "instruction": "Where does $(-2, 5)$ land? Write it in the form <x, y> (e.g. <3, -2>).", "answer": "<2, 5>", "accept": ["(2, 5)", "2, 5"], "hint": "Negate x; keep y." }
+      ],
+      "finalAnswer": { "value": "<2, 5>", "unit": "" },
+      "solutionNarrative": "$f(-x)$ reflects over the y-axis: $(-2, 5) \\to (2, 5)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s07",
+      "concepts": ["reflections"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Reflect $f(x) = x^2 + 2x$ over the y-axis by computing $g(x) = f(-x)$, and simplify.",
+      "plot": { "xRange": [-5, 5], "yRange": [-3, 9], "curves": [ { "fn": "x^2 + 2*x", "label": "f(x)", "labelAt": 1.8, "color": "dim" }, { "fn": "x^2 - 2*x", "label": "f(-x)", "labelAt": -1.2, "color": "accent" } ], "caption": "Substituting -x for x mirrors the parabola across the y-axis." },
+      "steps": [
+        { "instruction": "Substitute: $(-x)^2 + 2(-x)$. What is the coefficient of $x$ after simplifying?", "answer": "-2", "accept": [], "hint": "$(-x)^2 = x^2$ keeps its sign; the odd-power term flips." },
+        { "instruction": "Write the simplified formula for $g(x)$. (Type it like x^2 - 2x.)", "answer": "x^2 - 2x", "accept": ["x^2-2x", "x(x - 2)"], "hint": "Even power unchanged, odd power negated." }
+      ],
+      "finalAnswer": { "value": "x^2 - 2x", "unit": "" },
+      "solutionNarrative": "$f(-x) = (-x)^2 + 2(-x) = x^2 - 2x$: the even term survives, the odd term flips sign."
+    },
+    {
+      "id": "algebra-2.function-transformations.s08",
+      "concepts": ["stretches"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $g(x) = 3f(x)$, and suppose $(2, 4)$ is on the graph of $f$. Describe the transformation and track the point.",
+      "steps": [
+        { "instruction": "The factor 3 multiplies the OUTPUT. What is the vertical stretch factor?", "answer": "3", "accept": [], "hint": "Outside multiplication scales y directly." },
+        { "instruction": "Where does $(2, 4)$ land? Write it in the form <x, y> (e.g. <3, -2>).", "answer": "<2, 12>", "accept": ["(2, 12)", "2, 12"], "hint": "Keep x; triple y." }
+      ],
+      "finalAnswer": { "value": "<2, 12>", "unit": "" },
+      "solutionNarrative": "$3f(x)$ stretches vertically by 3: $(2, 4) \\to (2, 12)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s09",
+      "concepts": ["stretches"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $g(x) = f(2x)$, and suppose $(6, 5)$ is on the graph of $f$. Is this a horizontal stretch or compression, and where does the point land?",
+      "steps": [
+        { "instruction": "The factor 2 multiplies the INPUT, so it acts on x with the reciprocal. Is the graph horizontally stretched or compressed? Answer with one of: stretch, compression.", "answer": "compression", "accept": ["compressed", "compress"], "hint": "Inside factor greater than 1 squeezes toward the y-axis." },
+        { "instruction": "Where does $(6, 5)$ land? Write it in the form <x, y> (e.g. <3, -2>).", "answer": "<3, 5>", "accept": ["(3, 5)", "3, 5"], "hint": "x is halved (reciprocal of 2); y is untouched." }
+      ],
+      "finalAnswer": { "value": "<3, 5>", "unit": "" },
+      "solutionNarrative": "$f(2x)$ compresses horizontally by $\\tfrac{1}{2}$: $(6, 5) \\to (3, 5)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s10",
+      "concepts": ["stretches"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Stretch $f(x) = x^2 - 2$ vertically by a factor of 4. Write the resulting formula.",
+      "steps": [
+        { "instruction": "Multiply the WHOLE output by 4: $4(x^2 - 2)$. Write it expanded. (Type it like 4x^2 - 8.)", "answer": "4x^2 - 8", "accept": ["4x^2-8", "4(x^2 - 2)"], "hint": "The stretch multiplies every term of the output, including the $-2$." }
+      ],
+      "finalAnswer": { "value": "4x^2 - 8", "unit": "" },
+      "solutionNarrative": "A vertical stretch by 4 multiplies the entire output: $4(x^2 - 2) = 4x^2 - 8$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s11",
+      "concepts": ["stretches"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $g(x) = f(x/2)$, and suppose $(3, 8)$ is on the graph of $f$. Classify the transformation and track the point.",
+      "steps": [
+        { "instruction": "Dividing the input by 2 scales x by the reciprocal of $\\tfrac{1}{2}$. Is the graph horizontally stretched or compressed? Answer with one of: stretch, compression.", "answer": "stretch", "accept": ["stretched"], "hint": "Inside factor LESS than 1 widens the graph." },
+        { "instruction": "By what factor is the graph widened?", "answer": "2", "accept": [], "hint": "Reciprocal of $\\tfrac{1}{2}$." },
+        { "instruction": "Where does $(3, 8)$ land? Write it in the form <x, y> (e.g. <3, -2>).", "answer": "<6, 8>", "accept": ["(6, 8)", "6, 8"], "hint": "Double x; keep y." }
+      ],
+      "finalAnswer": { "value": "<6, 8>", "unit": "" },
+      "solutionNarrative": "$f(x/2)$ stretches horizontally by 2: $(3, 8) \\to (6, 8)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s12",
+      "concepts": ["combining-transformations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Let $g(x) = 2f(x) + 1$, and suppose $(3, 4)$ is on the graph of $f$. Where does the point land? (Stretch first, then shift.)",
+      "steps": [
+        { "instruction": "Apply the operations to $y = 4$ in order: multiply by 2, THEN add 1. What is the new y-value?", "answer": "9", "accept": [], "hint": "$2 \\cdot 4 + 1$ — multiplication before addition." },
+        { "instruction": "Write the image in the form <x, y> (e.g. <3, -2>).", "answer": "<3, 9>", "accept": ["(3, 9)", "3, 9"], "hint": "Nothing touched the input, so x stays 3." }
+      ],
+      "finalAnswer": { "value": "<3, 9>", "unit": "" },
+      "solutionNarrative": "Outside operations follow order of operations: $y = 2(4) + 1 = 9$, so $(3, 4) \\to (3, 9)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s13",
+      "concepts": ["combining-transformations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Let $g(x) = -f(x - 2)$, and suppose $(1, 5)$ is on the graph of $f$. Where does the point land?",
+      "steps": [
+        { "instruction": "Inside first: the $-2$ shifts right 2. What is the new x-coordinate?", "answer": "3", "accept": [], "hint": "$1 + 2$." },
+        { "instruction": "Outside next: the minus reflects over the x-axis. What is the new y-coordinate?", "answer": "-5", "accept": [], "hint": "Negate the output 5." },
+        { "instruction": "Write the image in the form <x, y> (e.g. <3, -2>).", "answer": "<3, -5>", "accept": ["(3, -5)", "3, -5"], "hint": "Combine the two coordinates." }
+      ],
+      "finalAnswer": { "value": "<3, -5>", "unit": "" },
+      "solutionNarrative": "Shift right 2 then flip over the x-axis: $(1, 5) \\to (3, 5) \\to (3, -5)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s14",
+      "concepts": ["combining-transformations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Transform $y = x^2$: shift RIGHT 1, stretch vertically by 2, then shift UP 3. Give the new vertex and the formula.",
+      "plot": { "xRange": [-3, 5], "yRange": [-1, 12], "curves": [ { "fn": "x^2", "label": "y = x^2", "labelAt": -2.2, "color": "dim" }, { "fn": "2*(x-1)^2 + 3", "label": "y = 2(x-1)^2 + 3", "labelAt": 3.2, "color": "accent" } ], "points": [ { "x": 1, "y": 3, "label": "vertex", "color": "accent" } ], "caption": "Right 1, twice as steep, up 3: vertex (1, 3), narrower opening." },
+      "steps": [
+        { "instruction": "The vertex starts at $(0,0)$. Where does it end up? Write it in the form <x, y> (e.g. <3, -2>).", "answer": "<1, 3>", "accept": ["(1, 3)", "1, 3"], "hint": "The stretch does not move the vertex: $(0+1, 2\\cdot 0 + 3)$." },
+        { "instruction": "Write the transformed formula in vertex form. (Type it like 2(x - 1)^2 + 3.)", "answer": "2(x - 1)^2 + 3", "accept": ["2(x-1)^2+3", "2x^2 - 4x + 5"], "hint": "$a = 2$, $h = 1$, $k = 3$ in $a(x-h)^2 + k$." }
+      ],
+      "finalAnswer": { "value": "2(x - 1)^2 + 3", "unit": "" },
+      "solutionNarrative": "Filling the template $a(x-h)^2+k$ with $a=2, h=1, k=3$ gives $2(x-1)^2 + 3$; the vertex rides to $(1, 3)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s15",
+      "concepts": ["combining-transformations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $g(x) = 3f(x + 2) - 4$, and suppose $(1, 2)$ is on the graph of $f$. Where does the point land?",
+      "steps": [
+        { "instruction": "Inside: $x + 2$ shifts LEFT 2. New x-coordinate?", "answer": "-1", "accept": [], "hint": "$1 - 2$ — inside plus moves left." },
+        { "instruction": "Outside, in order: multiply y by 3, then subtract 4. New y-coordinate?", "answer": "2", "accept": [], "hint": "$3 \\cdot 2 - 4$." },
+        { "instruction": "Write the image in the form <x, y> (e.g. <3, -2>).", "answer": "<-1, 2>", "accept": ["(-1, 2)", "-1, 2"], "hint": "Combine both coordinates." }
+      ],
+      "finalAnswer": { "value": "<-1, 2>", "unit": "" },
+      "solutionNarrative": "$(p, q) \\to (p - 2, 3q - 4)$: $(1, 2) \\to (-1, 2)$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s16",
+      "concepts": ["combining-transformations"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A game character's jump arc is $y = a(x - h)^2 + k$ with peak at $(3, 4)$, and the arc passes through the launch point $(1, -4)$. Find $a$.",
+      "steps": [
+        { "instruction": "The peak is the vertex, so $h = 3$ and $k = 4$: $y = a(x-3)^2 + 4$. Substitute the point $(1, -4)$: $-4 = a(1-3)^2 + 4$. What is $(1-3)^2$?", "answer": "4", "accept": [], "hint": "$(-2)^2$." },
+        { "instruction": "Solve $-4 = 4a + 4$ for $a$.", "answer": "-2", "accept": ["a = -2"], "hint": "$4a = -8$." }
+      ],
+      "finalAnswer": { "value": "a = -2", "unit": "" },
+      "solutionNarrative": "Vertex form with $(h,k) = (3,4)$ plus the point $(1,-4)$ gives $-4 = 4a + 4$, so $a = -2$ — an arc opening downward, twice as steep as $x^2$."
+    },
+    {
+      "id": "algebra-2.function-transformations.s17",
+      "concepts": ["stretches", "combining-transformations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Let $g(x) = f(2x - 6)$, and suppose $(4, 7)$ is on the graph of $f$. Factor the inside before reading it, then find the image of the point.",
+      "steps": [
+        { "instruction": "Factor the inside: $2x - 6 = 2(x - ?)$. What number completes the factoring?", "answer": "3", "accept": [], "hint": "Factor 2 out of both terms." },
+        { "instruction": "The point on $g$ needs $2x - 6 = 4$. Solve for $x$.", "answer": "x = 5", "accept": ["5"], "hint": "$2x = 10$." },
+        { "instruction": "Write the image in the form <x, y> (e.g. <3, -2>).", "answer": "<5, 7>", "accept": ["(5, 7)", "5, 7"], "hint": "The output is unchanged: $g(5) = f(4) = 7$." }
+      ],
+      "finalAnswer": { "value": "<5, 7>", "unit": "" },
+      "solutionNarrative": "$f(2x-6) = f(2(x-3))$: compress by $\\tfrac12$, then shift right 3. The input feeding $f$ the value 4 is $x = 5$, so the image is $(5, 7)$."
+    }
+  ]
+}

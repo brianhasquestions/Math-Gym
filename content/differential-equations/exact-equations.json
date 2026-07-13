@@ -1,0 +1,300 @@
+{
+  "id": "differential-equations.exact-equations",
+  "subject": "differential-equations",
+  "title": "Exact Equations",
+  "prerequisites": ["differential-equations.separable-equations", "calculus-3.partial-derivatives"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "exactness-test",
+      "label": "The exactness test",
+      "microLesson": "An equation written as $M(x,y)\\,dx + N(x,y)\\,dy = 0$ is **exact** when the left side is the total differential of some function $F(x,y)$ — i.e. $M = \\partial F/\\partial x$ and $N = \\partial F/\\partial y$. Because mixed partials commute ($F_{xy} = F_{yx}$), there is a one-line test: the equation is exact **iff** $\\dfrac{\\partial M}{\\partial y} = \\dfrac{\\partial N}{\\partial x}$. Example: $M = 2xy + 3$, $N = x^2 + 4y$ gives $M_y = 2x$ and $N_x = 2x$ — exact. Always run this test first; it decides which solution machinery applies."
+    },
+    {
+      "id": "reconstruct-potential",
+      "label": "Reconstructing F(x, y)",
+      "microLesson": "Once exactness holds, rebuild $F$ by **partial integration**. Integrate $M$ with respect to $x$, treating $y$ as a constant — but the 'constant' of integration can depend on $y$, so write $F = \\int M\\,dx + g(y)$. Then differentiate that result with respect to $y$ and match it against $N$: whatever is missing is $g'(y)$, and one ordinary integration gives $g(y)$. Example: $M = 2xy + 1$, $N = x^2 + 4y$: $\\int M\\,dx = x^2y + x$, and matching $\\partial_y(x^2y + x) = x^2$ against $N$ leaves $g'(y) = 4y$, so $F = x^2y + x + 2y^2$."
+    },
+    {
+      "id": "implicit-solution-ivp",
+      "label": "Implicit solutions and initial conditions",
+      "microLesson": "The general solution of an exact equation is the family of **level curves** $F(x, y) = C$ — an implicit solution, because $y$ is usually not isolated. An initial condition $y(x_0) = y_0$ pins down the constant instantly: $C = F(x_0, y_0)$, a plain number. Example: for $F = x^2 + y^2$ with $y(3) = 4$, $C = 9 + 16 = 25$, and the solution is the circle $x^2 + y^2 = 25$. If the question then asks for $y$ at some other $x$, substitute and solve the resulting ordinary equation."
+    },
+    {
+      "id": "integrating-factor",
+      "label": "Integrating factors μ(x)",
+      "microLesson": "When the test fails, the equation may still be one multiplication away from exact. If the quantity $\\dfrac{M_y - N_x}{N}$ happens to depend **only on $x$**, then multiplying through by $\\mu(x) = e^{\\int (M_y - N_x)/N\\,dx}$ makes the equation exact. The friendliest case is $\\dfrac{M_y - N_x}{N} = \\dfrac{k}{x}$ for a whole number $k$, which gives the polynomial factor $\\mu = x^k$. Example: $3y\\,dx + x\\,dy = 0$ has $M_y - N_x = 2$ and $N = x$, so the ratio is $2/x$, $\\mu = x^2$, and the repaired equation $3x^2y\\,dx + x^3\\,dy = 0$ is exact with $F = x^3y$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## When the equation is a disguised total differential\n\nSeparable equations let you herd every $x$ to one side and every $y$ to the other. Plenty of first-order equations refuse: try separating\n\n$$(2xy + 3)\\,dx + (x^2 + 4y)\\,dy = 0.$$\n\nThe $2xy$ term welds $x$ and $y$ together. But this equation hides a different kind of structure. Recall from multivariable calculus that a function $F(x, y)$ has total differential\n\n$$dF = \\frac{\\partial F}{\\partial x}\\,dx + \\frac{\\partial F}{\\partial y}\\,dy.$$\n\nIf the left side of our equation IS $dF$ for some $F$, then the equation says $dF = 0$ — i.e. $F$ is constant along every solution. The solutions are the **level curves** $F(x, y) = C$, and no integration trickery is needed beyond finding $F$. Such equations are called **exact**.\n\n## Step 1: test for exactness\n\nWrite the equation as $M\\,dx + N\\,dy = 0$. If it is exact, then $M = F_x$ and $N = F_y$, and because mixed partial derivatives commute ($F_{xy} = F_{yx}$),\n\n$$\\frac{\\partial M}{\\partial y} = \\frac{\\partial N}{\\partial x}.$$\n\nThis is both necessary and (on nice domains) sufficient — a one-line test you run before anything else.\n\nFor the equation above: $M = 2xy + 3$ gives $M_y = 2x$; $N = x^2 + 4y$ gives $N_x = 2x$. Equal — **exact**. Compare $2y\\,dx + 3x\\,dy = 0$: $M_y = 2$ but $N_x = 3$. Not exact, and pretending otherwise produces garbage.\n\n## Step 2: reconstruct the potential F\n\nKnowing $F_x = M$, integrate with respect to $x$ **holding $y$ fixed**:\n\n$$F = \\int (2xy + 3)\\,dx = x^2y + 3x + g(y).$$\n\nThe integration 'constant' is a full function $g(y)$ — anything depending only on $y$ dies under $\\partial/\\partial x$, so it must be recovered separately. Differentiate what we have with respect to $y$ and match against $N$:\n\n$$F_y = x^2 + g'(y) \\stackrel{!}{=} x^2 + 4y \\quad\\Rightarrow\\quad g'(y) = 4y \\quad\\Rightarrow\\quad g(y) = 2y^2.$$\n\nSo $F = x^2y + 3x + 2y^2$, and the general solution is the implicit family\n\n$$x^2y + 3x + 2y^2 = C.$$\n\nA reassuring sanity check: when you match against $N$, every $x$ must cancel out of $g'(y)$. If an $x$ survives, either the equation was not exact or the partial integration slipped.\n\n## Step 3: initial conditions pick the level curve\n\nAn initial condition $y(x_0) = y_0$ just evaluates the potential: $C = F(x_0, y_0)$. For $2x\\,dx + 2y\\,dy = 0$ we get $F = x^2 + y^2$; with $y(3) = 4$, $C = 9 + 16 = 25$ and the solution is the circle $x^2 + y^2 = 25$. The solution curve is whichever level set passes through your starting point.\n\n```plot\n{ \"xRange\": [0.4, 5], \"yRange\": [0, 8], \"curves\": [ { \"fn\": \"2/x\", \"label\": \"xy = 2\", \"labelAt\": 0.9, \"color\": \"dim\" }, { \"fn\": \"4/x\", \"label\": \"xy = 4\", \"labelAt\": 1.6, \"color\": \"accent\" }, { \"fn\": \"6/x\", \"label\": \"xy = 6\", \"labelAt\": 2.6, \"color\": \"warn\" } ], \"caption\": \"Solutions of y dx + x dy = 0 are the level curves of F = xy. An initial condition selects one hyperbola from the family xy = C.\" }\n```\n\n## Step 4: when the test fails — integrating factors\n\nSome equations fail the test but are one multiplication away from passing it. Multiply $M\\,dx + N\\,dy = 0$ by an unknown $\\mu(x)$ and demand exactness of the new equation; the algebra collapses to the condition\n\n$$\\frac{\\mu'}{\\mu} = \\frac{M_y - N_x}{N},$$\n\nwhich is solvable by a function of $x$ alone exactly when the right side contains **no $y$**. Then $\\mu(x) = e^{\\int (M_y - N_x)/N\\,dx}$.\n\nThe cleanest and most common case: $\\dfrac{M_y - N_x}{N} = \\dfrac{k}{x}$ gives $\\mu = e^{k\\ln x} = x^k$ — a polynomial factor.\n\n### Worked example\n\n$3y\\,dx + x\\,dy = 0$. Test: $M_y = 3$, $N_x = 1$ — not exact. But\n\n$$\\frac{M_y - N_x}{N} = \\frac{2}{x},$$\n\na pure-$x$ expression, so $\\mu = x^2$. Multiplying: $3x^2y\\,dx + x^3\\,dy = 0$, and now $M_y = 3x^2 = N_x$. Reconstructing, $F = x^3y$, so solutions are $x^3y = C$.\n\n## Common pitfalls\n\n- **Skipping the test.** Reconstruction applied to a non-exact equation produces a $g'(y)$ containing $x$ — a contradiction, not a solution.\n- **Forgetting $g(y)$.** The constant of partial integration is a whole function of $y$; dropping it loses part of $F$.\n- **Solving for $y$ prematurely.** The implicit form $F(x,y) = C$ IS the solution; only isolate $y$ if the question demands it.\n- **Sign slips in the test.** The integrating-factor ratio is $(M_y - N_x)/N$ — subtracting in the wrong order flips the sign of $k$ and produces $\\mu = x^{-k}$."
+  },
+  "application": {
+    "summary": "Exact equations are the differential form of conservation laws. Whenever a quantity F(x, y) is conserved along trajectories — energy in mechanics, entropy-like state functions in thermodynamics, utility level sets in economics — the trajectories obey M dx + N dy = 0 with M = F_x and N = F_y, and solving the ODE means recovering the conserved quantity from its gradient.",
+    "domains": ["thermodynamics", "mechanics", "economics", "electrostatics"],
+    "workedExample": "**Recovering a state function in thermodynamics.**\n\nA gas process is observed to satisfy $(2xy + 1)\\,dx + (x^2 + 4y)\\,dy = 0$, where $x$ and $y$ are scaled state variables. Is there a state function $F$ conserved by the process, and which level of it passes through the measured state $(1, 2)$?\n\n**Test:** $M_y = 2x$ and $N_x = 2x$ — exact, so a state function exists. (In thermodynamics this is precisely the difference between a state function like entropy and a path quantity like heat: the differential of a state function must pass the exactness test.)\n\n**Reconstruct:** $F = \\int (2xy + 1)\\,dx = x^2y + x + g(y)$; matching $F_y = x^2 + g'(y)$ against $N = x^2 + 4y$ gives $g'(y) = 4y$, so $F = x^2y + x + 2y^2$.\n\n**Fit the constant:** $C = F(1, 2) = 2 + 1 + 8 = 11$.\n\nThe process is confined to the curve $x^2y + x + 2y^2 = 11$: the observable prediction is that any later measurement $(x, y)$ of this process must land on that level set. The identical computation recovers potential energy from a force field in mechanics and the potential from a field in electrostatics.",
+    "domainNotes": [
+      "**Thermodynamics:** exactness distinguishes state functions (entropy, internal energy) from path-dependent quantities (heat, work); integrating factors are how $1/T$ turns $\\delta Q$ into the exact differential $dS$.",
+      "**Mechanics:** a force field $(M, N)$ is conservative iff $M_y = N_x$; the reconstructed $F$ is the potential energy, constant along trajectories.",
+      "**Economics:** indifference curves are level sets $U(x, y) = C$; the marginal-rate-of-substitution equation along them is exactly $U_x\\,dx + U_y\\,dy = 0$.",
+      "**Electrostatics:** recovering the potential from measured field components is the same partial-integration reconstruction, and the exactness test is the curl-free condition."
+    ]
+  },
+  "generators": [
+    "def4-exactness-test-d1",
+    "def4-exactness-test-d2",
+    "def4-exactness-test-d3",
+    "def4-reconstruct-potential-d1",
+    "def4-reconstruct-potential-d2",
+    "def4-reconstruct-potential-d3",
+    "def4-implicit-solution-ivp-d1",
+    "def4-implicit-solution-ivp-d2",
+    "def4-implicit-solution-ivp-d3",
+    "def4-integrating-factor-d1",
+    "def4-integrating-factor-d2",
+    "def4-integrating-factor-d3"
+  ],
+  "problems": [
+    {
+      "id": "differential-equations.exact-equations.s01",
+      "concepts": ["exactness-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Test whether $(3y + 2x)\\,dx + (3x + 4y)\\,dy = 0$ is exact.",
+      "steps": [
+        { "instruction": "Here $M = 3y + 2x$. Compute $\\partial M/\\partial y$.", "answer": "3", "accept": [], "hint": "Differentiate $3y + 2x$ with respect to $y$, treating $x$ as a constant." },
+        { "instruction": "Here $N = 3x + 4y$. Compute $\\partial N/\\partial x$.", "answer": "3", "accept": [], "hint": "Differentiate with respect to $x$, treating $y$ as a constant." },
+        { "instruction": "Compare the two partials. Type exactly 'exact' or 'not exact'.", "answer": "exact", "accept": [], "hint": "They are equal, so the test passes." }
+      ],
+      "finalAnswer": { "value": "exact", "unit": "" },
+      "solutionNarrative": "$M_y = 3$ and $N_x = 3$ agree, so the equation is exact (its potential is $F = x^2 + 3xy + 2y^2$)."
+    },
+    {
+      "id": "differential-equations.exact-equations.s02",
+      "concepts": ["exactness-test"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Test whether $2y\\,dx + 3x\\,dy = 0$ is exact.",
+      "steps": [
+        { "instruction": "Compute $\\partial M/\\partial y$ for $M = 2y$.", "answer": "2", "accept": [], "hint": "Derivative of $2y$ with respect to $y$." },
+        { "instruction": "Compute $\\partial N/\\partial x$ for $N = 3x$.", "answer": "3", "accept": [], "hint": "Derivative of $3x$ with respect to $x$." },
+        { "instruction": "Compare. Type exactly 'exact' or 'not exact'.", "answer": "not exact", "accept": [], "hint": "$2 \\neq 3$." }
+      ],
+      "finalAnswer": { "value": "not exact", "unit": "" },
+      "solutionNarrative": "$M_y = 2$ but $N_x = 3$, so the test fails: the equation is not exact as written (it needs an integrating factor)."
+    },
+    {
+      "id": "differential-equations.exact-equations.s03",
+      "concepts": ["exactness-test"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Test whether $(2xy + 3)\\,dx + (x^2 + 4y)\\,dy = 0$ is exact.",
+      "steps": [
+        { "instruction": "Compute $\\partial M/\\partial y$ for $M = 2xy + 3$.", "answer": "2x", "accept": ["2 x"], "hint": "Treat $x$ as a constant: the $y$-derivative of $2xy$ is $2x$; the 3 vanishes." },
+        { "instruction": "Compute $\\partial N/\\partial x$ for $N = x^2 + 4y$.", "answer": "2x", "accept": ["2 x"], "hint": "Treat $y$ as a constant: only $x^2$ survives." },
+        { "instruction": "Compare. Type exactly 'exact' or 'not exact'.", "answer": "exact", "accept": [], "hint": "Both partials equal $2x$." }
+      ],
+      "finalAnswer": { "value": "exact", "unit": "" },
+      "solutionNarrative": "$M_y = 2x = N_x$, so the equation is exact and a potential $F$ exists."
+    },
+    {
+      "id": "differential-equations.exact-equations.s04",
+      "concepts": ["exactness-test"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Test whether $4xy^2\\,dx + 3x^2y\\,dy = 0$ is exact. (The terms look symmetric — the test decides.)",
+      "steps": [
+        { "instruction": "Compute $\\partial M/\\partial y$ for $M = 4xy^2$.", "answer": "8xy", "accept": ["8 x y", "8yx"], "hint": "$4x \\cdot 2y$." },
+        { "instruction": "Compute $\\partial N/\\partial x$ for $N = 3x^2y$.", "answer": "6xy", "accept": ["6 x y", "6yx"], "hint": "$3y \\cdot 2x$." },
+        { "instruction": "Compare. Type exactly 'exact' or 'not exact'.", "answer": "not exact", "accept": [], "hint": "$8xy \\neq 6xy$." }
+      ],
+      "finalAnswer": { "value": "not exact", "unit": "" },
+      "solutionNarrative": "$M_y = 8xy$ while $N_x = 6xy$ — close but unequal, so the equation is not exact. Symmetric-looking terms still have to pass the test."
+    },
+    {
+      "id": "differential-equations.exact-equations.s05",
+      "concepts": ["reconstruct-potential"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The equation $(2x + y)\\,dx + (x + 2y)\\,dy = 0$ is exact ($M_y = 1 = N_x$). Reconstruct the potential $F(x, y)$.",
+      "steps": [
+        { "instruction": "Integrate $M = 2x + y$ with respect to $x$ (hold $y$ fixed; omit $g(y)$ for now).", "answer": "x^2 + xy", "accept": ["x^2+xy", "x^2 + yx"], "hint": "$\\int 2x\\,dx = x^2$ and $\\int y\\,dx = xy$." },
+        { "instruction": "Differentiate $x^2 + xy + g(y)$ with respect to $y$ and match against $N = x + 2y$. What is $g'(y)$?", "answer": "2y", "accept": ["2 y"], "hint": "$\\partial_y(x^2 + xy) = x$, so the missing piece is $2y$." },
+        { "instruction": "Integrate $g'(y)$ and write the full potential $F(x, y)$.", "answer": "x^2 + xy + y^2", "accept": ["x^2+xy+y^2", "x^2 + y^2 + xy"], "hint": "$g(y) = y^2$; add it to the partial result." }
+      ],
+      "finalAnswer": { "value": "F = x^2 + xy + y^2", "unit": "" },
+      "solutionNarrative": "$\\int M\\,dx = x^2 + xy + g(y)$; matching $F_y = x + g'(y)$ against $N$ gives $g'(y) = 2y$, so $F = x^2 + xy + y^2$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s06",
+      "concepts": ["reconstruct-potential"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The equation $(2xy + 1)\\,dx + (x^2 + 4y)\\,dy = 0$ is exact. Reconstruct $F(x, y)$.",
+      "steps": [
+        { "instruction": "Integrate $M = 2xy + 1$ with respect to $x$ (omit $g(y)$).", "answer": "x^2y + x", "accept": ["x^2 y + x", "x + x^2y"], "hint": "$y$ rides along as a constant: $\\int 2xy\\,dx = x^2y$." },
+        { "instruction": "Match $\\partial_y(x^2y + x) + g'(y)$ against $N = x^2 + 4y$. What is $g'(y)$?", "answer": "4y", "accept": ["4 y"], "hint": "$\\partial_y(x^2y + x) = x^2$ already accounts for the $x^2$ in $N$." },
+        { "instruction": "Write the full potential $F(x, y)$.", "answer": "x^2y + x + 2y^2", "accept": ["x^2 y + x + 2y^2", "x^2y + 2y^2 + x"], "hint": "$g(y) = 2y^2$." }
+      ],
+      "finalAnswer": { "value": "F = x^2y + x + 2y^2", "unit": "" },
+      "solutionNarrative": "Partial integration gives $x^2y + x + g(y)$; matching against $N$ leaves $g'(y) = 4y$, so $F = x^2y + x + 2y^2$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s07",
+      "concepts": ["reconstruct-potential"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The equation $(3x^2 + 2y)\\,dx + (2x + 6y)\\,dy = 0$ is exact. Reconstruct $F(x, y)$.",
+      "steps": [
+        { "instruction": "Integrate $M = 3x^2 + 2y$ with respect to $x$ (omit $g(y)$).", "answer": "x^3 + 2xy", "accept": ["x^3+2xy", "x^3 + 2yx"], "hint": "$\\int 3x^2\\,dx = x^3$; $\\int 2y\\,dx = 2xy$." },
+        { "instruction": "Match against $N = 2x + 6y$: what is $g'(y)$?", "answer": "6y", "accept": ["6 y"], "hint": "$\\partial_y(x^3 + 2xy) = 2x$; the remainder of $N$ is $6y$." },
+        { "instruction": "Write the full potential $F(x, y)$.", "answer": "x^3 + 2xy + 3y^2", "accept": ["x^3+2xy+3y^2", "x^3 + 3y^2 + 2xy"], "hint": "$g(y) = 3y^2$." }
+      ],
+      "finalAnswer": { "value": "F = x^3 + 2xy + 3y^2", "unit": "" },
+      "solutionNarrative": "$\\int M\\,dx = x^3 + 2xy + g(y)$; the match with $N$ gives $g'(y) = 6y$, hence $F = x^3 + 2xy + 3y^2$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s08",
+      "concepts": ["reconstruct-potential"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The equation $(3x^2y + y^2)\\,dx + (x^3 + 2xy + 3)\\,dy = 0$ is exact. Reconstruct $F(x, y)$.",
+      "steps": [
+        { "instruction": "Integrate $M = 3x^2y + y^2$ with respect to $x$ (omit $g(y)$).", "answer": "x^3y + xy^2", "accept": ["x^3 y + x y^2", "xy^2 + x^3y"], "hint": "$\\int 3x^2y\\,dx = x^3y$ and $\\int y^2\\,dx = xy^2$." },
+        { "instruction": "Differentiate your result with respect to $y$.", "answer": "x^3 + 2xy", "accept": ["x^3+2xy", "x^3 + 2yx"], "hint": "$\\partial_y(x^3y) = x^3$; $\\partial_y(xy^2) = 2xy$." },
+        { "instruction": "Match against $N = x^3 + 2xy + 3$: what is $g'(y)$?", "answer": "3", "accept": [], "hint": "Everything except the constant 3 is already accounted for." },
+        { "instruction": "Write the full potential $F(x, y)$.", "answer": "x^3y + xy^2 + 3y", "accept": ["x^3 y + x y^2 + 3y", "x^3y + 3y + xy^2"], "hint": "$g(y) = 3y$." }
+      ],
+      "finalAnswer": { "value": "F = x^3y + xy^2 + 3y", "unit": "" },
+      "solutionNarrative": "Partial integration gives $x^3y + xy^2 + g(y)$; the $y$-derivative matches $N$ except for the constant 3, so $g(y) = 3y$ and $F = x^3y + xy^2 + 3y$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s09",
+      "concepts": ["implicit-solution-ivp"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $2x\\,dx + 2y\\,dy = 0$ with $y(3) = 4$.",
+      "steps": [
+        { "instruction": "This is exact with $F_x = 2x$ and $F_y = 2y$. Write the potential $F(x, y)$.", "answer": "x^2 + y^2", "accept": ["x^2+y^2", "y^2 + x^2"], "hint": "Integrate $2x$ in $x$ and add the pure-$y$ part from $N = 2y$." },
+        { "instruction": "Use $y(3) = 4$ to find $C$ in $F(x, y) = C$.", "answer": "25", "accept": ["C = 25", "C=25"], "hint": "$C = 3^2 + 4^2$." }
+      ],
+      "finalAnswer": { "value": "x^2 + y^2 = 25", "unit": "" },
+      "solutionNarrative": "$F = x^2 + y^2$, and the initial point gives $C = 9 + 16 = 25$: the solution is the circle $x^2 + y^2 = 25$ through $(3, 4)$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s10",
+      "concepts": ["implicit-solution-ivp"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $(2xy + 1)\\,dx + x^2\\,dy = 0$ with $y(1) = 5$, then find $y$ at $x = 2$.",
+      "steps": [
+        { "instruction": "The equation is exact ($M_y = 2x = N_x$). Reconstruct $F(x, y)$.", "answer": "x^2y + x", "accept": ["x^2 y + x", "x + x^2y"], "hint": "$\\int (2xy + 1)\\,dx = x^2y + x$, and $N = x^2$ adds nothing new in $y$." },
+        { "instruction": "Use $y(1) = 5$ to find $C$.", "answer": "6", "accept": ["C = 6", "C=6"], "hint": "$C = 1^2 \\cdot 5 + 1$." },
+        { "instruction": "At $x = 2$ the level curve reads $4y + 2 = 6$. Solve for $y$.", "answer": "1", "accept": ["y = 1", "y=1"], "hint": "$4y = 4$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$F = x^2y + x$ and $C = 5 + 1 = 6$. At $x = 2$: $4y + 2 = 6$ gives $y = 1$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s11",
+      "concepts": ["implicit-solution-ivp"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The exact equation $(2x + y)\\,dx + (x + 2y)\\,dy = 0$ has potential $F = x^2 + xy + y^2$. Apply the initial condition $y(1) = 2$, then decide whether the point $(2, 1)$ lies on the solution curve.",
+      "steps": [
+        { "instruction": "Compute $C = F(1, 2)$.", "answer": "7", "accept": ["C = 7", "C=7"], "hint": "$1 + 2 + 4$." },
+        { "instruction": "Compute $F(2, 1)$.", "answer": "7", "accept": [], "hint": "$4 + 2 + 1$." },
+        { "instruction": "Is $(2, 1)$ on the solution curve $F = 7$? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Compare $F(2,1)$ with $C$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$C = F(1,2) = 7$ and $F(2,1) = 7$ as well, so both points sit on the same level curve $x^2 + xy + y^2 = 7$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s12",
+      "concepts": ["implicit-solution-ivp"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $(2x + 3y)\\,dx + (3x + 4)\\,dy = 0$ with $y(0) = 2$, then find $y$ at $x = 2$.",
+      "steps": [
+        { "instruction": "Verify exactness mentally ($M_y = 3 = N_x$), then reconstruct $F(x, y)$.", "answer": "x^2 + 3xy + 4y", "accept": ["x^2+3xy+4y", "x^2 + 4y + 3xy"], "hint": "$\\int M\\,dx = x^2 + 3xy$; matching $N = 3x + 4$ leaves $g'(y) = 4$." },
+        { "instruction": "Use $y(0) = 2$ to find $C$.", "answer": "8", "accept": ["C = 8", "C=8"], "hint": "$F(0, 2) = 0 + 0 + 8$." },
+        { "instruction": "At $x = 2$ the curve reads $4 + 6y + 4y = 8$. Solve for $y$ (fraction).", "answer": "2/5", "accept": ["0.4", "y = 2/5", "y=2/5"], "hint": "$10y = 4$." }
+      ],
+      "finalAnswer": { "value": "2/5", "unit": "" },
+      "solutionNarrative": "$F = x^2 + 3xy + 4y$ with $C = 8$. At $x = 2$: $4 + 10y = 8$, so $y = \\tfrac{2}{5}$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s13",
+      "concepts": ["integrating-factor"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The equation $3y\\,dx + x\\,dy = 0$ is not exact. Find an integrating factor of the form $\\mu = x^k$.",
+      "steps": [
+        { "instruction": "Compute $M_y - N_x$.", "answer": "2", "accept": [], "hint": "$M_y = 3$ and $N_x = 1$." },
+        { "instruction": "The ratio $\\dfrac{M_y - N_x}{N} = \\dfrac{2}{x}$ depends on $x$ alone, giving $\\mu = x^k$ with $k = 2$. Write $\\mu$.", "answer": "x^2", "accept": ["mu = x^2", "x^{2}"], "hint": "$\\mu = e^{\\int 2/x\\,dx} = e^{2\\ln x} = x^2$." },
+        { "instruction": "Multiply through and reconstruct: the exact equation $3x^2y\\,dx + x^3\\,dy = 0$ has potential $F = \\,?$", "answer": "x^3y", "accept": ["x^3 y", "yx^3"], "hint": "$\\int 3x^2y\\,dx = x^3y$, and $N = x^3$ adds nothing new." }
+      ],
+      "finalAnswer": { "value": "x^3y = C", "unit": "" },
+      "solutionNarrative": "$(M_y - N_x)/N = 2/x$, so $\\mu = x^2$. The repaired equation is exact with $F = x^3y$, giving solutions $x^3y = C$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s14",
+      "concepts": ["integrating-factor"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The equation $(2y + 6x)\\,dx + x\\,dy = 0$ is not exact. Repair it with a factor $\\mu = x^k$ and solve.",
+      "steps": [
+        { "instruction": "Compute $M_y - N_x$.", "answer": "1", "accept": [], "hint": "$M_y = 2$, $N_x = 1$." },
+        { "instruction": "So $\\dfrac{M_y - N_x}{N} = \\dfrac{1}{x}$ and $\\mu = x^k$ with $k = 1$. Write $\\mu$.", "answer": "x", "accept": ["mu = x", "x^1"], "hint": "$e^{\\int 1/x\\,dx} = e^{\\ln x} = x$." },
+        { "instruction": "After multiplying, $M = 2xy + 6x^2$ and $N = x^2$. Verify the test: compute $\\partial M/\\partial y$ (it should equal $N_x$).", "answer": "2x", "accept": ["2 x"], "hint": "Both partials are $2x$ — the repair worked." },
+        { "instruction": "Reconstruct the potential $F(x, y)$.", "answer": "x^2y + 2x^3", "accept": ["x^2 y + 2x^3", "2x^3 + x^2y"], "hint": "$\\int (2xy + 6x^2)\\,dx = x^2y + 2x^3$." }
+      ],
+      "finalAnswer": { "value": "x^2y + 2x^3 = C", "unit": "" },
+      "solutionNarrative": "$(M_y - N_x)/N = 1/x$ gives $\\mu = x$. The repaired equation is exact with $F = x^2y + 2x^3$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s15",
+      "concepts": ["integrating-factor"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The equation $(4xy + 5x^2)\\,dx + x^2\\,dy = 0$ is not exact. Find $\\mu = x^k$ and the potential of the repaired equation.",
+      "steps": [
+        { "instruction": "Compute $M_y$ for $M = 4xy + 5x^2$.", "answer": "4x", "accept": ["4 x"], "hint": "Only the $4xy$ term contains $y$." },
+        { "instruction": "Compute $N_x$ for $N = x^2$.", "answer": "2x", "accept": ["2 x"], "hint": "Power rule." },
+        { "instruction": "So $\\dfrac{M_y - N_x}{N} = \\dfrac{2x}{x^2} = \\dfrac{2}{x}$, giving $\\mu = x^k$. Write $\\mu$.", "answer": "x^2", "accept": ["mu = x^2", "x^{2}"], "hint": "$k = 2$." },
+        { "instruction": "After multiplying, $M = 4x^3y + 5x^4$ and $N = x^4$. Reconstruct $F(x, y)$.", "answer": "x^4y + x^5", "accept": ["x^4 y + x^5", "x^5 + x^4y"], "hint": "$\\int 4x^3y\\,dx = x^4y$ and $\\int 5x^4\\,dx = x^5$." }
+      ],
+      "finalAnswer": { "value": "x^4y + x^5 = C", "unit": "" },
+      "solutionNarrative": "$M_y - N_x = 2x$ and $N = x^2$, so the ratio is $2/x$ and $\\mu = x^2$. The repaired equation has potential $F = x^4y + x^5$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s16",
+      "concepts": ["exactness-test", "implicit-solution-ivp"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A thermodynamic process satisfies $(y + 4x)\\,dx + (x + 2y)\\,dy = 0$ in scaled state variables. A state function exists only if the differential is exact. Test it, then find the level curve through the measured state $(1, 1)$.",
+      "steps": [
+        { "instruction": "Compute $M_y$ and $N_x$ and compare. Type exactly 'exact' or 'not exact'.", "answer": "exact", "accept": [], "hint": "$M_y = 1$ and $N_x = 1$." },
+        { "instruction": "Reconstruct the state function $F(x, y)$.", "answer": "2x^2 + xy + y^2", "accept": ["2x^2+xy+y^2", "2x^2 + y^2 + xy"], "hint": "$\\int (y + 4x)\\,dx = xy + 2x^2$; matching $N$ leaves $g'(y) = 2y$." },
+        { "instruction": "Evaluate $C = F(1, 1)$.", "answer": "4", "accept": ["C = 4", "C=4"], "hint": "$2 + 1 + 1$." }
+      ],
+      "finalAnswer": { "value": "2x^2 + xy + y^2 = 4", "unit": "" },
+      "solutionNarrative": "$M_y = N_x = 1$, so a state function exists: $F = 2x^2 + xy + y^2$. The measured state pins the process to the level curve $F = 4$."
+    },
+    {
+      "id": "differential-equations.exact-equations.s17",
+      "concepts": ["reconstruct-potential", "implicit-solution-ivp"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A conservative force field has components $M = 2xy$ and $N = x^2 + 3y^2$, so trajectories obey $2xy\\,dx + (x^2 + 3y^2)\\,dy = 0$. Recover the potential and the trajectory through $(2, 1)$.",
+      "steps": [
+        { "instruction": "Confirm the field is conservative: compute $M_y$ (it equals $N_x$).", "answer": "2x", "accept": ["2 x"], "hint": "$\\partial_y(2xy) = 2x$ and $\\partial_x(x^2 + 3y^2) = 2x$." },
+        { "instruction": "Reconstruct the potential $F(x, y)$.", "answer": "x^2y + y^3", "accept": ["x^2 y + y^3", "y^3 + x^2y"], "hint": "$\\int 2xy\\,dx = x^2y$; matching $N$ leaves $g'(y) = 3y^2$." },
+        { "instruction": "Evaluate $C = F(2, 1)$.", "answer": "5", "accept": ["C = 5", "C=5"], "hint": "$4 \\cdot 1 + 1$." }
+      ],
+      "finalAnswer": { "value": "x^2y + y^3 = 5", "unit": "" },
+      "solutionNarrative": "$M_y = 2x = N_x$, so a potential exists: $F = x^2y + y^3$. The trajectory through $(2,1)$ is the level curve $x^2y + y^3 = 5$."
+    }
+  ]
+}

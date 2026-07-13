@@ -55,6 +55,25 @@ import { fill as gt2Fill } from "./gen-gt2-fill.js";                // gt2-  (ga
 import { fill as gt3Fill } from "./gen-gt3-fill.js";                // gt3-  (game theory: bargaining/auctions/evolutionary)
 import { fill as nt1Fill } from "./gen-nt1-fill.js";                // nt1-  (number theory: primes/gcd/CRT/diophantine)
 import { fill as nt2Fill } from "./gen-nt2-fill.js";                // nt2-  (number theory: arithmetic fns/QR/continued fractions)
+// Wave-14 thin-pool backfill packs: one per subject, each covering every
+// concept×difficulty pool that previously had a single seed and no generator.
+import { fill as algPoolFill } from "./gen-alg-pool-fill.js";       // apl-  (algebra)
+import { fill as alg2PoolFill } from "./gen-alg2-pool-fill.js";     // a2l-  (algebra-2)
+import { fill as calc1PoolFill } from "./gen-calc1-pool-fill.js";   // c1l-  (calculus-1)
+import { fill as calc2PoolFill } from "./gen-calc2-pool-fill.js";   // c2l-  (calculus-2)
+import { fill as calc3PoolFill } from "./gen-calc3-pool-fill.js";   // c3l-  (calculus-3)
+import { fill as geoPoolFill } from "./gen-geo-pool-fill.js";       // gpl-  (geometry)
+import { fill as matrixPoolFill } from "./gen-matrix-pool-fill.js"; // mpl-  (matrix-algebra)
+import { fill as matxFill } from "./gen-matx-fill.js";              // mxa-  (matrix-algebra compose/area)
+// Wave-14 curriculum-gap packs: new standard topics found by the audit.
+import { fill as calc2cFill } from "./gen-calc2c-fill.js";          // c2t-/c2u- (trig integrals, trig substitution)
+import { fill as calc13bFill } from "./gen-calc13b-fill.js";        // c3q-/c1m- (polar/cyl/spherical integrals, MVT)
+import { fill as deFill4 } from "./gen-de-fill4.js";                // def4- (exact equations, variation of parameters)
+import { fill as alg3Fill } from "./gen-alg3-fill.js";              // aab-/a2v- (absolute value, function transformations)
+import { fill as geo3Fill } from "./gen-geo3-fill.js";              // geo3- (triangle congruence)
+import { fill as nt3Fill } from "./gen-nt3-fill.js";                // nt3-  (orders and primitive roots)
+import { fill as num3Fill } from "./gen-num3-fill.js";              // nm3-  (least squares, numerical differentiation)
+import { fill as fin3Fill } from "./gen-fin3-fill.js";              // fm3-  (perpetuities)
 
 // --- Seeded RNG (mulberry32) so sessions are reproducible/debuggable ---
 export function makeRng(seed) {
@@ -2672,7 +2691,10 @@ Object.assign(generators, deFill, linAlgFill,
   alg2Fill, trig3Fill, calc1bFill, calc2Fill, calc3vFill, lapGsFill, stats2Fill,
   geo2Fill, discrete2Fill, deFill3, alg2bFill, calc2bFill, calc3sFill,
   advStat1Fill, advStat2Fill, advStat3Fill, advStat4Fill,
-  num1Fill, num2Fill, fin1Fill, fin2Fill, gt1Fill, gt2Fill, gt3Fill, nt1Fill, nt2Fill);
+  num1Fill, num2Fill, fin1Fill, fin2Fill, gt1Fill, gt2Fill, gt3Fill, nt1Fill, nt2Fill,
+  algPoolFill, alg2PoolFill, calc1PoolFill, calc2PoolFill, calc3PoolFill, geoPoolFill, matrixPoolFill,
+  matxFill,
+  calc2cFill, calc13bFill, deFill4, alg3Fill, geo3Fill, nt3Fill, num3Fill, fin3Fill);
 
 export function hasGenerator(template) {
   return Object.prototype.hasOwnProperty.call(generators, template);

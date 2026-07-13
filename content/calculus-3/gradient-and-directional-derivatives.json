@@ -41,7 +41,7 @@
       "**Engineering/physics:** force is the negative gradient of potential energy, so objects accelerate 'downhill' in the potential, $\\vec F = -\\nabla U$."
     ]
   },
-  "generators": ["gradient-v1", "directional-v1", "max-rate-v1"],
+  "generators": ["gradient-v1", "directional-v1", "max-rate-v1", "c3l-max-rate-d1", "c3l-max-rate-d3", "c3l-gradient-vector-d2", "c3l-directional-deriv-d1"],
   "problems": [
     {
       "id": "calculus-3.gradient-and-directional-derivatives.s01",

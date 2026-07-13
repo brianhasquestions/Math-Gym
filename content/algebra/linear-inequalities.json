@@ -41,7 +41,7 @@
       "**Health/everyday:** safe dosage ranges, a carry-on under the weight limit, a thermostat held between two temperatures."
     ]
   },
-  "generators": ["solve-ineq-v1", "flip-negative-v1", "interval-ineq-v1", "compound-ineq-v1"],
+  "generators": ["solve-ineq-v1", "flip-negative-v1", "interval-ineq-v1", "compound-ineq-v1", "apl-interval-d1", "apl-interval-d3", "apl-compound-ineq-d3"],
   "problems": [
     {
       "id": "algebra.linear-inequalities.s01",

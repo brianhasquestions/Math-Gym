@@ -41,7 +41,7 @@
       "**Everyday life:** judging when two cars heading for an intersection are actually getting closer, and how fast."
     ]
   },
-  "generators": ["circle-area-rate-v1", "sphere-volume-rate-v1", "ladder-rate-v1"],
+  "generators": ["circle-area-rate-v1", "sphere-volume-rate-v1", "ladder-rate-v1", "c1l-expand-d1", "c1l-ladder-d1", "c1l-ladder-d3", "c1l-filling-d1", "c1l-filling-d3", "c1l-motion-d1", "c1l-motion-d3"],
   "problems": [
     {
       "id": "calculus-1.related-rates.s01",

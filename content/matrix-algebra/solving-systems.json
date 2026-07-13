@@ -41,7 +41,7 @@
       "**Nutrition / manufacturing:** blending several ingredients to hit targets on multiple nutrients or properties is a system with one row per target."
     ]
   },
-  "generators": ["solve-system-2x2-v1"],
+  "generators": ["solve-system-2x2-v1", "mpl-solution-types-d3", "mpl-systems-applied-d1", "mxa-aug-write-1", "mxa-aug-read-1", "mxa-aug-write3-1", "mxa-rowop-1", "mxa-backsub3-1", "mxa-soltype-1", "mxa-soltype-2", "mxa-soltype-3", "mxa-sys-applied-1", "mxa-sys-applied-2", "mxa-sys-applied-3"],
   "problems": [
     {
       "id": "matrix-algebra.solving-systems.s01",

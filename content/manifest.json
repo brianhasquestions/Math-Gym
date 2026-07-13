@@ -10,6 +10,7 @@
         { "id": "algebra.variables-expressions", "title": "Variables and Expressions", "file": "content/algebra/variables-expressions.json", "status": "ready" },
         { "id": "algebra.linear-equations", "title": "Linear Equations in One Variable", "file": "content/algebra/linear-equations.json", "status": "ready" },
         { "id": "algebra.linear-inequalities", "title": "Linear Inequalities", "file": "content/algebra/linear-inequalities.json", "status": "ready" },
+        { "id": "algebra.absolute-value", "title": "Absolute Value Equations and Inequalities", "file": "content/algebra/absolute-value.json", "status": "ready" },
         { "id": "algebra.graphing-linear-equations", "title": "Graphing Linear Equations", "file": "content/algebra/graphing-linear-equations.json", "status": "ready" },
         { "id": "algebra.ratios-proportions-percent", "title": "Ratios, Proportions, and Percent", "file": "content/algebra/ratios-proportions-percent.json", "status": "ready" },
         { "id": "algebra.exponents", "title": "Exponents and Exponent Rules", "file": "content/algebra/exponents.json", "status": "ready" },
@@ -25,6 +26,7 @@
       "blurb": "Functions, exponentials, logarithms, and the math of growth.",
       "topics": [
         { "id": "algebra-2.functions", "title": "Functions: Notation, Domain, and Range", "file": "content/algebra-2/functions.json", "status": "ready" },
+        { "id": "algebra-2.function-transformations", "title": "Function Transformations", "file": "content/algebra-2/function-transformations.json", "status": "ready" },
         { "id": "algebra-2.polynomial-functions", "title": "Polynomial Functions and Their Graphs", "file": "content/algebra-2/polynomial-functions.json", "status": "ready" },
         { "id": "algebra-2.radicals", "title": "Radical Expressions and Equations", "file": "content/algebra-2/radicals.json", "status": "ready" },
         { "id": "algebra-2.complex-numbers", "title": "Complex Numbers", "file": "content/algebra-2/complex-numbers.json", "status": "ready" },
@@ -42,6 +44,7 @@
       "topics": [
         { "id": "geometry.angles-and-lines", "title": "Lines and Angles", "file": "content/geometry/angles-and-lines.json", "status": "ready" },
         { "id": "geometry.triangles", "title": "Triangles", "file": "content/geometry/triangles.json", "status": "ready" },
+        { "id": "geometry.triangle-congruence", "title": "Triangle Congruence: SSS, SAS, ASA, AAS", "file": "content/geometry/triangle-congruence.json", "status": "ready" },
         { "id": "geometry.quadrilaterals-and-polygons", "title": "Quadrilaterals and Polygons", "file": "content/geometry/quadrilaterals-and-polygons.json", "status": "ready" },
         { "id": "geometry.similarity", "title": "Similarity and Scale", "file": "content/geometry/similarity.json", "status": "ready" },
         { "id": "geometry.intro-to-proof", "title": "Introduction to Proof and Logical Reasoning", "file": "content/geometry/intro-to-proof.json", "status": "ready" },
@@ -77,6 +80,7 @@
         { "id": "calculus-1.differentiation-rules", "title": "Differentiation Rules", "file": "content/calculus-1/differentiation-rules.json", "status": "ready" },
         { "id": "calculus-1.transcendental-derivatives", "title": "Derivatives of Exponential, Log, and Trig Functions", "file": "content/calculus-1/transcendental-derivatives.json", "status": "ready" },
         { "id": "calculus-1.implicit-differentiation", "title": "Implicit Differentiation", "file": "content/calculus-1/implicit-differentiation.json", "status": "ready" },
+        { "id": "calculus-1.mean-value-theorem", "title": "Rolle's Theorem and the Mean Value Theorem", "file": "content/calculus-1/mean-value-theorem.json", "status": "ready" },
         { "id": "calculus-1.analyzing-functions", "title": "Analyzing Functions with Derivatives", "file": "content/calculus-1/analyzing-functions.json", "status": "ready" },
         { "id": "calculus-1.linearization-and-differentials", "title": "Linearization and Differentials", "file": "content/calculus-1/linearization-and-differentials.json", "status": "ready" },
         { "id": "calculus-1.related-rates", "title": "Related Rates", "file": "content/calculus-1/related-rates.json", "status": "ready" },
@@ -93,6 +97,8 @@
         { "id": "calculus-2.definite-integrals", "title": "The Definite Integral and the FTC", "file": "content/calculus-2/definite-integrals.json", "status": "ready" },
         { "id": "calculus-2.integration-by-substitution", "title": "Integration by Substitution", "file": "content/calculus-2/integration-by-substitution.json", "status": "ready" },
         { "id": "calculus-2.integration-by-parts", "title": "Integration by Parts", "file": "content/calculus-2/integration-by-parts.json", "status": "ready" },
+        { "id": "calculus-2.trigonometric-integrals", "title": "Trigonometric Integrals", "file": "content/calculus-2/trigonometric-integrals.json", "status": "ready" },
+        { "id": "calculus-2.trig-substitution", "title": "Trigonometric Substitution", "file": "content/calculus-2/trig-substitution.json", "status": "ready" },
         { "id": "calculus-2.partial-fractions", "title": "Integration by Partial Fractions", "file": "content/calculus-2/partial-fractions.json", "status": "ready" },
         { "id": "calculus-2.improper-integrals", "title": "Improper Integrals", "file": "content/calculus-2/improper-integrals.json", "status": "ready" },
         { "id": "calculus-2.applications-of-integration", "title": "Applications of Integration", "file": "content/calculus-2/applications-of-integration.json", "status": "ready" },
@@ -114,6 +120,7 @@
         { "id": "calculus-3.gradient-and-directional-derivatives", "title": "The Gradient and Directional Derivatives", "file": "content/calculus-3/gradient-and-directional-derivatives.json", "status": "ready" },
         { "id": "calculus-3.multivariable-optimization", "title": "Multivariable Optimization", "file": "content/calculus-3/multivariable-optimization.json", "status": "ready" },
         { "id": "calculus-3.multiple-integrals", "title": "Double and Triple Integrals", "file": "content/calculus-3/multiple-integrals.json", "status": "ready" },
+        { "id": "calculus-3.polar-cylindrical-spherical", "title": "Polar, Cylindrical, and Spherical Integrals", "file": "content/calculus-3/polar-cylindrical-spherical.json", "status": "ready" },
         { "id": "calculus-3.line-integrals", "title": "Line Integrals, Vector Fields, and Green's Theorem", "file": "content/calculus-3/line-integrals.json", "status": "ready" },
         { "id": "calculus-3.stokes-divergence", "title": "Surface Integrals, Stokes' and Divergence Theorems", "file": "content/calculus-3/stokes-divergence.json", "status": "ready" }
       ]
@@ -126,9 +133,11 @@
         { "id": "differential-equations.introduction", "title": "Introduction to Differential Equations", "file": "content/differential-equations/introduction.json", "status": "ready" },
         { "id": "differential-equations.separable-equations", "title": "Separable Differential Equations", "file": "content/differential-equations/separable-equations.json", "status": "ready" },
         { "id": "differential-equations.linear-first-order", "title": "Linear First-Order Equations", "file": "content/differential-equations/linear-first-order.json", "status": "ready" },
+        { "id": "differential-equations.exact-equations", "title": "Exact Equations", "file": "content/differential-equations/exact-equations.json", "status": "ready" },
         { "id": "differential-equations.growth-decay-cooling", "title": "Growth, Decay, and Cooling Models", "file": "content/differential-equations/growth-decay-cooling.json", "status": "ready" },
         { "id": "differential-equations.second-order-linear", "title": "Second-Order Linear Equations", "file": "content/differential-equations/second-order-linear.json", "status": "ready" },
         { "id": "differential-equations.nonhomogeneous-second-order", "title": "Nonhomogeneous Second-Order Equations", "file": "content/differential-equations/nonhomogeneous-second-order.json", "status": "ready" },
+        { "id": "differential-equations.variation-of-parameters", "title": "Variation of Parameters", "file": "content/differential-equations/variation-of-parameters.json", "status": "ready" },
         { "id": "differential-equations.laplace-transforms", "title": "Laplace Transforms", "file": "content/differential-equations/laplace-transforms.json", "status": "ready" },
         { "id": "differential-equations.systems-of-odes", "title": "Systems of Linear Differential Equations", "file": "content/differential-equations/systems-of-odes.json", "status": "ready" },
         { "id": "differential-equations.numerical-methods", "title": "Numerical Methods (Euler's Method)", "file": "content/differential-equations/numerical-methods.json", "status": "ready" }
@@ -235,6 +244,7 @@
         { "id": "number-theory.congruences-and-crt", "title": "Congruences and the Chinese Remainder Theorem", "file": "content/number-theory/congruences-and-crt.json", "status": "ready" },
         { "id": "number-theory.diophantine-equations", "title": "Diophantine Equations", "file": "content/number-theory/diophantine-equations.json", "status": "ready" },
         { "id": "number-theory.arithmetic-functions", "title": "Arithmetic Functions", "file": "content/number-theory/arithmetic-functions.json", "status": "ready" },
+        { "id": "number-theory.orders-and-primitive-roots", "title": "Orders and Primitive Roots", "file": "content/number-theory/orders-and-primitive-roots.json", "status": "ready" },
         { "id": "number-theory.quadratic-residues", "title": "Quadratic Residues", "file": "content/number-theory/quadratic-residues.json", "status": "ready" },
         { "id": "number-theory.continued-fractions", "title": "Continued Fractions", "file": "content/number-theory/continued-fractions.json", "status": "ready" }
       ]
@@ -248,6 +258,8 @@
         { "id": "numerical-methods.root-finding-bracketing", "title": "Bracketing Methods: Bisection and False Position", "file": "content/numerical-methods/root-finding-bracketing.json", "status": "ready" },
         { "id": "numerical-methods.root-finding-open", "title": "Open Methods: Newton and Secant", "file": "content/numerical-methods/root-finding-open.json", "status": "ready" },
         { "id": "numerical-methods.interpolation", "title": "Polynomial Interpolation", "file": "content/numerical-methods/interpolation.json", "status": "ready" },
+        { "id": "numerical-methods.least-squares-fitting", "title": "Least-Squares Fitting", "file": "content/numerical-methods/least-squares-fitting.json", "status": "ready" },
+        { "id": "numerical-methods.numerical-differentiation", "title": "Numerical Differentiation", "file": "content/numerical-methods/numerical-differentiation.json", "status": "ready" },
         { "id": "numerical-methods.numerical-integration", "title": "Numerical Integration", "file": "content/numerical-methods/numerical-integration.json", "status": "ready" },
         { "id": "numerical-methods.linear-systems", "title": "Numerical Linear Systems", "file": "content/numerical-methods/linear-systems.json", "status": "ready" },
         { "id": "numerical-methods.numerical-odes", "title": "Numerical Solutions of ODEs", "file": "content/numerical-methods/numerical-odes.json", "status": "ready" }
@@ -261,6 +273,7 @@
         { "id": "financial-mathematics.simple-and-compound-interest", "title": "Simple and Compound Interest", "file": "content/financial-mathematics/simple-and-compound-interest.json", "status": "ready" },
         { "id": "financial-mathematics.present-and-future-value", "title": "Time Value of Money", "file": "content/financial-mathematics/present-and-future-value.json", "status": "ready" },
         { "id": "financial-mathematics.annuities", "title": "Annuities", "file": "content/financial-mathematics/annuities.json", "status": "ready" },
+        { "id": "financial-mathematics.perpetuities", "title": "Perpetuities", "file": "content/financial-mathematics/perpetuities.json", "status": "ready" },
         { "id": "financial-mathematics.loans-and-amortization", "title": "Loans and Amortization", "file": "content/financial-mathematics/loans-and-amortization.json", "status": "ready" },
         { "id": "financial-mathematics.bonds-and-yields", "title": "Bonds and Yields", "file": "content/financial-mathematics/bonds-and-yields.json", "status": "ready" },
         { "id": "financial-mathematics.npv-and-irr", "title": "Net Present Value and Capital Budgeting", "file": "content/financial-mathematics/npv-and-irr.json", "status": "ready" },

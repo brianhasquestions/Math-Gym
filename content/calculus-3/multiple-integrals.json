@@ -41,7 +41,7 @@
       "**Manufacturing:** material volume of a milled part, average thickness of a coated surface."
     ]
   },
-  "generators": ["double-rect-v1", "double-general-v1", "triple-box-v1", "integral-volume-v1"],
+  "generators": ["double-rect-v1", "double-general-v1", "triple-box-v1", "integral-volume-v1", "c3l-double-general-d1", "c3l-triple-box-d1"],
   "problems": [
     {
       "id": "calculus-3.multiple-integrals.s01",

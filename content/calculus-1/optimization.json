@@ -41,7 +41,7 @@
       "**Engineering:** the dimension that maximizes strength or capacity under a fixed budget of material."
     ]
   },
-  "generators": ["max-rect-area-v1", "max-profit-v1", "min-fence-cost-v1"],
+  "generators": ["max-rect-area-v1", "max-profit-v1", "min-fence-cost-v1", "c1l-maxmin-d3", "c1l-geoopt-d1", "c1l-busopt-d1", "c1l-busopt-d3", "c1l-distopt-d1", "c1l-distopt-d2", "c1l-distopt-d3"],
   "problems": [
     {
       "id": "calculus-1.optimization.s01",

@@ -41,7 +41,7 @@
       "**Physics/everyday:** radioactive decay, carbon dating, and the resale value of cars and equipment."
     ]
   },
-  "generators": ["exp-fn-eval-v1", "exp-doubling-v1", "compound-interest-v1", "exp-equation-v1"],
+  "generators": ["exp-fn-eval-v1", "exp-doubling-v1", "compound-interest-v1", "exp-equation-v1", "a2l-compound-d1", "a2l-growth-decay-d3", "a2l-exp-eq-d2", "a2l-exp-eq-d3"],
   "problems": [
     {
       "id": "algebra-2.exponential-functions.s01",

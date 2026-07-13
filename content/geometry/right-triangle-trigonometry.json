@@ -41,7 +41,7 @@
       "**Everyday life:** safe ladder angles, shadow-based height estimates, and mounting a TV or shelf at the right tilt."
     ]
   },
-  "generators": ["trig-ratio-v1", "trig-find-side-v1", "trig-find-angle-v1", "trig-elevation-v1"],
+  "generators": ["trig-ratio-v1", "trig-find-side-v1", "trig-find-angle-v1", "trig-elevation-v1", "gpl-trig-ratios-d2", "gpl-trig-ratios-d3", "gpl-find-side-d1", "gpl-find-side-d3", "gpl-elev-d1", "gpl-elev-d3"],
   "problems": [
     {
       "id": "geometry.right-triangle-trigonometry.s01",

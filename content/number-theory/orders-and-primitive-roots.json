@@ -1,0 +1,276 @@
+{
+  "id": "number-theory.orders-and-primitive-roots",
+  "subject": "number-theory",
+  "title": "Orders and Primitive Roots",
+  "prerequisites": ["number-theory.congruences-and-crt", "number-theory.arithmetic-functions"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "multiplicative-order",
+      "label": "Multiplicative order $\\mathrm{ord}_n(a)$",
+      "microLesson": "Fix a modulus $n$ and a base $a$ with $\\gcd(a, n) = 1$. The powers $a, a^2, a^3, \\dots$ reduced mod $n$ must eventually cycle, and Euler's theorem guarantees they hit $1$: the **multiplicative order** $\\mathrm{ord}_n(a)$ is the SMALLEST positive $k$ with $a^k \\equiv 1 \\pmod{n}$. Example: mod $7$, the powers of $2$ are $2, 4, 1$, so $\\mathrm{ord}_7(2) = 3$. The coprimality condition is essential — if $\\gcd(a, n) > 1$, every power of $a$ shares that factor with $n$, so $a^k \\equiv 1$ is impossible and the order does not exist. Once you know the order, the powers of $a$ repeat with exact period $\\mathrm{ord}_n(a)$."
+    },
+    {
+      "id": "order-divides-phi",
+      "label": "The order divides $\\varphi(n)$",
+      "microLesson": "The single most useful fact about orders: $\\mathrm{ord}_n(a)$ always **divides** $\\varphi(n)$ (a Lagrange-type theorem — the powers of $a$ form a subgroup of the units mod $n$). This collapses the search: mod $13$, $\\varphi(13) = 12$, so the only possible orders are $1, 2, 3, 4, 6, 12$ — you check six exponents instead of twelve. Successive squaring makes the checks cheap: from $5^2 \\equiv -1 \\pmod{13}$ you get $5^4 \\equiv 1$ immediately, so $\\mathrm{ord}_{13}(5) = 4$. Spotting $a^k \\equiv -1$ is a bonus: it tells you the order is exactly $2k$ once no smaller exponent works."
+    },
+    {
+      "id": "primitive-roots",
+      "label": "Primitive roots and which moduli have them",
+      "microLesson": "A **primitive root** mod $n$ is an element of maximum possible order: $\\mathrm{ord}_n(g) = \\varphi(n)$. Its powers $g^1, g^2, \\dots, g^{\\varphi(n)}$ sweep out EVERY unit mod $n$ — one generator produces the whole multiplicative structure. Primitive roots exist only for $n = 1, 2, 4, p^k, 2p^k$ ($p$ an odd prime); notably $n = 8$ has none, since every odd number squared is $\\equiv 1 \\pmod 8$. When primitive roots exist there are exactly $\\varphi(\\varphi(n))$ of them: mod $11$, $\\varphi(\\varphi(11)) = \\varphi(10) = 4$ primitive roots."
+    },
+    {
+      "id": "discrete-log-index",
+      "label": "Indices (discrete logs) and Fermat–Euler in action",
+      "microLesson": "If $g$ is a primitive root mod $p$, every unit $h$ is some power $h \\equiv g^x$, and the exponent $x$ is called the **index** or **discrete logarithm** of $h$. With tiny numbers you find it by listing powers: mod $11$, $2^1, 2^2, 2^3, 2^4 = 2, 4, 8, 5$, so the index of $5$ is $4$. Orders also turbo-charge big exponents: since $a^{\\mathrm{ord}} \\equiv 1$, only the exponent mod the order matters — $3^{100} \\bmod 7$ reduces via $\\mathrm{ord}_7(3) = 6$ to $3^{100 \\bmod 6} = 3^4 \\equiv 4$. For large moduli the forward power is easy but recovering $x$ is believed hard: that asymmetry is the engine of Diffie–Hellman."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The rhythm of the powers\n\nPick $a = 2$ and reduce its powers mod $7$:\n\n$$2^1 \\equiv 2, \\quad 2^2 \\equiv 4, \\quad 2^3 \\equiv 1, \\quad 2^4 \\equiv 2, \\quad 2^5 \\equiv 4, \\quad 2^6 \\equiv 1, \\dots$$\n\nThe sequence is a drumbeat: $2, 4, 1$, repeating forever with period $3$. That period is the central object of this topic.\n\n**Definition.** For $\\gcd(a, n) = 1$, the **multiplicative order** of $a$ mod $n$, written $\\mathrm{ord}_n(a)$, is the smallest positive integer $k$ with\n\n$$a^k \\equiv 1 \\pmod{n}.$$\n\nSo $\\mathrm{ord}_7(2) = 3$. Euler's theorem ($a^{\\varphi(n)} \\equiv 1$) guarantees SOME power hits $1$, so the order always exists — provided $\\gcd(a, n) = 1$.\n\n**The coprimality guard.** If $\\gcd(a, n) = d > 1$, then every power $a^k$ is divisible by the primes of $d$, so $a^k \\equiv 1 \\pmod n$ would force $d \\mid 1$ — impossible. Example: $8$ mod $12$ walks $8, 4, 8, 4, \\dots$ and never reaches $1$. No order exists. Always check the gcd first.\n\n## Lagrange's shortcut: the order divides $\\varphi(n)$\n\nComputing an order by brute force means listing up to $\\varphi(n)$ powers. The structure theorem cuts the work dramatically:\n\n$$\\mathrm{ord}_n(a) \\;\\big|\\; \\varphi(n).$$\n\n*Why:* if $k = \\mathrm{ord}_n(a)$ and $a^m \\equiv 1$, write $m = qk + r$ with $0 \\le r < k$; then $a^r \\equiv 1$, and minimality of $k$ forces $r = 0$. Since $a^{\\varphi(n)} \\equiv 1$ by Euler, $k \\mid \\varphi(n)$. (This is Lagrange's theorem for the group of units.)\n\nSo mod $13$: $\\varphi(13) = 12$, and the only candidate orders are the divisors\n\n$$1, \\; 2, \\; 3, \\; 4, \\; 6, \\; 12.$$\n\n**Workflow:** compute $a^d \\bmod n$ for the divisors $d$ of $\\varphi(n)$ in increasing order; the first $d$ that gives $1$ is the order.\n\n### Successive squaring does the arithmetic\n\nTo find $\\mathrm{ord}_{13}(5)$: $5^2 = 25 \\equiv 12 \\equiv -1 \\pmod{13}$. Squaring, $5^4 \\equiv (-1)^2 = 1$. Since $5^1 \\ne 1$ and $5^2 \\ne 1$, the order is $4$ — and indeed $4 \\mid 12$. The $-1$ trick is worth internalizing: if $a^k \\equiv -1$, then $a^{2k} \\equiv 1$ and the order is exactly $2k$ (no divisor of $k$ can work, since $a^k$ would then be $1$, not $-1$).\n\nAnother example, mod $17$: $2^4 = 16 \\equiv -1$, so $2^8 \\equiv 1$ and $\\mathrm{ord}_{17}(2) = 8$, a proper divisor of $\\varphi(17) = 16$. So $2$ generates only half of the units mod $17$.\n\n## Primitive roots: maximal order\n\nAn element whose order is as large as possible — $\\mathrm{ord}_n(g) = \\varphi(n)$ — is a **primitive root** mod $n$. Its powers $g, g^2, \\dots, g^{\\varphi(n)}$ are all distinct, so they enumerate EVERY unit mod $n$. One number generates the whole multiplicative world.\n\nMod $7$: is $2$ a primitive root? $\\mathrm{ord}_7(2) = 3 \\ne 6 = \\varphi(7)$. No. Is $3$? Its powers are\n\n$$3, \\; 2, \\; 6, \\; 4, \\; 5, \\; 1$$\n\n— all six units, so $\\mathrm{ord}_7(3) = 6$ and $3$ is a primitive root (in fact the smallest one) mod $7$.\n\n### Which moduli have primitive roots?\n\nNot all! The complete list (Gauss):\n\n$$n = 1, \\; 2, \\; 4, \\; p^k, \\; 2p^k \\qquad (p \\text{ an odd prime}).$$\n\nThe classic failure is $n = 8$: every odd $x$ satisfies $x^2 \\equiv 1 \\pmod 8$ ($1, 9, 25, 49$ are all $\\equiv 1$), so the largest order is $2 < 4 = \\varphi(8)$. Similarly $12$, $15$, $16$, $20$, $24$ have none. But every prime has primitive roots, as do $9, 25, 27$ (odd prime powers) and $10, 18, 22$ (twice an odd prime power).\n\n### Counting them: $\\varphi(\\varphi(n))$\n\nWhen a primitive root exists, there are exactly $\\varphi(\\varphi(n))$ of them. For a prime $p$, that is $\\varphi(p-1)$:\n\n| $p$ | $\\varphi(p)$ | primitive roots: $\\varphi(p-1)$ |\n|---|---|---|\n| $5$ | $4$ | $\\varphi(4) = 2$ |\n| $7$ | $6$ | $\\varphi(6) = 2$ |\n| $11$ | $10$ | $\\varphi(10) = 4$ |\n| $13$ | $12$ | $\\varphi(12) = 4$ |\n\n*Why:* if $g$ is a primitive root, every unit is $g^j$, and $g^j$ is itself a primitive root exactly when $\\gcd(j, \\varphi(n)) = 1$ — there are $\\varphi(\\varphi(n))$ such $j$.\n\n## Indices: logarithms mod $p$\n\nFix a primitive root $g$ mod $p$. Every unit $h$ equals $g^x$ for exactly one $x \\in \\{1, \\dots, p-1\\}$; this $x$ is the **index** (or **discrete log**) of $h$ base $g$. Indices convert multiplication into addition of exponents mod $p - 1$, exactly like ordinary logarithms.\n\nExample mod $11$ with $g = 2$: the powers run\n\n$$2, \\; 4, \\; 8, \\; 5, \\; 10, \\; 9, \\; 7, \\; 3, \\; 6, \\; 1,$$\n\nso the index of $5$ is $4$ (because $2^4 = 16 \\equiv 5$).\n\n### Orders tame huge exponents\n\nSince $a^{\\mathrm{ord}} \\equiv 1$, exponents only matter mod the order. Compute $3^{100} \\bmod 7$: $\\mathrm{ord}_7(3) = 6$, and $100 = 16 \\cdot 6 + 4$, so\n\n$$3^{100} \\equiv 3^{4} = 81 \\equiv 4 \\pmod 7.$$\n\nThis is the sharpened form of the Fermat/Euler reduction: Fermat lets you reduce the exponent mod $p-1$; the order (which divides $p-1$) lets you reduce it even further.\n\n## Common pitfalls\n\n- **Forgetting the gcd check.** $\\mathrm{ord}_{12}(8)$ does not exist: $\\gcd(8,12) = 4 > 1$.\n- **Taking Euler's exponent for the order.** $a^{\\varphi(n)} \\equiv 1$ always, but $\\varphi(n)$ is only an upper bound — the order is the SMALLEST such exponent, and it may be a proper divisor.\n- **Checking non-divisors.** The order can only be a divisor of $\\varphi(n)$; testing exponent $5$ mod $13$ is wasted work since $5 \\nmid 12$.\n- **Assuming primitive roots always exist.** Mod $8$ or mod $15$ there are none, no matter how hard you search.\n- **Misreading the $-1$ signal.** $a^k \\equiv -1$ means the order is exactly $2k$ — it certainly is NOT $k$."
+  },
+  "application": {
+    "summary": "Orders and primitive roots are the number theory inside key exchange: Diffie–Hellman security rests on choosing a generator of large order, because the forward power is fast while recovering the exponent (the discrete log) is believed intractable — and every 'small subgroup attack' is exactly what happens when the order is carelessly small.",
+    "domains": ["cryptography", "pseudorandom generation", "coding theory", "acoustics and design"],
+    "workedExample": "**Choosing a generator for Diffie–Hellman (toy scale).**\n\nAlice and Bob agree to work mod the prime $p = 11$ and must pick a public base $g$. A naive choice is $g = 10$. Check its order: $10^2 = 100 \\equiv 1 \\pmod{11}$, so $\\mathrm{ord}_{11}(10) = 2$ — the powers of $10$ are just $\\{10, 1\\}$. Every 'secret' $10^x$ is one of TWO values; an eavesdropper guesses the shared key in one try. This is a small-subgroup disaster.\n\nNow check $g = 2$: powers mod $11$ run $2, 4, 8, 5, 10, 9, 7, 3, 6, 1$ — all ten units, so $\\mathrm{ord}_{11}(2) = 10 = \\varphi(11)$ and $2$ is a primitive root. Secrets $2^x$ now range over ALL ten units. Real deployments scale $p$ up to thousands of bits and additionally choose $g$ to generate a large prime-order subgroup, but the design rule is exactly this computation: **verify the order of your generator before trusting it**. The number of good generator choices mod $11$ is $\\varphi(\\varphi(11)) = \\varphi(10) = 4$ — they are $2, 6, 7, 8$.",
+    "domainNotes": [
+      "**Cryptography:** Diffie–Hellman and DSA require generators of large known order; validating group parameters (rejecting small-order elements) blocks small-subgroup attacks.",
+      "**Pseudorandom generation:** the period of a Lehmer/multiplicative congruential generator with multiplier $a$ mod $m$ is exactly $\\mathrm{ord}_m(a)$ — maximal period demands a primitive root.",
+      "**Coding theory:** the length of the repeating block of $1/p$ in base $10$ is $\\mathrm{ord}_p(10)$; cyclic codes and CRC polynomials lean on the same order computations.",
+      "**Acoustics and design:** quadratic-residue and primitive-root diffusers scatter sound using the index structure mod a prime — concert-hall panels are literally built from discrete logarithms."
+    ]
+  },
+  "generators": [
+    "nt3-order-1", "nt3-order-2", "nt3-order-3",
+    "nt3-orddiv-1", "nt3-orddiv-2", "nt3-orddiv-3",
+    "nt3-proot-1", "nt3-proot-2", "nt3-proot-3",
+    "nt3-dlog-1", "nt3-dlog-2", "nt3-dlog-3"
+  ],
+  "problems": [
+    {
+      "id": "number-theory.orders-and-primitive-roots.s01",
+      "concepts": ["multiplicative-order"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the multiplicative order of $2$ mod $7$, i.e. the smallest $k \\geq 1$ with $2^k \\equiv 1 \\pmod 7$.",
+      "steps": [
+        { "instruction": "Compute $2^2 \\bmod 7$.", "answer": "4", "accept": [], "hint": "$4 < 7$, no reduction needed." },
+        { "instruction": "Compute $2^3 \\bmod 7$.", "answer": "1", "accept": [], "hint": "$8 = 7 + 1$." },
+        { "instruction": "So what is $\\mathrm{ord}_7(2)$?", "answer": "3", "accept": ["k=3"], "hint": "The first exponent whose power landed on $1$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "The powers of $2$ mod $7$ run $2, 4, 1$ — the first return to $1$ is at exponent $3$, so $\\mathrm{ord}_7(2) = 3$."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s02",
+      "concepts": ["multiplicative-order"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find $\\mathrm{ord}_5(4)$.",
+      "steps": [
+        { "instruction": "Compute $4^2 \\bmod 5$.", "answer": "1", "accept": [], "hint": "$16 = 3 \\cdot 5 + 1$." },
+        { "instruction": "Since $4^1 \\equiv 4 \\neq 1$, what is $\\mathrm{ord}_5(4)$?", "answer": "2", "accept": ["k=2"], "hint": "The smallest exponent giving $1$ is $2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$4^2 = 16 \\equiv 1 \\pmod 5$ and $4^1 \\not\\equiv 1$, so the order is $2$. (Indeed $4 \\equiv -1$ mod 5, and $-1$ always has order 2.)"
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s03",
+      "concepts": ["order-divides-phi"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Orders mod $7$ can only be divisors of $\\varphi(7)$. List the possibilities.",
+      "steps": [
+        { "instruction": "Compute $\\varphi(7)$.", "answer": "6", "accept": [], "hint": "$7$ is prime, so $\\varphi(7) = 7 - 1$." },
+        { "instruction": "How many divisors does $6$ have? (These are the only possible orders.)", "answer": "4", "accept": ["four"], "hint": "$1, 2, 3, 6$." },
+        { "instruction": "Can any element mod $7$ have order $4$? (yes/no)", "answer": "no", "accept": ["n"], "hint": "$4$ does not divide $6$." }
+      ],
+      "finalAnswer": { "value": "possible orders: 1, 2, 3, 6 (so order 4 is impossible)", "unit": "" },
+      "solutionNarrative": "$\\varphi(7) = 6$, whose divisors $1, 2, 3, 6$ are the only possible orders — $4 \\nmid 6$, so order $4$ cannot occur."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s04",
+      "concepts": ["primitive-roots"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Is $2$ a primitive root mod $5$?",
+      "steps": [
+        { "instruction": "Compute $\\varphi(5)$ — the order a primitive root must have.", "answer": "4", "accept": [], "hint": "$5 - 1$." },
+        { "instruction": "The powers of $2$ mod $5$ are $2, 4, 3, 1$. What is $\\mathrm{ord}_5(2)$?", "answer": "4", "accept": [], "hint": "The first $1$ appears at the fourth power." },
+        { "instruction": "Is $2$ a primitive root mod $5$? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "Order equals $\\varphi(5)$." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$\\mathrm{ord}_5(2) = 4 = \\varphi(5)$, so the powers of $2$ sweep every unit mod $5$: $2$ is a primitive root."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s05",
+      "concepts": ["discrete-log-index"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use Fermat's little theorem to evaluate powers of $3$ mod $7$.",
+      "steps": [
+        { "instruction": "Fermat: $3^{7-1} = 3^6 \\bmod 7 = $ ?", "answer": "1", "accept": [], "hint": "$a^{p-1} \\equiv 1$ for $p$ prime, $p \\nmid a$." },
+        { "instruction": "Therefore $3^{13} = (3^6)^2 \\cdot 3 \\bmod 7 = $ ?", "answer": "3", "accept": [], "hint": "$1^2 \\cdot 3$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Fermat gives $3^6 \\equiv 1$, so $3^{13} = (3^6)^2 \\cdot 3 \\equiv 1 \\cdot 3 = 3 \\pmod 7$."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s06",
+      "concepts": ["multiplicative-order"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $\\mathrm{ord}_9(2)$ and decide whether $2$ is a primitive root mod $9$.",
+      "steps": [
+        { "instruction": "Compute $\\varphi(9)$.", "answer": "6", "accept": [], "hint": "$\\varphi(3^2) = 9 - 3$." },
+        { "instruction": "Compute $2^3 \\bmod 9$.", "answer": "8", "accept": [], "hint": "$8 < 9$." },
+        { "instruction": "The powers of $2$ mod $9$ run $2, 4, 8, 7, 5, 1$. What is $\\mathrm{ord}_9(2)$?", "answer": "6", "accept": [], "hint": "The first $1$ appears at the sixth power." },
+        { "instruction": "Is $2$ a primitive root mod $9$? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "Compare the order with $\\varphi(9)$." }
+      ],
+      "finalAnswer": { "value": "ord = 6; yes, a primitive root", "unit": "" },
+      "solutionNarrative": "$\\varphi(9) = 6$ and the powers $2, 4, 8, 7, 5, 1$ first return to $1$ at exponent $6$, so $\\mathrm{ord}_9(2) = 6 = \\varphi(9)$: a primitive root."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s07",
+      "concepts": ["order-divides-phi"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find $\\mathrm{ord}_{13}(5)$ using the divisor shortcut and successive squaring.",
+      "steps": [
+        { "instruction": "Compute $\\varphi(13)$ — the order must divide this.", "answer": "12", "accept": [], "hint": "$13$ is prime." },
+        { "instruction": "Compute $5^2 \\bmod 13$.", "answer": "12", "accept": ["-1"], "hint": "$25 = 13 + 12$; note $12 \\equiv -1$." },
+        { "instruction": "Square that: $5^4 \\bmod 13 = $ ?", "answer": "1", "accept": [], "hint": "$(-1)^2 = 1$." },
+        { "instruction": "Since $5^1, 5^2 \\not\\equiv 1$, what is $\\mathrm{ord}_{13}(5)$?", "answer": "4", "accept": [], "hint": "First exponent reaching $1$ — and it divides $12$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$5^2 \\equiv -1$ forces $5^4 \\equiv 1$ and rules out any smaller order, so $\\mathrm{ord}_{13}(5) = 4$, a divisor of $\\varphi(13) = 12$."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s08",
+      "concepts": ["primitive-roots"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "How many primitive roots does the prime $11$ have?",
+      "steps": [
+        { "instruction": "Compute $\\varphi(11)$.", "answer": "10", "accept": [], "hint": "$11 - 1$." },
+        { "instruction": "The count of primitive roots is $\\varphi(\\varphi(11)) = \\varphi(10) = $ ?", "answer": "4", "accept": [], "hint": "$\\varphi(10) = \\varphi(2)\\varphi(5) = 1 \\cdot 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Primitive roots mod a prime $p$ number $\\varphi(p-1)$; here $\\varphi(10) = 4$ (they are $2, 6, 7, 8$)."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s09",
+      "concepts": ["primitive-roots"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Show that $8$ has NO primitive root by checking orders directly.",
+      "steps": [
+        { "instruction": "Compute $\\varphi(8)$ — the order a primitive root would need.", "answer": "4", "accept": [], "hint": "The units mod 8 are $1, 3, 5, 7$." },
+        { "instruction": "Compute $3^2 \\bmod 8$.", "answer": "1", "accept": [], "hint": "$9 = 8 + 1$." },
+        { "instruction": "Compute $5^2 \\bmod 8$ and $7^2 \\bmod 8$ — they agree. What value?", "answer": "1", "accept": [], "hint": "$25 = 24 + 1$ and $49 = 48 + 1$." },
+        { "instruction": "Every unit has order at most $2 < 4$. Does $8$ have a primitive root? (yes/no)", "answer": "no", "accept": ["n"], "hint": "No element reaches order $\\varphi(8) = 4$." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "All odd squares are $\\equiv 1 \\pmod 8$, so every unit has order $\\leq 2$ while a primitive root would need order $4$: none exists — $8$ is not of the form $1, 2, 4, p^k, 2p^k$."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s10",
+      "concepts": ["discrete-log-index"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "$2$ is a primitive root mod $11$. Find the index (discrete log) of $5$, i.e. the smallest $x \\geq 1$ with $2^x \\equiv 5 \\pmod{11}$.",
+      "steps": [
+        { "instruction": "Compute $2^3 \\bmod 11$.", "answer": "8", "accept": [], "hint": "$8 < 11$." },
+        { "instruction": "Compute $2^4 \\bmod 11$.", "answer": "5", "accept": [], "hint": "$16 = 11 + 5$." },
+        { "instruction": "So the index of $5$ base $2$ is $x = $ ?", "answer": "4", "accept": ["x=4"], "hint": "The exponent that produced $5$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Listing powers of $2$ mod $11$: $2, 4, 8, 5$ — the value $5$ appears at exponent $4$, so $\\log_2 5 = 4$ in the index sense."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s11",
+      "concepts": ["multiplicative-order"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Does $\\mathrm{ord}_{12}(8)$ exist?",
+      "steps": [
+        { "instruction": "Compute $\\gcd(8, 12)$.", "answer": "4", "accept": [], "hint": "Common divisors of 8 and 12: 1, 2, 4." },
+        { "instruction": "Can $8^k \\equiv 1 \\pmod{12}$ for some $k \\geq 1$? (yes/no)", "answer": "no", "accept": ["n"], "hint": "Every power of 8 is divisible by 4, but numbers $\\equiv 1$ mod 12 are odd." }
+      ],
+      "finalAnswer": { "value": "no — the order is undefined since gcd(8,12) = 4 > 1", "unit": "" },
+      "solutionNarrative": "$\\gcd(8, 12) = 4 \\neq 1$, so $8$ is not a unit mod $12$: its powers cycle $8, 4, 8, 4, \\dots$ and never reach $1$. Orders only exist for bases coprime to the modulus."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s12",
+      "concepts": ["order-divides-phi"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find $\\mathrm{ord}_{17}(2)$ by successive squaring, using the fact that the order divides $\\varphi(17)$.",
+      "steps": [
+        { "instruction": "Compute $\\varphi(17)$.", "answer": "16", "accept": [], "hint": "$17$ is prime." },
+        { "instruction": "Compute $2^4 \\bmod 17$.", "answer": "16", "accept": ["-1"], "hint": "$16 < 17$; note $16 \\equiv -1$." },
+        { "instruction": "Square: $2^8 \\bmod 17 = $ ?", "answer": "1", "accept": [], "hint": "$(-1)^2 = 1$." },
+        { "instruction": "The order divides 16 and $2^1, 2^2, 2^4 \\not\\equiv 1$. What is $\\mathrm{ord}_{17}(2)$?", "answer": "8", "accept": [], "hint": "Candidates were $1, 2, 4, 8, 16$; the first success is $8$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$2^4 \\equiv -1 \\pmod{17}$ pins the order at exactly $2 \\cdot 4 = 8$: it divides $16$ but is not $1, 2$, or $4$. So $2$ is NOT a primitive root mod $17$."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s13",
+      "concepts": ["primitive-roots"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the smallest primitive root mod $7$.",
+      "steps": [
+        { "instruction": "The powers of $2$ mod $7$ are $2, 4, 1, \\dots$ — what is $\\mathrm{ord}_7(2)$?", "answer": "3", "accept": [], "hint": "$2^3 = 8 \\equiv 1$." },
+        { "instruction": "Is $2$ a primitive root mod $7$? (yes/no)", "answer": "no", "accept": ["n"], "hint": "A primitive root needs order $\\varphi(7) = 6$." },
+        { "instruction": "The powers of $3$ mod $7$ are $3, 2, 6, 4, 5, 1$. What is $\\mathrm{ord}_7(3)$?", "answer": "6", "accept": [], "hint": "The first $1$ appears at the sixth power." },
+        { "instruction": "So the smallest primitive root mod $7$ is:", "answer": "3", "accept": ["g=3"], "hint": "$2$ failed, $3$ succeeded." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$\\mathrm{ord}_7(2) = 3 < 6$, so $2$ fails; $3$ has order $6 = \\varphi(7)$, so $3$ is the smallest primitive root mod $7$."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s14",
+      "concepts": ["discrete-log-index"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute $3^{100} \\bmod 7$ using $\\mathrm{ord}_7(3) = 6$.",
+      "steps": [
+        { "instruction": "Only the exponent mod the order matters. Compute $100 \\bmod 6$.", "answer": "4", "accept": [], "hint": "$100 = 16 \\cdot 6 + 4$." },
+        { "instruction": "So $3^{100} \\equiv 3^4 \\pmod 7$. Compute $3^4 \\bmod 7$.", "answer": "4", "accept": [], "hint": "$81 = 77 + 4$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "Since $3^6 \\equiv 1 \\pmod 7$, exponents reduce mod $6$: $3^{100} \\equiv 3^{4} = 81 \\equiv 4 \\pmod 7$."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s15",
+      "concepts": ["multiplicative-order"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The powers of $3$ mod $11$ run $3, 9, 5, 4, 1, \\dots$. Analyze the order of $3$ mod $11$.",
+      "steps": [
+        { "instruction": "Compute $3^5 \\bmod 11$ to confirm the cycle closes.", "answer": "1", "accept": [], "hint": "$3^5 = 243 = 22 \\cdot 11 + 1$." },
+        { "instruction": "What is $\\mathrm{ord}_{11}(3)$?", "answer": "5", "accept": [], "hint": "No earlier power hit $1$." },
+        { "instruction": "Lagrange check: $\\varphi(11) / \\mathrm{ord}_{11}(3) = $ ?", "answer": "2", "accept": [], "hint": "$10 / 5$." }
+      ],
+      "finalAnswer": { "value": "ord = 5 (and 5 divides φ(11) = 10)", "unit": "" },
+      "solutionNarrative": "$3^5 = 243 \\equiv 1 \\pmod{11}$ and no earlier power is $1$, so $\\mathrm{ord}_{11}(3) = 5$ — a proper divisor of $\\varphi(11) = 10$, so $3$ is not a primitive root mod $11$."
+    },
+    {
+      "id": "number-theory.orders-and-primitive-roots.s16",
+      "concepts": ["primitive-roots", "order-divides-phi"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Decide whether $2$ is a primitive root mod $13$, then count the primitive roots mod $13$.",
+      "steps": [
+        { "instruction": "The order must divide $\\varphi(13) = 12$; the proper divisors to test are $1, 2, 3, 4, 6$. Compute the key power $2^6 \\bmod 13$.", "answer": "12", "accept": ["-1"], "hint": "$64 = 4 \\cdot 13 + 12$; note $12 \\equiv -1$." },
+        { "instruction": "$2^6 \\equiv -1$ (and $2^4 = 16 \\equiv 3 \\neq 1$, $2^3 = 8 \\neq 1$), so no proper divisor of 12 works. Is $2$ a primitive root mod $13$? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "$2^6 \\equiv -1$ forces the order to be exactly $12$." },
+        { "instruction": "How many primitive roots does $13$ have? (Compute $\\varphi(12)$.)", "answer": "4", "accept": [], "hint": "$\\varphi(12) = \\varphi(4)\\varphi(3) = 2 \\cdot 2$." }
+      ],
+      "finalAnswer": { "value": "yes; 4 primitive roots", "unit": "" },
+      "solutionNarrative": "$2^6 \\equiv -1 \\pmod{13}$ means the order is exactly $12 = \\varphi(13)$, so $2$ is a primitive root; the total count is $\\varphi(12) = 4$ (namely $2, 6, 7, 11$)."
+    }
+  ]
+}

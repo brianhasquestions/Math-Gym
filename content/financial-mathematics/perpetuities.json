@@ -1,0 +1,258 @@
+{
+  "id": "financial-mathematics.perpetuities",
+  "subject": "financial-mathematics",
+  "title": "Perpetuities",
+  "prerequisites": ["financial-mathematics.annuities"],
+  "estimatedMinutes": 45,
+  "keyConcepts": [
+    {
+      "id": "level-perpetuity",
+      "label": "The level perpetuity: PV = C/i",
+      "microLesson": "A **perpetuity** is an annuity that never ends: a payment $C$ at the end of every period, forever. Infinitely many payments, yet a finite price — because discounting shrinks distant payments toward nothing, the geometric series of present values converges to the remarkably simple $PV = \\dfrac{C}{i}$. Receiving \\$500 a year forever when money is worth 5% is worth $\\frac{500}{0.05} = \\$10{,}000$ today. Equivalently: \\$10,000 invested at 5% throws off exactly \\$500 of interest each year, forever, without touching the principal. As always, $i$ must be the rate PER PERIOD: monthly payments need the monthly rate."
+    },
+    {
+      "id": "perpetuity-due-and-deferred",
+      "label": "Perpetuity due and deferred perpetuities",
+      "microLesson": "Timing shifts are one multiplication away. A **perpetuity-due** pays at the *beginning* of each period, so every payment is discounted one period less: $PV_{due} = \\dfrac{C}{i}(1 + i) = \\dfrac{C}{i} + C$ — exactly the ordinary value plus one undiscounted payment received today. A **deferred perpetuity** starts $m$ periods in the future: value it as $\\frac{C}{i}$ at the start date, then discount that lump back with the factor $(1+i)^{-m}$. A \\$600-per-year perpetuity at 5% is worth \\$12,000 — but if payments only begin after year 4, it is worth $12000 \\times (1.05)^{-4} = 12000 \\times 0.822702 = \\$9{,}872.42$ today."
+    },
+    {
+      "id": "growing-perpetuity",
+      "label": "The growing perpetuity: PV = C/(i − g)",
+      "microLesson": "If the payment grows by a factor $(1+g)$ every period — dividends rising with profits, rents rising with inflation — the series still converges provided $i > g$, and collapses to the **Gordon growth formula** $PV = \\dfrac{C}{i - g}$, where $C$ is the FIRST payment (one period from now). Growth offsets discounting, so only the spread $i - g$ matters: \\$800 next year growing 3% forever at a 7% required return is worth $\\frac{800}{0.04} = \\$20{,}000$. Two traps: if the last payment was just made, grow it first ($C_1 = C_0(1+g)$); and if $g \\ge i$, the series diverges — the formula is meaningless."
+    },
+    {
+      "id": "perpetuity-applications",
+      "label": "Preferred stock, endowments, and cap rates",
+      "microLesson": "Perpetuities price real securities. **Preferred stock** pays a fixed dividend with no maturity: price $= D/i$, and inverting gives the implied yield $i = D/P$. An **endowment** is a perpetuity run in reverse: to fund a payout $C$ forever you need $C/i$, because the fund then earns exactly the payout in interest each year. Real-estate investors speak the same formula: a building's **cap rate** is $\\text{NOI}/\\text{price}$ — net operating income over value — which is just $i = C/PV$; pricing a building at a market cap rate is computing $\\text{NOI}/i$. One formula, three industries."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Payments that never stop\n\nThe annuity formulas of the last topic handled $n$ payments. Let $n \\to \\infty$ and something surprising happens: the algebra gets *simpler*. A **perpetuity** — a level payment $C$ at the end of every period, forever — has present value\n\n$$PV = \\frac{C}{(1+i)} + \\frac{C}{(1+i)^2} + \\frac{C}{(1+i)^3} + \\cdots = \\boxed{\\,\\frac{C}{i}\\,}$$\n\nThe infinite geometric series converges because each payment is worth $\\frac{1}{1+i}$ times the one before; the tail of far-future payments contributes almost nothing. You can also see it without series: a fund of $C/i$ earns interest $\\left(\\frac{C}{i}\\right) i = C$ each period — pay that out and the principal is untouched, ready to do it again forever.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,40],\"yRange\":[0,110],\"grid\":true,\"curves\":[{\"fn\":\"100*(1.05)^(-x)\",\"label\":\"PV of the payment in year x (at 5%)\",\"color\":\"accent\",\"labelAt\":16,\"fillRange\":[0,40]}],\"caption\":\"Each future $100 payment is worth less today; the shaded total converges to 100/0.05 = $2000 even over infinitely many years.\"}\n```\n\n**Worked example.** A trust pays \\$500 at the end of each year forever, money worth 5%: $PV = \\frac{500}{0.05} = \\$10{,}000$. Note what the annuity factor was doing all along: $\\frac{1 - (1+i)^{-n}}{i} \\to \\frac{1}{i}$ as $n \\to \\infty$, so a perpetuity is just an annuity whose factor has finished converging.\n\n> **Pitfall — the rate must match the period.** Monthly payments forever need the monthly rate. \\$50 a month at 6% per year compounded monthly uses $i = 0.005$: $PV = \\frac{50}{0.005} = \\$10{,}000$ — not $\\frac{50}{0.06}$.\n\n## Shifting the clock: due and deferred\n\n**Perpetuity-due** (payments at the *beginning* of each period): every payment is discounted one period less, so multiply by $(1+i)$ — the same correction as for annuities:\n\n$$PV_{due} = \\frac{C}{i}(1+i) = \\frac{C}{i} + C.$$\n\nThe second form is the intuition: a due perpetuity is an ordinary one *plus the first payment in hand today*. A \\$400 ground rent at 5%: ordinary \\$8,000, due $8000 \\times 1.05 = \\$8{,}400 = 8000 + 400$.\n\n**Deferred perpetuity** (first payment $m+1$ periods away, i.e. the stream 'starts' after year $m$): value the perpetuity at its start date, then discount the lump:\n\n$$PV = \\frac{C}{i}\\,(1+i)^{-m}.$$\n\n**Worked example.** \\$600 per year at 5%, beginning after year 4. At year 4 the stream is a plain perpetuity worth $\\frac{600}{0.05} = \\$12{,}000$. Discount four years using $(1.05)^{-4} = 0.822702$: $PV = 12000 \\times 0.822702 = \\$9{,}872.42$. (When the power is awkward to compute by hand, the discount factor will be given, as here.)\n\n## Growing forever: the Gordon formula\n\nLet the payment grow: $C$, then $C(1+g)$, then $C(1+g)^2, \\dots$ Each term of the PV series is $\\frac{1+g}{1+i}$ times the previous — still a geometric series, converging exactly when $g < i$:\n\n$$\\boxed{\\,PV = \\frac{C}{i - g}, \\qquad i > g\\,}$$\n\nwhere $C$ is the **next** payment, one period out. Growth partially cancels discounting, so the effective discount rate is the spread $i - g$.\n\n**Worked example.** A stock pays \\$800 next year, growing 3% forever; investors require 7%: $PV = \\frac{800}{0.07 - 0.03} = \\frac{800}{0.04} = \\$20{,}000$. The same stream without growth would be worth only $\\frac{800}{0.07} \\approx \\$11{,}429$ — growth is valuable, and the formula prices it.\n\n> **Pitfall — 'just paid' versus 'will pay'.** If the \\$1,000 dividend was *just paid*, next year's payment is $1000(1.02) = 1020$, and THAT goes on top: $PV = \\frac{1020}{i - g}$. Feeding the stale payment into the formula underprices the stream by a factor of $(1+g)$.\n>\n> **Pitfall — $i > g$ is not optional.** If $g \\ge i$, the terms of the series do not shrink and the sum diverges: no finite price exists. Real valuations keep long-run $g$ modest (at or below economy-wide growth) for exactly this reason.\n\n## One formula, three industries\n\n**Preferred stock.** A fixed dividend $D$ forever: price $P = \\frac{D}{i}$. Traders invert it daily: a \\$3 dividend on a \\$50 share implies a yield of $i = \\frac{3}{50} = 6\\%$.\n\n**Endowments.** To fund a \\$2,000 scholarship every year forever at 4%, you need $\\frac{2000}{0.04} = \\$50{,}000$: the fund earns \\$2,000 of interest, pays it out, and starts the next year whole. Add growth to keep pace with costs and the requirement becomes $\\frac{C}{i-g}$ — inflation-proofing an endowment is expensive because it consumes part of the return.\n\n**Real estate cap rates.** Investors quote a building's **capitalization rate**: $\\text{cap} = \\frac{\\text{NOI}}{\\text{price}}$, net operating income over value. That is literally $i = C/PV$, the perpetuity relation read backwards; appraising a property 'at a 6% cap' means computing $\\frac{\\text{NOI}}{0.06}$. When market cap rates fall, the same income is divided by a smaller $i$ — property values rise mechanically, exactly as $C/i$ dictates."
+  },
+  "application": {
+    "summary": "Perpetuities price everything that pays 'forever': preferred shares and their dividend yields, endowed chairs and scholarships, ground rents, and income real estate via cap rates. The growing version is the Gordon growth model at the heart of textbook stock valuation, and the deferred version prices streams that start later — pensions bought years before retirement.",
+    "domains": ["equity valuation", "endowments", "real estate", "corporate finance"],
+    "workedExample": "**Endowing a scholarship, inflation-proofed**\n\nA university wants a scholarship of \\$5,000 paid at the end of next year and growing 4% per year forever to keep up with tuition. The endowment portfolio is expected to earn 8% per year.\n\nThe naive (level) calculation says $\\frac{5000}{0.08} = \\$62{,}500$ suffices. But a level \\$5,000 buys less every year; the growing target needs the Gordon formula with the spread $i - g = 0.08 - 0.04 = 0.04$:\n\n$$PV = \\frac{5000}{0.04} = \\$125{,}000.$$\n\nInflation-proofing doubles the required gift — growth consumes half of the fund's 8-point return, leaving only 4 points to support the payout. Check year one: the fund earns $125000 \\times 0.08 = \\$10{,}000$, pays out \\$5,000, and retains \\$5,000, growing the principal to \\$130,000 — which is exactly 4% growth, just enough to support next year's \\$5,200 award at the same 4% spread. The same arithmetic runs a pension fund's inflation-linked obligations and a REIT's valuation of a rent-escalating lease: whenever a payment stream grows forever, only the spread between earning rate and growth rate does the heavy lifting.",
+    "domainNotes": [
+      "**Equity valuation:** the Gordon growth model prices a stock as next year's dividend over (required return minus growth) — a growing perpetuity.",
+      "**Endowments:** fund = payout / (return − growth); the spread, not the raw return, determines how much a gift can sustain.",
+      "**Real estate:** cap rate = NOI / price is the perpetuity relation inverted; falling market cap rates mechanically raise valuations.",
+      "**Corporate finance:** terminal values in DCF models are perpetuities (level or growing) discounted back — usually the largest single number in the model."
+    ]
+  },
+  "generators": ["fm3-level-1", "fm3-level-2", "fm3-level-3", "fm3-due-1", "fm3-due-2", "fm3-due-3", "fm3-grow-1", "fm3-grow-2", "fm3-grow-3", "fm3-app-1", "fm3-app-2", "fm3-app-3"],
+  "problems": [
+    {
+      "id": "financial-mathematics.perpetuities.s01",
+      "concepts": ["level-perpetuity"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A trust pays \\$500 at the end of every year, forever, when money is worth 5% per year. Find the present value with $PV = \\dfrac{C}{i}$. Enter as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Write the rate $i$ as a decimal.", "answer": "0.05", "accept": [], "hint": "5% as a decimal." },
+        { "instruction": "Compute $PV = \\dfrac{500}{0.05}$. Enter a number.", "answer": "10000", "accept": ["10000.00", "500/0.05"], "hint": "Dividing by 0.05 is multiplying by 20." }
+      ],
+      "finalAnswer": { "value": "10000", "unit": "dollars" },
+      "solutionNarrative": "$PV = \\dfrac{500}{0.05} = \\$10{,}000$: that principal earns exactly \\$500 of interest a year, forever, without ever shrinking."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s02",
+      "concepts": ["level-perpetuity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A trust pays \\$50 at the end of every month, forever. Money is worth 6% per year, compounded monthly. Use the MONTHLY rate $i = 6\\%/12$ in $PV = C/i$. Enter as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Divide the annual decimal rate by 12." },
+        { "instruction": "Compute $PV = \\dfrac{50}{0.005}$. Enter a number.", "answer": "10000", "accept": ["10000.00"], "hint": "Dividing by 0.005 is multiplying by 200." }
+      ],
+      "finalAnswer": { "value": "10000", "unit": "dollars" },
+      "solutionNarrative": "With the monthly rate 0.005, $PV = \\frac{50}{0.005} = \\$10{,}000$. Using the annual 0.06 here would be the classic period-mismatch error."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s03",
+      "concepts": ["level-perpetuity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A donor endows a \\$2,000-per-year prize forever; the fund earns 4% per year, paying the prize from interest at the end of each year. Find the required endowment, the interest earned in year one, and the fund balance after the first prize is paid. Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Required endowment $PV = \\dfrac{2000}{0.04}$. Enter a number.", "answer": "50000", "accept": ["50000.00"], "hint": "Level perpetuity: $C/i$." },
+        { "instruction": "Interest in year one: $50000 \\times 0.04$. Enter a number.", "answer": "2000", "accept": ["2000.00"], "hint": "It exactly equals the prize." },
+        { "instruction": "Balance after paying the prize: $50000 + 2000 - 2000$. Enter a number.", "answer": "50000", "accept": ["50000.00"], "hint": "Interest in, prize out — the principal never shrinks." }
+      ],
+      "finalAnswer": { "value": "50000", "unit": "dollars" },
+      "solutionNarrative": "The \\$50,000 endowment earns \\$2,000, pays \\$2,000, and ends the year at \\$50,000 again — a perpetuity is self-sustaining by construction."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s04",
+      "concepts": ["perpetuity-due-and-deferred"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A ground rent of \\$400 is paid at the BEGINNING of each year, forever, at 5% per year. Compute the ordinary perpetuity value, then multiply by $(1+i)$ for the perpetuity-due. Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Ordinary value: $\\dfrac{400}{0.05}$. Enter a number.", "answer": "8000", "accept": ["8000.00"], "hint": "End-of-year version first." },
+        { "instruction": "Multiply by $1.05$ for the due. Enter a number.", "answer": "8400", "accept": ["8400.00"], "hint": "$8000 \\times 1.05$ — the ordinary value plus one payment." }
+      ],
+      "finalAnswer": { "value": "8400", "unit": "dollars" },
+      "solutionNarrative": "Ordinary \\$8,000; paid up front it is worth $8000 \\times 1.05 = \\$8{,}400$ — precisely one extra \\$400 payment, the one received today."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s05",
+      "concepts": ["perpetuity-due-and-deferred"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A pension of \\$600 per year (end of year) begins after year 4 and runs forever, at 5% per year. Value the perpetuity as of year 4, then discount back with the given factor $(1.05)^{-4} = 0.822702$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Value at year 4: $\\dfrac{600}{0.05}$. Enter a number.", "answer": "12000", "accept": ["12000.00"], "hint": "A plain perpetuity, seen from year 4." },
+        { "instruction": "Discount to today: $12000 \\times 0.822702$. Enter a number rounded to the nearest cent.", "answer": "9872.42", "accept": ["9872.424"], "hint": "Multiply by the stated factor." }
+      ],
+      "finalAnswer": { "value": "9872.42", "unit": "dollars" },
+      "solutionNarrative": "At year 4 the stream is worth \\$12,000; four years of discounting at 5% gives $12000 \\times 0.822702 = \\$9{,}872.42$ today."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s06",
+      "concepts": ["perpetuity-due-and-deferred"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two contracts each pay \\$1,000 per year forever at 8% per year: contract X pays at the end of each year, contract Y at the beginning. Find both values and Y's premium over X. Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Value of X (ordinary): $\\dfrac{1000}{0.08}$. Enter a number.", "answer": "12500", "accept": ["12500.00"], "hint": "$C/i$." },
+        { "instruction": "Value of Y (due): $12500 \\times 1.08$. Enter a number.", "answer": "13500", "accept": ["13500.00"], "hint": "One extra period of value on the whole stream." },
+        { "instruction": "Premium $= Y - X$. Enter a number.", "answer": "1000", "accept": ["1000.00"], "hint": "It equals exactly one payment." }
+      ],
+      "finalAnswer": { "value": "1000", "unit": "dollars" },
+      "solutionNarrative": "X is worth \\$12,500 and Y \\$13,500: the \\$1,000 gap is Y's first payment, received today and undiscounted, while every later payment matches X one-for-one."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s07",
+      "concepts": ["growing-perpetuity"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A stock will pay \\$800 one year from now, growing 3% per year forever. The required return is 7% per year. Use $PV = \\dfrac{C}{i - g}$ (valid since $i > g$). Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the spread $i - g = 0.07 - 0.03$. Enter as a decimal.", "answer": "0.04", "accept": [], "hint": "Subtract the decimals." },
+        { "instruction": "Compute $PV = \\dfrac{800}{0.04}$. Enter a number.", "answer": "20000", "accept": ["20000.00"], "hint": "Dividing by 0.04 is multiplying by 25." }
+      ],
+      "finalAnswer": { "value": "20000", "unit": "dollars" },
+      "solutionNarrative": "$PV = \\frac{800}{0.07 - 0.03} = \\$20{,}000$. Growth offsets discounting, so only the 4-point spread matters."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s08",
+      "concepts": ["growing-perpetuity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A company JUST PAID a \\$1,000 dividend. Dividends grow 2% per year forever; the required return is 6%. The formula needs NEXT year's dividend: $PV = \\dfrac{C_1}{i - g}$ with $C_1 = C_0(1+g)$. Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Grow the dividend one step: $C_1 = 1000 \\times 1.02$. Enter a number.", "answer": "1020", "accept": ["1020.00"], "hint": "The just-paid dividend is already gone." },
+        { "instruction": "Compute $PV = \\dfrac{1020}{0.06 - 0.02}$. Enter a number.", "answer": "25500", "accept": ["25500.00"], "hint": "$1020 / 0.04$." }
+      ],
+      "finalAnswer": { "value": "25500", "unit": "dollars" },
+      "solutionNarrative": "$C_1 = \\$1{,}020$ and $PV = \\frac{1020}{0.04} = \\$25{,}500$. Using the stale \\$1,000 would underprice the stream by the growth factor."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s09",
+      "concepts": ["growing-perpetuity"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A growing perpetuity sells for \\$40,000; its next payment (one year out) is \\$1,600, growing 3% per year forever. Find the implied annual return from $i = \\dfrac{C}{PV} + g$.",
+      "steps": [
+        { "instruction": "Compute $\\dfrac{C}{PV} = \\dfrac{1600}{40000}$. Enter as a decimal.", "answer": "0.04", "accept": ["1600/40000"], "hint": "This is the spread $i - g$." },
+        { "instruction": "Add the growth: $i = 0.04 + 0.03$. Enter $i$ as a percent number (enter 7 for 7%).", "answer": "7", "accept": ["7%"], "hint": "Convert the decimal to percent." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "percent" },
+      "solutionNarrative": "The price implies $i = \\frac{1600}{40000} + 0.03 = 0.07$, i.e. 7%: a 4% cash yield plus 3% growth. Note $i > g$ holds, as required."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s10",
+      "concepts": ["perpetuity-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A preferred share pays a fixed \\$3 dividend per year, forever. Investors require 6% per year. Price the share as a perpetuity. Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Write the required return as a decimal.", "answer": "0.06", "accept": [], "hint": "6% as a decimal." },
+        { "instruction": "Price $= \\dfrac{3}{0.06}$. Enter a number.", "answer": "50", "accept": ["50.00"], "hint": "Dividend over required return." }
+      ],
+      "finalAnswer": { "value": "50", "unit": "dollars" },
+      "solutionNarrative": "Price $= \\frac{3}{0.06} = \\$50$ — preferred stock is the textbook perpetuity: fixed dividend, no maturity."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s11",
+      "concepts": ["perpetuity-applications"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A rental building sells for \\$300,000 with net operating income (NOI) of \\$24,000 per year. Find its cap rate ($\\text{NOI}/\\text{price}$, the perpetuity rate $i = C/PV$), then its value if the market cap rate moved to 6%.",
+      "steps": [
+        { "instruction": "Cap rate $= \\dfrac{24000}{300000}$. Enter as a percent number (enter 8 for 8%).", "answer": "8", "accept": ["8%"], "hint": "Divide, then multiply by 100." },
+        { "instruction": "Revalue at a 6% cap rate: $\\dfrac{24000}{0.06}$. Enter a number, no $ or commas.", "answer": "400000", "accept": ["400000.00"], "hint": "Same income, smaller perpetuity rate." }
+      ],
+      "finalAnswer": { "value": "400000", "unit": "dollars" },
+      "solutionNarrative": "Cap rate 8%; at a 6% cap the same \\$24,000 income supports a \\$400,000 price — lower rates mechanically inflate property values, exactly as $C/i$ predicts."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s12",
+      "concepts": ["perpetuity-applications"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A university wants a scholarship paying \\$5,000 next year, growing 4% per year forever; the endowment earns 8%. Find the endowment needed with growth, the endowment for a level \\$5,000 scholarship, and the extra cost of inflation-proofing. Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Growing version: $\\dfrac{5000}{0.08 - 0.04}$. Enter a number.", "answer": "125000", "accept": ["125000.00"], "hint": "The spread is 0.04." },
+        { "instruction": "Level version: $\\dfrac{5000}{0.08}$. Enter a number.", "answer": "62500", "accept": ["62500.00"], "hint": "Plain $C/i$." },
+        { "instruction": "Extra cost of growth: $125000 - 62500$. Enter a number.", "answer": "62500", "accept": ["62500.00"], "hint": "Inflation-proofing doubles the gift here." }
+      ],
+      "finalAnswer": { "value": "125000", "unit": "dollars" },
+      "solutionNarrative": "Growth consumes half of the fund's 8-point return, so the inflation-proofed scholarship needs \\$125,000 — double the \\$62,500 a level award requires."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s13",
+      "concepts": ["perpetuity-applications"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "How much must be donated today to fund a \\$1,200-per-year scholarship forever, if the endowment earns 4% per year? Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Write the rate as a decimal.", "answer": "0.04", "accept": [], "hint": "4% as a decimal." },
+        { "instruction": "Endowment $= \\dfrac{1200}{0.04}$. Enter a number.", "answer": "30000", "accept": ["30000.00"], "hint": "Dividing by 0.04 is multiplying by 25." }
+      ],
+      "finalAnswer": { "value": "30000", "unit": "dollars" },
+      "solutionNarrative": "$\\frac{1200}{0.04} = \\$30{,}000$: the fund earns \\$1,200 a year — exactly the scholarship — leaving the principal intact forever."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s14",
+      "concepts": ["perpetuity-due-and-deferred"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "An office lease pays \\$900 at the beginning of each year, forever, at 6% per year. Find the perpetuity-due value. Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Ordinary value: $\\dfrac{900}{0.06}$. Enter a number.", "answer": "15000", "accept": ["15000.00"], "hint": "End-of-year version first." },
+        { "instruction": "Multiply by $1.06$. Enter a number.", "answer": "15900", "accept": ["15900.00"], "hint": "Equivalently, add one \\$900 payment." }
+      ],
+      "finalAnswer": { "value": "15900", "unit": "dollars" },
+      "solutionNarrative": "Ordinary \\$15,000, due $15000 \\times 1.06 = \\$15{,}900$ — the up-front payment adds exactly one undiscounted \\$900."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s15",
+      "concepts": ["growing-perpetuity"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A royalty stream pays \\$700 one year from now, growing 3% per year forever; money is worth 5%. Check that $i > g$, then price the stream with $PV = \\dfrac{C}{i-g}$. Enter each as a number, no $ or commas.",
+      "steps": [
+        { "instruction": "Compute the spread $i - g = 0.05 - 0.03$. Enter as a decimal.", "answer": "0.02", "accept": [], "hint": "Positive, so the formula applies." },
+        { "instruction": "$PV = \\dfrac{700}{0.02}$. Enter a number.", "answer": "35000", "accept": ["35000.00"], "hint": "Dividing by 0.02 is multiplying by 50." }
+      ],
+      "finalAnswer": { "value": "35000", "unit": "dollars" },
+      "solutionNarrative": "$i - g = 0.02 > 0$, so $PV = \\frac{700}{0.02} = \\$35{,}000$. Were $g \\ge i$, the series would diverge and no finite price would exist."
+    },
+    {
+      "id": "financial-mathematics.perpetuities.s16",
+      "concepts": ["perpetuity-due-and-deferred"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A settlement pays \\$3,000 per year (end of year) forever, but only starting after year 3, at 6% per year. Value it as of year 3, then discount with the given factor $(1.06)^{-3} = 0.839619$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "steps": [
+        { "instruction": "Value at year 3: $\\dfrac{3000}{0.06}$. Enter a number.", "answer": "50000", "accept": ["50000.00"], "hint": "A plain perpetuity from year 3's viewpoint." },
+        { "instruction": "Discount to today: $50000 \\times 0.839619$. Enter a number rounded to the nearest cent.", "answer": "41980.95", "accept": [], "hint": "Multiply by the stated factor." }
+      ],
+      "finalAnswer": { "value": "41980.95", "unit": "dollars" },
+      "solutionNarrative": "Worth \\$50,000 at year 3; three years of discounting at 6% gives $50000 \\times 0.839619 = \\$41{,}980.95$ today — deferral trims almost a fifth of the value."
+    }
+  ]
+}

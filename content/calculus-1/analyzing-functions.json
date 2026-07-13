@@ -41,7 +41,7 @@
       "**Engineering:** locating maximum stress or deflection along a beam, where the rate of change crosses zero."
     ]
   },
-  "generators": ["critical-quadratic-v1", "increasing-decreasing-v1", "concavity-v1", "extrema-quadratic-v1"],
+  "generators": ["critical-quadratic-v1", "increasing-decreasing-v1", "concavity-v1", "extrema-quadratic-v1", "c1l-incdec-d1", "c1l-incdec-d3", "c1l-concav-d1"],
   "problems": [
     {
       "id": "calculus-1.analyzing-functions.s01",

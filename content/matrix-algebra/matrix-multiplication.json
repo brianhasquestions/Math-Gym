@@ -41,7 +41,7 @@
       "**Data analysis:** a score matrix times a weight vector collapses many criteria into one ranking number per item."
     ]
   },
-  "generators": ["mat-mult-v1", "mat-defined-v1"],
+  "generators": ["mat-mult-v1", "mat-defined-v1", "mpl-when-defined-d2", "mpl-when-defined-d3", "mpl-product-d1", "mpl-product-d3", "mpl-mult-props-d2", "mpl-mult-props-d3", "mpl-mult-applied-d1", "mxa-dims-2", "mxa-dims-3", "mxa-entry-1", "mxa-prod-rect-3", "mxa-identity-1", "mxa-commute-2", "mxa-power-3", "mxa-cost-1", "mxa-markov-2", "mxa-paths-3"],
   "problems": [
     {
       "id": "matrix-algebra.matrix-multiplication.s01",

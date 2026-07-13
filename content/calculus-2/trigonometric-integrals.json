@@ -1,0 +1,268 @@
+{
+  "id": "calculus-2.trigonometric-integrals",
+  "subject": "calculus-2",
+  "title": "Trigonometric Integrals",
+  "prerequisites": ["calculus-2.integration-by-parts", "trigonometry.trig-identities"],
+  "estimatedMinutes": 55,
+  "keyConcepts": [
+    {
+      "id": "odd-power-strategies",
+      "label": "Odd powers: peel one factor and substitute",
+      "microLesson": "When $\\sin^m x \\cos^n x$ has an ODD power, peel off one factor of the odd function and convert the rest with $\\sin^2 x + \\cos^2 x = 1$. For $\\int \\sin^3 x\\,dx$: write $\\sin^3 x = \\sin x(1 - \\cos^2 x)$, substitute $u = \\cos x$ (so $du = -\\sin x\\,dx$), and the integral becomes $-\\int(1 - u^2)\\,du = \\tfrac{\\cos^3 x}{3} - \\cos x + C$. The peeled factor is exactly the $du$ you need — that is why odd powers are the easy case. Over $[0, \\pi/2]$ the definite version is a clean polynomial integral: $\\int_0^{\\pi/2}\\sin^3 x\\,dx = \\int_0^1(1-u^2)\\,du = \\tfrac{2}{3}$."
+    },
+    {
+      "id": "even-power-reduction",
+      "label": "Even powers: half-angle reduction",
+      "microLesson": "With only EVEN powers there is no factor to peel, so reduce the power instead: $\\sin^2 x = \\tfrac{1 - \\cos 2x}{2}$ and $\\cos^2 x = \\tfrac{1 + \\cos 2x}{2}$. Each application halves the power and doubles the frequency. Over intervals like $[0, \\pi]$ the cosine terms integrate to zero, so only the constant survives: $\\int_0^{\\pi}\\sin^2 x\\,dx = \\tfrac{\\pi}{2}$, and applying the identity twice gives $\\int_0^{\\pi}\\sin^4 x\\,dx = \\tfrac{3\\pi}{8}$. The constant term IS the average value of the power — the fact behind RMS voltage in electrical engineering."
+    },
+    {
+      "id": "sec-tan-integrals",
+      "label": "Secant and tangent integrals",
+      "microLesson": "The workhorse derivatives run backwards: $\\int \\sec^2 x\\,dx = \\tan x + C$ and $\\int \\sec x\\tan x\\,dx = \\sec x + C$. For products of tangents and secants, the substitution $u = \\tan x$ works when a $\\sec^2 x$ factor is available ($\\int \\tan x\\sec^2 x\\,dx = \\tfrac{\\tan^2 x}{2} + C$), and $u = \\sec x$ works when a $\\sec x\\tan x$ factor is available. For $\\tan^2 x$ alone, convert with the Pythagorean cousin $\\tan^2 x = \\sec^2 x - 1$: $\\int_0^{\\pi/4}\\tan^2 x\\,dx = 1 - \\tfrac{\\pi}{4}$."
+    },
+    {
+      "id": "product-to-sum",
+      "label": "Products of different frequencies",
+      "microLesson": "A product like $\\sin(4x)\\cos(x)$ has two DIFFERENT frequencies, so power tricks fail. Product-to-sum identities split it: $\\sin A\\cos B = \\tfrac{1}{2}[\\sin(A+B) + \\sin(A-B)]$, so $\\sin(4x)\\cos(x) = \\tfrac{1}{2}[\\sin 5x + \\sin 3x]$ — two easy integrals. Over a full period, $\\int_0^{2\\pi}\\sin(mx)\\sin(nx)\\,dx = 0$ whenever $m \\neq n$ but equals $\\pi$ when $m = n$: this ORTHOGONALITY is the engine of Fourier analysis, letting you extract one frequency's coefficient from a signal containing many."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Integrals the u-substitution table doesn't cover\n\nYou can already integrate $\\sin x$, $\\cos x$, and $\\sin x\\cos x$ (take $u = \\sin x$). But what about $\\sin^3 x$? Or $\\sin^2 x$, which has no convenient factor to serve as $du$? Or $\\sin(4x)\\cos(x)$, where the frequencies don't even match? **Trigonometric integrals** is a small decision tree of identities that converts each of these into something the power rule handles. Learning the tree matters twice over: these integrals appear on their own, and they are the engine room for the *next* topic, trig substitution.\n\n## Case 1: an odd power — peel and substitute\n\nIf $\\sin$ (or $\\cos$) appears to an **odd** power, peel off one factor and convert the remaining even power with $\\sin^2 x + \\cos^2 x = 1$:\n\n$$\\int \\sin^3 x\\,dx = \\int \\sin x\\,(1 - \\cos^2 x)\\,dx.$$\n\nNow substitute $u = \\cos x$, $du = -\\sin x\\,dx$ — the peeled factor is exactly the $du$:\n\n$$-\\int (1 - u^2)\\,du = \\frac{u^3}{3} - u + C = \\frac{\\cos^3 x}{3} - \\cos x + C.$$\n\nThe same move handles mixed products: in $\\int \\sin^3 x\\cos^2 x\\,dx$, peel a $\\sin x$, convert $\\sin^2 x = 1 - \\cos^2 x$, and integrate the polynomial $u^2(1 - u^2)$. Rule of thumb: **the odd one gets peeled; substitute the other one.**\n\nDefinite versions are especially clean because the $u$-limits are numbers:\n\n$$\\int_0^{\\pi/2} \\sin^3 x\\,dx = \\int_0^1 (1 - u^2)\\,du = 1 - \\tfrac{1}{3} = \\tfrac{2}{3}.$$\n\n## Case 2: all powers even — reduce with half-angle identities\n\nWith $\\int \\sin^2 x\\,dx$ there is nothing to peel. Instead **reduce the power**:\n\n$$\\sin^2 x = \\frac{1 - \\cos 2x}{2}, \\qquad \\cos^2 x = \\frac{1 + \\cos 2x}{2}.$$\n\nEach use halves the power and doubles the frequency. So\n\n$$\\int_0^{\\pi} \\sin^2 x\\,dx = \\int_0^{\\pi}\\left(\\frac{1}{2} - \\frac{\\cos 2x}{2}\\right)dx = \\frac{\\pi}{2} - 0 = \\frac{\\pi}{2},$$\n\nbecause $\\cos 2x$ completes a whole number of periods on $[0, \\pi]$ and integrates to zero. For fourth powers, apply the identity twice ($\\cos^2 2x$ needs its own reduction):\n\n$$\\sin^4 x = \\frac{3}{8} - \\frac{\\cos 2x}{2} + \\frac{\\cos 4x}{8} \\quad\\Longrightarrow\\quad \\int_0^{\\pi}\\sin^4 x\\,dx = \\frac{3\\pi}{8}.$$\n\nOnly the **constant term survives** over full periods — and that constant is the average value of the function. The average of $\\sin^2$ is $\\tfrac{1}{2}$: memorize it, it prices every AC power calculation.\n\n```plot\n{ \"xRange\": [0, 6.4], \"yRange\": [-0.15, 1.15], \"curves\": [ { \"fn\": \"sin(x)^2\", \"label\": \"y = sin^2 x\", \"labelAt\": 5.1, \"color\": \"accent\", \"fillRange\": [0, 3.14159] }, { \"fn\": \"0.5\", \"label\": \"average = 1/2\", \"labelAt\": 1.1, \"color\": \"warn\" } ], \"caption\": \"sin^2 x oscillates symmetrically about its average 1/2, so its integral over [0, pi] is pi/2 — the shaded area equals the rectangle of height 1/2.\" }\n```\n\n## Case 3: secants and tangents\n\nTwo derivative facts run the whole show:\n\n$$\\frac{d}{dx}\\tan x = \\sec^2 x, \\qquad \\frac{d}{dx}\\sec x = \\sec x\\tan x.$$\n\n- A spare $\\sec^2 x$ factor? Substitute $u = \\tan x$: $\\displaystyle\\int_0^{\\pi/4} \\tan x\\sec^2 x\\,dx = \\int_0^1 u\\,du = \\tfrac{1}{2}$.\n- A spare $\\sec x\\tan x$ factor? Substitute $u = \\sec x$: $\\displaystyle\\int_0^{\\pi/3}\\sec x\\tan x\\,dx = \\sec\\tfrac{\\pi}{3} - \\sec 0 = 2 - 1 = 1$.\n- $\\tan^2 x$ alone? Convert with $\\tan^2 x = \\sec^2 x - 1$: $\\displaystyle\\int_0^{\\pi/4}\\tan^2 x\\,dx = \\tan x\\Big|_0^{\\pi/4} - \\tfrac{\\pi}{4} = 1 - \\tfrac{\\pi}{4}.$\n\n(For the record, $\\int \\tan x\\,dx = \\ln|\\sec x| + C$ and $\\int \\sec x\\,dx = \\ln|\\sec x + \\tan x| + C$ — logarithms enter the story here, so definite values of those need $\\ln$ approximations.)\n\n## Case 4: different frequencies — product to sum\n\n$\\sin(4x)\\cos(x)$ defeats all the tricks above because the arguments differ. **Product-to-sum identities** split the product:\n\n$$\\sin A\\cos B = \\tfrac{1}{2}[\\sin(A+B) + \\sin(A-B)], \\qquad \\sin A\\sin B = \\tfrac{1}{2}[\\cos(A-B) - \\cos(A+B)].$$\n\nSo $\\sin(4x)\\cos(x) = \\tfrac{1}{2}[\\sin 5x + \\sin 3x]$, and each term integrates immediately. Over $[0, \\pi]$, using $\\int_0^{\\pi}\\sin(jx)\\,dx = \\tfrac{2}{j}$ for odd $j$:\n\n$$\\int_0^{\\pi}\\sin(4x)\\cos(x)\\,dx = \\tfrac{1}{2}\\left(\\tfrac{2}{5} + \\tfrac{2}{3}\\right) = \\tfrac{8}{15}.$$\n\nThe crown jewel is **orthogonality** over a full period:\n\n$$\\int_0^{2\\pi}\\sin(mx)\\sin(nx)\\,dx = \\begin{cases} 0 & m \\neq n \\\\ \\pi & m = n. \\end{cases}$$\n\nDifferent frequencies annihilate each other; matched frequencies survive. Fourier analysis multiplies a signal by $\\sin(nx)$ and integrates — orthogonality guarantees only the $n$-th component answers.\n\n## The decision tree\n\n| Integrand | Strategy |\n| --- | --- |\n| odd power of $\\sin$ or $\\cos$ | peel one factor, Pythagorean identity, $u$-sub |\n| only even powers | half-angle reduction (repeat as needed) |\n| $\\tan$/$\\sec$ with a $\\sec^2$ or $\\sec\\tan$ factor | $u = \\tan x$ or $u = \\sec x$ |\n| $\\tan^2 x$ | convert via $\\sec^2 x - 1$ |\n| different frequencies | product-to-sum identities |\n\n## Common pitfalls\n\n- **Peeling from the even power**: in $\\sin^3 x\\cos^2 x$, peel the $\\sin$ (odd), not the $\\cos$.\n- **Forgetting the frequency doubles**: $\\sin^2(3x) = \\tfrac{1 - \\cos 6x}{2}$, not $\\tfrac{1 - \\cos 3x}{2}$.\n- **Dropping the sign in $du$**: $u = \\cos x$ gives $du = -\\sin x\\,dx$ — the minus flips the $u$-limits back into order.\n- **Treating $\\sin(4x)\\cos(x)$ like a power problem**: mismatched frequencies always mean product-to-sum first."
+  },
+  "application": {
+    "summary": "Squared sinusoids are how the physical world carries power, and mismatched-frequency products are how it mixes signals: the average of sin^2 sets every RMS voltage and AC power rating, while product-to-sum orthogonality is the mathematical engine that lets Fourier analysis pull one station's signal out of a crowded radio band.",
+    "domains": ["electrical engineering", "signal processing", "acoustics", "physics"],
+    "workedExample": "**What does a 60 W rating actually average?**\n\nA resistor $R = 10\\,\\Omega$ carries alternating current $i(t) = 2\\sin(120\\pi t)$ A. Instantaneous power is $p(t) = R\\,i(t)^2 = 40\\sin^2(120\\pi t)$ W — it pulses between 0 and 40 W, 120 times a second. What average does the resistor experience?\n\n$$\\bar{p} = \\frac{1}{T}\\int_0^{T} 40\\sin^2(120\\pi t)\\,dt.$$\n\nThe half-angle identity gives $\\sin^2(120\\pi t) = \\tfrac{1}{2} - \\tfrac{1}{2}\\cos(240\\pi t)$, and over a whole number of periods the cosine averages to zero. So\n\n$$\\bar{p} = 40 \\cdot \\tfrac{1}{2} = 20 \\text{ W}.$$\n\nThe factor $\\tfrac{1}{2}$ — the average of $\\sin^2$ — is why RMS values carry the $\\tfrac{1}{\\sqrt{2}}$: a sinusoid with peak $I$ delivers the same average power as a direct current of $I/\\sqrt{2}$. Every '120 V' outlet is quoting an RMS figure computed with exactly this integral.",
+    "domainNotes": [
+      "**Electrical engineering:** RMS voltage/current and AC power ratings all reduce to the average value of $\\sin^2$ being $\\tfrac{1}{2}$.",
+      "**Signal processing:** Fourier coefficients are computed via $\\int f(x)\\sin(nx)\\,dx$ — orthogonality of mismatched frequencies makes each coefficient independent.",
+      "**Acoustics:** beats between two close frequencies are the product-to-sum identity heard in real time: $\\sin A\\sin B$ contains the difference frequency $A - B$.",
+      "**Physics:** average kinetic energy of an oscillator and radiation intensity of an antenna both integrate squared sinusoids over a period."
+    ]
+  },
+  "generators": [
+    "c2t-odd-1", "c2t-odd-2", "c2t-odd-3",
+    "c2t-even-1", "c2t-even-2", "c2t-even-3",
+    "c2t-sectan-1", "c2t-sectan-2", "c2t-sectan-3",
+    "c2t-prodsum-1", "c2t-prodsum-2", "c2t-prodsum-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-2.trigonometric-integrals.s01",
+      "concepts": ["odd-power-strategies"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi/2} \\sin^3 x\\,dx$ using the odd-power strategy.",
+      "steps": [
+        { "instruction": "Write $\\sin^3 x = \\sin x(1 - \\cos^2 x)$ and substitute $u = \\cos x$: the integral becomes $\\displaystyle\\int_0^1 (1 - u^2)\\,du$. First compute $\\displaystyle\\int_0^1 u^2\\,du$.", "answer": "1/3", "accept": ["0.3333"], "hint": "Power rule: $\\tfrac{u^3}{3}$ from 0 to 1." },
+        { "instruction": "So the value is $1 - \\tfrac{1}{3} = $ ? (fraction)", "answer": "2/3", "accept": ["0.6667"], "hint": "$\\int_0^1 1\\,du = 1$ minus the $u^2$ part." }
+      ],
+      "finalAnswer": { "value": "2/3", "unit": "" },
+      "solutionNarrative": "Peel one $\\sin x$, convert the rest with $\\sin^2 = 1 - \\cos^2$, substitute $u = \\cos x$: $\\int_0^1(1-u^2)\\,du = 1 - \\tfrac{1}{3} = \\tfrac{2}{3}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s02",
+      "concepts": ["odd-power-strategies"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The antiderivative has the form $\\displaystyle\\int \\cos^3 x\\,dx = a\\sin x + b\\sin^3 x + C$. Find $a$ and $b$.",
+      "steps": [
+        { "instruction": "Write $\\cos^3 x = \\cos x(1 - \\sin^2 x)$ and substitute $u = \\sin x$ to get $\\displaystyle\\int(1 - u^2)\\,du$. The $u$ term supplies $a$. Enter $a$.", "answer": "1", "accept": ["a=1"], "hint": "$\\int 1\\,du = u = \\sin x$." },
+        { "instruction": "The $u^3$ term supplies $b$. Enter $b$ as a fraction.", "answer": "-1/3", "accept": ["-0.3333", "b=-1/3"], "hint": "$-\\tfrac{u^3}{3}$ gives the $\\sin^3 x$ coefficient." }
+      ],
+      "finalAnswer": { "value": "a = 1, b = -1/3", "unit": "" },
+      "solutionNarrative": "$u = \\sin x$ gives $\\int(1-u^2)\\,du = u - \\tfrac{u^3}{3}$, so the antiderivative is $\\sin x - \\tfrac{1}{3}\\sin^3 x + C$: $a = 1$, $b = -\\tfrac{1}{3}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s03",
+      "concepts": ["odd-power-strategies"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi/2} \\sin^5 x\\,dx$. Peel one $\\sin x$ and expand $(1 - u^2)^2$ after substituting $u = \\cos x$.",
+      "steps": [
+        { "instruction": "The integral becomes $\\displaystyle\\int_0^1 (1 - 2u^2 + u^4)\\,du$. Compute the middle piece $\\displaystyle\\int_0^1 2u^2\\,du$ as a fraction.", "answer": "2/3", "accept": ["0.6667"], "hint": "$2 \\cdot \\tfrac{1}{3}$." },
+        { "instruction": "Compute $\\displaystyle\\int_0^1 u^4\\,du$ as a fraction.", "answer": "1/5", "accept": ["0.2"], "hint": "Power rule: $\\tfrac{1}{5}$." },
+        { "instruction": "Combine: $1 - \\tfrac{2}{3} + \\tfrac{1}{5} = $ ? (fraction)", "answer": "8/15", "accept": ["0.5333"], "hint": "Common denominator 15: $\\tfrac{15 - 10 + 3}{15}$." }
+      ],
+      "finalAnswer": { "value": "8/15", "unit": "" },
+      "solutionNarrative": "$\\sin^5 x = \\sin x(1 - \\cos^2 x)^2$; with $u = \\cos x$ the integral is $\\int_0^1(1 - 2u^2 + u^4)\\,du = 1 - \\tfrac{2}{3} + \\tfrac{1}{5} = \\tfrac{8}{15}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s04",
+      "concepts": ["odd-power-strategies"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi/2} \\sin^3 x\\cos^2 x\\,dx$: the sine power is odd, so peel a $\\sin x$ and substitute $u = \\cos x$.",
+      "steps": [
+        { "instruction": "The integral becomes $\\displaystyle\\int_0^1 u^2(1 - u^2)\\,du = \\displaystyle\\int_0^1 (u^2 - u^4)\\,du$. Compute $\\displaystyle\\int_0^1 u^2\\,du$.", "answer": "1/3", "accept": ["0.3333"], "hint": "$\\tfrac{1}{3}$ by the power rule." },
+        { "instruction": "Compute $\\displaystyle\\int_0^1 u^4\\,du$.", "answer": "1/5", "accept": ["0.2"], "hint": "$\\tfrac{1}{5}$ by the power rule." },
+        { "instruction": "Subtract: $\\tfrac{1}{3} - \\tfrac{1}{5} = $ ? (fraction)", "answer": "2/15", "accept": ["0.1333"], "hint": "Common denominator 15." }
+      ],
+      "finalAnswer": { "value": "2/15", "unit": "" },
+      "solutionNarrative": "Peeling the odd sine gives $\\int_0^1 u^2(1-u^2)\\,du = \\tfrac{1}{3} - \\tfrac{1}{5} = \\tfrac{2}{15}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s05",
+      "concepts": ["even-power-reduction"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Rewrite $\\sin^2 x$ using the half-angle identity: $\\sin^2 x = a + b\\cos 2x$. Find $a$ and $b$.",
+      "steps": [
+        { "instruction": "Enter the constant $a$ as a fraction.", "answer": "1/2", "accept": ["0.5", "a=1/2"], "hint": "$\\sin^2 x = \\tfrac{1 - \\cos 2x}{2}$." },
+        { "instruction": "Enter the coefficient $b$ of $\\cos 2x$ (watch the sign).", "answer": "-1/2", "accept": ["-0.5", "b=-1/2"], "hint": "Minus for $\\sin^2$, plus for $\\cos^2$." }
+      ],
+      "finalAnswer": { "value": "a = 1/2, b = -1/2", "unit": "" },
+      "solutionNarrative": "$\\sin^2 x = \\tfrac{1}{2} - \\tfrac{1}{2}\\cos 2x$: power halves, frequency doubles."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s06",
+      "concepts": ["even-power-reduction"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi} \\sin^2 x\\,dx$ using the half-angle identity.",
+      "steps": [
+        { "instruction": "The constant piece: $\\displaystyle\\int_0^{\\pi} \\tfrac{1}{2}\\,dx = $ ? (enter a pi expression like pi/2)", "answer": "pi/2", "accept": ["1.5708"], "hint": "$\\tfrac{1}{2}$ times the interval length $\\pi$." },
+        { "instruction": "The oscillating piece: $\\displaystyle\\int_0^{\\pi} \\cos 2x\\,dx = $ ?", "answer": "0", "accept": [], "hint": "$\\cos 2x$ completes one full period on $[0, \\pi]$." }
+      ],
+      "finalAnswer": { "value": "pi/2", "unit": "" },
+      "solutionNarrative": "$\\sin^2 x = \\tfrac{1}{2} - \\tfrac{1}{2}\\cos 2x$; the cosine integrates to zero over its full period, leaving $\\tfrac{\\pi}{2}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s07",
+      "concepts": ["even-power-reduction"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi/2} \\cos^2 x\\,dx$.",
+      "steps": [
+        { "instruction": "Rewrite $\\cos^2 x = \\tfrac{1}{2} + b\\cos 2x$. What is $b$? (fraction)", "answer": "1/2", "accept": ["0.5"], "hint": "Plus sign for cosine: $\\tfrac{1 + \\cos 2x}{2}$." },
+        { "instruction": "Over $[0, \\pi/2]$ the $\\cos 2x$ term integrates to $\\tfrac{\\sin 2x}{2}\\big|_0^{\\pi/2} = 0$, so the value is $\\tfrac{1}{2} \\cdot \\tfrac{\\pi}{2} = $ ? (a pi expression)", "answer": "pi/4", "accept": ["0.7854"], "hint": "Constant $\\tfrac{1}{2}$ times interval length $\\tfrac{\\pi}{2}$." }
+      ],
+      "finalAnswer": { "value": "pi/4", "unit": "" },
+      "solutionNarrative": "$\\cos^2 x = \\tfrac{1}{2} + \\tfrac{1}{2}\\cos 2x$; $\\sin 2x$ vanishes at both endpoints, so the integral is $\\tfrac{\\pi}{4}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s08",
+      "concepts": ["even-power-reduction"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi} \\sin^4 x\\,dx$ by applying the half-angle identity twice.",
+      "steps": [
+        { "instruction": "Full reduction gives $\\sin^4 x = c - \\tfrac{1}{2}\\cos 2x + \\tfrac{1}{8}\\cos 4x$. What is the constant $c$? (fraction)", "answer": "3/8", "accept": ["0.375"], "hint": "$\\left(\\tfrac{1 - \\cos 2x}{2}\\right)^2$ and then reduce $\\cos^2 2x$: $\\tfrac{1}{4} + \\tfrac{1}{8}$." },
+        { "instruction": "Over $[0, \\pi]$, both cosine terms integrate to ?", "answer": "0", "accept": [], "hint": "Each completes a whole number of periods." },
+        { "instruction": "So the value is $\\tfrac{3}{8} \\cdot \\pi = $ ? (a pi expression like 3pi/8)", "answer": "3pi/8", "accept": ["1.1781"], "hint": "Constant times interval length." }
+      ],
+      "finalAnswer": { "value": "3pi/8", "unit": "" },
+      "solutionNarrative": "Two rounds of reduction leave constant $\\tfrac{3}{8}$ plus pure cosines; over $[0, \\pi]$ only the constant survives: $\\tfrac{3\\pi}{8}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s09",
+      "concepts": ["sec-tan-integrals"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi/4} \\sec^2 x\\,dx$.",
+      "steps": [
+        { "instruction": "The antiderivative of $\\sec^2 x$ is $\\tan x$. Compute $\\tan\\tfrac{\\pi}{4}$.", "answer": "1", "accept": [], "hint": "At $45^\\circ$, opposite equals adjacent." },
+        { "instruction": "Evaluate: $\\tan\\tfrac{\\pi}{4} - \\tan 0 = $ ?", "answer": "1", "accept": [], "hint": "$\\tan 0 = 0$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\int_0^{\\pi/4}\\sec^2 x\\,dx = \\tan x\\big|_0^{\\pi/4} = 1 - 0 = 1$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s10",
+      "concepts": ["sec-tan-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi/4} \\tan x\\sec^2 x\\,dx$ with the substitution $u = \\tan x$.",
+      "steps": [
+        { "instruction": "With $u = \\tan x$, $du = \\sec^2 x\\,dx$. The upper limit becomes $u = \\tan\\tfrac{\\pi}{4} = $ ?", "answer": "1", "accept": [], "hint": "$\\tan\\tfrac{\\pi}{4} = 1$." },
+        { "instruction": "So the integral is $\\displaystyle\\int_0^1 u\\,du = $ ? (fraction)", "answer": "1/2", "accept": ["0.5"], "hint": "$\\tfrac{u^2}{2}$ from 0 to 1." }
+      ],
+      "finalAnswer": { "value": "1/2", "unit": "" },
+      "solutionNarrative": "$u = \\tan x$ maps the interval to $[0, 1]$, giving $\\int_0^1 u\\,du = \\tfrac{1}{2}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s11",
+      "concepts": ["sec-tan-integrals"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi/4} \\tan^2 x\\,dx$ using $\\tan^2 x = \\sec^2 x - 1$.",
+      "steps": [
+        { "instruction": "First piece: $\\displaystyle\\int_0^{\\pi/4} \\sec^2 x\\,dx = $ ?", "answer": "1", "accept": [], "hint": "$\\tan\\tfrac{\\pi}{4} - \\tan 0$." },
+        { "instruction": "Second piece: $\\displaystyle\\int_0^{\\pi/4} 1\\,dx = $ ? (a pi expression)", "answer": "pi/4", "accept": ["0.7854"], "hint": "The length of the interval." },
+        { "instruction": "Subtract. Enter the value (like 1 - pi/4).", "answer": "1 - pi/4", "accept": ["0.2146"], "hint": "$\\sec^2$ piece minus the constant piece." }
+      ],
+      "finalAnswer": { "value": "1 - pi/4", "unit": "" },
+      "solutionNarrative": "$\\tan^2 x = \\sec^2 x - 1$ splits the integral into $1 - \\tfrac{\\pi}{4} \\approx 0.2146$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s12",
+      "concepts": ["sec-tan-integrals"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi/3} \\sec x\\tan x\\,dx$. Recall $\\dfrac{d}{dx}\\sec x = \\sec x\\tan x$.",
+      "steps": [
+        { "instruction": "The antiderivative is $\\sec x$. Compute $\\sec\\tfrac{\\pi}{3}$.", "answer": "2", "accept": [], "hint": "$\\cos\\tfrac{\\pi}{3} = \\tfrac{1}{2}$; secant is the reciprocal." },
+        { "instruction": "Compute $\\sec 0$.", "answer": "1", "accept": [], "hint": "$\\cos 0 = 1$." },
+        { "instruction": "Evaluate the integral: $\\sec\\tfrac{\\pi}{3} - \\sec 0 = $ ?", "answer": "1", "accept": [], "hint": "$2 - 1$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\int_0^{\\pi/3}\\sec x\\tan x\\,dx = \\sec x\\big|_0^{\\pi/3} = 2 - 1 = 1$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s13",
+      "concepts": ["product-to-sum"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Use $\\sin A\\cos B = \\tfrac{1}{2}[\\sin(A+B) + \\sin(A-B)]$ to write $\\sin(3x)\\cos(x) = \\tfrac{1}{2}[\\sin(ax) + \\sin(bx)]$ with $a > b$.",
+      "steps": [
+        { "instruction": "The sum frequency: $a = $ ?", "answer": "4", "accept": ["a=4"], "hint": "$3 + 1$." },
+        { "instruction": "The difference frequency: $b = $ ?", "answer": "2", "accept": ["b=2"], "hint": "$3 - 1$." }
+      ],
+      "finalAnswer": { "value": "a = 4, b = 2", "unit": "" },
+      "solutionNarrative": "$\\sin(3x)\\cos(x) = \\tfrac{1}{2}[\\sin 4x + \\sin 2x]$ — the product splits into a sum and a difference frequency."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s14",
+      "concepts": ["product-to-sum"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{\\pi} \\sin(4x)\\cos(x)\\,dx$ by converting the product to a sum first.",
+      "steps": [
+        { "instruction": "Product-to-sum gives $\\tfrac{1}{2}[\\sin(sx) + \\sin(3x)]$. The sum frequency $s = $ ?", "answer": "5", "accept": [], "hint": "$4 + 1$." },
+        { "instruction": "For odd $j$, $\\displaystyle\\int_0^{\\pi} \\sin(jx)\\,dx = \\tfrac{2}{j}$. Compute $\\displaystyle\\int_0^{\\pi}\\sin(5x)\\,dx$ as a fraction.", "answer": "2/5", "accept": ["0.4"], "hint": "$\\tfrac{1 - \\cos 5\\pi}{5} = \\tfrac{2}{5}$." },
+        { "instruction": "Combine: $\\tfrac{1}{2}\\left(\\tfrac{2}{5} + \\tfrac{2}{3}\\right) = $ ? (fraction)", "answer": "8/15", "accept": ["0.5333"], "hint": "$\\tfrac{1}{5} + \\tfrac{1}{3}$ over a common denominator." }
+      ],
+      "finalAnswer": { "value": "8/15", "unit": "" },
+      "solutionNarrative": "$\\sin(4x)\\cos(x) = \\tfrac{1}{2}[\\sin 5x + \\sin 3x]$; each odd-frequency sine contributes $\\tfrac{2}{j}$ over $[0, \\pi]$, totaling $\\tfrac{8}{15}$."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s15",
+      "concepts": ["product-to-sum"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A Fourier analyzer computes $\\displaystyle\\int_0^{2\\pi} \\sin(3x)\\sin(5x)\\,dx$ to test whether a 3 Hz component responds to a 5 Hz probe.",
+      "steps": [
+        { "instruction": "Product-to-sum: $\\sin(3x)\\sin(5x) = \\tfrac{1}{2}[\\cos(bx) - \\cos(8x)]$. The difference frequency $b = $ ?", "answer": "2", "accept": [], "hint": "$5 - 3$." },
+        { "instruction": "Every nonzero-frequency cosine integrates to $0$ over $[0, 2\\pi]$. So the integral equals ?", "answer": "0", "accept": [], "hint": "Both frequencies (2 and 8) are nonzero — orthogonality." },
+        { "instruction": "The matched case instead: $\\displaystyle\\int_0^{2\\pi} \\sin^2(3x)\\,dx = $ ? (a pi expression)", "answer": "pi", "accept": ["3.1416"], "hint": "$\\sin^2(3x) = \\tfrac{1}{2} - \\tfrac{1}{2}\\cos 6x$: the constant $\\tfrac{1}{2}$ times $2\\pi$." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "Mismatched frequencies are orthogonal (integral 0); the matched integral is $\\pi$. This pair of facts is exactly how Fourier analysis isolates one frequency's coefficient."
+    },
+    {
+      "id": "calculus-2.trigonometric-integrals.s16",
+      "concepts": ["even-power-reduction"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A resistor $R = 3\\,\\Omega$ carries current $i(t) = 4\\sin(120\\pi t)$ A, so the instantaneous power is $p(t) = R\\,i(t)^2 = 48\\sin^2(120\\pi t)$ W. Find the average power over a whole number of cycles.",
+      "steps": [
+        { "instruction": "What is the average value of $\\sin^2$ over a whole number of periods? (fraction)", "answer": "1/2", "accept": ["0.5"], "hint": "$\\sin^2 = \\tfrac{1}{2} - \\tfrac{1}{2}\\cos(240\\pi t)$; the cosine averages to zero." },
+        { "instruction": "What is the peak power $R \\cdot I^2 = 3 \\cdot 4^2$?", "answer": "48", "accept": [], "hint": "$3 \\times 16$." },
+        { "instruction": "Average power $= 48 \\cdot \\tfrac{1}{2} = $ ? (watts)", "answer": "24", "accept": ["24 W"], "hint": "Peak times the average of $\\sin^2$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "W" },
+      "solutionNarrative": "The half-angle identity says $\\sin^2$ averages $\\tfrac{1}{2}$, so the 48 W peak delivers $24$ W on average — the calculation behind every RMS rating."
+    }
+  ]
+}

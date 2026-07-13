@@ -41,7 +41,7 @@
       "**Everyday life:** sail and shade-sail fabric, triangular shelving brackets, and flag dimensions all come straight from area and angle rules."
     ]
   },
-  "generators": ["tri-angle-sum-v1", "tri-exterior-v1", "tri-classify-angles-v1", "tri-classify-sides-v1", "tri-inequality-v1", "tri-perimeter-v1", "tri-area-basic-v1"],
+  "generators": ["tri-angle-sum-v1", "tri-exterior-v1", "tri-classify-angles-v1", "tri-classify-sides-v1", "tri-inequality-v1", "tri-perimeter-v1", "tri-area-basic-v1", "gpl-tri-ineq-d2", "gpl-tri-ineq-d3", "gpl-tri-perim-area-d3"],
   "problems": [
     {
       "id": "geometry.triangles.s01",

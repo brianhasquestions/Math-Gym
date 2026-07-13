@@ -41,7 +41,7 @@
       "**Everyday life:** seats across theater rows, items stacked in a tapering pile, a weekly savings habit."
     ]
   },
-  "generators": ["arith-term-v1", "geom-term-v1", "arith-sum-v1", "geom-inf-sum-v1"],
+  "generators": ["arith-term-v1", "geom-term-v1", "arith-sum-v1", "geom-inf-sum-v1", "a2l-arith-seq-d3", "a2l-arith-series-d1", "a2l-arith-series-d3", "a2l-geom-series-d1"],
   "problems": [
     {
       "id": "algebra-2.sequences-and-series.s01",

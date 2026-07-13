@@ -41,7 +41,7 @@
       "**Saving & borrowing:** simple interest to see what savings earn — or what a short-term loan costs."
     ]
   },
-  "generators": ["unit-rate-v1", "proportion-v1", "percent-of-v1", "percent-is-v1", "tax-total-v1", "discount-v1", "percent-change-v1"],
+  "generators": ["unit-rate-v1", "proportion-v1", "percent-of-v1", "percent-is-v1", "tax-total-v1", "discount-v1", "percent-change-v1", "apl-rates-d2", "apl-rates-d3", "apl-proportion-d3", "apl-percent-of-d3"],
   "problems": [
     {
       "id": "algebra.ratios-proportions-percent.s01",

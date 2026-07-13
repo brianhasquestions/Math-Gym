@@ -1,0 +1,266 @@
+{
+  "id": "calculus-2.trig-substitution",
+  "subject": "calculus-2",
+  "title": "Trigonometric Substitution",
+  "prerequisites": ["calculus-2.trigonometric-integrals", "trigonometry.inverse-trig-functions"],
+  "estimatedMinutes": 60,
+  "keyConcepts": [
+    {
+      "id": "choosing-the-substitution",
+      "label": "Choosing the substitution pattern",
+      "microLesson": "Three radical shapes, three substitutions, each chosen so a Pythagorean identity collapses the radical: $\\sqrt{a^2 - x^2}$ takes $x = a\\sin\\theta$ (since $a^2 - a^2\\sin^2\\theta = a^2\\cos^2\\theta$); $\\sqrt{a^2 + x^2}$ takes $x = a\\tan\\theta$ (since $a^2 + a^2\\tan^2\\theta = a^2\\sec^2\\theta$); and $\\sqrt{x^2 - a^2}$ takes $x = a\\sec\\theta$ (since $a^2\\sec^2\\theta - a^2 = a^2\\tan^2\\theta$). Read the SIGN pattern, not the letters: minus-in-front means sine, plus means tangent, minus-behind means secant. If $x^2$ carries a coefficient, absorb it: $\\sqrt{9x^2 + 4}$ is $u^2 + a^2$ with $u = 3x$, so $3x = 2\\tan\\theta$, i.e. $x = \\tfrac{2}{3}\\tan\\theta$."
+    },
+    {
+      "id": "sine-substitution",
+      "label": "The sine substitution",
+      "microLesson": "For $\\sqrt{a^2 - x^2}$, set $x = a\\sin\\theta$: then $\\sqrt{a^2 - x^2} = a\\cos\\theta$ and $dx = a\\cos\\theta\\,d\\theta$. In $\\int \\tfrac{dx}{\\sqrt{a^2 - x^2}}$ everything cancels, leaving $\\int d\\theta = \\theta = \\arcsin\\tfrac{x}{a}$ — this is where the arcsine derivative formula comes from. Definite integrals convert the $x$-limits to $\\theta$-limits: $\\int_0^{1} \\tfrac{dx}{\\sqrt{4 - x^2}} = \\arcsin\\tfrac{1}{2} = \\tfrac{\\pi}{6}$. And $\\int_0^a \\sqrt{a^2 - x^2}\\,dx = \\tfrac{\\pi a^2}{4}$ is a quarter circle — the substitution PROVES the circle area formula."
+    },
+    {
+      "id": "tangent-secant-substitution",
+      "label": "Tangent and secant substitutions",
+      "microLesson": "For $\\sqrt{a^2 + x^2}$ use $x = a\\tan\\theta$; the simplest payoff is $\\int \\tfrac{dx}{a^2 + x^2} = \\tfrac{1}{a}\\arctan\\tfrac{x}{a} + C$, so $\\int_0^a \\tfrac{dx}{a^2 + x^2} = \\tfrac{1}{a}\\arctan(1) = \\tfrac{\\pi}{4a}$. For $\\sqrt{x^2 - a^2}$ use $x = a\\sec\\theta$, valid where $|x| \\geq a$. Back-substitution runs through a reference triangle: from $\\sec\\theta = \\tfrac{x}{a}$, draw hypotenuse $x$ and adjacent $a$, so the opposite side is $\\sqrt{x^2 - a^2}$ and every trig function of $\\theta$ can be read off as a ratio of sides."
+    },
+    {
+      "id": "completing-the-square",
+      "label": "Completing the square first",
+      "microLesson": "Radicals like $\\sqrt{x^2 + 6x + 13}$ hide a standard pattern behind a linear term. Complete the square: $x^2 + 6x + 13 = (x+3)^2 + 4$, and the shift $u = x + 3$ exposes $\\sqrt{u^2 + 2^2}$ — a tangent substitution. Downward quadratics give the sine pattern: $8 - 2x - x^2 = 9 - (x+1)^2$. Always pull the radicand into $(\\text{shift})^2 \\pm a^2$ or $a^2 - (\\text{shift})^2$ BEFORE choosing a substitution; the geometry becomes visible too, since $\\sqrt{a^2 - (x-h)^2}$ is just a circle of radius $a$ centered at $x = h$."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Radicals that shrug off u-substitution\n\nHow do you integrate $\\sqrt{9 - x^2}$? Ordinary substitution fails — no factor of $x$ is available to be the $du$. But geometry says the answer must be findable: $y = \\sqrt{9 - x^2}$ is a semicircle, and semicircles have known areas. **Trigonometric substitution** is the technique that turns radical integrands into trig integrands, where the identities from the last topic finish the job. It runs the substitution idea in reverse: instead of $u = (\\text{something in } x)$, we set $x = (\\text{trig function of } \\theta)$, chosen so the radical collapses.\n\n## The three patterns\n\nEach Pythagorean identity kills one radical shape:\n\n| Radical | Substitution | Collapses because |\n| --- | --- | --- |\n| $\\sqrt{a^2 - x^2}$ | $x = a\\sin\\theta$ | $a^2 - a^2\\sin^2\\theta = a^2\\cos^2\\theta$ |\n| $\\sqrt{a^2 + x^2}$ | $x = a\\tan\\theta$ | $a^2 + a^2\\tan^2\\theta = a^2\\sec^2\\theta$ |\n| $\\sqrt{x^2 - a^2}$ | $x = a\\sec\\theta$ | $a^2\\sec^2\\theta - a^2 = a^2\\tan^2\\theta$ |\n\nRead the **sign pattern**: constant-minus-$x^2$ is sine, a sum is tangent, $x^2$-minus-constant is secant. If $x^2$ has a coefficient, absorb it first: $\\sqrt{4x^2 + 9}$ is $u^2 + 3^2$ with $u = 2x$, so $2x = 3\\tan\\theta$ and $x = \\tfrac{3}{2}\\tan\\theta$.\n\n## The sine substitution, start to finish\n\nEvaluate $\\displaystyle\\int_0^1 \\frac{dx}{\\sqrt{4 - x^2}}$. Pattern: $a = 2$, so $x = 2\\sin\\theta$, $dx = 2\\cos\\theta\\,d\\theta$, and $\\sqrt{4 - x^2} = 2\\cos\\theta$:\n\n$$\\int \\frac{2\\cos\\theta\\,d\\theta}{2\\cos\\theta} = \\int d\\theta = \\theta.$$\n\nConvert the limits instead of back-substituting: $x = 0 \\Rightarrow \\theta = 0$; $x = 1 \\Rightarrow \\sin\\theta = \\tfrac{1}{2} \\Rightarrow \\theta = \\tfrac{\\pi}{6}$. The value is $\\tfrac{\\pi}{6}$ — and we have re-derived $\\tfrac{d}{dx}\\arcsin x$ along the way.\n\nThe area integral is the show-piece:\n\n$$\\int_0^{3} \\sqrt{9 - x^2}\\,dx = \\frac{\\pi \\cdot 9}{4},$$\n\na quarter of the circle of radius 3. The substitution $x = 3\\sin\\theta$ turns it into $9\\int_0^{\\pi/2}\\cos^2\\theta\\,d\\theta = 9 \\cdot \\tfrac{\\pi}{4}$ — the half-angle reduction from the previous topic doing the real work.\n\n```plot\n{ \"xRange\": [-3.6, 3.6], \"yRange\": [-0.6, 3.6], \"curves\": [ { \"fn\": \"sqrt(9 - x^2)\", \"label\": \"y = sqrt(9 - x^2)\", \"labelAt\": -2.2, \"color\": \"accent\", \"fillRange\": [0, 3] } ], \"caption\": \"The first-quadrant area under y = sqrt(9 - x^2) is a quarter circle: the sine substitution computes 9pi/4 analytically, matching the geometry.\" }\n```\n\n## Tangent and secant\n\n**Tangent** handles sums. The cleanest member of the family:\n\n$$\\int \\frac{dx}{a^2 + x^2} = \\frac{1}{a}\\arctan\\frac{x}{a} + C \\qquad\\Longrightarrow\\qquad \\int_0^{a}\\frac{dx}{a^2 + x^2} = \\frac{1}{a}\\arctan(1) = \\frac{\\pi}{4a}.$$\n\nRational functions with irreducible quadratic denominators (the case partial fractions leaves open) end here.\n\n**Secant** handles $\\sqrt{x^2 - a^2}$, defined where $|x| \\geq a$. With $x = a\\sec\\theta$, the radical becomes $a\\tan\\theta$.\n\n## Back-substitution: the reference triangle\n\nAn indefinite integral must return to $x$. Draw the right triangle the substitution encodes:\n\n- $x = a\\sin\\theta$: opposite $= x$, hypotenuse $= a$, adjacent $= \\sqrt{a^2 - x^2}$.\n- $x = a\\tan\\theta$: opposite $= x$, adjacent $= a$, hypotenuse $= \\sqrt{a^2 + x^2}$.\n- $x = a\\sec\\theta$: hypotenuse $= x$, adjacent $= a$, opposite $= \\sqrt{x^2 - a^2}$.\n\nEvery trig function of $\\theta$ is then a ratio of two sides. Example: after $x = 3\\sec\\theta$, at the point $x = 5$ the triangle is the 3-4-5 right triangle, so $\\tan\\theta = \\tfrac{4}{3}$ and $\\sin\\theta = \\tfrac{4}{5}$. Pythagorean triples make these exact.\n\n## Completing the square first\n\nQuadratics with a linear term hide their pattern:\n\n$$\\sqrt{x^2 + 6x + 13} = \\sqrt{(x+3)^2 + 4} \\qquad (u = x + 3,\\ \\text{tangent pattern, } a = 2),$$\n$$\\sqrt{8 - 2x - x^2} = \\sqrt{9 - (x+1)^2} \\qquad (u = x + 1,\\ \\text{sine pattern, } a = 3).$$\n\nThe second form also reveals geometry: $y = \\sqrt{9 - (x+1)^2}$ is the top of a circle centered at $x = -1$ with radius 3, so integrating across the full diameter gives the semicircle area $\\tfrac{9\\pi}{2}$ with no antiderivative at all.\n\n## Common pitfalls\n\n- **Choosing by letters instead of signs**: $\\sqrt{x^2 - 25}$ is secant, not sine — the $x^2$ leads.\n- **Forgetting $dx$**: $x = a\\sin\\theta$ requires $dx = a\\cos\\theta\\,d\\theta$; dropping the factor silently scales the answer.\n- **Skipping the coefficient absorption**: in $\\sqrt{4x^2 + 9}$, the substitution is $x = \\tfrac{3}{2}\\tan\\theta$, not $x = 3\\tan\\theta$.\n- **Back-substituting without the triangle**: expressions like $\\tan\\theta$ after a secant substitution should be read off the reference triangle, not guessed.\n- **Not completing the square**: $\\sqrt{x^2 + 6x + 13}$ matches NO pattern until it becomes $(x+3)^2 + 4$."
+  },
+  "application": {
+    "summary": "Any quantity governed by circles, distances, or inverse-square laws produces these radicals: cross-sectional areas of pipes and tunnels, gravitational and electric fields summed along a line, arc lengths of cables, and the arcsine/arctangent antiderivatives that price probabilities in statistics all come out of the three substitution patterns.",
+    "domains": ["civil engineering", "physics", "statistics", "architecture"],
+    "workedExample": "**How much water fits in a circular culvert?**\n\nA drainage culvert has a circular cross-section of radius 4 m. Its cross-sectional area is bounded above by $y = \\sqrt{16 - x^2}$ and below by $y = -\\sqrt{16 - x^2}$, but suppose we only need the TOP half (the air gap above the waterline when the culvert is half full):\n\n$$A = \\int_{-4}^{4} \\sqrt{16 - x^2}\\,dx.$$\n\nThe radicand matches the sine pattern with $a = 4$: substitute $x = 4\\sin\\theta$, $dx = 4\\cos\\theta\\,d\\theta$, and the limits $x = \\pm 4$ become $\\theta = \\pm\\tfrac{\\pi}{2}$:\n\n$$A = \\int_{-\\pi/2}^{\\pi/2} 4\\cos\\theta \\cdot 4\\cos\\theta\\,d\\theta = 16\\int_{-\\pi/2}^{\\pi/2}\\cos^2\\theta\\,d\\theta = 16 \\cdot \\frac{\\pi}{2} = 8\\pi \\approx 25.13 \\text{ m}^2.$$\n\n(The $\\cos^2$ integral is the half-angle reduction from Trigonometric Integrals.) The answer is the semicircle area $\\tfrac{1}{2}\\pi r^2$ — the substitution derives the geometry formula rather than assuming it, and the same computation with partial water depths (limits that do not span the full diameter) prices flow capacity, where no elementary formula exists.",
+    "domainNotes": [
+      "**Civil engineering:** partial-depth areas of circular pipes and culverts are sine-substitution integrals with off-center limits — the basis of open-channel flow tables.",
+      "**Physics:** the electric field of a finite charged rod integrates $\\tfrac{dx}{(a^2 + x^2)^{3/2}}$ — a tangent substitution — and gravity along a line of mass works the same way.",
+      "**Statistics:** the arcsine and arctangent antiderivatives behind these substitutions define the Cauchy distribution's CDF and arcsine-law probabilities.",
+      "**Architecture:** arc lengths and areas of circular and parabolic vaults reduce to $\\sqrt{a^2 \\pm x^2}$ integrals evaluated with these three patterns."
+    ]
+  },
+  "generators": [
+    "c2u-choose-1", "c2u-choose-2", "c2u-choose-3",
+    "c2u-sine-1", "c2u-sine-2", "c2u-sine-3",
+    "c2u-tansec-1", "c2u-tansec-2", "c2u-tansec-3",
+    "c2u-cts-1", "c2u-cts-2", "c2u-cts-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-2.trig-substitution.s01",
+      "concepts": ["choosing-the-substitution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "An integral contains $\\sqrt{9 - x^2}$. Choose the trig substitution.",
+      "steps": [
+        { "instruction": "Which substitution pattern applies? Answer with one of: sine, tangent, secant.", "answer": "sine", "accept": ["sin"], "hint": "Constant minus $x^2$ is the sine pattern." },
+        { "instruction": "In $x = a\\sin\\theta$, what is $a$?", "answer": "3", "accept": ["a=3"], "hint": "$a = \\sqrt{9}$." }
+      ],
+      "finalAnswer": { "value": "sine, a = 3", "unit": "" },
+      "solutionNarrative": "$9 - x^2$ has the constant-minus-$x^2$ shape, so $x = 3\\sin\\theta$ collapses the radical to $3\\cos\\theta$."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s02",
+      "concepts": ["choosing-the-substitution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "An integral contains $\\sqrt{x^2 + 16}$. Choose the trig substitution.",
+      "steps": [
+        { "instruction": "Which substitution pattern applies? Answer with one of: sine, tangent, secant.", "answer": "tangent", "accept": ["tan"], "hint": "A SUM of squares is the tangent pattern." },
+        { "instruction": "In $x = a\\tan\\theta$, what is $a$?", "answer": "4", "accept": ["a=4"], "hint": "$a = \\sqrt{16}$." }
+      ],
+      "finalAnswer": { "value": "tangent, a = 4", "unit": "" },
+      "solutionNarrative": "$x^2 + 16$ is a sum, so $x = 4\\tan\\theta$ turns the radical into $4\\sec\\theta$."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s03",
+      "concepts": ["choosing-the-substitution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An integral contains $\\sqrt{x^2 - 25}$.",
+      "steps": [
+        { "instruction": "Which substitution pattern applies? Answer with one of: sine, tangent, secant.", "answer": "secant", "accept": ["sec"], "hint": "$x^2$ minus a constant is the secant pattern." },
+        { "instruction": "In $x = a\\sec\\theta$, what is $a$?", "answer": "5", "accept": ["a=5"], "hint": "$a = \\sqrt{25}$." },
+        { "instruction": "Sanity check at $x = 13$: compute $\\sqrt{13^2 - 25}$.", "answer": "12", "accept": [], "hint": "$169 - 25 = 144$ — the 5-12-13 triple." }
+      ],
+      "finalAnswer": { "value": "secant, a = 5", "unit": "" },
+      "solutionNarrative": "$x^2 - 25$ takes $x = 5\\sec\\theta$ (valid for $|x| \\geq 5$); at $x = 13$ the radical is 12, the third side of the 5-12-13 triangle."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s04",
+      "concepts": ["choosing-the-substitution"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "An integral contains $\\sqrt{4x^2 + 9}$. The coefficient on $x^2$ must be absorbed before substituting.",
+      "steps": [
+        { "instruction": "With $u = 2x$ the radicand is $u^2 + 9$. Which substitution pattern applies? Answer with one of: sine, tangent, secant.", "answer": "tangent", "accept": ["tan"], "hint": "$u^2 + 3^2$ is a sum of squares." },
+        { "instruction": "Setting $2x = 3\\tan\\theta$ collapses the radical. So $x = c\\tan\\theta$ with $c = $ ? (fraction)", "answer": "3/2", "accept": ["1.5"], "hint": "Divide both sides by 2." }
+      ],
+      "finalAnswer": { "value": "tangent, c = 3/2", "unit": "" },
+      "solutionNarrative": "$4x^2 + 9 = (2x)^2 + 3^2$: the tangent pattern in $u = 2x$, so $x = \\tfrac{3}{2}\\tan\\theta$ — absorbing the coefficient is the step most often skipped."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s05",
+      "concepts": ["sine-substitution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{3} \\sqrt{9 - x^2}\\,dx$ by recognizing the region under $y = \\sqrt{9 - x^2}$.",
+      "steps": [
+        { "instruction": "The graph is the top half of a circle of radius 3. Area of the FULL circle? (a pi expression like 9pi)", "answer": "9pi", "accept": ["28.2743"], "hint": "$\\pi r^2$ with $r = 3$." },
+        { "instruction": "The integral covers the first-quadrant quarter. Enter its value (like 9pi/4).", "answer": "9pi/4", "accept": ["7.0686"], "hint": "One fourth of $9\\pi$." }
+      ],
+      "finalAnswer": { "value": "9pi/4", "unit": "" },
+      "solutionNarrative": "The substitution $x = 3\\sin\\theta$ gives $9\\int_0^{\\pi/2}\\cos^2\\theta\\,d\\theta = \\tfrac{9\\pi}{4}$ — matching the quarter-circle area."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s06",
+      "concepts": ["sine-substitution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{1} \\dfrac{dx}{\\sqrt{4 - x^2}}$ with $x = 2\\sin\\theta$.",
+      "steps": [
+        { "instruction": "At the upper limit $x = 1$: $\\sin\\theta = \\tfrac{1}{2}$... first confirm: $\\sin\\theta = \\tfrac{x}{a} = $ ? (fraction)", "answer": "1/2", "accept": ["0.5"], "hint": "$\\tfrac{1}{2}$ since $a = 2$." },
+        { "instruction": "The integrand collapses to $d\\theta$, so the value is the upper $\\theta$-limit: $\\arcsin\\tfrac{1}{2} = $ ? (a pi expression)", "answer": "pi/6", "accept": ["0.5236"], "hint": "$\\sin\\tfrac{\\pi}{6} = \\tfrac{1}{2}$." }
+      ],
+      "finalAnswer": { "value": "pi/6", "unit": "" },
+      "solutionNarrative": "$x = 2\\sin\\theta$ makes $\\sqrt{4 - x^2} = 2\\cos\\theta$ and $dx = 2\\cos\\theta\\,d\\theta$ — total cancellation, leaving $\\theta\\big|_0^{\\pi/6} = \\tfrac{\\pi}{6}$."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s07",
+      "concepts": ["sine-substitution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "After substituting $x = 5\\sin\\theta$ in an integral, you must back-substitute at the point $x = 3$ using the reference triangle (opposite $x$, hypotenuse 5).",
+      "steps": [
+        { "instruction": "Compute the adjacent side $\\sqrt{25 - 3^2}$.", "answer": "4", "accept": [], "hint": "3-4-5 triple." },
+        { "instruction": "Read off $\\cos\\theta$ = adjacent / hypotenuse. (fraction)", "answer": "4/5", "accept": ["0.8"], "hint": "$\\tfrac{4}{5}$." },
+        { "instruction": "Read off $\\tan\\theta$ = opposite / adjacent. (fraction)", "answer": "3/4", "accept": ["0.75"], "hint": "$\\tfrac{3}{4}$." }
+      ],
+      "finalAnswer": { "value": "cos = 4/5, tan = 3/4", "unit": "" },
+      "solutionNarrative": "$\\sin\\theta = \\tfrac{3}{5}$ puts the point on the 3-4-5 triangle: $\\cos\\theta = \\tfrac{4}{5}$, $\\tan\\theta = \\tfrac{3}{4}$ — the ratios back-substitution needs."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s08",
+      "concepts": ["sine-substitution"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{1} \\sqrt{4 - x^2}\\,dx$ with $x = 2\\sin\\theta$ (the integral becomes $4\\displaystyle\\int\\cos^2\\theta\\,d\\theta$, and the antiderivative works out to $\\tfrac{x}{2}\\sqrt{4 - x^2} + 2\\arcsin\\tfrac{x}{2}$).",
+      "steps": [
+        { "instruction": "The upper $\\theta$-limit: $\\arcsin\\tfrac{1}{2} = $ ? (a pi expression)", "answer": "pi/6", "accept": ["0.5236"], "hint": "$\\sin\\tfrac{\\pi}{6} = \\tfrac{1}{2}$." },
+        { "instruction": "Compute $\\sqrt{4 - 1^2}$ (enter like sqrt(3)).", "answer": "sqrt(3)", "accept": ["1.7321"], "hint": "$\\sqrt{3}$." },
+        { "instruction": "Evaluate the antiderivative at $x = 1$ (it vanishes at 0): $\\tfrac{1}{2}\\sqrt{3} + 2 \\cdot \\tfrac{\\pi}{6} = $ ? (enter like sqrt(3)/2 + pi/3)", "answer": "sqrt(3)/2 + pi/3", "accept": ["1.9132"], "hint": "$\\tfrac{\\sqrt{3}}{2} + \\tfrac{\\pi}{3}$." }
+      ],
+      "finalAnswer": { "value": "sqrt(3)/2 + pi/3", "unit": "" },
+      "solutionNarrative": "The half-angle reduction gives antiderivative $\\tfrac{x}{2}\\sqrt{4-x^2} + 2\\arcsin\\tfrac{x}{2}$; at $x = 1$ this is $\\tfrac{\\sqrt{3}}{2} + \\tfrac{\\pi}{3} \\approx 1.9132$."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s09",
+      "concepts": ["tangent-secant-substitution"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{2} \\dfrac{dx}{4 + x^2}$ using $x = 2\\tan\\theta$, which gives antiderivative $\\tfrac{1}{2}\\arctan\\tfrac{x}{2}$.",
+      "steps": [
+        { "instruction": "At the upper limit: $\\arctan\\tfrac{2}{2} = \\arctan(1) = $ ? (a pi expression)", "answer": "pi/4", "accept": ["0.7854"], "hint": "$\\tan\\tfrac{\\pi}{4} = 1$." },
+        { "instruction": "Multiply by $\\tfrac{1}{2}$: the value is ? (a pi expression)", "answer": "pi/8", "accept": ["0.3927"], "hint": "$\\tfrac{1}{2} \\cdot \\tfrac{\\pi}{4}$." }
+      ],
+      "finalAnswer": { "value": "pi/8", "unit": "" },
+      "solutionNarrative": "$x = 2\\tan\\theta$ reduces the integrand to $\\tfrac{1}{2}d\\theta$; the limits become 0 to $\\tfrac{\\pi}{4}$, so the value is $\\tfrac{\\pi}{8}$."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s10",
+      "concepts": ["tangent-secant-substitution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{2\\sqrt{3}} \\dfrac{dx}{4 + x^2}$.",
+      "steps": [
+        { "instruction": "The antiderivative is $\\tfrac{1}{2}\\arctan\\tfrac{x}{2}$. At the upper limit, $\\arctan\\left(\\tfrac{2\\sqrt{3}}{2}\\right) = \\arctan(\\sqrt{3}) = $ ? (a pi expression)", "answer": "pi/3", "accept": ["1.0472"], "hint": "$\\tan\\tfrac{\\pi}{3} = \\sqrt{3}$." },
+        { "instruction": "Multiply by $\\tfrac{1}{2}$: the value is ? (a pi expression)", "answer": "pi/6", "accept": ["0.5236"], "hint": "$\\tfrac{1}{2} \\cdot \\tfrac{\\pi}{3}$." }
+      ],
+      "finalAnswer": { "value": "pi/6", "unit": "" },
+      "solutionNarrative": "$\\arctan\\sqrt{3} = \\tfrac{\\pi}{3}$, so the integral is $\\tfrac{1}{2}\\cdot\\tfrac{\\pi}{3} = \\tfrac{\\pi}{6}$."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s11",
+      "concepts": ["tangent-secant-substitution"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "After substituting $x = 3\\sec\\theta$, back-substitute at the point $x = 5$ using the reference triangle (hypotenuse $x$, adjacent 3).",
+      "steps": [
+        { "instruction": "Compute the opposite side $\\sqrt{5^2 - 9}$.", "answer": "4", "accept": [], "hint": "3-4-5 triple." },
+        { "instruction": "Read off $\\tan\\theta$ = opposite / adjacent. (fraction)", "answer": "4/3", "accept": ["1.3333"], "hint": "$\\tfrac{4}{3}$." },
+        { "instruction": "Read off $\\sin\\theta$ = opposite / hypotenuse. (fraction)", "answer": "4/5", "accept": ["0.8"], "hint": "$\\tfrac{4}{5}$." }
+      ],
+      "finalAnswer": { "value": "tan = 4/3, sin = 4/5", "unit": "" },
+      "solutionNarrative": "$\\sec\\theta = \\tfrac{5}{3}$ builds the 3-4-5 triangle with hypotenuse 5 and adjacent 3: $\\tan\\theta = \\tfrac{4}{3}$, $\\sin\\theta = \\tfrac{4}{5}$."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s12",
+      "concepts": ["tangent-secant-substitution"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_0^{3} \\dfrac{x^2}{9 + x^2}\\,dx$ by splitting the improper fraction first.",
+      "steps": [
+        { "instruction": "Divide: $\\dfrac{x^2}{9 + x^2} = 1 - \\dfrac{c}{9 + x^2}$. What is the constant $c$?", "answer": "9", "accept": [], "hint": "$\\tfrac{x^2 + 9 - 9}{9 + x^2}$." },
+        { "instruction": "Second piece: $\\displaystyle\\int_0^3 \\dfrac{9}{9 + x^2}\\,dx = 3\\arctan\\tfrac{x}{3}\\Big|_0^3 = $ ? (a pi expression like 3pi/4)", "answer": "3pi/4", "accept": ["2.3562"], "hint": "$3\\arctan(1) = 3 \\cdot \\tfrac{\\pi}{4}$." },
+        { "instruction": "Subtract from the first piece $\\displaystyle\\int_0^3 1\\,dx = 3$. Enter the value (like 3 - 3pi/4).", "answer": "3 - 3pi/4", "accept": ["0.6438"], "hint": "$3 - \\tfrac{3\\pi}{4}$." }
+      ],
+      "finalAnswer": { "value": "3 - 3pi/4", "unit": "" },
+      "solutionNarrative": "Dividing first gives $3 - 3\\arctan(1) = 3 - \\tfrac{3\\pi}{4} \\approx 0.6438$: the tangent pattern finishes what polynomial division starts."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s13",
+      "concepts": ["completing-the-square"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Before substituting, complete the square: $x^2 + 6x + 13 = (x + h)^2 + k$.",
+      "steps": [
+        { "instruction": "$h$ is half the $x$-coefficient. $h = $ ?", "answer": "3", "accept": ["h=3"], "hint": "Half of 6." },
+        { "instruction": "$k = 13 - h^2 = $ ?", "answer": "4", "accept": ["k=4"], "hint": "$13 - 9$." }
+      ],
+      "finalAnswer": { "value": "h = 3, k = 4", "unit": "" },
+      "solutionNarrative": "$x^2 + 6x + 13 = (x+3)^2 + 4$: with $u = x + 3$ the radical becomes $\\sqrt{u^2 + 2^2}$ — a tangent substitution."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s14",
+      "concepts": ["completing-the-square"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "An integral contains $\\sqrt{8 - 2x - x^2}$. Completing the square gives $8 - 2x - x^2 = A - (x + 1)^2$.",
+      "steps": [
+        { "instruction": "Find the constant $A$.", "answer": "9", "accept": ["A=9"], "hint": "$-(x^2 + 2x) + 8 = -((x+1)^2 - 1) + 8$." },
+        { "instruction": "So the radical is $\\sqrt{9 - u^2}$ with $u = x + 1$. What is $a$ in the pattern $\\sqrt{a^2 - u^2}$?", "answer": "3", "accept": ["a=3"], "hint": "$\\sqrt{9}$." },
+        { "instruction": "Which substitution pattern now applies to $u$? Answer with one of: sine, tangent, secant.", "answer": "sine", "accept": ["sin"], "hint": "Constant minus a square is the sine pattern." }
+      ],
+      "finalAnswer": { "value": "A = 9, a = 3, sine", "unit": "" },
+      "solutionNarrative": "$8 - 2x - x^2 = 9 - (x+1)^2$: shift to $u = x + 1$ and the sine pattern appears with $a = 3$, so $u = 3\\sin\\theta$."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s15",
+      "concepts": ["completing-the-square"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Evaluate $\\displaystyle\\int_{-1}^{5} \\sqrt{5 + 4x - x^2}\\,dx$. Complete the square: $5 + 4x - x^2 = 9 - (x - 2)^2$, so the graph is the top of a circle centered at $x = 2$.",
+      "steps": [
+        { "instruction": "What is the circle's radius?", "answer": "3", "accept": [], "hint": "$\\sqrt{9}$." },
+        { "instruction": "The limits $-1$ to $5$ span the full diameter, so the integral is a semicircle's area. Enter it (like 9pi/2).", "answer": "9pi/2", "accept": ["14.1372"], "hint": "$\\tfrac{1}{2}\\pi \\cdot 3^2$." }
+      ],
+      "finalAnswer": { "value": "9pi/2", "unit": "" },
+      "solutionNarrative": "Completing the square exposes a circle of radius 3 centered at $x = 2$; the limits cover its whole diameter, so the value is $\\tfrac{9\\pi}{2}$ — geometry finishes what algebra starts."
+    },
+    {
+      "id": "calculus-2.trig-substitution.s16",
+      "concepts": ["sine-substitution", "choosing-the-substitution"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A drainage culvert has a semicircular cross-section bounded by $y = \\sqrt{16 - x^2}$ for $-4 \\leq x \\leq 4$ (meters). Its area $\\displaystyle\\int_{-4}^{4}\\sqrt{16 - x^2}\\,dx$ determines the culvert's flow capacity.",
+      "steps": [
+        { "instruction": "Which substitution pattern evaluates this integral analytically? Answer with one of: sine, tangent, secant.", "answer": "sine", "accept": ["sin"], "hint": "$16 - x^2$ is constant minus $x^2$." },
+        { "instruction": "The limits span the full diameter, so the value is the semicircle area $\\tfrac{1}{2}\\pi r^2$ with $r = 4$. Enter it (like 8pi).", "answer": "8pi", "accept": ["25.1327"], "hint": "$\\tfrac{1}{2}\\pi \\cdot 16$." }
+      ],
+      "finalAnswer": { "value": "8pi", "unit": "m^2" },
+      "solutionNarrative": "The sine substitution $x = 4\\sin\\theta$ turns the integral into $16\\int_{-\\pi/2}^{\\pi/2}\\cos^2\\theta\\,d\\theta = 8\\pi \\approx 25.13$ m$^2$ — and with partial limits the same setup prices any water depth."
+    }
+  ]
+}

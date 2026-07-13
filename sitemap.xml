@@ -22,6 +22,9 @@
     <loc>https://mathgym.io/topic.html?id=algebra.linear-inequalities</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=algebra.absolute-value</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=algebra.graphing-linear-equations</loc>
   </url>
   <url>
@@ -47,6 +50,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=algebra-2.functions</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=algebra-2.function-transformations</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=algebra-2.polynomial-functions</loc>
@@ -80,6 +86,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=geometry.triangles</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=geometry.triangle-congruence</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=geometry.quadrilaterals-and-polygons</loc>
@@ -151,6 +160,9 @@
     <loc>https://mathgym.io/topic.html?id=calculus-1.implicit-differentiation</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-1.mean-value-theorem</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=calculus-1.analyzing-functions</loc>
   </url>
   <url>
@@ -179,6 +191,12 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=calculus-2.integration-by-parts</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-2.trigonometric-integrals</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-2.trig-substitution</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=calculus-2.partial-fractions</loc>
@@ -226,6 +244,9 @@
     <loc>https://mathgym.io/topic.html?id=calculus-3.multiple-integrals</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=calculus-3.polar-cylindrical-spherical</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=calculus-3.line-integrals</loc>
   </url>
   <url>
@@ -244,6 +265,9 @@
     <loc>https://mathgym.io/topic.html?id=differential-equations.linear-first-order</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=differential-equations.exact-equations</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=differential-equations.growth-decay-cooling</loc>
   </url>
   <url>
@@ -251,6 +275,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=differential-equations.nonhomogeneous-second-order</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=differential-equations.variation-of-parameters</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=differential-equations.laplace-transforms</loc>
@@ -445,6 +472,9 @@
     <loc>https://mathgym.io/topic.html?id=number-theory.arithmetic-functions</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=number-theory.orders-and-primitive-roots</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=number-theory.quadratic-residues</loc>
   </url>
   <url>
@@ -466,6 +496,12 @@
     <loc>https://mathgym.io/topic.html?id=numerical-methods.interpolation</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=numerical-methods.least-squares-fitting</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=numerical-methods.numerical-differentiation</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=numerical-methods.numerical-integration</loc>
   </url>
   <url>
@@ -485,6 +521,9 @@
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=financial-mathematics.annuities</loc>
+  </url>
+  <url>
+    <loc>https://mathgym.io/topic.html?id=financial-mathematics.perpetuities</loc>
   </url>
   <url>
     <loc>https://mathgym.io/topic.html?id=financial-mathematics.loans-and-amortization</loc>

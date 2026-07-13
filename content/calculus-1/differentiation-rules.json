@@ -41,7 +41,7 @@
       "**Engineering:** composite relationships (a stress raised to a power, a flow through nested dependencies) call for the chain rule to connect rates."
     ]
   },
-  "generators": ["power-rule-v1", "product-eval-v1", "quotient-eval-v1", "chain-eval-v1"],
+  "generators": ["power-rule-v1", "product-eval-v1", "quotient-eval-v1", "chain-eval-v1", "c1l-power-d3", "c1l-product-d1", "c1l-product-d3", "c1l-quotient-d1", "c1l-quotient-d3", "c1l-chain-d1", "c1l-chain-d3"],
   "problems": [
     {
       "id": "calculus-1.differentiation-rules.s01",

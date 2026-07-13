@@ -1,0 +1,278 @@
+{
+  "id": "differential-equations.variation-of-parameters",
+  "subject": "differential-equations",
+  "title": "Variation of Parameters",
+  "prerequisites": ["differential-equations.nonhomogeneous-second-order"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "when-uc-fails",
+      "label": "When undetermined coefficients fails",
+      "microLesson": "Undetermined coefficients works only when the forcing $g(t)$ comes from the short 'closed under differentiation' catalog: polynomials, exponentials $e^{\\\\alpha t}$, sines and cosines, and their products. Differentiate any of those and you stay inside a finite family, which is what makes a finite guess possible. But differentiate $\\\\tan t$ and you get $\\\\sec^2 t$, then $2\\\\sec^2 t \\\\tan t$, then worse — the family never closes. The same failure hits $\\\\sec t$, $1/t$, $\\\\ln t$, and most quotients. For those forcings you need **variation of parameters**, a formula-driven method that works for ANY continuous $g$."
+    },
+    {
+      "id": "wronskian",
+      "label": "The Wronskian",
+      "microLesson": "Given two homogeneous solutions $y_1, y_2$, their **Wronskian** is the determinant $W = y_1 y_2' - y_2 y_1'$. It measures independence: $W \\\\neq 0$ means $\\\\{y_1, y_2\\\\}$ is a genuine fundamental set, and $W$ is also the denominator in the variation-of-parameters formulas — which is why it must not vanish. Useful values to know: for $\\\\{\\\\cos kt, \\\\sin kt\\\\}$, $W = k$ (a constant); for $\\\\{e^{at}, e^{bt}\\\\}$, $W = (b-a)e^{(a+b)t}$, so $W(0) = b - a$; for $\\\\{x, x^2\\\\}$, $W = x^2$."
+    },
+    {
+      "id": "vop-formulas",
+      "label": "The u1', u2' formulas",
+      "microLesson": "Write the trial solution $y_p = u_1 y_1 + u_2 y_2$ with **functions** $u_1(t), u_2(t)$ instead of constants — the 'parameters' are allowed to vary. Substituting (with one clever simplifying condition) collapses everything to two first-order formulas: $u_1' = \\\\dfrac{-y_2\\\\, g}{W}$ and $u_2' = \\\\dfrac{y_1\\\\, g}{W}$. Two cautions: the minus sign goes with $u_1'$ (the $y_2$ one), and $g$ must be read from the **standard form** $y'' + p y' + q y = g$ — divide off any leading coefficient first."
+    },
+    {
+      "id": "assemble-yp",
+      "label": "Assembling y_p (and comparing with UC)",
+      "microLesson": "Integrate $u_1'$ and $u_2'$ (no constants needed — they would only reproduce $y_c$) and assemble $y_p = u_1 y_1 + u_2 y_2$. The full general solution is then $y = y_c + y_p$ exactly as with undetermined coefficients. When BOTH methods apply, they agree: for $y'' - 3y' + 2y = 4e^{3t}$, variation of parameters grinds through integrals while undetermined coefficients jumps straight to $A = 4/2 = 2$ — same $y_p = 2e^{3t}$. Rule of thumb: use undetermined coefficients when the forcing is in the catalog, variation of parameters when it is not."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The forcing that breaks the guessing game\n\nUndetermined coefficients is a guessing game with a rigged deck: you guess $y_p$ from a short catalog — polynomials, exponentials, sines and cosines, products of these — and matching coefficients always works. The rig is that every function in the catalog is **closed under differentiation**: derivatives of $e^{3t}$ are multiples of $e^{3t}$; derivatives of $\\\\sin 2t$ stay inside $\\\\{\\\\sin 2t, \\\\cos 2t\\\\}$.\n\nNow try $y'' + y = \\\\tan t$. Differentiate $\\\\tan t$: you get $\\\\sec^2 t$. Again: $2\\\\sec^2 t\\\\tan t$. The family never closes, so no finite guess can work. The same disaster strikes $\\\\sec t$, $1/t$, $\\\\ln t$ — perfectly reasonable forcings that appear in real models.\n\n**Variation of parameters** is the method with no catalog restriction. It costs two integrals, but it works for *any* continuous forcing.\n\n## The idea: let the constants vary\n\nThe homogeneous solution is $y_c = C_1 y_1 + C_2 y_2$ with constants $C_1, C_2$. The idea (Lagrange's) is to promote the constants to **functions**:\n\n$$y_p = u_1(t)\\\\,y_1(t) + u_2(t)\\\\,y_2(t).$$\n\nSubstituting into $y'' + p y' + q y = g$ — and imposing the simplifying side condition $u_1' y_1 + u_2' y_2 = 0$ — collapses the calculus into a 2×2 linear system for $u_1'$ and $u_2'$. Its determinant is the **Wronskian**\n\n$$W = y_1 y_2' - y_2 y_1',$$\n\nand Cramer's rule hands you the two formulas that ARE this topic:\n\n$$u_1' = \\\\frac{-y_2\\\\,g}{W}, \\\\qquad u_2' = \\\\frac{y_1\\\\,g}{W}.$$\n\nIntegrate each, assemble $y_p = u_1 y_1 + u_2 y_2$, and add $y_c$.\n\n### Reading the formulas safely\n\n- The **minus sign belongs to $u_1'$**, the one paired with $y_2$ in the numerator. Crossing them is the classic error.\n- $g$ is the right side of the **standard form** $y'' + py' + qy = g$. If the equation arrives as $x^2y'' - 2xy' + 2y = 12x^3$, divide by $x^2$ first: $g = 12x$, not $12x^3$.\n- $W \\\\neq 0$ is guaranteed when $y_1, y_2$ form a fundamental set — the Wronskian of independent solutions never vanishes on the interval.\n\n## Wronskians worth memorizing\n\n| $\\\\{y_1, y_2\\\\}$ | $W$ | note |\n|---|---|---|\n| $\\\\{\\\\cos kt, \\\\sin kt\\\\}$ | $k$ | constant: $k\\\\cos^2 kt + k\\\\sin^2 kt$ |\n| $\\\\{e^{at}, e^{bt}\\\\}$ | $(b-a)e^{(a+b)t}$ | at $t=0$: $b - a$ |\n| $\\\\{x, x^2\\\\}$ | $x^2$ | Euler-equation pair |\n| $\\\\{e^{at}, te^{at}\\\\}$ | $e^{2at}$ | repeated-root pair |\n\n## Worked example 1: the classic $\\\\tan$-forcing shape\n\n$y'' + y = \\\\sec t$. Here $y_1 = \\\\cos t$, $y_2 = \\\\sin t$, $W = 1$, $g = \\\\sec t$. The formulas give\n\n$$u_1' = -\\\\sin t\\\\sec t = -\\\\tan t, \\\\qquad u_2' = \\\\cos t \\\\sec t = 1.$$\n\nNote how the 'impossible' forcing produced a trivially integrable $u_2' = 1$: $u_2 = t$, and $u_1 = \\\\ln|\\\\cos t|$. So\n\n$$y_p = \\\\cos t\\\\,\\\\ln|\\\\cos t| + t\\\\sin t$$\n\n— a solution containing $\\\\ln$ and a bare factor of $t$, shapes no undetermined-coefficients guess could ever produce.\n\n## Worked example 2: a polynomial pipeline\n\nEuler equations give variation of parameters with pure polynomial arithmetic. Take\n\n$$x^2y'' - 2xy' + 2y = 12x^3, \\\\qquad y_1 = x, \\\\; y_2 = x^2.$$\n\nStandard form: divide by $x^2$, so $g = 12x$. The Wronskian is $W = x\\\\cdot 2x - x^2\\\\cdot 1 = x^2$. Then\n\n$$u_1' = \\\\frac{-x^2 \\\\cdot 12x}{x^2} = -12x, \\\\qquad u_2' = \\\\frac{x \\\\cdot 12x}{x^2} = 12.$$\n\nIntegrate: $u_1 = -6x^2$, $u_2 = 12x$. Assemble:\n\n$$y_p = (-6x^2)(x) + (12x)(x^2) = 6x^3.$$\n\nCheck: $x^2(36x) - 2x(18x^2) + 2(6x^3) = 36x^3 - 36x^3 + 12x^3 = 12x^3$. ✓\n\n## Choosing between the two methods\n\n| forcing $g$ | method |\n|---|---|\n| $t^2,\\\\; 5e^{2t},\\\\; 3\\\\cos 4t,\\\\; t e^{-t}$ | undetermined coefficients (faster) |\n| $\\\\tan t,\\\\; \\\\sec t,\\\\; 1/t,\\\\; \\\\ln t,\\\\; e^{t}/t$ | variation of parameters (only option) |\n\nWhen both work they must agree — variation of parameters is the general theorem, undetermined coefficients the shortcut for catalog forcings.\n\n## Common pitfalls\n\n- **Swapping the sign**: $u_1'$ (the $y_2$ numerator) carries the minus.\n- **Forgetting standard form**: divide by the leading coefficient before reading $g$.\n- **Adding integration constants to $u_1, u_2$**: they only regenerate $y_c$, which is already in the general solution.\n- **Using a dependent pair**: if $W = 0$ your $y_1, y_2$ are not a fundamental set — the formulas divide by zero because the input was bad, not the method."
+  },
+  "application": {
+    "summary": "Variation of parameters is the general-purpose solver for driven linear systems whose forcing is not textbook-shaped: aerodynamic drag terms like 1/t, impulsive or ramp-log inputs, feedback signals like tan t, and any empirical forcing measured from data. It is also the theoretical backbone — Green's functions and transfer-function methods in engineering are variation of parameters in disguise.",
+    "domains": ["mechanical engineering", "electrical engineering", "control systems", "physics"],
+    "workedExample": "**A servo with a secant feedback signal.**\n\nA positioning servo near a mechanical stop obeys $y'' + y = \\\\sec t$ on the interval where $\\\\sec t$ models the rapidly stiffening feedback (valid for $|t| < \\\\pi/2$). Undetermined coefficients has no guess for $\\\\sec t$ — its derivatives never close into a finite family.\n\n**Setup:** $y_1 = \\\\cos t$, $y_2 = \\\\sin t$, and $W = \\\\cos t(\\\\cos t) - \\\\sin t(-\\\\sin t) = 1$.\n\n**Formulas:** $u_1' = -y_2 g/W = -\\\\sin t\\\\sec t = -\\\\tan t$ and $u_2' = y_1 g/W = \\\\cos t\\\\sec t = 1$.\n\n**Integrate and assemble:** $u_1 = \\\\ln|\\\\cos t|$, $u_2 = t$, so\n\n$$y_p = \\\\cos t\\\\,\\\\ln|\\\\cos t| + t\\\\sin t.$$\n\nAt $t = 0$ this predicts $y_p(0) = \\\\cos 0 \\\\cdot \\\\ln 1 + 0 = 0$ — the response starts from zero and grows with the $t\\\\sin t$ term, which is what the servo engineer sees: an initially quiet response that ramps as the stop is approached. The same machinery, packaged as a Green's function, is how engineers compute the response of a structure to an arbitrary measured load history rather than an idealized sine or step.",
+    "domainNotes": [
+      "**Mechanical:** response to real load histories — measured road profiles, wind records — where the forcing is data, not a formula from the undetermined-coefficients catalog.",
+      "**Electrical:** RLC circuits driven by clipped or logarithmic source waveforms; the Wronskian denominator is the same determinant that appears in transfer-function analysis.",
+      "**Control systems:** feedback terms like tan t and sec t near saturation limits; variation of parameters gives the exact response where guessing methods have no template.",
+      "**Physics:** Green's functions — the response to a point impulse — are built by variation of parameters, then integrated against any forcing; it is the standard route from one ODE solution to all of them."
+    ]
+  },
+  "generators": [
+    "def4-when-uc-fails-d1",
+    "def4-when-uc-fails-d2",
+    "def4-when-uc-fails-d3",
+    "def4-wronskian-d1",
+    "def4-wronskian-d2",
+    "def4-wronskian-d3",
+    "def4-vop-formulas-d1",
+    "def4-vop-formulas-d2",
+    "def4-vop-formulas-d3",
+    "def4-assemble-yp-d1",
+    "def4-assemble-yp-d2",
+    "def4-assemble-yp-d3"
+  ],
+  "problems": [
+    {
+      "id": "differential-equations.variation-of-parameters.s01",
+      "concepts": ["when-uc-fails"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider $y'' + y = \\\\tan t$. Decide which solution method is required.",
+      "steps": [
+        { "instruction": "Is $\\\\tan t$ in the undetermined-coefficients catalog (polynomials, exponentials, sines/cosines, and their products)? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Differentiate $\\\\tan t$: you get $\\\\sec^2 t$, then worse — the family of derivatives never closes." },
+        { "instruction": "Which method must you use? Type exactly 'variation' or 'undetermined'.", "answer": "variation", "accept": [], "hint": "When the forcing is outside the catalog, only variation of parameters applies." }
+      ],
+      "finalAnswer": { "value": "variation", "unit": "" },
+      "solutionNarrative": "$\\\\tan t$ is not closed under differentiation, so no finite undetermined-coefficients guess exists; variation of parameters is required."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s02",
+      "concepts": ["when-uc-fails"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Consider $y'' - 3y' + 2y = 5e^{4t}$. Decide which solution method to reach for.",
+      "steps": [
+        { "instruction": "Is $5e^{4t}$ in the undetermined-coefficients catalog? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Exponentials are the easiest catalog entry — derivatives are multiples of $e^{4t}$." },
+        { "instruction": "Which method is the efficient choice here? Type exactly 'variation' or 'undetermined'.", "answer": "undetermined", "accept": [], "hint": "Both work, but undetermined coefficients skips the integrals." }
+      ],
+      "finalAnswer": { "value": "undetermined", "unit": "" },
+      "solutionNarrative": "Exponential forcing is squarely in the catalog: guess $Ae^{4t}$ and match. Variation of parameters would give the same $y_p$ with more work."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s03",
+      "concepts": ["when-uc-fails"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For each forcing, decide whether undetermined coefficients can handle it: (a) $g = \\\\sec t$, (b) $g = t^2 e^{3t}$.",
+      "steps": [
+        { "instruction": "(a) Can undetermined coefficients handle $g = \\\\sec t$? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "Derivatives of $\\\\sec t$ generate an unending family: $\\\\sec t\\\\tan t$, then worse." },
+        { "instruction": "(b) Can undetermined coefficients handle $g = t^2 e^{3t}$? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "Products of polynomials and exponentials stay in the catalog — guess $(At^2 + Bt + C)e^{3t}$." }
+      ],
+      "finalAnswer": { "value": "no; yes", "unit": "" },
+      "solutionNarrative": "$\\\\sec t$ is outside the catalog (its derivative family never closes), so it needs variation of parameters. $t^2e^{3t}$ is a polynomial-times-exponential — a standard undetermined-coefficients template."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s04",
+      "concepts": ["when-uc-fails"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Of the five forcings $\\\\tan t$, $\\\\;t^3$, $\\\\;e^{-t}\\\\ln t$, $\\\\;4\\\\cos 2t$, $\\\\;1/t$ — how many can undetermined coefficients handle?",
+      "steps": [
+        { "instruction": "Go down the list: catalog members are polynomials, exponentials, sines/cosines, and products of those. Count the ones undetermined coefficients handles.", "answer": "2", "accept": ["two"], "hint": "$t^3$ (polynomial) and $4\\\\cos 2t$ (cosine) qualify; $\\\\tan t$, $\\\\ln t$, and $1/t$ do not." },
+        { "instruction": "How many of the five therefore require variation of parameters?", "answer": "3", "accept": ["three"], "hint": "$5 - 2$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Only $t^3$ and $4\\\\cos 2t$ live in the closed-under-differentiation catalog. The other three ($\\\\tan t$, $e^{-t}\\\\ln t$, $1/t$) force the general method."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s05",
+      "concepts": ["wronskian"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Compute the Wronskian of $y_1 = \\\\cos 3t$ and $y_2 = \\\\sin 3t$ at $t = 0$. (It is constant, so this is its value everywhere.)",
+      "steps": [
+        { "instruction": "Compute $y_2'(0)$ for $y_2 = \\\\sin 3t$.", "answer": "3", "accept": [], "hint": "$y_2' = 3\\\\cos 3t$, and $\\\\cos 0 = 1$." },
+        { "instruction": "Now $W(0) = y_1(0)\\\\,y_2'(0) - y_2(0)\\\\,y_1'(0)$ with $y_1(0) = 1$, $y_2(0) = 0$, $y_1'(0) = 0$. Compute $W(0)$.", "answer": "3", "accept": ["W = 3", "W=3"], "hint": "$1 \\\\cdot 3 - 0 \\\\cdot 0$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$W = 3\\\\cos^2 3t + 3\\\\sin^2 3t = 3$ everywhere — the $\\\\{\\\\cos kt, \\\\sin kt\\\\}$ pair always has constant Wronskian $k$."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s06",
+      "concepts": ["wronskian"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Compute the Wronskian of $y_1 = e^{2t}$ and $y_2 = e^{5t}$ at $t = 0$.",
+      "steps": [
+        { "instruction": "Compute $y_1'(0)$.", "answer": "2", "accept": [], "hint": "$y_1' = 2e^{2t}$ and $e^0 = 1$." },
+        { "instruction": "Compute $y_2'(0)$.", "answer": "5", "accept": [], "hint": "$y_2' = 5e^{5t}$." },
+        { "instruction": "With $y_1(0) = y_2(0) = 1$, compute $W(0) = y_1(0)y_2'(0) - y_2(0)y_1'(0)$.", "answer": "3", "accept": ["W = 3", "W=3"], "hint": "$5 - 2$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$W(t) = (5-2)e^{7t} = 3e^{7t}$, so $W(0) = 3$. Distinct exponents guarantee $W \\\\neq 0$: the pair is a fundamental set."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s07",
+      "concepts": ["wronskian"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The Euler equation $x^2y'' - 2xy' + 2y = 0$ has solutions $y_1 = x$ and $y_2 = x^2$. Compute their Wronskian as a function of $x$, then evaluate it at $x = 3$.",
+      "steps": [
+        { "instruction": "Compute $W = y_1 y_2' - y_2 y_1'$ as a polynomial in $x$.", "answer": "x^2", "accept": ["x^{2}", "W = x^2"], "hint": "$x(2x) - x^2(1) = 2x^2 - x^2$." },
+        { "instruction": "Evaluate $W(3)$.", "answer": "9", "accept": ["W(3) = 9"], "hint": "$3^2$." }
+      ],
+      "finalAnswer": { "value": "x^2", "unit": "" },
+      "solutionNarrative": "$W = x\\\\cdot 2x - x^2\\\\cdot 1 = x^2$, which is nonzero for $x \\\\neq 0$ — so $\\\\{x, x^2\\\\}$ is a fundamental set on $x > 0$, and $W(3) = 9$."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s08",
+      "concepts": ["wronskian"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Compute the Wronskian of $y_1 = x$ and $y_2 = x^3$, then evaluate it at $x = 2$.",
+      "steps": [
+        { "instruction": "Compute $y_2'$ for $y_2 = x^3$.", "answer": "3x^2", "accept": ["3 x^2", "3x^{2}"], "hint": "Power rule." },
+        { "instruction": "Compute $W = y_1 y_2' - y_2 y_1'$ as a polynomial.", "answer": "2x^3", "accept": ["2 x^3", "W = 2x^3"], "hint": "$x(3x^2) - x^3(1) = 3x^3 - x^3$." },
+        { "instruction": "Evaluate $W(2)$.", "answer": "16", "accept": ["W(2) = 16"], "hint": "$2 \\\\cdot 2^3$." }
+      ],
+      "finalAnswer": { "value": "2x^3", "unit": "" },
+      "solutionNarrative": "$W = x(3x^2) - x^3(1) = 2x^3$, nonzero away from the origin, and $W(2) = 16$."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s09",
+      "concepts": ["vop-formulas"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $y'' + y = 2$ with $y_1 = \\\\cos t$, $y_2 = \\\\sin t$, set up the variation-of-parameters derivatives and evaluate them at $t = 0$.",
+      "steps": [
+        { "instruction": "Compute the Wronskian of $\\\\{\\\\cos t, \\\\sin t\\\\}$ (a constant).", "answer": "1", "accept": ["W = 1", "W=1"], "hint": "$\\\\cos^2 t + \\\\sin^2 t$." },
+        { "instruction": "The formula $u_1' = -y_2 g/W$ gives $u_1' = -2\\\\sin t$. Evaluate $u_1'(0)$.", "answer": "0", "accept": [], "hint": "$\\\\sin 0 = 0$." },
+        { "instruction": "The formula $u_2' = y_1 g/W$ gives $u_2' = 2\\\\cos t$. Evaluate $u_2'(0)$.", "answer": "2", "accept": [], "hint": "$\\\\cos 0 = 1$." }
+      ],
+      "finalAnswer": { "value": "u1'(0) = 0, u2'(0) = 2", "unit": "" },
+      "solutionNarrative": "With $W = 1$ and $g = 2$: $u_1' = -2\\\\sin t$ (so $u_1'(0) = 0$) and $u_2' = 2\\\\cos t$ (so $u_2'(0) = 2$). The minus sign rides with the $y_2$ numerator."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s10",
+      "concepts": ["vop-formulas"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $y'' - \\\\dfrac{2}{x}y' + \\\\dfrac{2}{x^2}y = 6x$ with $y_1 = x$, $y_2 = x^2$, compute $u_1'$ and $u_2'$.",
+      "steps": [
+        { "instruction": "Compute the Wronskian $W$ of $\\\\{x, x^2\\\\}$.", "answer": "x^2", "accept": ["x^{2}", "W = x^2"], "hint": "$x(2x) - x^2(1)$." },
+        { "instruction": "Apply $u_1' = \\\\dfrac{-y_2\\\\,g}{W} = \\\\dfrac{-x^2 \\\\cdot 6x}{x^2}$. Simplify.", "answer": "-6x", "accept": ["-6 x", "u1' = -6x"], "hint": "The $x^2$ factors cancel." },
+        { "instruction": "Apply $u_2' = \\\\dfrac{y_1\\\\,g}{W} = \\\\dfrac{x \\\\cdot 6x}{x^2}$. Simplify.", "answer": "6", "accept": ["u2' = 6"], "hint": "$6x^2 / x^2$." }
+      ],
+      "finalAnswer": { "value": "u1' = -6x, u2' = 6", "unit": "" },
+      "solutionNarrative": "$W = x^2$; the formulas give $u_1' = -6x^3/x^2 = -6x$ and $u_2' = 6x^2/x^2 = 6$ — everything stays polynomial."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s11",
+      "concepts": ["vop-formulas"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the classic $y'' + y = \\\\sec t$ with $y_1 = \\\\cos t$, $y_2 = \\\\sin t$: the forcing is outside the undetermined-coefficients catalog, but watch the formulas simplify.",
+      "steps": [
+        { "instruction": "Compute the Wronskian $W$ of $\\\\{\\\\cos t, \\\\sin t\\\\}$.", "answer": "1", "accept": ["W = 1", "W=1"], "hint": "$\\\\cos^2 t + \\\\sin^2 t = 1$." },
+        { "instruction": "$u_2' = y_1 g/W = \\\\cos t \\\\cdot \\\\sec t$. Simplify to a constant.", "answer": "1", "accept": ["u2' = 1"], "hint": "$\\\\sec t = 1/\\\\cos t$." },
+        { "instruction": "$u_1' = -y_2 g/W = -\\\\sin t\\\\sec t = -\\\\tan t$. Evaluate $u_1'(0)$.", "answer": "0", "accept": [], "hint": "$\\\\tan 0 = 0$." }
+      ],
+      "finalAnswer": { "value": "u2' = 1, u1'(0) = 0", "unit": "" },
+      "solutionNarrative": "$W = 1$; the 'impossible' secant forcing collapses to $u_2' = \\\\cos t\\\\sec t = 1$ and $u_1' = -\\\\tan t$, which vanishes at $t = 0$."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s12",
+      "concepts": ["vop-formulas"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $x^2y'' - 2xy' + 2y = 12x^3$ with $y_1 = x$, $y_2 = x^2$, $W = x^2$: read off $g$ correctly, then compute $u_1'$ and $u_2'$.",
+      "steps": [
+        { "instruction": "Put the equation in standard form (divide by $x^2$). What is $g(x)$?", "answer": "12x", "accept": ["12 x", "g = 12x"], "hint": "$12x^3 / x^2$ — using $12x^3$ directly is the classic standard-form error." },
+        { "instruction": "Compute $u_1' = \\\\dfrac{-y_2\\\\,g}{W} = \\\\dfrac{-x^2 \\\\cdot 12x}{x^2}$.", "answer": "-12x", "accept": ["-12 x", "u1' = -12x"], "hint": "Cancel $x^2$." },
+        { "instruction": "Compute $u_2' = \\\\dfrac{y_1\\\\,g}{W} = \\\\dfrac{x \\\\cdot 12x}{x^2}$.", "answer": "12", "accept": ["u2' = 12"], "hint": "$12x^2/x^2$." }
+      ],
+      "finalAnswer": { "value": "u1' = -12x, u2' = 12", "unit": "" },
+      "solutionNarrative": "Standard form first: $g = 12x$. Then $u_1' = -12x$ and $u_2' = 12$. Reading $g = 12x^3$ would silently wreck both formulas."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s13",
+      "concepts": ["assemble-yp"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Given $u_1 = -3x^2$ and $u_2 = 6x$ with $y_1 = x$ and $y_2 = x^2$, assemble the particular solution $y_p = u_1 y_1 + u_2 y_2$.",
+      "steps": [
+        { "instruction": "Compute the first product $u_1 y_1$.", "answer": "-3x^3", "accept": ["-3 x^3", "-3x^{3}"], "hint": "$(-3x^2)(x)$." },
+        { "instruction": "Compute the second product $u_2 y_2$.", "answer": "6x^3", "accept": ["6 x^3", "6x^{3}"], "hint": "$(6x)(x^2)$." },
+        { "instruction": "Add them: $y_p = \\\\,?$", "answer": "3x^3", "accept": ["3 x^3", "y_p = 3x^3"], "hint": "$-3x^3 + 6x^3$." }
+      ],
+      "finalAnswer": { "value": "y_p = 3x^3", "unit": "" },
+      "solutionNarrative": "$y_p = (-3x^2)(x) + (6x)(x^2) = -3x^3 + 6x^3 = 3x^3$."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s14",
+      "concepts": ["assemble-yp"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Continue the problem $x^2y'' - 2xy' + 2y = 12x^3$: with $u_1' = -12x$ and $u_2' = 12$ (and $y_1 = x$, $y_2 = x^2$), integrate and assemble $y_p$.",
+      "steps": [
+        { "instruction": "Integrate $u_1' = -12x$ (no constant needed).", "answer": "-6x^2", "accept": ["-6 x^2", "u1 = -6x^2"], "hint": "$\\\\int -12x\\\\,dx$." },
+        { "instruction": "Integrate $u_2' = 12$.", "answer": "12x", "accept": ["12 x", "u2 = 12x"], "hint": "$\\\\int 12\\\\,dx$." },
+        { "instruction": "Assemble $y_p = u_1 y_1 + u_2 y_2$.", "answer": "6x^3", "accept": ["6 x^3", "y_p = 6x^3"], "hint": "$(-6x^2)(x) + (12x)(x^2) = -6x^3 + 12x^3$." }
+      ],
+      "finalAnswer": { "value": "y_p = 6x^3", "unit": "" },
+      "solutionNarrative": "$u_1 = -6x^2$, $u_2 = 12x$, so $y_p = -6x^3 + 12x^3 = 6x^3$. Substituting back: $36x^3 - 36x^3 + 12x^3 = 12x^3$ ✓."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s15",
+      "concepts": ["assemble-yp"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "For $y'' + y = \\\\sec t$ we found $u_1' = -\\\\tan t$ and $u_2' = 1$, giving $u_1 = \\\\ln|\\\\cos t|$ and $u_2 = t$, so $y_p = \\\\cos t\\\\,\\\\ln|\\\\cos t| + t\\\\sin t$. Probe this solution numerically.",
+      "steps": [
+        { "instruction": "Since $u_2' = 1$, $u_2(t) = t$. What is $u_2(2)$?", "answer": "2", "accept": [], "hint": "Integrating 1 gives $t$ itself." },
+        { "instruction": "Evaluate $y_p(0) = \\\\cos 0 \\\\cdot \\\\ln|\\\\cos 0| + 0 \\\\cdot \\\\sin 0$. (Recall $\\\\ln 1 = 0$.)", "answer": "0", "accept": [], "hint": "$1 \\\\cdot 0 + 0$." },
+        { "instruction": "Could undetermined coefficients ever have produced the $\\\\ln|\\\\cos t|$ term? Type 'yes' or 'no'.", "answer": "no", "accept": ["n"], "hint": "No finite catalog guess contains logarithms." }
+      ],
+      "finalAnswer": { "value": "y_p(0) = 0", "unit": "" },
+      "solutionNarrative": "$u_2(2) = 2$ and $y_p(0) = 1\\\\cdot\\\\ln 1 + 0 = 0$. The logarithm in $y_p$ is the signature of variation of parameters — no undetermined-coefficients template generates it."
+    },
+    {
+      "id": "differential-equations.variation-of-parameters.s16",
+      "concepts": ["assemble-yp", "wronskian"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A driven circuit obeys $y'' - 3y' + 2y = 4e^{3t}$, with homogeneous solutions $y_1 = e^{t}$, $y_2 = e^{2t}$. Both methods apply here — verify they agree.",
+      "steps": [
+        { "instruction": "Compute the Wronskian at $t = 0$: $W(0) = y_1(0)y_2'(0) - y_2(0)y_1'(0)$.", "answer": "1", "accept": ["W(0) = 1", "W(0)=1"], "hint": "$1 \\\\cdot 2 - 1 \\\\cdot 1$." },
+        { "instruction": "Undetermined coefficients: substituting $y_p = Ae^{3t}$ gives $(9 - 9 + 2)A = 4$. Solve for $A$.", "answer": "2", "accept": ["A = 2", "A=2"], "hint": "$2A = 4$." },
+        { "instruction": "Variation of parameters produces the same $y_p = 2e^{3t}$. Evaluate $y_p(0)$.", "answer": "2", "accept": [], "hint": "$e^0 = 1$." }
+      ],
+      "finalAnswer": { "value": "y_p = 2e^{3t}, y_p(0) = 2", "unit": "" },
+      "solutionNarrative": "$W(0) = 2 - 1 = 1$ confirms a fundamental set. UC gives $A = 2$ instantly; variation of parameters integrates its way to the same $y_p = 2e^{3t}$, worth $2$ at $t = 0$. When both methods apply, they must agree."
+    }
+  ]
+}

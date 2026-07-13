@@ -41,7 +41,7 @@
       "**Environmental science:** total population growth or total pollutant released is the integral of the corresponding rate over a time window."
     ]
   },
-  "generators": ["riemann-v1", "ftc-eval-v1", "area-under-v1", "net-change-v1"],
+  "generators": ["riemann-v1", "ftc-eval-v1", "area-under-v1", "net-change-v1", "c2l-riemann-d3", "c2l-ftc-evaluate-d3", "c2l-area-under-d3", "c2l-net-change-d1", "c2l-net-change-d3"],
   "problems": [
     {
       "id": "calculus-2.definite-integrals.s01",

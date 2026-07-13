@@ -1,0 +1,271 @@
+{
+  "id": "geometry.triangle-congruence",
+  "subject": "geometry",
+  "title": "Triangle Congruence: SSS, SAS, ASA, AAS",
+  "prerequisites": ["geometry.triangles"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "congruence-and-cpctc",
+      "label": "Congruence and CPCTC",
+      "microLesson": "Two triangles are **congruent** when one is an exact copy of the other — every side and every angle matches. The statement $\\triangle ABC \\cong \\triangle DEF$ carries more information than 'they look the same': the **order of the letters** declares the correspondence, so $A \\leftrightarrow D$, $B \\leftrightarrow E$, $C \\leftrightarrow F$, which forces $AB \\cong DE$, $BC \\cong EF$, $CA \\cong FD$ and $\\angle A \\cong \\angle D$, etc. Once a congruence is established, **CPCTC** — Corresponding Parts of Congruent Triangles are Congruent — lets you read off ANY matching side or angle. Reading the correspondence from the letter order, not from the picture, is the core skill."
+    },
+    {
+      "id": "congruence-criteria",
+      "label": "The four criteria: SSS, SAS, ASA, AAS",
+      "microLesson": "You never need all six matches to prove congruence — three well-chosen ones suffice. The four valid shortcuts are **SSS** (three pairs of sides), **SAS** (two sides and the angle INCLUDED between them), **ASA** (two angles and the side included between them), and **AAS** (two angles and a non-included side). The two impostors are **SSA** — two sides and a non-included angle, which can produce two different triangles (the 'swinging door') — and **AAA**, which fixes the shape but not the size (the triangles are only similar). Deciding which criterion applies means asking: how many side pairs are marked, and is the angle/side *included* between the marked parts?"
+    },
+    {
+      "id": "solving-with-congruence",
+      "label": "Solving for sides and angles",
+      "microLesson": "Congruence statements turn geometry into equations. If $\\triangle ABC \\cong \\triangle DEF$ and $AB = 10$ while $DE = 3x - 2$, CPCTC forces $3x - 2 = 10$, so $x = 4$. The angle sum $180^\\circ$ teams up with congruence too: knowing two angles of one triangle pins down the third, which is often exactly the angle you need to activate ASA or AAS. Perimeters transfer wholesale — a congruent copy has the same perimeter, so you can total the sides of whichever triangle you know better."
+    },
+    {
+      "id": "congruence-proofs",
+      "label": "Two-column congruence proofs",
+      "microLesson": "A congruence proof gathers three matched parts, cites a criterion, and then harvests conclusions with CPCTC. The recurring reasons are: **given** (stated in the problem), the **reflexive property** (a shared side is congruent to itself), **vertical angles** (crossing segments make congruent opposite angles), and **definition of midpoint** (a midpoint splits a segment into two congruent halves). The rhythm is always the same: statements down the left, one reason per statement down the right, criterion in the middle, CPCTC at the end. If a triangle shares a side with its partner, expect the reflexive property; if the triangles meet at a crossing point, expect vertical angles."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Exact copies\n\nA factory stamps out two triangular brackets from the same die. Are they interchangeable? That is the question triangle congruence answers. Two triangles are **congruent** when there is a correspondence between their vertices under which all three pairs of sides and all three pairs of angles match.\n\nThe notation does real work:\n\n$$\\triangle ABC \\cong \\triangle DEF$$\n\nmeans $A \\leftrightarrow D$, $B \\leftrightarrow E$, $C \\leftrightarrow F$ **in that order**. From the letters alone you may conclude\n\n$$AB \\cong DE, \\quad BC \\cong EF, \\quad CA \\cong FD, \\quad \\angle A \\cong \\angle D, \\quad \\angle B \\cong \\angle E, \\quad \\angle C \\cong \\angle F.$$\n\nRead correspondences from the **letter order**, never from the drawing — diagrams can be rotated, flipped, or deliberately misleading.\n\n```plot\n{ \"xRange\": [-1, 12], \"yRange\": [-1, 4.5], \"width\": 380, \"height\": 220, \"points\": [ { \"x\": 0, \"y\": 0, \"label\": \"A\", \"color\": \"accent\" }, { \"x\": 4, \"y\": 0, \"label\": \"B\", \"color\": \"accent\" }, { \"x\": 1, \"y\": 3, \"label\": \"C\", \"color\": \"accent\" }, { \"x\": 7, \"y\": 0, \"label\": \"D\", \"color\": \"good\" }, { \"x\": 11, \"y\": 0, \"label\": \"E\", \"color\": \"good\" }, { \"x\": 8, \"y\": 3, \"label\": \"F\", \"color\": \"good\" } ], \"segments\": [ { \"from\": [0, 0], \"to\": [4, 0], \"color\": \"accent\" }, { \"from\": [4, 0], \"to\": [1, 3], \"color\": \"accent\" }, { \"from\": [1, 3], \"to\": [0, 0], \"color\": \"accent\" }, { \"from\": [7, 0], \"to\": [11, 0], \"color\": \"good\" }, { \"from\": [11, 0], \"to\": [8, 3], \"color\": \"good\" }, { \"from\": [8, 3], \"to\": [7, 0], \"color\": \"good\" } ], \"caption\": \"△ABC ≅ △DEF: the letter order pairs A with D, B with E, C with F.\" }\n```\n\n## CPCTC: the payoff\n\nOnce a congruence is established, **CPCTC** — *Corresponding Parts of Congruent Triangles are Congruent* — lets you conclude that ANY pair of corresponding parts matches. Prove the triangles congruent using three parts, then harvest the other three for free. Almost every congruence proof ends with a CPCTC step: 'the triangles are congruent, therefore this side (or angle) equals that one.'\n\n## The four criteria\n\nChecking all six parts would defeat the purpose. Three well-chosen matches force the rest:\n\n| Criterion | What must match | Key requirement |\n|---|---|---|\n| **SSS** | three pairs of sides | nothing else needed |\n| **SAS** | two pairs of sides + the angle pair | angle **included** between the sides |\n| **ASA** | two pairs of angles + the side pair | side **included** between the angles |\n| **AAS** | two pairs of angles + a side pair | side **not** between the angles |\n\n'Included' is the load-bearing word. In $\\triangle ABC$, the angle included between sides $AB$ and $BC$ is $\\angle B$ — the vertex the two sides share. The side included between $\\angle A$ and $\\angle B$ is $AB$ — the side whose endpoints are those two vertices.\n\n### Why SSA fails: the swinging door\n\nTake two sides and an angle NOT between them. Fix the angle at $A$ and the side $AB$; now the second side swings from $B$ like a door and can land on the far ray in **two different places**, producing two non-congruent triangles with identical SSA data. That ambiguity is fatal — SSA proves nothing (it is also why the law of sines has an 'ambiguous case').\n\n### Why AAA fails: same shape, wrong size\n\nThree matching angles force the triangles to have the same **shape** — they are *similar* — but a triangle with sides twice as long has exactly the same angles. AAA can never pin down the **size**, so it never proves congruence.\n\n## Identifying the criterion from markings\n\nWork the checklist:\n\n1. **Count the marked side pairs.** Three → SSS. Two → SAS or the SSA trap. One → ASA or AAS. Zero → at best AAA, i.e. nothing.\n2. **Two sides marked:** is the marked angle at the vertex **shared by both sides**? Yes → SAS. No → SSA → not enough information.\n3. **Two angles marked:** is the marked side the one **connecting the two marked vertices**? Yes → ASA. No → AAS.\n\nA shared side (the reflexive property) and vertical angles at a crossing count as marked parts — they are free congruences the diagram hands you.\n\n## Solving with congruence\n\nBecause corresponding parts are equal, congruence statements become equations. If $\\triangle ABC \\cong \\triangle DEF$ with $AB = 10$ and $DE = 3x - 2$:\n\n$$3x - 2 = 10 \\implies x = 4.$$\n\nThe angle sum joins in constantly: if $m\\angle A = 40^\\circ$ and $m\\angle B = 75^\\circ$, then $m\\angle C = 180^\\circ - 40^\\circ - 75^\\circ = 65^\\circ$ — and by CPCTC the corresponding angle of the partner triangle is $65^\\circ$ too. Perimeter also transfers: congruent triangles have equal perimeters.\n\n## Two-column congruence proofs\n\nThe house pattern: statements on the left, reasons on the right.\n\n| Statement | Reason |\n|---|---|\n| $AB \\cong CB$, $AD \\cong CD$ | given |\n| $BD \\cong BD$ | reflexive property |\n| $\\triangle ABD \\cong \\triangle CBD$ | SSS |\n| $\\angle A \\cong \\angle C$ | CPCTC |\n\nThe reasons you will cite over and over:\n\n- **given** — the problem stated it.\n- **reflexive property** — a segment shared by both triangles is congruent to itself.\n- **vertical angles** — two segments crossing at a point make congruent opposite angles.\n- **definition of midpoint** — a midpoint cuts a segment into two congruent pieces.\n- **SSS / SAS / ASA / AAS** — the criterion that seals the congruence.\n- **CPCTC** — harvests any remaining part AFTER the congruence is proved.\n\n## Common pitfalls\n\n- **Trusting the picture instead of the letters.** $\\triangle ABC \\cong \\triangle RQP$ pairs $A$ with $R$, $B$ with $Q$, $C$ with $P$ — even if the drawing suggests otherwise.\n- **Accepting SSA.** Two sides and a non-included angle is the swinging door: not a criterion.\n- **Accepting AAA.** Similar is not congruent — size is unconstrained.\n- **Citing CPCTC too early.** CPCTC only works AFTER the triangles are proved congruent, never as a step toward proving it.\n- **Missing free parts.** Shared sides (reflexive) and vertical angles are congruent pairs the diagram gives you at no charge."
+  },
+  "application": {
+    "summary": "Congruence criteria are the mathematics of interchangeable parts: a fabricator certifies that two brackets, truss panels, or stamped components are identical by matching three measured parts instead of six, and CPCTC guarantees every unmeasured hole and edge lines up.",
+    "domains": ["manufacturing", "structural engineering", "surveying", "computer graphics"],
+    "workedExample": "**Are the two roof braces interchangeable?**\n\nA truss builder makes two triangular braces, $\\triangle ABC$ and $\\triangle DEF$. The jig guarantees $AB = DE = 2.4$ m and $AC = DF = 1.8$ m, and the welding fixture holds the angle between those two members at $\\angle A = \\angle D = 52^\\circ$ in both braces.\n\n**Which criterion applies?** Two pairs of sides are matched, and the matched angle sits at the vertex shared by both sides — the *included* angle. That is **SAS**, so $\\triangle ABC \\cong \\triangle DEF$.\n\n**The payoff.** The third member was never measured, but CPCTC forces $BC \\cong EF$ — the unmeasured edges are automatically equal, so the pre-drilled bolt holes at $B$ and $C$ land exactly where $E$ and $F$ expect them. Two measurements and one fixture angle certify all six parts. Note what the builder may NOT do: matching $AB$, $BC$, and $\\angle A$ (an angle not between those sides) would be SSA — and SSA braces can genuinely come out in two different shapes.",
+    "domainNotes": [
+      "**Manufacturing:** interchangeable parts are certified by checking a minimal set of dimensions; SAS/SSS are the logic behind 'three measurements suffice'.",
+      "**Structural engineering:** truss analysis assumes mirror-image panels are congruent, so member forces computed once apply to both sides.",
+      "**Surveying:** a distance across a river is found by building a congruent triangle on the accessible bank (vertical angles at a crossing stake + two measured legs = SAS) and measuring the copy.",
+      "**Computer graphics:** collision meshes and instanced geometry rely on rigid motions — translations, rotations, reflections — which preserve congruence exactly."
+    ]
+  },
+  "generators": [
+    "geo3-cpctc-1", "geo3-cpctc-2", "geo3-cpctc-3",
+    "geo3-criteria-1", "geo3-criteria-2", "geo3-criteria-3",
+    "geo3-solve-1", "geo3-solve-2", "geo3-solve-3",
+    "geo3-proof-1", "geo3-proof-2", "geo3-proof-3"
+  ],
+  "problems": [
+    {
+      "id": "geometry.triangle-congruence.s01",
+      "concepts": ["congruence-and-cpctc"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "$\\triangle ABC \\cong \\triangle DEF$, with $AB = 7$, $BC = 9$, $CA = 12$. Use the letter order to read off parts of $\\triangle DEF$.",
+      "plot": { "xRange": [-1, 12], "yRange": [-1, 4.5], "width": 360, "height": 200, "points": [ { "x": 0, "y": 0, "label": "A", "color": "accent" }, { "x": 4, "y": 0, "label": "B", "color": "accent" }, { "x": 1, "y": 3, "label": "C", "color": "accent" }, { "x": 7, "y": 0, "label": "D", "color": "good" }, { "x": 11, "y": 0, "label": "E", "color": "good" }, { "x": 8, "y": 3, "label": "F", "color": "good" } ], "segments": [ { "from": [0, 0], "to": [4, 0], "color": "accent" }, { "from": [4, 0], "to": [1, 3], "color": "accent" }, { "from": [1, 3], "to": [0, 0], "color": "accent" }, { "from": [7, 0], "to": [11, 0], "color": "good" }, { "from": [11, 0], "to": [8, 3], "color": "good" }, { "from": [8, 3], "to": [7, 0], "color": "good" } ], "caption": "△ABC ≅ △DEF — correspondence comes from the letter order." },
+      "steps": [
+        { "instruction": "Which side of $\\triangle DEF$ corresponds to $AB$? (Type the two letters, e.g. DF.)", "answer": "DE", "accept": ["ED"], "hint": "First two letters pair with first two letters: $A \\to D$, $B \\to E$." },
+        { "instruction": "By CPCTC, what is the length of $DE$?", "answer": "7", "accept": ["DE=7"], "hint": "$DE \\cong AB$ and $AB = 7$." },
+        { "instruction": "What is the length of $EF$?", "answer": "9", "accept": ["EF=9"], "hint": "$E, F$ pair with $B, C$, so $EF \\cong BC$." }
+      ],
+      "finalAnswer": { "value": "DE = 7, EF = 9", "unit": "" },
+      "solutionNarrative": "The letter order gives $A \\to D$, $B \\to E$, $C \\to F$, so $DE \\cong AB = 7$ and $EF \\cong BC = 9$."
+    },
+    {
+      "id": "geometry.triangle-congruence.s02",
+      "concepts": ["congruence-criteria"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "In a diagram, tick marks show $AB \\cong DE$, $BC \\cong EF$, and $CA \\cong FD$. No angles are marked. Which congruence criterion applies?",
+      "steps": [
+        { "instruction": "How many pairs of sides are marked congruent?", "answer": "3", "accept": ["three"], "hint": "Count the tick-marked pairs: $AB/DE$, $BC/EF$, $CA/FD$." },
+        { "instruction": "Which criterion proves $\\triangle ABC \\cong \\triangle DEF$? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "SSS", "accept": ["sss", "side side side", "SSS postulate", "sss congruence"], "hint": "Three side pairs, no angles needed." }
+      ],
+      "finalAnswer": { "value": "SSS", "unit": "" },
+      "solutionNarrative": "All three pairs of corresponding sides are marked, which is exactly the SSS criterion."
+    },
+    {
+      "id": "geometry.triangle-congruence.s03",
+      "concepts": ["congruence-criteria"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Markings show $AB \\cong DE$, $AC \\cong DF$, and $\\angle A \\cong \\angle D$. Decide which criterion applies.",
+      "steps": [
+        { "instruction": "$\\angle A$ sits at vertex $A$, which is shared by sides $AB$ and $AC$. Is the marked angle INCLUDED between the two marked sides? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "Included means the angle's vertex is the endpoint both sides share." },
+        { "instruction": "Which criterion applies? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "SAS", "accept": ["sas", "side angle side", "SAS postulate", "sas congruence"], "hint": "Side, included angle, side." }
+      ],
+      "finalAnswer": { "value": "SAS", "unit": "" },
+      "solutionNarrative": "Both marked sides emanate from $A$, so $\\angle A$ is the included angle: side–angle–side, SAS."
+    },
+    {
+      "id": "geometry.triangle-congruence.s04",
+      "concepts": ["solving-with-congruence"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "$\\triangle ABC \\cong \\triangle DEF$, $AB = 10$, and $DE = 3x - 2$. Find $x$.",
+      "steps": [
+        { "instruction": "By CPCTC, $DE = AB$. Solve $3x - 2 = 10$ for $x$.", "answer": "4", "accept": ["x=4", "x = 4"], "hint": "Add 2, then divide by 3." }
+      ],
+      "finalAnswer": { "value": "x = 4", "unit": "" },
+      "solutionNarrative": "CPCTC forces $3x - 2 = 10$, so $3x = 12$ and $x = 4$."
+    },
+    {
+      "id": "geometry.triangle-congruence.s05",
+      "concepts": ["congruence-proofs"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A two-column proof shows $\\triangle ABC \\cong \\triangle DEF$ and then concludes $\\angle B \\cong \\angle E$. Supply the reasons.",
+      "steps": [
+        { "instruction": "The first statements, $AB \\cong DE$, $BC \\cong EF$, $CA \\cong FD$, come straight from the problem. Reason? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "given", "accept": ["givens", "it is given"], "hint": "Stated in the problem = given." },
+        { "instruction": "After $\\triangle ABC \\cong \\triangle DEF$ is proved, which reason justifies $\\angle B \\cong \\angle E$? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "CPCTC", "accept": ["cpctc", "corresponding parts of congruent triangles are congruent", "cpct"], "hint": "Corresponding Parts of Congruent Triangles are Congruent." }
+      ],
+      "finalAnswer": { "value": "given; CPCTC", "unit": "" },
+      "solutionNarrative": "The three side congruences are given; after SSS seals the triangle congruence, CPCTC delivers $\\angle B \\cong \\angle E$."
+    },
+    {
+      "id": "geometry.triangle-congruence.s06",
+      "concepts": ["congruence-and-cpctc"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "$\\triangle PQR \\cong \\triangle XYZ$ with $PQ = 5$, $QR = 8$, $PR = 11$. Find the perimeter of $\\triangle XYZ$.",
+      "steps": [
+        { "instruction": "Which length does $XY$ have?", "answer": "5", "accept": ["XY=5"], "hint": "$X, Y$ pair with $P, Q$, so $XY \\cong PQ$." },
+        { "instruction": "Congruent triangles have equal perimeters. Perimeter of $\\triangle XYZ$?", "answer": "24", "accept": ["24 units"], "hint": "$5 + 8 + 11$." }
+      ],
+      "finalAnswer": { "value": "24", "unit": "units" },
+      "solutionNarrative": "Every side transfers by CPCTC, so the perimeter of the copy is $5 + 8 + 11 = 24$."
+    },
+    {
+      "id": "geometry.triangle-congruence.s07",
+      "concepts": ["congruence-criteria"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Markings show $\\angle A \\cong \\angle D$, $\\angle B \\cong \\angle E$, and $BC \\cong EF$. Which criterion applies?",
+      "steps": [
+        { "instruction": "The side included between $\\angle A$ and $\\angle B$ would be $AB$. Is the marked side $BC$ that included side? (yes/no)", "answer": "no", "accept": ["n"], "hint": "The included side connects the two marked angle vertices, $A$ and $B$." },
+        { "instruction": "Two angles and a NON-included side — which criterion? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "AAS", "accept": ["aas", "angle angle side", "AAS theorem", "aas congruence", "saa"], "hint": "Angle–angle–side, the side not between the angles." }
+      ],
+      "finalAnswer": { "value": "AAS", "unit": "" },
+      "solutionNarrative": "$BC$ does not connect vertices $A$ and $B$, so the side is not included: AAS."
+    },
+    {
+      "id": "geometry.triangle-congruence.s08",
+      "concepts": ["congruence-criteria"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Markings show $AB \\cong DE$, $BC \\cong EF$, and $\\angle A \\cong \\angle D$. Can congruence be concluded?",
+      "steps": [
+        { "instruction": "The angle included between sides $AB$ and $BC$ would be $\\angle B$. Is the marked angle $\\angle A$ included between the two marked sides? (yes/no)", "answer": "no", "accept": ["n"], "hint": "$\\angle A$ touches side $AB$ but not side $BC$." },
+        { "instruction": "Two sides and a non-included angle is the SSA pattern — the 'swinging door'. Does SSA guarantee the triangles are congruent? (yes/no)", "answer": "no", "accept": ["n"], "hint": "The second side can swing to two different landing spots." }
+      ],
+      "finalAnswer": { "value": "no — SSA is not a valid criterion", "unit": "" },
+      "solutionNarrative": "The marked angle is not between the marked sides, so this is SSA, which can produce two different triangles — no conclusion."
+    },
+    {
+      "id": "geometry.triangle-congruence.s09",
+      "concepts": ["solving-with-congruence"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "In $\\triangle ABC$, $m\\angle A = 40^\\circ$ and $m\\angle B = 75^\\circ$. $\\triangle DEF$ has $m\\angle D = 40^\\circ$, $m\\angle E = 75^\\circ$, and $DE \\cong AB$. Work toward a criterion.",
+      "steps": [
+        { "instruction": "Find $m\\angle C$ using the angle sum.", "answer": "65", "accept": ["65 degrees", "65°"], "hint": "$180 - 40 - 75$." },
+        { "instruction": "Is $AB$ the side included between $\\angle A$ and $\\angle B$? (yes/no)", "answer": "yes", "accept": ["y"], "hint": "$AB$ connects the two marked vertices." },
+        { "instruction": "Which criterion proves $\\triangle ABC \\cong \\triangle DEF$? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "ASA", "accept": ["asa", "angle side angle", "ASA postulate", "asa congruence"], "hint": "Angle, included side, angle." }
+      ],
+      "finalAnswer": { "value": "ASA (with m∠C = 65°)", "unit": "" },
+      "solutionNarrative": "$m\\angle C = 180 - 40 - 75 = 65^\\circ$; the matched side $AB$/$DE$ lies between the matched angles, so ASA applies."
+    },
+    {
+      "id": "geometry.triangle-congruence.s10",
+      "concepts": ["congruence-proofs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Given $AB \\cong CB$ and $AD \\cong CD$, prove $\\triangle ABD \\cong \\triangle CBD$ and conclude $\\angle A \\cong \\angle C$. Supply the reasons.",
+      "steps": [
+        { "instruction": "Statement: $BD \\cong BD$. Reason? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "reflexive property", "accept": ["reflexive", "reflexive property of congruence"], "hint": "The diagonal is shared by both triangles." },
+        { "instruction": "Three side pairs now match. Which criterion? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "SSS", "accept": ["sss", "side side side", "SSS postulate", "sss congruence"], "hint": "$AB/CB$, $AD/CD$, and the shared $BD$." },
+        { "instruction": "Which reason justifies $\\angle A \\cong \\angle C$ afterwards? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "CPCTC", "accept": ["cpctc", "corresponding parts of congruent triangles are congruent", "cpct"], "hint": "Harvest corresponding parts after congruence is sealed." }
+      ],
+      "finalAnswer": { "value": "reflexive property; SSS; CPCTC", "unit": "" },
+      "solutionNarrative": "The shared diagonal $BD$ is congruent to itself (reflexive), giving three side pairs (SSS); CPCTC then yields $\\angle A \\cong \\angle C$."
+    },
+    {
+      "id": "geometry.triangle-congruence.s11",
+      "concepts": ["congruence-proofs"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Segments $AC$ and $BD$ intersect at $X$, with $AX \\cong CX$ and $BX \\cong DX$. Prove $\\triangle AXB \\cong \\triangle CXD$ and conclude $AB \\cong CD$.",
+      "plot": { "xRange": [-5, 5], "yRange": [-3.5, 3.5], "width": 340, "height": 240, "points": [ { "x": -4, "y": 2, "label": "A", "color": "accent" }, { "x": 4, "y": -2, "label": "C", "color": "accent" }, { "x": -4, "y": -2, "label": "B", "color": "good" }, { "x": 4, "y": 2, "label": "D", "color": "good" }, { "x": 0, "y": 0, "label": "X", "color": "text" } ], "segments": [ { "from": [-4, 2], "to": [4, -2], "color": "accent" }, { "from": [-4, -2], "to": [4, 2], "color": "good" }, { "from": [-4, 2], "to": [-4, -2], "color": "dim", "dashed": true }, { "from": [4, 2], "to": [4, -2], "color": "dim", "dashed": true } ], "caption": "AC and BD cross at X; the dashed segments AB and CD are the CPCTC payoff." },
+      "steps": [
+        { "instruction": "Statement: $\\angle AXB \\cong \\angle CXD$. Reason? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "vertical angles", "accept": ["vertical angle theorem", "vertical angles theorem", "vert angles"], "hint": "Opposite angles at the crossing point $X$." },
+        { "instruction": "Two side pairs with the included angle pair — which criterion? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "SAS", "accept": ["sas", "side angle side", "SAS postulate", "sas congruence"], "hint": "The angle at $X$ sits between $AX$ and $BX$." },
+        { "instruction": "Which reason justifies $AB \\cong CD$? (Answer with one of: given, reflexive property, vertical angles, CPCTC)", "answer": "CPCTC", "accept": ["cpctc", "corresponding parts of congruent triangles are congruent", "cpct"], "hint": "Corresponding parts, after the congruence." }
+      ],
+      "finalAnswer": { "value": "vertical angles; SAS; CPCTC", "unit": "" },
+      "solutionNarrative": "The vertical angles at $X$ are the included angles between the two given side pairs, so SAS applies, and CPCTC gives $AB \\cong CD$."
+    },
+    {
+      "id": "geometry.triangle-congruence.s12",
+      "concepts": ["congruence-criteria"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two triangles have $\\angle A \\cong \\angle D$, $\\angle B \\cong \\angle E$, and $\\angle C \\cong \\angle F$ — and nothing else is marked. What can you conclude?",
+      "steps": [
+        { "instruction": "How many pairs of sides are marked congruent?", "answer": "0", "accept": ["zero", "none"], "hint": "Only angles are marked." },
+        { "instruction": "Does AAA guarantee congruence? (yes/no)", "answer": "no", "accept": ["n"], "hint": "A triangle with doubled sides has exactly the same angles." },
+        { "instruction": "Which criterion, if any, applies? (Answer with one of: SSS, SAS, ASA, AAS, not enough information)", "answer": "not enough information", "accept": ["not enough info", "none", "no criterion", "cannot be determined"], "hint": "AAA fixes shape (similarity) but not size." }
+      ],
+      "finalAnswer": { "value": "not enough information (AAA gives similarity only)", "unit": "" },
+      "solutionNarrative": "With zero side pairs, the best AAA can deliver is similarity — the triangles could be scaled copies, so no congruence criterion applies."
+    },
+    {
+      "id": "geometry.triangle-congruence.s13",
+      "concepts": ["solving-with-congruence"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "$\\triangle ABC \\cong \\triangle DEF$ with $AB = 2x + 3$, $DE = 17$, $m\\angle A = (5y)^\\circ$, $m\\angle D = 40^\\circ$, $BC = 10$, and $CA = 21$. Find $x$, $y$, and the perimeter of $\\triangle DEF$.",
+      "steps": [
+        { "instruction": "CPCTC: $AB = DE$. Solve $2x + 3 = 17$.", "answer": "7", "accept": ["x=7", "x = 7"], "hint": "Subtract 3, divide by 2." },
+        { "instruction": "CPCTC: $m\\angle A = m\\angle D$. Solve $5y = 40$.", "answer": "8", "accept": ["y=8", "y = 8"], "hint": "Divide by 5." },
+        { "instruction": "Perimeter of $\\triangle DEF$ (equal to the perimeter of $\\triangle ABC$)?", "answer": "48", "accept": ["48 units"], "hint": "$17 + 10 + 21$." }
+      ],
+      "finalAnswer": { "value": "x = 7, y = 8, perimeter 48", "unit": "" },
+      "solutionNarrative": "$2x + 3 = 17$ gives $x = 7$; $5y = 40$ gives $y = 8$; the sides $17, 10, 21$ total a perimeter of $48$, shared by both triangles."
+    },
+    {
+      "id": "geometry.triangle-congruence.s14",
+      "concepts": ["congruence-proofs"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "$M$ is the midpoint of both $AC$ and $BD$. Prove $\\triangle AMB \\cong \\triangle CMD$ and conclude $AB \\cong CD$.",
+      "steps": [
+        { "instruction": "Statement: $AM \\cong MC$. Reason? (Answer with one of: given, definition of midpoint, vertical angles, CPCTC)", "answer": "definition of midpoint", "accept": ["midpoint", "def of midpoint", "midpoint definition"], "hint": "A midpoint splits a segment into two congruent halves." },
+        { "instruction": "Statement: $\\angle AMB \\cong \\angle CMD$. Reason? (Answer with one of: given, definition of midpoint, vertical angles, CPCTC)", "answer": "vertical angles", "accept": ["vertical angle theorem", "vertical angles theorem", "vert angles"], "hint": "The segments cross at $M$." },
+        { "instruction": "Which criterion proves the triangles congruent? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "SAS", "accept": ["sas", "side angle side", "SAS postulate", "sas congruence"], "hint": "Two midpoint side pairs with the vertical angle between them." },
+        { "instruction": "Which reason justifies $AB \\cong CD$? (Answer with one of: given, definition of midpoint, vertical angles, CPCTC)", "answer": "CPCTC", "accept": ["cpctc", "corresponding parts of congruent triangles are congruent", "cpct"], "hint": "After the congruence, corresponding parts follow." }
+      ],
+      "finalAnswer": { "value": "definition of midpoint; vertical angles; SAS; CPCTC", "unit": "" },
+      "solutionNarrative": "The midpoint supplies both side pairs, the vertical angles at $M$ supply the included angle, SAS seals the congruence, and CPCTC gives $AB \\cong CD$."
+    },
+    {
+      "id": "geometry.triangle-congruence.s15",
+      "concepts": ["congruence-and-cpctc"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "$\\triangle ABC \\cong \\triangle RQP$ (note the reversed order!), with $AB = 6$ and $m\\angle B = 100^\\circ$. Read off parts of $\\triangle RQP$.",
+      "steps": [
+        { "instruction": "Which side of $\\triangle RQP$ corresponds to $AB$? (Type the two letters.)", "answer": "RQ", "accept": ["QR"], "hint": "$A \\to R$ and $B \\to Q$ by letter order." },
+        { "instruction": "What is the length of $RQ$?", "answer": "6", "accept": ["RQ=6"], "hint": "$RQ \\cong AB$." },
+        { "instruction": "What is $m\\angle Q$ in degrees?", "answer": "100", "accept": ["100 degrees", "100°"], "hint": "$\\angle Q$ corresponds to $\\angle B$." }
+      ],
+      "finalAnswer": { "value": "RQ = 6, m∠Q = 100°", "unit": "" },
+      "solutionNarrative": "Despite the reversed-looking name, the letter order gives $A \\to R$, $B \\to Q$, $C \\to P$: $RQ = 6$ and $m\\angle Q = 100^\\circ$."
+    },
+    {
+      "id": "geometry.triangle-congruence.s16",
+      "concepts": ["congruence-criteria", "solving-with-congruence"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "In $\\triangle ABC$: $m\\angle A = 35^\\circ$, $m\\angle C = 65^\\circ$. In $\\triangle DEF$: $m\\angle D = 35^\\circ$, $m\\angle E = 80^\\circ$, and $BC \\cong EF$. Determine whether the triangles are congruent and by which criterion.",
+      "steps": [
+        { "instruction": "Find $m\\angle B$.", "answer": "80", "accept": ["80 degrees", "80°"], "hint": "$180 - 35 - 65$." },
+        { "instruction": "So $\\angle A \\cong \\angle D$ and $\\angle B \\cong \\angle E$. Is $BC$ the side included between $\\angle A$ and $\\angle B$? (yes/no)", "answer": "no", "accept": ["n"], "hint": "The included side would be $AB$, connecting the two angle vertices." },
+        { "instruction": "Which criterion applies? (Answer with one of: SSS, SAS, ASA, AAS)", "answer": "AAS", "accept": ["aas", "angle angle side", "AAS theorem", "aas congruence", "saa"], "hint": "Two angles plus a non-included side." }
+      ],
+      "finalAnswer": { "value": "AAS (after computing m∠B = 80°)", "unit": "" },
+      "solutionNarrative": "The angle sum gives $m\\angle B = 80^\\circ$, matching $\\angle E$; with the non-included side pair $BC/EF$, AAS proves the congruence."
+    }
+  ]
+}

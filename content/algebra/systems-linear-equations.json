@@ -41,7 +41,7 @@
       "**Engineering / physics:** separating a vehicle's own speed from the wind or current using upstream/downstream times."
     ]
   },
-  "generators": ["system-setup-v1", "system-substitution-v1", "system-elimination-v1"],
+  "generators": ["system-setup-v1", "system-substitution-v1", "system-elimination-v1", "apl-substitution-d1", "apl-elimination-d1", "apl-classify-d1", "apl-classify-d2", "apl-classify-d3"],
   "problems": [
     {
       "id": "algebra.systems-linear-equations.s01",

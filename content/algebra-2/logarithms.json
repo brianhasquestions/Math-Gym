@@ -41,7 +41,7 @@
       "**Finance/science:** taking a log finds the time for a compounding or decaying quantity to reach a target."
     ]
   },
-  "generators": ["log-eval-v1", "log-convert-v1", "log-property-v1", "log-solve-v1"],
+  "generators": ["log-eval-v1", "log-convert-v1", "log-property-v1", "log-solve-v1", "a2l-log-props-d1", "a2l-log-props-d3", "a2l-solve-logs-d1", "a2l-log-apps-d1"],
   "problems": [
     {
       "id": "algebra-2.logarithms.s01",

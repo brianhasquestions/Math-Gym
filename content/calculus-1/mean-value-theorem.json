@@ -1,0 +1,266 @@
+{
+  "id": "calculus-1.mean-value-theorem",
+  "subject": "calculus-1",
+  "title": "Rolle's Theorem and the Mean Value Theorem",
+  "prerequisites": ["calculus-1.differentiation-rules", "calculus-1.limits-and-continuity"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "rolles-theorem",
+      "label": "Rolle's theorem",
+      "microLesson": "If $f$ is continuous on $[a,b]$, differentiable on $(a,b)$, and $f(a) = f(b)$, then some $c$ in $(a,b)$ has $f'(c) = 0$. Intuition: a smooth curve that starts and ends at the same height must turn around somewhere, and at the turnaround the tangent is horizontal. To find $c$, compute $f'(x)$, set it to $0$, and keep only solutions strictly inside $(a,b)$. Example: $f(x) = x^2 - 4x + 3$ on $[1,3]$ has $f(1) = f(3) = 0$ and $f'(x) = 2x - 4$, so $c = 2$."
+    },
+    {
+      "id": "mvt-statement",
+      "label": "The Mean Value Theorem and secant slopes",
+      "microLesson": "The MVT tilts Rolle: if $f$ is continuous on $[a,b]$ and differentiable on $(a,b)$, then some $c$ in $(a,b)$ satisfies $f'(c) = \\dfrac{f(b) - f(a)}{b - a}$ — at some interior point the tangent is parallel to the secant through the endpoints. The right side is just the **average rate of change**, so the theorem says: somewhere, the instantaneous rate equals the average rate. Both hypotheses matter — a break (discontinuity) or a corner (non-differentiability) inside the interval voids the guarantee."
+    },
+    {
+      "id": "finding-c",
+      "label": "Finding the guaranteed c",
+      "microLesson": "The recipe: (1) compute the secant slope $m = \\dfrac{f(b)-f(a)}{b-a}$; (2) compute $f'(x)$; (3) solve $f'(c) = m$; (4) discard any solutions outside $(a,b)$. For quadratics the answer is always the midpoint: $f(x) = x^2$ on $[a,b]$ gives $2c = a + b$, so $c = \\tfrac{a+b}{2}$. For $f(x) = x^3$ on $[0,b]$ the secant slope is $b^2$ and $3c^2 = b^2$ gives $c = b/\\sqrt{3}$ — an irrational $c$ is perfectly normal."
+    },
+    {
+      "id": "mvt-consequences",
+      "label": "Consequences: speed traps and bounds",
+      "microLesson": "The MVT converts average information into instantaneous facts. **Speed trap:** a car covering 150 miles in 2 hours averaged 75 mph, so at some instant its speedometer read exactly 75 — proof of speeding on a 65 mph road. **Bounds:** if $|f'(x)| \\le M$ on $[a,b]$, then $|f(b) - f(a)| \\le M(b-a)$ — a function can't change more than its fastest rate allows. **Rigidity:** if $f'(x) = 0$ everywhere on an interval, $f$ is constant there; if $f' = g'$ everywhere, then $f$ and $g$ differ by a constant."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A theorem about honesty\n\nA car enters a toll road at 1:00 and exits 150 miles away at 3:00. The driver never saw a police radar. Can a court still prove the car hit exactly 75 mph at some instant? Yes — and the proof is the **Mean Value Theorem**, the result that links the *average* rate of change over an interval to the *instantaneous* rate at some moment inside it.\n\n## Rolle's theorem: what goes up must turn around\n\n**Rolle's theorem.** If $f$ is\n\n1. continuous on the closed interval $[a,b]$,\n2. differentiable on the open interval $(a,b)$, and\n3. $f(a) = f(b)$,\n\nthen there is at least one $c$ in $(a,b)$ with $f'(c) = 0$.\n\nPicture a smooth path that starts and ends at the same height. If it ever leaves that height, it must come back — and at the top (or bottom) of the excursion the tangent is horizontal.\n\n### Worked example\n\n$f(x) = x^2 - 4x + 3$ on $[1, 3]$. Check: $f(1) = 0$ and $f(3) = 0$ — equal. Polynomials are continuous and differentiable everywhere, so Rolle applies. Solve $f'(x) = 2x - 4 = 0$: $c = 2$, which indeed lies in $(1,3)$.\n\n**Hypotheses are not decoration.** Take $f(x) = |x - 2|$ on $[0, 4]$: $f(0) = f(4) = 2$, and $f$ is continuous — but $f'$ is never zero. Rolle doesn't apply because $f$ has a **corner** at $x = 2$: differentiability fails, and with it the guarantee.\n\n## The Mean Value Theorem: Rolle, tilted\n\n**MVT.** If $f$ is continuous on $[a,b]$ and differentiable on $(a,b)$, then there is a $c$ in $(a,b)$ with\n\n$$f'(c) = \\frac{f(b) - f(a)}{b - a}.$$\n\nThe right-hand side is the slope of the **secant line** through $(a, f(a))$ and $(b, f(b))$ — the average rate of change. The theorem says some tangent line inside the interval is exactly **parallel to the secant**. Rolle is the special case where the secant is horizontal.\n\n```plot\n{ \"xRange\": [-0.3, 4.5], \"yRange\": [-1.5, 4.8], \"curves\": [ { \"fn\": \"x^2/4\", \"label\": \"f(x)\", \"labelAt\": 3.9, \"color\": \"accent\" }, { \"fn\": \"x - 1\", \"label\": \"tangent at c\", \"labelAt\": 4.1, \"color\": \"warn\", \"dashed\": true } ], \"segments\": [ { \"from\": [0, 0], \"to\": [4, 4], \"color\": \"success\", \"label\": \"secant\" } ], \"points\": [ { \"x\": 2, \"y\": 1, \"label\": \"c = 2\", \"color\": \"warn\" } ], \"caption\": \"f(x) = x^2/4 on [0,4]: the secant from (0,0) to (4,4) has slope 1, and at c = 2 the tangent (dashed) is parallel to it.\" }\n```\n\n### Finding the guaranteed $c$: the four-step recipe\n\n1. Compute the secant slope $m = \\dfrac{f(b) - f(a)}{b - a}$.\n2. Compute $f'(x)$.\n3. Solve $f'(c) = m$.\n4. Keep only solutions with $a < c < b$.\n\n**Example.** $f(x) = x^2 - 3x + 1$ on $[1, 5]$: $f(5) = 11$, $f(1) = -1$, so $m = \\tfrac{11 - (-1)}{4} = 3$. Then $f'(x) = 2x - 3 = 3$ gives $c = 3$ — inside $(1,5)$. For any quadratic on any interval, $c$ lands exactly at the **midpoint** $\\tfrac{a+b}{2}$; try it.\n\n**Example with a root.** $f(x) = x^3$ on $[0, 3]$: $m = \\tfrac{27 - 0}{3} = 9$, and $3c^2 = 9$ gives $c = \\sqrt{3} \\approx 1.73$. Irrational $c$ values are common — the theorem never promised integers.\n\n## Checking the hypotheses\n\nThe MVT needs continuity on the closed interval and differentiability on the open one. Two classic failures:\n\n- **Discontinuity:** $f(x) = \\dfrac{1}{x - 2}$ on $[0, 3]$ blows up at $x = 2$, inside the interval. No guarantee — and in fact no $c$ works.\n- **Corner:** $f(x) = |x|$ on $[-1, 2]$ is continuous but not differentiable at $0$. The secant slope is $\\tfrac{2 - 1}{3} = \\tfrac13$, yet $f'$ only takes the values $\\pm 1$.\n\nWhen a problem asks 'does the MVT apply?', it is really asking you to scan the interval for breaks and corners.\n\n## What the MVT buys you\n\n- **Speed-trap arguments.** Average speed = $\\tfrac{\\text{distance}}{\\text{time}}$; the MVT upgrades it to an exact instantaneous reading at some moment. 150 miles in 2 hours forces a moment at exactly 75 mph.\n- **Bounding change.** If $|f'(x)| \\le M$ on $[a,b]$, then $|f(b) - f(a)| \\le M(b - a)$. If your rate never exceeds 4 units/hour, you cannot gain more than 20 units in 5 hours. With two-sided bounds $m \\le f' \\le M$ you trap $f(b)$ in the window $[f(a) + m(b-a),\\; f(a) + M(b-a)]$.\n- **Rigidity.** $f' = 0$ on an interval $\\Rightarrow$ $f$ is constant. $f' = g'$ $\\Rightarrow$ $f = g + C$. This is precisely why antiderivatives are unique 'up to $+C$' — the fact the whole of integral calculus leans on.\n\n## Common pitfalls\n\n- **Reporting a $c$ outside $(a,b)$**: always check the solution lands strictly inside the interval.\n- **Using the closed interval for differentiability**: differentiability is only required on the open interval $(a,b)$; endpoints may be corners.\n- **Applying the MVT across a discontinuity**: check the hypotheses before invoking the conclusion.\n- **Confusing average and instantaneous**: the secant slope is the average rate; the MVT is the bridge to an instantaneous one — not an equality everywhere, just at some $c$."
+  },
+  "application": {
+    "summary": "The MVT is the mathematically airtight version of 'your average proves something about an instant.' Toll-road speed enforcement, error bounds in engineering estimates, and the '+C' in every antiderivative all rest on it: average rate equals instantaneous rate somewhere, and a bounded rate strictly limits how much a quantity can change.",
+    "domains": ["law enforcement", "engineering", "physics", "numerical analysis"],
+    "workedExample": "**The toll-ticket speeding case**\n\nA toll ticket shows a car entered a turnpike at 1:00 PM and exited 150 miles down the road at 3:00 PM. The speed limit is 65 mph. The average speed was\n\n$$\\frac{150 \\text{ mi}}{2 \\text{ hr}} = 75 \\text{ mph}.$$\n\nLet $s(t)$ be the car's position. Position is continuous, and (barring teleportation) differentiable, so the MVT applies on $[1, 3]$: there is an instant $t = c$ where\n\n$$s'(c) = \\frac{s(3) - s(1)}{3 - 1} = 75 \\text{ mph}.$$\n\nAt that instant the car was traveling at exactly 75 mph — 10 over the limit — even though no officer ever measured it. Courts have accepted precisely this argument. The same logic powers engineering error bounds: if a sensor's drift rate is provably below $M$ units/hour, the MVT guarantees the reading can't wander more than $M \\cdot \\Delta t$ between calibrations.",
+    "domainNotes": [
+      "**Law enforcement:** average-speed (point-to-point) camera systems ticket drivers using the MVT argument — average over the segment forces an instant at that speed.",
+      "**Engineering:** bounded derivative $\\Rightarrow$ bounded change: worst-case drift, thermal expansion, and tolerance analyses are MVT inequalities.",
+      "**Physics:** between any two velocity measurements, acceleration must have taken its average value at some instant.",
+      "**Numerical analysis:** error formulas for linear interpolation and Newton's method come from applying the MVT (and its Taylor cousins) to the remainder."
+    ]
+  },
+  "generators": [
+    "c1m-rolles-1", "c1m-rolles-2", "c1m-rolles-3",
+    "c1m-secant-1", "c1m-secant-2", "c1m-secant-3",
+    "c1m-findc-1", "c1m-findc-2", "c1m-findc-3",
+    "c1m-conseq-1", "c1m-conseq-2", "c1m-conseq-3"
+  ],
+  "problems": [
+    {
+      "id": "calculus-1.mean-value-theorem.s01",
+      "concepts": ["rolles-theorem"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Verify Rolle's theorem for $f(x) = x^2 - 4x + 3$ on $[1, 3]$ and find the guaranteed $c$.",
+      "steps": [
+        { "instruction": "Check the endpoint values: what is $f(1)$ (which equals $f(3)$)?", "answer": "0", "accept": [], "hint": "$1 - 4 + 3$." },
+        { "instruction": "Compute $f'(x)$.", "answer": "2x - 4", "accept": ["2x-4"], "hint": "Power rule term by term." },
+        { "instruction": "Solve $f'(c) = 0$ for $c$.", "answer": "2", "accept": ["c=2", "c = 2"], "hint": "$2c - 4 = 0$." }
+      ],
+      "finalAnswer": { "value": "c = 2", "unit": "" },
+      "solutionNarrative": "$f(1) = f(3) = 0$, and the polynomial is smooth, so Rolle applies; $f'(x) = 2x - 4 = 0$ at $c = 2 \\in (1,3)$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s02",
+      "concepts": ["rolles-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2 - 2x + 5$ on $[0, 2]$, confirm the endpoints match and find the $c$ from Rolle's theorem.",
+      "steps": [
+        { "instruction": "Compute $f(0)$.", "answer": "5", "accept": [], "hint": "Only the constant survives." },
+        { "instruction": "Compute $f(2)$.", "answer": "5", "accept": [], "hint": "$4 - 4 + 5$." },
+        { "instruction": "Solve $f'(c) = 2c - 2 = 0$.", "answer": "1", "accept": ["c=1", "c = 1"], "hint": "The vertex of the parabola." }
+      ],
+      "finalAnswer": { "value": "c = 1", "unit": "" },
+      "solutionNarrative": "$f(0) = f(2) = 5$; Rolle applies and $f'(x) = 2x - 2$ vanishes at $c = 1$, the midpoint."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s03",
+      "concepts": ["rolles-theorem"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Apply Rolle's theorem to $f(x) = x^3 - 4x$ on $[0, 2]$ (note $f(0) = f(2) = 0$) and find the $c$ in $(0, 2)$.",
+      "steps": [
+        { "instruction": "Compute $f'(x)$.", "answer": "3x^2 - 4", "accept": ["3x^2-4"], "hint": "Power rule on each term." },
+        { "instruction": "Solve $3c^2 - 4 = 0$ for the positive root. (Type it like 2/sqrt(3).)", "answer": "2/sqrt(3)", "accept": ["2*sqrt(3)/3", "sqrt(4/3)", "1.1547"], "hint": "$c^2 = \\tfrac{4}{3}$; keep the root that lies in $(0,2)$." }
+      ],
+      "finalAnswer": { "value": "c = 2/sqrt(3)", "unit": "" },
+      "solutionNarrative": "$f'(x) = 3x^2 - 4 = 0$ gives $c = \\pm\\tfrac{2}{\\sqrt{3}}$; only $c = \\tfrac{2}{\\sqrt{3}} \\approx 1.155$ lies in $(0,2)$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s04",
+      "concepts": ["rolles-theorem"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "$f(x) = |x - 2|$ on $[0, 4]$ satisfies $f(0) = f(4)$, yet $f'$ is never zero. Which hypothesis of Rolle's theorem fails?",
+      "steps": [
+        { "instruction": "Compute the common endpoint value $f(0) = f(4)$.", "answer": "2", "accept": [], "hint": "$|0 - 2|$." },
+        { "instruction": "The graph has a corner at $x = 2$. Which hypothesis fails there? Answer with one of: continuity, differentiability.", "answer": "differentiability", "accept": ["Differentiability"], "hint": "The function IS continuous everywhere — but a corner has no single tangent slope." }
+      ],
+      "finalAnswer": { "value": "differentiability", "unit": "" },
+      "solutionNarrative": "$f$ is continuous with $f(0) = f(4) = 2$, but the corner at $x = 2$ breaks differentiability on $(0,4)$, so Rolle's conclusion is not guaranteed — and indeed $f' = \\pm 1$ only."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s05",
+      "concepts": ["mvt-statement"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2$ on $[1, 3]$, compute the secant slope $\\dfrac{f(3) - f(1)}{3 - 1}$ that the MVT matches with some tangent slope.",
+      "steps": [
+        { "instruction": "Compute $f(3)$ and $f(1)$, then their difference $f(3) - f(1)$.", "answer": "8", "accept": ["9-1"], "hint": "$9 - 1$." },
+        { "instruction": "Divide by the interval length $3 - 1$.", "answer": "4", "accept": ["8/2"], "hint": "$\\tfrac{8}{2}$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "The secant through $(1,1)$ and $(3,9)$ has slope $\\tfrac{8}{2} = 4$; the MVT promises a $c$ in $(1,3)$ with $f'(c) = 4$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s06",
+      "concepts": ["mvt-statement"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For $f(x) = x^2 - 3x$ on $[0, 4]$, find the average rate of change (the secant slope).",
+      "steps": [
+        { "instruction": "Compute $f(4)$.", "answer": "4", "accept": [], "hint": "$16 - 12$." },
+        { "instruction": "Compute the secant slope $\\dfrac{f(4) - f(0)}{4 - 0}$.", "answer": "1", "accept": ["4/4"], "hint": "$f(0) = 0$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$f(4) = 4$, $f(0) = 0$, so the average rate is $\\tfrac{4}{4} = 1$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s07",
+      "concepts": ["mvt-statement"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Does the MVT apply to $f(x) = \\dfrac{1}{x - 2}$ on $[0, 3]$?",
+      "steps": [
+        { "instruction": "At which $x$-value is $f$ undefined?", "answer": "2", "accept": ["x=2", "x = 2"], "hint": "Zero denominator." },
+        { "instruction": "That point lies inside $[0, 3]$, so $f$ is not continuous on the interval. Does the MVT apply? Answer with one of: yes, no.", "answer": "no", "accept": ["No"], "hint": "Continuity on the whole closed interval is required." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$f$ blows up at $x = 2 \\in [0,3]$, violating continuity, so the MVT gives no guarantee on this interval."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s08",
+      "concepts": ["mvt-statement"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Consider $f(x) = \\dfrac{1}{x}$ on $[1, 4]$. Check that the MVT applies, compute the secant slope, and find the guaranteed $c$.",
+      "steps": [
+        { "instruction": "$f$ is undefined only at $x = 0$, which is outside $[1,4]$. Does the MVT apply? Answer with one of: yes, no.", "answer": "yes", "accept": ["Yes"], "hint": "On $[1,4]$ the function is continuous and differentiable." },
+        { "instruction": "Compute the secant slope $\\dfrac{f(4) - f(1)}{4 - 1}$ as a fraction.", "answer": "-1/4", "accept": ["-0.25"], "hint": "$\\tfrac{1/4 - 1}{3} = \\tfrac{-3/4}{3}$." },
+        { "instruction": "Solve $f'(c) = -\\dfrac{1}{c^2} = -\\dfrac{1}{4}$ for the $c$ in $(1, 4)$.", "answer": "2", "accept": ["c=2", "c = 2"], "hint": "$c^2 = 4$; keep the positive root." }
+      ],
+      "finalAnswer": { "value": "c = 2", "unit": "" },
+      "solutionNarrative": "The trouble spot $x=0$ is outside the interval, so the MVT applies; the secant slope is $-\\tfrac14$, and $-\\tfrac{1}{c^2} = -\\tfrac14$ gives $c = 2$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s09",
+      "concepts": ["finding-c"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Find the $c$ guaranteed by the MVT for $f(x) = x^2$ on $[2, 6]$.",
+      "plot": { "xRange": [0, 7], "yRange": [-2, 40], "curves": [ { "fn": "x^2", "label": "f(x) = x^2", "labelAt": 5.6, "color": "accent" } ], "segments": [ { "from": [2, 4], "to": [6, 36], "color": "success", "label": "secant" } ], "points": [ { "x": 4, "y": 16, "label": "c = 4", "color": "warn" } ], "caption": "The secant from (2,4) to (6,36) has slope 8; the tangent at c = 4 matches it." },
+      "steps": [
+        { "instruction": "Compute the secant slope $\\dfrac{f(6) - f(2)}{6 - 2}$.", "answer": "8", "accept": ["32/4"], "hint": "$\\tfrac{36 - 4}{4}$." },
+        { "instruction": "Solve $f'(c) = 2c = 8$.", "answer": "4", "accept": ["c=4", "c = 4"], "hint": "Divide by 2 — for $x^2$, $c$ is always the midpoint of the interval." }
+      ],
+      "finalAnswer": { "value": "c = 4", "unit": "" },
+      "solutionNarrative": "Secant slope $= \\tfrac{32}{4} = 8$; $2c = 8$ gives $c = 4$, the midpoint of $[2,6]$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s10",
+      "concepts": ["finding-c"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the MVT point for $f(x) = x^2 - 3x + 1$ on $[1, 5]$.",
+      "steps": [
+        { "instruction": "Compute the secant slope $\\dfrac{f(5) - f(1)}{5 - 1}$.", "answer": "3", "accept": ["12/4"], "hint": "$f(5) = 11$ and $f(1) = -1$." },
+        { "instruction": "Compute $f'(x)$.", "answer": "2x - 3", "accept": ["2x-3"], "hint": "Power rule; the constant drops." },
+        { "instruction": "Solve $2c - 3 = 3$.", "answer": "3", "accept": ["c=3", "c = 3"], "hint": "Add 3, divide by 2." }
+      ],
+      "finalAnswer": { "value": "c = 3", "unit": "" },
+      "solutionNarrative": "Secant slope $\\tfrac{11 - (-1)}{4} = 3$; setting $2c - 3 = 3$ gives $c = 3$ — again the midpoint, as for every quadratic."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s11",
+      "concepts": ["finding-c"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Find the $c$ guaranteed by the MVT for $f(x) = x^3$ on $[0, 3]$.",
+      "steps": [
+        { "instruction": "Compute the secant slope $\\dfrac{f(3) - f(0)}{3 - 0}$.", "answer": "9", "accept": ["27/3"], "hint": "$\\tfrac{27}{3}$." },
+        { "instruction": "Solve $f'(c) = 3c^2 = 9$ for the $c$ in $(0, 3)$. (Type it like sqrt(3).)", "answer": "sqrt(3)", "accept": ["3/sqrt(3)", "1.7321"], "hint": "$c^2 = 3$; keep the positive root." }
+      ],
+      "finalAnswer": { "value": "c = sqrt(3)", "unit": "" },
+      "solutionNarrative": "The secant slope is 9; $3c^2 = 9$ gives $c = \\sqrt{3} \\approx 1.73$, inside $(0,3)$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s12",
+      "concepts": ["finding-c"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Find the MVT point for $f(x) = \\sqrt{x}$ on $[1, 9]$.",
+      "steps": [
+        { "instruction": "Compute the secant slope $\\dfrac{f(9) - f(1)}{9 - 1}$ as a fraction.", "answer": "1/4", "accept": ["0.25", "2/8"], "hint": "$\\tfrac{3 - 1}{8}$." },
+        { "instruction": "Solve $f'(c) = \\dfrac{1}{2\\sqrt{c}} = \\dfrac{1}{4}$: first find $\\sqrt{c}$.", "answer": "2", "accept": [], "hint": "$2\\sqrt{c} = 4$." },
+        { "instruction": "So $c = $ ?", "answer": "4", "accept": ["c=4", "c = 4"], "hint": "Square the previous answer." }
+      ],
+      "finalAnswer": { "value": "c = 4", "unit": "" },
+      "solutionNarrative": "Secant slope $\\tfrac{2}{8} = \\tfrac14$; $\\tfrac{1}{2\\sqrt{c}} = \\tfrac14$ gives $\\sqrt{c} = 2$, so $c = 4 \\in (1,9)$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s13",
+      "concepts": ["mvt-consequences"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Suppose $|f'(x)| \\le 5$ for all $x$ in $[1, 4]$. What is the largest possible value of $|f(4) - f(1)|$?",
+      "steps": [
+        { "instruction": "What is the interval length $4 - 1$?", "answer": "3", "accept": [], "hint": "Just subtract." },
+        { "instruction": "By the MVT, $|f(4) - f(1)| = |f'(c)| \\cdot 3 \\le M(b-a)$. Compute the bound.", "answer": "15", "accept": [], "hint": "$5 \\times 3$." }
+      ],
+      "finalAnswer": { "value": "15", "unit": "" },
+      "solutionNarrative": "$|f(4) - f(1)| = |f'(c)|(4-1) \\le 5 \\cdot 3 = 15$: a rate capped at 5 can move the value at most 15 over a length-3 interval."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s14",
+      "concepts": ["mvt-consequences"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A car passes toll booth A at 1:00 PM and toll booth B, 150 miles away, at 3:00 PM. The speed limit is 65 mph. Use the MVT to decide whether the car must have broken the limit.",
+      "steps": [
+        { "instruction": "Compute the average speed in mph.", "answer": "75", "accept": ["150/2"], "hint": "Distance over time: $\\tfrac{150}{2}$." },
+        { "instruction": "By the MVT, at some instant the speedometer read exactly 75 mph. Is that over the 65 mph limit? Answer with one of: yes, no.", "answer": "yes", "accept": ["Yes"], "hint": "Compare 75 to 65." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "Average speed $= 75$ mph; the MVT guarantees an instant at exactly 75 mph, which exceeds 65 — provable speeding without a radar gun."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s15",
+      "concepts": ["mvt-consequences"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Suppose $f(1) = 3$ and $2 \\le f'(x) \\le 4$ for all $x$ in $[1, 6]$. Find the smallest and largest possible values of $f(6)$.",
+      "steps": [
+        { "instruction": "Using the lower rate bound: minimum $f(6) = f(1) + 2 \\cdot (6 - 1) = $ ?", "answer": "13", "accept": [], "hint": "$3 + 2 \\cdot 5$." },
+        { "instruction": "Using the upper rate bound: maximum $f(6) = f(1) + 4 \\cdot (6 - 1) = $ ?", "answer": "23", "accept": [], "hint": "$3 + 4 \\cdot 5$." }
+      ],
+      "finalAnswer": { "value": "13 <= f(6) <= 23", "unit": "" },
+      "solutionNarrative": "The MVT gives $f(6) - f(1) = 5 f'(c)$ with $f'(c) \\in [2,4]$, so $f(6) \\in [3 + 10,\\; 3 + 20] = [13, 23]$."
+    },
+    {
+      "id": "calculus-1.mean-value-theorem.s16",
+      "concepts": ["mvt-consequences"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two functions satisfy $f'(x) = g'(x)$ for every $x$. Given $f(0) = 2$, $g(0) = 5$, and $f(3) = 10$, find $g(3)$.",
+      "steps": [
+        { "instruction": "Since $(g - f)' = 0$, the MVT forces $g - f$ to be constant. What is that constant, from the values at $x = 0$?", "answer": "3", "accept": [], "hint": "$g(0) - f(0)$." },
+        { "instruction": "So $g(3) = f(3) + 3 = $ ?", "answer": "13", "accept": [], "hint": "Add the constant gap to $f(3)$." }
+      ],
+      "finalAnswer": { "value": "13", "unit": "" },
+      "solutionNarrative": "Equal derivatives mean $g = f + C$; at $0$, $C = 3$, so $g(3) = 10 + 3 = 13$. This rigidity is exactly why antiderivatives differ only by $+C$."
+    }
+  ]
+}

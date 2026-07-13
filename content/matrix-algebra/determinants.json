@@ -41,7 +41,7 @@
       "**Data science / geometry:** compute polygon areas and tetrahedron volumes straight from point coordinates via determinants."
     ]
   },
-  "generators": ["det2-v1", "det3-v1", "det-invertible-v1"],
+  "generators": ["det2-v1", "det3-v1", "det-invertible-v1", "mpl-det2x2-d2", "mpl-det2x2-d3", "mpl-det3x3-d1", "mpl-det-invert-d1", "mpl-det-applied-d3"],
   "problems": [
     {
       "id": "matrix-algebra.determinants.s01",

@@ -41,7 +41,7 @@
       "**Engineering:** sizing reservoirs and pressure vessels, where both the volume held and the surface to fabricate matter."
     ]
   },
-  "generators": ["box-volume-v1", "cylinder-volume-v1", "cone-sphere-volume-v1", "box-surface-v1", "cylinder-surface-v1", "tank-fill-v1"],
+  "generators": ["box-volume-v1", "cylinder-volume-v1", "cone-sphere-volume-v1", "box-surface-v1", "cylinder-surface-v1", "tank-fill-v1", "gpl-vol-prisms-d2", "gpl-vol-prisms-d3", "gpl-vol-applied-d3", "gpl-vol-cyl-d1"],
   "problems": [
     {
       "id": "geometry.surface-area-and-volume.s01",

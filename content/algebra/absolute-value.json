@@ -1,0 +1,283 @@
+{
+  "id": "algebra.absolute-value",
+  "subject": "algebra",
+  "title": "Absolute Value Equations and Inequalities",
+  "prerequisites": ["algebra.linear-inequalities"],
+  "estimatedMinutes": 40,
+  "keyConcepts": [
+    {
+      "id": "absolute-value-meaning",
+      "label": "Absolute value as distance",
+      "microLesson": "The absolute value $|x|$ is the **distance** from $x$ to 0 on the number line — always zero or positive, never negative. So $|7| = 7$ and $|-7| = 7$: both numbers sit 7 units from 0. More generally, $|a - b|$ is the distance **between** $a$ and $b$: the gap between $3$ and $-5$ is $|3 - (-5)| = 8$. Reading $|x - c|$ as 'the distance from $x$ to $c$' is the key that unlocks every equation and inequality in this topic."
+    },
+    {
+      "id": "absolute-value-equations",
+      "label": "Solving absolute value equations",
+      "microLesson": "The equation $|ax + b| = c$ (with $c > 0$) says the expression inside sits $c$ units from 0 — which can happen **two ways**: $ax + b = c$ or $ax + b = -c$. Solve both linear equations and you get two answers. If $c < 0$ there is **no solution**, because a distance can never be negative — don't even split into cases. And when the right side contains the variable, like $|x + 1| = 2x$, you must **check** each candidate in the original equation: a case can produce an extraneous root that makes the right side negative."
+    },
+    {
+      "id": "less-than-inequalities",
+      "label": "Less-than: a band between two fences",
+      "microLesson": "The inequality $|ax + b| < c$ says the inside expression stays **within** $c$ of 0, so it is trapped between the two fences: $-c < ax + b < c$. Solve this compound 'and' inequality by operating on all three parts at once. For example $|x - 5| \\leq 2$ becomes $-2 \\leq x - 5 \\leq 2$, then $3 \\leq x \\leq 7$ — a solid band on the number line. Manufacturing tolerances live here: 'within 0.2 mm of 10 mm' is exactly $|d - 10| \\leq 0.2$."
+    },
+    {
+      "id": "greater-than-inequalities",
+      "label": "Greater-than: two pieces with a gap",
+      "microLesson": "The inequality $|ax + b| > c$ says the inside expression is **farther** than $c$ from 0 — on either side. That splits into an 'or': $ax + b < -c$ **or** $ax + b > c$. The solution is two separate rays with a gap in the middle, never a single band. For example $|x| > 4$ means $x < -4$ or $x > 4$. Mixing this up with the less-than case is the classic error: **less-thAND** (a band), **great-OR** (two pieces)."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Distance, not sign-stripping\n\nThe absolute value $|x|$ is usually introduced as 'drop the minus sign', but the definition that actually *works* is geometric:\n\n> $|x|$ is the **distance** from $x$ to $0$ on the number line.\n\nDistance is never negative, so $|5| = 5$ and $|-5| = 5$. One step further: $|a - b|$ is the distance **between** $a$ and $b$. The gap between $3$ and $-5$ is $|3 - (-5)| = |8| = 8$, no matter which one you subtract from which.\n\nThis reading turns every problem below into a sentence:\n\n| Statement | Says in words |\n|---|---|\n| $\\lvert x \\rvert = 5$ | $x$ is exactly 5 from 0 |\n| $\\lvert x - 4 \\rvert = 9$ | $x$ is exactly 9 from 4 |\n| $\\lvert x \\rvert < 3$ | $x$ is within 3 of 0 |\n| $\\lvert x - 10 \\rvert \\leq 0.2$ | $x$ is within 0.2 of 10 |\n| $\\lvert x \\rvert > 4$ | $x$ is farther than 4 from 0 |\n\n## Equations: split into two cases\n\nIf $|ax + b| = c$ with $c > 0$, the inside expression is either $c$ or $-c$:\n\n$$ax + b = c \\qquad\\text{or}\\qquad ax + b = -c.$$\n\nSolve each linear equation separately. Example: $|x - 4| = 9$ gives $x - 4 = 9$ or $x - 4 = -9$, so $x = 13$ **or** $x = -5$. Check both: each sits 9 away from 4. ✓\n\n**When $c$ is negative, stop.** $|3x - 2| = -4$ has **no solution** — a distance cannot equal $-4$. Splitting into cases anyway produces two confident, wrong answers.\n\n### Watch for extraneous roots\n\nWhen the right side contains the variable, the two cases can lie to you. Solve $|x + 1| = 2x$:\n\n- Case 1: $x + 1 = 2x \\Rightarrow x = 1$. Check: $|1+1| = 2$ and $2(1) = 2$. ✓\n- Case 2: $x + 1 = -2x \\Rightarrow x = -\\tfrac{1}{3}$. Check: $\\left|-\\tfrac{1}{3}+1\\right| = \\tfrac{2}{3}$ but $2\\left(-\\tfrac{1}{3}\\right) = -\\tfrac{2}{3}$. ✗\n\nThe second candidate makes the right side **negative**, and an absolute value can never equal a negative number. It is **extraneous** — the only solution is $x = 1$. Rule of thumb: whenever the right side has an $x$ in it, plug every candidate back into the original equation.\n\n## Less-than: trapped in a band\n\n$|ax + b| < c$ means the inside stays within $c$ of 0, squeezed between two fences:\n\n$$-c < ax + b < c.$$\n\nSolve the compound inequality by doing each operation to **all three parts**. Example: $|2x + 1| < 9$:\n\n$$-9 < 2x + 1 < 9 \\;\\Rightarrow\\; -10 < 2x < 8 \\;\\Rightarrow\\; -5 < x < 4.$$\n\nThe solution is a single connected band. With $\\leq$ the endpoints join in.\n\n```plot\n{ \"xRange\": [-8, 7], \"yRange\": [-1, 12], \"curves\": [ { \"fn\": \"abs(2*x+1)\", \"label\": \"y = |2x+1|\", \"labelAt\": 3.6, \"color\": \"accent\" }, { \"fn\": \"9\", \"label\": \"y = 9\", \"labelAt\": -7, \"color\": \"warn\" } ], \"caption\": \"|2x+1| < 9 exactly where the V-shaped graph dips below the horizontal line y = 9: between x = -5 and x = 4.\" }\n```\n\n## Greater-than: pushed outside the fences\n\n$|ax + b| > c$ means the inside is **farther** than $c$ from 0 — beyond a fence on either side. That is an **or**:\n\n$$ax + b < -c \\qquad\\text{or}\\qquad ax + b > c.$$\n\nExample: $|x - 2| \\geq 5$ gives $x - 2 \\leq -5$ or $x - 2 \\geq 5$, so $x \\leq -3$ **or** $x \\geq 7$ — two rays with a gap between them.\n\nA reliable mnemonic: **less-thAND, great-OR**. Less-than makes one 'and' band; greater-than makes two 'or' pieces. If your less-than answer has two pieces, or your greater-than answer is a single band, a sign got flipped somewhere.\n\n## Common pitfalls\n\n- **Solving $|ax+b| = c$ with only one case** — you lose half the answers. Distance-$c$ points come in pairs.\n- **Splitting when $c < 0$** — $|expr| = -4$ and $|expr| < -4$ have no solutions at all, while $|expr| > -4$ is true for *every* $x$ (any distance beats a negative number).\n- **Turning $|x| > 4$ into $-4 < x < 4$** — that's the less-than band. Greater-than is the outside: $x < -4$ or $x > 4$.\n- **Skipping the check when the right side has the variable** — case 2 of $|x+1| = 2x$ produces a candidate that fails; only checking catches it."
+  },
+  "application": {
+    "summary": "Absolute value is the mathematics of tolerance: every spec sheet that says 'within 0.2 mm', every thermostat that allows a swing of 2 degrees, every quality-control gate that rejects parts too far from target is an absolute value inequality about distance from a target value.",
+    "domains": ["manufacturing", "quality control", "medicine", "everyday life"],
+    "workedExample": "**Which pistons pass inspection?**\n\nA machine shop mills pistons to a target diameter of 25 mm. The spec allows a tolerance of 0.5 mm: a piston passes only if its diameter $d$ is within 0.5 mm of the target. Write and solve the inequality.\n\n'Within 0.5 of 25' is a distance statement:\n\n$$|d - 25| \\leq 0.5.$$\n\nUnpack the less-than into a band:\n\n$$-0.5 \\leq d - 25 \\leq 0.5 \\;\\Rightarrow\\; 24.5 \\leq d \\leq 25.5.$$\n\n**Any diameter from 24.5 mm to 25.5 mm passes; anything outside is scrap.** The rejection rule is the same statement flipped to a greater-than: a part fails when $|d - 25| > 0.5$, i.e. $d < 24.5$ or $d > 25.5$ — two failure zones, one for undersized and one for oversized parts. Every tolerance on a drawing, a lab assay, or a shipping weight works exactly this way.",
+    "domainNotes": [
+      "**Manufacturing:** tolerances like $\\pm 0.5$ mm are the inequality $|d - \\text{target}| \\leq 0.5$; pass bands and reject zones fall straight out of the two cases.",
+      "**Quality control:** a filling line rejects bottles when $|w - 500| > 8$ grams — the greater-than 'or' gives the two reject zones.",
+      "**Medicine:** a safe blood-glucose range 'within 15 of 100 mg/dL' is $|g - 100| \\leq 15$; dosing bands work the same way.",
+      "**Everyday life:** 'arrive within 10 minutes of noon', 'keep the room within 2 degrees of 70' — every within-statement is an absolute value inequality."
+    ]
+  },
+  "generators": [
+    "aab-meaning-1", "aab-meaning-2", "aab-meaning-3",
+    "aab-equation-1", "aab-equation-2", "aab-equation-3",
+    "aab-less-1", "aab-less-2", "aab-less-3",
+    "aab-greater-1", "aab-greater-2", "aab-greater-3"
+  ],
+  "problems": [
+    {
+      "id": "algebra.absolute-value.s01",
+      "concepts": ["absolute-value-meaning"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Evaluate $|-7|$ and $|4|$, thinking of each as a distance from 0.",
+      "steps": [
+        { "instruction": "How far is $-7$ from 0? That is, $|-7| = $ ?", "answer": "7", "accept": [], "hint": "Distance is never negative; $-7$ sits 7 units left of 0." },
+        { "instruction": "And $|4| = $ ?", "answer": "4", "accept": [], "hint": "$4$ is already 4 units from 0." }
+      ],
+      "finalAnswer": { "value": "7 and 4", "unit": "" },
+      "solutionNarrative": "Both are distances from 0: $|-7| = 7$ and $|4| = 4$."
+    },
+    {
+      "id": "algebra.absolute-value.s02",
+      "concepts": ["absolute-value-meaning"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A thermometer read $-5°$ at dawn and $3°$ at noon. The temperature swing is the distance between the readings, $|3 - (-5)|$. Compute it.",
+      "steps": [
+        { "instruction": "First simplify the inside: $3 - (-5) = $ ?", "answer": "8", "accept": [], "hint": "Subtracting a negative adds: $3 + 5$." },
+        { "instruction": "So the swing is $|8| = $ ?", "answer": "8", "accept": [], "hint": "8 is already positive." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "degrees" },
+      "solutionNarrative": "$|3 - (-5)| = |8| = 8$ degrees — the distance between the two readings on the number line."
+    },
+    {
+      "id": "algebra.absolute-value.s03",
+      "concepts": ["absolute-value-meaning"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Evaluate the expression $|2(-3) + 5| + |{-6}|$.",
+      "steps": [
+        { "instruction": "Simplify inside the first bars: $2(-3) + 5 = $ ?", "answer": "-1", "accept": [], "hint": "$-6 + 5$." },
+        { "instruction": "So the first term is $|-1| = $ ?", "answer": "1", "accept": [], "hint": "Distance of $-1$ from 0." },
+        { "instruction": "Add the second term: $1 + |-6| = $ ?", "answer": "7", "accept": [], "hint": "$|-6| = 6$." }
+      ],
+      "finalAnswer": { "value": "7", "unit": "" },
+      "solutionNarrative": "Work inside-out: $|2(-3)+5| = |-1| = 1$, and $1 + |-6| = 1 + 6 = 7$."
+    },
+    {
+      "id": "algebra.absolute-value.s04",
+      "concepts": ["absolute-value-meaning"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Which numbers $x$ sit at distance 6 from 0? Express the condition as an absolute value equation, then give all solutions.",
+      "steps": [
+        { "instruction": "Write the condition as an equation in $x$.", "answer": "|x| = 6", "accept": ["abs(x) = 6", "|x|=6"], "hint": "Distance from 0 is $|x|$." },
+        { "instruction": "Give every solution. (Type it like x = 6 or x = -6.)", "answer": "x = 6 or x = -6", "accept": ["x = -6 or x = 6", "6 or -6"], "form": "solutions", "hint": "Distance-6 points come in a pair, one on each side of 0." }
+      ],
+      "finalAnswer": { "value": "x = 6 or x = -6", "unit": "" },
+      "solutionNarrative": "The condition is $|x| = 6$, and exactly two points sit 6 from 0: $x = 6$ and $x = -6$."
+    },
+    {
+      "id": "algebra.absolute-value.s05",
+      "concepts": ["absolute-value-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $|x| = 5$.",
+      "steps": [
+        { "instruction": "Two numbers sit 5 units from 0. Give both solutions. (Type it like x = 5 or x = -5.)", "answer": "x = 5 or x = -5", "accept": ["x = -5 or x = 5", "5 or -5"], "form": "solutions", "hint": "One on each side of 0." }
+      ],
+      "finalAnswer": { "value": "x = 5 or x = -5", "unit": "" },
+      "solutionNarrative": "$|x| = 5$ means $x$ is 5 from 0, so $x = 5$ or $x = -5$."
+    },
+    {
+      "id": "algebra.absolute-value.s06",
+      "concepts": ["absolute-value-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $|x - 4| = 9$ by splitting into two cases.",
+      "steps": [
+        { "instruction": "Case 1: $x - 4 = 9$. Solve it.", "answer": "x = 13", "accept": ["13"], "hint": "Add 4 to both sides." },
+        { "instruction": "Case 2: $x - 4 = -9$. Solve it.", "answer": "x = -5", "accept": ["-5"], "hint": "Add 4 to both sides." },
+        { "instruction": "State the full solution. (Type it like x = 13 or x = -5.)", "answer": "x = 13 or x = -5", "accept": ["x = -5 or x = 13"], "form": "solutions", "hint": "Both cases are genuine solutions here." }
+      ],
+      "finalAnswer": { "value": "x = 13 or x = -5", "unit": "" },
+      "solutionNarrative": "The inside is $9$ or $-9$: $x - 4 = 9$ gives $x = 13$; $x - 4 = -9$ gives $x = -5$. Both sit 9 units from 4."
+    },
+    {
+      "id": "algebra.absolute-value.s07",
+      "concepts": ["absolute-value-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $|2x + 3| = 7$.",
+      "steps": [
+        { "instruction": "Case 1: $2x + 3 = 7$. Solve for $x$.", "answer": "x = 2", "accept": ["2"], "hint": "$2x = 4$." },
+        { "instruction": "Case 2: $2x + 3 = -7$. Solve for $x$.", "answer": "x = -5", "accept": ["-5"], "hint": "$2x = -10$." },
+        { "instruction": "State the full solution. (Type it like x = 2 or x = -5.)", "answer": "x = 2 or x = -5", "accept": ["x = -5 or x = 2"], "form": "solutions", "hint": "Combine both cases with 'or'." }
+      ],
+      "finalAnswer": { "value": "x = 2 or x = -5", "unit": "" },
+      "solutionNarrative": "$2x + 3 = 7$ gives $x = 2$; $2x + 3 = -7$ gives $x = -5$."
+    },
+    {
+      "id": "algebra.absolute-value.s08",
+      "concepts": ["absolute-value-equations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $|3x - 2| = -4$, or explain why you cannot.",
+      "steps": [
+        { "instruction": "An absolute value is a distance. Can it ever equal $-4$? Answer with exactly: no solution", "answer": "no solution", "accept": ["none", "no solutions", "empty set"], "hint": "Distances are never negative — do not split into cases." }
+      ],
+      "finalAnswer": { "value": "no solution", "unit": "" },
+      "solutionNarrative": "$|3x - 2|$ is a distance, hence $\\geq 0$ for every $x$; it can never equal $-4$. The equation has no solution."
+    },
+    {
+      "id": "algebra.absolute-value.s09",
+      "concepts": ["absolute-value-equations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $|x + 1| = 2x$. The right side contains the variable, so check every candidate.",
+      "steps": [
+        { "instruction": "Case 1: $x + 1 = 2x$. Solve it.", "answer": "x = 1", "accept": ["1"], "hint": "Subtract $x$ from both sides." },
+        { "instruction": "Case 2: $x + 1 = -2x$. Solve it.", "answer": "x = -1/3", "accept": ["-1/3"], "hint": "$3x = -1$." },
+        { "instruction": "Check both in the ORIGINAL equation. One makes the right side $2x$ negative and fails. Which candidate is extraneous?", "answer": "-1/3", "accept": ["x = -1/3"], "hint": "At $x = -\\tfrac{1}{3}$: left side $\\tfrac{2}{3}$, right side $-\\tfrac{2}{3}$." },
+        { "instruction": "State the actual solution. (Type it like x = 1.)", "answer": "x = 1", "accept": ["1"], "hint": "Only the candidate that survives the check." }
+      ],
+      "finalAnswer": { "value": "x = 1", "unit": "" },
+      "solutionNarrative": "Case 1 gives $x = 1$ (checks: $2 = 2$). Case 2 gives $x = -\\tfrac{1}{3}$, but then $2x = -\\tfrac{2}{3} < 0$ while the left side is $\\tfrac{2}{3}$ — extraneous. The only solution is $x = 1$."
+    },
+    {
+      "id": "algebra.absolute-value.s10",
+      "concepts": ["less-than-inequalities"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $|x| < 3$ and write the answer as a compound inequality.",
+      "steps": [
+        { "instruction": "Within 3 of 0 means trapped between $-3$ and $3$. Write the compound inequality. (Type it like -3 < x < 3.)", "answer": "-3 < x < 3", "accept": ["-3<x<3", "3 > x > -3"], "hint": "Less-than gives a single band: $-c < x < c$." }
+      ],
+      "finalAnswer": { "value": "-3 < x < 3", "unit": "" },
+      "solutionNarrative": "$|x| < 3$ means $x$ stays within 3 of 0: $-3 < x < 3$."
+    },
+    {
+      "id": "algebra.absolute-value.s11",
+      "concepts": ["less-than-inequalities"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $|x - 5| \\leq 2$.",
+      "steps": [
+        { "instruction": "Rewrite as a band: $-2 \\leq x - 5 \\leq 2$. Add 5 to all three parts. What is the LOWER endpoint of the solution?", "answer": "3", "accept": [], "hint": "$-2 + 5$." },
+        { "instruction": "What is the UPPER endpoint?", "answer": "7", "accept": [], "hint": "$2 + 5$." },
+        { "instruction": "Write the solution as a compound inequality. (Type it like 3 <= x <= 7.)", "answer": "3 <= x <= 7", "accept": ["3 \\leq x \\leq 7", "7 >= x >= 3"], "hint": "Endpoints included because of $\\leq$." }
+      ],
+      "finalAnswer": { "value": "3 <= x <= 7", "unit": "" },
+      "solutionNarrative": "$-2 \\leq x - 5 \\leq 2$ shifts to $3 \\leq x \\leq 7$: every $x$ within 2 of 5."
+    },
+    {
+      "id": "algebra.absolute-value.s12",
+      "concepts": ["less-than-inequalities"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $|2x + 1| < 9$.",
+      "plot": { "xRange": [-8, 7], "yRange": [-1, 12], "curves": [ { "fn": "abs(2*x+1)", "label": "y = |2x+1|", "labelAt": 3.6, "color": "accent" }, { "fn": "9", "label": "y = 9", "labelAt": -7, "color": "warn" } ], "caption": "The V dips below y = 9 exactly on the solution band." },
+      "steps": [
+        { "instruction": "Rewrite as a band: $-9 < 2x + 1 < 9$. Subtract 1 from all three parts. What compound inequality results? (Type it like -10 < 2x < 8.)", "answer": "-10 < 2x < 8", "accept": ["-10<2x<8"], "hint": "Same subtraction on every part." },
+        { "instruction": "Divide all three parts by 2. What is the LOWER endpoint of the solution?", "answer": "-5", "accept": [], "hint": "$-10 \\div 2$." },
+        { "instruction": "And the UPPER endpoint?", "answer": "4", "accept": [], "hint": "$8 \\div 2$." },
+        { "instruction": "Write the solution. (Type it like -5 < x < 4.)", "answer": "-5 < x < 4", "accept": ["-5<x<4", "4 > x > -5"], "hint": "Strict inequality keeps the endpoints out." }
+      ],
+      "finalAnswer": { "value": "-5 < x < 4", "unit": "" },
+      "solutionNarrative": "$-9 < 2x+1 < 9$ gives $-10 < 2x < 8$, then $-5 < x < 4$."
+    },
+    {
+      "id": "algebra.absolute-value.s13",
+      "concepts": ["less-than-inequalities"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A bolt passes inspection only if its diameter $d$ (mm) is within 0.2 mm of the 10 mm target: $|d - 10| \\leq 0.2$. Find the acceptable range.",
+      "steps": [
+        { "instruction": "Rewrite as a band: $-0.2 \\leq d - 10 \\leq 0.2$. What is the SMALLEST passing diameter?", "answer": "9.8", "accept": [], "hint": "$10 - 0.2$." },
+        { "instruction": "What is the LARGEST passing diameter?", "answer": "10.2", "accept": [], "hint": "$10 + 0.2$." },
+        { "instruction": "Write the passing range as a compound inequality. (Type it like 9.8 <= d <= 10.2.)", "answer": "9.8 <= d <= 10.2", "accept": ["9.8 \\leq d \\leq 10.2", "10.2 >= d >= 9.8"], "hint": "Tolerance bands include their endpoints." }
+      ],
+      "finalAnswer": { "value": "9.8 <= d <= 10.2", "unit": "mm" },
+      "solutionNarrative": "'Within 0.2 of 10' unpacks to $9.8 \\leq d \\leq 10.2$ mm — the pass band."
+    },
+    {
+      "id": "algebra.absolute-value.s14",
+      "concepts": ["greater-than-inequalities"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $|x| > 4$ and write the answer as an 'or' statement.",
+      "steps": [
+        { "instruction": "Farther than 4 from 0 means beyond a fence on either side. Write the solution. (Type it like x < -4 or x > 4.)", "answer": "x < -4 or x > 4", "accept": ["x > 4 or x < -4"], "hint": "Greater-than gives TWO pieces, never a band." }
+      ],
+      "finalAnswer": { "value": "x < -4 or x > 4", "unit": "" },
+      "solutionNarrative": "$|x| > 4$ means $x$ is farther than 4 from 0: $x < -4$ or $x > 4$."
+    },
+    {
+      "id": "algebra.absolute-value.s15",
+      "concepts": ["greater-than-inequalities"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $|x - 2| \\geq 5$.",
+      "plot": { "xRange": [-7, 11], "yRange": [-1, 9], "curves": [ { "fn": "abs(x-2)", "label": "y = |x-2|", "labelAt": 8, "color": "accent" }, { "fn": "5", "label": "y = 5", "labelAt": -6, "color": "warn" } ], "caption": "The V rises above y = 5 on two separate rays — the 'or' solution." },
+      "steps": [
+        { "instruction": "Split into two cases. Case 1: $x - 2 \\geq 5$. Solve it.", "answer": "x >= 7", "accept": ["x \\geq 7", "7 <= x"], "hint": "Add 2 to both sides." },
+        { "instruction": "Case 2: $x - 2 \\leq -5$. Solve it.", "answer": "x <= -3", "accept": ["x \\leq -3", "-3 >= x"], "hint": "Add 2 to both sides." },
+        { "instruction": "Combine with 'or'. (Type it like x <= -3 or x >= 7.)", "answer": "x <= -3 or x >= 7", "accept": ["x >= 7 or x <= -3"], "hint": "Two rays with a gap from $-3$ to $7$." }
+      ],
+      "finalAnswer": { "value": "x <= -3 or x >= 7", "unit": "" },
+      "solutionNarrative": "$x - 2 \\geq 5$ gives $x \\geq 7$; $x - 2 \\leq -5$ gives $x \\leq -3$. The solution is the two outside rays."
+    },
+    {
+      "id": "algebra.absolute-value.s16",
+      "concepts": ["greater-than-inequalities"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $|3x - 1| > 8$.",
+      "steps": [
+        { "instruction": "Case 1: $3x - 1 > 8$. Solve for $x$.", "answer": "x > 3", "accept": ["3 < x"], "hint": "$3x > 9$." },
+        { "instruction": "Case 2: $3x - 1 < -8$. Solve for $x$ (answer is a fraction).", "answer": "x < -7/3", "accept": ["-7/3 > x"], "hint": "$3x < -7$, divide by 3." },
+        { "instruction": "Combine with 'or'. (Type it like x < -7/3 or x > 3.)", "answer": "x < -7/3 or x > 3", "accept": ["x > 3 or x < -7/3"], "hint": "Two pieces outside the fences." }
+      ],
+      "finalAnswer": { "value": "x < -7/3 or x > 3", "unit": "" },
+      "solutionNarrative": "$3x - 1 > 8$ gives $x > 3$; $3x - 1 < -8$ gives $x < -\\tfrac{7}{3}$."
+    },
+    {
+      "id": "algebra.absolute-value.s17",
+      "concepts": ["greater-than-inequalities"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A filling machine targets 350 g per jar. Quality control pulls any jar whose mass $m$ differs from the target by MORE than 15 g: $|m - 350| > 15$. Which masses get pulled?",
+      "steps": [
+        { "instruction": "Case 1 (overfilled): $m - 350 > 15$. Solve it.", "answer": "m > 365", "accept": ["365 < m"], "hint": "Add 350 to both sides." },
+        { "instruction": "Case 2 (underfilled): $m - 350 < -15$. Solve it.", "answer": "m < 335", "accept": ["335 > m"], "hint": "Add 350 to both sides." },
+        { "instruction": "Combine with 'or'. (Type it like m < 335 or m > 365.)", "answer": "m < 335 or m > 365", "accept": ["m > 365 or m < 335"], "hint": "Two reject zones: too light and too heavy." }
+      ],
+      "finalAnswer": { "value": "m < 335 or m > 365", "unit": "g" },
+      "solutionNarrative": "Jars are pulled when $m < 335$ g (underfilled) or $m > 365$ g (overfilled) — the two zones farther than 15 g from target."
+    }
+  ]
+}

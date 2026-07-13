@@ -1,0 +1,260 @@
+{
+  "id": "numerical-methods.least-squares-fitting",
+  "subject": "numerical-methods",
+  "title": "Least-Squares Fitting",
+  "prerequisites": ["numerical-methods.linear-systems"],
+  "estimatedMinutes": 50,
+  "keyConcepts": [
+    {
+      "id": "residuals-and-sse",
+      "label": "Residuals and the least-squares idea",
+      "microLesson": "Real data never sit exactly on a line, so instead of interpolating through every point we ask for the line that comes CLOSEST overall. The gap at each data point is its **residual** $e_i = y_i - \\hat{y}_i$ — observed minus predicted, positive above the line and negative below. The **least-squares** criterion picks the line minimizing the **sum of squared errors** $SSE = \\sum e_i^2$; squaring keeps positives and negatives from cancelling and punishes big misses hardest. For the line $\\hat{y} = 2x + 1$ and the point $(3, 8)$: predicted $7$, residual $8 - 7 = 1$, contributing $1$ to the SSE. Smaller SSE means a better fit — and the least-squares line beats every other line by this measure."
+    },
+    {
+      "id": "normal-equations",
+      "label": "The normal equations",
+      "microLesson": "Minimizing the SSE over all slopes and intercepts is a calculus problem whose answer is a small linear system — the **normal equations**. Everything is built from four sums of the data: $\\Sigma x$, $\\Sigma y$, $\\Sigma xy$, $\\Sigma x^2$. The best slope is $b = \\dfrac{n\\Sigma xy - \\Sigma x\\,\\Sigma y}{n\\Sigma x^2 - (\\Sigma x)^2}$, and then the intercept follows from the means. For $(1,2), (2,4), (3,6)$: $\\Sigma x = 6$, $\\Sigma y = 12$, $\\Sigma xy = 28$, $\\Sigma x^2 = 14$, so $b = \\frac{3\\cdot 28 - 72}{3\\cdot 14 - 36} = \\frac{12}{6} = 2$. This is the same 2×2 linear-system machinery from the previous topic, applied to data."
+    },
+    {
+      "id": "fitting-the-line",
+      "label": "Fitting and using y = a + bx",
+      "microLesson": "Once the slope $b$ is computed, the intercept comes from a beautiful fact: the least-squares line always passes through the point of means $(\\bar{x}, \\bar{y})$, so $a = \\bar{y} - b\\bar{x}$. The fitted line $\\hat{y} = a + bx$ then does its real job: **prediction**. Plug in any $x$ — inside the data range (interpolation) or modestly beyond it (extrapolation) — and read off the model's estimate. With $b = 2$, $\\bar{x} = 2$, $\\bar{y} = 5$: $a = 5 - 4 = 1$, and the prediction at $x = 5$ is $\\hat{y} = 1 + 2\\cdot 5 = 11$. Extrapolating far outside the data is where fitted lines quietly become fiction, so keep predictions near the data."
+    },
+    {
+      "id": "linearization",
+      "label": "Linearizing curved models",
+      "microLesson": "Many real relationships are not lines — populations grow exponentially, physical laws follow powers — but a **log transform** often straightens them so the same line-fitting machinery applies. If $y = C\\cdot 10^{kx}$, then $\\log_{10} y = \\log_{10} C + kx$: plotting $\\log y$ against $x$ gives a line with slope $k$. If $y = Cx^m$, then $\\log y = \\log C + m\\log x$: a line on **log-log** axes with slope $m$. So the diagnostic is: straight on semi-log paper → exponential; straight on log-log paper → power law. Fit the line to the transformed data, then undo the transform to recover $C$ and the exponent."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## The problem: a line through data that doesn't cooperate\n\nInterpolation forces a curve through every point exactly — the right tool when the data are exact. But measured data carry noise, and forcing a polynomial through noise reproduces the noise. What an experimenter usually wants is the single straight line $\\hat{y} = a + bx$ that best summarizes a cloud of points. **Least-squares fitting** makes 'best' precise and computable.\n\n## Residuals: measuring the miss\n\nFor a candidate line, each data point $(x_i, y_i)$ misses it by the **residual**\n\n$$e_i = y_i - \\hat{y}_i = y_i - (a + b x_i),$$\n\npositive when the point sits above the line, negative below. To score the whole line we add up squared residuals:\n\n$$SSE = \\sum_{i=1}^n e_i^2.$$\n\nWhy square? Raw residuals cancel (a line can be terrible yet have residual sum zero), absolute values are hard to differentiate, and squares punish large misses hardest — which is exactly the behavior you want from a fitting criterion. **The least-squares line is the line with the smallest SSE.** Any other line, when you actually compute its SSE against the same data, loses.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,8],\"yRange\":[0,12],\"grid\":true,\"curves\":[{\"fn\":\"2 + 1.25*x\",\"label\":\"best fit: y = 2 + 1.25x\",\"color\":\"accent\",\"labelAt\":5.6}],\"segments\":[{\"from\":[2,4.5],\"to\":[2,5],\"color\":\"warn\"},{\"from\":[4,6],\"to\":[4,7],\"color\":\"warn\"},{\"from\":[6,9.5],\"to\":[6,10],\"color\":\"warn\"}],\"points\":[{\"x\":2,\"y\":5,\"label\":\"(2, 5)\",\"color\":\"good\"},{\"x\":4,\"y\":6,\"label\":\"(4, 6)\",\"color\":\"good\"},{\"x\":6,\"y\":10,\"label\":\"(6, 10)\",\"color\":\"good\"}],\"caption\":\"The least-squares line minimizes the total squared length of the vertical residual gaps (orange).\"}\n```\n\n## The normal equations: four sums decide everything\n\nSetting the derivatives of the SSE with respect to $a$ and $b$ to zero gives a 2×2 linear system, the **normal equations**:\n\n$$a\\,n + b\\,\\Sigma x = \\Sigma y, \\qquad a\\,\\Sigma x + b\\,\\Sigma x^2 = \\Sigma xy.$$\n\nSolving it (the elimination you know from linear systems) yields the closed forms\n\n$$\\boxed{\\,b = \\frac{n\\,\\Sigma xy - \\Sigma x\\,\\Sigma y}{n\\,\\Sigma x^2 - (\\Sigma x)^2}, \\qquad a = \\bar{y} - b\\,\\bar{x}\\,}$$\n\nwhere $\\bar{x} = \\Sigma x / n$ and $\\bar{y} = \\Sigma y / n$ are the data means. So a least-squares fit is just bookkeeping: accumulate $\\Sigma x$, $\\Sigma y$, $\\Sigma xy$, $\\Sigma x^2$, then two formulas.\n\n### Worked example\n\nFit $(0, 1), (2, 5), (4, 9)$. The sums: $\\Sigma x = 6$, $\\Sigma y = 15$, $\\Sigma xy = 0 + 10 + 36 = 46$, $\\Sigma x^2 = 0 + 4 + 16 = 20$.\n\n$$b = \\frac{3\\cdot 46 - 6\\cdot 15}{3\\cdot 20 - 36} = \\frac{48}{24} = 2, \\qquad a = \\bar{y} - b\\bar{x} = 5 - 2\\cdot 2 = 1.$$\n\nThe fit is $\\hat{y} = 1 + 2x$ — here it happens to pass through all three points exactly (SSE $= 0$), the special case where least squares agrees with interpolation.\n\n> **Pitfall — the intercept shortcut.** Compute $b$ FIRST, then $a = \\bar{y} - b\\bar{x}$. The line always passes through the mean point $(\\bar{x}, \\bar{y})$; that anchor is what makes the shortcut valid.\n\n## Using the fit: prediction and its limits\n\nThe fitted line's purpose is prediction: $\\hat{y}(x^*) = a + b x^*$. Predicting inside the data range is **interpolation** and is usually safe; predicting beyond it is **extrapolation**, and the further you go the more you are trusting that a trend continues where you never measured it. A calibration line fit on inputs 1–7 says little about input 70.\n\nA useful diagnostic after any fit: the residuals of the least-squares line always satisfy $\\sum e_i = 0$. If you compute residuals and they do NOT sum to (nearly) zero, the fit — or the arithmetic — is wrong. And if the residuals show a clear curve pattern rather than random scatter, a straight line is the wrong model altogether.\n\n## Linearization: fitting curves with a line fitter\n\nTwo model families dominate applied work, and both straighten under logarithms:\n\n| Model | Take logs | Straight line in | Slope means |\n|-------|-----------|------------------|-------------|\n| Exponential $y = C\\cdot 10^{kx}$ | $\\log y = \\log C + kx$ | $\\log y$ vs $x$ (semi-log) | growth rate $k$ |\n| Power law $y = C x^m$ | $\\log y = \\log C + m \\log x$ | $\\log y$ vs $\\log x$ (log-log) | exponent $m$ |\n\nThe workflow: transform the data, fit the line by least squares as usual, then undo the transform ($C = 10^{\\text{intercept}}$). The diagnostic runs the other way too — if data look straight on log-log axes, suspect a power law; straight on semi-log axes, suspect exponential growth or decay.\n\n### Worked example\n\nData $(1, 10), (2, 100), (3, 1000)$ look explosive. Taking $\\log_{10} y$ gives $(1, 1), (2, 2), (3, 3)$ — a perfect line with slope $1$ and intercept $0$. So $k = 1$, $C = 10^0 = 1$, and the model is $y = 10^x$.\n\n> **Pitfall — what least squares assumes.** Fitting in log space minimizes squared errors of the LOGS, which weights relative (percent) errors, not absolute ones. For most growth and scaling data that is exactly right, but it is a different criterion than fitting the raw curve directly."
+  },
+  "application": {
+    "summary": "Least-squares fitting is the workhorse of experimental science and analytics: calibrating instruments, extracting physical constants from measurements, drawing trendlines through sales or sensor data, and — via log transforms — measuring growth rates and power-law exponents. It is also the gateway to regression, the single most used tool in statistics and machine learning.",
+    "domains": ["experimental physics", "data analysis", "engineering calibration", "economics"],
+    "workedExample": "**Calibrating a flow sensor**\n\nAn engineer feeds known flow rates through a new sensor and records its raw output: $(1, 4), (3, 6), (5, 10), (7, 16)$ — flow rate $x$, sensor reading $y$. The readings are noisy, so she fits a calibration line by least squares.\n\nSums: $\\Sigma x = 16$, $\\Sigma y = 36$, $\\Sigma xy = 4 + 18 + 50 + 112 = 184$, $\\Sigma x^2 = 1 + 9 + 25 + 49 = 84$, with $n = 4$.\n\n$$b = \\frac{4\\cdot 184 - 16\\cdot 36}{4\\cdot 84 - 16^2} = \\frac{736 - 576}{336 - 256} = \\frac{160}{80} = 2, \\qquad a = \\bar{y} - b\\bar{x} = 9 - 2\\cdot 4 = 1.$$\n\nThe calibration is $\\hat{y} = 1 + 2x$. Now the sensor is useful in reverse: a field reading of $y = 13$ means a flow of about $x = (13 - 1)/2 = 6$. The residuals $(1, -1, -1, 1)$ sum to zero, as least-squares residuals must, and the $SSE = 4$ quantifies the sensor's noise floor — if a later recalibration shows a much larger SSE, the sensor is drifting. The same four-sums recipe runs inside every spreadsheet trendline and every 'line of best fit' a lab report has ever shown.",
+    "domainNotes": [
+      "**Experimental physics:** extracting constants (spring stiffness, resistivity, decay rates) as slopes of fitted lines, with log transforms for exponential decay.",
+      "**Data analysis:** spreadsheet trendlines and simple forecasts are exactly the least-squares line; SSE (or its cousin R²) reports fit quality.",
+      "**Engineering calibration:** instruments are calibrated by fitting readings against known standards, then inverting the line in the field.",
+      "**Economics:** log-linear fits measure growth rates; log-log fits measure elasticities and scaling exponents."
+    ]
+  },
+  "generators": ["nm3-resid-1", "nm3-resid-2", "nm3-resid-3", "nm3-normal-1", "nm3-normal-2", "nm3-normal-3", "nm3-fitline-1", "nm3-fitline-2", "nm3-fitline-3", "nm3-linearize-1", "nm3-linearize-2", "nm3-linearize-3"],
+  "problems": [
+    {
+      "id": "numerical-methods.least-squares-fitting.s01",
+      "concepts": ["residuals-and-sse"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The fitted line is $\\hat{y} = 2x + 1$. Find the residual $e = y - \\hat{y}$ at the data point $(3, 8)$.",
+      "steps": [
+        { "instruction": "Compute the predicted value $\\hat{y} = 2\\cdot 3 + 1$.", "answer": "7", "accept": [], "hint": "Plug $x = 3$ into the line." },
+        { "instruction": "Residual $= 8 - 7$. Compute it.", "answer": "1", "accept": [], "hint": "Observed minus predicted." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$\\hat{y}(3) = 7$, so $e = 8 - 7 = 1$: the point sits one unit above the line."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s02",
+      "concepts": ["residuals-and-sse"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the line $\\hat{y} = x + 2$ and the data $(1, 4), (2, 3), (3, 6)$, compute the residual at $(2, 3)$ and the total $SSE = \\sum e_i^2$.",
+      "steps": [
+        { "instruction": "Residual at $(2, 3)$: $e = 3 - (2 + 2)$. Compute it (sign matters).", "answer": "-1", "accept": [], "hint": "Predicted value is 4." },
+        { "instruction": "The three residuals are $1, -1, 1$. Compute $SSE = 1^2 + (-1)^2 + 1^2$.", "answer": "3", "accept": [], "hint": "Squares are all 1." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "Residuals $1, -1, 1$ give $SSE = 3$. Squaring stops the $+1$ and $-1$ from cancelling each other out."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s03",
+      "concepts": ["residuals-and-sse"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Two candidate lines are proposed for the data $(1, 3), (2, 4), (3, 7)$: line A is $\\hat{y} = 2x$ and line B is $\\hat{y} = x + 2$. Compute both SSEs and pick the better least-squares fit.",
+      "steps": [
+        { "instruction": "Line A residuals: $3-2, 4-4, 7-6 = 1, 0, 1$. Compute $SSE_A$.", "answer": "2", "accept": [], "hint": "$1 + 0 + 1$." },
+        { "instruction": "Line B residuals: $3-3, 4-4, 7-5 = 0, 0, 2$. Compute $SSE_B$.", "answer": "4", "accept": [], "hint": "$0 + 0 + 4$." },
+        { "instruction": "Which line fits better? Answer with one of: A, B.", "answer": "A", "accept": ["a"], "hint": "Smaller SSE wins." }
+      ],
+      "finalAnswer": { "value": "A", "unit": "" },
+      "solutionNarrative": "$SSE_A = 2 < SSE_B = 4$, so line A fits better. Line B nails two points but its one big miss, squared, costs more than A's two small ones."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s04",
+      "concepts": ["normal-equations"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "For the data $(1, 2), (2, 4), (3, 6)$, compute the sums $\\Sigma x$ and $\\Sigma y$ that feed the normal equations.",
+      "steps": [
+        { "instruction": "$\\Sigma x = 1 + 2 + 3 = $ ?", "answer": "6", "accept": [], "hint": "Add the x-values." },
+        { "instruction": "$\\Sigma y = 2 + 4 + 6 = $ ?", "answer": "12", "accept": [], "hint": "Add the y-values." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "$\\Sigma x = 6$ and $\\Sigma y = 12$: two of the four sums that completely determine the best-fit line."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s05",
+      "concepts": ["normal-equations"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "For the data $(1, 2), (2, 4), (3, 6)$ (where $\\Sigma x = 6$, $\\Sigma y = 12$), compute $\\Sigma xy$ and $\\Sigma x^2$, then the slope $b = \\dfrac{n\\Sigma xy - \\Sigma x\\,\\Sigma y}{n\\Sigma x^2 - (\\Sigma x)^2}$ with $n = 3$.",
+      "steps": [
+        { "instruction": "$\\Sigma xy = 1\\cdot 2 + 2\\cdot 4 + 3\\cdot 6 = $ ?", "answer": "28", "accept": [], "hint": "$2 + 8 + 18$." },
+        { "instruction": "$\\Sigma x^2 = 1 + 4 + 9 = $ ?", "answer": "14", "accept": [], "hint": "Square each x." },
+        { "instruction": "$b = \\dfrac{3\\cdot 28 - 6\\cdot 12}{3\\cdot 14 - 36} = $ ?", "answer": "2", "accept": [], "hint": "$\\frac{84 - 72}{42 - 36} = \\frac{12}{6}$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$\\Sigma xy = 28$, $\\Sigma x^2 = 14$, and $b = \\frac{12}{6} = 2$ — sensible, since these data lie exactly on $y = 2x$."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s06",
+      "concepts": ["normal-equations"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Fit $\\hat{y} = a + bx$ to $(0, 1), (2, 5), (4, 9)$. The sums $\\Sigma x = 6$, $\\Sigma y = 15$, $\\Sigma x^2 = 20$ are given; find $\\Sigma xy$, then $b$, then $a$.",
+      "steps": [
+        { "instruction": "$\\Sigma xy = 0\\cdot 1 + 2\\cdot 5 + 4\\cdot 9 = $ ?", "answer": "46", "accept": [], "hint": "$0 + 10 + 36$." },
+        { "instruction": "$b = \\dfrac{3\\cdot 46 - 6\\cdot 15}{3\\cdot 20 - 36} = $ ?", "answer": "2", "accept": [], "hint": "$\\frac{138 - 90}{60 - 36} = \\frac{48}{24}$." },
+        { "instruction": "$a = \\bar{y} - b\\bar{x} = 5 - 2\\cdot 2 = $ ?", "answer": "1", "accept": [], "hint": "Means: $\\bar{x} = 2$, $\\bar{y} = 5$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$b = 2$ and $a = 1$: the fit $\\hat{y} = 1 + 2x$ passes exactly through all three points, so its SSE is 0."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s07",
+      "concepts": ["fitting-the-line"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A least-squares fit has slope $b = 3$, and the data means are $\\bar{x} = 2$, $\\bar{y} = 7$. Find the intercept $a = \\bar{y} - b\\bar{x}$.",
+      "steps": [
+        { "instruction": "Compute $b\\bar{x} = 3\\cdot 2$.", "answer": "6", "accept": [], "hint": "Slope times mean of x." },
+        { "instruction": "$a = 7 - 6 = $ ?", "answer": "1", "accept": [], "hint": "The best-fit line always passes through $(\\bar{x}, \\bar{y})$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$a = 7 - 3\\cdot 2 = 1$, so the line is $\\hat{y} = 3x + 1$ — anchored at the mean point $(2, 7)$."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s08",
+      "concepts": ["fitting-the-line"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Fit $\\hat{y} = a + bx$ to $(1, 3), (2, 5), (3, 7)$, then predict $y$ at $x = 5$. Sums: $\\Sigma x = 6$, $\\Sigma y = 15$, $\\Sigma xy = 34$, $\\Sigma x^2 = 14$, $n = 3$.",
+      "steps": [
+        { "instruction": "$b = \\dfrac{3\\cdot 34 - 6\\cdot 15}{3\\cdot 14 - 36} = $ ?", "answer": "2", "accept": [], "hint": "$\\frac{102 - 90}{42 - 36}$." },
+        { "instruction": "$a = \\bar{y} - b\\bar{x} = 5 - 2\\cdot 2 = $ ?", "answer": "1", "accept": [], "hint": "$\\bar{x} = 2$, $\\bar{y} = 5$." },
+        { "instruction": "Predict at $x = 5$: $\\hat{y} = 1 + 2\\cdot 5 = $ ?", "answer": "11", "accept": [], "hint": "Evaluate the fitted line." }
+      ],
+      "finalAnswer": { "value": "11", "unit": "" },
+      "solutionNarrative": "The fit is $\\hat{y} = 1 + 2x$ and $\\hat{y}(5) = 11$ — a short extrapolation just beyond the data range."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s09",
+      "concepts": ["fitting-the-line"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A materials test records load $x$ versus elongation $y$: $(2, 5), (4, 6), (6, 10)$. Fit the least-squares line and predict the elongation at load $x = 8$. Sums: $\\Sigma x = 12$, $\\Sigma y = 21$, $\\Sigma xy = 94$, $\\Sigma x^2 = 56$, $n = 3$.",
+      "steps": [
+        { "instruction": "$b = \\dfrac{3\\cdot 94 - 12\\cdot 21}{3\\cdot 56 - 144} = $ ? Enter as a decimal.", "answer": "1.25", "accept": ["5/4"], "hint": "$\\frac{282 - 252}{168 - 144} = \\frac{30}{24}$." },
+        { "instruction": "$a = \\bar{y} - b\\bar{x} = 7 - 1.25\\cdot 4 = $ ?", "answer": "2", "accept": ["2.0"], "hint": "$\\bar{x} = 4$, $\\bar{y} = 7$." },
+        { "instruction": "Predict at $x = 8$: $\\hat{y} = 2 + 1.25\\cdot 8 = $ ?", "answer": "12", "accept": [], "hint": "$2 + 10$." }
+      ],
+      "finalAnswer": { "value": "12", "unit": "" },
+      "solutionNarrative": "The fit is $\\hat{y} = 2 + 1.25x$, predicting elongation 12 at load 8. The middle point sits below the line, the outer two above — residuals that sum to zero, as they must."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s10",
+      "concepts": ["fitting-the-line", "residuals-and-sse"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Fit $\\hat{y} = a + bx$ to the noisy data $(1, 4), (2, 2), (3, 6)$ and compute the SSE of the fit. Sums: $\\Sigma x = 6$, $\\Sigma y = 12$, $\\Sigma xy = 26$, $\\Sigma x^2 = 14$, $n = 3$.",
+      "steps": [
+        { "instruction": "$b = \\dfrac{3\\cdot 26 - 6\\cdot 12}{3\\cdot 14 - 36} = $ ?", "answer": "1", "accept": [], "hint": "$\\frac{78 - 72}{6}$." },
+        { "instruction": "$a = \\bar{y} - b\\bar{x} = 4 - 1\\cdot 2 = $ ?", "answer": "2", "accept": [], "hint": "$\\bar{x} = 2$, $\\bar{y} = 4$." },
+        { "instruction": "The residuals against $\\hat{y} = x + 2$ are $1, -2, 1$. Compute the SSE.", "answer": "6", "accept": [], "hint": "$1 + 4 + 1$." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "The best line is $\\hat{y} = x + 2$ with $SSE = 6$. No other line scores lower on these three points — that is the least-squares guarantee."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s11",
+      "concepts": ["linearization"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Data are plotted as $\\log y$ against $x$ and fall on a straight line. Which model does that reveal? Answer with one of: exponential, power, linear.",
+      "steps": [
+        { "instruction": "Type exactly one of: exponential, power, linear.", "answer": "exponential", "accept": [], "hint": "$y = C\\cdot 10^{kx}$ becomes $\\log y = \\log C + kx$ — linear in $x$." }
+      ],
+      "finalAnswer": { "value": "exponential", "unit": "" },
+      "solutionNarrative": "A straight line on semi-log axes ($\\log y$ vs $x$) is the signature of exponential growth or decay."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s12",
+      "concepts": ["linearization"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "The data $(1, 10), (2, 100), (3, 1000)$ follow $y = C\\cdot 10^{kx}$. Linearize with $\\log_{10}$ and find $k$.",
+      "steps": [
+        { "instruction": "Compute $\\log_{10}(100)$ (the transformed value at $x = 2$).", "answer": "2", "accept": [], "hint": "$100 = 10^2$." },
+        { "instruction": "The transformed points are $(1, 1), (2, 2), (3, 3)$. The slope $k = $ ?", "answer": "1", "accept": [], "hint": "Rise over run." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "Logs turn the data into the perfect line $\\log y = x$, so $k = 1$ and $C = 10^0 = 1$: the model is $y = 10^x$."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s13",
+      "concepts": ["linearization"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "The data $(10, 100)$ and $(100, 10000)$ follow a power law $y = Cx^m$. Take $\\log_{10}$ of both coordinates (so $\\log x = 1$ and $2$) and find $m$ and $C$.",
+      "steps": [
+        { "instruction": "The log-log points are $(1, 2)$ and $(2, 4)$. Slope $m = \\dfrac{4 - 2}{2 - 1} = $ ?", "answer": "2", "accept": [], "hint": "Rise over run in log coordinates." },
+        { "instruction": "Intercept: $\\log_{10} C = 2 - 2\\cdot 1 = 0$, so $C = $ ?", "answer": "1", "accept": [], "hint": "$10^0$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "Slope 2 and intercept 0 on log-log axes mean $y = x^2$ — check: $10^2 = 100$ and $100^2 = 10000$. ✓"
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s14",
+      "concepts": ["residuals-and-sse"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "The fitted line is $\\hat{y} = 2x - 1$. Find the residual at the data point $(4, 6)$.",
+      "steps": [
+        { "instruction": "Predicted value: $\\hat{y} = 2\\cdot 4 - 1 = $ ?", "answer": "7", "accept": [], "hint": "Evaluate the line at $x = 4$." },
+        { "instruction": "Residual $= 6 - 7 = $ ? (Sign matters.)", "answer": "-1", "accept": [], "hint": "Observed minus predicted; the point is below the line." }
+      ],
+      "finalAnswer": { "value": "-1", "unit": "" },
+      "solutionNarrative": "$\\hat{y}(4) = 7$ but the observation is 6, so the residual is $-1$: the point lies one unit below the fitted line."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s15",
+      "concepts": ["linearization"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A dataset of animal body masses versus metabolic rates looks straight when plotted on log-log axes. Which model family should you fit? Answer with one of: exponential, power, linear.",
+      "steps": [
+        { "instruction": "Type exactly one of: exponential, power, linear.", "answer": "power", "accept": [], "hint": "$y = Cx^m$ becomes $\\log y = \\log C + m\\log x$ — linear in $\\log x$." }
+      ],
+      "finalAnswer": { "value": "power", "unit": "" },
+      "solutionNarrative": "Straight on log-log axes means a power law $y = Cx^m$ — the famous metabolic scaling data fit $m \\approx 3/4$ this way."
+    },
+    {
+      "id": "numerical-methods.least-squares-fitting.s16",
+      "concepts": ["normal-equations", "fitting-the-line"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A flow sensor is calibrated with four readings $(1, 4), (3, 6), (5, 10), (7, 16)$. Fit the calibration line $\\hat{y} = a + bx$. Sums: $\\Sigma x = 16$, $\\Sigma y = 36$, $\\Sigma x^2 = 84$, $n = 4$; find $\\Sigma xy$ first.",
+      "steps": [
+        { "instruction": "$\\Sigma xy = 1\\cdot 4 + 3\\cdot 6 + 5\\cdot 10 + 7\\cdot 16 = $ ?", "answer": "184", "accept": [], "hint": "$4 + 18 + 50 + 112$." },
+        { "instruction": "$b = \\dfrac{4\\cdot 184 - 16\\cdot 36}{4\\cdot 84 - 16^2} = $ ?", "answer": "2", "accept": [], "hint": "$\\frac{736 - 576}{336 - 256} = \\frac{160}{80}$." },
+        { "instruction": "$a = \\bar{y} - b\\bar{x} = 9 - 2\\cdot 4 = $ ?", "answer": "1", "accept": [], "hint": "$\\bar{x} = 4$, $\\bar{y} = 9$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "The calibration line is $\\hat{y} = 1 + 2x$, with residuals $(1, -1, -1, 1)$ summing to zero and $SSE = 4$ measuring the sensor's noise."
+    }
+  ]
+}
