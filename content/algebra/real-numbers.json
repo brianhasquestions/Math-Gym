@@ -41,7 +41,7 @@
       "**Everyday life:** splitting a bill divides a total, and order of operations keeps a multi-item receipt or tip calculation from going wrong."
     ]
   },
-  "generators": ["pemdas-v1", "pemdas-parens-v1", "integer-arith-v1", "integer-mixed-v1", "fraction-mult-v1", "fraction-add-v1", "abs-eval-v1", "abs-distance-v1", "apl-order-ops-d3", "apl-abs-value-d3"],
+  "generators": ["pemdas-v1", "pemdas-parens-v1", "integer-arith-v1", "integer-mixed-v1", "fraction-mult-v1", "fraction-add-v1", "abs-eval-v1", "abs-distance-v1", "apl-order-ops-d3", "apl-abs-value-d3", "apl-integer-ops-d3", "apl-fraction-ops-d3"],
   "problems": [
     {
       "id": "algebra.real-numbers.s01",

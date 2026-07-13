@@ -41,7 +41,7 @@
       "**Economics:** maximizing utility or output subject to a fixed budget — exactly the Lagrange-multiplier setup, with $\\lambda$ as the shadow price."
     ]
   },
-  "generators": ["critical-point-2d-v1", "second-deriv-test-v1", "lagrange-v1", "c3l-lagrange-d2", "c3l-optimization-applied-d1"],
+  "generators": ["critical-point-2d-v1", "second-deriv-test-v1", "lagrange-v1", "c3l-lagrange-d2", "c3l-optimization-applied-d1", "c3l-critical-points-d2", "c3l-critical-points-d3", "c3l-second-deriv-test-d1", "c3l-second-deriv-test-d3", "c3l-optimization-applied-d2", "c3l-optimization-applied-d3", "c3l-lagrange-d1"],
   "problems": [
     {
       "id": "calculus-3.multivariable-optimization.s01",

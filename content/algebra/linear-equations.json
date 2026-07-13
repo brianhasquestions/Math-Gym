@@ -41,7 +41,7 @@
       "**Logistics:** when does a faster-but-pricier option overtake a cheaper-but-slower one."
     ]
   },
-  "generators": ["linear-oneside-v1", "linear-twoside-v1", "linear-distribute-v1", "apl-isolate-d2", "apl-combine-terms-d1", "apl-combine-terms-d2", "apl-distribute-d2"],
+  "generators": ["linear-oneside-v1", "linear-twoside-v1", "linear-distribute-v1", "apl-isolate-d2", "apl-combine-terms-d1", "apl-combine-terms-d2", "apl-distribute-d2", "apl-distribute-d1", "apl-both-sides-d1"],
   "problems": [
     {
       "id": "algebra.linear-equations.s01",

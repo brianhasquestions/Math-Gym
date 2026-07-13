@@ -711,6 +711,480 @@ fill["gpl-tri-ineq-d3"] = (rng, idx) => {
   };
 };
 
+// ============================================================================
+// Wave-15 additions: the remaining 2-seed pools (one template per pool)
+// ============================================================================
+
+// --- angles-and-lines / parallel-lines-transversal d3 ------------------------
+// Algebraic co-interior pair (seed s07 style) or a numeric relationship chain
+// (seed s17 style).
+const TRANS_PAIRS = [
+  { m: 2, n: 3, xlo: 24, xhi: 34 },
+  { m: 3, n: 4, xlo: 18, xhi: 24 },
+  { m: 2, n: 4, xlo: 20, xhi: 28 },
+];
+fill["gpl-transversal-d3"] = (rng, idx) => {
+  const kind = rng.pick(["cointerior", "chain"]);
+  const base = { id: `gen.gpl-transversal-d3.${idx}`, generated: true, concepts: ["parallel-lines-transversal"], difficulty: 3 };
+  if (kind === "cointerior") {
+    const { m, n, xlo, xhi } = rng.pick(TRANS_PAIRS);
+    let x = rng.int(xlo, xhi);
+    if (n * x === 90) x += 1;          // never a 90/90 tie — "larger" must exist
+    const b = 180 - (m + n) * x;       // stays >= 5 by the ranges above
+    const ang2 = n * x;
+    const ang1 = 180 - ang2;           // = m*x + b
+    const larger = Math.max(ang1, ang2);
+    return { ...base, context: "abstract",
+      prompt: `A transversal crosses two parallel lines. A co-interior pair (same-side interior angles) measures $(${m}x + ${b})^\\circ$ and $(${n}x)^\\circ$. Find $x$ and then the larger of the two angles.`,
+      steps: [
+        { instruction: "Co-interior angles sum to 180. Write the equation.", answer: `(${m}x + ${b}) + ${n}x = 180`, accept: [`${m}x+${b}+${n}x=180`, `(${m}x+${b})+${n}x=180`, `${m + n}x+${b}=180`], hint: "Same-side interior angles are supplementary." },
+        { instruction: "Combine and solve for $x$.", answer: `x = ${x}`, accept: [`x=${x}`, `${x}`], hint: `$${m + n}x + ${b} = 180$, so $${m + n}x = ${180 - b}$.` },
+        { instruction: "Find the larger angle by substituting into the right expression (degrees).", answer: `${larger}`, accept: [`${larger} degrees`], hint: `The angles are $${m}(${x}) + ${b} = ${ang1}^\\circ$ and $${n}(${x}) = ${ang2}^\\circ$.` },
+      ],
+      finalAnswer: { value: `${larger}`, unit: "degrees" },
+      solutionNarrative: `Co-interior angles are supplementary: $(${m}x + ${b}) + ${n}x = 180$ gives $${m + n}x = ${180 - b}$, so $x = ${x}$. The angles are $${ang1}^\\circ$ and $${ang2}^\\circ$; the larger is $${larger}^\\circ$.`,
+    };
+  }
+  const t = rng.int(95, 140);
+  const rail = rng.pick(["guide rails", "fence rails", "shelf rails", "deck joists"]);
+  const beam = rng.pick(["support beam", "diagonal brace", "cross strut"]);
+  return { ...base, context: "applied",
+    prompt: `Two parallel ${rail} are crossed by a ${beam} (a transversal). At the top rail the ${beam} makes a $${t}^\\circ$ angle. Find: (a) the corresponding angle at the bottom rail, and (b) the angle right next to that one along the straight bottom rail. Answer each in degrees.`,
+    steps: [
+      { instruction: "Corresponding angles between parallel lines are equal. State the corresponding angle at the bottom rail (degrees).", answer: `${t}`, accept: [`${t} degrees`], hint: "Corresponding angles match exactly." },
+      { instruction: "Its neighbour along the straight rail is supplementary. Find it (degrees).", answer: `${180 - t}`, accept: [`${180 - t} degrees`], hint: `$180 - ${t}$.` },
+    ],
+    finalAnswer: { value: `${180 - t}`, unit: "degrees" },
+    solutionNarrative: `The corresponding angle at the bottom rail is also $${t}^\\circ$. Its neighbour on the straight rail is supplementary: $180 - ${t} = ${180 - t}^\\circ$.`,
+  };
+};
+
+// --- angles-and-lines / angle-pairs d2 ----------------------------------------
+fill["gpl-angle-pairs-d2"] = (rng, idx) => {
+  const kind = rng.pick(["crossing", "complement"]);
+  const base = { id: `gen.gpl-angle-pairs-d2.${idx}`, generated: true, concepts: ["angle-pairs"], difficulty: 2, context: "applied" };
+  if (kind === "crossing") {
+    let t = rng.int(35, 144);
+    if (t >= 90) t += 1; // skip the 90-degree special case
+    const place = rng.pick(["straight roads", "straight hiking trails", "straight railway tracks", "straight garden paths"]);
+    return { ...base,
+      prompt: `Two ${place} cross. The angle in one corner of the intersection measures $${t}^\\circ$. (a) What is the angle directly opposite it (its vertical angle)? (b) What is the angle right next to it (supplementary)? Answer each in degrees.`,
+      steps: [
+        { instruction: "Vertical angles are equal. State the opposite angle (degrees).", answer: `${t}`, accept: [`${t} degrees`], hint: "Vertical (opposite) angles are equal." },
+        { instruction: "The adjacent angle lies along a straight path, so it is supplementary. Find it (degrees).", answer: `${180 - t}`, accept: [`${180 - t} degrees`], hint: `$180 - ${t}$.` },
+      ],
+      finalAnswer: { value: `${180 - t}`, unit: "degrees" },
+      solutionNarrative: `The vertical (opposite) angle equals the original, $${t}^\\circ$. The adjacent angle sits on a straight line, so it is $180 - ${t} = ${180 - t}^\\circ$.`,
+    };
+  }
+  let t = rng.int(25, 64);
+  if (t === 45) t += 1; // keep the two angles distinct
+  const obj = rng.pick(["ladder", "ramp board", "prop pole", "kickstand"]);
+  return { ...base,
+    prompt: `A ${obj} leans against a vertical wall, making a $${t}^\\circ$ angle with the level ground. The ground and the wall meet at a right angle, so the ${obj}'s angles with the ground and with the wall are complementary. Find the angle the ${obj} makes with the wall.`,
+    steps: [
+      { instruction: "Complementary angles sum to how many degrees?", answer: "90", accept: ["90 degrees"], hint: "The ground and wall form a right angle." },
+      { instruction: `Subtract to find the angle with the wall (degrees).`, answer: `${90 - t}`, accept: [`${90 - t} degrees`], hint: `$90 - ${t}$.` },
+    ],
+    finalAnswer: { value: `${90 - t}`, unit: "degrees" },
+    solutionNarrative: `The two angles are complementary: $90 - ${t} = ${90 - t}^\\circ$ with the wall.`,
+  };
+};
+
+// --- angles-and-lines / angle-relationships-applied d1 -------------------------
+const SPLIT_CTX = [
+  { n: 5, text: "A wheel has 5 evenly spaced spokes. What is the angle between two neighbouring spokes" },
+  { n: 6, text: "A pizza is cut into 6 equal slices through the center. What is the tip angle of each slice" },
+  { n: 8, text: "A Ferris wheel has 8 evenly spaced cars around its circle. What is the angle between two neighbouring cars" },
+  { n: 9, text: "A carousel has 9 evenly spaced horses around its circular platform. What is the angle between two neighbouring horses" },
+  { n: 10, text: "A game spinner is divided into 10 equal wedges. What is the angle of each wedge" },
+];
+fill["gpl-angle-applied-d1"] = (rng, idx) => {
+  const ctx = rng.pick(SPLIT_CTX);
+  const ans = 360 / ctx.n;
+  return {
+    id: `gen.gpl-angle-applied-d1.${idx}`, generated: true, concepts: ["angle-relationships-applied"], difficulty: 1, context: "applied",
+    prompt: `${ctx.text}? Answer in degrees.`,
+    steps: [
+      { instruction: `A full circle is 360 degrees, divided into ${ctx.n} equal parts. Divide (answer in degrees).`, answer: `${ans}`, accept: [`${ans} degrees`], hint: `$360 \\div ${ctx.n}$.` },
+    ],
+    finalAnswer: { value: `${ans}`, unit: "degrees" },
+    solutionNarrative: `The full $360^\\circ$ circle splits into ${ctx.n} equal parts: $360 \\div ${ctx.n} = ${ans}^\\circ$.`,
+  };
+};
+
+// --- perimeter-and-area / rectangle-square d3: work backward -------------------
+fill["gpl-rect-square-d3"] = (rng, idx) => {
+  const kind = rng.pick(["length", "square"]);
+  const base = { id: `gen.gpl-rect-square-d3.${idx}`, generated: true, concepts: ["rectangle-square"], difficulty: 3, context: "applied" };
+  if (kind === "length") {
+    const L = rng.int(8, 18);
+    let W = rng.int(5, 12);
+    if (W === L) W += 1;
+    const A = L * W;
+    const room = rng.pick(["kitchen floor", "bedroom floor", "workshop floor", "storage room floor"]);
+    return { ...base,
+      prompt: `A rectangular ${room} has an area of ${A} square feet and is ${W} feet wide. Find its length, then find how many feet of baseboard trim are needed for the full perimeter.`,
+      steps: [
+        { instruction: "Area = length × width, so length = area ÷ width. Divide (feet).", answer: `${L}`, accept: [`${L} ft`, `${L} feet`], hint: `$${A} \\div ${W}$.` },
+        { instruction: "Now find the perimeter $P = 2l + 2w$ (feet).", answer: `${2 * L + 2 * W}`, accept: [`${2 * L + 2 * W} ft`, `${2 * L + 2 * W} feet`], hint: `$2(${L}) + 2(${W})$.` },
+      ],
+      finalAnswer: { value: `${2 * L + 2 * W}`, unit: "feet" },
+      solutionNarrative: `Length $= ${A} \\div ${W} = ${L}$ ft. Perimeter $= 2(${L}) + 2(${W}) = ${2 * L + 2 * W}$ ft of trim.`,
+    };
+  }
+  const s = rng.int(5, 15);
+  const P = 4 * s;
+  const plot = rng.pick(["square garden plot", "square patio", "square sandbox", "square courtyard"]);
+  return { ...base,
+    prompt: `A ${plot} is enclosed by exactly ${P} feet of fencing around its full perimeter. Work backward to find its side length, then its area.`,
+    steps: [
+      { instruction: "A square's perimeter is $4s$. Solve for the side (feet).", answer: `${s}`, accept: [`s=${s}`, `${s} ft`, `${s} feet`], hint: `$${P} \\div 4$.` },
+      { instruction: "Square the side to find the area (square feet).", answer: `${s * s}`, accept: [`${s * s} ft^2`, `${s * s} square feet`], hint: `$${s}^2 = ${s} \\times ${s}$.` },
+    ],
+    finalAnswer: { value: `${s * s}`, unit: "square feet" },
+    solutionNarrative: `Side $= ${P} \\div 4 = ${s}$ ft, so the area is $${s}^2 = ${s * s}$ square feet.`,
+  };
+};
+
+// --- perimeter-and-area / rectangle-square d2: direct formula ------------------
+fill["gpl-rect-square-d2"] = (rng, idx) => {
+  const kind = rng.pick(["rect-perim", "square-area", "rect-area"]);
+  const base = { id: `gen.gpl-rect-square-d2.${idx}`, generated: true, concepts: ["rectangle-square"], difficulty: 2, context: "applied" };
+  if (kind === "rect-perim") {
+    const L = rng.int(8, 20);
+    let W = rng.int(4, 12);
+    if (W === L) W += 1;
+    const obj = rng.pick(["garden bed", "dog run", "vegetable patch", "play area"]);
+    return { ...base,
+      prompt: `You want to fence a rectangular ${obj} that is ${L} feet long and ${W} feet wide. How many feet of fencing do you need for the full perimeter?`,
+      steps: [
+        { instruction: "Add the length and width (feet).", answer: `${L + W}`, accept: [`${L + W} ft`], hint: `$${L} + ${W}$.` },
+        { instruction: "Double that sum for the perimeter $P = 2(l + w)$ (feet).", answer: `${2 * (L + W)}`, accept: [`${2 * (L + W)} ft`, `${2 * (L + W)} feet`], hint: `$2 \\times ${L + W}$.` },
+      ],
+      finalAnswer: { value: `${2 * (L + W)}`, unit: "feet" },
+      solutionNarrative: `$P = 2(${L} + ${W}) = 2 \\times ${L + W} = ${2 * (L + W)}$ feet of fencing.`,
+    };
+  }
+  if (kind === "square-area") {
+    const s = rng.int(4, 15);
+    const obj = rng.pick(["square rug", "square patio", "square quilt", "square deck"]);
+    return { ...base,
+      prompt: `A ${obj} measures ${s} feet on each side. Find its area.`,
+      steps: [
+        { instruction: "A square's area is $s^2$. Compute it (square feet).", answer: `${s * s}`, accept: [`${s * s} ft^2`, `${s * s} square feet`], hint: `$${s} \\times ${s}$.` },
+      ],
+      finalAnswer: { value: `${s * s}`, unit: "square feet" },
+      solutionNarrative: `Area $= s^2 = ${s} \\times ${s} = ${s * s}$ square feet.`,
+    };
+  }
+  const L = rng.int(8, 16);
+  let W = rng.int(4, 10);
+  if (W === L) W += 1;
+  const obj = rng.pick(["area rug", "tabletop", "poster board", "garden tarp"]);
+  return { ...base,
+    prompt: `A rectangular ${obj} is ${L} feet by ${W} feet. Find its area.`,
+    steps: [
+      { instruction: "Multiply length by width (square feet).", answer: `${L * W}`, accept: [`${L * W} ft^2`, `${L * W} square feet`], hint: `$${L} \\times ${W}$.` },
+    ],
+    finalAnswer: { value: `${L * W}`, unit: "square feet" },
+    solutionNarrative: `Area $= ${L} \\times ${W} = ${L * W}$ square feet.`,
+  };
+};
+
+// --- perimeter-and-area / composite-and-applied d3 ------------------------------
+fill["gpl-composite-d3"] = (rng, idx) => {
+  const kind = rng.pick(["border", "lshape"]);
+  const base = { id: `gen.gpl-composite-d3.${idx}`, generated: true, concepts: ["composite-and-applied"], difficulty: 3, context: "applied" };
+  if (kind === "border") {
+    const L = rng.int(15, 24);
+    const W = rng.int(10, 16);
+    const l = L - 2 * rng.int(2, 4);
+    const w = W - 2 * rng.int(2, 3);
+    const pair = rng.pick([
+      { outer: "rectangular patio", inner: "rectangular fire pit area", job: "tiled" },
+      { outer: "rectangular yard", inner: "rectangular vegetable bed", job: "covered with sod" },
+      { outer: "rectangular room", inner: "rectangular rug", job: "left as bare floor" },
+      { outer: "rectangular park plot", inner: "rectangular pond", job: "planted with grass" },
+    ]);
+    return { ...base,
+      prompt: `A ${pair.outer} is ${L} ft by ${W} ft. A ${pair.inner} ${l} ft by ${w} ft sits inside it. The region around the inner rectangle will be ${pair.job}. How many square feet is that region?`,
+      steps: [
+        { instruction: "Find the full outer area (square feet).", answer: `${L * W}`, accept: [`${L * W} ft^2`, `${L * W} square feet`], hint: `$${L} \\times ${W}$.` },
+        { instruction: "Find the inner area (square feet).", answer: `${l * w}`, accept: [`${l * w} ft^2`, `${l * w} square feet`], hint: `$${l} \\times ${w}$.` },
+        { instruction: "Subtract to get the surrounding region (square feet).", answer: `${L * W - l * w}`, accept: [`${L * W - l * w} ft^2`, `${L * W - l * w} square feet`], hint: `$${L * W} - ${l * w}$.` },
+      ],
+      finalAnswer: { value: `${L * W - l * w}`, unit: "square feet" },
+      solutionNarrative: `Outer $= ${L} \\times ${W} = ${L * W}$ ft²; inner $= ${l} \\times ${w} = ${l * w}$ ft²; the region around it is $${L * W} - ${l * w} = ${L * W - l * w}$ ft².`,
+    };
+  }
+  const a = rng.int(10, 16);
+  const b = rng.int(8, 12);
+  const c = rng.int(4, 8);
+  const d = rng.int(3, 6);
+  const room = rng.pick(["L-shaped living room", "L-shaped deck", "L-shaped office", "L-shaped kitchen"]);
+  return { ...base,
+    prompt: `An ${room} splits into two rectangles: a main section ${a} ft by ${b} ft and an extension ${c} ft by ${d} ft. Find the total floor area.`,
+    steps: [
+      { instruction: "Find the main section's area (square feet).", answer: `${a * b}`, accept: [`${a * b} ft^2`, `${a * b} square feet`], hint: `$${a} \\times ${b}$.` },
+      { instruction: "Find the extension's area (square feet).", answer: `${c * d}`, accept: [`${c * d} ft^2`, `${c * d} square feet`], hint: `$${c} \\times ${d}$.` },
+      { instruction: "Add the two areas for the total (square feet).", answer: `${a * b + c * d}`, accept: [`${a * b + c * d} ft^2`, `${a * b + c * d} square feet`], hint: `$${a * b} + ${c * d}$.` },
+    ],
+    finalAnswer: { value: `${a * b + c * d}`, unit: "square feet" },
+    solutionNarrative: `Main $= ${a} \\times ${b} = ${a * b}$ ft²; extension $= ${c} \\times ${d} = ${c * d}$ ft²; total $= ${a * b} + ${c * d} = ${a * b + c * d}$ ft².`,
+  };
+};
+
+// --- pythagorean-theorem / find-leg d3: reach check (seed s16 style) -----------
+// Triples ordered [base, reach, ladder] with base < reach so the setup reads naturally.
+const LEG_TRIPLES = [
+  [6, 8, 10], [5, 12, 13], [9, 12, 15], [8, 15, 17], [7, 24, 25], [10, 24, 26], [20, 21, 29],
+];
+fill["gpl-find-leg-d3"] = (rng, idx) => {
+  const [a, b, c] = rng.pick(LEG_TRIPLES);
+  const works = rng.pick([true, false]);
+  const req = works ? b - rng.int(1, 3) : b + rng.int(1, 3);
+  const obj = rng.pick(["ladder", "extension ladder", "rescue ladder"]);
+  const yn = works ? "yes" : "no";
+  return {
+    id: `gen.gpl-find-leg-d3.${idx}`, generated: true, concepts: ["find-leg"], difficulty: 3, context: "applied",
+    prompt: `A ${c} ft ${obj} must reach a window ledge. For safe footing its base sits ${a} ft from the wall. The job requires it to reach at least ${req} ft up the wall. Does it? First find how high it actually reaches.`,
+    steps: [
+      { instruction: `The ${obj} (${c}) is the hypotenuse and the base distance (${a}) is a leg. Subtract their squares.`, answer: `${b * b}`, accept: [], hint: `$${c}^2 - ${a}^2 = ${c * c} - ${a * a}$.` },
+      { instruction: "Take the square root to find the height reached (feet).", answer: `${b}`, accept: [`a=${b}`, `${b} ft`, `${b} feet`], hint: `$\\sqrt{${b * b}}$ — it comes out whole.` },
+      { instruction: `It reaches ${b} ft. Does that meet the ${req} ft minimum? Type 'yes' or 'no'.`, answer: yn, accept: works ? ["y"] : ["n"], hint: `Compare ${b} to ${req}.` },
+    ],
+    finalAnswer: { value: `${b}`, unit: "feet" },
+    solutionNarrative: `Height $= \\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c - a * a}} = ${b}$ ft, which ${works ? "meets" : "falls short of"} the ${req} ft minimum — this is the $(${a}, ${b}, ${c})$ triple.`,
+  };
+};
+
+// --- pythagorean-theorem / pythagorean-applications d3: big-triple diagonals ----
+const BIG_TRIPLES = [
+  [9, 40, 41], [12, 35, 37], [20, 21, 29], [10, 24, 26], [27, 36, 45], [15, 36, 39],
+];
+fill["gpl-pyth-app-d3"] = (rng, idx) => {
+  const [a, b, c] = rng.pick(BIG_TRIPLES);
+  const obj = rng.pick([
+    { thing: "rectangular gate", brace: "single diagonal board" },
+    { thing: "rectangular banner", brace: "diagonal support batten" },
+    { thing: "rectangular trellis", brace: "diagonal cross-piece" },
+    { thing: "rectangular barn door", brace: "diagonal brace" },
+  ]);
+  return {
+    id: `gen.gpl-pyth-app-d3.${idx}`, generated: true, concepts: ["pythagorean-applications"], difficulty: 3, context: "applied",
+    prompt: `A carpenter stiffens a ${obj.thing} with a ${obj.brace}. The ${obj.thing.replace("rectangular ", "")} is ${a} ft wide, and the diagonal measures ${c} ft. How tall is it?`,
+    steps: [
+      { instruction: `The diagonal (${c}) is the hypotenuse and the width (${a}) is a leg. Subtract their squares to get the height's square.`, answer: `${b * b}`, accept: [], hint: `$${c}^2 - ${a}^2 = ${c * c} - ${a * a}$.` },
+      { instruction: "Take the square root to find the height (feet).", answer: `${b}`, accept: [`a=${b}`, `${b} ft`, `${b} feet`], hint: `$\\sqrt{${b * b}}$ — it comes out whole.` },
+    ],
+    finalAnswer: { value: `${b}`, unit: "feet" },
+    solutionNarrative: `Height $= \\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c} - ${a * a}} = \\sqrt{${b * b}} = ${b}$ ft. This is the $(${a}, ${b}, ${c})$ triple.`,
+  };
+};
+
+// --- pythagorean-theorem / find-hypotenuse d2 -----------------------------------
+fill["gpl-hypotenuse-d2"] = (rng, idx) => {
+  const kind = rng.pick(["walk", "screen"]);
+  const base = { id: `gen.gpl-hypotenuse-d2.${idx}`, generated: true, concepts: ["find-hypotenuse"], difficulty: 2, context: "applied" };
+  if (kind === "walk") {
+    const [a, b, c] = rng.pick(TRIPLES);
+    const [d1, d2] = rng.pick([["east", "north"], ["west", "south"], ["east", "south"]]);
+    return { ...base,
+      prompt: `You walk ${a} blocks ${d1} and then ${b} blocks ${d2}. How far are you from your starting point in a straight line?`,
+      steps: [
+        { instruction: `The two walks are the legs, ${a} and ${b}. Add the squares of the legs.`, answer: `${a * a + b * b}`, accept: [], hint: `$${a}^2 + ${b}^2 = ${a * a} + ${b * b}$.` },
+        { instruction: "Take the square root to find the straight-line distance (blocks).", answer: `${c}`, accept: [`c=${c}`, `${c} blocks`], hint: `$\\sqrt{${a * a + b * b}}$ — it comes out whole.` },
+      ],
+      finalAnswer: { value: `${c}`, unit: "blocks" },
+      solutionNarrative: `$c = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${a * a + b * b}} = ${c}$ blocks. This is the $(${a}, ${b}, ${c})$ triple.`,
+    };
+  }
+  const k = rng.int(6, 12);
+  const [w, h, dgn] = [4 * k, 3 * k, 5 * k];
+  const obj = rng.pick(["TV", "computer monitor", "projector screen", "picture frame"]);
+  return { ...base,
+    prompt: `A ${obj} is ${w} inches wide and ${h} inches tall. ${obj === "TV" ? "TVs" : "These"} are sized by the diagonal. What is the diagonal measurement?`,
+    steps: [
+      { instruction: "The width and height are the legs. Add their squares.", answer: `${w * w + h * h}`, accept: [], hint: `$${w}^2 + ${h}^2 = ${w * w} + ${h * h}$.` },
+      { instruction: "Take the square root to find the diagonal (inches).", answer: `${dgn}`, accept: [`c=${dgn}`, `${dgn} inches`, `${dgn} in`], hint: `$\\sqrt{${w * w + h * h}}$ — it comes out whole.` },
+    ],
+    finalAnswer: { value: `${dgn}`, unit: "inches" },
+    solutionNarrative: `Diagonal $= \\sqrt{${w}^2 + ${h}^2} = \\sqrt{${w * w + h * h}} = ${dgn}$ inches — the $(3, 4, 5)$ pattern scaled by ${k}.`,
+  };
+};
+
+// --- triangles / angle-sum d3: exterior angle theorem (seed s03 style) ----------
+fill["gpl-angle-sum-d3"] = (rng, idx) => {
+  const p = rng.int(35, 75);
+  const q = rng.int(35, 75);
+  const ext = p + q;
+  const int_ = 180 - ext;
+  const plot = rng.pick(["triangular plot of land", "triangular park", "triangular sail", "triangular parking island"]);
+  return {
+    id: `gen.gpl-angle-sum-d3.${idx}`, generated: true, concepts: ["angle-sum"], difficulty: 3, context: "applied",
+    prompt: `On a ${plot}, a surveyor extends one side past a corner to create an exterior angle. The two interior angles NOT touching that exterior angle measure $${p}^\\circ$ and $${q}^\\circ$. By the exterior angle theorem, the exterior angle equals their sum. Find the exterior angle, then find the interior angle at that same corner. (Answers in degrees.)`,
+    steps: [
+      { instruction: "Use the exterior angle theorem: add the two non-adjacent interior angles to get the exterior angle (degrees).", answer: `${ext}`, accept: [`${ext} degrees`], hint: `$${p} + ${q}$.` },
+      { instruction: "The interior angle at that corner is supplementary to the exterior angle. Subtract from 180 (degrees).", answer: `${int_}`, accept: [`${int_} degrees`], hint: `$180 - ${ext}$.` },
+      { instruction: `Check: the three interior angles (${p}, ${q}, and the one you found) should sum to 180. What is their sum?`, answer: "180", accept: ["180 degrees"], hint: `$${p} + ${q} + ${int_}$.` },
+    ],
+    finalAnswer: { value: `${int_}`, unit: "degrees" },
+    solutionNarrative: `Exterior angle $= ${p} + ${q} = ${ext}^\\circ$. The interior angle at that corner is $180 - ${ext} = ${int_}^\\circ$, and indeed $${p} + ${q} + ${int_} = 180^\\circ$.`,
+  };
+};
+
+// --- triangles / triangle-types d3: ratio angles, then classify -----------------
+// [p, q, r] with p+q+r dividing 180 exactly; class comes from the largest angle.
+const RATIO_SETS = [
+  { r: [1, 2, 3], cls: "right" },   // 30, 60, 90
+  { r: [2, 3, 4], cls: "acute" },   // 40, 60, 80
+  { r: [1, 3, 5], cls: "obtuse" },  // 20, 60, 100
+  { r: [3, 4, 5], cls: "acute" },   // 45, 60, 75
+  { r: [2, 3, 7], cls: "obtuse" },  // 30, 45, 105
+  { r: [4, 5, 6], cls: "acute" },   // 48, 60, 72
+  { r: [1, 1, 2], cls: "right" },   // 45, 45, 90
+  { r: [2, 2, 5], cls: "obtuse" },  // 40, 40, 100
+];
+fill["gpl-tri-types-d3"] = (rng, idx) => {
+  const { r: [p, q, w], cls } = rng.pick(RATIO_SETS);
+  const k = p + q + w;
+  const x = 180 / k;
+  const big = w * x;
+  const obj = rng.pick(["triangular garden bed", "triangular banner", "triangular skate ramp face", "triangular roof gable"]);
+  return {
+    id: `gen.gpl-tri-types-d3.${idx}`, generated: true, concepts: ["triangle-types"], difficulty: 3, context: "applied",
+    prompt: `A ${obj} has angles measuring $${p === 1 ? "x" : `${p}x`}$, $${q === 1 ? "x" : `${q}x`}$, and $${w}x$ degrees. Find $x$, identify the largest angle, and classify the shape by its angles (answer acute, right, or obtuse).`,
+    steps: [
+      { instruction: `The three angles sum to 180. Combine $${p === 1 ? "x" : `${p}x`} + ${q === 1 ? "x" : `${q}x`} + ${w}x$ and write it equal to 180.`, answer: `${k}x = 180`, accept: [`${k}x=180`], hint: `The coefficients add to ${k}.` },
+      { instruction: "Solve for $x$ (degrees).", answer: `${x}`, accept: [`x=${x}`], hint: `Divide 180 by ${k}.` },
+      { instruction: `The largest angle is $${w}x$. What is it (degrees)?`, answer: `${big}`, accept: [`${big} degrees`], hint: `${w} times ${x}.` },
+      { instruction: `The largest angle is $${big}^\\circ$. Classify by angles — answer acute, right, or obtuse.`, answer: cls, accept: [], hint: cls === "right" ? "Exactly one 90-degree angle." : cls === "obtuse" ? "One angle is bigger than 90 degrees." : "All three angles are under 90 degrees." },
+    ],
+    finalAnswer: { value: cls, unit: "" },
+    solutionNarrative: `$${k}x = 180$, so $x = ${x}^\\circ$. The angles are $${p * x}^\\circ$, $${q * x}^\\circ$, $${big}^\\circ$; the largest is $${big}^\\circ$, so the triangle is ${cls}.`,
+  };
+};
+
+// --- right-triangle-trigonometry / find-missing-angle: shared helper ------------
+const atanDeg = (opp, adj) => (Math.atan(opp / adj) * 180) / Math.PI;
+const arctanAccepts = (opp, adj) => {
+  const acc = [`arctan(${opp}/${adj})`, `theta=arctan(${opp}/${adj})`];
+  if ((opp * 100) % adj === 0) acc.push(`tan^-1(${opp / adj})`);
+  return acc;
+};
+
+// --- find-missing-angle d2: applied inverse tangent ------------------------------
+const SLOPE_CTX = [
+  { text: (a, b) => `A ramp rises ${a} inches over a horizontal run of ${b} inches. What angle does the ramp make with the ground?`, obj: "ramp" },
+  { text: (a, b) => `A road climbs ${a} m over a horizontal distance of ${b} m. What angle does the road make with the horizontal?`, obj: "road" },
+  { text: (a, b) => `A roof rises ${a} ft over a horizontal span of ${b} ft. What angle does the roof surface make with the horizontal?`, obj: "roof" },
+  { text: (a, b) => `A conveyor belt lifts crates ${a} ft upward over a horizontal stretch of ${b} ft. What angle does the belt make with the floor?`, obj: "belt" },
+];
+fill["gpl-find-angle-d2"] = (rng, idx) => {
+  const [a, b] = rng.pick(TRIPLES);
+  const ctx = rng.pick(SLOPE_CTX);
+  const raw = atanDeg(a, b);
+  const ans = Math.round(raw);
+  return {
+    id: `gen.gpl-find-angle-d2.${idx}`, generated: true, concepts: ["find-missing-angle"], difficulty: 2, context: "applied",
+    prompt: `${ctx.text(a, b)} Round to the nearest degree.`,
+    steps: [
+      { instruction: `Set up the inverse-tangent equation using the rise (${a}) over the run (${b}).`, answer: `theta = tan^-1(${a}/${b})`, accept: arctanAccepts(a, b), hint: `$\\tan\\theta = ${a}/${b}$ (the rise over the run).` },
+      { instruction: "Evaluate the inverse tangent and round to the nearest degree.", answer: `${ans}`, accept: [`${ans} degrees`], hint: `$${a}/${b} \\approx ${(a / b).toFixed(4)}$ and $\\tan^{-1}(${(a / b).toFixed(4)}) \\approx ${raw.toFixed(2)}^\\circ$.` },
+    ],
+    finalAnswer: { value: `${ans}`, unit: "degrees" },
+    solutionNarrative: `$\\tan\\theta = ${a}/${b} \\approx ${(a / b).toFixed(4)}$, so $\\theta = \\tan^{-1}(${a}/${b}) \\approx ${raw.toFixed(2)}^\\circ \\approx ${ans}^\\circ$.`,
+  };
+};
+
+// --- find-missing-angle d1: labeled triple, inverse tangent ----------------------
+fill["gpl-find-angle-d1"] = (rng, idx) => {
+  const [p, q, c] = rng.pick(PRIM_TRIPLES);
+  const swap = rng.pick([true, false]);
+  const opp = swap ? q : p;
+  const adj = swap ? p : q;
+  const raw = atanDeg(opp, adj);
+  const ans = Math.round(raw);
+  return {
+    id: `gen.gpl-find-angle-d1.${idx}`, generated: true, concepts: ["find-missing-angle"], difficulty: 1, context: "abstract",
+    prompt: `In a ${p}-${q}-${c} right triangle, find the angle $\\theta$ whose opposite leg is ${opp} and adjacent leg is ${adj}. Round to the nearest degree.`,
+    steps: [
+      { instruction: "Set up the inverse-tangent equation using opposite over adjacent.", answer: `theta = tan^-1(${opp}/${adj})`, accept: arctanAccepts(opp, adj), hint: `$\\tan\\theta = ${opp}/${adj}$, so $\\theta = \\tan^{-1}(${opp}/${adj})$.` },
+      { instruction: "Evaluate the inverse tangent and round to the nearest degree.", answer: `${ans}`, accept: [`${ans} degrees`], hint: `$${opp}/${adj} \\approx ${(opp / adj).toFixed(4)}$ and $\\tan^{-1}(${(opp / adj).toFixed(4)}) \\approx ${raw.toFixed(2)}^\\circ$.` },
+    ],
+    finalAnswer: { value: `${ans}`, unit: "degrees" },
+    solutionNarrative: `$\\tan\\theta = ${opp}/${adj} \\approx ${(opp / adj).toFixed(4)}$, so $\\theta = \\tan^{-1}(${opp}/${adj}) \\approx ${raw.toFixed(2)}^\\circ \\approx ${ans}^\\circ$.`,
+  };
+};
+
+// --- surface-area-and-volume / surface-area d1 -----------------------------------
+fill["gpl-surface-area-d1"] = (rng, idx) => {
+  const kind = rng.pick(["box", "cube"]);
+  const base = { id: `gen.gpl-surface-area-d1.${idx}`, generated: true, concepts: ["surface-area"], difficulty: 1 };
+  if (kind === "box") {
+    const l = rng.int(3, 8);
+    const w = rng.int(2, 6);
+    const h = rng.int(2, 5);
+    const sum = l * w + l * h + w * h;
+    const obj = rng.pick(["closed gift box", "closed shipping box", "closed toy chest", "closed storage bin"]);
+    return { ...base, context: "applied",
+      prompt: `A ${obj} is ${l} ft long, ${w} ft wide, and ${h} ft tall. How many square feet of material cover the outside?`,
+      steps: [
+        { instruction: "Compute the three face products $lw$, $lh$, and $wh$, then add them.", answer: `${sum}`, accept: [], hint: `$${l}\\cdot${w} + ${l}\\cdot${h} + ${w}\\cdot${h} = ${l * w} + ${l * h} + ${w * h}$.` },
+        { instruction: "Multiply the sum by 2 for the matching pairs of faces.", answer: `${2 * sum}`, accept: [`${2 * sum} ft^2`, `${2 * sum} square feet`], hint: `$2 \\times ${sum}$.` },
+      ],
+      finalAnswer: { value: `${2 * sum}`, unit: "square feet" },
+      solutionNarrative: `$SA = 2(lw + lh + wh) = 2(${l * w} + ${l * h} + ${w * h}) = 2(${sum}) = ${2 * sum}$ ft².`,
+    };
+  }
+  const s = rng.int(2, 7);
+  return { ...base, context: "abstract",
+    prompt: `Find the surface area of a cube with edge length ${s}.`,
+    steps: [
+      { instruction: "Find the area of one square face ($s^2$).", answer: `${s * s}`, accept: [], hint: `$${s} \\times ${s}$.` },
+      { instruction: "A cube has 6 identical faces. Multiply by 6.", answer: `${6 * s * s}`, accept: [`${6 * s * s} units^2`, `${6 * s * s} square units`], hint: `$6 \\times ${s * s}$.` },
+    ],
+    finalAnswer: { value: `${6 * s * s}`, unit: "square units" },
+    solutionNarrative: `Each face is $${s}^2 = ${s * s}$; six faces give $SA = 6 \\times ${s * s} = ${6 * s * s}$ square units.`,
+  };
+};
+
+// --- surface-area-and-volume / volume-applied d1 -----------------------------------
+fill["gpl-vol-applied-d1"] = (rng, idx) => {
+  const kind = rng.pick(["box", "cube"]);
+  const base = { id: `gen.gpl-vol-applied-d1.${idx}`, generated: true, concepts: ["volume-applied"], difficulty: 1, context: "applied" };
+  if (kind === "box") {
+    const l = rng.int(3, 8);
+    const w = rng.int(2, 5);
+    const d = rng.int(1, 3);
+    const ctx = rng.pick([
+      { box: "rectangular planter box", fillWith: "soil" },
+      { box: "rectangular sandbox", fillWith: "sand" },
+      { box: "rectangular storage trough", fillWith: "feed" },
+      { box: "rectangular garden bed", fillWith: "compost" },
+    ]);
+    return { ...base,
+      prompt: `A ${ctx.box} is ${l} ft long, ${w} ft wide, and ${d} ft deep. How many cubic feet of ${ctx.fillWith} does it take to fill it?`,
+      steps: [
+        { instruction: "Multiply the three dimensions to find the volume.", answer: `${l * w * d}`, accept: [`${l * w * d} ft^3`, `${l * w * d} cubic feet`], hint: `$${l} \\times ${w} \\times ${d}$.` },
+      ],
+      finalAnswer: { value: `${l * w * d}`, unit: "cubic feet" },
+      solutionNarrative: `$V = ${l} \\times ${w} \\times ${d} = ${l * w * d}$ cubic feet of ${ctx.fillWith}.`,
+    };
+  }
+  const s = rng.int(2, 5);
+  const obj = rng.pick(["cube-shaped water tank", "cube-shaped rain barrel", "cube-shaped storage vat"]);
+  return { ...base,
+    prompt: `A ${obj} has edges of ${s} m. How many cubic meters does it hold?`,
+    steps: [
+      { instruction: "Cube the edge length ($s^3$).", answer: `${s * s * s}`, accept: [`${s * s * s} m^3`, `${s * s * s} cubic meters`], hint: `$${s} \\times ${s} \\times ${s}$.` },
+    ],
+    finalAnswer: { value: `${s * s * s}`, unit: "cubic meters" },
+    solutionNarrative: `$V = s^3 = ${s}^3 = ${s * s * s}$ cubic meters.`,
+  };
+};
+
 // --- perimeter-and-basic-area d3: isosceles triangle, height via Pythagoras ----
 // [half-base, height, equal side] triples so every intermediate value is whole.
 const ISO_TRIPLES = [

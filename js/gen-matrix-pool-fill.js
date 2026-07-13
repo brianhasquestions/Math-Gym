@@ -133,6 +133,80 @@ fill["mpl-det-applied-d3"] = (rng, idx) => {
   };
 };
 
+// determinant-3x3 d3: full cofactor expansion with a negative top-row entry.
+fill["mpl-det3x3-d3"] = (rng, idx) => {
+  const a = rng.int(2, 4), b = rng.int(1, 3), c = rng.int(1, 3); // row 1 = [a, -b, c]
+  const d = rng.int(1, 4), e = rng.int(0, 3), f = rng.int(1, 3);
+  const g = rng.int(1, 3), h = rng.int(0, 4), i = rng.int(1, 4);
+  const M1 = e * i - f * h, M2 = d * i - f * g, M3 = d * h - e * g;
+  const det = a * M1 + b * M2 + c * M3;
+  return {
+    id: `gen.mpl-det3x3-d3.${idx}`, generated: true, concepts: ["determinant-3x3"], difficulty: 3, context: "abstract",
+    prompt: `Compute by cofactor expansion along the top row: $${vmat([[a, -b, c], [d, e, f], [g, h, i]])}$`,
+    steps: [
+      { instruction: `Compute the first minor $${vmat([[e, f], [h, i]])}$.`, answer: `${M1}`, accept: [], hint: `$(${e})(${i}) - (${f})(${h})$.` },
+      { instruction: `Compute the second minor $${vmat([[d, f], [g, i]])}$.`, answer: `${M2}`, accept: [], hint: `$(${d})(${i}) - (${f})(${g})$.` },
+      { instruction: `Compute the third minor $${vmat([[d, e], [g, h]])}$.`, answer: `${M3}`, accept: [], hint: `$(${d})(${h}) - (${e})(${g})$.` },
+      { instruction: `Combine: $${a}(${M1}) - (${-b})(${M2}) + ${c}(${M3})$.`, answer: `${det}`, accept: [], hint: `$${a * M1} + (${b * M2}) + (${c * M3})$.` },
+    ],
+    finalAnswer: { value: `${det}`, unit: "" },
+    solutionNarrative: `Minors are $${M1}$, $${M2}$, $${M3}$. With alternating signs: $${a}(${M1}) - (${-b})(${M2}) + ${c}(${M3}) = ${a * M1} + (${b * M2}) + (${c * M3}) = ${det}$.`,
+  };
+};
+
+// determinant-and-invertibility d3: solve det = 0 for the k that makes it singular.
+fill["mpl-det-invert-d3"] = (rng, idx) => {
+  const t = rng.int(1, 4), c = rng.int(2, 4), d = rng.int(2, 5);
+  const b = t * d; // det = dk - bc = d(k - tc), zero exactly at k = tc
+  const k = t * c;
+  return {
+    id: `gen.mpl-det-invert-d3.${idx}`, generated: true, concepts: ["determinant-and-invertibility"], difficulty: 3, context: "abstract",
+    prompt: `For what value of $k$ is $${bmat([["k", b], [c, d]])}$ singular?`,
+    steps: [
+      { instruction: "Write the determinant in terms of $k$.", answer: `${d}k - ${b * c}`, accept: [`${d}k-${b * c}`], hint: `$\\det = (k)(${d}) - (${b})(${c})$.` },
+      { instruction: "Set the determinant equal to 0 and solve for $k$.", answer: `${k}`, accept: [`k=${k}`, `k = ${k}`], hint: `$${d}k - ${b * c} = 0$, so $${d}k = ${b * c}$.` },
+    ],
+    finalAnswer: { value: `${k}`, unit: "" },
+    solutionNarrative: `$\\det = ${d}k - ${b * c}$. Setting $${d}k - ${b * c} = 0$ gives $k = ${k}$, the value that makes the matrix singular.`,
+  };
+};
+
+// determinant-applied d1: parallelogram area from two edge vectors, one on the x-axis.
+fill["mpl-det-applied-d1"] = (rng, idx) => {
+  const a = rng.int(3, 7), b = rng.int(1, 4), c = rng.int(2, 5);
+  const det = a * c;
+  return {
+    id: `gen.mpl-det-applied-d1.${idx}`, generated: true, concepts: ["determinant-applied"], difficulty: 1, context: "applied",
+    prompt: `Two edge vectors of a parallelogram are $\\mathbf{u} = (${a}, 0)$ and $\\mathbf{v} = (${b}, ${c})$. Find the area of the parallelogram they span.`,
+    steps: [
+      { instruction: `Place the vectors as columns and compute the determinant $${vmat([[a, b], [0, c]])}$.`, answer: `${det}`, accept: [], hint: `$(${a})(${c}) - (${b})(0)$.` },
+      { instruction: "The area is the absolute value of the determinant. State the area.", answer: `${det}`, accept: [], hint: `$|${det}| = ${det}$.` },
+    ],
+    finalAnswer: { value: `${det}`, unit: "square units" },
+    solutionNarrative: `$\\det ${bmat([[a, b], [0, c]])} = (${a})(${c}) - (${b})(0) = ${det}$, and the parallelogram area is $|${det}| = ${det}$ square units.`,
+  };
+};
+
+// determinant-applied d2: triangle area — half the determinant of the edge vectors.
+fill["mpl-det-applied-d2"] = (rng, idx) => {
+  const u1 = 2 * rng.int(2, 3), u2 = rng.int(1, 3);
+  const v1 = 2 * rng.int(1, 2);
+  let v2 = rng.int(3, 6);
+  let det = u1 * v2 - v1 * u2; // both terms even, so det is even
+  if (det <= 0) { v2 += 2; det = u1 * v2 - v1 * u2; }
+  const area = det / 2;
+  return {
+    id: `gen.mpl-det-applied-d2.${idx}`, generated: true, concepts: ["determinant-applied"], difficulty: 2, context: "applied",
+    prompt: `A triangle has vertices at the origin $(0,0)$, $(${u1},${u2})$, and $(${v1},${v2})$. Use the determinant to find its area.`,
+    steps: [
+      { instruction: `With one vertex at the origin, the other two are edge vectors. Compute $${vmat([[u1, v1], [u2, v2]])}$.`, answer: `${det}`, accept: [], hint: `$(${u1})(${v2}) - (${v1})(${u2}) = ${u1 * v2} - ${v1 * u2}$.` },
+      { instruction: "The triangle area is half the absolute value of the determinant. Compute it.", answer: `${area}`, accept: [], hint: `$\\tfrac{1}{2}|${det}| = ${area}$.` },
+    ],
+    finalAnswer: { value: `${area}`, unit: "square units" },
+    solutionNarrative: `The edge vectors as columns give $\\det = (${u1})(${v2}) - (${v1})(${u2}) = ${det}$. The triangle area is $\\tfrac{1}{2}|${det}| = ${area}$ square units.`,
+  };
+};
+
 // ============================================================================
 // matrix-inverses.json
 // ============================================================================
@@ -265,6 +339,83 @@ fill["mpl-inv-applied-d3"] = (rng, idx) => {
     ],
     finalAnswer: { value: `<${x[0]}, ${x[1]}>`, unit: "" },
     solutionNarrative: `$\\det = 1$, so $A^{-1} = ${bmat(inv)}$. Then $A^{-1}\\mathbf{p} = \\langle ${x[0]}, ${x[1]} \\rangle$ — the pair before the transform.`,
+  };
+};
+
+// invertibility-test d3: applied — is the proposed matrix's job reversible?
+const KEYTEST_CTX = [
+  { lead: "An encoding scheme can only be decoded if its key matrix is invertible. An intern proposes the key", q: "Can messages encoded with this key be decoded?", need: "Decoding needs the inverse, which exists only when the determinant is nonzero." },
+  { lead: "A graphics filter can only be undone if its transform matrix is invertible. A designer proposes the transform", q: "Can the filter be undone?", need: "Undo needs the inverse, which exists only when the determinant is nonzero." },
+  { lead: "A sensor's raw readings can only be corrected if its calibration matrix is invertible. A technician proposes the matrix", q: "Can the readings be corrected?", need: "Correction needs the inverse, which exists only when the determinant is nonzero." },
+];
+fill["mpl-invert-test-d3"] = (rng, idx) => {
+  const ctx = rng.pick(KEYTEST_CTX);
+  const singular = rng.int(0, 1) === 0;
+  let M, det;
+  if (singular) {
+    const a = rng.int(1, 2), b = a + rng.int(1, 2);
+    const p = rng.int(2, 3), q = p === 2 ? 3 : 2;
+    M = [[p * a, p * b], [q * a, q * b]]; // rows proportional, det = 0
+    det = 0;
+  } else {
+    const a = rng.int(2, 6), b = rng.int(1, 5), c = rng.int(1, 4);
+    let d = rng.int(2, 6);
+    if (a * d === b * c) d += 1; // det shifts by a != 0
+    M = [[a, b], [c, d]];
+    det = a * d - b * c;
+  }
+  return {
+    id: `gen.mpl-invert-test-d3.${idx}`, generated: true, concepts: ["invertibility-test"], difficulty: 3, context: "applied",
+    prompt: `${ctx.lead} $A = ${bmat(M)}$. Determine whether this matrix's effect can be reversed.`,
+    steps: [
+      { instruction: "Compute the determinant of the proposed matrix.", answer: `${det}`, accept: [], hint: `$(${M[0][0]})(${M[1][1]}) - (${M[0][1]})(${M[1][0]}) = ${M[0][0] * M[1][1]} - ${M[0][1] * M[1][0]}$.` },
+      { instruction: `${ctx.q} Answer the invertibility question: type 'yes' or 'no'.`, answer: det === 0 ? "no" : "yes", accept: det === 0 ? ["n"] : ["y"], hint: ctx.need },
+    ],
+    finalAnswer: { value: det === 0 ? "no" : "yes", unit: "" },
+    solutionNarrative: `$\\det = (${M[0][0]})(${M[1][1]}) - (${M[0][1]})(${M[1][0]}) = ${det}$, so the matrix is ${det === 0 ? "singular — no inverse exists and the effect cannot be reversed" : "invertible, so its effect can be reversed"}.`,
+  };
+};
+
+// inverse-2x2 d3: det = 2 by construction, so entries simplify to halves.
+const half = (x) => (x % 2 === 0 ? `${x / 2}` : `${x}/2`);
+fill["mpl-inverse2x2-d3"] = (rng, idx) => {
+  const a = rng.pick([3, 5]);
+  const d = a === 3 ? rng.int(2, 4) : rng.pick([2, 4]);
+  const n = a * d - 2; // choosing bc = n makes det = 2
+  const pairs = [];
+  for (let b = 1; b <= 9; b++) if (n % b === 0 && n / b <= 9) pairs.push([b, n / b]);
+  const [b, c] = rng.pick(pairs);
+  const inv = [[half(d), half(-b)], [half(-c), half(a)]];
+  return {
+    id: `gen.mpl-inverse2x2-d3.${idx}`, generated: true, concepts: ["inverse-2x2"], difficulty: 3, context: "abstract",
+    prompt: `Find the inverse of $A = ${bmat([[a, b], [c, d]])}$. Enter fractions, not rounded decimals.`,
+    steps: [
+      { instruction: "Compute the determinant $ad - bc$.", answer: "2", accept: [], hint: `$(${a})(${d}) - (${b})(${c}) = ${a * d} - ${b * c}$.` },
+      { instruction: "Form $\\frac{1}{\\det}\\begin{bmatrix} d & -b \\\\ -c & a \\end{bmatrix}$ and simplify each entry to a fraction. Enter as [[a, b], [c, d]].", answer: rows(inv), accept: [], hint: `$\\frac{1}{2}${bmat([[d, -b], [-c, a]])}$; halve each entry.` },
+    ],
+    finalAnswer: { value: rows(inv), unit: "" },
+    solutionNarrative: `$\\det = ${a * d} - ${b * c} = 2$, so $A^{-1} = \\frac{1}{2}${bmat([[d, -b], [-c, a]])} = ${bmat(inv)}$. Check: $A A^{-1} = I$.`,
+  };
+};
+
+// solve-with-inverse d3: full pipeline — det, inverse, then x = A^{-1}b.
+fill["mpl-solve-inverse-d3"] = (rng, idx) => {
+  const a = rng.int(2, 3), d = rng.int(2, 3);
+  const b = a * d - 1; // det = 1, so the inverse has integer entries
+  const A = [[a, b], [1, d]];
+  const inv = [[d, -b], [-1, a]];
+  const x = [rng.int(1, 4), rng.int(1, 3)];
+  const rhs = apply2(A, x);
+  return {
+    id: `gen.mpl-solve-inverse-d3.${idx}`, generated: true, concepts: ["solve-with-inverse"], difficulty: 3, context: "abstract",
+    prompt: `Solve $A\\mathbf{x} = \\mathbf{b}$ for $A = ${bmat(A)}$ and $\\mathbf{b} = ${bmat([[rhs[0]], [rhs[1]]])}$.`,
+    steps: [
+      { instruction: "Compute the determinant.", answer: "1", accept: [], hint: `$(${a})(${d}) - (${b})(1) = ${a * d} - ${b}$.` },
+      { instruction: "Compute $A^{-1}$ and enter as [[a, b], [c, d]].", answer: rows(inv), accept: [], hint: `Swap ${a} and ${d}, negate ${b} and 1, divide by 1.` },
+      { instruction: "Compute $\\mathbf{x} = A^{-1}\\mathbf{b}$ and enter as <x, y>.", answer: `<${x[0]}, ${x[1]}>`, accept: [vec(x)], hint: `Top: $${d}\\cdot${rhs[0]} + (${-b})\\cdot${rhs[1]}$. Bottom: $-1\\cdot${rhs[0]} + ${a}\\cdot${rhs[1]}$.` },
+    ],
+    finalAnswer: { value: `<${x[0]}, ${x[1]}>`, unit: "" },
+    solutionNarrative: `$\\det = ${a * d} - ${b} = 1$, so $A^{-1} = ${bmat(inv)}$. Then $\\mathbf{x} = A^{-1}\\mathbf{b} = \\langle ${x[0]}, ${x[1]} \\rangle$, which solves the system.`,
   };
 };
 
@@ -457,6 +608,110 @@ fill["mpl-dimensions-d3"] = (rng, idx) => {
     ],
     finalAnswer: { value: `${m * n} entries; not square`, unit: "" },
     solutionNarrative: `A $${m} \\times ${n}$ matrix has $${m} \\times ${n} = ${m * n}$ entries. Since $${m} \\neq ${n}$ it is not square, and each row holds ${n} entries — one per column.`,
+  };
+};
+
+// matrix-addition d2: subtraction with signs — one entry goes negative.
+fill["mpl-mat-add-d2"] = (rng, idx) => {
+  const A = [[rng.int(4, 9), rng.int(2, 8)], [rng.int(3, 9), rng.int(0, 4)]];
+  const B = [[rng.int(1, 3), rng.int(0, 2)], [rng.int(1, 2), A[1][1] + rng.int(2, 6)]];
+  const D = [[A[0][0] - B[0][0], A[0][1] - B[0][1]], [A[1][0] - B[1][0], A[1][1] - B[1][1]]];
+  return {
+    id: `gen.mpl-mat-add-d2.${idx}`, generated: true, concepts: ["matrix-addition"], difficulty: 2, context: "abstract",
+    prompt: `Compute the difference $${bmat(A)} - ${bmat(B)}$.`,
+    steps: [
+      { instruction: "Subtract entry by entry, watching the signs. Give the result as [[a, b], [c, d]].", answer: rows(D), accept: [], hint: `Subtract matching positions: $${A[0][0]}-${B[0][0]}$, $${A[0][1]}-${B[0][1]}$, $${A[1][0]}-${B[1][0]}$, $${A[1][1]}-${B[1][1]}$.` },
+    ],
+    finalAnswer: { value: rows(D), unit: "" },
+    solutionNarrative: `Subtracting matching entries: $${A[0][0]}-${B[0][0]}=${D[0][0]}$, $${A[0][1]}-${B[0][1]}=${D[0][1]}$, $${A[1][0]}-${B[1][0]}=${D[1][0]}$, $${A[1][1]}-${B[1][1]}=${D[1][1]}$, giving $${bmat(D)}$.`,
+  };
+};
+
+// scalar-multiplication d3: linear combination kA - mB, scale first then subtract.
+fill["mpl-scalar-mult-d3"] = (rng, idx) => {
+  const k = rng.int(2, 3), m = k === 2 ? 3 : 2;
+  const A = [[rng.int(0, 5), rng.int(0, 5)], [rng.int(0, 5), rng.int(0, 5)]];
+  const B = [[rng.int(0, 4), rng.int(0, 4)], [rng.int(0, 4), rng.int(0, 4)]];
+  const kA = A.map((r) => r.map((x) => k * x));
+  const mB = B.map((r) => r.map((x) => m * x));
+  const D = [[kA[0][0] - mB[0][0], kA[0][1] - mB[0][1]], [kA[1][0] - mB[1][0], kA[1][1] - mB[1][1]]];
+  return {
+    id: `gen.mpl-scalar-mult-d3.${idx}`, generated: true, concepts: ["scalar-multiplication"], difficulty: 3, context: "abstract",
+    prompt: `Let $A = ${bmat(A)}$ and $B = ${bmat(B)}$. Compute $${k}A - ${m}B$.`,
+    steps: [
+      { instruction: `First compute $${k}A$. Give it as [[a, b], [c, d]].`, answer: rows(kA), accept: [], hint: `Multiply every entry of $A$ by ${k}.` },
+      { instruction: `Now compute $${m}B$. Give it as [[a, b], [c, d]].`, answer: rows(mB), accept: [], hint: `Multiply every entry of $B$ by ${m}.` },
+      { instruction: `Subtract: $${k}A - ${m}B$. Give the result as [[a, b], [c, d]].`, answer: rows(D), accept: [], hint: `Subtract entry by entry: $${kA[0][0]}-${mB[0][0]}$, $${kA[0][1]}-${mB[0][1]}$, $${kA[1][0]}-${mB[1][0]}$, $${kA[1][1]}-${mB[1][1]}$.` },
+    ],
+    finalAnswer: { value: rows(D), unit: "" },
+    solutionNarrative: `$${k}A = ${bmat(kA)}$ and $${m}B = ${bmat(mB)}$. Subtracting entry by entry gives $${bmat(D)}$.`,
+  };
+};
+
+// operations-applied d1: two-day totals — add two 2-entry sales columns.
+const OPS1_CTX = [
+  { where: "A bakery", i1: "cupcakes", i2: "cookies" },
+  { where: "A farm stand", i1: "apple baskets", i2: "pear baskets" },
+  { where: "A food truck", i1: "tacos", i2: "burritos" },
+  { where: "A gift kiosk", i1: "keychains", i2: "magnets" },
+];
+fill["mpl-ops-applied-d1"] = (rng, idx) => {
+  const ctx = rng.pick(OPS1_CTX);
+  const a = rng.int(10, 25), b = rng.int(15, 40), c = rng.int(10, 25), d = rng.int(15, 40);
+  return {
+    id: `gen.mpl-ops-applied-d1.${idx}`, generated: true, concepts: ["operations-applied"], difficulty: 1, context: "applied",
+    prompt: `${ctx.where} tracks units sold of (${ctx.i1}, ${ctx.i2}) on two days as column matrices. Day 1 sold $${bmat([[a], [b]])}$ and day 2 sold $${bmat([[c], [d]])}$. Find the two-day total.`,
+    steps: [
+      { instruction: "Add the two columns entry by entry. Give the result as [[a], [b]].", answer: rows([[a + c], [b + d]]), accept: [], hint: `${ctx.i1}: $${a} + ${c}$. ${ctx.i2}: $${b} + ${d}$.` },
+    ],
+    finalAnswer: { value: rows([[a + c], [b + d]]), unit: "units" },
+    solutionNarrative: `Adding the columns: ${ctx.i1} $${a} + ${c} = ${a + c}$, ${ctx.i2} $${b} + ${d} = ${b + d}$, giving $${bmat([[a + c], [b + d]])}$.`,
+  };
+};
+
+// operations-applied d2: combine two 3-entry stock columns into one total.
+const OPS2_CTX = [
+  { who: "Two stores' stock of three products", w1: "Store A", w2: "Store B", want: "the combined chain-wide total" },
+  { who: "Two warehouses' counts of three parts", w1: "Warehouse 1", w2: "Warehouse 2", want: "the combined total across both warehouses" },
+  { who: "Two clinics' supplies of three vaccines", w1: "Clinic A", w2: "Clinic B", want: "the combined total supply" },
+];
+fill["mpl-ops-applied-d2"] = (rng, idx) => {
+  const ctx = rng.pick(OPS2_CTX);
+  const u = [rng.int(2, 12) * 5, rng.int(2, 12) * 5, rng.int(2, 12) * 5];
+  const v = [rng.int(2, 12) * 5, rng.int(2, 12) * 5, rng.int(2, 12) * 5];
+  const s = [u[0] + v[0], u[1] + v[1], u[2] + v[2]];
+  return {
+    id: `gen.mpl-ops-applied-d2.${idx}`, generated: true, concepts: ["operations-applied"], difficulty: 2, context: "applied",
+    prompt: `${ctx.who} are columns. ${ctx.w1}: $${bmat([[u[0]], [u[1]], [u[2]]])}$, ${ctx.w2}: $${bmat([[v[0]], [v[1]], [v[2]]])}$. Headquarters wants ${ctx.want}.`,
+    steps: [
+      { instruction: "Add the two columns entry by entry. Give the result as [[a], [b], [c]].", answer: rows([[s[0]], [s[1]], [s[2]]]), accept: [], hint: `Add row by row: $${u[0]}+${v[0]}$, $${u[1]}+${v[1]}$, $${u[2]}+${v[2]}$.` },
+    ],
+    finalAnswer: { value: rows([[s[0]], [s[1]], [s[2]]]), unit: "units" },
+    solutionNarrative: `The total is the sum: $${u[0]}+${v[0]}=${s[0]}$, $${u[1]}+${v[1]}=${s[1]}$, $${u[2]}+${v[2]}=${s[2]}$, giving $${bmat([[s[0]], [s[1]], [s[2]]])}$.`,
+  };
+};
+
+// operations-applied d3: projection 2B + A — scale this period, add last period.
+const OPS3_CTX = [
+  { rows: "products", cols: "two stores", what: "sales", when1: "Last month", when2: "This month", next: "next month", unit: "units" },
+  { rows: "menu items", cols: "two locations", what: "orders", when1: "Last week", when2: "This week", next: "next week", unit: "orders" },
+  { rows: "workshops", cols: "two campuses", what: "sign-ups", when1: "Last term", when2: "This term", next: "next term", unit: "sign-ups" },
+];
+fill["mpl-ops-applied-d3"] = (rng, idx) => {
+  const ctx = rng.pick(OPS3_CTX);
+  const A = [[rng.int(3, 12), rng.int(3, 12)], [rng.int(3, 12), rng.int(3, 12)]];
+  const B = [[rng.int(3, 12), rng.int(3, 12)], [rng.int(3, 12), rng.int(3, 12)]];
+  const B2 = B.map((r) => r.map((x) => 2 * x));
+  const P = [[B2[0][0] + A[0][0], B2[0][1] + A[0][1]], [B2[1][0] + A[1][0], B2[1][1] + A[1][1]]];
+  return {
+    id: `gen.mpl-ops-applied-d3.${idx}`, generated: true, concepts: ["operations-applied"], difficulty: 3, context: "applied",
+    prompt: `${ctx.when1}'s ${ctx.what} matrix (rows: ${ctx.rows}, columns: ${ctx.cols}) was $A = ${bmat(A)}$. ${ctx.when2}'s was $B = ${bmat(B)}$. Management projects ${ctx.next} at twice ${ctx.when2.toLowerCase()}'s ${ctx.what} plus ${ctx.when1.toLowerCase()}'s, i.e. $2B + A$. Find the projection.`,
+    steps: [
+      { instruction: "First compute $2B$. Give it as [[a, b], [c, d]].", answer: rows(B2), accept: [], hint: "Double every entry of $B$." },
+      { instruction: "Now add $A$ to get $2B + A$. Give the result as [[a, b], [c, d]].", answer: rows(P), accept: [], hint: `Add $A$ entry by entry: $${B2[0][0]}+${A[0][0]}$, $${B2[0][1]}+${A[0][1]}$, $${B2[1][0]}+${A[1][0]}$, $${B2[1][1]}+${A[1][1]}$.` },
+    ],
+    finalAnswer: { value: rows(P), unit: ctx.unit },
+    solutionNarrative: `$2B = ${bmat(B2)}$; adding $A$ entry by entry gives $${bmat(P)}$.`,
   };
 };
 

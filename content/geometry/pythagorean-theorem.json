@@ -41,7 +41,7 @@
       "**Everyday life:** the diagonal size of a TV or monitor from its width and height, and whether a long item fits across a room or through a doorway."
     ]
   },
-  "generators": ["pyth-hypotenuse-v1", "pyth-leg-v1", "pyth-distance-v1", "pyth-ladder-v1", "gpl-hypotenuse-d3", "gpl-distance-d3", "gpl-distance-d1", "gpl-find-leg-d1", "gpl-pyth-app-d1"],
+  "generators": ["pyth-hypotenuse-v1", "pyth-leg-v1", "pyth-distance-v1", "pyth-ladder-v1", "gpl-hypotenuse-d3", "gpl-distance-d3", "gpl-distance-d1", "gpl-find-leg-d1", "gpl-pyth-app-d1", "gpl-find-leg-d3", "gpl-pyth-app-d3", "gpl-hypotenuse-d2"],
   "problems": [
     {
       "id": "geometry.pythagorean-theorem.s01",

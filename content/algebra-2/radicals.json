@@ -41,7 +41,7 @@
       "**Everyday life:** estimating how far you can see to the horizon, or how fast a fallen object was going on impact."
     ]
   },
-  "generators": ["root-eval-v1", "simplify-radical-v1", "solve-radical-eq-v1", "radical-area-v1", "a2l-simplify-rad-d1", "a2l-simplify-rad-d3", "a2l-eval-roots-d2", "a2l-solve-radical-d1", "a2l-radical-apps-d3"],
+  "generators": ["root-eval-v1", "simplify-radical-v1", "solve-radical-eq-v1", "radical-area-v1", "a2l-simplify-rad-d1", "a2l-simplify-rad-d3", "a2l-eval-roots-d2", "a2l-solve-radical-d1", "a2l-radical-apps-d3", "a2l-eval-roots-d3", "a2l-solve-radical-d3", "a2l-radical-apps-d2"],
   "problems": [
     {
       "id": "algebra-2.radicals.s01",

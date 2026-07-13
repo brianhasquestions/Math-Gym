@@ -41,7 +41,7 @@
       "**Computer graphics:** every transform that scales or rotates an object is undone by the inverse matrix to map screen coordinates back to model space."
     ]
   },
-  "generators": ["invertibility-test-v1", "inverse-2x2-v1", "solve-with-inverse-v1", "mpl-invert-test-d2", "mpl-inverse2x2-d1", "mpl-solve-inverse-d1", "mpl-inv-applied-d1", "mpl-inv-applied-d2", "mpl-inv-applied-d3"],
+  "generators": ["invertibility-test-v1", "inverse-2x2-v1", "solve-with-inverse-v1", "mpl-invert-test-d2", "mpl-invert-test-d3", "mpl-inverse2x2-d1", "mpl-inverse2x2-d3", "mpl-solve-inverse-d1", "mpl-solve-inverse-d3", "mpl-inv-applied-d1", "mpl-inv-applied-d2", "mpl-inv-applied-d3"],
   "problems": [
     {
       "id": "matrix-algebra.matrix-inverses.s01",

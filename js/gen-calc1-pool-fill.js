@@ -793,3 +793,422 @@ fill["c1l-motion-d3"] = (rng, idx) => {
     solutionNarrative: `$L = ${q === 1 ? p : `\\frac{${p}}{${q}}`}x$, so $\\frac{dL}{dt} = ${q === 1 ? p : `\\frac{${p}}{${q}}`}(${speed}) = ${ans}$ ft/s — the shadow tip always outruns the walker.`,
   };
 };
+
+// ============================================================================
+// Wave 15: the remaining 2-seed pools, one template per (concept, difficulty)
+// ============================================================================
+
+// Trailing linear term: linTerm(3) -> " + 3", linTerm(-3) -> " - 3", linTerm(0) -> "".
+const linTerm = (b) => (b === 0 ? "" : b > 0 ? ` + ${b}` : ` - ${-b}`);
+
+// ============================================================================
+// Topic: calculus-1.limits-and-continuity (wave 15)
+// ============================================================================
+
+// --- one-sided-and-infinite d1: limit at infinity, two flavors -----------------
+const OS1_PAIRS = [[2, 4], [2, 8], [4, 6], [3, 9], [4, 10], [6, 8], [5, 10], [2, 6]]; // (3, 6) is the seed
+const OS1_CTX = [
+  { who: "A streaming service's", what: "average server cost per viewer", item: "viewers", x: "x" },
+  { who: "A print shop's", what: "average cost per poster", item: "posters", x: "x" },
+  { who: "A delivery hub's", what: "average cost per package", item: "packages", x: "x" },
+];
+fill["c1l-onesided-d1"] = (rng, idx) => {
+  const kind = rng.pick(["ratio", "applied"]);
+  const base = { id: `gen.c1l-onesided-d1.${idx}`, generated: true, concepts: ["one-sided-and-infinite"], difficulty: 1 };
+  if (kind === "ratio") {
+    const [a, b] = rng.pick(OS1_PAIRS);
+    const p = rng.int(1, 5);
+    const q = rng.int(1, 5);
+    const g = gcd(a, b);
+    const ans = frac(a, b); // every OS1 pair reduces
+    const dec = (100 * a) % b === 0 ? dec2(a / b) : null;
+    return { ...base, context: "abstract",
+      prompt: `Find the limit at infinity: $\\lim_{x \\to \\infty}\\dfrac{${a}x^2 + ${p}}{${b}x^2 - ${q}x}$.`,
+      steps: [
+        { instruction: "Top and bottom have the same degree, so take the ratio of the leading coefficients and simplify to a fraction.", answer: ans, accept: [`${a}/${b}`, ...(dec ? [dec] : [])], hint: `Both are degree 2, so the limit is $\\frac{${a}}{${b}}$.` },
+      ],
+      finalAnswer: { value: ans, unit: "" },
+      solutionNarrative: `Same degree top and bottom, so the limit is the ratio of leading coefficients, $\\frac{${a}}{${b}} = \\frac{${a / g}}{${b / g}}$.`,
+    };
+  }
+  const ctx = rng.pick(OS1_CTX);
+  const k = rng.pick([200, 300, 400, 600, 800]); // 500 is the seed
+  const c = rng.int(2, 9);
+  return { ...base, context: "applied",
+    prompt: `${ctx.who} ${ctx.what} is $C(${ctx.x}) = \\dfrac{${k}}{${ctx.x}} + ${c}$ dollars when serving $${ctx.x}$ ${ctx.item}. As $${ctx.x}$ grows very large, what value does the ${ctx.what} approach (dollars)?`,
+    steps: [
+      { instruction: `As $${ctx.x} \\to \\infty$, the term $\\frac{${k}}{${ctx.x}}$ approaches what value?`, answer: "0", accept: [], hint: "A fixed number over a huge denominator goes to 0." },
+      { instruction: `Add that to the constant ${c} to get the limiting ${ctx.what}.`, answer: `${c}`, accept: [], hint: `$0 + ${c}$.` },
+    ],
+    finalAnswer: { value: `${c}`, unit: "dollars" },
+    solutionNarrative: `$\\frac{${k}}{${ctx.x}} \\to 0$ as $${ctx.x} \\to \\infty$, so the ${ctx.what} settles toward $\\$${c}$ per ${ctx.item.replace(/s$/, "")}.`,
+  };
+};
+
+// --- one-sided-and-infinite d3: one-sided limits at a piecewise seam ------------
+fill["c1l-onesided-d3"] = (rng, idx) => {
+  const p = rng.int(1, 4);
+  const a = rng.int(1, 9);
+  const L = p + a;
+  const jump = rng.pick([true, false]);
+  const d = jump ? rng.pick([-3, -2, -1, 1, 2, 3]) : 0;
+  const R = L + d;
+  const b = R - 2 * p; // right piece 2x + b hits R at x = p
+  const rightStr = `2x${linTerm(b)}`;
+  const word = jump ? "no" : "yes";
+  return {
+    id: `gen.c1l-onesided-d3.${idx}`, generated: true, concepts: ["one-sided-and-infinite"], difficulty: 3, context: "abstract",
+    prompt: `A function is defined piecewise: $f(x) = x + ${a}$ for $x < ${p}$ and $f(x) = ${rightStr}$ for $x > ${p}$. Does $\\lim_{x \\to ${p}}f(x)$ exist? Answer 'yes' or 'no' after computing both one-sided limits.`,
+    steps: [
+      { instruction: `Find the left-hand limit: substitute $x = ${p}$ into $x + ${a}$.`, answer: `${L}`, accept: [], hint: `$${p} + ${a}$.` },
+      { instruction: `Find the right-hand limit: substitute $x = ${p}$ into $${rightStr}$.`, answer: `${R}`, accept: [], hint: `$2(${p})${linTerm(b)}$.` },
+      { instruction: "Do the two one-sided limits agree, so the two-sided limit exists? Answer 'yes' or 'no'.", answer: word, accept: jump ? ["dne"] : [], hint: `Compare ${L} and ${R}: a two-sided limit exists only when both sides match.` },
+    ],
+    finalAnswer: { value: word, unit: "" },
+    solutionNarrative: jump
+      ? `The left limit is ${L} and the right limit is ${R}; they disagree, so the two-sided limit does not exist.`
+      : `Both one-sided limits equal ${L}, so the two-sided limit exists (and equals ${L}) even though $f(${p})$ itself is undefined.`,
+  };
+};
+
+// --- limits-applied d3: simplify a difference quotient at a point ----------------
+const LIMAPP3_CTX = [
+  { obj: "A maglev sled's", u: "meters", tu: "seconds", ru: "m/s" },
+  { obj: "A subway train's", u: "meters", tu: "seconds", ru: "m/s" },
+  { obj: "A soapbox cart's", u: "feet", tu: "seconds", ru: "ft/s" },
+];
+fill["c1l-limapp-d3"] = (rng, idx) => {
+  const ctx = rng.pick(LIMAPP3_CTX);
+  const k = rng.pick([1, 2, 3]);
+  let a = rng.int(2, 6);
+  if (k === 1 && a === 3) a = 4; // seed: s(t) = t^2 over [3, 3+h]
+  const v = 2 * a * k;
+  const numer = `${v}h + ${co(k)}h^2`;
+  const quot = `${v} + ${co(k)}h`;
+  return {
+    id: `gen.c1l-limapp-d3.${idx}`, generated: true, concepts: ["limits-applied"], difficulty: 3, context: "applied",
+    prompt: `${ctx.obj} position is $s(t) = ${co(k)}t^2$ ${ctx.u} after $t$ ${ctx.tu}. The average velocity over $[${a}, ${a}+h]$ is $\\dfrac{${co(k)}(${a}+h)^2 - ${k * a * a}}{h}$. Simplify it and take the limit as $h \\to 0$ to find the instantaneous velocity at $t = ${a}$ (${ctx.ru}).`,
+    steps: [
+      { instruction: `Expand $${co(k)}(${a}+h)^2 - ${k * a * a}$.`, answer: numer, accept: [`${co(k)}h^2 + ${v}h`], hint: `$(${a}+h)^2 = ${a * a} + ${2 * a}h + h^2$; ${k === 1 ? `subtract ${a * a}` : `multiply by ${k}, then subtract ${k * a * a}`}.` },
+      { instruction: "Divide by $h$ to simplify the average velocity.", answer: quot, accept: [`${co(k)}h + ${v}`], hint: `$\\frac{${numer}}{h} = ${quot}$.` },
+      { instruction: "Take the limit as $h \\to 0$.", answer: `${v}`, accept: [], hint: `Substitute $h = 0$ into $${quot}$.` },
+    ],
+    finalAnswer: { value: `${v}`, unit: ctx.ru },
+    solutionNarrative: `$\\dfrac{${co(k)}(${a}+h)^2 - ${k * a * a}}{h} = ${quot}$, whose limit as $h \\to 0$ is $${v}$ ${ctx.ru} — the instantaneous velocity at $t = ${a}$.`,
+  };
+};
+
+// ============================================================================
+// Topic: calculus-1.derivative-rates-of-change (wave 15)
+// ============================================================================
+
+// --- limit-definition d2: difference quotient for a monic quadratic --------------
+const LDEF2_CTX = [
+  { obj: "A ball rolls", what: "distance" },
+  { obj: "A cart coasts", what: "distance" },
+  { obj: "A robot vacuum drives", what: "distance" },
+];
+fill["c1l-limitdef-d2"] = (rng, idx) => {
+  const kind = rng.pick(["abstract", "applied"]);
+  const base = { id: `gen.c1l-limitdef-d2.${idx}`, generated: true, concepts: ["limit-definition"], difficulty: 2 };
+  if (kind === "abstract") {
+    const plus = rng.pick([true, false]);
+    let b = rng.int(2, 9);
+    if (!plus && b === 4) b = 5; // seed: x^2 - 4x
+    const sgn = plus ? "+" : "-";
+    const deriv = `2x ${sgn} ${b}`;
+    return { ...base, context: "abstract",
+      prompt: `Use the limit definition to find $f'(x)$ for $f(x) = x^2 ${sgn} ${b}x$.`,
+      steps: [
+        { instruction: "Simplify the difference quotient $\\dfrac{f(x+h) - f(x)}{h}$ until the $h$ cancels. What expression remains?", answer: `${deriv} + h`, accept: [`2x + h ${sgn} ${b}`], hint: `$f(x+h) = (x+h)^2 ${sgn} ${b}(x+h)$; subtract $f(x)$, expand, divide by $h$.` },
+        { instruction: "Let $h \\to 0$. Write $f'(x)$.", answer: deriv, accept: [], hint: "The lone $h$ term vanishes." },
+      ],
+      finalAnswer: { value: deriv, unit: "" },
+      solutionNarrative: `The quotient simplifies to $${deriv} + h$; as $h \\to 0$, $f'(x) = ${deriv}$.`,
+    };
+  }
+  const ctx = rng.pick(LDEF2_CTX);
+  let c = rng.int(2, 9);
+  if (c === 3) c = 6; // seed: s(t) = t^2 + 3t
+  return { ...base, context: "applied",
+    prompt: `${ctx.obj} so its ${ctx.what} is $s(t) = t^2 + ${c}t$ feet after $t$ seconds. Use the limit definition to find the velocity function $s'(t)$ (in feet per second).`,
+    steps: [
+      { instruction: `Simplify the difference quotient for $s(t) = t^2 + ${c}t$ until $h$ cancels. What expression remains?`, answer: `2t + ${c} + h`, accept: [`2t + h + ${c}`], hint: `$s(t+h) = (t+h)^2 + ${c}(t+h)$.` },
+      { instruction: "Let $h \\to 0$ to get the velocity function $s'(t)$.", answer: `2t + ${c}`, accept: [], hint: "The $h$ term vanishes." },
+    ],
+    finalAnswer: { value: `2t + ${c}`, unit: "feet per second" },
+    solutionNarrative: `The quotient simplifies to $2t + ${c} + h$; as $h \\to 0$ the velocity is $s'(t) = 2t + ${c}$ ft/s.`,
+  };
+};
+
+// --- limit-definition d3: non-monic quadratic, then a slope ----------------------
+fill["c1l-limitdef-d3"] = (rng, idx) => {
+  const a = rng.int(2, 4);
+  const plus = rng.pick([true, false]);
+  let c = rng.int(2, 7);
+  if (a === 2 && !plus && c === 3) c = 5; // seed: 2x^2 - 3x
+  const x0 = rng.int(1, 3);
+  const sgn = plus ? "+" : "-";
+  const quot = `${2 * a}x ${sgn} ${c} + ${a}h`;
+  const deriv = `${2 * a}x ${sgn} ${c}`;
+  const m = 2 * a * x0 + (plus ? c : -c);
+  return {
+    id: `gen.c1l-limitdef-d3.${idx}`, generated: true, concepts: ["limit-definition"], difficulty: 3, context: "abstract",
+    prompt: `Let $f(x) = ${a}x^2 ${sgn} ${c}x$. Use the limit definition to find $f'(x)$, then find the slope of the tangent at $x = ${x0}$.`,
+    steps: [
+      { instruction: "Simplify the difference quotient until $h$ cancels. What expression remains before the limit?", answer: quot, accept: [`${2 * a}x + ${a}h ${sgn} ${c}`], hint: `$f(x+h) = ${a}(x+h)^2 ${sgn} ${c}(x+h)$; subtract $f(x)$ and divide by $h$.` },
+      { instruction: "Let $h \\to 0$. Write $f'(x)$.", answer: deriv, accept: [], hint: `The $${a}h$ term vanishes.` },
+      { instruction: `Find the tangent slope $f'(${x0})$ (a number).`, answer: `${m}`, accept: [], hint: `Substitute $x = ${x0}$ into $${deriv}$.` },
+    ],
+    finalAnswer: { value: `${m}`, unit: "" },
+    solutionNarrative: `The quotient simplifies to $${quot}$; as $h \\to 0$, $f'(x) = ${deriv}$, and $f'(${x0}) = ${2 * a}(${x0}) ${sgn} ${c} = ${m}$.`,
+  };
+};
+
+// --- slope-and-tangent d3: full tangent line at a point ---------------------------
+fill["c1l-slopetan-d3"] = (rng, idx) => {
+  const x0 = rng.int(2, 5);
+  const plus = rng.pick([true, false]);
+  let b;
+  if (plus) { b = rng.int(1, 6); }
+  else { b = rng.int(1, 2 * x0 - 2); if (b === 2 && x0 === 4) b = 3; } // seed: x^2 - 2x at x = 4
+  const sgn = plus ? "+" : "-";
+  const m = plus ? 2 * x0 + b : 2 * x0 - b;
+  const y0 = x0 * x0 + (plus ? b * x0 : -b * x0);
+  const line = `y = ${m}x - ${x0 * x0}`;
+  return {
+    id: `gen.c1l-slopetan-d3.${idx}`, generated: true, concepts: ["slope-and-tangent"], difficulty: 3, context: "abstract",
+    prompt: `For $f(x) = x^2 ${sgn} ${b}x$ (so $f'(x) = 2x ${sgn} ${b}$), find the tangent line at $x = ${x0}$.`,
+    steps: [
+      { instruction: `Find the slope $f'(${x0})$ (a number).`, answer: `${m}`, accept: [], hint: `Substitute into $2x ${sgn} ${b}$.` },
+      { instruction: `Find $f(${x0})$ (a number).`, answer: `${y0}`, accept: [], hint: `$f(${x0}) = ${x0}^2 ${sgn} ${b}(${x0})$.` },
+      { instruction: "Write the tangent line in the form $y = mx + b$.", answer: line, accept: [], hint: `Use $y - ${y0} = ${m}(x - ${x0})$ and simplify.` },
+    ],
+    finalAnswer: { value: line, unit: "" },
+    solutionNarrative: `Slope $f'(${x0}) = ${m}$ and point $(${x0}, ${y0})$ give $y - ${y0} = ${m}(x - ${x0})$, i.e. $${line}$.`,
+  };
+};
+
+// ============================================================================
+// Topic: calculus-1.analyzing-functions (wave 15)
+// ============================================================================
+
+// --- concavity-inflection d3: concave-down interval, or an inflection day ---------
+const CONCAV3_CTX = [
+  { what: "The number of infected people in an outbreak", event: "New infections stop accelerating", tu: "days", tname: "day" },
+  { what: "A viral video's total view count", event: "New views stop accelerating", tu: "days", tname: "day" },
+  { what: "An app's total download count", event: "New downloads stop accelerating", tu: "weeks", tname: "week" },
+];
+fill["c1l-concav-d3"] = (rng, idx) => {
+  const kind = rng.pick(["quartic", "cubic"]);
+  const base = { id: `gen.c1l-concav-d3.${idx}`, generated: true, concepts: ["concavity-inflection"], difficulty: 3 };
+  if (kind === "quartic") {
+    const k = rng.int(2, 4); // k = 1 is the seed's x^4 - 6x^2
+    return { ...base, context: "abstract",
+      prompt: `For $f(x) = x^4 - ${6 * k * k}x^2$, find the interval where the graph is concave down. (The inflection points are at $x = -${k}$ and $x = ${k}$.)`,
+      steps: [
+        { instruction: "Find the second derivative $f''(x)$.", answer: `12x^2 - ${12 * k * k}`, accept: [`f''(x) = 12x^2 - ${12 * k * k}`], hint: `$f'(x) = 4x^3 - ${12 * k * k}x$, then differentiate again.` },
+        { instruction: "Factor $f''(x)$.", answer: `12(x^2 - ${k * k})`, accept: [`12(x^2-${k * k})`, `12(x-${k})(x+${k})`], hint: "Pull out 12; the rest is a difference of squares." },
+        { instruction: "Concave down means $f''(x) < 0$, which happens between the inflection points. Give the interval as a compound inequality.", answer: `-${k} < x < ${k}`, accept: [`-${k}<x<${k}`], hint: `$12(x^2 - ${k * k}) < 0$ when $x^2 < ${k * k}$.` },
+      ],
+      finalAnswer: { value: `-${k} < x < ${k}`, unit: "" },
+      solutionNarrative: `$f''(x) = 12(x^2 - ${k * k})$ is negative when $x^2 < ${k * k}$, so the graph is concave down on $-${k} < x < ${k}$.`,
+    };
+  }
+  const ctx = rng.pick(CONCAV3_CTX);
+  const m = rng.pick([3, 4, 5, 7, 8]); // m = 6 is the seed's 18t^2
+  const c = rng.int(2, 9);
+  return { ...base, context: "applied",
+    prompt: `${ctx.what} is modeled by $N(t) = -t^3 + ${3 * m}t^2 + ${c}t$ for $t$ in ${ctx.tu}. ${ctx.event} at the inflection point. On which ${ctx.tname} does that turning point occur?`,
+    steps: [
+      { instruction: "Find the first derivative $N'(t)$ (the growth rate).", answer: `N'(t) = -3t^2 + ${6 * m}t + ${c}`, accept: [`-3t^2 + ${6 * m}t + ${c}`, `-3t^2+${6 * m}t+${c}`], hint: "Differentiate term by term." },
+      { instruction: "Find the second derivative $N''(t)$.", answer: `N''(t) = -6t + ${6 * m}`, accept: [`-6t + ${6 * m}`, `-6t+${6 * m}`, `${6 * m} - 6t`], hint: "Differentiate $N'(t)$." },
+      { instruction: `Set $N''(t) = 0$ and solve for $t$ to find the inflection ${ctx.tname}.`, answer: `t = ${m}`, accept: [`${m}`], hint: `Solve $-6t + ${6 * m} = 0$.` },
+    ],
+    finalAnswer: { value: `${m}`, unit: ctx.tu },
+    solutionNarrative: `$N''(t) = -6t + ${6 * m} = 0$ at $t = ${m}$. Before ${ctx.tname} ${m} the curve is concave up (accelerating); after, concave down — so ${ctx.tname} ${m} is the inflection point where growth stops accelerating.`,
+  };
+};
+
+// ============================================================================
+// Topic: calculus-1.optimization (wave 15)
+// ============================================================================
+
+// --- max-min-from-derivative d1: vertex of an applied quadratic -------------------
+const MAXMIN1_MAX_CTX = [
+  { what: "A toy rocket's altitude (in meters)", v: "t", tu: "seconds", goal: "Find the time at which it reaches its maximum altitude." },
+  { what: "A flare's height (in meters)", v: "t", tu: "seconds", goal: "Find the time at which it reaches its maximum height." },
+  { what: "A stunt bike's ramp height (in feet)", v: "t", tu: "seconds", goal: "Find the time at which the rider is highest." },
+];
+const MAXMIN1_MIN_CTX = [
+  { what: "A car's fuel use (liters per 100 km) at cruise setting $x$", v: "x", tu: "", goal: "Find the setting $x$ that minimizes fuel use." },
+  { what: "A server farm's power draw (kilowatts) at load setting $x$", v: "x", tu: "", goal: "Find the setting $x$ that minimizes power draw." },
+  { what: "A kiln's defect score at temperature setting $x$", v: "x", tu: "", goal: "Find the setting $x$ that minimizes defects." },
+];
+fill["c1l-maxmin-d1"] = (rng, idx) => {
+  const isMax = rng.pick([true, false]);
+  const base = { id: `gen.c1l-maxmin-d1.${idx}`, generated: true, concepts: ["max-min-from-derivative"], difficulty: 1, context: "applied" };
+  const m = rng.int(2, 7);
+  if (isMax) {
+    const ctx = rng.pick(MAXMIN1_MAX_CTX);
+    let c = rng.int(2, 9);
+    if (m === 3 && c === 5) c = 7; // seed: -t^2 + 6t + 5
+    return { ...base,
+      prompt: `${ctx.what} is modeled by $h(${ctx.v}) = -${ctx.v}^2 + ${2 * m}${ctx.v} + ${c}$${ctx.tu ? ` for $${ctx.v}$ in ${ctx.tu}` : ""}. ${ctx.goal}`,
+      steps: [
+        { instruction: `Differentiate $h(${ctx.v})$ with respect to $${ctx.v}$.`, answer: `-2${ctx.v} + ${2 * m}`, accept: [`${2 * m} - 2${ctx.v}`], hint: `Use the power rule term by term; the constant ${c} differentiates to 0.` },
+        { instruction: `Set the derivative equal to 0 and solve for $${ctx.v}$.`, answer: `${ctx.v} = ${m}`, accept: [`${m}`], hint: `Solve $-2${ctx.v} + ${2 * m} = 0$.` },
+      ],
+      finalAnswer: { value: `${m}`, unit: ctx.tu },
+      solutionNarrative: `$h'(${ctx.v}) = -2${ctx.v} + ${2 * m}$. Setting it to 0 gives $${ctx.v} = ${m}$${ctx.tu ? ` ${ctx.tu}` : ""}, the peak (the parabola opens downward, so it is a maximum).`,
+    };
+  }
+  const ctx = rng.pick(MAXMIN1_MIN_CTX);
+  let c = m * m + rng.int(2, 20);
+  if (m === 4 && c === 30) c = 31; // seed: x^2 - 8x + 30
+  return { ...base,
+    prompt: `${ctx.what} is $C(x) = x^2 - ${2 * m}x + ${c}$. ${ctx.goal}`,
+    steps: [
+      { instruction: "Differentiate $C(x)$.", answer: `2x - ${2 * m}`, accept: [], hint: "Power rule term by term." },
+      { instruction: "Set the derivative to 0 and solve for $x$.", answer: `x = ${m}`, accept: [`${m}`], hint: `Solve $2x - ${2 * m} = 0$.` },
+    ],
+    finalAnswer: { value: `${m}`, unit: "" },
+    solutionNarrative: `$C'(x) = 2x - ${2 * m}$. Setting it to 0 gives $x = ${m}$; since the parabola opens upward, this is the minimum.`,
+  };
+};
+
+// --- max-min-from-derivative d2: maximum value, or a cubic's interior peak --------
+const MAXMIN2_CTX = [
+  { who: "A company's", scale: "hundreds of dollars", xdesc: "items (in thousands) sold" },
+  { who: "A game studio's", scale: "thousands of dollars", xdesc: "ad slots (in hundreds) sold" },
+  { who: "A farm stand's", scale: "tens of dollars", xdesc: "crates sold" },
+];
+fill["c1l-maxmin-d2"] = (rng, idx) => {
+  const kind = rng.pick(["quadratic", "cubic"]);
+  const base = { id: `gen.c1l-maxmin-d2.${idx}`, generated: true, concepts: ["max-min-from-derivative"], difficulty: 2, context: "applied" };
+  if (kind === "quadratic") {
+    const ctx = rng.pick(MAXMIN2_CTX);
+    const m = rng.int(3, 9);
+    let c = rng.int(2, Math.min(m * m - 1, 30));
+    if (m === 5 && c === 9) c = 11; // seed: -x^2 + 10x - 9
+    const maxV = m * m - c;
+    return { ...base,
+      prompt: `${ctx.who} daily profit (in ${ctx.scale}) is $P(x) = -x^2 + ${2 * m}x - ${c}$, where $x$ is the number of ${ctx.xdesc}. What is the maximum daily profit, in ${ctx.scale}?`,
+      steps: [
+        { instruction: "Differentiate $P(x)$.", answer: `-2x + ${2 * m}`, accept: [`${2 * m} - 2x`], hint: "Power rule term by term." },
+        { instruction: "Set $P'(x) = 0$ and solve for $x$.", answer: `x = ${m}`, accept: [`${m}`], hint: `Solve $-2x + ${2 * m} = 0$.` },
+        { instruction: `Substitute $x = ${m}$ into $P(x)$ to get the maximum profit.`, answer: `${maxV}`, accept: [], hint: `Compute $-(${m})^2 + ${2 * m}(${m}) - ${c} = -${m * m} + ${2 * m * m} - ${c}$.` },
+      ],
+      finalAnswer: { value: `${maxV}`, unit: ctx.scale },
+      solutionNarrative: `$P'(x) = -2x + ${2 * m} = 0$ gives $x = ${m}$. Then $P(${m}) = -${m * m} + ${2 * m * m} - ${c} = ${maxV}$ ${ctx.scale}, the maximum since the parabola opens downward.`,
+    };
+  }
+  const k = rng.pick([3, 4]); // k = 2 is the seed reservoir
+  const C = rng.int(5, 30);
+  const T = 2 * k;
+  const ctx = rng.pick([
+    { what: "A reservoir's water level (in meters)", tname: "hours" },
+    { what: "A tidal basin's water level (in meters)", tname: "hours" },
+    { what: "A storage battery's charge level (in percent of capacity, scaled)", tname: "hours" },
+  ]);
+  return { ...base,
+    prompt: `${ctx.what} over part of a day is $L(t) = -\\frac{1}{3}t^3 + ${k}t^2 + ${C}$ for $0 \\le t \\le ${T + 1}$ ${ctx.tname}. Find the time $t$ at which the level is highest (a critical point inside the interval).`,
+    steps: [
+      { instruction: "Differentiate $L(t)$.", answer: `-t^2 + ${2 * k}t`, accept: [`${2 * k}t - t^2`], hint: "$\\frac{d}{dt}[-\\frac{1}{3}t^3] = -t^2$." },
+      { instruction: "Set $L'(t) = 0$ and find the positive critical point.", answer: `t = ${T}`, accept: [`${T}`], hint: `$-t^2 + ${2 * k}t = -t(t - ${T}) = 0$, so $t = 0$ or $t = ${T}$; take the interior one.` },
+    ],
+    finalAnswer: { value: `${T}`, unit: ctx.tname },
+    solutionNarrative: `$L'(t) = -t^2 + ${2 * k}t = -t(t - ${T})$, so critical points are $t = 0$ and $t = ${T}$. Since $L''(t) = -2t + ${2 * k}$ gives $L''(${T}) = -${2 * k} < 0$, $t = ${T}$ ${ctx.tname} is the maximum level.`,
+  };
+};
+
+// ============================================================================
+// Topic: calculus-1.related-rates (wave 15)
+// ============================================================================
+
+// --- filling-draining d2: constant cross-section cylinder, or a V = kh^2 trough ---
+const FILL2_CYL_CTX = ["cylindrical tank", "cylindrical rain barrel", "cylindrical vat"];
+const FILL2_TROUGH_CTX = ["trough", "drainage channel", "feed trough"];
+fill["c1l-filling-d2"] = (rng, idx) => {
+  const kind = rng.pick(["cylinder", "trough"]);
+  const base = { id: `gen.c1l-filling-d2.${idx}`, generated: true, concepts: ["filling-draining"], difficulty: 2, context: "applied" };
+  if (kind === "cylinder") {
+    const what = rng.pick(FILL2_CYL_CTX);
+    const r = rng.pick([2, 3, 4]);
+    let dV = -rng.int(2, 8);
+    if (r === 2 && dV === -3) dV = -5; // seed: radius 2, dV/dt = -3
+    const A = r * r;
+    const val = (dV / (PI * A)).toFixed(2);
+    return { ...base,
+      prompt: `A ${what} of radius ${r} ft is being drained at $\\frac{dV}{dt} = ${dV}$ ft³/min (negative because it's draining). How fast is the water level falling? ($V = \\pi r^2 h$ with $r = ${r}$ fixed.) Use $\\pi \\approx 3.14$ and round to 2 decimals.`,
+      steps: [
+        { instruction: `With $r = ${r}$ fixed, $V = \\pi(${A})h = ${A}\\pi h$. Differentiate in time. Write the related-rate equation.`, answer: `dV/dt = ${A}*pi*dh/dt`, accept: [`dV/dt=${A}*pi*dh/dt`, `dV/dt = ${A} pi dh/dt`], hint: `$\\frac{dV}{dt} = ${A}\\pi \\frac{dh}{dt}$ since the cross-section is constant.` },
+        { instruction: `Substitute $\\frac{dV}{dt} = ${dV}$, $\\pi \\approx 3.14$ and solve for $\\frac{dh}{dt}$ in ft/min (2 decimals).`, answer: val, accept: [], hint: `$\\frac{dh}{dt} = \\frac{${dV}}{${A}(3.14)} = \\frac{${dV}}{${dec2(A * PI)}}$.` },
+      ],
+      finalAnswer: { value: val, unit: "ft/min" },
+      solutionNarrative: `$\\frac{dV}{dt} = ${A}\\pi\\frac{dh}{dt} \\Rightarrow \\frac{dh}{dt} = \\frac{${dV}}{${dec2(A * PI)}} \\approx ${val}$ ft/min (falling).`,
+    };
+  }
+  const what = rng.pick(FILL2_TROUGH_CTX);
+  const k = rng.pick([2, 4, 5]); // k = 3 is the seed trough
+  const dV = rng.int(2, 9);
+  const h0 = rng.int(1, 3);
+  const val = (dV / (2 * k * h0)).toFixed(2);
+  return { ...base,
+    prompt: `A ${what} has a triangular cross-section; its water volume is $V = ${k}h^2$ (cubic feet, $h$ in feet) when filled to depth $h$. Water enters at $\\frac{dV}{dt} = ${dV}$ ft³/min. How fast is the depth rising when $h = ${h0}$ ft? Round to 2 decimals.`,
+    steps: [
+      { instruction: `Differentiate $V = ${k}h^2$ in time. Write the related-rate equation.`, answer: `dV/dt = ${2 * k}*h*dh/dt`, accept: [`dV/dt=${2 * k}*h*dh/dt`, `dV/dt = ${2 * k} h dh/dt`], hint: `$\\frac{d}{dt}(${k}h^2) = ${2 * k}h\\frac{dh}{dt}$.` },
+      { instruction: `Substitute $h = ${h0}$, $\\frac{dV}{dt} = ${dV}$ and solve for $\\frac{dh}{dt}$ in ft/min (2 decimals).`, answer: val, accept: [], hint: `$\\frac{dh}{dt} = \\frac{${dV}}{${2 * k}(${h0})} = \\frac{${dV}}{${2 * k * h0}}$.` },
+    ],
+    finalAnswer: { value: val, unit: "ft/min" },
+    solutionNarrative: `$\\frac{dV}{dt} = ${2 * k}h\\frac{dh}{dt} \\Rightarrow \\frac{dh}{dt} = \\frac{${dV}}{${2 * k * h0}} \\approx ${val}$ ft/min.`,
+  };
+};
+
+// --- rates-in-motion d2: closing cars, or a rising balloon on a 3-4-5 sight line --
+// Each entry: scaled 3-4-5-style triple plus a speed factor keeping speeds realistic.
+// ([3,4,5], sf 20) would clone the seed's 0.3/0.4 km at 60/80 km/h.
+const MOT2_CARS = [
+  { a: 3, b: 4, c: 5, sf: 10 }, { a: 3, b: 4, c: 5, sf: 15 }, { a: 3, b: 4, c: 5, sf: 25 }, { a: 3, b: 4, c: 5, sf: 30 },
+  { a: 6, b: 8, c: 10, sf: 10 }, { a: 6, b: 8, c: 10, sf: 12 },
+  { a: 5, b: 12, c: 13, sf: 5 }, { a: 5, b: 12, c: 13, sf: 10 },
+];
+const MOT2_BALLOON_CTX = [
+  { obj: "A hot-air balloon rises straight up", watcher: "A camera crew stands" },
+  { obj: "A weather balloon rises straight up", watcher: "A technician stands" },
+  { obj: "A drone climbs straight up", watcher: "Its pilot stands" },
+];
+fill["c1l-motion-d2"] = (rng, idx) => {
+  const kind = rng.pick(["cars", "balloon"]);
+  const base = { id: `gen.c1l-motion-d2.${idx}`, generated: true, concepts: ["rates-in-motion"], difficulty: 2, context: "applied" };
+  if (kind === "cars") {
+    const { a, b, c, sf } = rng.pick(MOT2_CARS);
+    const y = a / 10, x = b / 10, z = c / 10;
+    const vy = a * sf, vx = b * sf, ans = c * sf;
+    return { ...base,
+      prompt: `Two cars approach the same intersection on perpendicular roads. Car A is ${y} km north of it moving south at ${vy} km/h; car B is ${x} km east moving west at ${vx} km/h. How fast is the distance between them changing right now? (Both are approaching, so expect a negative rate.)`,
+      steps: [
+        { instruction: `Find the current separation $z$ from $x = ${x}$, $y = ${y}$ via $x^2 + y^2 = z^2$.`, answer: `${z}`, accept: [`z = ${z}`, `z=${z}`], hint: `$\\sqrt{${x}^2 + ${y}^2} = \\sqrt{${dec2(x * x + y * y)}}$.` },
+        { instruction: "Differentiate $x^2 + y^2 = z^2$ in time. Write the related-rate equation.", answer: "2x*dx/dt + 2y*dy/dt = 2z*dz/dt", accept: ["x*dx/dt + y*dy/dt = z*dz/dt", "2x*dx/dt+2y*dy/dt=2z*dz/dt"], hint: "$2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 2z\\frac{dz}{dt}$. Approaching means $\\frac{dx}{dt}$, $\\frac{dy}{dt}$ are negative." },
+        { instruction: `Substitute $x=${x}$, $\\frac{dx}{dt}=-${vx}$, $y=${y}$, $\\frac{dy}{dt}=-${vy}$, $z=${z}$ and solve for $\\frac{dz}{dt}$ in km/h.`, answer: `${-ans}`, accept: [`${-ans}.0`, `dz/dt = ${-ans}`], hint: `$\\frac{dz}{dt} = \\frac{${x}(-${vx}) + ${y}(-${vy})}{${z}} = \\frac{${dec2(-x * vx - y * vy)}}{${z}}$.` },
+      ],
+      finalAnswer: { value: `${-ans}`, unit: "km/h" },
+      solutionNarrative: `$\\frac{dz}{dt} = \\frac{x\\frac{dx}{dt}+y\\frac{dy}{dt}}{z} = \\frac{${dec2(-x * vx - y * vy)}}{${z}} = ${-ans}$ km/h (closing).`,
+    };
+  }
+  const ctx = rng.pick(MOT2_BALLOON_CTX);
+  const g = rng.pick([10, 20, 30]);
+  const dy = rng.pick([5, 10, 15]);
+  const d = 3 * g, yy = 4 * g, z = 5 * g;
+  const ans = (4 * dy) / 5; // integer since dy is a multiple of 5
+  return { ...base,
+    prompt: `${ctx.obj} at $\\frac{dy}{dt} = ${dy}$ ft/s. ${ctx.watcher} ${d} ft from the launch point. When the balloon is ${yy} ft high, how fast is the line-of-sight distance $z$ increasing? ($z^2 = ${d}^2 + y^2$.)`,
+    steps: [
+      { instruction: `Find the current sight-line distance $z$ when $y = ${yy}$.`, answer: `${z}`, accept: [`z = ${z}`, `z=${z}`], hint: `$\\sqrt{${d}^2 + ${yy}^2} = \\sqrt{${d * d + yy * yy}}$ — a ${3 * g}-${4 * g}-${5 * g} right triangle.` },
+      { instruction: `Differentiate $z^2 = ${d * d} + y^2$ in time. Write the related-rate equation.`, answer: "2z*dz/dt = 2y*dy/dt", accept: ["z*dz/dt = y*dy/dt", "2z*dz/dt=2y*dy/dt"], hint: `The ${d} ft ground distance is constant: $2z\\frac{dz}{dt} = 2y\\frac{dy}{dt}$.` },
+      { instruction: `Substitute $y = ${yy}$, $z = ${z}$, $\\frac{dy}{dt} = ${dy}$ and solve for $\\frac{dz}{dt}$ in ft/s.`, answer: `${ans}`, accept: [`${ans}.0`, `dz/dt = ${ans}`], hint: `$\\frac{dz}{dt} = \\frac{y}{z}\\frac{dy}{dt} = \\frac{${yy}}{${z}}(${dy}) = \\frac{4}{5}(${dy})$.` },
+    ],
+    finalAnswer: { value: `${ans}`, unit: "ft/s" },
+    solutionNarrative: `$\\frac{dz}{dt} = \\frac{y}{z}\\frac{dy}{dt} = \\frac{${yy}}{${z}}(${dy}) = ${ans}$ ft/s — the sight line lengthens at $\\frac{4}{5}$ of the climb rate.`,
+  };
+};

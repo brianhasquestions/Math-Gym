@@ -41,7 +41,7 @@
       "**Engineering:** simplifying transfer functions and finding where a response crosses zero."
     ]
   },
-  "generators": ["factor-gcf-v1", "factor-diff-squares-v1", "factor-trinomial-v1", "factor-trinomial-leading-v1", "apl-gcf-d3", "apl-diff-squares-d3", "apl-trinomial-simple-d3", "apl-trinomial-leading-d1"],
+  "generators": ["factor-gcf-v1", "factor-diff-squares-v1", "factor-trinomial-v1", "factor-trinomial-leading-v1", "apl-gcf-d3", "apl-diff-squares-d3", "apl-trinomial-simple-d3", "apl-trinomial-leading-d1", "apl-trinomial-leading-d2", "apl-gcf-d1", "apl-diff-squares-d1", "apl-trinomial-simple-d1"],
   "problems": [
     {
       "id": "algebra.factoring.s01",

@@ -41,7 +41,7 @@
       "**Robotics/navigation:** dot products test perpendicularity and measure heading angles between direction vectors."
     ]
   },
-  "generators": ["dot-product-v1", "cross-product-v1", "dot-work-v1", "c3l-angle-between-d1", "c3l-angle-between-d2", "c3l-angle-between-d3", "c3l-dot-product-d2", "c3l-cross-product-d1", "c3l-products-applied-d1"],
+  "generators": ["dot-product-v1", "cross-product-v1", "dot-work-v1", "c3l-angle-between-d1", "c3l-angle-between-d2", "c3l-angle-between-d3", "c3l-dot-product-d2", "c3l-cross-product-d1", "c3l-products-applied-d1", "c3l-dot-product-d3", "c3l-cross-product-d3", "c3l-products-applied-d3"],
   "problems": [
     {
       "id": "calculus-3.dot-and-cross-products.s01",

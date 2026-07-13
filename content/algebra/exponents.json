@@ -41,7 +41,7 @@
       "**Finance:** compound growth multiplies by the same factor each period, so a balance after $n$ periods is a base raised to the $n$th power."
     ]
   },
-  "generators": ["exp-product-v1", "exp-quotient-v1", "exp-power-v1", "exp-power-coef-v1", "exp-numeric-v1", "exp-negative-v1", "sci-eval-v1", "apl-power-rules-d1", "apl-sci-notation-d1", "apl-sci-notation-d3"],
+  "generators": ["exp-product-v1", "exp-quotient-v1", "exp-power-v1", "exp-power-coef-v1", "exp-numeric-v1", "exp-negative-v1", "sci-eval-v1", "apl-power-rules-d1", "apl-sci-notation-d1", "apl-sci-notation-d3", "apl-zero-neg-exp-d3"],
   "problems": [
     {
       "id": "algebra.exponents.s01",

@@ -41,7 +41,7 @@
       "**Everyday life:** translating *\"\\$3 a gallon\"* or *\"\\$15 an hour\"* into expressions you can reuse and combine."
     ]
   },
-  "generators": ["eval-linear-v1", "eval-quadratic-v1", "combine-terms-v1", "distribute-v1", "distribute-combine-v1", "translate-cost-v1", "apl-evaluate-d3", "apl-translate-d3", "apl-distributive-d1"],
+  "generators": ["eval-linear-v1", "eval-quadratic-v1", "combine-terms-v1", "distribute-v1", "distribute-combine-v1", "translate-cost-v1", "apl-evaluate-d3", "apl-translate-d3", "apl-distributive-d1", "apl-combine-like-terms-d3", "apl-combine-like-terms-d2", "apl-translate-d2"],
   "problems": [
     {
       "id": "algebra.variables-expressions.s01",

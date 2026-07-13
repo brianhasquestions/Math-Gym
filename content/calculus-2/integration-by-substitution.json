@@ -41,7 +41,7 @@
       "**Environmental science:** total pollutant or water volume when the flow rate scales with a changing inner measure."
     ]
   },
-  "generators": ["choosing-u-v1", "sub-definite-v1", "sub-applied-v1", "c2l-choosing-u-d3", "c2l-indef-sub-d2", "c2l-indef-sub-d3", "c2l-def-sub-d3", "c2l-sub-apps-d1", "c2l-sub-apps-d3"],
+  "generators": ["choosing-u-v1", "sub-definite-v1", "sub-applied-v1", "c2l-choosing-u-d3", "c2l-indef-sub-d2", "c2l-indef-sub-d3", "c2l-def-sub-d3", "c2l-sub-apps-d1", "c2l-sub-apps-d3", "c2l-choosing-u-d2", "c2l-indef-sub-d1", "c2l-def-sub-d1"],
   "problems": [
     {
       "id": "calculus-2.integration-by-substitution.s01",

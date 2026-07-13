@@ -985,3 +985,555 @@ fill["apl-distribute-d2"] = (rng, idx) => {
     solutionNarrative: `Distribute: $${k}x + ${k * aa} + ${coefTerm(m, "x")} = ${C}$. Combine: $${s}x + ${k * aa} = ${C}$. Subtract ${k * aa}: $${s}x = ${s * x0}$. Divide by ${s}: $x = ${x0}$.`,
   };
 };
+
+// ============================================================================
+// ============================================================================
+// Wave 15: the 25 remaining 2-seed pools (one template per pool).
+// ============================================================================
+// ============================================================================
+
+const cap = (s) => s.replace(/^./, (ch) => ch.toUpperCase());
+const gcdf = (x, y) => (y === 0 ? x : gcdf(y, x % y));
+
+// ============================================================================
+// exponents  (zero-and-negative-exponents d3)
+// ============================================================================
+
+// d3: quotient rule producing a negative exponent, then evaluate as a fraction.
+fill["apl-zero-neg-exp-d3"] = (rng, idx) => {
+  const [b, e] = rng.pick([[2, 2], [2, 3], [2, 4], [3, 2], [3, 3], [4, 2], [5, 2]]);
+  const m = rng.int(1, 4);
+  const n = m + e;
+  const val = Math.pow(b, e);
+  const dec = String(1 / val);
+  return {
+    id: `gen.apl-zero-neg-exp-d3.${idx}`, generated: true, concepts: ["zero-and-negative-exponents"], difficulty: 3, context: "abstract",
+    prompt: `Use the quotient rule, then evaluate: $\\dfrac{${b}^${m}}{${b}^${n}}$.`,
+    steps: [
+      { instruction: `Subtract the exponents to get a single power of ${b} (it will be negative).`, answer: `${b}^{-${e}}`, accept: [`${b}^-${e}`], hint: `$${b}^{${m}-${n}} = ${b}^{-${e}}$.` },
+      { instruction: "Rewrite as a positive-exponent fraction and evaluate.", answer: `1/${val}`, accept: dec.length <= 8 ? [dec] : [], hint: `$${b}^{-${e}} = 1/${b}^${e}$ and $${b}^${e} = ${val}$.` },
+    ],
+    finalAnswer: { value: `1/${val}`, unit: "" },
+    solutionNarrative: `$${b}^${m} / ${b}^${n} = ${b}^{${m}-${n}} = ${b}^{-${e}} = 1/${b}^${e} = 1/${val}$.`,
+  };
+};
+
+// ============================================================================
+// linear-inequalities  (flip-on-negative d3 & d1, compound-inequality d1)
+// ============================================================================
+
+// d3: applied two-step solve ending in a divide-by-negative flip.
+const FLIP3_CTX = [
+  { thing: "campsite water tank", stuff: "gallons", uses: "campers drain", ok: "The camp kitchen can operate", per: "hour" },
+  { thing: "phone battery", stuff: "percent of charge", uses: "streaming burns", ok: "The GPS keeps running", per: "hour" },
+  { thing: "printer cartridge", stuff: "milliliters of ink", uses: "each job uses", ok: "Print quality stays sharp", per: "job" },
+];
+fill["apl-flip-negative-d3"] = (rng, idx) => {
+  const ctx = rng.pick(FLIP3_CTX);
+  const k = rng.int(2, 5);
+  const X = rng.int(3, 9);
+  const D = rng.int(5, 20);
+  const C = D + k * X;
+  return {
+    id: `gen.apl-flip-negative-d3.${idx}`, generated: true, concepts: ["flip-on-negative"], difficulty: 3, context: "applied",
+    prompt: `A ${ctx.thing} starts at ${C} ${ctx.stuff} and ${ctx.uses} ${k} ${ctx.stuff} per ${ctx.per}, leaving $${C} - ${k}x$ after $x$ ${ctx.per}s. ${ctx.ok} only while $${C} - ${k}x > ${D}$. Solve the inequality for $x$.`,
+    steps: [
+      { instruction: `Subtract ${C} from both sides.`, answer: `-${k}x > ${D - C}`, accept: [`${D - C} < -${k}x`], hint: `Undo the $+${C}$; subtraction does not flip the sign.` },
+      { instruction: `Divide both sides by $-${k}$, and reverse the inequality.`, answer: `x < ${X}`, accept: [`${X} > x`], hint: "Dividing by a negative flips $>$ to $<$." },
+    ],
+    finalAnswer: { value: `x < ${X}`, unit: `${ctx.per}s` },
+    solutionNarrative: `$${C} - ${k}x > ${D}$ gives $-${k}x > ${D - C}$; dividing by $-${k}$ flips the sign: $x < ${X}$ ${ctx.per}s.`,
+  };
+};
+
+// d1: one-step divide-by-negative with the flip, all four directions.
+fill["apl-flip-negative-d1"] = (rng, idx) => {
+  const k = rng.int(2, 6);
+  const X = nz(rng, -8, 8);
+  const op = rng.pick(["<", ">", "<=", ">="]);
+  const flip = OP_FLIP[op];
+  const C = -k * X;
+  return {
+    id: `gen.apl-flip-negative-d1.${idx}`, generated: true, concepts: ["flip-on-negative"], difficulty: 1, context: "abstract",
+    prompt: `Solve for $x$:  $-${k}x ${OP_LATEX[op]} ${C}$. Be careful with the sign.`,
+    steps: [
+      { instruction: `Divide both sides by $-${k}$, and remember to reverse the inequality.`, answer: `x ${flip} ${X}`, accept: [`${X} ${op} x`], hint: `Dividing by a negative flips $${OP_LATEX[op]}$ to $${OP_LATEX[flip]}$.` },
+    ],
+    finalAnswer: { value: `x ${flip} ${X}`, unit: "" },
+    solutionNarrative: `Dividing $-${k}x ${OP_LATEX[op]} ${C}$ by $-${k}$ flips the sign: $x ${OP_LATEX[flip]} ${X}$.`,
+  };
+};
+
+// d1: subtract a constant from all three parts of a compound inequality.
+fill["apl-compound-ineq-d1"] = (rng, idx) => {
+  const a = rng.int(2, 7);
+  const L = rng.int(-6, 2);
+  const U = L + rng.int(3, 8);
+  return {
+    id: `gen.apl-compound-ineq-d1.${idx}`, generated: true, concepts: ["compound-inequality"], difficulty: 1, context: "abstract",
+    prompt: `Solve the compound inequality $${L + a} < x + ${a} \\leq ${U + a}$ for $x$. Write the answer as a compound inequality.`,
+    steps: [
+      { instruction: `Subtract ${a} from all three parts.`, answer: `${L} < x <= ${U}`, accept: [`${L} < x \\leq ${U}`, `${U} >= x > ${L}`], hint: "Whatever you do to the middle, do to both outer parts." },
+    ],
+    finalAnswer: { value: `${L} < x <= ${U}`, unit: "" },
+    solutionNarrative: `Subtracting ${a} from each part of $${L + a} < x + ${a} \\leq ${U + a}$ gives $${L} < x \\leq ${U}$.`,
+  };
+};
+
+// ============================================================================
+// polynomials-operations  (multiply-binomials d3, multiply-monomial d1)
+// ============================================================================
+
+// d3: applied revenue FOIL with a negative leading term to arrange.
+const REV_CTX = [
+  { event: "concert", item: "tickets" },
+  { event: "food festival", item: "passes" },
+  { event: "planetarium show", item: "seats" },
+];
+fill["apl-multiply-binomials-d3"] = (rng, idx) => {
+  const ctx = rng.pick(REV_CTX);
+  const a = rng.int(3, 7);
+  const c = rng.pick([2, 3]);
+  const b = a * c + rng.int(5, 25);
+  const mid = b - a * c;
+  const P = `-${c}x^2 + ${mid}x + ${a * b}`;
+  return {
+    id: `gen.apl-multiply-binomials-d3.${idx}`, generated: true, concepts: ["multiply-binomials"], difficulty: 3, context: "applied",
+    prompt: `A ${ctx.event} sells ${ctx.item} at price $(x + ${a})$ dollars, and the number of ${ctx.item} sold is $(${b} - ${c}x)$. Revenue is price times quantity. Write the revenue as a single polynomial.`,
+    steps: [
+      { instruction: "Multiply price by quantity using FOIL.", answer: `${b}x - ${c}x^2 + ${a * b} - ${a * c}x`, accept: [], hint: `$(x+${a})(${b}-${c}x)$: First $${b}x$, Outer $-${c}x^2$, Inner $${a * b}$, Last $-${a * c}x$.` },
+      { instruction: "Combine like terms and write the revenue polynomial.", answer: P, accept: [], hint: `$${b}x - ${a * c}x = ${mid}x$; arrange in descending degree.` },
+    ],
+    finalAnswer: { value: P, unit: "dollars" },
+    solutionNarrative: `Revenue $= (x+${a})(${b}-${c}x) = ${b}x - ${c}x^2 + ${a * b} - ${a * c}x = ${P}$ dollars.`,
+  };
+};
+
+// d1: distribute a monomial across a binomial.
+fill["apl-multiply-monomial-d1"] = (rng, idx) => {
+  const a = rng.int(2, 5);
+  const b = rng.int(2, 6);
+  const cc = rng.int(2, 9);
+  const ans = `${a * b}x^2 + ${a * cc}x`;
+  return {
+    id: `gen.apl-multiply-monomial-d1.${idx}`, generated: true, concepts: ["multiply-monomial"], difficulty: 1, context: "abstract",
+    prompt: `Multiply: $${a}x(${b}x + ${cc})$.`,
+    steps: [
+      { instruction: "Distribute the monomial across both terms.", answer: ans, accept: [], hint: `$${a}x \\cdot ${b}x = ${a * b}x^2$ and $${a}x \\cdot ${cc} = ${a * cc}x$.` },
+    ],
+    finalAnswer: { value: ans, unit: "" },
+    solutionNarrative: `$${a}x \\cdot ${b}x = ${a * b}x^2$ and $${a}x \\cdot ${cc} = ${a * cc}x$, giving $${ans}$.`,
+  };
+};
+
+// ============================================================================
+// real-numbers  (integer-operations d3, fraction-operations d3)
+// ============================================================================
+
+// d3: mixed signed multiplication, division, and addition.
+fill["apl-integer-ops-d3"] = (rng, idx) => {
+  const a = rng.int(2, 6), b = rng.int(2, 6);
+  const d = rng.int(2, 6), q = rng.int(2, 5);
+  const c = d * q;
+  const P = a * b;
+  return {
+    id: `gen.apl-integer-ops-d3.${idx}`, generated: true, concepts: ["integer-operations"], difficulty: 3, context: "abstract",
+    prompt: `Evaluate: $-${a} \\times (-${b}) + (-${c}) \\div ${d}$`,
+    steps: [
+      { instruction: "Multiply the first two factors (watch the signs).", answer: `${P}`, accept: [], hint: `Negative times negative is positive: $(-${a})\\times(-${b})$.` },
+      { instruction: `Divide $-${c}$ by $${d}$ (watch the signs).`, answer: `-${q}`, accept: [], hint: "Different signs give a negative." },
+      { instruction: "Add the two results.", answer: `${P - q}`, accept: [], hint: `$${P} + (-${q})$.` },
+    ],
+    finalAnswer: { value: `${P - q}`, unit: "" },
+    solutionNarrative: `$(-${a})\\times(-${b}) = ${P}$ and $-${c} \\div ${d} = -${q}$; then $${P} + (-${q}) = ${P - q}$.`,
+  };
+};
+
+// d3: applied fraction division via the reciprocal, with a reduction at the end.
+const FRAC_CTX = [
+  { thing: "pizza", of: "of a whole pizza" },
+  { thing: "pan of lasagna", of: "of the whole pan" },
+  { thing: "sheet cake", of: "of the whole cake" },
+];
+const FRAC_TRIPLES = [[3, 4, 3], [2, 3, 2], [3, 5, 3], [2, 5, 2], [4, 5, 2], [3, 8, 3], [4, 9, 2]];
+fill["apl-fraction-ops-d3"] = (rng, idx) => {
+  const ctx = rng.pick(FRAC_CTX);
+  const [p, q, n] = rng.pick(FRAC_TRIPLES);
+  const den = q * n;
+  const g = gcdf(p, den);
+  const simp = `${p / g}/${den / g}`;
+  return {
+    id: `gen.apl-fraction-ops-d3.${idx}`, generated: true, concepts: ["fraction-operations"], difficulty: 3, context: "applied",
+    prompt: `You have $\\frac{${p}}{${q}}$ of a ${ctx.thing} left and want to split it equally among ${n} people. What fraction ${ctx.of} does each person get?`,
+    steps: [
+      { instruction: `Splitting among ${n} means dividing by ${n}. Rewrite the division as multiplication by the reciprocal of ${n}.`, answer: `${p}/${q} * 1/${n}`, accept: [`${p}/${q} × 1/${n}`, `1/${n} * ${p}/${q}`], hint: `Dividing by ${n} is multiplying by $\\frac{1}{${n}}$.` },
+      { instruction: "Multiply and simplify.", answer: simp, accept: [`${p}/${den}`], hint: `$\\frac{${p}}{${den}}$ reduces.` },
+    ],
+    finalAnswer: { value: simp, unit: `of the ${ctx.thing}` },
+    solutionNarrative: `$\\frac{${p}}{${q}} \\div ${n} = \\frac{${p}}{${q}} \\times \\frac{1}{${n}} = \\frac{${p}}{${den}} = \\frac{${p / g}}{${den / g}}$ each.`,
+  };
+};
+
+// ============================================================================
+// systems-linear-equations  (setup-system d3 & d1, substitution d3, elimination d3)
+// ============================================================================
+
+// d3: ticket-sales setup, then a full elimination solve.
+const TICKET_CTX = [
+  { place: "theater", big: "adult", small: "child" },
+  { place: "museum", big: "adult", small: "student" },
+  { place: "ballpark", big: "adult", small: "child" },
+];
+fill["apl-setup-system-d3"] = (rng, idx) => {
+  const ctx = rng.pick(TICKET_CTX);
+  const B = rng.int(3, 7);
+  const A = B + rng.int(2, 5);
+  const x0 = rng.int(30, 120), y0 = rng.int(30, 120);
+  const N = x0 + y0, R = A * x0 + B * y0;
+  const dA = A - B;
+  return {
+    id: `gen.apl-setup-system-d3.${idx}`, generated: true, concepts: ["setup-system"], difficulty: 3, context: "applied",
+    prompt: `A ${ctx.place} sold ${N} tickets for \\$${R}. ${cap(ctx.big)} tickets cost \\$${A} and ${ctx.small} tickets cost \\$${B}. Let $x$ = ${ctx.big} tickets and $y$ = ${ctx.small} tickets. Set up the system, then solve for how many of each were sold.`,
+    steps: [
+      { instruction: "Write the count equation (total tickets).", answer: `x + y = ${N}`, accept: [`y + x = ${N}`], hint: `${cap(ctx.big)} tickets plus ${ctx.small} tickets equal ${N}.` },
+      { instruction: "Write the revenue equation (total dollars).", answer: `${A}x + ${B}y = ${R}`, accept: [`${B}y + ${A}x = ${R}`], hint: `Each ${ctx.big} ticket is \\$${A}, each ${ctx.small} ticket \\$${B}.` },
+      { instruction: `Multiply the count equation by ${B}, then subtract it from the revenue equation to eliminate $y$. Write the resulting equation.`, answer: `${dA}x = ${R - B * N}`, accept: [`${R - B * N} = ${dA}x`], hint: `$${B}(x+y)=${B * N}$; $(${A}x+${B}y)-(${B}x+${B}y)=${R}-${B * N}$.` },
+      { instruction: `Solve for $x$ (${ctx.big} tickets).`, answer: `x = ${x0}`, accept: [`${x0}`], hint: `Divide by ${dA}.` },
+      { instruction: `Find $y$ (${ctx.small} tickets) using $x + y = ${N}$.`, answer: `y = ${y0}`, accept: [`${y0}`], hint: `$${N} - ${x0} = ${y0}$.` },
+    ],
+    finalAnswer: { value: `(${x0}, ${y0})`, unit: "tickets" },
+    solutionNarrative: `From $x + y = ${N}$ and $${A}x + ${B}y = ${R}$: eliminating $y$ gives $${dA}x = ${R - B * N}$, so $x = ${x0}$ ${ctx.big} and $y = ${y0}$ ${ctx.small} tickets.`,
+  };
+};
+
+// d1: translate two verbal facts into a system (setup only).
+fill["apl-setup-system-d1"] = (rng, idx) => {
+  const y0 = rng.int(3, 12);
+  const D = rng.int(2, 8);
+  const x0 = y0 + D;
+  const S = x0 + y0;
+  return {
+    id: `gen.apl-setup-system-d1.${idx}`, generated: true, concepts: ["setup-system"], difficulty: 1, context: "applied",
+    prompt: `Two numbers add up to ${S}, and one is ${D} more than the other. Set up a system using $x$ (the larger) and $y$ (the smaller).`,
+    steps: [
+      { instruction: `Write an equation for the two numbers adding to ${S}.`, answer: `x + y = ${S}`, accept: [`y + x = ${S}`], hint: `Their sum is ${S}.` },
+      { instruction: `Write an equation saying the larger is ${D} more than the smaller.`, answer: `x = y + ${D}`, accept: [`x - y = ${D}`], hint: `Larger equals smaller plus ${D}.` },
+    ],
+    finalAnswer: { value: `x + y = ${S}; x = y + ${D}`, unit: "" },
+    solutionNarrative: `The two facts become $x + y = ${S}$ and $x = y + ${D}$. (Solving them gives $x = ${x0}$, $y = ${y0}$.)`,
+  };
+};
+
+// d3: full substitution solve with a distribute step and an ordered pair.
+fill["apl-substitution-d3"] = (rng, idx) => {
+  const a = rng.int(2, 4);
+  const y0 = rng.int(2, 4);
+  const b = nz(rng, -3, 5);
+  const x0 = a * y0 + b;
+  const c = rng.pick([2, 3]);
+  const d = rng.int(1, 5);
+  const K = c * a + d;
+  const e = c * x0 + d * y0;
+  const M = K * y0;
+  return {
+    id: `gen.apl-substitution-d3.${idx}`, generated: true, concepts: ["substitution"], difficulty: 3, context: "abstract",
+    prompt: `Solve: $\\begin{cases} x = ${a}y ${sgnC(b)} \\\\ ${c}x + ${coefTerm(d, "y")} = ${e} \\end{cases}$`,
+    steps: [
+      { instruction: `Substitute $x = ${a}y ${sgnC(b)}$ into the second equation and simplify to $(\\text{number})y = (\\text{number})$.`, answer: `${K}y = ${M}`, accept: [`${M} = ${K}y`], hint: `$${c}(${a}y ${sgnC(b)}) + ${coefTerm(d, "y")} = ${e}$ — distribute, then combine and move the constant.` },
+      { instruction: "Solve for $y$.", answer: `y = ${y0}`, accept: [`${y0}`], hint: `Divide by ${K}.` },
+      { instruction: `Find $x$ using $x = ${a}y ${sgnC(b)}$.`, answer: `x = ${x0}`, accept: [`${x0}`], hint: `$x = ${a}(${y0}) ${sgnC(b)}$.` },
+      { instruction: "Write the solution as an ordered pair.", answer: `(${x0}, ${y0})`, accept: [`x=${x0}, y=${y0}`, `${x0},${y0}`], hint: "(x, y)." },
+    ],
+    finalAnswer: { value: `(${x0}, ${y0})`, unit: "" },
+    solutionNarrative: `Substituting gives $${K}y = ${M}$, so $y = ${y0}$ and $x = ${x0}$. Solution: $(${x0}, ${y0})$.`,
+  };
+};
+
+// d3: elimination that needs a row scaled first, ending in an ordered pair.
+fill["apl-elimination-d3"] = (rng, idx) => {
+  const a = rng.int(2, 4);
+  const b = a + 1;
+  const x0 = rng.int(2, 7), y0 = rng.int(2, 7);
+  const s = x0 + y0, e1 = a * x0 + b * y0;
+  const scaled = `${a}x + ${a}y = ${a * s}`;
+  return {
+    id: `gen.apl-elimination-d3.${idx}`, generated: true, concepts: ["elimination"], difficulty: 3, context: "abstract",
+    prompt: `Solve by elimination (you'll need to scale a row first): $\\begin{cases} ${a}x + ${b}y = ${e1} \\\\ x + y = ${s} \\end{cases}$`,
+    steps: [
+      { instruction: `Multiply the second equation by ${a} so the $x$ terms match the first. Write the new second equation.`, answer: scaled, accept: [squash(scaled)], hint: `Multiply every term of $x + y = ${s}$ by ${a}.` },
+      { instruction: "Subtract the new equation from the first to eliminate $x$. Write the result.", answer: `y = ${y0}`, accept: [`${y0}`], hint: `$(${a}x + ${b}y) - (${a}x + ${a}y) = ${e1} - ${a * s}$.` },
+      { instruction: `Substitute $y = ${y0}$ into $x + y = ${s}$ to find $x$.`, answer: `x = ${x0}`, accept: [`${x0}`], hint: `$x + ${y0} = ${s}$.` },
+      { instruction: "Write the solution as an ordered pair.", answer: `(${x0}, ${y0})`, accept: [`x=${x0}, y=${y0}`, `${x0},${y0}`], hint: "(x, y)." },
+    ],
+    finalAnswer: { value: `(${x0}, ${y0})`, unit: "" },
+    solutionNarrative: `Scale row 2 to $${scaled}$, subtract to get $y = ${y0}$, then $x = ${x0}$. Solution: $(${x0}, ${y0})$.`,
+  };
+};
+
+// ============================================================================
+// variables-expressions  (combine-like-terms d3 & d2, translate-to-expression d2)
+// ============================================================================
+
+// d3: five terms with three x's to gather, signs included.
+fill["apl-combine-like-terms-d3"] = (rng, idx) => {
+  const b = rng.int(1, 3), d = rng.int(1, 3);
+  const a = b + d + rng.int(1, 4);
+  const c1 = rng.int(2, 9), c2 = rng.int(2, 9);
+  const g = a - b - d, C = c1 + c2;
+  const grouped = `${a}x - ${coefTerm(b, "x")} - ${coefTerm(d, "x")} + ${c1} + ${c2}`;
+  const ans = `${coefTerm(g, "x")} + ${C}`;
+  return {
+    id: `gen.apl-combine-like-terms-d3.${idx}`, generated: true, concepts: ["combine-like-terms"], difficulty: 3, context: "abstract",
+    prompt: `Simplify by combining like terms: $${a}x + ${c1} - ${coefTerm(b, "x")} + ${c2} - ${coefTerm(d, "x")}$.`,
+    steps: [
+      { instruction: "Group the $x$ terms together and the constants together.", answer: grouped, accept: [squash(grouped)], hint: "Keep the sign in front of each term." },
+      { instruction: "Combine each group.", answer: ans, accept: [`${C} + ${coefTerm(g, "x")}`], hint: `$${a}x - ${coefTerm(b, "x")} - ${coefTerm(d, "x")} = ${coefTerm(g, "x")}$ and $${c1} + ${c2} = ${C}$.` },
+    ],
+    finalAnswer: { value: ans, unit: "" },
+    solutionNarrative: `$${a}x - ${coefTerm(b, "x")} - ${coefTerm(d, "x")} = ${coefTerm(g, "x")}$ and $${c1} + ${c2} = ${C}$, giving $${ans}$.`,
+  };
+};
+
+// d2: two different variables that must be combined separately.
+fill["apl-combine-like-terms-d2"] = (rng, idx) => {
+  const [u, v] = rng.pick([["a", "b"], ["m", "n"], ["p", "q"]]);
+  const a1 = rng.int(3, 7), a2 = rng.int(2, 5);
+  const b1 = rng.int(2, 6);
+  const b2 = rng.int(1, b1 - 1);
+  const gu = a1 + a2, gv = b1 - b2;
+  const grouped = `${a1}${u} + ${a2}${u} + ${b1}${v} - ${coefTerm(b2, v)}`;
+  const ans = `${gu}${u} + ${coefTerm(gv, v)}`;
+  return {
+    id: `gen.apl-combine-like-terms-d2.${idx}`, generated: true, concepts: ["combine-like-terms"], difficulty: 2, context: "abstract",
+    prompt: `Simplify: $${a1}${u} + ${b1}${v} + ${a2}${u} - ${coefTerm(b2, v)}$.`,
+    steps: [
+      { instruction: `Group like terms: the $${u}$ terms and the $${v}$ terms.`, answer: grouped, accept: [squash(grouped)], hint: `$${u}$ terms and $${v}$ terms are different and cannot merge with each other.` },
+      { instruction: "Combine each group.", answer: ans, accept: [`${coefTerm(gv, v)} + ${gu}${u}`], hint: `$${a1}${u} + ${a2}${u} = ${gu}${u}$ and $${b1}${v} - ${coefTerm(b2, v)} = ${coefTerm(gv, v)}$.` },
+    ],
+    finalAnswer: { value: ans, unit: "" },
+    solutionNarrative: `$${a1}${u} + ${a2}${u} = ${gu}${u}$ and $${b1}${v} - ${coefTerm(b2, v)} = ${coefTerm(gv, v)}$, so the result is $${ans}$.`,
+  };
+};
+
+// d2: rate-plus-flat-fee translation.
+const SUB_CTX = [
+  { who: "A gym", fee: "one-time joining fee", per: "month", varName: "m" },
+  { who: "A streaming service", fee: "one-time signup fee", per: "month", varName: "m" },
+  { who: "A tool-rental shop", fee: "flat cleaning fee", per: "day", varName: "d" },
+];
+fill["apl-translate-d2"] = (rng, idx) => {
+  const ctx = rng.pick(SUB_CTX);
+  const r = rng.pick([12, 15, 18, 20, 25, 35, 40]);
+  const F = rng.pick([20, 25, 30, 45, 50, 60]);
+  const V = ctx.varName;
+  return {
+    id: `gen.apl-translate-d2.${idx}`, generated: true, concepts: ["translate-to-expression"], difficulty: 2, context: "applied",
+    prompt: `${ctx.who} charges a \\$${F} ${ctx.fee} plus \\$${r} per ${ctx.per}. Write an expression for the total cost after $${V}$ ${ctx.per}s.`,
+    steps: [
+      { instruction: `Translate '\\$${r} per ${ctx.per}' into a term (use $${V}$ for ${ctx.per}s).`, answer: `${r}${V}`, accept: [`${r}*${V}`, `${V}*${r}`], hint: `Per ${ctx.per} signals multiplication: rate times ${ctx.per}s.` },
+      { instruction: `Add the one-time \\$${F} ${ctx.fee} to get the total.`, answer: `${r}${V} + ${F}`, accept: [`${F} + ${r}${V}`], hint: "Plus a flat fee signals addition." },
+    ],
+    finalAnswer: { value: `${r}${V} + ${F}`, unit: "dollars" },
+    solutionNarrative: `The per-${ctx.per} cost is $${r}${V}$; adding the flat \\$${F} fee gives $${r}${V} + ${F}$ dollars.`,
+  };
+};
+
+// ============================================================================
+// factoring  (trinomial-leading d2, gcf d1, difference-of-squares d1, trinomial-simple d1)
+// ============================================================================
+
+// d2: leading-coefficient trinomial with mixed sign patterns.
+fill["apl-trinomial-leading-d2"] = (rng, idx) => {
+  const a = rng.pick([2, 3]);
+  const b = a === 2 ? rng.pick([1, 3, 5]) : rng.pick([1, 2, 4, 5]);
+  const cc = rng.int(2, 4);
+  const kind = rng.pick(["pp", "pm", "mp"]);
+  let mid, K, factored, alt, n1, n2;
+  if (kind === "pp") { mid = a * cc + b; K = b * cc; factored = `(${a}x + ${b})(x + ${cc})`; alt = `(x + ${cc})(${a}x + ${b})`; n1 = a * cc; n2 = b; }
+  else if (kind === "pm") { mid = b - a * cc; K = -b * cc; factored = `(${a}x + ${b})(x - ${cc})`; alt = `(x - ${cc})(${a}x + ${b})`; n1 = -a * cc; n2 = b; }
+  else { mid = a * cc - b; K = -b * cc; factored = `(${a}x - ${b})(x + ${cc})`; alt = `(x + ${cc})(${a}x - ${b})`; n1 = a * cc; n2 = -b; }
+  return {
+    id: `gen.apl-trinomial-leading-d2.${idx}`, generated: true, concepts: ["trinomial-leading"], difficulty: 2, context: "abstract",
+    prompt: `Factor completely: $${a}x^2 ${midTerm(mid, "x")} ${sgnC(K)}$`,
+    steps: [
+      { instruction: "Factor this trinomial into two binomials.", form: "factored", answer: factored, accept: [alt], hint: `AC method: $a \\cdot c = ${a * K}$; two numbers multiplying to ${a * K} and adding to ${mid} are ${n1} and ${n2}.` },
+    ],
+    finalAnswer: { value: factored, unit: "" },
+    solutionNarrative: `$${a}x^2 ${midTerm(mid, "x")} ${sgnC(K)} = ${factored}$. Check with FOIL: the middle term is $${n1}x + ${n2}x = ${mid}x$. ✓`,
+  };
+};
+
+// d1: pull a numeric-times-x GCF out of two terms.
+const GCF1_PAIRS = [[2, 3], [3, 4], [2, 5], [3, 5], [4, 5], [5, 2], [3, 2], [5, 3], [2, 7], [4, 3]];
+fill["apl-gcf-d1"] = (rng, idx) => {
+  const g = rng.pick([2, 3, 4, 5]);
+  const [m1, m2] = rng.pick(GCF1_PAIRS);
+  const factored = `${g}x(${m1}x + ${m2})`;
+  return {
+    id: `gen.apl-gcf-d1.${idx}`, generated: true, concepts: ["gcf"], difficulty: 1, context: "abstract",
+    prompt: `Factor out the greatest common factor: $${g * m1}x^2 + ${g * m2}x$`,
+    steps: [
+      { instruction: `What is the GCF of $${g * m1}x^2$ and $${g * m2}x$?`, answer: `${g}x`, accept: [], hint: `The largest number dividing ${g * m1} and ${g * m2} is ${g}; both terms have an $x$.` },
+      { instruction: "Write the factored form.", form: "factored", answer: factored, accept: [], hint: `Divide each term by $${g}x$.` },
+    ],
+    finalAnswer: { value: factored, unit: "" },
+    solutionNarrative: `GCF is $${g}x$: $${g * m1}x^2 + ${g * m2}x = ${factored}$.`,
+  };
+};
+
+// d1: plain difference of squares.
+fill["apl-diff-squares-d1"] = (rng, idx) => {
+  const n = rng.int(2, 9);
+  const factored = `(x - ${n})(x + ${n})`;
+  return {
+    id: `gen.apl-diff-squares-d1.${idx}`, generated: true, concepts: ["difference-of-squares"], difficulty: 1, context: "abstract",
+    prompt: `Factor completely: $x^2 - ${n * n}$`,
+    steps: [
+      { instruction: `Write $x^2 - ${n * n}$ as a difference of squares, then factor it.`, form: "factored", answer: factored, accept: [`(x + ${n})(x - ${n})`], hint: `$x^2 - ${n * n} = x^2 - ${n}^2$, which is $(a-b)(a+b)$.` },
+    ],
+    finalAnswer: { value: factored, unit: "" },
+    solutionNarrative: `$x^2 - ${n * n} = ${factored}$.`,
+  };
+};
+
+// d1: monic trinomial with both numbers positive.
+fill["apl-trinomial-simple-d1"] = (rng, idx) => {
+  const p = rng.int(2, 6);
+  const q = p + rng.int(1, 3);
+  const B = p + q, C = p * q;
+  const factored = `(x + ${p})(x + ${q})`;
+  return {
+    id: `gen.apl-trinomial-simple-d1.${idx}`, generated: true, concepts: ["trinomial-simple"], difficulty: 1, context: "abstract",
+    prompt: `Factor completely: $x^2 + ${B}x + ${C}$`,
+    steps: [
+      { instruction: `Find two integers that multiply to ${C} and add to ${B}. Enter them comma-separated.`, answer: `${p}, ${q}`, accept: [`${q}, ${p}`], hint: `List the factor pairs of ${C}; which one adds to ${B}?` },
+      { instruction: "Write the factorization.", form: "factored", answer: factored, accept: [`(x + ${q})(x + ${p})`], hint: "Each number $r$ gives a factor $(x + r)$." },
+    ],
+    finalAnswer: { value: factored, unit: "" },
+    solutionNarrative: `${p} and ${q} multiply to ${C} and add to ${B}: $${factored}$.`,
+  };
+};
+
+// ============================================================================
+// quadratic-equations  (quadratic-formula d2, square-root-method d1)
+// ============================================================================
+
+// d2: quadratic formula with opposite-sign roots (perfect-square discriminant).
+fill["apl-quad-formula-d2"] = (rng, idx) => {
+  const p = rng.int(2, 7);
+  let qm = rng.int(2, 7);
+  if (qm === p) qm = p === 7 ? 6 : p + 1;
+  const q = -qm;
+  const B = -(p + q), C = p * q;
+  const D = (p - q) * (p - q);
+  return {
+    id: `gen.apl-quad-formula-d2.${idx}`, generated: true, concepts: ["quadratic-formula"], difficulty: 2, context: "abstract",
+    prompt: `Solve using the quadratic formula: $${triStr(B, C)} = 0$`,
+    steps: [
+      { instruction: `Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=${B}$, $c=${C}$).`, answer: `${D}`, accept: [], hint: `$(${B})^2 - 4(1)(${C}) = ${B * B} + ${-4 * C}$.` },
+      { instruction: "Apply the formula to find both solutions.", form: "solutions", answer: `x = ${p} or x = ${q}`, accept: [`${p}, ${q}`, `${q}, ${p}`], hint: `$x = \\dfrac{${-B} \\pm ${p - q}}{2}$.` },
+    ],
+    finalAnswer: { value: `x = ${p}, x = ${q}`, unit: "" },
+    solutionNarrative: `Discriminant ${D}; $x = \\dfrac{${-B} \\pm ${p - q}}{2}$ gives $x = ${p}$ or $x = ${q}$.`,
+  };
+};
+
+// d1: pure square root of both sides with the ± reminder.
+fill["apl-sqrt-method-d1"] = (rng, idx) => {
+  const k = rng.int(3, 12);
+  return {
+    id: `gen.apl-sqrt-method-d1.${idx}`, generated: true, concepts: ["square-root-method"], difficulty: 1, context: "abstract",
+    prompt: `Solve: $x^2 = ${k * k}$`,
+    steps: [
+      { instruction: "Take the square root of both sides (remember $\\pm$). Enter both solutions.", form: "solutions", answer: `x = ${k} or x = -${k}`, accept: [`${k}, -${k}`, `-${k}, ${k}`], hint: `$\\sqrt{${k * k}} = ${k}$, and $x$ can be positive or negative.` },
+    ],
+    finalAnswer: { value: `x = ${k}, x = -${k}`, unit: "" },
+    solutionNarrative: `$x^2 = ${k * k} \\Rightarrow x = \\pm ${k}$.`,
+  };
+};
+
+// ============================================================================
+// linear-equations  (distribute d1, variables-both-sides d1)
+// ============================================================================
+
+// d1: single distribution, no solving.
+fill["apl-distribute-d1"] = (rng, idx) => {
+  const a = rng.int(2, 7);
+  const b = rng.int(2, 9);
+  const sign = rng.pick(["+", "-"]);
+  const ans = `${a}x ${sign} ${a * b}`;
+  return {
+    id: `gen.apl-distribute-d1.${idx}`, generated: true, concepts: ["distribute"], difficulty: 1, context: "abstract",
+    prompt: `Distribute to remove the parentheses (do not solve):  $${a}(x ${sign} ${b})$.`,
+    steps: [
+      { instruction: `Multiply the ${a} through the parentheses. Write the result.`, answer: ans, accept: sign === "+" ? [`${a * b} + ${a}x`] : [], hint: `$${a} \\cdot x = ${a}x$ and $${a} \\cdot ${b} = ${a * b}$${sign === "-" ? ", keeping the minus sign" : ""}.` },
+    ],
+    finalAnswer: { value: ans, unit: "" },
+    solutionNarrative: `$${a}(x ${sign} ${b}) = ${ans}$.`,
+  };
+};
+
+// d1: one gathering step with variables on both sides.
+fill["apl-both-sides-d1"] = (rng, idx) => {
+  const b = rng.int(2, 5);
+  const g = rng.int(2, 5);
+  const a = b + g;
+  const x0 = rng.int(2, 7);
+  const c = g * x0;
+  return {
+    id: `gen.apl-both-sides-d1.${idx}`, generated: true, concepts: ["variables-both-sides"], difficulty: 1, context: "abstract",
+    prompt: `Gather the variable on one side (one step):  $${a}x = ${b}x + ${c}$. Subtract $${b}x$ from both sides and write the resulting equation.`,
+    steps: [
+      { instruction: `Subtract $${b}x$ from both sides. Write the resulting equation.`, answer: `${g}x = ${c}`, accept: [`${g}x=${c}`, `${c} = ${g}x`], hint: `$${a}x - ${b}x = ${g}x$; the right side loses its $${b}x$.` },
+    ],
+    finalAnswer: { value: `${g}x = ${c}`, unit: "" },
+    solutionNarrative: `Subtracting $${b}x$ from both sides of $${a}x = ${b}x + ${c}$ gives $${g}x = ${c}$ (which then solves to $x = ${x0}$).`,
+  };
+};
+
+// ============================================================================
+// ratios-proportions-percent  (solve-proportion d1, percent-change d1)
+// ============================================================================
+
+// d1: recipe-style proportion with a clean integer answer.
+const PROP1_CTX = [
+  { small: "cups of flour", big: "cookies", uses: "A recipe uses" },
+  { small: "scoops of lemonade mix", big: "cups of lemonade", uses: "A pitcher recipe uses" },
+  { small: "tablespoons of chia seeds", big: "smoothies", uses: "A smoothie recipe uses" },
+];
+fill["apl-proportion-d1"] = (rng, idx) => {
+  const ctx = rng.pick(PROP1_CTX);
+  const p = rng.int(2, 4);
+  const s = rng.int(4, 8);
+  const q = p * s;
+  const x0 = p + rng.int(1, 4);
+  const r = s * x0;
+  return {
+    id: `gen.apl-proportion-d1.${idx}`, generated: true, concepts: ["solve-proportion"], difficulty: 1, context: "applied",
+    prompt: `${ctx.uses} ${p} ${ctx.small} to make ${q} ${ctx.big}. How many ${ctx.small} are needed for ${r} ${ctx.big}? (Enter the number.)`,
+    steps: [
+      { instruction: `Set up a proportion: $\\frac{${p}}{${q}} = \\frac{x}{${r}}$. Cross-multiply to get an equation for $${q}x$.`, answer: `${q}x = ${p * r}`, accept: [`${q}x=${p * r}`, `${p * r} = ${q}x`], hint: `Cross-multiply: $${p} \\times ${r} = ${q} \\times x$.` },
+      { instruction: "Solve for $x$.", answer: `x = ${x0}`, accept: [`${x0}`], hint: `Divide both sides by ${q}.` },
+    ],
+    finalAnswer: { value: `${x0}`, unit: ctx.small },
+    solutionNarrative: `$\\frac{${p}}{${q}} = \\frac{x}{${r}}$ cross-multiplies to $${q}x = ${p * r}$, so $x = ${x0}$ ${ctx.small}.`,
+  };
+};
+
+// d1: percent of an amount (tip), whole dollars only.
+const TIP_CTX = ["restaurant bill", "food-delivery order", "haircut"];
+fill["apl-percent-change-d1"] = (rng, idx) => {
+  const what = rng.pick(TIP_CTX);
+  const p = rng.pick([10, 15, 20, 25]);
+  const W = 20 * rng.int(2, 8);
+  const tip = (W * p) / 100;
+  return {
+    id: `gen.apl-percent-change-d1.${idx}`, generated: true, concepts: ["percent-change"], difficulty: 1, context: "applied",
+    prompt: `Your ${what} is \\$${W}. You want to leave a ${p}% tip. How many dollars is the tip? (Enter the number of dollars.)`,
+    steps: [
+      { instruction: `Convert ${p}% to a decimal and multiply by the total.`, answer: `${tip}`, accept: [`${tip}.00`], hint: `${p / 100} × ${W}.` },
+    ],
+    finalAnswer: { value: `${tip}`, unit: "dollars" },
+    solutionNarrative: `${p}% of \\$${W} is $${p / 100} \\times ${W} = \\$${tip}$.`,
+  };
+};

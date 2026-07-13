@@ -41,7 +41,7 @@
       "**Everyday life:** turn a filling or draining rate into how much is in the tank, tub, or reservoir at a given moment."
     ]
   },
-  "generators": ["antideriv-power-v1", "antideriv-rules-v1", "ivp-v1", "antideriv-app-v1", "c2l-power-rule-d3", "c2l-antideriv-rules-d1", "c2l-antideriv-rules-d3", "c2l-ivp-d1", "c2l-ivp-d3", "c2l-antideriv-apps-d1"],
+  "generators": ["antideriv-power-v1", "antideriv-rules-v1", "ivp-v1", "antideriv-app-v1", "c2l-power-rule-d3", "c2l-antideriv-rules-d1", "c2l-antideriv-rules-d3", "c2l-ivp-d1", "c2l-ivp-d3", "c2l-antideriv-apps-d1", "c2l-power-rule-d2", "c2l-antideriv-apps-d3"],
   "problems": [
     {
       "id": "calculus-2.antiderivatives.s01",

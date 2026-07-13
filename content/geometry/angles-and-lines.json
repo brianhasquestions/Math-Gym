@@ -41,7 +41,7 @@
       "**Everyday life:** clock-hand angles, the tilt of a solar panel or satellite dish, and the lean of a ladder are all single-angle computations."
     ]
   },
-  "generators": ["complement-supplement-v1", "vertical-angle-v1", "transversal-v1", "angle-on-line-v1", "clock-angle-v1", "gpl-angle-pairs-d3", "gpl-angle-applied-d3", "gpl-transversal-d1", "gpl-angle-arith-d1"],
+  "generators": ["complement-supplement-v1", "vertical-angle-v1", "transversal-v1", "angle-on-line-v1", "clock-angle-v1", "gpl-angle-pairs-d3", "gpl-angle-applied-d3", "gpl-transversal-d1", "gpl-angle-arith-d1", "gpl-transversal-d3", "gpl-angle-pairs-d2", "gpl-angle-applied-d1"],
   "problems": [
     {
       "id": "geometry.angles-and-lines.s01",

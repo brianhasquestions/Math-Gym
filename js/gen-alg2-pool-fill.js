@@ -778,3 +778,474 @@ fill["a2l-geom-series-d1"] = (rng, idx) => {
     solutionNarrative: `With $a_1 = ${a1}$, $r = ${r}$, $n = ${n}$: $S_{${n}} = ${a1} \\cdot \\dfrac{${r}^{${n}} - 1}{${r} - 1} = ${S}$. (Check: $${terms.join(" + ")} = ${S}$.)`,
   };
 };
+
+// ===========================================================================
+// WAVE 2 — the 16 remaining thin algebra-2 pools (seeds <= 2, no generator):
+//   exponential-functions: evaluate-exponential d3, growth-and-decay d1
+//   logarithms:            log-definition d2+d3, solve-with-logs d3,
+//                          log-applications d2+d3
+//   radicals:              evaluate-roots d3, solve-radical-equations d3,
+//                          radical-applications d2
+//   sequences-and-series:  geometric-sequences d1+d3, geometric-series d3,
+//                          arithmetic-sequences d2
+//   functions:             domain-and-range d2
+//   rational-expressions:  solve-rational-equations d1
+// Same conventions as above: fixed concept+difficulty per template, all
+// answers grader-verifiable (integers, exact decimals, fractions, equations,
+// inequalities, and the seed-established "yes"/"no"/"no solution" strings).
+// ===========================================================================
+
+// --- evaluate-exponential d3: f(x) = a·b^x, difference of two outputs ---
+fill["a2l-eval-exp-d3"] = (rng, idx) => {
+  const a = rng.int(2, 4);
+  const b = rng.pick([2, 3, 5]);
+  const p = b === 2 ? rng.int(4, 6) : b === 3 ? rng.int(3, 4) : 3;
+  const q = p - 2;
+  const v1 = a * b ** p, v2 = a * b ** q, diff = v1 - v2;
+  return {
+    id: `gen.a2l-eval-exp-d3.${idx}`, generated: true, concepts: ["evaluate-exponential"], difficulty: 3, context: "abstract",
+    prompt: `For $f(x) = ${a} \\cdot ${b}^x$, evaluate $f(${p}) - f(${q})$.`,
+    steps: [
+      { instruction: `Find $f(${p})$ by computing $${a} \\cdot ${b}^{${p}}$.`, answer: `${v1}`, accept: [], hint: `$${b}^{${p}} = ${b ** p}$, then times ${a}.` },
+      { instruction: `Find $f(${q})$ by computing $${a} \\cdot ${b}^{${q}}$.`, answer: `${v2}`, accept: [], hint: `$${b}^{${q}} = ${b ** q}$, then times ${a}.` },
+      { instruction: `Subtract: $f(${p}) - f(${q})$.`, answer: `${diff}`, accept: [], hint: `$${v1} - ${v2}$.` },
+    ],
+    finalAnswer: { value: `${diff}`, unit: "" },
+    solutionNarrative: `$f(${p}) = ${a} \\cdot ${b ** p} = ${v1}$ and $f(${q}) = ${a} \\cdot ${b ** q} = ${v2}$, so $f(${p}) - f(${q}) = ${diff}$. The exponential outgrows itself: two extra steps multiplied the output by $${b ** 2}$.`,
+  };
+};
+
+// --- growth-and-decay d1: doubling/tripling population, evaluate the model ---
+const GD1_CTX = [
+  { what: "bacteria culture", unit: "bacteria", period: "hour" },
+  { what: "colony of yeast cells", unit: "cells", period: "hour" },
+  { what: "town", unit: "people", period: "decade" },
+];
+fill["a2l-growth-decay-d1"] = (rng, idx) => {
+  const r = rng.pick([2, 3]);
+  const n = r === 2 ? rng.int(3, 4) : rng.int(2, 3);
+  const m = rng.int(2, 9);
+  const P = 100 * m;
+  const ctx = rng.pick(GD1_CTX);
+  const word = r === 2 ? "doubles" : "triples";
+  const pow = r ** n;
+  const val = P * pow;
+  return {
+    id: `gen.a2l-growth-decay-d1.${idx}`, generated: true, concepts: ["growth-and-decay"], difficulty: 1, context: "applied",
+    prompt: `A ${ctx.what} of ${P} ${ctx.unit} ${word} every ${ctx.period}. Using the model $${P} \\cdot ${r}^n$ where $n$ counts ${ctx.period}s, how many ${ctx.unit} are there after ${n} ${ctx.period}s?`,
+    steps: [
+      { instruction: `Evaluate the growth factor raised to the power: what is $${r}^{${n}}$?`, answer: `${pow}`, accept: [], hint: `Multiply ${r} by itself ${n} times.` },
+      { instruction: `Multiply by the starting ${P}.`, answer: `${val}`, accept: [], hint: `$${P} \\times ${pow}$.` },
+    ],
+    finalAnswer: { value: `${val}`, unit: ctx.unit },
+    solutionNarrative: `$${r}^{${n}} = ${pow}$, so the ${ctx.what} reaches $${P} \\cdot ${pow} = ${val}$ ${ctx.unit} after ${n} ${ctx.period}s.`,
+  };
+};
+
+// --- log-definition d2: convert b^k = N (or a reciprocal) to log form ---
+fill["a2l-log-def-d2"] = (rng, idx) => {
+  const recip = rng.int(0, 1) === 1;
+  const b = rng.pick([2, 3, 4, 5, 10]);
+  if (recip) {
+    const k = b === 2 ? rng.int(2, 5) : b === 3 ? rng.int(2, 4) : b === 5 ? 3 : rng.int(2, 3);
+    const M = b ** k;
+    return {
+      id: `gen.a2l-log-def-d2.${idx}`, generated: true, concepts: ["log-definition"], difficulty: 2, context: "abstract",
+      prompt: `Evaluate $\\log_{${b}}\\left(\\dfrac{1}{${M}}\\right)$.`,
+      steps: [
+        { instruction: `First compute $${b}^{${k}}$.`, answer: `${M}`, accept: [], hint: `Multiply ${b} by itself ${k} times.` },
+        { instruction: `So $\\dfrac{1}{${M}} = ${b}^{?}$. Enter that exponent — it is the value of the log.`, answer: `${-k}`, accept: [], hint: `$${b}^{-${k}} = \\dfrac{1}{${b}^{${k}}}$.` },
+      ],
+      finalAnswer: { value: `${-k}`, unit: "" },
+      solutionNarrative: `$${b}^{-${k}} = \\dfrac{1}{${M}}$, so $\\log_{${b}}\\!\\left(\\dfrac{1}{${M}}\\right) = ${-k}$. Reciprocals flip the sign of the exponent.`,
+    };
+  }
+  const k = b === 2 ? rng.pick([3, 4, 6]) : b === 3 ? rng.int(2, 4) : b === 10 ? rng.int(2, 4) : rng.int(2, 3);
+  const N = b ** k;
+  return {
+    id: `gen.a2l-log-def-d2.${idx}`, generated: true, concepts: ["log-definition"], difficulty: 2, context: "abstract",
+    prompt: `Rewrite $${b}^{${k}} = ${N}$ in logarithmic form and read off the value of $\\log_{${b}}(${N})$.`,
+    steps: [
+      { instruction: `The form $b^x = y$ becomes $\\log_b(y) = x$. What is $\\log_{${b}}(${N})$?`, answer: `${k}`, accept: [], hint: `$${b}^{${k}} = ${N}$, so the exponent is ${k}.` },
+      { instruction: `Check backward: what is $${b}^{${k}}$?`, answer: `${N}`, accept: [], hint: `The log and the power undo each other.` },
+    ],
+    finalAnswer: { value: `${k}`, unit: "" },
+    solutionNarrative: `$${b}^{${k}} = ${N}$ converts to $\\log_{${b}}(${N}) = ${k}$ — the log IS the exponent.`,
+  };
+};
+
+// --- log-definition d3: fractional value, base and argument share a root ---
+const LOGDEF3 = [[2, 2, 1], [2, 3, 1], [2, 2, 3], [2, 3, 2], [3, 2, 1], [3, 3, 1], [3, 2, 3], [3, 3, 2], [5, 2, 1], [5, 2, 3]];
+fill["a2l-log-def-d3"] = (rng, idx) => {
+  const [b, m, j] = rng.pick(LOGDEF3);
+  const B = b ** m, N = b ** j;
+  const val = frac(j, m);
+  const dec = m === 2 ? [`${j / 2}`] : [];
+  return {
+    id: `gen.a2l-log-def-d3.${idx}`, generated: true, concepts: ["log-definition"], difficulty: 3, context: "abstract",
+    prompt: `Evaluate $\\log_{${B}}(${N})$. (Hint: write both ${B} and ${N} as powers of ${b}.)`,
+    steps: [
+      { instruction: `Write the base as a power of ${b}: $${B} = ${b}^{?}$. Enter the exponent.`, answer: `${m}`, accept: [], hint: `$${b}^{${m}} = ${B}$.` },
+      { instruction: `Write the argument as a power of ${b}: $${N} = ${b}^{?}$. Enter the exponent.`, answer: `${j}`, accept: [], hint: j === 1 ? `$${b}^1 = ${b}$.` : `$${b}^{${j}} = ${N}$.` },
+      { instruction: `If $\\log_{${B}}(${N}) = x$, then $${B}^x = ${N}$, i.e. $${b}^{${m}x} = ${b}^{${j}}$. Solve $${m}x = ${j}$ for $x$. Give a fraction.`, answer: val, accept: [`x=${val}`, ...dec], hint: `Divide both sides by ${m}.` },
+    ],
+    finalAnswer: { value: val, unit: "" },
+    solutionNarrative: `$${B} = ${b}^{${m}}$ and $${N} = ${b}^{${j}}$, so $${b}^{${m}x} = ${b}^{${j}}$ forces $${m}x = ${j}$: $\\log_{${B}}(${N}) = ${val}$. Logs can be fractions — the base just isn't the natural unit here.`,
+  };
+};
+
+// --- solve-with-logs d3: isolate the power first, then take the log ---
+fill["a2l-solve-logs-d3"] = (rng, idx) => {
+  const b = rng.pick([2, 3]);
+  const k = b === 2 ? rng.int(3, 5) : rng.int(2, 3);
+  const a = rng.pick([3, 4, 5, 6, 7]);
+  const N = b ** k;
+  const M = a * N;
+  return {
+    id: `gen.a2l-solve-logs-d3.${idx}`, generated: true, concepts: ["solve-with-logs"], difficulty: 3, context: "abstract",
+    prompt: `Solve for $x$: $${a} \\cdot ${b}^x = ${M}$. (Isolate the power before using logs.)`,
+    steps: [
+      { instruction: `Divide both sides by ${a} to isolate the power: $${b}^x = ?$`, answer: `${N}`, accept: [], hint: `$${M} \\div ${a}$.` },
+      { instruction: `Now $x = \\log_{${b}}(${N})$: ${b} to what power equals ${N}?`, answer: `${k}`, accept: [`x=${k}`, `x = ${k}`], hint: `$${b}^{${k}} = ${N}$.` },
+    ],
+    finalAnswer: { value: `${k}`, unit: "" },
+    solutionNarrative: `The coefficient must come off first: $${b}^x = ${M}/${a} = ${N}$, so $x = \\log_{${b}}(${N}) = ${k}$. Taking a log of $${a} \\cdot ${b}^x$ directly would NOT give $x$ alone.`,
+  };
+};
+
+// --- log-applications d2: ratio from a difference on a base-10 scale ---
+fill["a2l-log-apps-d2"] = (rng, idx) => {
+  const richter = rng.int(0, 1) === 1;
+  const d = rng.int(2, 4);
+  const low = rng.int(3, 5);
+  const high = low + d;
+  const ratio = 10 ** d;
+  if (richter) {
+    return {
+      id: `gen.a2l-log-apps-d2.${idx}`, generated: true, concepts: ["log-applications"], difficulty: 2, context: "applied",
+      prompt: `On the Richter scale, each whole magnitude is a tenfold increase in shaking amplitude. How many times stronger is a magnitude-${high} earthquake than a magnitude-${low} earthquake?`,
+      steps: [
+        { instruction: `Find the difference in magnitude.`, answer: `${d}`, accept: [], hint: `$${high} - ${low}$.` },
+        { instruction: `Each step is a factor of 10, so the ratio is $10^{${d}}$. Compute it.`, answer: `${ratio}`, accept: [], hint: `A 1 followed by ${d} zeros.` },
+      ],
+      finalAnswer: { value: `${ratio}`, unit: "times" },
+      solutionNarrative: `The magnitudes differ by $${high} - ${low} = ${d}$, and each step multiplies amplitude by 10, so the ratio is $10^{${d}} = ${ratio}$ times.`,
+    };
+  }
+  return {
+    id: `gen.a2l-log-apps-d2.${idx}`, generated: true, concepts: ["log-applications"], difficulty: 2, context: "applied",
+    prompt: `The pH scale is logarithmic: each whole pH unit is a tenfold change in acidity, and LOWER pH means MORE acidic. Sample A has pH ${low} and sample B has pH ${high}. How many times more acidic is sample A?`,
+    steps: [
+      { instruction: `Find the difference in pH.`, answer: `${d}`, accept: [], hint: `$${high} - ${low}$.` },
+      { instruction: `Each pH unit is a factor of 10 in acidity, so the ratio is $10^{${d}}$. Compute it.`, answer: `${ratio}`, accept: [], hint: `A 1 followed by ${d} zeros.` },
+    ],
+    finalAnswer: { value: `${ratio}`, unit: "times" },
+    solutionNarrative: `The pH values differ by $${high} - ${low} = ${d}$ units, each a tenfold change, so sample A is $10^{${d}} = ${ratio}$ times more acidic.`,
+  };
+};
+
+// --- log-applications d3: run the scale BACKWARD — from a ratio to a reading ---
+fill["a2l-log-apps-d3"] = (rng, idx) => {
+  const quake = rng.int(0, 1) === 1;
+  const d = rng.int(2, 4);
+  const N = 10 ** d;
+  if (quake) {
+    const m = rng.int(3, 5);
+    const target = m + d;
+    return {
+      id: `gen.a2l-log-apps-d3.${idx}`, generated: true, concepts: ["log-applications"], difficulty: 3, context: "applied",
+      prompt: `An aftershock registers magnitude ${m} on the Richter scale. The main earthquake's shaking amplitude was ${N} times greater. Each whole magnitude step is a tenfold increase in amplitude. What was the main quake's magnitude?`,
+      steps: [
+        { instruction: `How many tenfold steps make a factor of ${N}? Compute $\\log_{10}(${N})$.`, answer: `${d}`, accept: [], hint: `$10^{${d}} = ${N}$.` },
+        { instruction: `Add those steps to the aftershock's magnitude.`, answer: `${target}`, accept: [], hint: `$${m} + ${d}$.` },
+      ],
+      finalAnswer: { value: `${target}`, unit: "" },
+      solutionNarrative: `A factor of ${N} is $\\log_{10}(${N}) = ${d}$ magnitude steps, so the main quake measured $${m} + ${d} = ${target}$. The log converts a ratio back into a scale reading.`,
+    };
+  }
+  const pA = rng.int(5, 7);
+  const pB = pA - d;
+  return {
+    id: `gen.a2l-log-apps-d3.${idx}`, generated: true, concepts: ["log-applications"], difficulty: 3, context: "applied",
+    prompt: `Since $\\text{pH} = -\\log_{10}[\\text{H}^+]$, each whole pH unit is a tenfold change in acidity, and lower pH means more acidic. A vinegar sample is ${N} times more acidic than a coffee sample with pH ${pA}. What is the vinegar's pH?`,
+    steps: [
+      { instruction: `How many tenfold steps make a factor of ${N}? Compute $\\log_{10}(${N})$.`, answer: `${d}`, accept: [], hint: `$10^{${d}} = ${N}$.` },
+      { instruction: `More acidic means LOWER pH: subtract those steps from the coffee's pH.`, answer: `${pB}`, accept: [], hint: `$${pA} - ${d}$.` },
+    ],
+    finalAnswer: { value: `${pB}`, unit: "pH" },
+    solutionNarrative: `A factor of ${N} is $\\log_{10}(${N}) = ${d}$ pH units, and acidity grows as pH falls, so the vinegar's pH is $${pA} - ${d} = ${pB}$.`,
+  };
+};
+
+// --- evaluate-roots d3: trap sqrt(N) between integers, then to 1 decimal ---
+fill["a2l-eval-roots-d3"] = (rng, idx) => {
+  let a, t, v10, N;
+  do {
+    a = rng.int(4, 9);
+    t = rng.int(1, 9);
+    v10 = 10 * a + t;                             // the answer is v10/10
+    N = Math.round((v10 * v10) / 100);
+  } while (Math.round(Math.sqrt(N) * 10) !== v10 || Number.isInteger(Math.sqrt(N)) || N === 20);
+  const vStr = `${a}.${t}`;
+  const lo2 = ((v10 - 1) * (v10 - 1)) / 100;       // (v - 0.1)^2, exact
+  const hi2 = (v10 * v10) / 100;                   // v^2, exact
+  return {
+    id: `gen.a2l-eval-roots-d3.${idx}`, generated: true, concepts: ["evaluate-roots"], difficulty: 3, context: "abstract",
+    prompt: `Estimate $\\sqrt{${N}}$ rounded to 1 decimal place.`,
+    steps: [
+      { instruction: `Which two consecutive whole numbers does $\\sqrt{${N}}$ fall between? Give the smaller one.`, answer: `${a}`, accept: [], hint: `$${a}^2 = ${a * a}$ and $${a + 1}^2 = ${(a + 1) * (a + 1)}$, and ${N} is between them.` },
+      { instruction: `Now give $\\sqrt{${N}}$ rounded to 1 decimal place.`, answer: vStr, accept: [], hint: `$${(v10 - 1) / 10}^2 = ${lo2}$ and $${vStr}^2 = ${hi2}$, so it rounds to ${vStr}.` },
+    ],
+    finalAnswer: { value: vStr, unit: "" },
+    solutionNarrative: `${N} sits between $${a * a}$ and $${(a + 1) * (a + 1)}$, so $\\sqrt{${N}}$ is between ${a} and ${a + 1}. Since $${vStr}^2 = ${hi2} \\approx ${N}$, $\\sqrt{${N}} \\approx ${vStr}$.`,
+  };
+};
+
+// --- solve-radical-equations d3: shifted radical, or an extraneous trap ---
+fill["a2l-solve-radical-d3"] = (rng, idx) => {
+  const extraneous = rng.int(0, 1) === 1;
+  if (extraneous) {
+    const k = rng.pick([2, 4, 5, 6, 7, 8, 9]);     // 3 would clone the seed
+    const sq = k * k;
+    return {
+      id: `gen.a2l-solve-radical-d3.${idx}`, generated: true, concepts: ["solve-radical-equations"], difficulty: 3, context: "abstract",
+      prompt: `Solve for $x$:  $\\sqrt{x} = -${k}$. Watch for an extraneous result.`,
+      steps: [
+        { instruction: `Square both sides to get a candidate value.`, answer: `x = ${sq}`, accept: [`x=${sq}`, `${sq}`], hint: `$(-${k})^2 = ${sq}$.` },
+        { instruction: `Check $x = ${sq}$ in the ORIGINAL equation: does $\\sqrt{${sq}} = -${k}$? Type 'yes' or 'no'.`, answer: `no`, accept: [`n`], hint: `The principal square root $\\sqrt{${sq}} = +${k}$, not $-${k}$.` },
+        { instruction: `So how many solutions does the equation have? Type a number or 'no solution'.`, answer: `no solution`, accept: [`none`, `0`, `zero`], hint: `A square root can never equal a negative number.` },
+      ],
+      finalAnswer: { value: "no solution", unit: "" },
+      solutionNarrative: `Squaring gives $x = ${sq}$, but $\\sqrt{${sq}} = ${k} \\ne -${k}$, so ${sq} is extraneous. A principal square root is never negative, so there is no solution.`,
+    };
+  }
+  const k = rng.int(4, 9);
+  const c = nz(rng, -15, 15);
+  const x = k * k - c;
+  const inside = c < 0 ? `x - ${-c}` : `x + ${c}`;
+  return {
+    id: `gen.a2l-solve-radical-d3.${idx}`, generated: true, concepts: ["solve-radical-equations"], difficulty: 3, context: "abstract",
+    prompt: `Solve for $x$:  $\\sqrt{${inside}} = ${k}$, and check your answer.`,
+    steps: [
+      { instruction: `Square both sides.`, answer: `${inside} = ${k * k}`, accept: [`${squash(inside)}=${k * k}`], hint: `$${k}^2 = ${k * k}$.` },
+      { instruction: `Solve for $x$.`, answer: `x = ${x}`, accept: [`x=${x}`, `${x}`], hint: c < 0 ? `Add ${-c} to both sides.` : `Subtract ${c} from both sides.` },
+      { instruction: `Check by substituting back: $${x} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${k * k}$, and $\\sqrt{${k * k}} = ?$`, answer: `${k}`, accept: [], hint: `It should reproduce the original right side.` },
+    ],
+    finalAnswer: { value: `${x}`, unit: "" },
+    solutionNarrative: `Square: $${inside} = ${k * k}$, so $x = ${x}$. Check: $\\sqrt{${x} ${c < 0 ? "-" : "+"} ${Math.abs(c)}} = \\sqrt{${k * k}} = ${k}$. ✓`,
+  };
+};
+
+// --- radical-applications d2: one clean formula-with-a-root evaluation ---
+fill["a2l-radical-apps-d2"] = (rng, idx) => {
+  const kinetic = rng.int(0, 1) === 1;
+  if (kinetic) {
+    let m, v;
+    do {
+      m = rng.pick([2, 4, 6, 8]);
+      v = rng.int(3, 9);
+    } while (m === 2 && v === 6);                  // seed s16's exact numbers
+    const E = (m * v * v) / 2;
+    const obj = rng.pick(["cart", "wagon", "go-kart", "sled"]);
+    return {
+      id: `gen.a2l-radical-apps-d2.${idx}`, generated: true, concepts: ["radical-applications"], difficulty: 2, context: "applied",
+      prompt: `A ${m} kg ${obj} has kinetic energy $E = ${E}$ joules. Its speed is $v = \\sqrt{2E/m}$. Find $v$ in m/s.`,
+      steps: [
+        { instruction: `Compute the value inside the root, $2E/m = 2(${E})/${m}$.`, answer: `${v * v}`, accept: [], hint: `$2 \\times ${E} = ${2 * E}$, and $${2 * E} / ${m} = ${v * v}$.` },
+        { instruction: `Take the square root to find $v$ (m/s).`, answer: `${v}`, accept: [`v=${v}`], hint: `$\\sqrt{${v * v}} = ${v}$.` },
+      ],
+      finalAnswer: { value: `${v}`, unit: "m/s" },
+      solutionNarrative: `$v = \\sqrt{2(${E})/${m}} = \\sqrt{${v * v}} = ${v}$ m/s.`,
+    };
+  }
+  const t = rng.pick([2, 4, 5, 6, 7]);             // 3 would clone seed s15
+  const hStr = `${(49 * t * t) / 10}`;             // h = 4.9 t^2, exact 1-decimal
+  const obj = rng.pick(["phone", "wrench", "acorn", "hailstone"]);
+  return {
+    id: `gen.a2l-radical-apps-d2.${idx}`, generated: true, concepts: ["radical-applications"], difficulty: 2, context: "applied",
+    prompt: `A ${obj} falls from a height of $h = ${hStr}$ m. Free-fall time is $t = \\sqrt{2h/g}$ with $g = 9.8\\ \\text{m/s}^2$. Find $t$ in seconds.`,
+    steps: [
+      { instruction: `Compute the value inside the root, $2h/g = 2(${hStr})/9.8$.`, answer: `${t * t}`, accept: [], hint: `$2 \\times ${hStr} = ${(98 * t * t) / 10}$, and $${(98 * t * t) / 10} / 9.8 = ${t * t}$.` },
+      { instruction: `Take the square root to find $t$ (seconds).`, answer: `${t}`, accept: [`t=${t}`], hint: `$\\sqrt{${t * t}} = ${t}$.` },
+    ],
+    finalAnswer: { value: `${t}`, unit: "seconds" },
+    solutionNarrative: `$t = \\sqrt{2(${hStr})/9.8} = \\sqrt{${t * t}} = ${t}$ seconds.`,
+  };
+};
+
+// --- geometric-sequences d1: spot the ratio, extend with the formula ---
+fill["a2l-geom-seq-d1"] = (rng, idx) => {
+  const r = rng.pick([2, 3]);
+  const a1 = r === 2 ? rng.pick([2, 4, 5, 6]) : rng.int(1, 3); // a1=3, r=2 is seed s05
+  const n = r === 2 ? 6 : 5;
+  const an = a1 * r ** (n - 1);
+  const terms = [a1, a1 * r, a1 * r * r, a1 * r ** 3];
+  return {
+    id: `gen.a2l-geom-seq-d1.${idx}`, generated: true, concepts: ["geometric-sequences"], difficulty: 1, context: "abstract",
+    prompt: `Consider the geometric sequence $${terms.join(", ")}, \\dots$`,
+    steps: [
+      { instruction: `Find the common ratio $r$.`, answer: `${r}`, accept: [`r=${r}`], hint: `Divide a term by the previous one: $${terms[1]} \\div ${terms[0]}$.` },
+      { instruction: `Find the ${n}th term $a_{${n}}$ using $a_n = a_1 \\cdot r^{n-1}$.`, answer: `${an}`, accept: [], hint: `$a_{${n}} = ${a1} \\cdot ${r}^{${n - 1}} = ${a1} \\cdot ${r ** (n - 1)}$.` },
+    ],
+    finalAnswer: { value: `${an}`, unit: "" },
+    solutionNarrative: `The ratio is $r = ${terms[1]} / ${terms[0]} = ${r}$. Then $a_{${n}} = ${a1} \\cdot ${r}^{${n - 1}} = ${a1} \\cdot ${r ** (n - 1)} = ${an}$.`,
+  };
+};
+
+// --- geometric-sequences d3: recover r from two non-adjacent terms ---
+fill["a2l-geom-seq-d3"] = (rng, idx) => {
+  const r = rng.pick([2, 3]);
+  const a1 = r === 2 ? rng.int(2, 6) : rng.int(1, 4);
+  const a2 = a1 * r, a4 = a1 * r ** 3, a6 = a1 * r ** 5;
+  return {
+    id: `gen.a2l-geom-seq-d3.${idx}`, generated: true, concepts: ["geometric-sequences"], difficulty: 3, context: "abstract",
+    prompt: `A geometric sequence with positive terms has $a_2 = ${a2}$ and $a_4 = ${a4}$. Find the common ratio $r$, then find $a_6$.`,
+    steps: [
+      { instruction: `Terms two steps apart differ by a factor of $r^2$. Compute $a_4 / a_2$.`, answer: `${r * r}`, accept: [], hint: `$${a4} \\div ${a2}$.` },
+      { instruction: `Take the square root to find $r$ (the terms are positive, so $r > 0$).`, answer: `${r}`, accept: [`r=${r}`], hint: `$\\sqrt{${r * r}} = ${r}$.` },
+      { instruction: `Step forward two more terms: $a_6 = a_4 \\cdot r^2$.`, answer: `${a6}`, accept: [], hint: `$${a4} \\times ${r * r}$.` },
+    ],
+    finalAnswer: { value: `${a6}`, unit: "" },
+    solutionNarrative: `$a_4 / a_2 = r^2 = ${r * r}$, so $r = ${r}$ (positive terms rule out $-${r}$). Then $a_6 = a_4 \\cdot r^2 = ${a4} \\cdot ${r * r} = ${a6}$.`,
+  };
+};
+
+// --- geometric-series d3: total of doubling/tripling weekly amounts ---
+const GS3_CTX = [
+  { plan: "fundraising drive", amt: "collections" },
+  { plan: "seedling giveaway", amt: "distributions" },
+  { plan: "recycling challenge", amt: "collections" },
+];
+fill["a2l-geom-series-d3"] = (rng, idx) => {
+  let r, n, m;
+  do {
+    r = rng.pick([2, 3]);
+    n = r === 2 ? rng.int(6, 8) : rng.int(4, 5);
+    m = rng.int(1, 4);
+  } while (r === 2 && n === 7 && m === 2);         // seed s14's exact numbers
+  const a1 = 100 * m;
+  const rn = r ** n;
+  const S = (a1 * (rn - 1)) / (r - 1);
+  const word = r === 2 ? "double" : "triple";
+  const ctx = rng.pick(GS3_CTX);
+  return {
+    id: `gen.a2l-geom-series-d3.${idx}`, generated: true, concepts: ["geometric-series"], difficulty: 3, context: "applied",
+    prompt: `A ${ctx.plan} brings in \\$${a1} in week 1, and each week's total is ${word} the previous week's. What is the combined total of the ${ctx.amt} over ${n} weeks?`,
+    steps: [
+      { instruction: `Identify $a_1$, $r$, and $n$. Enter the common ratio $r$.`, answer: `${r}`, accept: [`r=${r}`], hint: `Each week's amount is ${word} the one before.` },
+      { instruction: `Compute $r^{n} = ${r}^{${n}}$.`, answer: `${rn}`, accept: [], hint: `Multiply ${r} by itself ${n} times.` },
+      { instruction: `Use $S_n = a_1 \\cdot \\dfrac{r^{n} - 1}{r - 1}$ to total all ${n} weeks, in dollars.`, answer: `${S}`, accept: [`$${S}`], hint: `$${a1} \\cdot \\dfrac{${rn} - 1}{${r - 1}} = ${a1} \\cdot ${(rn - 1) / (r - 1)}$.` },
+    ],
+    finalAnswer: { value: `${S}`, unit: "dollars" },
+    solutionNarrative: `With $a_1 = ${a1}$, $r = ${r}$, $n = ${n}$: $S_{${n}} = ${a1} \\cdot \\dfrac{${rn} - 1}{${r - 1}} = ${a1} \\cdot ${(rn - 1) / (r - 1)} = \\$${S}$. Late weeks dominate — the last week alone brings in \\$${a1 * r ** (n - 1)}.`,
+  };
+};
+
+// --- arithmetic-sequences d2: explicit formula in the form an + b ---
+fill["a2l-arith-seq-d2"] = (rng, idx) => {
+  let a1, d;
+  do {
+    a1 = rng.int(1, 9);
+    d = rng.int(2, 6);
+  } while (a1 === d || (a1 === 2 && d === 3));     // a1=d makes b=0; (2,3) is seed s03
+  const b = a1 - d;
+  const formula = b < 0 ? `${d}n - ${-b}` : `${d}n + ${b}`;
+  const a8 = 8 * d + b;
+  const terms = [a1, a1 + d, a1 + 2 * d, a1 + 3 * d];
+  return {
+    id: `gen.a2l-arith-seq-d2.${idx}`, generated: true, concepts: ["arithmetic-sequences"], difficulty: 2, context: "abstract",
+    prompt: `An arithmetic sequence starts $${terms.join(", ")}, \\dots$. Write the explicit formula for the $n$th term, simplified to the form $an + b$, then use it to find $a_8$.`,
+    steps: [
+      { instruction: `Find $a_1$ and the common difference $d$. Enter $d$.`, answer: `${d}`, accept: [`d=${d}`], hint: `$d = ${a1 + d} - ${a1}$.` },
+      { instruction: `Substitute into $a_n = a_1 + (n-1)d$ and simplify to the form $an + b$.`, answer: formula, accept: [squash(formula), `${d}*n ${b < 0 ? "-" : "+"} ${Math.abs(b)}`], hint: `$${a1} + (n-1)(${d}) = ${a1} + ${d}n - ${d} = ${formula}$.` },
+      { instruction: `Evaluate your formula at $n = 8$ to find $a_8$.`, answer: `${a8}`, accept: [], hint: `$${d}(8) ${b < 0 ? "-" : "+"} ${Math.abs(b)}$.` },
+    ],
+    finalAnswer: { value: formula, unit: "" },
+    solutionNarrative: `$a_1 = ${a1}$, $d = ${d}$, so $a_n = ${a1} + (n-1)(${d}) = ${formula}$. Check: $n = 1$ gives ${a1}. ✓ Then $a_8 = ${formula.replace("n", "(8)")} = ${a8}$.`,
+  };
+};
+
+// --- domain-and-range d2: one restriction at a time (root, square, or denominator) ---
+fill["a2l-domain-range-d2"] = (rng, idx) => {
+  const kind = rng.pick(["root", "range", "denom"]);
+  if (kind === "root") {
+    let c, plus;
+    do {
+      c = rng.int(2, 9);
+      plus = rng.int(0, 1) === 1;
+    } while (!plus && c === 5);                    // sqrt(x - 5) is seed s07
+    const inside = plus ? `x + ${c}` : `x - ${c}`;
+    const bound = plus ? -c : c;
+    return {
+      id: `gen.a2l-domain-range-d2.${idx}`, generated: true, concepts: ["domain-and-range"], difficulty: 2, context: "abstract",
+      prompt: `The function $f(x) = \\sqrt{${inside}}$ requires the inside of the square root to be non-negative. What is its domain? Give your answer as an inequality in $x$.`,
+      steps: [
+        { instruction: `Set the inside of the root to be $\\geq 0$.`, answer: `${inside} >= 0`, accept: [`${squash(inside)}>=0`, `0<=${squash(inside)}`], hint: `The expression under the square root cannot be negative.` },
+        { instruction: `Solve the inequality for $x$.`, answer: `x >= ${bound}`, accept: [`x>=${bound}`, `${bound}<=x`], hint: plus ? `Subtract ${c} from both sides.` : `Add ${c} to both sides.` },
+      ],
+      finalAnswer: { value: `x >= ${bound}`, unit: "" },
+      solutionNarrative: `We need $${inside} \\geq 0$, i.e. $x \\geq ${bound}$, so the domain is $x \\geq ${bound}$.`,
+    };
+  }
+  if (kind === "range") {
+    const k = nz(rng, -9, 9);
+    const fStr = k < 0 ? `x^2 - ${-k}` : `x^2 + ${k}`;
+    return {
+      id: `gen.a2l-domain-range-d2.${idx}`, generated: true, concepts: ["domain-and-range"], difficulty: 2, context: "abstract",
+      prompt: `What is the range of $f(x) = ${fStr}$? Give your answer as an inequality in $y$.`,
+      steps: [
+        { instruction: `What is the smallest possible value of $x^2$?`, answer: `0`, accept: [], hint: `A square is never negative, and $0^2 = 0$.` },
+        { instruction: `So the smallest output is $0 ${k < 0 ? "-" : "+"} ${Math.abs(k)}$. State the range as an inequality in $y$.`, answer: `y >= ${k}`, accept: [`y>=${k}`, `${k}<=y`], hint: `Every output is at least ${k}.` },
+      ],
+      finalAnswer: { value: `y >= ${k}`, unit: "" },
+      solutionNarrative: `$x^2 \\geq 0$ always, with equality at $x = 0$, so the outputs of $${fStr}$ are exactly $y \\geq ${k}$.`,
+    };
+  }
+  const c = nz(rng, -9, 9);
+  const denom = fmtShift(c);
+  return {
+    id: `gen.a2l-domain-range-d2.${idx}`, generated: true, concepts: ["domain-and-range"], difficulty: 2, context: "abstract",
+    prompt: `The function $f(x) = \\dfrac{1}{${denom}}$ is defined for every $x$ except where the denominator is zero. Which value of $x$ is excluded from the domain?`,
+    steps: [
+      { instruction: `Set the denominator equal to zero and solve.`, answer: `x = ${c}`, accept: [`x=${c}`, `${c}`], hint: `$${denom} = 0$ where?` },
+      { instruction: `Check a nearby ALLOWED input: what is the denominator $${denom}$ at $x = ${c + 1}$?`, answer: `1`, accept: [], hint: `$${c + 1} ${c < 0 ? "+" : "-"} ${Math.abs(c)}$.` },
+    ],
+    finalAnswer: { value: `x != ${c}`, unit: "" },
+    solutionNarrative: `$${denom} = 0$ exactly at $x = ${c}$, so the domain is all real numbers except $x = ${c}$. Everywhere else — like $x = ${c + 1}$, where the denominator is 1 — the function is fine.`,
+  };
+};
+
+// --- solve-rational-equations d1: one-fraction-each-side, cross-multiply ---
+const SRE1_PAIRS = [[2, 3], [3, 4], [2, 5], [3, 5], [4, 5], [5, 6]];
+fill["a2l-solve-rational-d1"] = (rng, idx) => {
+  const varOnTop = rng.int(0, 1) === 1;
+  const s = rng.int(2, 5);
+  if (varOnTop) {
+    const [p, q] = rng.pick([[1, 2], [1, 3], [1, 4], ...SRE1_PAIRS]);
+    const den = q * s;                             // x/den = p/q, so x = p*s
+    const x = p * s;
+    return {
+      id: `gen.a2l-solve-rational-d1.${idx}`, generated: true, concepts: ["solve-rational-equations"], difficulty: 1, context: "abstract",
+      prompt: `Solve for $x$:  $\\dfrac{x}{${den}} = \\dfrac{${p}}{${q}}$.`,
+      steps: [
+        { instruction: `Cross-multiply to clear the fractions.`, answer: `${q}x = ${p * den}`, accept: [`${q}x=${p * den}`, `${p * den} = ${q}x`, `${p * den}=${q}x`], hint: `$x \\cdot ${q} = ${p} \\cdot ${den}$.` },
+        { instruction: `Solve for $x$.`, answer: `x = ${x}`, accept: [`x=${x}`, `${x}`], hint: `Divide both sides by ${q}.` },
+      ],
+      finalAnswer: { value: `${x}`, unit: "" },
+      solutionNarrative: `Cross-multiplying gives $${q}x = ${p * den}$, so $x = ${x}$. No denominator here contains $x$, so nothing can be extraneous.`,
+    };
+  }
+  const [p, q] = rng.pick(SRE1_PAIRS);             // p >= 2 keeps step 1 meaningful
+  const k = p * s, x = q * s;                      // k/x = p/q
+  return {
+    id: `gen.a2l-solve-rational-d1.${idx}`, generated: true, concepts: ["solve-rational-equations"], difficulty: 1, context: "abstract",
+    prompt: `Solve for $x$:  $\\dfrac{${k}}{x} = \\dfrac{${p}}{${q}}$.`,
+    steps: [
+      { instruction: `Cross-multiply (or multiply both sides by $${q}x$) to clear the fractions.`, answer: `${p}x = ${k * q}`, accept: [`${p}x=${k * q}`, `${k * q} = ${p}x`, `${k * q}=${p}x`], hint: `$${k} \\cdot ${q} = ${p} \\cdot x$.` },
+      { instruction: `Solve for $x$.`, answer: `x = ${x}`, accept: [`x=${x}`, `${x}`], hint: `Divide both sides by ${p}.` },
+      { instruction: `Is $x = ${x}$ allowed (it must not make a denominator zero)? Type 'yes' or 'no'.`, answer: `yes`, accept: [`y`], hint: `Does $x = ${x}$ make the original denominator $x$ zero?` },
+    ],
+    finalAnswer: { value: `${x}`, unit: "" },
+    solutionNarrative: `Cross-multiplying gives $${p}x = ${k * q}$, so $x = ${x}$. Since $${x} \\neq 0$, no denominator vanishes and the solution is valid.`,
+  };
+};

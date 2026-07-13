@@ -41,7 +41,7 @@
       "**Data analysis:** subtract a baseline matrix from current data to get the change in every cell at once."
     ]
   },
-  "generators": ["mat-add-v1", "mat-scalar-v1", "mat-dimensions-v1", "mpl-dimensions-d2", "mpl-dimensions-d3"],
+  "generators": ["mat-add-v1", "mat-scalar-v1", "mat-dimensions-v1", "mpl-dimensions-d2", "mpl-dimensions-d3", "mpl-mat-add-d2", "mpl-scalar-mult-d3", "mpl-ops-applied-d1", "mpl-ops-applied-d2", "mpl-ops-applied-d3"],
   "problems": [
     {
       "id": "matrix-algebra.matrix-operations.s01",

@@ -41,7 +41,7 @@
       "**Business:** a pay rule like hours → wages is read forward to budget, and backward (inverse) to find the hours needed to hit a target paycheck."
     ]
   },
-  "generators": ["func-eval-v1", "func-compose-v1", "func-inverse-v1", "func-domain-v1", "a2l-fn-notation-d2", "a2l-fn-notation-d3", "a2l-domain-range-d3", "a2l-composition-d1", "a2l-composition-d3", "a2l-inverse-d1", "a2l-inverse-d3"],
+  "generators": ["func-eval-v1", "func-compose-v1", "func-inverse-v1", "func-domain-v1", "a2l-fn-notation-d2", "a2l-fn-notation-d3", "a2l-domain-range-d3", "a2l-composition-d1", "a2l-composition-d3", "a2l-inverse-d1", "a2l-inverse-d3", "a2l-domain-range-d2"],
   "problems": [
     {
       "id": "algebra-2.functions.s01",

@@ -41,7 +41,7 @@
       "**Physics:** displacement, velocity, and acceleration are all vectors, combined by component-wise addition."
     ]
   },
-  "generators": ["vec-components-v1", "vec-magnitude-v1", "vec-operations-v1", "c3l-vector-ops-d1", "c3l-vector-ops-d3"],
+  "generators": ["vec-components-v1", "vec-magnitude-v1", "vec-operations-v1", "c3l-vector-ops-d1", "c3l-vector-ops-d3", "c3l-vector-components-d2", "c3l-vector-components-d3", "c3l-magnitude-unit-d2", "c3l-magnitude-unit-d3", "c3l-vectors-applied-d1", "c3l-vectors-applied-d2", "c3l-vectors-applied-d3"],
   "problems": [
     {
       "id": "calculus-3.vectors-in-space.s01",

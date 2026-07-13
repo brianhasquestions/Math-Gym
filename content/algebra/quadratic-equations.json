@@ -41,7 +41,7 @@
       "**Engineering:** resonance and stability questions that hinge on whether roots are real."
     ]
   },
-  "generators": ["quad-factorable-v1", "quad-sqrt-v1", "quad-formula-v1", "discriminant-v1", "apl-quad-factor-d1", "apl-quad-factor-d3", "apl-sqrt-method-d3", "apl-quad-formula-d1", "apl-discriminant-d2", "apl-discriminant-d3"],
+  "generators": ["quad-factorable-v1", "quad-sqrt-v1", "quad-formula-v1", "discriminant-v1", "apl-quad-factor-d1", "apl-quad-factor-d3", "apl-sqrt-method-d3", "apl-quad-formula-d1", "apl-discriminant-d2", "apl-discriminant-d3", "apl-quad-formula-d2", "apl-sqrt-method-d1"],
   "problems": [
     {
       "id": "algebra.quadratic-equations.s01",

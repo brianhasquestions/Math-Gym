@@ -41,7 +41,7 @@
       "**Everyday life:** the area (and so the value) of a pizza, a TV screen, or a tarp."
     ]
   },
-  "generators": ["rect-area-perim-v1", "triangle-area-v1", "trapezoid-area-v1", "circle-area-circ-v1", "fencing-cost-v1", "gpl-tri-trap-d3", "gpl-circle-d3", "gpl-circle-d1", "gpl-composite-d1"],
+  "generators": ["rect-area-perim-v1", "triangle-area-v1", "trapezoid-area-v1", "circle-area-circ-v1", "fencing-cost-v1", "gpl-tri-trap-d3", "gpl-circle-d3", "gpl-circle-d1", "gpl-composite-d1", "gpl-rect-square-d3", "gpl-rect-square-d2", "gpl-composite-d3"],
   "problems": [
     {
       "id": "geometry.perimeter-and-area.s01",

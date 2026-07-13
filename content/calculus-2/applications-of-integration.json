@@ -41,7 +41,7 @@
       "**Environmental science:** average concentration, mean temperature, or total flow over a time interval each come from one integral."
     ]
   },
-  "generators": ["area-between-v1", "volume-rev-v1", "avg-value-v1", "c2l-area-between-d3", "c2l-volume-rev-d3", "c2l-avg-value-d3", "c2l-accum-work-d3"],
+  "generators": ["area-between-v1", "volume-rev-v1", "avg-value-v1", "c2l-area-between-d3", "c2l-volume-rev-d3", "c2l-avg-value-d3", "c2l-accum-work-d3", "c2l-area-between-d1", "c2l-volume-rev-d1", "c2l-avg-value-d1", "c2l-accum-work-d1", "c2l-accum-work-d2"],
   "problems": [
     {
       "id": "calculus-2.applications-of-integration.s01",

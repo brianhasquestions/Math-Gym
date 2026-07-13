@@ -41,7 +41,7 @@
       "**Data science:** gradient descent steps along the partials of a loss function, adjusting one weight at a time relative to the rest."
     ]
   },
-  "generators": ["first-partials-v1", "eval-partial-v1", "second-partial-v1", "c3l-second-partials-d1", "c3l-second-partials-d3", "c3l-evaluate-partials-d1", "c3l-partials-applied-d1"],
+  "generators": ["first-partials-v1", "eval-partial-v1", "second-partial-v1", "c3l-second-partials-d1", "c3l-second-partials-d3", "c3l-evaluate-partials-d1", "c3l-partials-applied-d1", "c3l-first-partials-d2", "c3l-first-partials-d3", "c3l-evaluate-partials-d3", "c3l-partials-applied-d2", "c3l-partials-applied-d3"],
   "problems": [
     {
       "id": "calculus-3.partial-derivatives.s01",

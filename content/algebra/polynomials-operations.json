@@ -41,7 +41,7 @@
       "**Everyday life:** comparing or combining two changing quantities (like two phone-plan cost formulas) into one expression."
     ]
   },
-  "generators": ["poly-add-v1", "poly-subtract-v1", "poly-monomial-v1", "poly-foil-v1", "poly-degree-v1", "apl-poly-addsub-d3", "apl-poly-degree-d2", "apl-poly-degree-d3", "apl-multiply-binomials-d1"],
+  "generators": ["poly-add-v1", "poly-subtract-v1", "poly-monomial-v1", "poly-foil-v1", "poly-degree-v1", "apl-poly-addsub-d3", "apl-poly-degree-d2", "apl-poly-degree-d3", "apl-multiply-binomials-d1", "apl-multiply-binomials-d3", "apl-multiply-monomial-d1"],
   "problems": [
     {
       "id": "algebra.polynomials-operations.s01",

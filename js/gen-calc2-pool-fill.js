@@ -1,14 +1,14 @@
 // gen-calc2-pool-fill.js
 // Thin-pool fill pack for five Calculus 2 topics (prefix c2l-). Each template
-// covers one (concept, difficulty) pool that previously had a single seed
-// problem and no generator, so repeat practice re-served the same problem:
-//   - calculus-2.antiderivatives              (6 templates)
-//   - calculus-2.applications-of-integration  (4 templates)
-//   - calculus-2.definite-integrals           (5 templates)
-//   - calculus-2.integration-by-parts         (6 templates)
-//   - calculus-2.integration-by-substitution  (6 templates)
-//   - calculus-2.series-and-convergence       (5 templates)
-// 32 total. Self-contained: exports a `fill` map of template-name ->
+// covers one (concept, difficulty) pool that previously had only one or two
+// seed problems and no generator, so repeat practice re-served the same problems:
+//   - calculus-2.antiderivatives              (8 templates)
+//   - calculus-2.applications-of-integration  (9 templates)
+//   - calculus-2.definite-integrals           (8 templates)
+//   - calculus-2.integration-by-parts         (9 templates)
+//   - calculus-2.integration-by-substitution  (9 templates)
+//   - calculus-2.series-and-convergence       (6 templates)
+// 49 total. Self-contained: exports a `fill` map of template-name ->
 // (rng, idx) => problem, matching js/generator.js's shape. Deterministic
 // concept/difficulty per template; answers built answer-first so every draw
 // grades cleanly.
@@ -96,6 +96,30 @@ fill["c2l-power-rule-d3"] = (rng, idx) => {
     ],
     finalAnswer: { value: anti, unit: "" },
     solutionNarrative: `Integrate term by term: $\\int (${integrand})\\,dx = ${anti.replace(" + C", "")} + C$. Differentiating hands back $${integrand}$. ✓`,
+  };
+};
+
+// --- power-rule-integration d2: 3-term polynomial, integer coefficients ------
+fill["c2l-power-rule-d2"] = (rng, idx) => {
+  let a, b, c;
+  do {
+    a = rng.int(1, 3);
+    b = rng.int(1, 3);
+    c = rng.int(2, 6);
+  } while (a === 1 && b === 2 && c === 2); // ∫(4x^3 + 6x^2 + 2)dx is the existing seed
+  const terms = [{ k: 4 * a, p: 3 }, { k: 3 * b, p: 2 }, { k: c, p: 0 }];
+  const integrand = polyJoin(terms);
+  const anti = antiJoin(terms);
+  const lead = antiMag(4 * a, 3);
+  return {
+    id: `gen.c2l-power-rule-d2.${idx}`, generated: true, concepts: ["power-rule-integration"], difficulty: 2, context: "abstract",
+    prompt: `Find $\\int (${integrand})\\,dx$. Include $+ C$.`,
+    steps: [
+      { instruction: `Integrate the leading term: $\\int ${tmag(4 * a, 3)}\\,dx$ (no $+ C$ yet).`, answer: lead, accept: [`${lead} + C`], hint: `Raise the exponent to 4 and divide: $\\frac{${4 * a}}{4}x^4 = ${lead}$.` },
+      { instruction: "Now integrate term by term and write the full antiderivative. Include $+ C$.", answer: anti, accept: [], hint: `$\\int ${3 * b}x^2\\,dx = ${tmag(b, 3)}$ and $\\int ${c}\\,dx = ${tmag(c, 1)}$.` },
+    ],
+    finalAnswer: { value: anti, unit: "" },
+    solutionNarrative: `Term by term: $\\int ${tmag(4 * a, 3)}\\,dx = ${tmag(a, 4)}$, $\\int ${tmag(3 * b, 2)}\\,dx = ${tmag(b, 3)}$, $\\int ${c}\\,dx = ${tmag(c, 1)}$. Together: $${anti.replace(" + C", "")} + C$.`,
   };
 };
 
@@ -222,6 +246,34 @@ fill["c2l-antideriv-apps-d1"] = (rng, idx) => {
   };
 };
 
+// --- antiderivative-applications d3: acceleration + initial velocity ---------
+const APP_CTX_D3 = [
+  { who: "A maglev test cart" },
+  { who: "A subway train" },
+  { who: "A speedboat" },
+];
+fill["c2l-antideriv-apps-d3"] = (rng, idx) => {
+  const ctx = rng.pick(APP_CTX_D3);
+  const k = rng.int(1, 3);
+  const c0 = rng.int(2, 8);
+  const v0 = rng.int(2, 9);
+  const T = rng.pick([2, 3]);
+  const vAtT = 3 * k * T * T + c0 * T + v0;
+  const accel = polyJoin([{ k: 6 * k, p: 1 }, { k: c0, p: 0 }], "t");
+  const anti = antiJoin([{ k: 6 * k, p: 1 }, { k: c0, p: 0 }], "t");
+  return {
+    id: `gen.c2l-antideriv-apps-d3.${idx}`, generated: true, concepts: ["antiderivative-applications"], difficulty: 3, context: "applied",
+    prompt: `${ctx.who} accelerates at $a(t) = ${accel}$ m/s². Its initial velocity is $v(0) = ${v0}$ m/s. Integrate acceleration to get velocity, then find the velocity at $t = ${T}$ seconds.`,
+    steps: [
+      { instruction: `Integrate $a(t) = ${accel}$ to get velocity $v(t)$. Include $+ C$.`, answer: anti, accept: [], hint: `$\\int ${6 * k}t\\,dt = ${tmag(3 * k, 2, "t")}$ and $\\int ${c0}\\,dt = ${tmag(c0, 1, "t")}$.` },
+      { instruction: `Use $v(0) = ${v0}$ to find $C$.`, answer: `${v0}`, accept: [`C = ${v0}`, `C=${v0}`], hint: `At $t = 0$ every $t$ term vanishes.` },
+      { instruction: `Evaluate $v(${T})$ (m/s).`, answer: `${vAtT}`, accept: [`${vAtT} m/s`], hint: `$${3 * k}(${T})^2 + ${c0}(${T}) + ${v0} = ${3 * k * T * T} + ${c0 * T} + ${v0}$.` },
+    ],
+    finalAnswer: { value: `${vAtT}`, unit: "m/s" },
+    solutionNarrative: `$v(t) = \\int (${accel})\\,dt = ${anti.replace(" + C", "")} + C$. With $v(0) = ${v0}$, $C = ${v0}$. Then $v(${T}) = ${3 * k * T * T} + ${c0 * T} + ${v0} = ${vAtT}$ m/s.`,
+  };
+};
+
 // ============================================================================
 // Topic: calculus-2.applications-of-integration
 // ============================================================================
@@ -322,6 +374,132 @@ fill["c2l-accum-work-d3"] = (rng, idx) => {
     ],
     finalAnswer: { value: `${W}`, unit: ctx.unit },
     solutionNarrative: `$W = [${anti}]_{${x1}}^{${x2}} = ${F2} - ${F1} = ${W}$ ${ctx.unit}. A nonzero lower limit means the lower evaluation genuinely subtracts.`,
+  };
+};
+
+// --- area-between-curves d1: two horizontal lines over a strip ---------------
+fill["c2l-area-between-d1"] = (rng, idx) => {
+  let top, bot, L;
+  do {
+    top = rng.int(5, 9);
+    bot = rng.int(1, 4);
+    L = rng.int(3, 6);
+  } while (top === 6 && bot === 2 && L === 5); // the existing seed's plate
+  const h = top - bot;
+  const area = h * L;
+  return {
+    id: `gen.c2l-area-between-d1.${idx}`, generated: true, concepts: ["area-between-curves"], difficulty: 1, context: "applied",
+    prompt: `A flat metal strip fills the region between the line $y = ${top}$ (top) and the line $y = ${bot}$ (bottom) from $x = 0$ to $x = ${L}$ (units in cm). What is its cross-sectional area?`,
+    steps: [
+      { instruction: "Write the integrand top minus bottom.", answer: `${h}`, accept: [`${top} - ${bot}`, `${top}-${bot}`], hint: `$${top} - ${bot}$.` },
+      { instruction: `Evaluate $\\int_0^{${L}} ${h}\\,dx$.`, answer: `${area}`, accept: [`${area} cm^2`], hint: `A constant integrand just multiplies by the width: $${h} \\times ${L}$.` },
+    ],
+    finalAnswer: { value: `${area}`, unit: "cm^2" },
+    solutionNarrative: `The gap between the lines is constant: $${top} - ${bot} = ${h}$. So the area is $\\int_0^{${L}} ${h}\\,dx = ${h} \\times ${L} = ${area}$ cm².`,
+  };
+};
+
+// --- volume-of-revolution d1: constant radius disks ---------------------------
+const VOL_CTX_D1 = [
+  { what: "A solid roller" },
+  { what: "A steel pin" },
+  { what: "A round dowel" },
+];
+fill["c2l-volume-rev-d1"] = (rng, idx) => {
+  const ctx = rng.pick(VOL_CTX_D1);
+  let R, L;
+  do {
+    R = rng.int(2, 4);
+    L = rng.int(2, 6);
+  } while ((R === 2 && L === 5) || (R === 3 && L === 2)); // the two existing seeds
+  const I = R * R * L;
+  const vol = rnd(I * 3.14, 2);
+  return {
+    id: `gen.c2l-volume-rev-d1.${idx}`, generated: true, concepts: ["volume-of-revolution"], difficulty: 1, context: "applied",
+    prompt: `${ctx.what} is made by revolving the region under $y = ${R}$ from $x = 0$ to $x = ${L}$ (cm) around the $x$-axis. Use $\\pi \\approx 3.14$. Find its volume, rounded to two decimals.`,
+    steps: [
+      { instruction: `Each disk has radius ${R}. Evaluate $\\int_0^{${L}} ${R}^2\\,dx$ (the integral part, without $\\pi$).`, answer: `${I}`, accept: [], hint: `$${R * R} \\times ${L}$.` },
+      { instruction: `Multiply by $\\pi \\approx 3.14$ to get the volume.`, answer: vol, accept: nbrs(I * 3.14, 2), hint: `$${I} \\times 3.14$.` },
+    ],
+    finalAnswer: { value: vol, unit: "cm^3" },
+    solutionNarrative: `$V = \\pi \\int_0^{${L}} ${R}^2\\,dx = \\pi \\cdot ${I} \\approx ${vol}$ cm³ — the familiar cylinder volume $\\pi r^2 h$.`,
+  };
+};
+
+// --- average-value d1: linear function over a window --------------------------
+const AVG_CTX_D1 = [
+  { what: "the temperature in a greenhouse", unit: "degrees C" },
+  { what: "the depth of water in a filling pool", unit: "cm" },
+  { what: "the load on a web server", unit: "percent" },
+];
+fill["c2l-avg-value-d1"] = (rng, idx) => {
+  const ctx = rng.pick(AVG_CTX_D1);
+  const m = rng.int(1, 3);
+  const c = rng.int(5, 12);
+  const T = rng.pick([2, 4, 5]);
+  const total = m * T * T + c * T;
+  const avg = m * T + c;
+  return {
+    id: `gen.c2l-avg-value-d1.${idx}`, generated: true, concepts: ["average-value"], difficulty: 1, context: "applied",
+    prompt: `Over a ${T}-hour window, ${ctx.what} (${ctx.unit}) is modeled by $f(t) = ${2 * m}t + ${c}$ for $0 \\le t \\le ${T}$. What is the average value of $f$ over the window?`,
+    steps: [
+      { instruction: `Evaluate the total $\\int_0^{${T}} (${2 * m}t + ${c})\\,dt$.`, answer: `${total}`, accept: [], hint: `Antiderivative $${m}t^2 + ${c}t$; at $t = ${T}$: $${m * T * T} + ${c * T}$.` },
+      { instruction: `Divide by the interval width $${T} - 0$ to get the average (${ctx.unit}).`, answer: `${avg}`, accept: [], hint: `$${total} \\div ${T}$.` },
+    ],
+    finalAnswer: { value: `${avg}`, unit: ctx.unit },
+    solutionNarrative: `$\\int_0^{${T}} (${2 * m}t + ${c})\\,dt = [${m}t^2 + ${c}t]_0^{${T}} = ${total}$. Average $= \\frac{${total}}{${T}} = ${avg}$ ${ctx.unit}.`,
+  };
+};
+
+// --- accumulation-and-work d1: constant inflow rate ---------------------------
+const ACCUM_CTX_D1 = [
+  { what: "Water flows into a barrel", rate: "liters per minute", t: "minutes", unit: "liters", q: "How many liters enter" },
+  { what: "A conveyor delivers gravel", rate: "kg per minute", t: "minutes", unit: "kg", q: "How many kilograms arrive" },
+  { what: "A vent releases gas", rate: "cubic meters per minute", t: "minutes", unit: "cubic meters", q: "How much gas escapes" },
+];
+fill["c2l-accum-work-d1"] = (rng, idx) => {
+  const ctx = rng.pick(ACCUM_CTX_D1);
+  let c, T;
+  do {
+    c = rng.int(3, 9);
+    T = rng.int(4, 9);
+  } while (c === 5 && T === 8); // r = 5 over [0,8] is the existing seed
+  const total = c * T;
+  return {
+    id: `gen.c2l-accum-work-d1.${idx}`, generated: true, concepts: ["accumulation-and-work"], difficulty: 1, context: "applied",
+    prompt: `${ctx.what} at a constant rate of $r(t) = ${c}$ ${ctx.rate}. ${ctx.q} during the first ${T} ${ctx.t}?`,
+    steps: [
+      { instruction: `Write the antiderivative of the constant rate $${c}$.`, answer: `${c}t`, accept: [`${c}t + C`], hint: `$\\int ${c}\\,dt = ${c}t$.` },
+      { instruction: `Evaluate $\\int_0^{${T}} ${c}\\,dt$ for the total (${ctx.unit}).`, answer: `${total}`, accept: [`${total} ${ctx.unit}`], hint: `$${c} \\times ${T} - ${c} \\times 0$.` },
+    ],
+    finalAnswer: { value: `${total}`, unit: ctx.unit },
+    solutionNarrative: `A constant rate accumulates linearly: $\\int_0^{${T}} ${c}\\,dt = [${c}t]_0^{${T}} = ${total}$ ${ctx.unit}.`,
+  };
+};
+
+// --- accumulation-and-work d2: linear spring-style force ----------------------
+const WORK_CTX_D2 = [
+  { what: "Stretching a spring requires a force", act: "stretching it" },
+  { what: "Compressing a strut requires a force", act: "compressing it" },
+  { what: "Drawing a bowstring requires a force", act: "drawing it" },
+];
+fill["c2l-accum-work-d2"] = (rng, idx) => {
+  const ctx = rng.pick(WORK_CTX_D2);
+  let k, L;
+  do {
+    k = rng.int(2, 5);
+    L = rng.int(2, 5);
+  } while (k === 3 && L === 4); // F = 6x over [0,4] is the existing seed
+  const W = k * L * L;
+  return {
+    id: `gen.c2l-accum-work-d2.${idx}`, generated: true, concepts: ["accumulation-and-work"], difficulty: 2, context: "applied",
+    prompt: `${ctx.what} $F(x) = ${2 * k}x$ newtons at displacement $x$ meters. How much work is done ${ctx.act} from $x = 0$ to $x = ${L}$ m?`,
+    steps: [
+      { instruction: `Write the antiderivative of $${2 * k}x$.`, answer: `${k}x^2`, accept: [`${k}x^2 + C`], hint: `$\\frac{${2 * k}x^2}{2} = ${k}x^2$.` },
+      { instruction: `Evaluate $\\int_0^{${L}} ${2 * k}x\\,dx$ for the work (joules).`, answer: `${W}`, accept: [`${W} joules`], hint: `$${k}(${L})^2 = ${k} \\times ${L * L}$.` },
+    ],
+    finalAnswer: { value: `${W}`, unit: "joules" },
+    solutionNarrative: `$W = \\int_0^{${L}} ${2 * k}x\\,dx = [${k}x^2]_0^{${L}} = ${k}(${L})^2 = ${W}$ joules.`,
   };
 };
 
@@ -456,6 +634,77 @@ fill["c2l-net-change-d3"] = (rng, idx) => {
     ],
     finalAnswer: { value: `${net}`, unit: ctx.unit },
     solutionNarrative: `$F(t) = ${anti}$; $F(4) = ${F4}$, $F(1) = ${F1}$, so the net change is $${F4} - ${F1} = ${net}$ ${ctx.unit} — the losses late in the window partly cancel the early gains.`,
+  };
+};
+
+// --- riemann-sums d2: left sum from logged linear speeds ----------------------
+const RIEMANN_CTX_D2 = [
+  { who: "A bike's speed" },
+  { who: "A jogger's speed" },
+  { who: "A delivery rover's speed" },
+];
+fill["c2l-riemann-d2"] = (rng, idx) => {
+  const ctx = rng.pick(RIEMANN_CTX_D2);
+  const a = rng.int(2, 4); // a = 1 would clone the existing seed (v = t + 1)
+  const b = rng.int(1, 5);
+  const vals = [b, a + b, 2 * a + b, 3 * a + b];
+  const sum = 6 * a + 4 * b;
+  return {
+    id: `gen.c2l-riemann-d2.${idx}`, generated: true, concepts: ["riemann-sums"], difficulty: 2, context: "applied",
+    prompt: `${ctx.who} (m/s) is recorded at the start of each 1-second interval over 4 seconds following $v(t) = ${a}t + ${b}$: $v(0) = ${vals[0]}$, $v(1) = ${vals[1]}$, $v(2) = ${vals[2]}$, $v(3) = ${vals[3]}$. Estimate the distance with a **left** Riemann sum ($\\Delta t = 1$).`,
+    steps: [
+      { instruction: `Add the four left-edge speeds $v(0) + v(1) + v(2) + v(3)$.`, answer: `${sum}`, accept: [], hint: `$${vals[0]} + ${vals[1]} + ${vals[2]} + ${vals[3]}$.` },
+      { instruction: `Multiply the speed-sum by $\\Delta t = 1$ to estimate the distance.`, answer: `${sum}`, accept: [`${sum} meters`, `${sum} m`], hint: `$${sum} \\times 1$.` },
+    ],
+    finalAnswer: { value: `${sum}`, unit: "meters" },
+    solutionNarrative: `Left-edge speeds $${vals.join(", ")}$ sum to $${sum}$; times width 1 gives $${sum}$ m. (The exact distance $\\int_0^4 (${a}t + ${b})\\,dt = ${8 * a + 4 * b}$ m is a bit more — left sums undercount an increasing speed.)`,
+  };
+};
+
+// --- ftc-evaluate d2: lower limit 1, standard FTC chain ------------------------
+fill["c2l-ftc-evaluate-d2"] = (rng, idx) => {
+  let a, b, L;
+  do {
+    a = rng.int(1, 2);
+    b = rng.int(2, 5);
+    L = rng.pick([2, 3]);
+  } while (a === 1 && b === 2 && L === 3); // ∫_1^3 (3x^2 + 2)dx is the existing seed
+  const FL = a * L ** 3 + b * L;
+  const F1 = a + b;
+  const val = FL - F1;
+  const integrand = polyJoin([{ k: 3 * a, p: 2 }, { k: b, p: 0 }]);
+  const anti = polyJoin([{ k: a, p: 3 }, { k: b, p: 1 }]);
+  return {
+    id: `gen.c2l-ftc-evaluate-d2.${idx}`, generated: true, concepts: ["ftc-evaluate"], difficulty: 2, context: "abstract",
+    prompt: `Evaluate $\\int_1^{${L}} (${integrand})\\,dx$.`,
+    steps: [
+      { instruction: `Find an antiderivative $F(x)$ of $${integrand}$.`, answer: anti, accept: [`${anti} + C`], hint: `$\\int ${3 * a}x^2\\,dx = ${tmag(a, 3)}$ and $\\int ${b}\\,dx = ${tmag(b, 1)}$.` },
+      { instruction: `Evaluate $F(${L})$.`, answer: `${FL}`, accept: [], hint: `$${a}(${L})^3 + ${b}(${L}) = ${a * L ** 3} + ${b * L}$.` },
+      { instruction: "Evaluate $F(1)$.", answer: `${F1}`, accept: [], hint: `$${a} + ${b}$.` },
+      { instruction: `Compute $F(${L}) - F(1)$.`, answer: `${val}`, accept: [], hint: `$${FL} - ${F1}$.` },
+    ],
+    finalAnswer: { value: `${val}`, unit: "" },
+    solutionNarrative: `$F(x) = ${anti}$. $F(${L}) = ${FL}$ and $F(1) = ${F1}$, so the integral is $${FL} - ${F1} = ${val}$.`,
+  };
+};
+
+// --- area-under-curve d1: line through the origin ------------------------------
+fill["c2l-area-under-d1"] = (rng, idx) => {
+  let k, L;
+  do {
+    k = rng.int(2, 5);
+    L = rng.int(2, 4);
+  } while (k === 2 && L === 2); // area under 4x on [0,2] is the existing seed
+  const area = k * L * L;
+  return {
+    id: `gen.c2l-area-under-d1.${idx}`, generated: true, concepts: ["area-under-curve"], difficulty: 1, context: "abstract",
+    prompt: `Find the exact area under $f(x) = ${2 * k}x$ from $x = 0$ to $x = ${L}$.`,
+    steps: [
+      { instruction: `Find an antiderivative of $${2 * k}x$.`, answer: `${k}x^2`, accept: [`${k}x^2 + C`], hint: `$\\frac{${2 * k}x^2}{2} = ${k}x^2$.` },
+      { instruction: `Evaluate $\\left[${k}x^2\\right]_0^{${L}} = ${k}(${L}^2) - ${k}(0^2)$.`, answer: `${area}`, accept: [], hint: `$${k} \\times ${L * L} - 0$.` },
+    ],
+    finalAnswer: { value: `${area}`, unit: "square units" },
+    solutionNarrative: `$\\int_0^{${L}} ${2 * k}x\\,dx = \\left[${k}x^2\\right]_0^{${L}} = ${area} - 0 = ${area}$ square units.`,
   };
 };
 
@@ -595,6 +844,72 @@ fill["c2l-parts-apps-d3"] = (rng, idx) => {
     ],
     finalAnswer: { value: ansAvg, unit: ctx.unit },
     solutionNarrative: `$\\int_0^2 t e^{-t} dt = [-(t+1)e^{-t}]_0^2 \\approx ${rnd(base, 4)}$. Times ${c}: $\\approx ${ansTotal}$; divided by 2: average $\\approx ${ansAvg}$.`,
+  };
+};
+
+// --- parts-formula d3: x sin x over [0, π] -------------------------------------
+fill["c2l-parts-formula-d3"] = (rng, idx) => {
+  const c = rng.int(1, 3);
+  const cs = c === 1 ? "" : `${c}`;
+  const val = c * 3.14;
+  const ans = rnd(val, 2);
+  return {
+    id: `gen.c2l-parts-formula-d3.${idx}`, generated: true, concepts: ["parts-formula"], difficulty: 3, context: "abstract",
+    prompt: `Evaluate $\\int_0^{\\pi} ${cs}x\\,\\sin x\\,dx$ using integration by parts. Use $\\pi \\approx 3.14$.`,
+    steps: [
+      { instruction: "By LIATE, which factor is $u$? (Type the factor.)", answer: "x", accept: ["u = x", "u=x"], hint: "Algebraic (A) beats Trig (T), so $u = x$." },
+      { instruction: `With $u = x$ and $dv = \\sin x\\,dx$, the antiderivative is $${cs}(\\sin x - x\\cos x)$. What is its value at the lower limit $x = 0$?`, answer: "0", accept: [], hint: "$\\sin 0 = 0$ and $0 \\cdot \\cos 0 = 0$." },
+      { instruction: `Evaluate $\\big[${cs}(\\sin x - x\\cos x)\\big]_0^{\\pi}$. Round to 2 decimal places.`, answer: ans, accept: nbrs(val, 2), hint: `At $x = \\pi$: $\\sin\\pi - \\pi\\cos\\pi = 0 - \\pi(-1) = \\pi$, so the bracket is $${c} \\cdot 3.14$. Subtract the 0 from the lower limit.` },
+    ],
+    finalAnswer: { value: ans, unit: "" },
+    solutionNarrative: `With $u = x$, $dv = \\sin x\\,dx$, the antiderivative is $${cs}(\\sin x - x\\cos x)$. Since $\\cos\\pi = -1$, at $\\pi$ it equals $${c}\\pi \\approx ${ans}$; at 0 it is 0. Result $\\approx ${ans}$.`,
+  };
+};
+
+// --- polynomial-times-exponential d3: c x^2 e^x needs parts twice --------------
+fill["c2l-poly-exp-d3"] = (rng, idx) => {
+  const c = rng.pick([2, 3, 4]); // c = 1 over [0,1] is the existing seed
+  const e2 = parseFloat(EPOW[2]);
+  const base = 2 * e2 - 2;       // ∫_0^2 x^2 e^x dx
+  const val = c * base;
+  const ansBase = rnd(base, 2);
+  const ans = rnd(val, 2);
+  return {
+    id: `gen.c2l-poly-exp-d3.${idx}`, generated: true, concepts: ["polynomial-times-exponential"], difficulty: 3, context: "abstract",
+    prompt: `Evaluate $\\int_0^2 ${c}x^2\\,e^x\\,dx$. This requires applying parts twice. Use $e^2 \\approx ${EPOW[2]}$.`,
+    steps: [
+      { instruction: "After applying parts twice, the antiderivative of $x^2 e^x$ is $(x^2 - 2x + 2)e^x$. Confirm the bracket polynomial by typing it.", answer: "x^2 - 2x + 2", accept: ["x^2-2x+2"], hint: "First pass gives $x^2 e^x - 2\\int x e^x dx$; the inner integral is $(x-1)e^x$, so combine." },
+      { instruction: `Evaluate $\\big[(x^2 - 2x + 2)e^x\\big]_0^2$ using $e^2 \\approx ${EPOW[2]}$. Round to 2 decimal places.`, answer: ansBase, accept: nbrs(base, 2), hint: `At $x=2$: $(4 - 4 + 2)(${EPOW[2]}) = ${rnd(2 * e2, 3)}$. At $x=0$: $(2)(1) = 2$. Subtract.` },
+      { instruction: `Multiply by the constant ${c} out front. Round to 2 decimal places.`, answer: ans, accept: nbrs(val, 2), hint: `$${c} \\times ${rnd(base, 4)}$.` },
+    ],
+    finalAnswer: { value: ans, unit: "" },
+    solutionNarrative: `Two passes give antiderivative $(x^2-2x+2)e^x$; from 0 to 2 it is $2e^2 - 2 \\approx ${ansBase}$. Times ${c}: $\\approx ${ans}$.`,
+  };
+};
+
+// --- parts-applications d2: scaled t e^{-t} total over [0, 1] ------------------
+const PARTS_APP_CTX_D2 = [
+  { lead: "A startup earns income at a rate of", rate: "thousand dollars per year (already discounted)", span: "The present value of the first year is", q: "present value", unit: "thousand dollars", varn: "t" },
+  { lead: "A damping force is", rate: "newtons", span: "As a slider moves from $x = 0$ to $x = 1$ meters, the work done is", q: "work", unit: "joules", varn: "x" },
+  { lead: "A transmitter radiates power", rate: "watts", span: "Over the first second, the energy delivered is", q: "energy", unit: "joules", varn: "t" },
+];
+fill["c2l-parts-apps-d2"] = (rng, idx) => {
+  const ctx = rng.pick(PARTS_APP_CTX_D2);
+  const c = rng.int(2, 6);
+  const v = ctx.varn;
+  const base = 1 - 2 * 0.3679;   // ∫_0^1 t e^{-t} dt with e^{-1} ≈ 0.3679
+  const total = c * base;
+  const ansBase = rnd(base, 2);
+  const ans = rnd(total, 2);
+  return {
+    id: `gen.c2l-parts-apps-d2.${idx}`, generated: true, concepts: ["parts-applications"], difficulty: 2, context: "applied",
+    prompt: `${ctx.lead} $f(${v}) = ${c}${v}\\,e^{-${v}}$ ${ctx.rate}. ${ctx.span} $${c}\\int_0^1 ${v}\\,e^{-${v}}\\,d${v}$. With $u = ${v}$ and $dv = e^{-${v}}\\,d${v}$, the antiderivative of $${v}\\,e^{-${v}}$ is $-(${v}+1)e^{-${v}}$. Find the ${ctx.q}. Use $e^{-1} \\approx 0.3679$.`,
+    steps: [
+      { instruction: `Evaluate $\\big[-(${v}+1)e^{-${v}}\\big]_0^1$. Round to 2 decimal places.`, answer: ansBase, accept: nbrs(base, 2), hint: `At $${v}=1$: $-(2)(0.3679) = -0.7358$. At $${v}=0$: $-(1)(1) = -1$. Subtract: $-0.7358 - (-1)$.` },
+      { instruction: `Multiply by the constant ${c} for the ${ctx.q} (${ctx.unit}). Round to 2 decimal places.`, answer: ans, accept: nbrs(total, 2), hint: `$${c} \\times ${rnd(base, 4)}$.` },
+    ],
+    finalAnswer: { value: ans, unit: ctx.unit },
+    solutionNarrative: `$\\int_0^1 ${v} e^{-${v}} d${v} = [-(${v}+1)e^{-${v}}]_0^1 = -0.7358 - (-1) = ${rnd(base, 4)}$. Times ${c}: $\\approx ${ans}$ ${ctx.unit}.`,
   };
 };
 
@@ -743,6 +1058,62 @@ fill["c2l-sub-apps-d3"] = (rng, idx) => {
   };
 };
 
+// --- choosing-u d2: pick u, compute du, balance a half -------------------------
+fill["c2l-choosing-u-d2"] = (rng, idx) => {
+  const b = rng.int(2, 9) * rng.pick([1, -1]);
+  const n = rng.int(3, 6);
+  const bs = b < 0 ? `- ${-b}` : `+ ${b}`;
+  const u = `x^2 ${bs}`;
+  return {
+    id: `gen.c2l-choosing-u-d2.${idx}`, generated: true, concepts: ["choosing-u"], difficulty: 2, context: "abstract",
+    prompt: `For $\\int x\\,(x^2 ${bs})^{${n}}\\,dx$, find $u$, then find the constant $k$ so that $x\\,dx = k\\,du$.`,
+    steps: [
+      { instruction: "Choose the inner function $u$. Enter it as an expression in $x$.", answer: u, accept: [`x^2${b < 0 ? "-" : "+"}${Math.abs(b)}`], hint: "Take $u$ to be the base of the power — the inside of the parentheses." },
+      { instruction: "Compute $\\frac{du}{dx}$.", answer: "2x", accept: [], hint: `Differentiate $x^2 ${bs}$; the constant drops out.` },
+      { instruction: `Since $du = 2x\\,dx$, solve for the constant $k$ in $x\\,dx = k\\,du$.`, answer: "1/2", accept: ["0.5"], hint: "$x\\,dx$ is half of $2x\\,dx$." },
+    ],
+    finalAnswer: { value: `u = ${u}, k = 1/2`, unit: "" },
+    solutionNarrative: `$u = x^2 ${bs}$ gives $du = 2x\\,dx$, so $x\\,dx = \\tfrac{1}{2}\\,du$ — the integral becomes $\\tfrac{1}{2}\\int u^{${n}}\\,du$ with no $x$ left over.`,
+  };
+};
+
+// --- indefinite-substitution d1: du matches exactly ----------------------------
+fill["c2l-indef-sub-d1"] = (rng, idx) => {
+  const b = rng.int(2, 7);
+  const m = rng.pick([2, 3]);
+  const d = m + 1;
+  const uAns = `u^${d}/${d} + C`;
+  const xAns = `(x^3+${b})^${d}/${d} + C`;
+  return {
+    id: `gen.c2l-indef-sub-d1.${idx}`, generated: true, concepts: ["indefinite-substitution"], difficulty: 1, context: "abstract",
+    prompt: `Evaluate $\\int 3x^2\\,(x^3+${b})^{${m}}\\,dx$ using $u = x^3 + ${b}$. Note $du = 3x^2\\,dx$ matches exactly. Give the antiderivative in terms of $x$ (include + C).`,
+    steps: [
+      { instruction: `With $du = 3x^2\\,dx$, the integral becomes $\\int u^{${m}}\\,du$. Integrate it (in $u$, include + C).`, answer: uAns, accept: [`(1/${d})u^${d} + C`, `u^${d} / ${d} + C`], hint: `Power rule: $\\int u^{${m}}\\,du = \\frac{u^{${d}}}{${d}}$.` },
+      { instruction: `Back-substitute $u = x^3 + ${b}$ to write the answer in $x$.`, answer: xAns, accept: [`(1/${d})(x^3+${b})^${d} + C`, `(x^3 + ${b})^${d} / ${d} + C`], hint: `Replace $u$ with $x^3 + ${b}$.` },
+    ],
+    finalAnswer: { value: xAns, unit: "" },
+    solutionNarrative: `Since $du = 3x^2\\,dx$, $\\int 3x^2 (x^3+${b})^{${m}}\\,dx = \\int u^{${m}}\\,du = \\frac{u^{${d}}}{${d}} + C = \\frac{(x^3+${b})^{${d}}}{${d}} + C$.`,
+  };
+};
+
+// --- definite-substitution d1: du matches, change the limits -------------------
+fill["c2l-def-sub-d1"] = (rng, idx) => {
+  const b = rng.int(2, 6); // b = 1 would sit too close to the existing seed's x^2 + 1
+  const hi = b + 4;
+  const val = 8 + 4 * b;   // (hi^2 - b^2)/2
+  return {
+    id: `gen.c2l-def-sub-d1.${idx}`, generated: true, concepts: ["definite-substitution"], difficulty: 1, context: "abstract",
+    prompt: `Evaluate $\\int_0^2 2x\\,(x^2+${b})\\,dx$ using $u = x^2 + ${b}$ and changing the limits. (Here $du = 2x\\,dx$ matches exactly.)`,
+    steps: [
+      { instruction: `Find the new lower limit: evaluate $u = x^2 + ${b}$ at $x = 0$.`, answer: `${b}`, accept: [], hint: `Plug $x = 0$ into $x^2 + ${b}$.` },
+      { instruction: `Find the new upper limit: evaluate $u = x^2 + ${b}$ at $x = 2$.`, answer: `${hi}`, accept: [], hint: `$4 + ${b}$.` },
+      { instruction: `Evaluate $\\int_{${b}}^{${hi}} u\\,du$. Give the numeric value.`, answer: `${val}`, accept: [], hint: `$\\big[\\frac{u^2}{2}\\big]_{${b}}^{${hi}} = \\frac{${hi * hi} - ${b * b}}{2}$.` },
+    ],
+    finalAnswer: { value: `${val}`, unit: "" },
+    solutionNarrative: `With $u = x^2 + ${b}$ the limits become ${b} and ${hi}: $\\int_{${b}}^{${hi}} u\\,du = \\frac{${hi * hi} - ${b * b}}{2} = ${val}$.`,
+  };
+};
+
 // ============================================================================
 // Topic: calculus-2.series-and-convergence
 // ============================================================================
@@ -856,5 +1227,29 @@ fill["c2l-series-apps-d1"] = (rng, idx) => {
     ],
     finalAnswer: { value: S, unit: "" },
     solutionNarrative: `With $a = 0.${d}$ and $r = 0.1$, $S = \\dfrac{0.${d}}{0.9} = \\dfrac{${d}}{9}${S === `${d}/9` ? "" : ` = \\dfrac{${S.replace("/", "}{")}}`}$, so $0.${d}${d}${d}${d}\\ldots = ${S.includes("/") ? `\\tfrac{${S.replace("/", "}{")}}` : S}$.`,
+  };
+};
+
+// --- series-applications d3: bouncing ball total distance ----------------------
+fill["c2l-series-apps-d3"] = (rng, idx) => {
+  const H = rng.pick([8, 12, 16, 20]); // 10 m is the existing seed's drop height
+  const pct = rng.pick([50, 75]);
+  const r = pct / 100;
+  const first = H * r;          // first rebound height (integer for these H)
+  const a = 2 * first;          // first up-and-down rebound term
+  const reb = a / (1 - r);      // 2H (r = 0.5) or 6H (r = 0.75) — integer
+  const total = H + reb;
+  const second = first * r;
+  const rs = r === 0.5 ? "0.5" : "0.75";
+  return {
+    id: `gen.c2l-series-apps-d3.${idx}`, generated: true, concepts: ["series-applications"], difficulty: 3, context: "applied",
+    prompt: `A ball is dropped from ${H} meters. Each bounce returns it to ${pct}% of its previous height. The total vertical distance traveled is the drop (${H} m) plus each rebound counted twice (up and down): $${H} + 2(${first}) + 2(${second}) + \cdots$. Find the total distance.`,
+    steps: [
+      { instruction: `The rebound distances form a geometric series $2(${first}) + 2(${second}) + \cdots = ${a} + ${2 * second} + \cdots$. Find its first term $a$ and ratio $r$.`, answer: `a = ${a}, r = ${rs}`, accept: [`${a}, ${rs}`, `a=${a}, r=${rs}`], hint: `First rebound up-and-down is $2 \times ${first} = ${a}$; each rebound is ${pct}% of the last, so $r = ${rs}$.` },
+      { instruction: `Sum the rebound series with $S = \dfrac{a}{1 - r}$.`, answer: `${reb}`, accept: [], hint: `$S = \dfrac{${a}}{1 - ${rs}} = \dfrac{${a}}{${1 - r}}$.` },
+      { instruction: `Add the initial ${H} m drop to get the total distance.`, answer: `${total}`, accept: [`${total} meters`, `${total} m`], hint: `Total = ${H} + (rebound sum).` },
+    ],
+    finalAnswer: { value: `${total}`, unit: "meters" },
+    solutionNarrative: `The rebounds sum to $\dfrac{${a}}{1 - ${rs}} = ${reb}$ m. Adding the initial ${H} m drop gives $${total}$ meters of total travel.`,
   };
 };
