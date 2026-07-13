@@ -43,7 +43,10 @@
   <script type="module">
     import { loadTopic, conceptById } from "./js/content-loader.js";
     import { getTopicState, setTopicState, resetTopic } from "./js/progress-store.js";
-    import { initState, selectConcept, grade, topicProgress, conceptProgress, CONFIG } from "./js/mastery-model.js";
+    import {
+      initState, selectConcept, grade, topicProgress, conceptProgress, CONFIG,
+      reviewStatus, applyReviewResult, finishReview,
+    } from "./js/mastery-model.js";
     import { ProblemSource, checkStep } from "./js/problem-engine.js";
     import { unmetPrerequisites } from "./js/insights.js";
     import { renderInlineInto, renderProseInto, renderMarkdown } from "./js/renderer.js";
@@ -60,7 +63,7 @@
 
     const root = document.getElementById("train-root");
     const id = qs("id");
-    if (!id) showError(root, "No topic specified.");
+    if (!id) { showError(root, "No topic specified."); throw new Error("No topic specified."); }
 
     let topic, source, state;
     // Cross-topic intelligence: prerequisites this topic builds on that the
@@ -70,6 +73,10 @@
     let prereqNudgeShown = false;
     // Per-problem working state.
     let current = null;
+    // Post-mastery review session state: a queue of concept ids still to check
+    // (null when not reviewing) and whether every check so far held.
+    let reviewQueue = null;
+    let reviewAllHeld = true;
     // DOM handles, populated by buildLayout(). Declared up here so the bootstrap
     // try-block below can call buildLayout() without hitting a temporal dead zone.
     let nodes = {};
@@ -77,8 +84,14 @@
     try {
       topic = await loadTopic(id);
       document.title = `MathGym — Training: ${topic.title}`;
-      document.getElementById("crumbs").innerHTML =
-        `<a href="topic.html?id=${encodeURIComponent(topic.id)}">${topic.title}</a> / Training`;
+      // Built with el()/text nodes, not innerHTML — the title comes from a
+      // content file and must not be able to inject markup.
+      const crumbs = document.getElementById("crumbs");
+      crumbs.textContent = "";
+      crumbs.append(
+        el("a", { href: `topic.html?id=${encodeURIComponent(topic.id)}` }, topic.title),
+        " / Training",
+      );
       source = new ProblemSource(topic);
       state = initState(topic.id, topic.keyConcepts.map((c) => c.id), getTopicState(topic.id));
       unmetPrereqs = await unmetPrerequisites(topic.id);
@@ -148,6 +161,7 @@
     // ---- Problem flow -------------------------------------------------------
     function nextProblem() {
       nodes.extra.innerHTML = "";
+      if (reviewQueue) return serveReviewProblem();
       const concept = selectConcept(state);
       if (!concept) return showCompletion();
 
@@ -275,9 +289,17 @@
       // Lock the board so the final step stops being editable and shows its ✓.
       current.locked = true;
       renderSteps();
+      if (current.review) {
+        const res = applyReviewResult(state, {
+          conceptId: current.conceptId, correct: true,
+          hintsUsed: current.hintsUsed, wrongs: current.problemWrongs || 0,
+        });
+        setTopicState(topic.id, state);
+        return reactToReview(res);
+      }
       const summary = grade(state, {
         correct: true, hintsUsed: current.hintsUsed, conceptId: current.conceptId,
-        wrongs: current.problemWrongs || 0,
+        wrongs: current.problemWrongs || 0, difficulty: current.problem.difficulty,
       });
       setTopicState(topic.id, state);
       reactToGrade(summary, true);
@@ -287,14 +309,89 @@
       current.gaveUp = true;
       current.locked = true;
       renderSteps();
+      if (current.review) {
+        const res = applyReviewResult(state, {
+          conceptId: current.conceptId, correct: false,
+          hintsUsed: current.hintsUsed, wrongs: current.problemWrongs || 0,
+        });
+        setTopicState(topic.id, state);
+        showSolution(current.problem);
+        return reactToReview(res);
+      }
       const summary = grade(state, {
         correct: false, hintsUsed: current.hintsUsed, conceptId: current.conceptId,
-        wrongs: current.problemWrongs || 0,
+        wrongs: current.problemWrongs || 0, difficulty: current.problem.difficulty,
       });
       setTopicState(topic.id, state);
       // Always show the full worked solution when giving up.
       showSolution(current.problem);
       reactToGrade(summary, false);
+    }
+
+    // ---- Post-mastery review session ---------------------------------------
+    function startReview() {
+      reviewQueue = (state.conceptOrder && state.conceptOrder.length
+        ? state.conceptOrder.slice() : Object.keys(state.concepts));
+      // Shuffle so retention checks don't always replay the authored order.
+      for (let i = reviewQueue.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [reviewQueue[i], reviewQueue[j]] = [reviewQueue[j], reviewQueue[i]];
+      }
+      reviewAllHeld = true;
+      nextProblem();
+    }
+
+    function serveReviewProblem() {
+      if (!reviewQueue.length) return endReview();
+      const cid = reviewQueue.shift();
+      const conceptMeta = conceptById(topic, cid);
+      const problem = conceptMeta && source.next(cid, CONFIG.topDifficulty);
+      if (!problem) return serveReviewProblem(); // unservable skill: skip, don't stall
+      current = {
+        problem, conceptId: cid, conceptLabel: conceptMeta.label,
+        stepIndex: 0, hintsUsed: 0, gaveUp: false, stepWrongs: 0, locked: false,
+        review: true,
+      };
+      nodes.meta.innerHTML = "";
+      nodes.meta.append(
+        el("span", {}, `Review: ${conceptMeta.label}`),
+        el("span", {}, "Difficulty: Challenge"),
+      );
+      nodes.chip.textContent = "Retention check — no hints";
+      nodes.figure.innerHTML = problem.plot ? plotToSvg(problem.plot) : "";
+      renderProseInto(nodes.prompt, problem.prompt);
+      renderSteps();
+      refreshMastery();
+    }
+
+    function reactToReview(res) {
+      refreshMastery();
+      if (res.held) {
+        nodes.extra.appendChild(el("div", { class: "step-feedback ok", role: "status" },
+          `Still solid — "${current.conceptLabel}" held.`));
+      } else {
+        reviewAllHeld = false;
+        nodes.extra.appendChild(el("div", { class: "micro-lesson", role: "status" }, [
+          el("strong", {}, "That one slipped. "),
+          `"${current.conceptLabel}" is back in training — you'll re-earn it starting near the top tier.`,
+        ]));
+      }
+      const cont = el("button", { class: "btn", style: "margin-top: var(--space-3)" },
+        reviewQueue.length ? "Next retention check" : "Finish review");
+      cont.addEventListener("click", nextProblem);
+      nodes.extra.appendChild(cont);
+      setTimeout(() => cont.focus(), 0);
+    }
+
+    function endReview() {
+      finishReview(state, reviewAllHeld);
+      setTopicState(topic.id, state);
+      const held = reviewAllHeld;
+      reviewQueue = null;
+      // Everything held: back to the mastered screen (with the new review date).
+      // Anything lapsed: normal training resumes on the weakened skill(s).
+      if (held) showCompletion();
+      else nextProblem();
     }
 
     function reactToGrade(summary, correct) {
@@ -377,9 +474,31 @@
       nodes.prompt.innerHTML = "";
       nodes.steps.innerHTML = "";
       nodes.extra.innerHTML = "";
+      // Spaced-repetition status: offer the retention check when due, otherwise
+      // say when it's coming (with an early-review escape hatch).
+      const rs = reviewStatus(state);
+      const reviewBits = [];
+      if (rs.due) {
+        const btn = el("button", { class: "btn" }, "Review session — prove it stuck");
+        btn.addEventListener("click", startReview);
+        reviewBits.push(
+          el("p", {}, "It's been a while since you practiced this. A quick retention check — one top-tier problem per skill, no hints — keeps the mastery honest."),
+          btn,
+        );
+      } else if (rs.nextReviewAt) {
+        const days = Math.max(1, Math.ceil((rs.nextReviewAt - Date.now()) / 86400000));
+        const early = el("button", { class: "btn secondary" }, "Review early");
+        early.addEventListener("click", startReview);
+        reviewBits.push(
+          el("p", { style: "color: var(--text-dim)" },
+            `Next retention check in ~${days} day${days === 1 ? "" : "s"} — skills fade without reinforcement, so we'll re-test this topic on a spaced schedule.`),
+          early,
+        );
+      }
       const card = el("div", {}, [
         el("h2", { style: "margin-top:0; color: var(--success)" }, "[ TOPIC MASTERED ]"),
         el("p", {}, `You cleared every skill in "${topic.title}" — including the top-difficulty problems, cleanly. That's real mastery, not a lucky guess.`),
+        ...reviewBits,
         el("div", { style: "display:flex; gap: var(--space-3); flex-wrap:wrap; margin-top: var(--space-3)" }, [
           el("a", { class: "btn", href: "index.html" }, "Back to subjects"),
           el("button", { class: "btn ghost" , onclick: () => {

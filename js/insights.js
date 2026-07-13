@@ -15,22 +15,25 @@
 
 import { loadManifest, loadTopic } from "./content-loader.js";
 import { getTopicState } from "./progress-store.js";
-import { topicProgress } from "./mastery-model.js";
+import { topicProgress, reviewStatus } from "./mastery-model.js";
 
 // ---- Topic status (no fetch — reads stored progress only) -----------------
 // Returns a stable shape whether or not the learner has ever touched the topic.
 export function topicStatus(topicId) {
   const st = getTopicState(topicId);
   if (!st) {
-    return { state: "not-started", started: false, mastered: false, progress: 0, answered: 0 };
+    return { state: "not-started", started: false, mastered: false, progress: 0, answered: 0, dueForReview: false, nextReviewAt: null };
   }
   const mastered = !!st.topicMastered;
+  const rs = reviewStatus(st);
   return {
     state: mastered ? "mastered" : "in-progress",
     started: true,
     mastered,
     progress: topicProgress(st),
     answered: st.totalAnswered || 0,
+    dueForReview: rs.due,
+    nextReviewAt: rs.nextReviewAt,
   };
 }
 

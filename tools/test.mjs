@@ -63,6 +63,36 @@ eq("wrong roots", checkStep({ form: "solutions", answer: "x=2 or x=-3" }, "(2, 3
 group("grader — factored gate still accepts real factorings");
 eq("factored accepted", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "(x-3)(x-2)"), true);
 eq("gcf factored accepted", checkStep({ form: "factored", answer: "2x(3x+4)" }, "2x(3x+4)"), true);
+eq("constant-times-paren accepted", checkStep({ form: "factored", answer: "2(x+3)" }, "2(x + 3)"), true);
+eq("squared factor accepted", checkStep({ form: "factored", answer: "(x+3)^2" }, "(x+3)^2"), true);
+eq("factored equation accepted", checkStep({ form: "factored", answer: "(2u - 1)(u - 1) = 0" }, "(2u-1)(u-1)=0"), true);
+
+group("grader — factored gate rejects trivial ±1 wrappers");
+eq("1(...) rejected", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "1(x^2-5x+6)"), false);
+eq("(1)(...) rejected", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "(1)(x^2-5x+6)"), false);
+eq("(...)*1 rejected", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "(x^2-5x+6)*1"), false);
+eq("-1(...) rejected", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "-1(-x^2+5x-6)"), false);
+eq("1(...)=0 equation rejected", checkStep({ form: "factored", answer: "(2u-1)(u-1)=0" }, "1(2u^2-3u+1)=0"), false);
+eq("1 times a REAL factoring still ok", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "1(x-2)(x-3)"), true);
+
+group("grader — numeric formats and tolerance");
+eq("thousands separator accepted", checkStep({ answer: "1000" }, "1,000"), true);
+eq("grouped decimal accepted", checkStep({ answer: "431676.38" }, "431,676.38"), true);
+eq("tuple still a tuple", checkStep({ answer: "(1, 0)" }, "1,0"), true);
+eq("non-grouped comma not a number", checkStep({ answer: "1234" }, "12,34"), false);
+eq("user cannot under-round a decimal answer", checkStep({ answer: "7.25" }, "7.3"), false);
+eq("rounding an exact fraction still ok", checkStep({ answer: "1/3" }, "0.33"), true);
+eq("more precision than the answer still ok", checkStep({ answer: "0.67" }, "0.667"), true);
+
+group("grader — polynomial blowup guard (pMul like-term merging + caps)");
+{
+  const t0 = Date.now();
+  const r = checkStep({ answer: "x+1" }, "(x+1)^8(x+1)^8(x+1)^8(x+1)^8");
+  const ms = Date.now() - t0;
+  eq("huge power product rejected", r, false);
+  ok(`…and fast (${ms}ms < 500ms)`, ms < 500);
+  eq("merged expansion still equates", checkStep({ answer: "(x+1)^2" }, "x^2+2x+1"), true);
+}
 
 // ---------------------------------------------------------------- mastery model
 group("mastery model — config is self-consistent");
@@ -110,6 +140,53 @@ group("mastery model — grade transitions");
   ok("topicMastered true when all concepts mastered", st.topicMastered);
 }
 
+group("mastery model — credit capped at served difficulty");
+{
+  const st = mastery.initState("t6", ["k"], null);
+  st.concepts.k.currentDifficulty = 3;
+  st.concepts.k.proficiency = 0.9;
+  // An easy problem substituted at the top tier must not feed the mastery streak.
+  mastery.grade(st, { correct: true, hintsUsed: 0, conceptId: "k", wrongs: 0, difficulty: 1 });
+  eq("easy problem earns no top-tier streak", st.concepts.k.consecutiveTopClean, 0);
+  ok("…and only tier-1 gain", st.concepts.k.proficiency <= 0.9 + mastery.CONFIG.gainBase + 1e-9);
+  mastery.grade(st, { correct: true, hintsUsed: 0, conceptId: "k", wrongs: 0, difficulty: 3 });
+  eq("full-tier problem does count", st.concepts.k.consecutiveTopClean, 1);
+}
+
+group("mastery model — spaced-repetition review lifecycle");
+{
+  const DAY = 24 * 60 * 60 * 1000;
+  const t0 = 1000000;
+  const st = mastery.initState("t7", ["k"], null);
+  for (let i = 0; i < 12; i++) mastery.grade(st, { correct: true, hintsUsed: 0, conceptId: "k", wrongs: 0, now: t0 });
+  ok("mastered", st.topicMastered);
+  eq("first review scheduled on the bottom rung", st.nextReviewAt, t0 + mastery.CONFIG.reviewIntervalsDays[0] * DAY);
+  ok("not due immediately", !mastery.reviewStatus(st, t0 + DAY).due);
+  ok("due once the interval passes", mastery.reviewStatus(st, st.nextReviewAt + 1).due);
+
+  // A clean review holds mastery and climbs the ladder.
+  const held = mastery.applyReviewResult(st, { conceptId: "k", correct: true, hintsUsed: 0, wrongs: 0, now: t0 + 4 * DAY });
+  ok("clean review holds", held.held && st.concepts.k.mastered && st.topicMastered);
+  mastery.finishReview(st, true, t0 + 4 * DAY);
+  eq("ladder climbs", st.reviewLevel, 1);
+  eq("next interval is the second rung", st.nextReviewAt, t0 + 4 * DAY + mastery.CONFIG.reviewIntervalsDays[1] * DAY);
+
+  // A lapse revokes mastery and sends the concept back to training.
+  const lapse = mastery.applyReviewResult(st, { conceptId: "k", correct: false, hintsUsed: 1, wrongs: 2, now: t0 + 12 * DAY });
+  ok("lapse revokes concept mastery", !lapse.held && !st.concepts.k.mastered);
+  ok("lapse revokes topic mastery", !st.topicMastered);
+  ok("proficiency knocked down", st.concepts.k.proficiency <= mastery.CONFIG.reviewLapseProficiency);
+  eq("tier knocked down a rung", st.concepts.k.currentDifficulty, mastery.CONFIG.topDifficulty - 1);
+  mastery.finishReview(st, false, t0 + 12 * DAY);
+  eq("ladder resets on lapse", st.reviewLevel, 0);
+  eq("no review scheduled while unmastered", st.nextReviewAt, null);
+
+  // Legacy states (mastered before this feature) get a review backfilled.
+  const legacy = { topicId: "t8", concepts: { k: { id: "k", proficiency: 1, recent: [], currentDifficulty: 3, attempts: 9, consecutiveCorrect: 0, consecutiveTopClean: 3, consecutiveWrong: 0, hintsUsed: 0, mastered: true, mustProveClean: false } }, topicMastered: true, totalAnswered: 9, focusConceptId: null };
+  const rehydrated = mastery.initState("t8", ["k"], legacy);
+  ok("legacy mastered state gets a review scheduled", Number.isFinite(rehydrated.nextReviewAt));
+}
+
 // ---------------------------------------------------------------- progress store
 group("progress store — sanitizes bad data");
 {
@@ -131,6 +208,21 @@ group("progress store — sanitizes bad data");
   localStorage.clear();
   ok("import rejects wrong version", (() => { try { store.importProgress(JSON.stringify({ schemaVersion: 999 })); return false; } catch { return true; } })());
 }
+{
+  // A truncated import (concept missing currentDifficulty) must be backfilled,
+  // or grade() computes gainBase * undefined = NaN proficiency FOREVER.
+  localStorage.clear();
+  store.importProgress(JSON.stringify({
+    schemaVersion: 1,
+    topics: { t: { concepts: { k: { proficiency: 0.9, recent: [] } }, totalAnswered: "5" } },
+  }));
+  const st = store.getTopicState("t");
+  eq("missing currentDifficulty backfilled", st.concepts.k.currentDifficulty, 1);
+  eq("string totalAnswered coerced", st.totalAnswered, 0);
+  const live = mastery.initState("t", ["k"], st);
+  mastery.grade(live, { correct: true, hintsUsed: 0, conceptId: "k", wrongs: 0 });
+  ok("grade on imported state stays finite", Number.isFinite(live.concepts.k.proficiency));
+}
 
 // ---------------------------------------------------------------- ProblemSource
 group("ProblemSource — serves and varies");
@@ -151,6 +243,11 @@ ok("graph renders a figure", plotToSvg({ type: "graph", nodes: [{ id: "A", x: 0,
 ok("zero-span range does not emit NaN", !plotToSvg({ xRange: [2, 2], yRange: [0, 0], curves: [{ fn: "x" }] }).includes("NaN"));
 ok("caption becomes aria-label", plotToSvg({ curves: [{ fn: "x" }], caption: "hi" }).includes('aria-label="hi"'));
 ok("bad spec degrades, never throws", typeof plotToSvg(null) === "string");
+// A quote in a content-authored caption must not break out of the attribute.
+ok("caption quotes escaped (no attribute injection)",
+  !plotToSvg({ curves: [{ fn: "x" }], caption: 'a" onmouseover="alert(1)' }).includes('onmouseover="'));
+ok("string width cannot inject attributes",
+  !plotToSvg({ width: '440" onload="alert(1)', curves: [{ fn: "x" }] }).includes("onload"));
 
 group("plot renderer — binary operators in fn (compileFn self-capture regression)");
 {

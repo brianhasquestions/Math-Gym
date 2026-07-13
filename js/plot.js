@@ -104,8 +104,14 @@ function compileFn(src) {
 }
 
 // --- SVG helpers ------------------------------------------------------------
-const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+// Quotes must be escaped too: esc() output lands inside double-quoted SVG
+// attributes (aria-label), where a bare `"` in a content-authored caption
+// would close the attribute and inject arbitrary ones (e.g. onmouseover).
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const num = (n) => (Math.round(n * 100) / 100);
+// Coerce a spec-supplied dimension to a finite number so a string in a content
+// file can never be interpolated raw into an SVG attribute.
+const dim = (v, fallback) => (Number.isFinite(Number(v)) ? Number(v) : fallback);
 
 function colorVar(name) {
   const map = { accent: "--accent", success: "--success", error: "--error", warn: "--warn", text: "--text", dim: "--text-dim", faint: "--text-faint" };
@@ -114,7 +120,7 @@ function colorVar(name) {
 
 // --- Cartesian plot ---------------------------------------------------------
 function cartesian(spec) {
-  const W = spec.width || 440, H = spec.height || 320;
+  const W = dim(spec.width, 440), H = dim(spec.height, 320);
   const pad = 6;
   let [x0, x1] = spec.xRange || [-6, 6];
   let [y0, y1] = spec.yRange || [-6, 6];
@@ -187,7 +193,7 @@ function cartesian(spec) {
   }
   // Points
   for (const p of spec.points || []) {
-    parts.push(`<circle cx="${num(px(p.x))}" cy="${num(py(p.y))}" r="${p.r || 4}" fill="${colorVar(p.color || "accent")}"/>`);
+    parts.push(`<circle cx="${num(px(p.x))}" cy="${num(py(p.y))}" r="${dim(p.r, 4)}" fill="${colorVar(p.color || "accent")}"/>`);
     if (p.label) parts.push(text(px(p.x) + 7, py(p.y) - 6, p.label, colorVar(p.color || "text")));
   }
   return svgWrap(W, H, parts.join(""), spec.caption);
@@ -195,7 +201,7 @@ function cartesian(spec) {
 
 // --- Real elliptic curve y^2 = x^3 + a x + b --------------------------------
 function elliptic(spec) {
-  const W = spec.width || 440, H = spec.height || 320;
+  const W = dim(spec.width, 440), H = dim(spec.height, 320);
   const a = spec.a ?? -1, b = spec.b ?? 1;
   const [x0, x1] = spec.xRange || [-3, 4];
   const [y0, y1] = spec.yRange || [-6, 6];
@@ -235,7 +241,7 @@ function elliptic(spec) {
     parts.push(`<line x1="${num(px(s.from[0]))}" y1="${num(py(s.from[1]))}" x2="${num(px(s.to[0]))}" y2="${num(py(s.to[1]))}" stroke="${colorVar(s.color || "warn")}" stroke-width="1.5"${dash}/>`);
   }
   for (const p of spec.points || []) {
-    parts.push(`<circle cx="${num(px(p.x))}" cy="${num(py(p.y))}" r="${p.r || 4.5}" fill="${colorVar(p.color || "accent")}"/>`);
+    parts.push(`<circle cx="${num(px(p.x))}" cy="${num(py(p.y))}" r="${dim(p.r, 4.5)}" fill="${colorVar(p.color || "accent")}"/>`);
     if (p.label) parts.push(text(px(p.x) + 7, py(p.y) - 6, p.label, colorVar(p.color || "text")));
   }
   return svgWrap(W, H, parts.join(""), spec.caption || ecCaption(a, b));
@@ -253,7 +259,7 @@ function ecCaption(a, b, mod) {
 // --- Elliptic curve over Z_p (dot lattice) ----------------------------------
 function modLattice(spec) {
   const p = spec.p || 11, a = spec.a ?? 1, b = spec.b ?? 6;
-  const W = spec.width || 320, H = spec.height || 320, pad = 22;
+  const W = dim(spec.width, 320), H = dim(spec.height, 320), pad = 22;
   const cell = (Math.min(W, H) - 2 * pad) / p;
   const px = (x) => pad + x * cell, py = (y) => H - pad - y * cell;
   const parts = [];
@@ -286,7 +292,7 @@ function modLattice(spec) {
 function graphDiagram(spec) {
   const nodes = spec.nodes || [];
   if (nodes.length === 0) throw new Error("graph needs nodes");
-  const W = spec.width || 360, H = spec.height || 280, pad = 34;
+  const W = dim(spec.width, 360), H = dim(spec.height, 280), pad = 34;
   const xs = nodes.map((n) => n.x), ys = nodes.map((n) => n.y);
   const minX = Math.min(...xs), maxX = Math.max(...xs);
   const minY = Math.min(...ys), maxY = Math.max(...ys);
@@ -294,7 +300,7 @@ function graphDiagram(spec) {
   const sy = (H - 2 * pad) / Math.max(maxY - minY, 1e-9);
   const px = (x) => (maxX === minX ? W / 2 : pad + (x - minX) * sx);
   const py = (y) => (maxY === minY ? H / 2 : H - pad - (y - minY) * sy);
-  const R = spec.nodeRadius || 14;
+  const R = dim(spec.nodeRadius, 14);
   const byId = new Map(nodes.map((n) => [String(n.id), n]));
   const parts = [];
   for (const e of spec.edges || []) {

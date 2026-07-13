@@ -4,13 +4,20 @@
 
 const cache = new Map();
 
-async function getJSON(path) {
-  if (cache.has(path)) return cache.get(path);
-  const res = await fetch(path, { cache: "no-cache" });
-  if (!res.ok) throw new Error(`Failed to load ${path} (${res.status})`);
-  const data = await res.json();
-  cache.set(path, data);
-  return data;
+// The cache holds the PROMISE, not the resolved value, so concurrent callers
+// (e.g. subjectMap's Promise.all fan-out) share one in-flight fetch instead of
+// double-fetching. A failed load is evicted so a later retry can succeed.
+function getJSON(path) {
+  if (!cache.has(path)) {
+    const p = (async () => {
+      const res = await fetch(path, { cache: "no-cache" });
+      if (!res.ok) throw new Error(`Failed to load ${path} (${res.status})`);
+      return res.json();
+    })();
+    p.catch(() => cache.delete(path));
+    cache.set(path, p);
+  }
+  return cache.get(path);
 }
 
 export async function loadManifest() {

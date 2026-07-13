@@ -227,10 +227,10 @@
       "prompt": "A striker and goalie in a shootout, modeled zero-sum. Each cell is (Striker's payoff, Goalie's payoff). p = prob Striker aims Left; q = prob Goalie dives Left.\n\n| Row \\ Col | Dive Left | Dive Right |\n|---|---|---|\n| **Aim Left** | 1, -1 | 4, -4 |\n| **Aim Right** | 3, -3 | 0, 0 |",
       "steps": [
         { "instruction": "Solve for q (Striker indifferent). Aim Left = 1q + 4(1-q); Aim Right = 3q + 0(1-q). Set equal. Fraction or decimal in (0,1).", "answer": "2/3", "accept": ["0.6667", "0.667"], "hint": "4 - 3q = 3q, so 4 = 6q." },
-        { "instruction": "Solve for p (Goalie indifferent). Goalie's Dive Left = -1p + -3(1-p); Dive Right = -4p + 0(1-p). Set equal. Fraction or decimal in (0,1).", "answer": "3/4", "accept": ["0.75"], "hint": "-3 + 2p = -4p, so -3 = -6p." }
+        { "instruction": "Solve for p (Goalie indifferent). Goalie's Dive Left = -1p + -3(1-p); Dive Right = -4p + 0(1-p). Set equal. Fraction or decimal in (0,1).", "answer": "1/2", "accept": ["0.5"], "hint": "-3 + 2p = -4p, so -3 = -6p." }
       ],
-      "finalAnswer": { "value": "p = 3/4, q = 2/3", "unit": "" },
-      "solutionNarrative": "Striker indifference: 4 - 3q = 3q → q = 2/3. Goalie indifference: -3 + 2p = -4p → p = 3/4. The mixed Nash equilibrium is p = 3/4, q = 2/3."
+      "finalAnswer": { "value": "p = 1/2, q = 2/3", "unit": "" },
+      "solutionNarrative": "Striker indifference: 4 - 3q = 3q → q = 2/3. Goalie indifference: -3 + 2p = -4p → -3 = -6p → p = 1/2. The mixed Nash equilibrium is p = 1/2, q = 2/3."
     },
     {
       "id": "game-theory.mixed-strategies.s15",

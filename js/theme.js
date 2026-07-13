@@ -5,6 +5,17 @@
 const KEY = "mathgym.theme";
 const DEFAULT = "terminal";
 
+// localStorage GETTERS throw SecurityError when storage is blocked (strict
+// privacy modes, some embedded webviews). Every page calls applyTheme() first,
+// so an unguarded access here would kill the whole page module. The theme
+// simply doesn't persist in that case.
+function safeGet(key) {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+function safeSet(key, val) {
+  try { localStorage.setItem(key, val); } catch { /* not persisted */ }
+}
+
 export const THEMES = [
   { id: "terminal", label: "Matrix Terminal", swatch: "#00ff41" },
   { id: "light", label: "Daylight Blue", swatch: "#2563eb" },
@@ -12,13 +23,13 @@ export const THEMES = [
 ];
 
 export function getTheme() {
-  const t = localStorage.getItem(KEY);
+  const t = safeGet(KEY);
   return THEMES.some((x) => x.id === t) ? t : DEFAULT;
 }
 
 export function setTheme(id) {
   if (!THEMES.some((x) => x.id === id)) return;
-  localStorage.setItem(KEY, id);
+  safeSet(KEY, id);
   document.documentElement.setAttribute("data-theme", id);
   applyFavicon();
 }

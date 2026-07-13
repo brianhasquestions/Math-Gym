@@ -79,7 +79,7 @@
       "steps": [
         { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Annual decimal rate over 12." },
         { "instruction": "Compute the monthly payment $PMT = \\dfrac{200000 \\cdot 0.005}{1 - (1.005)^{-360}}$. Enter a number rounded to the nearest cent.", "answer": "1199.10", "accept": ["1199.100", "$1199.10"], "hint": "Standard mortgage formula with the monthly rate over 360 months." },
-        { "instruction": "Find the total paid over the life of the loan: $PMT \\times 360$. Enter a number rounded to the nearest cent.", "answer": "431676.38", "accept": ["431676.380", "$431676.38"], "hint": "Monthly payment times 360 payments." }
+        { "instruction": "Find the total paid over the life of the loan: $PMT \\times 360$. Enter a number rounded to the nearest cent.", "answer": "431676.38", "accept": ["431676.380", "$431676.38", "431676.00", "431676"], "hint": "Monthly payment times 360 payments." }
       ],
       "finalAnswer": { "value": "1199.10", "unit": "dollars" },
       "solutionNarrative": "The payment is \\$1,199.10/month; over 360 months you repay \\$431,676.38 — far more than the \\$200,000 borrowed, all of the excess being interest."

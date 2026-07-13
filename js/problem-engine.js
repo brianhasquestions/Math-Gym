@@ -36,7 +36,10 @@ function normalize(s) {
 
 // Parse a number that may be an integer, decimal, or fraction a/b. -> Number|null.
 function parseNum(s) {
-  const t = String(s).trim();
+  let t = String(s).trim();
+  // Digit-grouping commas ("431,676.38") count as one number only when the
+  // WHOLE string is a grouped numeral — "1,2" stays a tuple, "12,34" is neither.
+  if (/^-?\d{1,3}(?:,\d{3})+(?:\.\d+)?$/.test(t)) t = t.replace(/,/g, "");
   const frac = t.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);
   if (frac) {
     const d = parseFloat(frac[2]);
@@ -54,14 +57,35 @@ function parseNum(s) {
 
 const pNeg = (A) => A.map((t) => ({ c: -t.c, v: t.v }));
 const pScale = (A, k) => A.map((t) => ({ c: t.c * k, v: t.v }));
+
+// Like-term merging keeps products compact. Without it term counts multiply
+// RAW — (x+1)^8 is 256 terms, and each juxtaposed factor multiplies again, so
+// a ~36-character input could freeze the tab for minutes (checkStep runs
+// synchronously on every "Check" click). The caps turn pathological inputs
+// into a thrown RangeError, which the parse entry points convert to null
+// ("not a polynomial") instead of a hung UI thread.
+const MAX_POLY_TERMS = 2000;
+function pCompact(A) {
+  const map = new Map();
+  for (const t of A) {
+    const k = monoKey(t.v);
+    const cur = map.get(k);
+    if (cur) cur.c += t.c;
+    else map.set(k, { c: t.c, v: t.v });
+  }
+  return [...map.values()];
+}
 function pMul(A, B) {
+  if (A.length * B.length > 250000) throw new RangeError("polynomial too large");
   const out = [];
   for (const a of A) for (const b of B) {
     const v = { ...a.v };
     for (const k in b.v) v[k] = (v[k] || 0) + b.v[k];
     out.push({ c: a.c * b.c, v });
   }
-  return out;
+  const merged = pCompact(out);
+  if (merged.length > MAX_POLY_TERMS) throw new RangeError("polynomial too large");
+  return merged;
 }
 function pPow(A, n) { let r = [{ c: 1, v: {} }]; for (let i = 0; i < n; i++) r = pMul(r, A); return r; }
 function asConst(A) { // numeric value if A has no variables, else null
@@ -161,7 +185,9 @@ function parsePoly(s) {
     return null;
   }
 
-  const result = parseExpr();
+  // A term-count blowup inside pMul/pPow throws; treat it as "not a polynomial".
+  let result;
+  try { result = parseExpr(); } catch { return null; }
   return result !== null && pos === toks.length ? result : null;
 }
 
@@ -391,7 +417,49 @@ function isFactoredForm(normalized) {
     else if (ch === ")") depth--;
     else if ((ch === "+" || ch === "-") && depth === 0 && i !== 0) return false;
   }
-  return true;
+  // Product shape confirmed — now reject "factorizations" that are really the
+  // whole expression scaled by ±1, e.g. "1(x^2-5x+6)", "(1)(x^2-5x+6)", or
+  // "(x^2-5x+6)*1": peeling off a unit coefficient is not factoring. Walk the
+  // top-level factor units and demand either two non-constant factors or one
+  // non-constant factor with a genuine (non-±1, non-zero) constant, as in
+  // "2(x+3)". Equations ("(2u-1)(u-1) = 0") are judged side by side, so a
+  // trailing "= 0" can't launder a trivial 1(...) wrapper either.
+  const sideIsFactored = (side) => {
+    let i = 0;
+    if (side[0] === "+" || side[0] === "-") i = 1;
+    let nonConst = 0, scaled = false;
+    while (i < side.length) {
+      if (side[i] === "*" || side[i] === "/") { i++; continue; }
+      let unit;
+      if (side[i] === "(") {
+        let d = 0, j = i;
+        do { if (side[j] === "(") d++; else if (side[j] === ")") d--; j++; } while (j < side.length && d > 0);
+        if (d !== 0) return false;
+        unit = side.slice(i, j); i = j;
+      } else {
+        let j = i;
+        while (j < side.length && /[a-z0-9.]/.test(side[j])) j++;
+        if (j === i) return false; // unexpected top-level char
+        unit = side.slice(i, j); i = j;
+      }
+      let exp = 1;
+      if (side[i] === "^") {
+        let j = i + 1;
+        if (side[j] === "(") { while (j < side.length && side[j] !== ")") j++; j++; }
+        else while (j < side.length && /[0-9.]/.test(side[j])) j++;
+        exp = Number(side.slice(i + 1, j).replace(/[()]/g, ""));
+        if (!Number.isFinite(exp)) return false;
+        i = j;
+      }
+      if (/[a-z]/.test(unit)) nonConst += exp >= 2 ? 2 : 1;
+      else {
+        const val = parseNum(unit.replace(/[()]/g, ""));
+        if (val === null || Math.abs(val) !== 1) scaled = true;
+      }
+    }
+    return nonConst >= 2 || (nonConst >= 1 && scaled);
+  };
+  return s.split("=").some(sideIsFactored);
 }
 
 // Half-a-unit-in-the-last-place tolerance for a plainly-written decimal (e.g.
@@ -445,17 +513,22 @@ export function checkStep(step, userAnswer) {
     if (uNum !== null && cNum !== null && Math.abs(uNum.n - cNum.n) < 1e-6 &&
         (!uNum.v || !cNum.v || uNum.v === cNum.v)) return true;
     const cVal = evalNumeric(c);                                              // radical / pi / e value
-    // Tolerance widens to the coarser side's rounding grain, so a learner's
-    // "50.27" matches the exact "16pi" (≈50.2655) as the doc on evalNumeric promises.
+    // Tolerance widens to the rounding grain of a plainly-written decimal — but
+    // the learner's OWN coarseness only counts when the expected answer is an
+    // exact form (16pi, 5sqrt2, 1/3): "50.27" still matches 16pi, yet "7.3" can
+    // no longer satisfy an answer authored to 2 decimals as "7.25".
     if (uVal !== null && cVal !== null) {
-      const tol = Math.max(1e-6, decimalTol(u), decimalTol(c), 1e-9 * Math.abs(cVal));
+      const cIsPlain = /^-?\d*\.?\d+$/.test(c);
+      const tol = Math.max(1e-6, decimalTol(c), cIsPlain ? 0 : decimalTol(u), 1e-9 * Math.abs(cVal));
       if (Math.abs(uVal - cVal) <= tol) return true;
     }
     // Rational-expression equality via cross-multiplication (only when a fraction
     // is involved; bare polynomials are already handled by the canon path above).
     if (uRat && (u.includes("/") || c.includes("/"))) {
       const cRat = rationalParts(c);
-      if (cRat && polyToString(pMul(uRat.num, cRat.den)) === polyToString(pMul(cRat.num, uRat.den))) return true;
+      try {
+        if (cRat && polyToString(pMul(uRat.num, cRat.den)) === polyToString(pMul(cRat.num, uRat.den))) return true;
+      } catch { /* term-count blowup — treat as not equal */ }
     }
   }
   return false;
@@ -476,6 +549,19 @@ export class ProblemSource {
     // and a problem missed earlier isn't re-served as the fresh prove-it problem.
     // Falls back to a content-derived base if Math.random is somehow unavailable.
     this.seedBase = (Math.floor(Math.random() * 0x7fffffff) || (topic.id || "t").length * 7919 + 13);
+    // Probe each generator ONCE (a fixed seed is deterministic) and index the
+    // templates by concept|difficulty, instead of re-generating every template
+    // on every next() call.
+    this.genIndex = new Map();
+    for (const t of this.templates) {
+      const probe = this.safeGenerate(t, makeRng(1), -1);
+      if (!probe) continue;
+      for (const cid of probe.concepts || []) {
+        const key = `${cid}|${probe.difficulty}`;
+        if (!this.genIndex.has(key)) this.genIndex.set(key, []);
+        this.genIndex.get(key).push(t);
+      }
+    }
   }
 
   // Generate defensively: a buggy generator must never crash a live session.
@@ -487,10 +573,7 @@ export class ProblemSource {
   // Return the next problem for a concept at a difficulty.
   next(conceptId, difficulty) {
     // 1) Try a generator that matches concept + difficulty (preferred: variety).
-    const gens = this.templates.filter((t) => {
-      const probe = this.safeGenerate(t, makeRng(1), -1);
-      return probe && probe.difficulty === difficulty && probe.concepts.includes(conceptId);
-    });
+    const gens = this.genIndex.get(`${conceptId}|${difficulty}`) || [];
     if (gens.length > 0) {
       const template = gens[this.genCounter % gens.length];
       // Generate, retrying a few times if it lands on the exact same prompt as

@@ -91,7 +91,12 @@ export async function runPlacement(root) {
     for (const it of items) {
       const val = it.input.value.trim();
       const fa = it.problem.finalAnswer;
-      const good = val !== "" && checkStep({ answer: fa.value, accept: fa.accept || [] }, val);
+      // Grade with the final step's `form` semantics (e.g. "solutions" for a
+      // quadratic's root set) — without it, correct answers like "5, -1" for
+      // "x = 5, x = -1" are rejected and the quiz places the learner too low.
+      const steps = it.problem.steps || [];
+      const lastForm = steps.length ? steps[steps.length - 1].form : undefined;
+      const good = val !== "" && checkStep({ answer: fa.value, accept: fa.accept || [], form: lastForm }, val);
       if (good) { correct++; seedHeadStart(it.topic); }
       else if (!firstMissed) firstMissed = it;
     }

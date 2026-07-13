@@ -30,6 +30,7 @@
     import { buildShell } from "./js/shell.js";
     import { loadManifest } from "./js/content-loader.js";
     import { exportProgress, importProgress, resetAll, getTopicState } from "./js/progress-store.js";
+    import { reviewStatus } from "./js/mastery-model.js";
     import { el } from "./js/app.js";
     applyTheme();
 
@@ -70,6 +71,20 @@
           ]),
           bar(overall),
         ]);
+        // Mastered topics whose spaced-repetition retention check has come due.
+        const due = allTopics.filter((x) => reviewStatus(x.state).due);
+        if (due.length) {
+          dash.appendChild(el("h4", {}, "Due for review — keep it sharp"));
+          const dueList = el("div", { class: "dash-continue" });
+          for (const x of due.slice(0, 6)) {
+            dueList.appendChild(el("a", { class: "dash-item", href: `train.html?id=${encodeURIComponent(x.t.id)}` }, [
+              el("span", { class: "dash-item-title" }, x.t.title),
+              el("span", { class: "dash-item-sub" }, "retention check"),
+              bar(100),
+            ]));
+          }
+          dash.appendChild(dueList);
+        }
         const inProgress = allTopics.filter((x) => x.state && x.state.totalAnswered > 0 && !x.state.topicMastered);
         if (inProgress.length) {
           dash.appendChild(el("h4", {}, "Continue where you left off"));

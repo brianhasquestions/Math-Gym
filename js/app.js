@@ -31,12 +31,15 @@ export function showError(container, message) {
 import { setMotionEnabled } from "./animations.js";
 const MOTION_KEY = "mathgym.motion";
 export function initMotionToggle() {
-  const stored = localStorage.getItem(MOTION_KEY);
+  // Guarded: localStorage getters throw when storage is blocked (strict
+  // privacy modes), and this runs at boot on every page.
+  let stored = null;
+  try { stored = localStorage.getItem(MOTION_KEY); } catch { /* default */ }
   const on = stored === null ? true : stored === "1";
   setMotionEnabled(on);
   return on;
 }
 export function setMotionPref(on) {
-  localStorage.setItem(MOTION_KEY, on ? "1" : "0");
+  try { localStorage.setItem(MOTION_KEY, on ? "1" : "0"); } catch { /* not persisted */ }
   setMotionEnabled(on);
 }
