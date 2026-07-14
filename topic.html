@@ -67,7 +67,22 @@
       };
       const makeTab = (key, label, contentEl) => {
         const tab = el("button", { class: "tab" }, label);
-        tab.addEventListener("click", () => activate(key));
+        tab.addEventListener("click", () => {
+          activate(key);
+          // The switcher sits BELOW the content, so after a swap the reader is
+          // at the END of the newly shown pane — bring them to its top, offset
+          // so the pane heading clears the sticky site header. The swap changes
+          // the page height, and the browser's scroll-position clamp lands a
+          // frame later and CANCELS any in-flight smooth scroll — so wait two
+          // frames and compute the target from the settled geometry.
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            const header = document.querySelector(".site-header");
+            const offset = (header ? header.offsetHeight : 0) + 12;
+            const top = Math.max(0, contentEl.getBoundingClientRect().top + window.scrollY - offset);
+            const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            window.scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
+          }));
+        });
         panes[key] = { tab, contentEl };
         tabRow.appendChild(tab);
       };
@@ -99,8 +114,13 @@
         }
       }
 
-      main.appendChild(tabRow);
+      // Content first, switcher after it: readers change tabs when they FINISH
+      // a pane, so the controls live where the reading ends.
       main.append(lectureEl, appEl, skillsEl);
+      main.appendChild(tabRow);
+      // Pane swaps change the page height drastically; scroll anchoring would
+      // fight the programmatic scroll-to-pane-top and land it off-target.
+      main.style.overflowAnchor = "none";
       activate("lecture");
 
       main.appendChild(el("div", { style: "margin-top: var(--space-4); display:flex; gap: var(--space-3); align-items:center; flex-wrap:wrap" }, [
