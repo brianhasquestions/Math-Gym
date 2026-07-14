@@ -74,6 +74,7 @@ import { fill as geo3Fill } from "./gen-geo3-fill.js";              // geo3- (tr
 import { fill as nt3Fill } from "./gen-nt3-fill.js";                // nt3-  (orders and primitive roots)
 import { fill as num3Fill } from "./gen-num3-fill.js";              // nm3-  (least squares, numerical differentiation)
 import { fill as fin3Fill } from "./gen-fin3-fill.js";              // fm3-  (perpetuities)
+import { fill as arithFill } from "./gen-arith-fill.js";            // ari-  (mental arithmetic: addition + multiplication tables)
 
 // --- Seeded RNG (mulberry32) so sessions are reproducible/debuggable ---
 export function makeRng(seed) {
@@ -2694,7 +2695,8 @@ Object.assign(generators, deFill, linAlgFill,
   num1Fill, num2Fill, fin1Fill, fin2Fill, gt1Fill, gt2Fill, gt3Fill, nt1Fill, nt2Fill,
   algPoolFill, alg2PoolFill, calc1PoolFill, calc2PoolFill, calc3PoolFill, geoPoolFill, matrixPoolFill,
   matxFill,
-  calc2cFill, calc13bFill, deFill4, alg3Fill, geo3Fill, nt3Fill, num3Fill, fin3Fill);
+  calc2cFill, calc13bFill, deFill4, alg3Fill, geo3Fill, nt3Fill, num3Fill, fin3Fill,
+  arithFill);
 
 export function hasGenerator(template) {
   return Object.prototype.hasOwnProperty.call(generators, template);

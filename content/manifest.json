@@ -2,6 +2,15 @@
   "schemaVersion": 1,
   "subjects": [
     {
+      "id": "arithmetic",
+      "title": "Mental Arithmetic",
+      "blurb": "The tables, drilled to reflex — addition and multiplication facts fast enough that the rest of math stops waiting on them.",
+      "topics": [
+        { "id": "arithmetic.addition-tables", "title": "Addition Tables & Mental Sums", "file": "content/arithmetic/addition-tables.json", "status": "ready" },
+        { "id": "arithmetic.multiplication-tables", "title": "Multiplication Tables", "file": "content/arithmetic/multiplication-tables.json", "status": "ready" }
+      ]
+    },
+    {
       "id": "algebra",
       "title": "Algebra",
       "blurb": "The language of the unknown — model real situations and solve for what you don't yet know.",

@@ -1,0 +1,54 @@
+{
+  "id": "arithmetic.addition-tables",
+  "subject": "arithmetic",
+  "title": "Addition Tables & Mental Sums",
+  "prerequisites": [],
+  "estimatedMinutes": 25,
+  "keyConcepts": [
+    {
+      "id": "sums-within-10",
+      "label": "Sums within 10",
+      "microLesson": "The single-digit sums are the atoms of all mental math. Two habits make them instant: **start from the bigger number** ($3 + 8$? Think $8 + 3$ — three counts, not eight), and **lean on doubles** ($6 + 7$ is one more than $6 + 6 = 12$). If you know the doubles $1+1$ through $5+5$ and can count on by 1 or 2, every sum within 10 is at most one small step away."
+    },
+    {
+      "id": "crossing-ten",
+      "label": "Crossing ten (make-a-ten)",
+      "microLesson": "When a sum passes 10, don't count — **make a ten**. For $8 + 7$: the 8 wants 2 more to become 10, so split the 7 as $2 + 5$. Now it's $10 + 5 = 15$, which you can read off instantly. Every teen sum works this way: feed the bigger number up to 10, and whatever is left of the other number just lands after the 1."
+    },
+    {
+      "id": "two-digit-mental",
+      "label": "Two-digit mental addition",
+      "microLesson": "Add big numbers **left to right**: tens first, then ones. $47 + 38$? Tens: $47 + 30 = 77$. Ones: $77 + 8 = 85$. When the second number ends in 8 or 9, **compensate** instead — $47 + 38 = 47 + 40 - 2 = 85$. Round, add, take back the change. Both tricks turn a pencil-and-paper problem into two easy moves."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Why drill addition?\n\nEvery piece of math you'll ever do — algebra, calculus, statistics — sits on top of arithmetic you shouldn't have to think about. When $8 + 7$ takes you three seconds, the three seconds come out of the *real* problem you're solving. The goal here isn't understanding (you already understand addition) — it's **automaticity**: answers that arrive faster than you can reach for a calculator.\n\n## Three levels of skill\n\n**1. Sums within 10.** These are pure recall, helped by two structures:\n\n| Strategy | Example | Why it works |\n|---|---|---|\n| Count on from the bigger number | $3 + 8 \\to 8, 9, 10, 11$ | Addition is commutative — order doesn't matter |\n| Doubles | $4 + 4 = 8$, $5 + 5 = 10$ | Doubles are the easiest facts to memorize |\n| Near-doubles | $5 + 6 = 5 + 5 + 1 = 11$ | One step from a double |\n\n**2. Crossing ten.** The make-a-ten move is the single most useful trick in mental arithmetic. To add $9 + 6$: the 9 takes 1 from the 6 to become 10, leaving 5, so the answer is 15. In symbols:\n\n$$9 + 6 = (9 + 1) + 5 = 10 + 5 = 15.$$\n\nTens are special because our number system is built on them — $10 + \\text{anything}$ requires no thought at all.\n\n**3. Two-digit sums.** Work **left to right** (tens, then ones) — the opposite of the paper algorithm, and much better suited to your head:\n\n$$47 + 38 = (47 + 30) + 8 = 77 + 8 = 85.$$\n\nWhen a number is close to a round ten, **compensate**: $47 + 38 = 47 + 40 - 2$. You'll cross a ten inside the ones step sometimes — that's just your crossing-ten skill again, one level up. Every skill here contains the previous one.\n\n## How to train\n\nSpeed comes from *correct* repetition. Answer at whatever pace keeps you accurate; the pace rises on its own. If you catch yourself finger-counting a fact, that fact just isn't memorized yet — the trainer will keep serving it until it is."
+  },
+  "application": {
+    "summary": "Instant addition is the everyday math you use most: totalling a cart before checkout, splitting a bill, adding minutes and scores, keeping a running tally in games, and sanity-checking every larger calculation you'll ever do in algebra and beyond.",
+    "domains": ["everyday life", "personal finance", "games", "estimation"],
+    "workedExample": "**Keeping a running total at the store.**\n\nYour cart has items at \\$24, \\$9, and \\$38, and you want to stay under \\$75. No calculator — just left-to-right adding.\n\nFirst two items: $24 + 9$. The 24 needs 6 to reach 30, and $9 = 6 + 3$, so $24 + 9 = 33$ (crossing ten, one level up).\n\nAdd the third: $33 + 38$. Tens first: $33 + 30 = 63$. Ones: $63 + 8 = 71$ (the 63 takes 7 to reach 70, leaving 1).\n\nTotal: **\\$71** — under budget with \\$4 to spare. Three prices summed in your head in the time it takes to walk to the register, powered by exactly the three skills in this topic: known small sums, make-a-ten, and tens-then-ones.",
+    "domainNotes": [
+      "**Shopping/finance:** running totals, making change, and checking receipts are pure mental addition — compensation ($\\$4.99 \\approx \\$5$) does most of the work.",
+      "**Games & sport:** darts, card games, and scorekeeping all reward instant teen sums — crossing ten is the whole game.",
+      "**Estimation:** rounding to tens and adding left to right gives fast ballpark answers, and the exact skills here tighten those ballparks."
+    ]
+  },
+  "generators": ["ari-sums10-d1", "ari-sums10-d2", "ari-sums10-d3", "ari-cross10-d1", "ari-cross10-d2", "ari-cross10-d3", "ari-twodigit-d1", "ari-twodigit-d2", "ari-twodigit-d3"],
+  "problems": [
+    { "id": "arithmetic.addition-tables.s01", "concepts": ["sums-within-10"], "difficulty": 1, "context": "abstract", "prompt": "Compute $4 + 3$", "steps": [{ "instruction": "Give the sum.", "answer": "7", "accept": [], "hint": "Count on from 4: five, six, seven." }], "finalAnswer": { "value": "7", "unit": "" }, "solutionNarrative": "$4 + 3 = 7$." },
+    { "id": "arithmetic.addition-tables.s02", "concepts": ["sums-within-10"], "difficulty": 1, "context": "abstract", "prompt": "Compute $2 + 5$", "steps": [{ "instruction": "Give the sum.", "answer": "7", "accept": [], "hint": "Start from the bigger number: 5, then two more." }], "finalAnswer": { "value": "7", "unit": "" }, "solutionNarrative": "Order doesn't matter: $2 + 5 = 5 + 2 = 7$." },
+    { "id": "arithmetic.addition-tables.s03", "concepts": ["sums-within-10"], "difficulty": 2, "context": "applied", "prompt": "You have 6 stickers and a friend gives you 4 more. How many do you have?", "steps": [{ "instruction": "Give the total.", "answer": "10", "accept": [], "hint": "6 and 4 are ten-partners." }], "finalAnswer": { "value": "10", "unit": "stickers" }, "solutionNarrative": "$6 + 4 = 10$ — one of the pairs that make ten, worth knowing cold." },
+    { "id": "arithmetic.addition-tables.s04", "concepts": ["sums-within-10"], "difficulty": 3, "context": "abstract", "prompt": "Fill in the blank: $3 + \\underline{\\;\\;} = 9$", "steps": [{ "instruction": "What number completes the sum?", "answer": "6", "accept": [], "hint": "How far from 3 up to 9?" }], "finalAnswer": { "value": "6", "unit": "" }, "solutionNarrative": "A missing addend is subtraction in disguise: $9 - 3 = 6$." },
+    { "id": "arithmetic.addition-tables.s05", "concepts": ["crossing-ten"], "difficulty": 1, "context": "abstract", "prompt": "Compute $9 + 5$", "steps": [{ "instruction": "Give the sum.", "answer": "14", "accept": [], "hint": "Move 1 over: $9 + 5 = 10 + 4$." }], "finalAnswer": { "value": "14", "unit": "" }, "solutionNarrative": "Make a ten: $9 + 5 = (9 + 1) + 4 = 10 + 4 = 14$." },
+    { "id": "arithmetic.addition-tables.s06", "concepts": ["crossing-ten"], "difficulty": 2, "context": "abstract", "prompt": "Compute $8 + 7$", "steps": [{ "instruction": "Give the sum.", "answer": "15", "accept": [], "hint": "8 needs 2 to make ten; split $7 = 2 + 5$." }], "finalAnswer": { "value": "15", "unit": "" }, "solutionNarrative": "$8 + 7 = (8 + 2) + 5 = 10 + 5 = 15$." },
+    { "id": "arithmetic.addition-tables.s07", "concepts": ["crossing-ten"], "difficulty": 2, "context": "applied", "prompt": "A recipe needs 6 cups of flour and 8 cups of oats. How many cups is that in total?", "steps": [{ "instruction": "Give the total.", "answer": "14", "accept": [], "hint": "$8 + 2 = 10$, and $6 = 2 + 4$." }], "finalAnswer": { "value": "14", "unit": "cups" }, "solutionNarrative": "$8 + 6 = (8 + 2) + 4 = 14$ cups." },
+    { "id": "arithmetic.addition-tables.s08", "concepts": ["crossing-ten"], "difficulty": 3, "context": "applied", "prompt": "You need 16 points to win and already have 9. How many more points do you need?", "steps": [{ "instruction": "How many more?", "answer": "7", "accept": [], "hint": "From 9 up to 10 is 1; from 10 up to 16 is 6." }], "finalAnswer": { "value": "7", "unit": "points" }, "solutionNarrative": "Bridge through ten: $9 \\to 10$ is 1, and $10 \\to 16$ is 6, so you need $1 + 6 = 7$." },
+    { "id": "arithmetic.addition-tables.s09", "concepts": ["two-digit-mental"], "difficulty": 1, "context": "abstract", "prompt": "Compute $52 + 6$", "steps": [{ "instruction": "Give the sum.", "answer": "58", "accept": [], "hint": "Only the ones digit changes." }], "finalAnswer": { "value": "58", "unit": "" }, "solutionNarrative": "The tens stay put: $2 + 6 = 8$, so $52 + 6 = 58$." },
+    { "id": "arithmetic.addition-tables.s10", "concepts": ["two-digit-mental"], "difficulty": 2, "context": "abstract", "prompt": "Compute $38 + 7$", "steps": [{ "instruction": "Give the sum.", "answer": "45", "accept": [], "hint": "Bridge the ten: $38 + 2 = 40$, then 5 more." }], "finalAnswer": { "value": "45", "unit": "" }, "solutionNarrative": "$38 + 7 = (38 + 2) + 5 = 40 + 5 = 45$." },
+    { "id": "arithmetic.addition-tables.s11", "concepts": ["two-digit-mental"], "difficulty": 2, "context": "applied", "prompt": "You read 26 pages yesterday and 30 today. How many pages in total?", "steps": [{ "instruction": "Give the total.", "answer": "56", "accept": [], "hint": "Adding whole tens: only the tens digit moves." }], "finalAnswer": { "value": "56", "unit": "pages" }, "solutionNarrative": "$26 + 30 = 56$ — the ones digit never changes when you add whole tens." },
+    { "id": "arithmetic.addition-tables.s12", "concepts": ["two-digit-mental"], "difficulty": 3, "context": "abstract", "prompt": "Compute $47 + 38$ in your head (tens first, then ones).", "steps": [{ "instruction": "Give the sum.", "answer": "85", "accept": [], "hint": "$47 + 30 = 77$, then $77 + 8$." }], "finalAnswer": { "value": "85", "unit": "" }, "solutionNarrative": "Left to right: $47 + 30 = 77$, then $77 + 8 = 85$. Or compensate: $47 + 40 - 2 = 85$." },
+    { "id": "arithmetic.addition-tables.s13", "concepts": ["two-digit-mental"], "difficulty": 3, "context": "applied", "prompt": "Two bus rides take 35 minutes and 49 minutes. What is the total travel time?", "steps": [{ "instruction": "Give the total in minutes.", "answer": "84", "accept": [], "hint": "49 is one less than 50: add 50, take back 1." }], "finalAnswer": { "value": "84", "unit": "minutes" }, "solutionNarrative": "Compensate: $35 + 50 = 85$, minus the extra 1 gives $84$ minutes." }
+  ]
+}
