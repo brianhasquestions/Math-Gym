@@ -835,7 +835,10 @@ generators["compound-ineq-v1"] = (rng, idx) => {
 };
 
 // --- Ratios, Proportions & Percent -------------------------------------------
-const round2 = (x) => Math.round(x * 100) / 100;
+// Round half AWAY FROM ZERO (the school convention). Plain Math.round rounds
+// half toward +Infinity, so it turned -0.375 into -0.37 — and a learner who
+// correctly rounded to -0.38 was marked wrong.
+const round2 = (x) => Math.sign(x) * Math.round(Math.abs(x) * 100) / 100;
 const RATE_ITEMS = [["apples", "apple"], ["bottles", "bottle"], ["pens", "pen"], ["notebooks", "notebook"], ["bags", "bag"]];
 
 generators["unit-rate-v1"] = (rng, idx) => {
@@ -1397,7 +1400,7 @@ generators["eval-rational-v1"] = (rng, idx) => {
   return {
     id: `gen.eval-rational-v1.${idx}`, generated: true, concepts: ["evaluate-rational"], difficulty: 2, context: "abstract",
     prompt: `Evaluate $\\dfrac{${a}x ${signed(b)}}{x ${signed(d)}}$ at $x = ${v}$. (Round to 2 decimals if needed.)`,
-    steps: [{ instruction: `Substitute $x = ${v}$ into numerator and denominator.`, answer: `${val}`, accept: [], hint: `$\\frac{${num}}{${den}}$.` }],
+    steps: [{ instruction: `Substitute $x = ${v}$ into numerator and denominator.`, answer: `${val}`, accept: [`${num}/${den}`], hint: `$\\frac{${num}}{${den}}$.` }],
     finalAnswer: { value: `${val}`, unit: "" }, solutionNarrative: `$\\frac{${num}}{${den}} = ${val}$.`,
   };
 };
@@ -2702,7 +2705,36 @@ export function hasGenerator(template) {
   return Object.prototype.hasOwnProperty.call(generators, template);
 }
 
+// Display cleanup applied to every generated problem: parametric templates
+// frequently draw a coefficient of 1 and render "$1x + 6$", "$-1e^{4t}$",
+// "$\sin(1x)$", "$-3 \pm 1i$" — mathematically fine, visually broken. Strip
+// the redundant 1 inside math spans ONLY (prose like "count the 1s" must
+// survive), at this single dispatch point so all templates benefit. The
+// lookbehind keeps "11x"/"2.1x" (real coefficients) and "C_1e" (subscript
+// index) intact; grading strings (answers/accepts) are left untouched — the
+// grader already treats 1x and x as equal.
+const stripUnitCoefIn = (inner) => inner.replace(/(?<![0-9.a-zA-Z_])1(?=[a-zA-Z\\])/g, "");
+const stripUnitCoef = (s) => {
+  if (typeof s !== "string" || !s.includes("1")) return s;
+  // Escaped currency dollars ("\$240") are NOT math delimiters — mask them so
+  // they can't mispair a span and expose prose ("the 1st term") to stripping.
+  return s
+    .replace(/\\\$/g, "\u0000")
+    .replace(/\$\$([^$]+)\$\$/g, (m, inner) => `$$${stripUnitCoefIn(inner)}$$`)
+    .replace(/\$([^$]+)\$/g, (m, inner) => `$${stripUnitCoefIn(inner)}$`)
+    .replace(/\u0000/g, "\\$");
+};
+
 export function generate(template, rng, idx) {
   if (!hasGenerator(template)) return null;
-  return generators[template](rng, idx);
+  const p = generators[template](rng, idx);
+  if (p) {
+    p.prompt = stripUnitCoef(p.prompt);
+    if (p.solutionNarrative) p.solutionNarrative = stripUnitCoef(p.solutionNarrative);
+    for (const s of p.steps || []) {
+      s.instruction = stripUnitCoef(s.instruction);
+      if (s.hint) s.hint = stripUnitCoef(s.hint);
+    }
+  }
+  return p;
 }

@@ -187,6 +187,38 @@ group("mastery model — spaced-repetition review lifecycle");
   ok("legacy mastered state gets a review scheduled", Number.isFinite(rehydrated.nextReviewAt));
 }
 
+// ---------------------------------------------------------------- generator display + rounding
+group("generator — unit coefficients stripped, prose and currency intact");
+{
+  const { generate, makeRng } = await imp("js/generator.js");
+  // eval-rational-v1 draws a=1 often; its prompt must never show "1x".
+  let coefLeak = false, roundingBad = null;
+  for (let s = 1; s <= 300; s++) {
+    const p = generate("eval-rational-v1", makeRng(s), s);
+    if (/(?<![0-9.])1x/.test(p.prompt)) coefLeak = true;
+    // The answer must be the hint fraction rounded HALF AWAY FROM ZERO
+    // (plain Math.round turned -0.375 into -0.37 and failed correct answers).
+    const m = p.steps[0].hint.match(/frac\{(-?\d+)\}\{(-?\d+)\}/);
+    const v = Number(m[1]) / Number(m[2]);
+    const expected = Math.sign(v) * Math.round(Math.abs(v) * 100) / 100;
+    if (Number(p.steps[0].answer) !== expected) roundingBad = `${m[1]}/${m[2]} -> ${p.steps[0].answer}, want ${expected}`;
+  }
+  ok("no '1x' coefficient rendering (300 seeds)", !coefLeak);
+  eq("half-away-from-zero rounding (300 seeds)", roundingBad, null);
+  const known = generate("eval-rational-v1", makeRng(7), 7);
+  eq("regression: -3/8 rounds to -0.38, not -0.37", known.steps[0].answer, "-0.38");
+  ok("…and the exact fraction is accepted", checkStep(known.steps[0], "-3/8"));
+  // Prose digits must survive the math-span cleanup: this discrete-math
+  // template's hint says "Count the 1s" outside math delimiters.
+  const dm = generate("dm-log-tt-d2", makeRng(3), 3);
+  ok("prose '1s' untouched by cleanup", /Count the 1s/.test(dm.steps.map((x) => x.hint || "").join(" ")));
+  // Escaped currency dollars must not be eaten or mispaired as math delimiters
+  // (this applied template mixes "\$" prose amounts with real $...$ math).
+  const fin = generate("a2l-eval-rational-d3", makeRng(3), 3);
+  ok("escaped currency '\\$' survives cleanup", fin.prompt.includes("\\$"));
+  ok("…with no NUL placeholder leaking", !fin.prompt.includes(String.fromCharCode(0)));
+}
+
 // ---------------------------------------------------------------- progress store
 group("progress store — sanitizes bad data");
 {
