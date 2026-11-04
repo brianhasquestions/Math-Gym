@@ -44,8 +44,8 @@ fill["cr4-ksr-d1"] = (rng, idx) => {
     id: `gen.cr4-ksr-d1.${idx}`, generated: true, concepts: ["keystream-reuse"], difficulty: 1, context: "applied",
     prompt: `A stream cipher reused its keystream nibble $K$ on two messages: $C_1 = M_1 \\oplus K = ${C1}$ and $C_2 = M_2 \\oplus K = ${C2}$ (4-bit values). You know the first message was $M_1 = ${M1}$. Recover the key. (All answers in decimal.)`,
     steps: [
-      { instruction: `Compute $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$. (This equals $M_1 \\oplus M_2$: the key cancels.)`, answer: `${xC}`, accept: [bin4(xC)], hint: `$${bin4(C1)} \\oplus ${bin4(C2)}$, column by column.` },
-      { instruction: `Recover the key: $K = C_1 \\oplus M_1 = ${C1} \\oplus ${M1}$.`, answer: `${K}`, accept: [bin4(K)], hint: `$${bin4(C1)} \\oplus ${bin4(M1)}$.` },
+      { instruction: `Compute $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$. (This equals $M_1 \\oplus M_2$ — the key cancels.)`, answer: `${xC}`, accept: [], hint: `$${bin4(C1)} \\oplus ${bin4(C2)}$, column by column.` },
+      { instruction: `Recover the key: $K = C_1 \\oplus M_1 = ${C1} \\oplus ${M1}$.`, answer: `${K}`, accept: [], hint: `$${bin4(C1)} \\oplus ${bin4(M1)}$.` },
     ],
     finalAnswer: { value: `${K}`, unit: "" },
     solutionNarrative: `Reusing one keystream makes $C_1 \\oplus C_2 = ${xC} = M_1 \\oplus M_2$. A single known message then peels off the key: $K = ${C1} \\oplus ${M1} = ${K}$.`,
@@ -63,9 +63,9 @@ fill["cr4-ksr-d2"] = (rng, idx) => {
     id: `gen.cr4-ksr-d2.${idx}`, generated: true, concepts: ["keystream-reuse"], difficulty: 2, context: "applied",
     prompt: `AES-CTR was run twice with the SAME nonce, so both messages were XORed with the same keystream byte $K$: $C_1 = ${C1}$ and $C_2 = ${C2}$. A predictable header reveals $M_1 = ${M1}$. Recover the key byte and the second message. (Decimal.)`,
     steps: [
-      { instruction: `Compute $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$ (which is $M_1 \\oplus M_2$).`, answer: `${xC}`, accept: [bin8(xC)], hint: `$${bin8(C1)} \\oplus ${bin8(C2)}$.` },
-      { instruction: `Recover the key: $K = C_1 \\oplus M_1 = ${C1} \\oplus ${M1}$.`, answer: `${K}`, accept: [bin8(K)], hint: `$${bin8(C1)} \\oplus ${bin8(M1)}$.` },
-      { instruction: `Recover the second message: $M_2 = C_2 \\oplus K = ${C2} \\oplus ${K}$.`, answer: `${M2}`, accept: [bin8(M2)], hint: `Also equals $M_1 \\oplus (C_1 \\oplus C_2) = ${M1} \\oplus ${xC}$.` },
+      { instruction: `Compute $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$ (which is $M_1 \\oplus M_2$).`, answer: `${xC}`, accept: [], hint: `$${bin8(C1)} \\oplus ${bin8(C2)}$.` },
+      { instruction: `Recover the key: $K = C_1 \\oplus M_1 = ${C1} \\oplus ${M1}$.`, answer: `${K}`, accept: [], hint: `$${bin8(C1)} \\oplus ${bin8(M1)}$.` },
+      { instruction: `Recover the second message: $M_2 = C_2 \\oplus K = ${C2} \\oplus ${K}$.`, answer: `${M2}`, accept: [], hint: `Also equals $M_1 \\oplus (C_1 \\oplus C_2) = ${M1} \\oplus ${xC}$.` },
     ],
     finalAnswer: { value: `${M2}`, unit: "" },
     solutionNarrative: `The reused keystream cancels: $C_1 \\oplus C_2 = ${xC}$. Then $K = ${C1} \\oplus ${M1} = ${K}$ and $M_2 = ${C2} \\oplus ${K} = ${M2}$. Nonce reuse turns CTR/GCM into a broken two-time pad.`,
@@ -81,15 +81,15 @@ fill["cr4-ksr-d3"] = (rng, idx) => {
   const xC = C1 ^ C2;
   return {
     id: `gen.cr4-ksr-d3.${idx}`, generated: true, concepts: ["keystream-reuse"], difficulty: 3, context: "applied",
-    prompt: `Two AES-GCM ciphertexts share a nonce: $C_1 = ${C1}$, $C_2 = ${C2}$; a known header gives $M_1 = ${M1}$. Break the pair, then recall GCM's separate SAFETY limit: at most $2^{36}-32$ bytes may be encrypted under one key/nonce pair. (Decimal.)`,
+    prompt: `Two AES-GCM ciphertexts share a nonce: $C_1 = ${C1}$, $C_2 = ${C2}$; a known header gives $M_1 = ${M1}$. Break the pair, then recall GCM's separate length limit: a single message (one key/nonce pair) can be at most $2^{36}-32$ bytes, because the 32-bit block counter runs out. (Decimal.)`,
     steps: [
-      { instruction: `Cancel the keystream: $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$.`, answer: `${xC}`, accept: [bin8(xC)], hint: `This is $M_1 \\oplus M_2$; the shared keystream drops out.` },
-      { instruction: `Recover the second message directly: $M_2 = M_1 \\oplus (C_1 \\oplus C_2) = ${M1} \\oplus ${xC}$.`, answer: `${M2}`, accept: [bin8(M2)], hint: `$${bin8(M1)} \\oplus ${bin8(xC)}$.` },
-      { instruction: `Recover the keystream byte $K = C_1 \\oplus M_1 = ${C1} \\oplus ${M1}$.`, answer: `${K}`, accept: [bin8(K)], hint: `Once $M_1$ is known, $C_1 \\oplus M_1$ strips the mask.` },
-      { instruction: `The wear-out limit is $2^{36} - 32$ bytes. Compute that number.`, answer: `68719476704`, accept: [], hint: `$2^{36} = 68719476736$; subtract 32.` },
+      { instruction: `Cancel the keystream: $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$.`, answer: `${xC}`, accept: [], hint: `This is $M_1 \\oplus M_2$; the shared keystream drops out.` },
+      { instruction: `Recover the second message directly: $M_2 = M_1 \\oplus (C_1 \\oplus C_2) = ${M1} \\oplus ${xC}$.`, answer: `${M2}`, accept: [], hint: `$${bin8(M1)} \\oplus ${bin8(xC)}$.` },
+      { instruction: `Recover the keystream byte $K = C_1 \\oplus M_1 = ${C1} \\oplus ${M1}$.`, answer: `${K}`, accept: [], hint: `Once $M_1$ is known, $C_1 \\oplus M_1$ strips the mask.` },
+      { instruction: `The per-message limit is $2^{36} - 32$ bytes. Compute that number.`, answer: `68719476704`, accept: [], hint: `$2^{36} = 68719476736$; subtract 32.` },
     ],
     finalAnswer: { value: `${M2}`, unit: "" },
-    solutionNarrative: `$C_1 \\oplus C_2 = ${xC} = M_1 \\oplus M_2$, so $M_2 = ${M1} \\oplus ${xC} = ${M2}$ and $K = ${C1} \\oplus ${M1} = ${K}$. Even with UNIQUE nonces, GCM still wears out at $2^{36}-32 = 68719476704$ bytes per key/nonce pair: see Soatok, "Comparison of Symmetric Encryption Methods".`,
+    solutionNarrative: `$C_1 \\oplus C_2 = ${xC} = M_1 \\oplus M_2$, so $M_2 = ${M1} \\oplus ${xC} = ${M2}$ and $K = ${C1} \\oplus ${M1} = ${K}$. Separately, one GCM message (one key/nonce pair) can be at most $2^{36}-32 = 68719476704$ bytes: the 32-bit counter allows $2^{32}-2$ blocks of 16 bytes. See Soatok, "Comparison of Symmetric Encryption Methods".`,
   };
 };
 
@@ -109,46 +109,58 @@ function ecbStats(labels) {
   return { N: labels.length, distinct, repeatedGroups, leaked };
 }
 
-// d1: short block stream with one repeated block.
+// Distinct random 2-digit hex block labels (each contains a letter so it reads as hex).
+function hexLabels(rng, count) {
+  const out = [];
+  while (out.length < count) {
+    const h = rng.int(16, 255).toString(16).toUpperCase();
+    if (!/[A-F]/.test(h) || out.includes(h)) continue;
+    out.push(h);
+  }
+  return out;
+}
+function shuffled(rng, arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = rng.int(0, i); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+// d1: short block stream with ONE repeated value (2 or 3 copies) plus distinct singles.
 fill["cr4-ecb-d1"] = (rng, idx) => {
-  // Two identical blocks A plus two distinct singles; shuffle positions a little.
-  const arrangements = [
-    ["A", "B", "A", "C"], ["A", "B", "C", "A"], ["B", "A", "C", "A"], ["A", "A", "B", "C"],
-  ];
-  const labels = rng.pick(arrangements);
+  const N = rng.pick([4, 5, 6]);
+  const reps = rng.int(2, Math.min(3, N - 1));
+  const vals = hexLabels(rng, 1 + (N - reps));
+  const labels = shuffled(rng, [...Array(reps).fill(vals[0]), ...vals.slice(1)]);
   const st = ecbStats(labels);
-  const disp = labels.map((l, i) => `${["c1", "c2", "c3", "c4"][i]}=${l === "A" ? "9F" : l === "B" ? "3C" : "D1"}`);
+  const disp = labels.map((v, i) => `c${i + 1}=${v}`);
   return {
     id: `gen.cr4-ecb-d1.${idx}`, generated: true, concepts: ["ecb-patterns"], difficulty: 1, context: "applied",
     prompt: `In ECB mode, equal plaintext blocks encrypt to equal ciphertext blocks. A ${st.N}-block message produced these ciphertext blocks: ${disp.join(", ")}. (Blocks with the same hex value came from the same plaintext.)`,
     steps: [
-      { instruction: `How many DISTINCT ciphertext block values appear?`, answer: `${st.distinct}`, accept: [], hint: `Count the different hex values.` },
-      { instruction: `The value 9F appears twice, so how many of the ${st.N} blocks are proven identical to another? (Count both copies.)`, answer: `2`, accept: [], hint: `Two blocks share the value 9F.` },
+      { instruction: `How many DISTINCT ciphertext block values appear?`, answer: `${st.distinct}`, accept: [], hint: `List each hex value once and count the list.` },
+      { instruction: `One value repeats. How many of the ${st.N} blocks carry that repeated value? (Count every copy.)`, answer: `${reps}`, accept: [], hint: `Find the value that shows up more than once and count its copies.` },
     ],
-    finalAnswer: { value: `2`, unit: "blocks" },
-    solutionNarrative: `The repeated value 9F betrays two identical plaintext blocks: ${st.distinct} distinct values across ${st.N} blocks. ECB never hides where a message repeats itself.`,
+    finalAnswer: { value: `${reps}`, unit: "blocks" },
+    solutionNarrative: `The value ${vals[0]} appears ${reps} times, so ${reps} plaintext blocks were identical, and there are ${st.distinct} distinct values across ${st.N} blocks. ECB never hides where a message repeats itself.`,
   };
 };
 
-// d2: larger stream, two repeated groups; count leaked blocks.
+// d2: larger stream with TWO repeated groups plus singles; count leaked blocks.
 fill["cr4-ecb-d2"] = (rng, idx) => {
-  const arrangements = [
-    ["P", "Q", "P", "Q", "R", "P"], ["P", "P", "Q", "R", "Q", "P"], ["Q", "P", "R", "P", "Q", "P"],
-  ];
-  const labels = rng.pick(arrangements);
-  const st = ecbStats(labels);           // N=6, distinct=3, leaked=5 (P thrice + Q twice), R once
-  const hex = { P: "A1", Q: "7E", R: "C4" };
-  const disp = labels.map((l) => hex[l]).join(" ");
+  const a = rng.int(2, 4), b = rng.int(2, 3), singles = rng.int(1, 3);
+  const vals = hexLabels(rng, 2 + singles);
+  const labels = shuffled(rng, [...Array(a).fill(vals[0]), ...Array(b).fill(vals[1]), ...vals.slice(2)]);
+  const st = ecbStats(labels);
   return {
     id: `gen.cr4-ecb-d2.${idx}`, generated: true, concepts: ["ecb-patterns"], difficulty: 2, context: "applied",
-    prompt: `An image encrypted with AES in ECB mode gives this ${st.N}-block ciphertext stream (by block value): ${disp}. Identical values mean identical plaintext blocks. Analyze the leak.`,
+    prompt: `An image encrypted with AES in ECB mode gives this ${st.N}-block ciphertext stream (by block value): ${labels.join(" ")}. Identical values mean identical plaintext blocks. Analyze the leak.`,
     steps: [
       { instruction: `How many DISTINCT block values are there?`, answer: `${st.distinct}`, accept: [], hint: `Count the different hex values in the stream.` },
-      { instruction: `A1 appears 3 times and 7E appears 2 times. How many blocks in total belong to a repeated group? (Add those copies: 3 + 2.)`, answer: `${st.leaked}`, accept: [], hint: `3 copies of A1 plus 2 copies of 7E.` },
-      { instruction: `How many blocks are UNIQUE (appear exactly once), and therefore leak no repeat? (Only C4.)`, answer: `1`, accept: [], hint: `${st.N} total minus ${st.leaked} in repeated groups.` },
+      { instruction: `How many blocks in total belong to a repeated group (a value that appears at least twice)? Count every copy.`, answer: `${st.leaked}`, accept: [], hint: `Two values repeat. Add up all of their copies.` },
+      { instruction: `How many blocks are UNIQUE (their value appears exactly once)?`, answer: `${singles}`, accept: [], hint: `${st.N} total minus the blocks in repeated groups.` },
     ],
     finalAnswer: { value: `${st.leaked}`, unit: "blocks" },
-    solutionNarrative: `${st.distinct} distinct values; A1 (×3) and 7E (×2) put ${st.leaked} of the ${st.N} blocks into visible repeat groups, with only C4 unique. This is exactly why the "ECB penguin" is still recognizable after encryption.`,
+    solutionNarrative: `${st.distinct} distinct values: ${vals[0]} appears ${a} times and ${vals[1]} appears ${b} times, so ${st.leaked} of the ${st.N} blocks sit in visible repeat groups and ${singles} are unique. This is exactly why the "ECB penguin" is still recognizable after encryption.`,
   };
 };
 
@@ -309,7 +321,8 @@ fill["cr4-rsa-d3"] = (rng, idx) => {
   const n1 = p * q1, n2 = p * q2;
   const phi = (p - 1) * (q1 - 1);
   // choose e coprime to phi from a small candidate set
-  const eCand = [5, 7, 11, 13, 17, 19].filter((e) => gcd(e, phi) === 1);
+  // (skip self-inverse e, where d would equal e and the answer could be guessed)
+  const eCand = [5, 7, 11, 13, 17, 19].filter((e) => gcd(e, phi) === 1 && modinv(e, phi) !== e);
   const e = eCand[idx % eCand.length] ?? 7;
   const d = modinv(e, phi);
   return {
@@ -322,6 +335,6 @@ fill["cr4-rsa-d3"] = (rng, idx) => {
       { instruction: `Recover the private key $d = e^{-1} \\bmod \\varphi = ${e}^{-1} \\bmod ${phi}$.`, answer: `${d}`, accept: [], hint: `Find $d$ with $${e}d \\equiv 1 \\pmod{${phi}}$.` },
     ],
     finalAnswer: { value: `${d}`, unit: "" },
-    solutionNarrative: `One gcd factors $n_1 = ${p} \\times ${q1}$, giving $\\varphi = ${phi}$ and $d = ${e}^{-1} \\bmod ${phi} = ${d}$: the whole private key. Don't roll your own RSA: use vetted libraries with OAEP. See Soatok, "Cryptography Engineering Has An Intrinsic Duty of Care".`,
+    solutionNarrative: `One gcd factors $n_1 = ${p} \\times ${q1}$, giving $\\varphi = ${phi}$ and $d = ${e}^{-1} \\bmod ${phi} = ${d}$ — the whole private key. The defense is key generation from a properly seeded CSPRNG, which vetted libraries provide (padding cannot help once the primes are shared). See Soatok, "Cryptography Engineering Has An Intrinsic Duty of Care".`,
   };
 };

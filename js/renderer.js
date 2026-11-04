@@ -60,10 +60,13 @@ function tokenizeMath(text) {
   return tokens;
 }
 
-// Inline formatting on already-escaped, math-free text: **bold**, *italic*, `code`.
+// Inline formatting on already-escaped, math-free text: **bold**, *italic*, `code`,
+// and [text](https://url) links. Only http(s) URLs without quotes or angle
+// brackets become links, so content still cannot inject attributes or schemes.
 function inlineFormat(escaped) {
   return escaped
     .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s()"'<>]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>");
 }

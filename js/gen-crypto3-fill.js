@@ -57,7 +57,8 @@ const C11 = { a: 1, b: 6, p: 11, order: 13, mult: [[2, 7], [5, 2], [8, 3], [10, 
 const C13 = { a: 3, b: 8, p: 13, order: 9, mult: [[1, 8], [2, 3], [9, 6], [12, 11], [12, 2], [9, 7], [2, 10], [1, 5]] };
 const C17 = { a: 2, b: 2, p: 17, order: 19, mult: [[5, 1], [6, 3], [10, 6], [3, 1], [9, 16], [16, 13], [0, 6], [13, 7], [7, 6], [7, 11], [13, 10], [0, 11], [16, 4], [9, 1], [3, 16], [10, 11], [6, 14], [5, 16]] };
 const C23pts = [[0, 1], [1, 7], [3, 10], [5, 4], [6, 4], [7, 11], [9, 7], [11, 3], [12, 4], [13, 7], [17, 3], [18, 3], [19, 5]]; // y != 0, on y^2 = x^3 + x + 1 mod 23
-const curveEq = (c) => `y^2 \\equiv x^3 + ${c.a === 1 ? "" : c.a}x + ${c.b} \\pmod{${c.p}}`;
+const coefX = (a) => (a === 1 ? "" : `${a}`);
+const curveEq = (c) => `y^2 \\equiv x^3 + ${coefX(c.a)}x + ${c.b} \\pmod{${c.p}}`;
 const multTable = (c, n) => c.mult.slice(0, n).map((P, i) => `${i + 1}G = ${tup(P)}`).join(", \\; ");
 
 export const fill = {};
@@ -77,7 +78,7 @@ fill["cr3-xor-d1"] = (rng, idx) => {
     steps: [
       { instruction: `Write ${a} in binary (4 bits).`, answer: a.toString(2).padStart(4, "0"), accept: [bin(a)], hint: `Split ${a} into powers of 2: 8, 4, 2, 1.` },
       { instruction: `Write ${b} in binary (4 bits).`, answer: b.toString(2).padStart(4, "0"), accept: [bin(b)], hint: `Split ${b} into powers of 2: 8, 4, 2, 1.` },
-      { instruction: `XOR the two bit strings column by column (1 where the bits differ, 0 where they match) and give the result as a DECIMAL number.`, answer: `${x}`, accept: [x.toString(2).padStart(4, "0")], hint: "Each column is addition mod 2: 1+1 = 0 with no carry." },
+      { instruction: `XOR the two bit strings column by column (1 where the bits differ, 0 where they match) and give the result as a DECIMAL number.`, answer: `${x}`, accept: [], hint: "Each column is addition mod 2: 1+1 = 0 with no carry." },
     ],
     finalAnswer: { value: `${x}`, unit: "" }, solutionNarrative: `$${a} = ${a.toString(2).padStart(4, "0")}_2$ and $${b} = ${b.toString(2).padStart(4, "0")}_2$; XOR each column to get $${x.toString(2).padStart(4, "0")}_2 = ${x}$.`,
   };
@@ -90,8 +91,8 @@ fill["cr3-xor-d2"] = (rng, idx) => {
     id: `gen.cr3-xor-d2.${idx}`, generated: true, concepts: ["xor-and-otp"], difficulty: 2, context: "applied",
     prompt: `A one-time pad encrypts one plaintext byte $M = ${M}$ with the key byte $K = ${K}$ by XOR: $C = M \\oplus K$. (In binary: $M = ${bin8(M)}$, $K = ${bin8(K)}$.)`,
     steps: [
-      { instruction: "Compute the ciphertext byte $C = M \\oplus K$. Give a DECIMAL number.", answer: `${C}`, accept: [bin8(C)], hint: "XOR the two 8-bit strings column by column, then convert back to decimal." },
-      { instruction: "The receiver computes $C \\oplus K$ to decrypt. What byte comes out? (Decimal.)", answer: `${M}`, accept: [bin8(M)], hint: "XOR with the same value twice cancels: $(M \\oplus K) \\oplus K = M$." },
+      { instruction: "Compute the ciphertext byte $C = M \\oplus K$. Give a DECIMAL number.", answer: `${C}`, accept: [], hint: "XOR the two 8-bit strings column by column, then convert back to decimal." },
+      { instruction: "The receiver computes $C \\oplus K$ to decrypt. What byte comes out? (Decimal.)", answer: `${M}`, accept: [], hint: "XOR with the same value twice cancels: $(M \\oplus K) \\oplus K = M$." },
     ],
     finalAnswer: { value: `${M}`, unit: "" }, solutionNarrative: `$C = ${M} \\oplus ${K} = ${C}$. Decryption is the same operation: $${C} \\oplus ${K} = ${M}$, because XOR-ing with $K$ twice cancels out.`,
   };
@@ -105,9 +106,9 @@ fill["cr3-xor-d3"] = (rng, idx) => {
     id: `gen.cr3-xor-d3.${idx}`, generated: true, concepts: ["xor-and-otp"], difficulty: 3, context: "applied",
     prompt: `An operator reuses a one-time-pad key byte $K$ on two messages: $C_1 = M_1 \\oplus K = ${C1}$ and $C_2 = M_2 \\oplus K = ${C2}$. An analyst learns (from a predictable header) that $M_1 = ${M1}$. Recover the key and the second message. All answers in DECIMAL.`,
     steps: [
-      { instruction: "First, XOR the two ciphertexts: $C_1 \\oplus C_2$. (The key cancels, leaving $M_1 \\oplus M_2$.)", answer: `${D}`, accept: [bin8(D)], hint: "$(M_1 \\oplus K) \\oplus (M_2 \\oplus K) = M_1 \\oplus M_2$: the $K$'s cancel." },
-      { instruction: "Recover the key: $K = C_1 \\oplus M_1$.", answer: `${K}`, accept: [bin8(K)], hint: `XOR $${C1}$ with the known plaintext $${M1}$.` },
-      { instruction: "Recover the second message: $M_2 = C_2 \\oplus K$.", answer: `${M2}`, accept: [bin8(M2)], hint: `XOR $${C2}$ with the key you just found.` },
+      { instruction: "First, XOR the two ciphertexts: $C_1 \\oplus C_2$. (The key cancels, leaving $M_1 \\oplus M_2$.)", answer: `${D}`, accept: [], hint: "$(M_1 \\oplus K) \\oplus (M_2 \\oplus K) = M_1 \\oplus M_2$ — the $K$'s cancel." },
+      { instruction: "Recover the key: $K = C_1 \\oplus M_1$.", answer: `${K}`, accept: [], hint: `XOR $${C1}$ with the known plaintext $${M1}$.` },
+      { instruction: "Recover the second message: $M_2 = C_2 \\oplus K$.", answer: `${M2}`, accept: [], hint: `XOR $${C2}$ with the key you just found.` },
     ],
     finalAnswer: { value: `${M2}`, unit: "" }, solutionNarrative: `$C_1 \\oplus C_2 = ${D} = M_1 \\oplus M_2$ (key cancels). Then $K = ${C1} \\oplus ${M1} = ${K}$ and $M_2 = ${C2} \\oplus ${K} = ${M2}$. One known plaintext under a reused pad breaks everything.`,
   };
@@ -136,7 +137,7 @@ fill["cr3-b2p-d2"] = (rng, idx) => {
     prompt: `A $GF(2^8)$ element is written as the polynomial $${polyOf(n)}$. Convert it back to a byte value.`,
     steps: [
       { instruction: `What is the decimal value of the leading term $x^{${top}}$ alone?`, answer: `${1 << top}`, accept: [`2^${top}`], hint: `$x^{${top}}$ stands for the bit worth $2^{${top}}$.` },
-      { instruction: "Add up the decimal values of ALL the terms. What byte (decimal) does the polynomial represent?", answer: `${n}`, accept: [bin8(n)], hint: "Each term $x^i$ is worth $2^i$; the constant term 1 is worth 1." },
+      { instruction: "Add up the decimal values of ALL the terms. What byte (decimal) does the polynomial represent?", answer: `${n}`, accept: [], hint: "Each term $x^i$ is worth $2^i$; the constant term 1 is worth 1." },
     ],
     finalAnswer: { value: `${n}`, unit: "" }, solutionNarrative: `Each $x^i$ is the bit worth $2^i$; the terms sum to ${n}.`,
   };
@@ -153,7 +154,7 @@ fill["cr3-b2p-d3"] = (rng, idx) => {
     prompt: `In $GF(2^8)$, ADDITION of field elements is bitwise XOR: coefficients add mod 2, so matching terms cancel. Add the elements $A = ${A}$ ($${polyOf(A)}$) and $B = ${B}$ ($${polyOf(B)}$).`,
     steps: [
       { instruction: "How many terms cancel (appear in both polynomials)?", answer: `${popcount(cancelled)}`, accept: [], hint: "A term cancels when its bit is 1 in BOTH bytes, since $x^i + x^i = 2x^i \\equiv 0$ mod 2." },
-      { instruction: "Compute the sum $A \\oplus B$ as a DECIMAL byte.", answer: `${S}`, accept: [bin8(S)], hint: `XOR the binary forms: $${bin8(A)} \\oplus ${bin8(B)}$.` },
+      { instruction: "Compute the sum $A \\oplus B$ as a DECIMAL byte.", answer: `${S}`, accept: [], hint: `XOR the binary forms: $${bin8(A)} \\oplus ${bin8(B)}$.` },
       { instruction: "Write the sum as a (mod-2 reduced) polynomial in $x$.", answer: polyOf(S), accept: [], hint: "Convert your decimal answer's bits to powers of $x$." },
     ],
     finalAnswer: { value: `${S}`, unit: "" }, solutionNarrative: `Shared terms cancel (coefficients are mod 2), leaving $${polyOf(S)}$, i.e. the byte ${S}. Note ${A} + ${B} would be ${A + B} in ordinary arithmetic: field addition is NOT integer addition.`,
@@ -168,7 +169,7 @@ fill["cr3-gf28-d1"] = (rng, idx) => {
     prompt: `Compute $\\texttt{xtime}(${b})$: multiplication by $x$ in $GF(2^8)$. Rule: shift left one bit; if the result is 256 or more, XOR with 283 (the modulus byte pattern of $x^8+x^4+x^3+x+1$).`,
     steps: [
       { instruction: `First: is ${b} at least 128 (i.e. is bit 7 set, so the shift overflows)? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: "128 is the threshold: below it, doubling stays inside one byte." },
-      { instruction: `So no reduction is needed. What is $\\texttt{xtime}(${b})$? (Decimal.)`, answer: `${2 * b}`, accept: [bin8(2 * b)], hint: "Just double it." },
+      { instruction: `So no reduction is needed. What is $\\texttt{xtime}(${b})$? (Decimal.)`, answer: `${2 * b}`, accept: [], hint: "Just double it." },
     ],
     finalAnswer: { value: `${2 * b}`, unit: "" }, solutionNarrative: `${b} < 128, so the left shift does not overflow: $\\texttt{xtime}(${b}) = ${2 * b}$.`,
   };
@@ -180,8 +181,8 @@ fill["cr3-gf28-d2"] = (rng, idx) => {
     id: `gen.cr3-gf28-d2.${idx}`, generated: true, concepts: ["gf28-multiplication"], difficulty: 2, context: "abstract",
     prompt: `Compute $\\texttt{xtime}(${b})$ in $GF(2^8)$. Since $${b} \\ge 128$, the left shift overflows past $x^7$, so you must reduce by XOR-ing with 283 ($= 100011011_2$, the bit pattern of $x^8+x^4+x^3+x+1$).`,
     steps: [
-      { instruction: `Shift first: what is $2 \\times ${b}$, before any reduction? (Decimal: it may exceed 255.)`, answer: `${raw}`, accept: [], hint: "Just double it; the 9-bit overflow is handled in the next step." },
-      { instruction: `Now reduce: XOR your result with 283. What byte remains? (Decimal.)`, answer: `${red}`, accept: [bin8(red)], hint: `Write $${raw}$ and 283 in binary (9 bits each) and XOR column by column.` },
+      { instruction: `Shift first: what is $2 \\times ${b}$, before any reduction? (Decimal — it may exceed 255.)`, answer: `${raw}`, accept: [], hint: "Just double it; the 9-bit overflow is handled in the next step." },
+      { instruction: `Now reduce: XOR your result with 283. What byte remains? (Decimal.)`, answer: `${red}`, accept: [], hint: `Write $${raw}$ and 283 in binary (9 bits each) and XOR column by column.` },
     ],
     finalAnswer: { value: `${red}`, unit: "" }, solutionNarrative: `$2 \\times ${b} = ${raw} \\ge 256$, so reduce: $${raw} \\oplus 283 = ${red}$. That XOR is exactly 'subtracting' the modulus polynomial $x^8+x^4+x^3+x+1$.`,
   };
@@ -192,12 +193,12 @@ fill["cr3-gf28-d3"] = (rng, idx) => {
   const overflow = b >= 128;
   const steps = [];
   if (overflow) {
-    steps.push({ instruction: `Step 1: $\\texttt{xtime}(${b})$: first shift. What is $2 \\times ${b}$ before reduction? (Decimal.)`, answer: `${2 * b}`, accept: [], hint: "Double it; reduction comes next." });
-    steps.push({ instruction: `The shift overflowed ($\\ge 256$), so XOR with 283. What is $\\texttt{xtime}(${b})$? (Decimal.)`, answer: `${t}`, accept: [bin8(t)], hint: `$${2 * b} \\oplus 283$.` });
+    steps.push({ instruction: `Step 1 — $\\texttt{xtime}(${b})$: first shift. What is $2 \\times ${b}$ before reduction? (Decimal.)`, answer: `${2 * b}`, accept: [], hint: "Double it; reduction comes next." });
+    steps.push({ instruction: `The shift overflowed ($\\ge 256$), so XOR with 283. What is $\\texttt{xtime}(${b})$? (Decimal.)`, answer: `${t}`, accept: [], hint: `$${2 * b} \\oplus 283$.` });
   } else {
     steps.push({ instruction: `Step 1: compute $\\texttt{xtime}(${b})$. (${b} < 128, so no reduction is needed.) Decimal.`, answer: `${t}`, accept: [], hint: "Just double it." });
   }
-  steps.push({ instruction: `Step 2, since $3 = x + 1$, we have $3 \\cdot ${b} = \\texttt{xtime}(${b}) \\oplus ${b}$. Compute it. (Decimal.)`, answer: `${result}`, accept: [bin8(result)], hint: `XOR $${t}$ with $${b}$ bit by bit.` });
+  steps.push({ instruction: `Step 2 — since $3 = x + 1$, we have $3 \\cdot ${b} = \\texttt{xtime}(${b}) \\oplus ${b}$. Compute it. (Decimal.)`, answer: `${result}`, accept: [], hint: `XOR $${t}$ with $${b}$ bit by bit.` });
   return {
     id: `gen.cr3-gf28-d3.${idx}`, generated: true, concepts: ["gf28-multiplication"], difficulty: 3, context: "applied",
     prompt: `MixColumns multiplies state bytes by the constant 3 in $GF(2^8)$. Compute $3 \\cdot ${b}$ using the xtime trick: $3 \\cdot b = \\texttt{xtime}(b) \\oplus b$.`,
@@ -216,7 +217,7 @@ fill["cr3-aes-d1"] = (rng, idx) => {
   const v = rng.pick(variants);
   return {
     id: `gen.cr3-aes-d1.${idx}`, generated: true, concepts: ["aes-big-picture"], difficulty: 1, context: "applied",
-    prompt: `AES comes in three key sizes (128, 192 and 256 bits) running 10, 12 and 14 rounds respectively. Each round applies SubBytes, ShiftRows, MixColumns and AddRoundKey.`,
+    prompt: `AES comes in three key sizes — 128, 192 and 256 bits — running 10, 12 and 14 rounds respectively. Each round applies SubBytes, ShiftRows, MixColumns and AddRoundKey (the final round leaves out MixColumns).`,
     steps: [
       { instruction: `How many rounds does AES-${v.bits} run?`, answer: `${v.rounds}`, accept: [], hint: "128→10, 192→12, 256→14: two extra rounds per key-size step." },
       { instruction: "Which round step combines the round key with the state, using plain XOR? (SubBytes, ShiftRows, MixColumns, or AddRoundKey)", answer: "AddRoundKey", accept: [], hint: "The name says it: it's the only step that touches the key." },
@@ -267,9 +268,9 @@ fill["cr3-aes-d3"] = (rng, idx) => {
       prompt: `Grover's quantum search algorithm finds a $2^n$-key brute-force target in about $\\sqrt{2^n} = 2^{n/2}$ steps. Consider AES-${n}.`,
       steps: [
         { instruction: `Against a quantum attacker running Grover, AES-${n}'s effective security drops to $2^k$ steps. What is $k$?`, answer: `${n / 2}`, accept: [], hint: "$\\sqrt{2^n} = 2^{n/2}$: halve the exponent." },
-        { instruction: `Is $2^{${n / 2}}$ still considered computationally infeasible today (the usual bar is $2^{128}$ or more)? Type 'yes' or 'no'.`, answer: n / 2 >= 128 ? "yes" : "no", accept: [], hint: "Compare the exponent to 128." },
+        { instruction: `Does the Grover estimate $2^{${n / 2}}$ still reach the conservative $2^{128}$ security target? Type 'yes' or 'no'.`, answer: n / 2 >= 128 ? "yes" : "no", accept: [], hint: "Compare the exponent to 128." },
       ],
-      finalAnswer: { value: `${n / 2}`, unit: "" }, solutionNarrative: `Grover halves the exponent: AES-${n} gives $2^{${n / 2}}$ post-quantum. ${n / 2 >= 128 ? "That clears the $2^{128}$ bar, which is exactly why AES-256 is called post-quantum comfortable." : "That is below the $2^{128}$ bar, which is why AES-128 is the variant people worry about long-term."}`,
+      finalAnswer: { value: `${n / 2}`, unit: "" }, solutionNarrative: `Grover halves the exponent: AES-${n} gives $2^{${n / 2}}$ post-quantum. ${n / 2 >= 128 ? "That clears the $2^{128}$ target, which is why AES-256 is called post-quantum comfortable." : "That is below the conservative $2^{128}$ target, which is why cautious guidance (for example NSA's CNSA 2.0) asks for AES-256."} This is a textbook upper bound on the speedup: Grover's steps must run one after another on a fault-tolerant quantum computer and parallelize poorly, so $2^{${n / 2}}$ Grover iterations are far harder than $2^{${n / 2}}$ classical guesses, and NIST still counts AES-128 as meeting its lowest post-quantum security category.`,
     };
   }
   const pairs = [[128, 128], [128, 64], [192, 64], [64, 64]];
@@ -304,7 +305,7 @@ const membershipGen = (rng, idx, c, diff, tpl) => {
       { instruction: `Compute the right side: $x^3 + ${c.a === 1 ? "" : c.a}x + ${c.b} = ${x}^3 + ${c.a === 1 ? "" : c.a + " \\cdot "}${x} + ${c.b} \\bmod ${c.p}$.`, answer: `${rhs}`, accept: [], hint: `Cube ${x}, add ${c.a === 1 ? "" : c.a + " times "}${x} and ${c.b}, then reduce mod ${c.p}.` },
       { instruction: "Do the two sides match: is the point on the curve? Type 'yes' or 'no'.", answer: on ? "yes" : "no", accept: [], hint: "The point is on the curve exactly when both sides give the same residue." },
     ],
-    finalAnswer: { value: on ? "yes" : "no", unit: "" }, solutionNarrative: `$y^2 \\equiv ${lhs}$ and $x^3 + ${c.a}x + ${c.b} \\equiv ${rhs} \\pmod{${c.p}}$: ${on ? "equal, so the point IS on the curve." : "not equal, so the point is NOT on the curve."}`,
+    finalAnswer: { value: on ? "yes" : "no", unit: "" }, solutionNarrative: `$y^2 \\equiv ${lhs}$ and $x^3 + ${coefX(c.a)}x + ${c.b} \\equiv ${rhs} \\pmod{${c.p}}$ — ${on ? "equal, so the point IS on the curve." : "not equal, so the point is NOT on the curve."}`,
   };
 };
 fill["cr3-ecc-mem-d1"] = (rng, idx) => membershipGen(rng, idx, C11, 1, "cr3-ecc-mem-d1");
@@ -318,7 +319,7 @@ fill["cr3-ecc-mem-d3"] = (rng, idx) => {
     id: `gen.cr3-ecc-mem-d3.${idx}`, generated: true, concepts: ["curve-membership"], difficulty: 3, context: "abstract",
     prompt: `On the curve $y^2 \\equiv x^3 + x + 1 \\pmod{23}$, consider the vertical line $x = ${x}$.`,
     steps: [
-      { instruction: `Compute the right side at $x = ${x}$: $x^3 + x + 1 \\bmod 23$. (0 to 22.)`, answer: `${rhs}`, accept: [], hint: `${x}^3 + ${x} + 1, then reduce mod 23.` },
+      { instruction: `Compute the right side at $x = ${x}$: $x^3 + x + 1 \\bmod 23$. (0 to 22.)`, answer: `${rhs}`, accept: [], hint: `$${x}^3 + ${x} + 1$, then reduce mod 23.` },
       { instruction: `Check: is $y = ${y}$ a solution of $y^2 \\equiv ${rhs} \\pmod{23}$? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Square ${y} and reduce mod 23.` },
       { instruction: `Square roots mod a prime come in pairs $y$ and $p - y$. What is the OTHER $y$-value on the curve at $x = ${x}$?`, answer: `${other}`, accept: [], hint: `Compute $23 - ${y}$.` },
     ],
@@ -342,10 +343,10 @@ fill["cr3-ecc-add-d1"] = (rng, idx) => {
     id: `gen.cr3-ecc-add-d1.${idx}`, generated: true, concepts: ["point-addition"], difficulty: 1, context: "abstract",
     prompt: `Add the points $P = ${tup(P)}$ and $Q = ${tup(Q)}$ on $${curveEq(c)}$. The slope is $\\lambda = (y_2 - y_1)(x_2 - x_1)^{-1} \\bmod 11$. Helpful fact: $${d.den}^{-1} \\equiv ${d.deninv} \\pmod{11}$, because $${d.den} \\cdot ${d.deninv} \\equiv 1$.`,
     steps: [
-      { instruction: `Compute the numerator $y_2 - y_1 \\bmod 11$. (0 to 10.)`, answer: `${d.num}`, accept: d.rawNum !== d.num ? [`${d.rawNum}`] : [], hint: `${Q[1]} - ${P[1]}, then add 11 if negative.` },
+      { instruction: `Compute the numerator $y_2 - y_1 \\bmod 11$. (0 to 10.)`, answer: `${d.num}`, accept: [], hint: `${Q[1]} - ${P[1]}, then add 11 if negative.` },
       { instruction: `Compute the slope $\\lambda = (y_2 - y_1) \\cdot ${d.deninv} \\bmod 11$.`, answer: `${d.lam}`, accept: [], hint: `Multiply ${d.num} by the given inverse ${d.deninv}, reduce mod 11.` },
-      { instruction: `Compute $x_3 = \\lambda^2 - x_1 - x_2 \\bmod 11$.`, answer: `${d.x3}`, accept: [], hint: `${d.lam}^2 - ${P[0]} - ${Q[0]}, then reduce into 0..10.` },
-      { instruction: `Compute $y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 11$.`, answer: `${d.y3}`, accept: [], hint: `${d.lam}(${P[0]} - ${d.x3}) - ${P[1]}, then reduce into 0..10.` },
+      { instruction: `Compute $x_3 = \\lambda^2 - x_1 - x_2 \\bmod 11$.`, answer: `${d.x3}`, accept: [], hint: `$${d.lam}^2 - ${P[0]} - ${Q[0]}$, then reduce into 0..10.` },
+      { instruction: `Compute $y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 11$.`, answer: `${d.y3}`, accept: [], hint: `$${d.lam}(${P[0]} - ${d.x3}) - ${P[1]}$, then reduce into 0..10.` },
       { instruction: `State the sum $P + Q$ as a point $(x_3, y_3)$.`, answer: `(${d.x3}, ${d.y3})`, accept: [], hint: "Combine your last two answers." },
     ],
     finalAnswer: { value: `(${d.x3}, ${d.y3})`, unit: "" }, solutionNarrative: `$\\lambda = ${d.num} \\cdot ${d.deninv} \\equiv ${d.lam}$, so $x_3 \\equiv ${d.lam}^2 - ${P[0]} - ${Q[0]} \\equiv ${d.x3}$ and $y_3 \\equiv ${d.lam}(${P[0]} - ${d.x3}) - ${P[1]} \\equiv ${d.y3} \\pmod{11}$.`,
@@ -358,12 +359,12 @@ const addGenFull = (rng, idx, c, diff, tpl) => {
     id: `gen.${tpl}.${idx}`, generated: true, concepts: ["point-addition"], difficulty: diff, context: "abstract",
     prompt: `Add $P = ${tup(P)}$ and $Q = ${tup(Q)}$ on $${curveEq(c)}$, computing the modular inverse yourself. All residues from 0 to ${c.p - 1}.`,
     steps: [
-      { instruction: `Numerator: $y_2 - y_1 \\bmod ${c.p}$.`, answer: `${d.num}`, accept: d.rawNum !== d.num ? [`${d.rawNum}`] : [], hint: `${Q[1]} - ${P[1]}, adding ${c.p} if negative.` },
-      { instruction: `Denominator: $x_2 - x_1 \\bmod ${c.p}$.`, answer: `${d.den}`, accept: d.rawDen !== d.den ? [`${d.rawDen}`] : [], hint: `${Q[0]} - ${P[0]}, adding ${c.p} if negative.` },
+      { instruction: `Numerator: $y_2 - y_1 \\bmod ${c.p}$.`, answer: `${d.num}`, accept: [], hint: `${Q[1]} - ${P[1]}, adding ${c.p} if negative.` },
+      { instruction: `Denominator: $x_2 - x_1 \\bmod ${c.p}$.`, answer: `${d.den}`, accept: [], hint: `${Q[0]} - ${P[0]}, adding ${c.p} if negative.` },
       { instruction: `Find the inverse: which value $v$ in 1..${c.p - 1} satisfies $${d.den} \\cdot v \\equiv 1 \\pmod{${c.p}}$?`, answer: `${d.deninv}`, accept: [], hint: `Try multiples: ${d.den}·1, ${d.den}·2, ... until one is $\\equiv 1$ mod ${c.p} (or use the extended Euclidean algorithm).` },
       { instruction: `Slope: $\\lambda = ${d.num} \\cdot ${d.deninv} \\bmod ${c.p}$.`, answer: `${d.lam}`, accept: [], hint: "Multiply and reduce." },
-      { instruction: `$x_3 = \\lambda^2 - x_1 - x_2 \\bmod ${c.p}$.`, answer: `${d.x3}`, accept: [], hint: `${d.lam}^2 - ${P[0]} - ${Q[0]}, reduced.` },
-      { instruction: `$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod ${c.p}$.`, answer: `${d.y3}`, accept: [], hint: `${d.lam}(${P[0]} - ${d.x3}) - ${P[1]}, reduced.` },
+      { instruction: `$x_3 = \\lambda^2 - x_1 - x_2 \\bmod ${c.p}$.`, answer: `${d.x3}`, accept: [], hint: `$${d.lam}^2 - ${P[0]} - ${Q[0]}$, reduced.` },
+      { instruction: `$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod ${c.p}$.`, answer: `${d.y3}`, accept: [], hint: `$${d.lam}(${P[0]} - ${d.x3}) - ${P[1]}$, reduced.` },
       { instruction: `State $P + Q$ as a point.`, answer: `(${d.x3}, ${d.y3})`, accept: [], hint: "Combine $x_3$ and $y_3$." },
     ],
     finalAnswer: { value: `(${d.x3}, ${d.y3})`, unit: "" }, solutionNarrative: `$\\lambda = ${d.num}/${d.den} \\equiv ${d.num} \\cdot ${d.deninv} \\equiv ${d.lam}$; then $x_3 = ${d.x3}$, $y_3 = ${d.y3}$: $P + Q = (${d.x3}, ${d.y3})$.`,
@@ -381,10 +382,10 @@ fill["cr3-ecc-dbl-d1"] = (rng, idx) => {
     id: `gen.cr3-ecc-dbl-d1.${idx}`, generated: true, concepts: ["point-doubling-and-multiples"], difficulty: 1, context: "abstract",
     prompt: `Double the point $P = ${tup(P)}$ on $${curveEq(c)}$. The tangent slope is $\\lambda = (3x_1^2 + 1)(2y_1)^{-1} \\bmod 11$. Helpful fact: $${d.den}^{-1} \\equiv ${d.deninv} \\pmod{11}$.`,
     steps: [
-      { instruction: `Numerator: $3x_1^2 + 1 = 3 \\cdot ${P[0]}^2 + 1 \\bmod 11$. (0 to 10.)`, answer: `${d.num}`, accept: d.rawNum !== d.num ? [`${d.rawNum}`] : [], hint: `Compute $3 \\cdot ${P[0] * P[0]} + 1$, then reduce mod 11.` },
+      { instruction: `Numerator: $3x_1^2 + 1 = 3 \\cdot ${P[0]}^2 + 1 \\bmod 11$. (0 to 10.)`, answer: `${d.num}`, accept: [], hint: `Compute $3 \\cdot ${P[0] * P[0]} + 1$, then reduce mod 11.` },
       { instruction: `Slope: $\\lambda = ${d.num} \\cdot ${d.deninv} \\bmod 11$.`, answer: `${d.lam}`, accept: [], hint: "Multiply by the given inverse and reduce." },
-      { instruction: `$x_3 = \\lambda^2 - 2x_1 \\bmod 11$.`, answer: `${d.x3}`, accept: [], hint: `${d.lam}^2 - ${2 * P[0]}, reduced into 0..10.` },
-      { instruction: `$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 11$.`, answer: `${d.y3}`, accept: [], hint: `${d.lam}(${P[0]} - ${d.x3}) - ${P[1]}, reduced.` },
+      { instruction: `$x_3 = \\lambda^2 - 2x_1 \\bmod 11$.`, answer: `${d.x3}`, accept: [], hint: `$${d.lam}^2 - ${2 * P[0]}$, reduced into 0..10.` },
+      { instruction: `$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 11$.`, answer: `${d.y3}`, accept: [], hint: `$${d.lam}(${P[0]} - ${d.x3}) - ${P[1]}$, reduced.` },
       { instruction: `State $2P$ as a point.`, answer: `(${d.x3}, ${d.y3})`, accept: [], hint: "Combine $x_3$ and $y_3$." },
     ],
     finalAnswer: { value: `(${d.x3}, ${d.y3})`, unit: "" }, solutionNarrative: `$\\lambda = ${d.num} \\cdot ${d.deninv} \\equiv ${d.lam}$, $x_3 = ${d.x3}$, $y_3 = ${d.y3}$: $2P = (${d.x3}, ${d.y3})$.`,
@@ -402,8 +403,8 @@ fill["cr3-ecc-dbl-d2"] = (rng, idx) => {
       { instruction: `Denominator: $2y_1 \\bmod 17$.`, answer: `${d.den}`, accept: [], hint: `$2 \\cdot ${P[1]}$, reduced.` },
       { instruction: `Inverse: find $v$ with $${d.den} \\cdot v \\equiv 1 \\pmod{17}$.`, answer: `${d.deninv}`, accept: [], hint: "Trial multiples or extended Euclid." },
       { instruction: `Slope $\\lambda = ${d.num} \\cdot ${d.deninv} \\bmod 17$.`, answer: `${d.lam}`, accept: [], hint: "Multiply and reduce." },
-      { instruction: `$x_3 = \\lambda^2 - 2x_1 \\bmod 17$.`, answer: `${d.x3}`, accept: [], hint: `${d.lam}^2 - ${2 * P[0]}, reduced.` },
-      { instruction: `$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 17$.`, answer: `${d.y3}`, accept: [], hint: `${d.lam}(${P[0]} - ${d.x3}) - ${P[1]}, reduced.` },
+      { instruction: `$x_3 = \\lambda^2 - 2x_1 \\bmod 17$.`, answer: `${d.x3}`, accept: [], hint: `$${d.lam}^2 - ${2 * P[0]}$, reduced.` },
+      { instruction: `$y_3 = \\lambda(x_1 - x_3) - y_1 \\bmod 17$.`, answer: `${d.y3}`, accept: [], hint: `$${d.lam}(${P[0]} - ${d.x3}) - ${P[1]}$, reduced.` },
       { instruction: `State $2P$ as a point.`, answer: `(${d.x3}, ${d.y3})`, accept: [], hint: "Combine $x_3$ and $y_3$." },
     ],
     finalAnswer: { value: `(${d.x3}, ${d.y3})`, unit: "" }, solutionNarrative: `$\\lambda = ${d.num} \\cdot ${d.deninv} \\equiv ${d.lam} \\pmod{17}$; $2P = (${d.x3}, ${d.y3})$.`,
@@ -459,8 +460,8 @@ fill["cr3-ecdh-d2"] = (rng, idx) => {
     steps: [
       { instruction: `Alice sends $A = ${a}G$. Which point is that? (Use the table.)`, answer: tup(A), accept: [], hint: `Look up ${a}G.` },
       { instruction: `Bob sends $B = ${b}G$. Which point?`, answer: tup(B), accept: [], hint: `Look up ${b}G.` },
-      { instruction: `Alice computes $aB = ${a} \\cdot ${b}G = (ab)G$. First: $ab \\bmod 13$?`, answer: `${s}`, accept: a * b < 13 ? [] : [`${a * b}`], hint: `${a} \\cdot ${b} = ${a * b}; the group has order 13, so reduce mod 13.` },
-      { instruction: `So the shared secret point is $${s}G$. Which point is it?`, answer: tup(S), accept: [], hint: `Look up ${s}G: Bob gets the same point from $bA$.` },
+      { instruction: `Alice computes $aB = ${a} \\cdot ${b}G = (ab)G$. First: $ab \\bmod 13$?`, answer: `${s}`, accept: [], hint: `$${a} \\cdot ${b} = ${a * b}$; the group has order 13, so reduce mod 13.` },
+      { instruction: `So the shared secret point is $${s}G$. Which point is it?`, answer: tup(S), accept: [], hint: `Look up ${s}G — Bob gets the same point from $bA$.` },
     ],
     finalAnswer: { value: tup(S), unit: "" }, solutionNarrative: `$A = ${tup(A)}$, $B = ${tup(B)}$; both sides land on $(ab)G = ${s}G = ${tup(S)}$. An eavesdropper sees $A$ and $B$ but must solve a discrete log to find $a$ or $b$.`,
   };
@@ -478,7 +479,7 @@ fill["cr3-ecdh-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Alice's public point $A = ${a}G$?`, answer: tup(A), accept: [], hint: `Table lookup at ${a}G.` },
       { instruction: `Bob's public point $B = ${b}G$?`, answer: tup(B), accept: [], hint: `Table lookup at ${b}G.` },
-      { instruction: `Alice computes $aB = (ab)G$. Reduce the scalar: $${a} \\cdot ${b} \\bmod 19$?`, answer: `${s}`, accept: a * b < 19 ? [] : [`${a * b}`], hint: `${a * b} mod 19.` },
+      { instruction: `Alice computes $aB = (ab)G$. Reduce the scalar: $${a} \\cdot ${b} \\bmod 19$?`, answer: `${s}`, accept: [], hint: `$${a * b} \\bmod 19$.` },
       { instruction: `Shared secret point $(ab)G$?`, answer: tup(S), accept: [], hint: `Look up ${s}G.` },
       { instruction: `Bob computes $bA = (ba)G$ instead. Does he get the SAME point? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: "Scalar multiplication commutes: $a(bG) = b(aG) = (ab)G$." },
     ],

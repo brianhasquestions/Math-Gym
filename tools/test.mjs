@@ -488,6 +488,10 @@ group("markdown renderer: review regressions");
     !cur.includes("katex-error") && (cur.match(/class="katex"/g) || []).length === 1 && /per unit\.<\/p>$/.test(cur));
   const inlineDisplay = renderMarkdown("$$a^2 + b^2$$ (note the plus sign)");
   ok("$$…$$ followed by prose on one line renders cleanly", !inlineDisplay.includes("katex-error") && inlineDisplay.includes("note the plus sign"));
+  const link = renderMarkdown('See Soatok\'s ["Comparison"](https://soatok.blog/2020/07/12/x/) post.');
+  ok("[text](https://…) renders as a link", link.includes('<a href="https://soatok.blog/2020/07/12/x/"') && link.includes('>"Comparison"</a>') && !link.includes("]("));
+  const evil = renderMarkdown('[x](javascript:alert(1)) [y](https://a.b/" onmouseover="z)');
+  ok("non-http links and quote-injection stay plain text", !evil.includes("<a ") && !evil.includes("onmouseover=\"z\""));
   globalThis.katex = prevKatex;
 }
 

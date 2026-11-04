@@ -226,10 +226,14 @@ fill["cr2-dh-d1"] = (rng, idx) => {
 
 fill["cr2-dh-d2"] = (rng, idx) => {
   const { p, g } = rng.pick(DH_POOL);
-  const a = rng.int(3, 6);
+  // p = 13, a = 6 has no non-degenerate partner b (g^6 = -1 there), so cap a at 5.
+  const a = rng.int(3, p === 13 ? 5 : 6);
   let b = rng.int(3, 6);
-  if (b === a) b = b === 6 ? 3 : b + 1;
   const A = modpow(g, a, p);
+  // Reject degenerate draws: b == a, a shared secret of 1 (ab a multiple of
+  // p - 1), or a secret that just repeats one of the public values.
+  const bad = (bb) => { const ss = modpow(g, a * bb, p); return bb === a || ss === 1 || ss === A || ss === modpow(g, bb, p); };
+  for (let tries = 0; tries < 6 && bad(b); tries++) b = b >= 7 ? 3 : b + 1;
   const B = modpow(g, b, p);
   const s = modpow(B, a, p);
   return {
@@ -261,10 +265,10 @@ fill["cr2-dh-d3"] = (rng, idx) => {
   steps.push({ instruction: `So Alice's secret exponent $a$ is:`, answer: `${a}`, accept: [], hint: `The exponent whose power first matched $A = ${A}$.` });
   return {
     id: `gen.cr2-dh-d3.${idx}`, generated: true, concepts: ["diffie-hellman"], difficulty: 3, context: "applied",
-    prompt: `You're the eavesdropper on a Diffie–Hellman exchange with $p = ${p}$, $g = ${g}$. You intercepted Alice's public value $A = ${A}$. Recover her secret exponent $a$ the only known way: brute-force the discrete log, one exponent at a time. ($${g}^1 = ${g}$ is not a match.)`,
+    prompt: `You're the eavesdropper on a Diffie–Hellman exchange with $p = ${p}$, $g = ${g}$. You intercepted Alice's public value $A = ${A}$. Recover her secret exponent $a$ by brute-forcing the discrete log, one exponent at a time. (At this toy size brute force is enough; real attackers have faster discrete-log algorithms, which is why real primes are 2048 bits. $${g}^1 = ${g}$ is not a match.)`,
     steps,
     finalAnswer: { value: `${a}`, unit: "" },
-    solutionNarrative: `Successive powers of ${g} mod ${p} first hit $${A}$ at exponent ${a}, so $a = ${a}$. Forward exponentiation took two squarings; going backward meant checking every exponent: at 2048-bit sizes that brute force outlives the universe, and THAT asymmetry is the security.`,
+    solutionNarrative: `Successive powers of ${g} mod ${p} first hit $${A}$ at exponent ${a}, so $a = ${a}$. Forward exponentiation took a couple of multiplications; going backward meant checking every exponent. At 2048-bit sizes that brute force outlives the universe, and even the best known discrete-log algorithms are out of reach: that asymmetry is the security.`,
   };
 };
 
@@ -338,9 +342,20 @@ fill["cr2-keygen-d3"] = (rng, idx) => {
 // rsa.json: encryption
 // ============================================================================
 
+// Pick a plaintext in [lo, hi] that is coprime to n, is not a fixed point of
+// x -> x^e mod n, and has m^e >= n (so the "reduce mod n" step is real: a tiny
+// m with m^e < n is the textbook small-message weakness, recoverable by an
+// ordinary integer e-th root).
+const pickPlain = (rng, n, e, lo, hi) => {
+  let m = rng.int(lo, hi);
+  const ok = (x) => gcd(x, n) === 1 && modpow(x, e, n) !== x && Math.pow(x, e) >= n;
+  for (let tries = 0; tries <= hi - lo && !ok(m); tries++) m = m >= hi ? lo : m + 1;
+  return m;
+};
+
 fill["cr2-encrypt-d1"] = (rng, idx) => {
   const { n } = rng.pick([{ n: 33 }, { n: 55 }]); // e = 3 valid for both (phi 20, 40)
-  const m = rng.int(2, 5);
+  const m = pickPlain(rng, n, 3, 4, 9);
   const s1 = (m * m) % n;
   const c = modpow(m, 3, n);
   return {
@@ -357,14 +372,14 @@ fill["cr2-encrypt-d1"] = (rng, idx) => {
 
 fill["cr2-encrypt-d2"] = (rng, idx) => {
   const { n } = rng.pick([{ n: 35 }, { n: 65 }]); // e = 5 valid (phi 24, 48)
-  const m = rng.int(2, 6);
+  const m = pickPlain(rng, n, 5, 3, 8);
   const s1 = modpow(m, 2, n), s2 = modpow(m, 4, n);
   const c = modpow(m, 5, n);
   return {
     id: `gen.cr2-encrypt-d2.${idx}`, generated: true, concepts: ["rsa-encrypt"], difficulty: 2, context: "applied",
     prompt: `Encrypt $m = ${m}$ with the public key $(n, e) = (${n}, 5)$ using square-and-multiply ($5 = 4 + 1$).`,
     steps: [
-      { instruction: `Compute $${m}^2 \\bmod ${n}$.`, answer: `${s1}`, accept: [], hint: `$${m}^2 = ${m * m}$; reduce mod ${n}.` },
+      { instruction: `Compute $${m}^2 \\bmod ${n}$.`, answer: `${s1}`, accept: [], hint: `$${m}^2 = ${m * m}$; reduce mod ${n} if needed.` },
       { instruction: `Square: $${m}^4 \\equiv ${s1}^2 \\pmod{${n}}$. What is it?`, answer: `${s2}`, accept: [], hint: `$${s1}^2 = ${s1 * s1}$; reduce mod ${n}.` },
       { instruction: `Combine: $c = ${m}^5 = ${m}^4 \\cdot ${m} \\equiv ${s2} \\cdot ${m} \\pmod{${n}}$. What is $c$?`, answer: `${c}`, accept: [], hint: `$${s2} \\cdot ${m} = ${s2 * m}$; reduce mod ${n}.` },
     ],
@@ -375,7 +390,7 @@ fill["cr2-encrypt-d2"] = (rng, idx) => {
 
 fill["cr2-encrypt-d3"] = (rng, idx) => {
   const { n } = rng.pick([{ n: 143 }, { n: 85 }, { n: 133 }]); // e = 7 valid (phi 120, 64, 108)
-  const m = rng.int(2, 6);
+  const m = pickPlain(rng, n, 7, 3, 8);
   const s1 = modpow(m, 2, n), s2 = modpow(m, 4, n);
   const t = (s2 * s1) % n;
   const c = modpow(m, 7, n);
@@ -398,9 +413,10 @@ fill["cr2-encrypt-d3"] = (rng, idx) => {
 // ============================================================================
 
 const pickMessage = (rng, n, e) => {
-  // avoid fixed points (c == m) so decryption feels like decryption
-  let m = rng.int(2, 6);
-  for (let tries = 0; tries < 8 && modpow(m, e, n) === m; tries++) m = (m % 6) + 2;
+  // avoid fixed points (c == m) so decryption feels like decryption, and keep
+  // m coprime to n so the narratives' appeal to Euler's theorem is literal
+  let m = rng.int(2, 7);
+  for (let tries = 0; tries < 6 && (modpow(m, e, n) === m || gcd(m, n) !== 1); tries++) m = m >= 7 ? 2 : m + 1;
   return m;
 };
 
@@ -479,7 +495,7 @@ fill["cr2-whyworks-d1"] = (rng, idx) => {
       { instruction: `Reduce: what is $${e * d} \\bmod ${phi}$?`, answer: "1", accept: [], hint: `$${e * d} = ${(e * d - 1) / phi} \\times ${phi} + 1$.` },
     ],
     finalAnswer: { value: "1", unit: "" },
-    solutionNarrative: `$${e} \\cdot ${d} = ${e * d} \\equiv 1 \\pmod{${phi}}$, so $m^{ed} = m^{k\\varphi + 1} \\equiv m$ by Euler's theorem, and decryption is guaranteed to undo encryption.`,
+    solutionNarrative: `$${e} \\cdot ${d} = ${e * d} \\equiv 1 \\pmod{${phi}}$ — so $m^{ed} = m^{k\\varphi + 1} \\equiv m$ by Euler's theorem (for $m$ coprime to $n$; the Chinese remainder theorem extends it to every $m$), and decryption is guaranteed to undo encryption.`,
   };
 };
 
@@ -519,6 +535,6 @@ fill["cr2-whyworks-d3"] = (rng, idx) => {
       { instruction: `Recover the private key: find $d = ${e}^{-1} \\bmod ${phi}$.`, answer: `${d}`, accept: [], hint: `$${e} \\times ${d} = ${e * d} = ${(e * d - 1) / phi} \\times ${phi} + 1$.` },
     ],
     finalAnswer: { value: `${d}`, unit: "" },
-    solutionNarrative: `$${n} = ${p} \\times ${q}$, so $\\varphi = ${phi}$ and $d = ${d}$. Factoring $n$ handed over the private key in four steps: RSA's entire security is that nobody can do this to a 2048-bit modulus.`,
+    solutionNarrative: `$${n} = ${p} \\times ${q}$, so $\\varphi = ${phi}$ and $d = ${d}$. Factoring $n$ handed over the private key in four steps: RSA's security rests on nobody being able to do this to a 2048-bit modulus.`,
   };
 };
