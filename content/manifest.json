@@ -4,7 +4,7 @@
     {
       "id": "arithmetic",
       "title": "Mental Arithmetic",
-      "blurb": "The tables, drilled to reflex — addition and multiplication facts fast enough that the rest of math stops waiting on them.",
+      "blurb": "The tables, drilled to reflex: addition and multiplication facts fast enough that the rest of math stops waiting on them.",
       "topics": [
         { "id": "arithmetic.addition-tables", "title": "Addition Tables & Mental Sums", "file": "content/arithmetic/addition-tables.json", "status": "ready" },
         { "id": "arithmetic.multiplication-tables", "title": "Multiplication Tables", "file": "content/arithmetic/multiplication-tables.json", "status": "ready" }
@@ -13,7 +13,7 @@
     {
       "id": "algebra",
       "title": "Algebra",
-      "blurb": "The language of the unknown — model real situations and solve for what you don't yet know.",
+      "blurb": "The language of the unknown: model real situations and solve for what you don't yet know.",
       "topics": [
         { "id": "algebra.real-numbers", "title": "Real Numbers and Operations", "file": "content/algebra/real-numbers.json", "status": "ready" },
         { "id": "algebra.variables-expressions", "title": "Variables and Expressions", "file": "content/algebra/variables-expressions.json", "status": "ready" },
@@ -68,7 +68,7 @@
     {
       "id": "trigonometry",
       "title": "Trigonometry",
-      "blurb": "Angles, waves, and rotation — the math of everything that cycles.",
+      "blurb": "Angles, waves, and rotation: the math of everything that cycles.",
       "topics": [
         { "id": "trigonometry.radians-and-unit-circle", "title": "Radians and the Unit Circle", "file": "content/trigonometry/radians-and-unit-circle.json", "status": "ready" },
         { "id": "trigonometry.sine-cosine-graphs", "title": "Graphs of Sine and Cosine", "file": "content/trigonometry/sine-cosine-graphs.json", "status": "ready" },
@@ -82,7 +82,7 @@
     {
       "id": "calculus-1",
       "title": "Calculus 1",
-      "blurb": "Rates of change — how fast, how steep, how optimal.",
+      "blurb": "Rates of change: how fast, how steep, how optimal.",
       "topics": [
         { "id": "calculus-1.limits-and-continuity", "title": "Limits and Continuity", "file": "content/calculus-1/limits-and-continuity.json", "status": "ready" },
         { "id": "calculus-1.derivative-rates-of-change", "title": "The Derivative: Rates of Change", "file": "content/calculus-1/derivative-rates-of-change.json", "status": "ready" },
@@ -119,7 +119,7 @@
     {
       "id": "calculus-3",
       "title": "Calculus 3",
-      "blurb": "Calculus in three dimensions — fields, surfaces, and flow.",
+      "blurb": "Calculus in three dimensions: fields, surfaces, and flow.",
       "topics": [
         { "id": "calculus-3.vectors-in-space", "title": "Vectors in Space", "file": "content/calculus-3/vectors-in-space.json", "status": "ready" },
         { "id": "calculus-3.dot-and-cross-products", "title": "The Dot and Cross Products", "file": "content/calculus-3/dot-and-cross-products.json", "status": "ready" },
@@ -168,7 +168,7 @@
     {
       "id": "linear-algebra",
       "title": "Linear Algebra",
-      "blurb": "Vectors, spaces, and transformations — the backbone of data and graphics.",
+      "blurb": "Vectors, spaces, and transformations: the backbone of data and graphics.",
       "topics": [
         { "id": "linear-algebra.vectors-and-span", "title": "Vectors, Linear Combinations, and Span", "file": "content/linear-algebra/vectors-and-span.json", "status": "ready" },
         { "id": "linear-algebra.linear-independence", "title": "Linear Independence", "file": "content/linear-algebra/linear-independence.json", "status": "ready" },
@@ -183,7 +183,7 @@
     {
       "id": "statistics",
       "title": "Statistics & Probability",
-      "blurb": "Making sense of data and chance — the most applied math there is, from A/B tests to medical odds.",
+      "blurb": "Making sense of data and chance: the most applied math there is, from A/B tests to medical odds.",
       "topics": [
         { "id": "statistics.descriptive-statistics", "title": "Descriptive Statistics: Center and Spread", "file": "content/statistics/descriptive-statistics.json", "status": "ready" },
         { "id": "statistics.data-displays", "title": "Data Displays and Distributions", "file": "content/statistics/data-displays.json", "status": "ready" },
@@ -199,7 +199,7 @@
     {
       "id": "advanced-statistics",
       "title": "Advanced Statistics",
-      "blurb": "A second course in statistics — named distributions, covariance, Bayesian updating, and the full inference toolkit: t, chi-square, ANOVA, and regression.",
+      "blurb": "A second course in statistics: named distributions, covariance, Bayesian updating, and the full inference toolkit: t, chi-square, ANOVA, and regression.",
       "topics": [
         { "id": "advanced-statistics.experimental-design", "title": "Experimental Design and Sampling Methods", "file": "content/advanced-statistics/experimental-design.json", "status": "ready" },
         { "id": "advanced-statistics.discrete-distributions", "title": "Discrete Distributions: Binomial and Geometric", "file": "content/advanced-statistics/discrete-distributions.json", "status": "ready" },
@@ -218,7 +218,7 @@
     {
       "id": "discrete-math",
       "title": "Discrete Math",
-      "blurb": "Logic, sets, counting, and networks — the math beneath algorithms and computer science.",
+      "blurb": "Logic, sets, counting, and networks: the math beneath algorithms and computer science.",
       "topics": [
         { "id": "discrete-math.logic-and-propositions", "title": "Propositional Logic and Truth Tables", "file": "content/discrete-math/logic-and-propositions.json", "status": "ready" },
         { "id": "discrete-math.proof-techniques", "title": "Proof Techniques: Direct, Contrapositive, and Contradiction", "file": "content/discrete-math/proof-techniques.json", "status": "ready" },
@@ -232,13 +232,14 @@
     {
       "id": "cryptography",
       "title": "Cryptography",
-      "blurb": "The number theory and algebra that lock down the internet — from AES-256 to RSA and elliptic curves.",
+      "blurb": "The number theory and algebra that lock down the internet: from AES-256 to RSA and elliptic curves.",
       "topics": [
         { "id": "cryptography.modular-arithmetic", "title": "Modular Arithmetic: The Clock Behind Ciphers", "file": "content/cryptography/modular-arithmetic.json", "status": "ready" },
         { "id": "cryptography.gcd-euclid", "title": "GCD, Primes, and the Euclidean Algorithm", "file": "content/cryptography/gcd-euclid.json", "status": "ready" },
         { "id": "cryptography.modular-exponentiation", "title": "Modular Exponentiation and Fermat–Euler", "file": "content/cryptography/modular-exponentiation.json", "status": "ready" },
         { "id": "cryptography.rsa", "title": "RSA: Public-Key Encryption", "file": "content/cryptography/rsa.json", "status": "ready" },
         { "id": "cryptography.aes-finite-fields", "title": "Symmetric Ciphers and Finite Fields (AES)", "file": "content/cryptography/aes-finite-fields.json", "status": "ready" },
+        { "id": "cryptography.aes-modes", "title": "AES Modes of Operation: ECB to GCM", "file": "content/cryptography/aes-modes.json", "status": "ready" },
         { "id": "cryptography.ecc", "title": "Elliptic Curve Cryptography", "file": "content/cryptography/ecc.json", "status": "ready" },
         { "id": "cryptography.crypto-weaknesses", "title": "How Cryptography Breaks: Attacks and Misuse", "file": "content/cryptography/crypto-weaknesses.json", "status": "ready" }
       ]
@@ -246,7 +247,7 @@
     {
       "id": "number-theory",
       "title": "Number Theory",
-      "blurb": "The pure mathematics of the integers — primes, divisibility, congruences, and the deep patterns that underpin cryptography.",
+      "blurb": "The pure mathematics of the integers: primes, divisibility, congruences, and the deep patterns that underpin cryptography.",
       "topics": [
         { "id": "number-theory.divisibility-and-primes", "title": "Divisibility and Primes", "file": "content/number-theory/divisibility-and-primes.json", "status": "ready" },
         { "id": "number-theory.gcd-lcm-and-bezout", "title": "GCD, LCM, and Bézout's Identity", "file": "content/number-theory/gcd-lcm-and-bezout.json", "status": "ready" },
@@ -261,7 +262,7 @@
     {
       "id": "numerical-methods",
       "title": "Numerical Methods",
-      "blurb": "How computers actually do the math — approximating roots, integrals, and solutions when exact answers are out of reach.",
+      "blurb": "How computers actually do the math: approximating roots, integrals, and solutions when exact answers are out of reach.",
       "topics": [
         { "id": "numerical-methods.error-and-floating-point", "title": "Error, Precision, and Floating Point", "file": "content/numerical-methods/error-and-floating-point.json", "status": "ready" },
         { "id": "numerical-methods.root-finding-bracketing", "title": "Bracketing Methods: Bisection and False Position", "file": "content/numerical-methods/root-finding-bracketing.json", "status": "ready" },
@@ -277,7 +278,7 @@
     {
       "id": "financial-mathematics",
       "title": "Financial Mathematics",
-      "blurb": "The math of money over time — interest, annuities, loans, bonds, and investment decisions.",
+      "blurb": "The math of money over time: interest, annuities, loans, bonds, and investment decisions.",
       "topics": [
         { "id": "financial-mathematics.simple-and-compound-interest", "title": "Simple and Compound Interest", "file": "content/financial-mathematics/simple-and-compound-interest.json", "status": "ready" },
         { "id": "financial-mathematics.present-and-future-value", "title": "Time Value of Money", "file": "content/financial-mathematics/present-and-future-value.json", "status": "ready" },
@@ -292,7 +293,7 @@
     {
       "id": "game-theory",
       "title": "Game Theory",
-      "blurb": "The mathematics of strategic decisions — from Nash equilibria and auctions to bargaining, evolution, and the logic of cooperation.",
+      "blurb": "The mathematics of strategic decisions: from Nash equilibria and auctions to bargaining, evolution, and the logic of cooperation.",
       "topics": [
         { "id": "game-theory.strategic-form-and-dominance", "title": "Strategic-Form Games and Dominance", "file": "content/game-theory/strategic-form-and-dominance.json", "status": "ready" },
         { "id": "game-theory.pure-nash-equilibrium", "title": "Pure-Strategy Nash Equilibrium", "file": "content/game-theory/pure-nash-equilibrium.json", "status": "ready" },

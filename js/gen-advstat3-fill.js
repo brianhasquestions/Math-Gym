@@ -91,7 +91,7 @@ fill["as3-t-why-3"] = (rng, idx) => {
       { instruction: `A new sample of $n = ${n + 11}$ would use how many degrees of freedom?`, answer: `${n + 10}`, accept: [], hint: `$\\mathrm{df} = n - 1$.` },
     ],
     finalAnswer: { value: "wider", unit: "" },
-    solutionNarrative: `Since $t^* = ${T[df].two}$ exceeds $z^* = 1.960$, the t interval is wider — the honest price of estimating $\\sigma$ with $s$. As df grows, $t^* \\to z^*$ and the penalty vanishes.`,
+    solutionNarrative: `Since $t^* = ${T[df].two}$ exceeds $z^* = 1.960$, the t interval is wider: the honest price of estimating $\\sigma$ with $s$. As df grows, $t^* \\to z^*$ and the penalty vanishes.`,
   };
 };
 
@@ -111,7 +111,7 @@ fill["as3-t-ci-1"] = (rng, idx) => {
       { instruction: `Margin of error: $m = ${T[df].two} \\times ${k}$. Give the exact value.`, answer: d1000(mT), accept: acc3(mT), hint: `$${T[df].two} \\times ${k}$.` },
     ],
     finalAnswer: { value: d1000(mT), unit: "" },
-    solutionNarrative: `$\\mathrm{df} = ${df}$, $\\mathrm{SE} = \\frac{${s}}{${sq}} = ${k}$, so $m = ${T[df].two} \\times ${k} = ${d1000(mT)}$. Note $t^* = ${T[df].two}$ is a bit larger than the z value 1.960 — the t penalty for estimating $\\sigma$.`,
+    solutionNarrative: `$\\mathrm{df} = ${df}$, $\\mathrm{SE} = \\frac{${s}}{${sq}} = ${k}$, so $m = ${T[df].two} \\times ${k} = ${d1000(mT)}$. Note $t^* = ${T[df].two}$ is a bit larger than the z value 1.960: the t penalty for estimating $\\sigma$.`,
   };
 };
 fill["as3-t-ci-2"] = (rng, idx) => {
@@ -234,7 +234,7 @@ fill["as3-t-test-3"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: reject ? "reject" : "fail to reject", accept: reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Outside $\\pm ${crit}$ means significant.` },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$t = ${d10(tT)}$, so $|t| = ${d10(mag)}$ ${reject ? ">" : "\\le"} ${crit}$ (df $= ${df}$): we ${reject ? "reject $H_0$ — the process has drifted" : "fail to reject $H_0$ — the drift is within sampling noise"}.`,
+    solutionNarrative: `$t = ${d10(tT)}$, so $|t| = ${d10(mag)} ${reject ? ">" : "\\le"} ${crit}$ (df $= ${df}$): we ${reject ? "reject $H_0$: the process has drifted" : "fail to reject $H_0$: the drift is within sampling noise"}.`,
   };
 };
 
@@ -243,7 +243,7 @@ const DEV_PERMS = [[-3, 1, 1, 1], [1, -3, 1, 1], [1, 1, -3, 1], [1, 1, 1, -3]];
 fill["as3-t-paired-1"] = (rng, idx) => {
   const scen = rng.pick([
     { item: "typing speeds (words/min) before and after a training course", b: [38, 44, 41, 47] },
-    { item: "reaction times (ms, lower is better) before and after practice — here we still take After − Before", b: [280, 265, 291, 274] },
+    { item: "reaction times (ms, lower is better) before and after practice: here we still take After − Before", b: [280, 265, 291, 274] },
     { item: "quiz scores before and after a review session", b: [61, 70, 66, 73] },
   ]);
   const dbar = rng.pick([2, 3]);
@@ -252,7 +252,7 @@ fill["as3-t-paired-1"] = (rng, idx) => {
   const after = scen.b.map((v, i) => v + d[i]);
   return {
     id: `gen.as3-t-paired-1.${idx}`, generated: true, concepts: ["paired-t"], difficulty: 1, context: "applied",
-    prompt: `Four subjects are measured twice — ${scen.item}. Before: ${scen.b.join(", ")}. After: ${after.join(", ")}. Paired data are analyzed through the DIFFERENCES $d_i = \\text{After} - \\text{Before}$.`,
+    prompt: `Four subjects are measured twice: ${scen.item}. Before: ${scen.b.join(", ")}. After: ${after.join(", ")}. Paired data are analyzed through the DIFFERENCES $d_i = \\text{After} - \\text{Before}$.`,
     steps: [
       { instruction: `Difference for subject 1: $${after[0]} - ${scen.b[0]}$. (Give a number.)`, answer: `${d[0]}`, accept: [], hint: `After minus Before.` },
       { instruction: `Difference for subject 2: $${after[1]} - ${scen.b[1]}$. (Give a number.)`, answer: `${d[1]}`, accept: [], hint: `Keep the sign.` },
@@ -343,7 +343,7 @@ fill["as3-ts-setup-1"] = (rng, idx) => {
       { instruction: `Under the no-difference null hypothesis, $\\mu_1 - \\mu_2$ equals what number?`, answer: "0", accept: ["zero"], hint: `"No difference" in symbols.` },
     ],
     finalAnswer: { value: scen.ans, unit: "" },
-    solutionNarrative: `${scen.desc} — that is a ${scen.ans} design. Either way, the null hypothesis says the difference is 0.`,
+    solutionNarrative: `${scen.desc}: that is a ${scen.ans} design. Either way, the null hypothesis says the difference is 0.`,
   };
 };
 fill["as3-ts-setup-2"] = (rng, idx) => {
@@ -397,7 +397,7 @@ fill["as3-ts-means-1"] = (rng, idx) => {
       { instruction: `Take the square root for the SE. (Give a whole number.)`, answer: `${c.se}`, accept: [`sqrt(${c.v1 + c.v2})`], hint: `$${c.se}^2 = ${c.v1 + c.v2}$.` },
     ],
     finalAnswer: { value: `${c.se}`, unit: "" },
-    solutionNarrative: `Variances add for a difference: $\\frac{${c.s1 * c.s1}}{${c.n1}} + \\frac{${c.s2 * c.s2}}{${c.n2}} = ${c.v1} + ${c.v2} = ${c.v1 + c.v2}$, so $\\mathrm{SE} = ${c.se}$. Never add standard deviations — add variances.`,
+    solutionNarrative: `Variances add for a difference: $\\frac{${c.s1 * c.s1}}{${c.n1}} + \\frac{${c.s2 * c.s2}}{${c.n2}} = ${c.v1} + ${c.v2} = ${c.v1 + c.v2}$, so $\\mathrm{SE} = ${c.se}$. Never add standard deviations: add variances.`,
   };
 };
 fill["as3-ts-means-2"] = (rng, idx) => {
@@ -447,7 +447,7 @@ fill["as3-ts-means-3"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: scen.reject ? "reject" : "fail to reject", accept: scen.reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Beyond the critical value $\\to$ reject.` },
     ],
     finalAnswer: { value: scen.reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$\\mathrm{SE} = ${c.se}$, $t = ${d10(scen.tT)}$. Against the rule "${ruleTxt}" we ${scen.reject ? "reject $H_0$ — the groups genuinely differ" : "fail to reject $H_0$ — the gap is within sampling noise"}.`,
+    solutionNarrative: `$\\mathrm{SE} = ${c.se}$, $t = ${d10(scen.tT)}$. Against the rule "${ruleTxt}" we ${scen.reject ? "reject $H_0$: the groups genuinely differ" : "fail to reject $H_0$: the gap is within sampling noise"}.`,
   };
 };
 
@@ -474,7 +474,7 @@ fill["as3-ts-props-1"] = (rng, idx) => {
       { instruction: `Pooled: $\\hat{p} = \\dfrac{${c.x1} + ${c.x2}}{400}$. (Give a decimal.)`, answer: d100(c.pH), accept: [`${c.x1 + c.x2}/400`], hint: `$${c.x1} + ${c.x2} = ${c.x1 + c.x2}$.` },
     ],
     finalAnswer: { value: d100(c.pH), unit: "" },
-    solutionNarrative: `$\\hat{p}_1 = ${p3(c.x1)}$, $\\hat{p}_2 = ${p3(c.x2)}$, and pooling all successes over all trials gives $\\hat{p} = ${d100(c.pH)}$ — the single rate the null hypothesis believes in.`,
+    solutionNarrative: `$\\hat{p}_1 = ${p3(c.x1)}$, $\\hat{p}_2 = ${p3(c.x2)}$, and pooling all successes over all trials gives $\\hat{p} = ${d100(c.pH)}$: the single rate the null hypothesis believes in.`,
   };
 };
 fill["as3-ts-props-2"] = (rng, idx) => {
@@ -537,7 +537,7 @@ fill["as3-ts-ci-1"] = (rng, idx) => {
       { instruction: `Does the interval contain 0? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `Both endpoints are positive.` },
     ],
     finalAnswer: { value: `(${diff - m}, ${diff + m})`, unit: "" },
-    solutionNarrative: `The interval is $(${diff - m}, ${diff + m})$. Zero is outside it, so every plausible value of $\\mu_1 - \\mu_2$ is positive — the same verdict a two-tailed test would give.`,
+    solutionNarrative: `The interval is $(${diff - m}, ${diff + m})$. Zero is outside it, so every plausible value of $\\mu_1 - \\mu_2$ is positive: the same verdict a two-tailed test would give.`,
   };
 };
 fill["as3-ts-ci-2"] = (rng, idx) => {
@@ -615,7 +615,7 @@ fill["as3-chi-exp-1"] = (rng, idx) => {
       { instruction: `$E_3 = ${c.n} \\times ${c.ps[2]}$. (Give a whole number.)`, answer: `${c.es[2]}`, accept: [], hint: `The three expecteds must total $${c.n}$.` },
     ],
     finalAnswer: { value: `${c.es.join(", ")}`, unit: "" },
-    solutionNarrative: `$E_i = n p_i$ gives $${c.es.join(", ")}$ — note they sum to $${c.n}$, a built-in sanity check. Expected counts may be decimals in general; only the OBSERVED counts must be whole.`,
+    solutionNarrative: `$E_i = n p_i$ gives $${c.es.join(", ")}$: note they sum to $${c.n}$, a built-in sanity check. Expected counts may be decimals in general; only the OBSERVED counts must be whole.`,
   };
 };
 fill["as3-chi-exp-2"] = (rng, idx) => {
@@ -657,7 +657,7 @@ fill["as3-chi-exp-3"] = (rng, idx) => {
       { instruction: `The rule of thumb requires every expected count to be at least 5. Is the condition met? Type 'yes' or 'no'.`, answer: c.met ? "yes" : "no", accept: [], hint: `Compare $${e11}$ with 5.` },
     ],
     finalAnswer: { value: c.met ? "yes" : "no", unit: "" },
-    solutionNarrative: `$E_{11} = ${e11}$ is the smallest expected count. ${c.met ? "All expecteds are at least 5, so the chi-square approximation is trustworthy." : "Since it is below 5, the chi-square approximation is unreliable — combine categories or collect more data."}`,
+    solutionNarrative: `$E_{11} = ${e11}$ is the smallest expected count. ${c.met ? "All expecteds are at least 5, so the chi-square approximation is trustworthy." : "Since it is below 5, the chi-square approximation is unreliable: combine categories or collect more data."}`,
   };
 };
 
@@ -713,7 +713,7 @@ fill["as3-chi-gof-2"] = (rng, idx) => {
       { instruction: `Degrees of freedom: $k - 1$. (Give a whole number.)`, answer: "3", accept: [], hint: `$k = 4$ lanes.` },
     ],
     finalAnswer: { value: d10(chiT), unit: "" },
-    solutionNarrative: `$\\chi^2 = ${c.termsT.map(d10).join(" + ")} = ${d10(chiT)}$ with $\\mathrm{df} = 3$. Note the deviations sum to zero, but the SQUARED terms all push $\\chi^2$ upward — chi-square only ever accumulates surprise.`,
+    solutionNarrative: `$\\chi^2 = ${c.termsT.map(d10).join(" + ")} = ${d10(chiT)}$ with $\\mathrm{df} = 3$. Note the deviations sum to zero, but the SQUARED terms all push $\\chi^2$ upward: chi-square only ever accumulates surprise.`,
   };
 };
 fill["as3-chi-gof-3"] = (rng, idx) => {
@@ -739,7 +739,7 @@ fill["as3-chi-gof-3"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: scen.reject ? "reject" : "fail to reject", accept: scen.reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Chi-square tests reject only in the RIGHT tail.` },
     ],
     finalAnswer: { value: scen.reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$\\chi^2 = ${d10(chiT)}$ against the df-3 critical value $${scen.crit}$ at $\\alpha = ${scen.alpha}$: we ${scen.reject ? "reject the model — the observed split is too far from equal proportions" : "fail to reject — the observed wobble is consistent with the model"}.`,
+    solutionNarrative: `$\\chi^2 = ${d10(chiT)}$ against the df-3 critical value $${scen.crit}$ at $\\alpha = ${scen.alpha}$: we ${scen.reject ? "reject the model: the observed split is too far from equal proportions" : "fail to reject: the observed wobble is consistent with the model"}.`,
   };
 };
 
@@ -763,7 +763,7 @@ fill["as3-chi-ind-1"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: scen.reject ? "reject" : "fail to reject", accept: scen.reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Beyond the critical value $\\to$ reject.` },
     ],
     finalAnswer: { value: scen.reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$\\mathrm{df} = (${scen.r}-1)(${scen.c}-1) = ${scen.df}$, and $\\chi^2 = ${scen.chi}$ ${scen.reject ? ">" : "\\le"} ${scen.crit}$: ${scen.reject ? "reject independence — the variables are associated" : "fail to reject — the table is compatible with independence"}.`,
+    solutionNarrative: `$\\mathrm{df} = (${scen.r}-1)(${scen.c}-1) = ${scen.df}$, and $\\chi^2 = ${scen.chi} ${scen.reject ? ">" : "\\le"} ${scen.crit}$: ${scen.reject ? "reject independence: the variables are associated" : "fail to reject: the table is compatible with independence"}.`,
   };
 };
 fill["as3-chi-ind-2"] = (rng, idx) => {
@@ -782,7 +782,7 @@ fill["as3-chi-ind-2"] = (rng, idx) => {
   const O = [c.a + c.d, c.b - c.d, c.a - c.d, c.b + c.d];
   return {
     id: `gen.as3-chi-ind-2.${idx}`, generated: true, concepts: ["independence-tests"], difficulty: 2, context: "applied",
-    prompt: `200 customers (100 in each of two age groups) are asked yes/no. Observed counts — group 1: ${O[0]} yes, ${O[1]} no; group 2: ${O[2]} yes, ${O[3]} no. Column totals are ${2 * c.a} yes and ${2 * c.b} no. Run the chi-square computation.`,
+    prompt: `200 customers (100 in each of two age groups) are asked yes/no. Observed counts: group 1: ${O[0]} yes, ${O[1]} no; group 2: ${O[2]} yes, ${O[3]} no. Column totals are ${2 * c.a} yes and ${2 * c.b} no. Run the chi-square computation.`,
     steps: [
       { instruction: `Expected count for (group 1, yes): $\\dfrac{100 \\times ${2 * c.a}}{200}$. (Give a whole number.)`, answer: `${c.a}`, accept: [], hint: `Row total 100 times column total over 200.` },
       { instruction: `Term for that cell: $\\dfrac{(${O[0]} - ${c.a})^2}{${c.a}}$. (Give a decimal.)`, answer: d100(t1H), accept: [], hint: `$(${c.d})^2 = ${c.d * c.d}$.` },
@@ -791,7 +791,7 @@ fill["as3-chi-ind-2"] = (rng, idx) => {
       { instruction: `Degrees of freedom for a 2×2 table: $(2-1)(2-1)$. (Give a whole number.)`, answer: "1", accept: [], hint: `$(r-1)(c-1)$.` },
     ],
     finalAnswer: { value: d100(chiH), unit: "" },
-    solutionNarrative: `All four expecteds come from row×column/total; every deviation is $\\pm ${c.d}$, giving $\\chi^2 = ${d100(chiH)}$ with $\\mathrm{df} = 1$. In a 2×2 table one deviation determines all four — that is why df is 1.`,
+    solutionNarrative: `All four expecteds come from row×column/total; every deviation is $\\pm ${c.d}$, giving $\\chi^2 = ${d100(chiH)}$ with $\\mathrm{df} = 1$. In a 2×2 table one deviation determines all four: that is why df is 1.`,
   };
 };
 fill["as3-chi-ind-3"] = (rng, idx) => {
@@ -810,7 +810,7 @@ fill["as3-chi-ind-3"] = (rng, idx) => {
   const O2 = [scen.e1 - scen.d, scen.e1 + scen.d, scen.e3];
   return {
     id: `gen.as3-chi-ind-3.${idx}`, generated: true, concepts: ["independence-tests"], difficulty: 3, context: "applied",
-    prompt: `200 voters (100 urban, 100 rural) pick one of three candidates. Observed — urban: $${O1.join(", ")}$; rural: $${O2.join(", ")}$. Column totals: $${2 * scen.e1}, ${2 * scen.e1}, ${2 * scen.e3}$, so the expected counts per row are $${scen.e1}, ${scen.e1}, ${scen.e3}$. Test independence at $\\alpha = 0.05$: with the correct df the critical value is $5.991$, reject when $\\chi^2 > 5.991$.`,
+    prompt: `200 voters (100 urban, 100 rural) pick one of three candidates. Observed: urban: $${O1.join(", ")}$; rural: $${O2.join(", ")}$. Column totals: $${2 * scen.e1}, ${2 * scen.e1}, ${2 * scen.e3}$, so the expected counts per row are $${scen.e1}, ${scen.e1}, ${scen.e3}$. Test independence at $\\alpha = 0.05$: with the correct df the critical value is $5.991$, reject when $\\chi^2 > 5.991$.`,
     steps: [
       { instruction: `Degrees of freedom: $(2-1)(3-1)$. (Give a whole number.)`, answer: "2", accept: [], hint: `$(r-1)(c-1)$.` },
       { instruction: `Term for (urban, candidate 1): $\\dfrac{(${O1[0]} - ${scen.e1})^2}{${scen.e1}}$. (Give a decimal.)`, answer: d10(termT), accept: [], hint: `$(${scen.d})^2 = ${scen.d * scen.d}$.` },
@@ -875,6 +875,6 @@ fill["as3-chi-cond-3"] = (rng, idx) => {
       { instruction: `If instead the test had FAILED to reject, would that prove the variables are independent? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `Absence of evidence is not evidence of absence.` },
     ],
     finalAnswer: { value: "associated", unit: "" },
-    solutionNarrative: `Rejection says the variables are associated — the observed table is too lopsided for pure chance. It does NOT establish causation (${scen.conf} could explain the link), and failing to reject would not have proven independence either.`,
+    solutionNarrative: `Rejection says the variables are associated: the observed table is too lopsided for pure chance. It does NOT establish causation (${scen.conf} could explain the link), and failing to reject would not have proven independence either.`,
   };
 };

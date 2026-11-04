@@ -20,25 +20,48 @@ import { generate, makeRng } from "./generator.js";
 // un-transformed "4x + 19 = 59"), which keeps intermediate steps meaningful.
 
 function normalize(s) {
-  return String(s)
+  let t = String(s);
+  // A mixed number "1 1/3" / "-2 3/4" is one quantity. Convert it BEFORE
+  // whitespace collapses, or it became "11/3" (and "8 1/4" matched 81/4).
+  const mixed = t.match(/^\s*(-?)(\d+)\s+(\d+)\s*\/\s*(\d+)\s*$/);
+  if (mixed) {
+    const [, sg, w, n, d] = mixed;
+    if (Number(d) !== 0) t = `${sg}${Number(w) * Number(d) + Number(n)}/${d}`;
+  }
+  return t
+    // Digits separated only by whitespace ("2 3") are not one number; keep
+    // them apart so they can't merge into "23".
+    .replace(/(\d)\s+(?=\d)/g, "$1#")
+    // Degree marks are units, not part of the value: 55°, 55^\circ, 55 degrees.
+    .replace(/\^\s*\{?\s*\\circ\s*\}?/g, "")
+    .replace(/°/g, "")
+    .replace(/(\d|\))\s*(?:degrees|degree|deg)\b/gi, "$1")
+    // Subscripts: c_1, v_{2} -> c1, v2 (the polynomial engine reads letter+digits as one symbol).
+    .replace(/([a-zA-Z])_\{?(\d+)\}?/g, "$1$2")
+    // Plus-minus: \pm, +/- -> a single ± marker (expanded by parseSolutionSet).
+    .replace(/\\pm|\+\/-/g, "±")
+    // Infinity spellings: \infty, ∞, infinity -> inf.
+    .replace(/\\infty|∞|infinity/gi, "inf")
     .toLowerCase()
     .replace(/\s+/g, "")
     .replace(/\\cdot|\\times/g, "*") // latex multiplication -> *
     .replace(/[×·]/g, "*")          // unicode multiplication -> *
-    .replace(/[−–—]/g, "-")         // unicode minus variants -> hyphen
+    .replace(/[\u2212\u2013\u2014]/g, "-")         // unicode minus variants -> hyphen
     .replace(/\\leq|\\le|≤|⩽/g, "<=")    // unicode/latex inequalities
     .replace(/\\geq|\\ge|≥|⩾/g, ">=")
     .replace(/\\sqrt|√/g, "sqrt")   // radicals -> sqrt
     .replace(/\\pi|π/g, "pi")       // pi
     .replace(/\\,|\\!/g, "")         // stray latex spacing
-    .replace(/[{}$]/g, "");          // stray latex/markup ( x^{2} -> x^2, sqrt{2} -> sqrt2 )
+    .replace(/\\%/g, "%")
+    .replace(/[{}$]/g, "")           // stray latex/markup ( x^{2} -> x^2, sqrt{2} -> sqrt2 )
+    .replace(/%$/, "");              // a trailing percent sign is a unit (see checkStep for the /100 reading)
 }
 
 // Parse a number that may be an integer, decimal, or fraction a/b. -> Number|null.
 function parseNum(s) {
-  let t = String(s).trim();
+  let t = String(s).trim().replace(/^\+(?=[\d.])/, ""); // "+3" is 3
   // Digit-grouping commas ("431,676.38") count as one number only when the
-  // WHOLE string is a grouped numeral — "1,2" stays a tuple, "12,34" is neither.
+  // WHOLE string is a grouped numeral: "1,2" stays a tuple, "12,34" is neither.
   if (/^-?\d{1,3}(?:,\d{3})+(?:\.\d+)?$/.test(t)) t = t.replace(/,/g, "");
   const frac = t.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);
   if (frac) {
@@ -46,7 +69,27 @@ function parseNum(s) {
     return d === 0 ? null : parseFloat(frac[1]) / d;
   }
   if (/^-?\d*\.?\d+$/.test(t)) return parseFloat(t);
+  // Scientific notation as calculators print it: 1.08e9, 2.5e-4.
+  if (/^-?\d*\.?\d+e[+-]?\d+$/.test(t)) return parseFloat(t);
   return null;
+}
+
+const gcdInt = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) [a, b] = [b, a % b]; return a; };
+
+// Significant figures in a plainly-written number ("0.030" -> 2, "50.27" -> 4).
+function sigFigs(s) {
+  const m = String(s).match(/^-?(\d*)\.?(\d*)$/);
+  if (!m) return 0;
+  const digits = (m[1] + m[2]).replace(/^0+/, "");
+  return digits.length;
+}
+
+// Absolute tolerance floor for comparing a value against `c`. 1e-6 for
+// ordinary magnitudes, but RELATIVE for tiny ones: a flat 1e-6 accepted "0"
+// for machine epsilon 2^-20 (~9.5e-7).
+function absFloor(c) {
+  const a = Math.abs(c);
+  return a >= 1 ? 1e-6 : Math.max(1e-12, 1e-6 * a);
 }
 
 // --- Polynomial engine ------------------------------------------------------
@@ -59,7 +102,7 @@ const pNeg = (A) => A.map((t) => ({ c: -t.c, v: t.v }));
 const pScale = (A, k) => A.map((t) => ({ c: t.c * k, v: t.v }));
 
 // Like-term merging keeps products compact. Without it term counts multiply
-// RAW — (x+1)^8 is 256 terms, and each juxtaposed factor multiplies again, so
+// RAW: (x+1)^8 is 256 terms, and each juxtaposed factor multiplies again, so
 // a ~36-character input could freeze the tab for minutes (checkStep runs
 // synchronously on every "Check" click). The caps turn pathological inputs
 // into a thrown RangeError, which the parse entry points convert to null
@@ -95,7 +138,7 @@ function asConst(A) { // numeric value if A has no variables, else null
 }
 
 // Function names must NOT be read as products of single-letter variables, or
-// "sin(4x)" would canonicalize to s*i*n*4*x and compare equal to "4sin(x)" —
+// "sin(4x)" would canonicalize to s*i*n*4*x and compare equal to "4sin(x)":
 // two different functions. When a letter run spells a known function, we bail
 // out of polynomial parsing entirely so the answer falls back to exact/accept
 // matching (symbolic trig/log is unverifiable here by design; see checkStep).
@@ -105,6 +148,8 @@ const POLY_FUNCS = new Set([
   "arcsin", "arccos", "arctan", "asin", "acos", "atan",
 ]);
 
+const GREEK = ["lambda", "theta", "alpha", "gamma", "sigma", "omega", "delta", "beta", "phi", "rho", "tau", "mu"];
+
 function tokenizePoly(s) {
   const toks = [];
   for (let i = 0; i < s.length; ) {
@@ -113,8 +158,29 @@ function tokenizePoly(s) {
     else if (/[a-z]/.test(ch)) {
       let j = i + 1; while (j < s.length && /[a-z]/.test(s[j])) j++;
       const run = s.slice(i, j);
-      if (POLY_FUNCS.has(run)) return null; // a function name — not a polynomial
-      for (let k = i; k < j; k++) toks.push({ t: "var", v: s[k] }); // each letter is a variable (xy = x*y)
+      // A function name ANYWHERE in the run ("rsin(4theta)", "2xcos") means this
+      // is not a polynomial: reading "rsin" as r*s*i*n let the angle multiplier
+      // fold into the coefficient ("4rsin(2theta)" == "8rsin(theta)").
+      for (const f of POLY_FUNCS) if (run.includes(f)) return null;
+      // Split the run into symbols: Greek names (lambda, theta, …) are one
+      // symbol each, every other letter is its own variable (xy = x*y). Four or
+      // more loose letters in a row is a WORD ("angle", "side"), not a product:
+      // "angle-angle" parsed as 0 and matched any other zero.
+      const syms = [];
+      let loose = 0;
+      for (let k = 0; k < run.length; ) {
+        const g = GREEK.find((n) => run.startsWith(n, k));
+        if (g) { syms.push(g); k += g.length; loose = 0; }
+        else { syms.push(run[k]); k++; if (++loose >= 4) return null; }
+      }
+      // A symbol immediately followed by digits is ONE subscripted symbol
+      // (v1, w3, c2): reading "v2w3" as 6vw let "0" pass for v2w3 - v3w2.
+      if (j < s.length && /[0-9]/.test(s[j])) {
+        let d = j; while (d < s.length && /[0-9]/.test(s[d])) d++;
+        syms[syms.length - 1] += s.slice(j, d);
+        j = d;
+      }
+      for (const v of syms) toks.push({ t: "var", v });
       i = j;
     }
     else if ("+-*/^()".includes(ch)) { toks.push({ t: ch }); i++; }
@@ -180,8 +246,9 @@ function parsePoly(s) {
     if (p.t === "(") { pos++; const e = parseExpr(); if (e === null) return null; return eat(")") ? e : null; }
     if (p.t === "num") { pos++; const val = parseNum(p.v); return val === null ? null : [{ c: val, v: {} }]; }
     if (p.t === "var") { pos++; return [{ c: 1, v: { [p.v]: 1 } }]; }
-    if (p.t === "-") { pos++; const b = parseBaseP(); return b === null ? null : pNeg(b); }
-    if (p.t === "+") { pos++; return parseBaseP(); }
+    // Unary minus negates the whole power: "2*-x^2" is -2x^2, not 2x^2.
+    if (p.t === "-") { pos++; const b = parseFactorP(); return b === null ? null : pNeg(b); }
+    if (p.t === "+") { pos++; return parseFactorP(); }
     return null;
   }
 
@@ -217,26 +284,6 @@ function polyCanonExpr(expr) {
   return p === null ? null : polyToString(p);
 }
 
-// Split a single rational expression P/Q into numerator and denominator
-// polynomials (a bare polynomial is P/1). Handles ONE top-level division; the
-// numerator/denominator may themselves be any polynomials (incl. a variable
-// denominator, which the plain polynomial parser rejects). Returns {num, den}
-// term arrays or null. Two rationals are then compared by cross-multiplication.
-function rationalParts(normalized) {
-  if (/[=,<>]/.test(normalized)) return null; // not a single rational expression
-  let depth = 0, slash = -1;
-  for (let i = 0; i < normalized.length; i++) {
-    const c = normalized[i];
-    if (c === "(") depth++;
-    else if (c === ")") depth--;
-    else if (c === "/" && depth === 0) { slash = i; break; }
-  }
-  const numS = slash === -1 ? normalized : normalized.slice(0, slash);
-  const denS = slash === -1 ? "1" : normalized.slice(slash + 1);
-  const num = parsePoly(numS), den = parsePoly(denS);
-  if (num === null || den === null || polyToString(den) === "0") return null;
-  return { num, den };
-}
 
 // Canonicalize a full answer: an equation (side-swap invariant, but never moving
 // terms across "=") or a bare expression.
@@ -244,10 +291,13 @@ function canonEquation(normalized) {
   if (isWord(normalized)) return null;
   if (normalized.includes("=")) {
     const parts = normalized.split("=");
-    if (parts.length !== 2) return null;
-    const a = polyCanonExpr(parts[0]);
-    const b = polyCanonExpr(parts[1]);
+    if (parts.length !== 2 || parts.some((p) => p === "")) return null;
+    // A side the polynomial engine can't read (it holds sin/cos/ln) is kept
+    // verbatim, so "2rcos(theta) = r^2" still side-swaps to "r^2 = 2rcos(theta)".
+    const side = (p) => { const k = polyCanonExpr(p); return k !== null ? k : isWord(p) ? null : `~${p}`; };
+    const a = side(parts[0]), b = side(parts[1]);
     if (a === null || b === null) return null;
+    if (a.startsWith("~") && b.startsWith("~")) return null; // nothing algebraic to compare
     return [a, b].sort().join("="); // sort sides => swap-invariant
   }
   return polyCanonExpr(normalized);
@@ -266,15 +316,36 @@ function parseTuple(normalized) {
   const bare = [];
   let anyNamed = false;
   for (const p of parts) {
-    const m = p.match(/^([a-z])=(.+)$/);
-    if (m) { anyNamed = true; const n = parseNum(m[2]); if (n === null) return null; named[m[1]] = n; }
-    else { const n = parseNum(p); if (n === null) return null; bare.push(n); }
+    // Named components: x=4, c1=-3 (subscripted names sort c1 < c2).
+    const m = p.match(/^([a-z][0-9]*)=(.+)$/);
+    if (m) { anyNamed = true; const n = parseNum(m[2]); if (n === null) return null; named[m[1]] = { n, raw: m[2] }; }
+    else { const n = parseNum(p); if (n === null) return null; bare.push({ n, raw: p }); }
   }
+  let comps;
   if (anyNamed) {
     if (bare.length > 0) return null; // mixed named/bare is ambiguous
-    return Object.keys(named).sort().map((k) => named[k]);
-  }
-  return bare;
+    comps = Object.keys(named).sort().map((k) => named[k]);
+  } else comps = bare;
+  const out = comps.map((c) => c.n);
+  out.raw = comps.map((c) => c.raw); // as written, for rounding-grain tolerance
+  return out;
+}
+
+// Do a learner value `u` (written as uRaw) and an expected value `c` (written
+// as cRaw) agree? Tolerance is the larger of:
+//   - a magnitude-aware floor (absFloor),
+//   - the rounding grain of the EXPECTED value when it is a plain decimal
+//     ("7.25" -> ±0.005, so more precise learner input passes),
+//   - the learner's own rounding grain, but only when the expected value is an
+//     exact form (1/3, 16pi) AND the learner wrote at least 2 significant
+//     figures: "0.33" for 1/3 passes, "0.0" for 1/36 or "0.7" for 2/3 do not,
+//   - a 1e-12 relative slack for float noise (NOT 1e-9: that accepted
+//     1080000001 for 1080000000).
+function valuesAgree(u, c, uRaw, cRaw) {
+  const cIsPlain = /^-?\d*\.?\d+$/.test(String(cRaw));
+  const learnerGrain = !cIsPlain && sigFigs(uRaw) >= 2 ? decimalTol(uRaw) : 0;
+  const tol = Math.max(absFloor(c), decimalTol(cRaw), learnerGrain, 1e-12 * Math.abs(c));
+  return Math.abs(u - c) <= tol;
 }
 
 // Canonicalize a linear/polynomial inequality so direction-flips compare equal:
@@ -282,44 +353,75 @@ function parseTuple(normalized) {
 // We move everything to one side (L - R), then pick a sign-canonical form so the
 // representation is unique regardless of which side the variable sat on.
 function canonInequality(normalized) {
-  const m = normalized.match(/^(.*?)(<=|>=|<|>)(.*)$/);
-  if (!m) return null;
-  const [, L, op, R] = m;
-  const lp = parsePoly(L), rp = parsePoly(R);
-  if (!lp || !rp) return null;
-  const E = lp.concat(pNeg(rp));            // L - R
-  const sE = polyToString(E), sEn = polyToString(pNeg(E));
-  const strict = op === "<" || op === ">";
-  // ">" / ">=" mean E > 0; "<" / "<=" mean E < 0. Keep a sign label, flip on negate.
-  let positive = op === ">" || op === ">=";
-  let str = sE;
-  if (sEn < sE) { str = sEn; positive = !positive; } // negate E -> flip direction
-  return `${str}|${positive ? "gt" : "lt"}|${strict ? "s" : "n"}`;
+  // Each SIDE is canonicalized on its own: terms are never moved across the
+  // inequality sign. (Canonicalizing L − R made "x + 1 >= 4" and even the
+  // un-solved prompt "x + 4 >= 7" equal to the answer "x >= 3".) Only the
+  // direction flip is normalized: "x > 3" == "3 < x", and a compound chain
+  // "-10 < 2x < 8" == "8 > 2x > -10". Strictness (< vs <=) must match.
+  const parts = normalized.split(/(<=|>=|<|>)/);
+  if (parts.length < 3 || parts.length % 2 === 0) return null;
+  const sides = [], ops = [];
+  for (let k = 0; k < parts.length; k++) {
+    if (k % 2 === 1) { ops.push(parts[k]); continue; }
+    const c = polyCanonExpr(parts[k]);
+    if (c === null) return null;
+    sides.push(c);
+  }
+  const flip = { "<": ">", ">": "<", "<=": ">=", ">=": "<=" };
+  const fwd = sides.map((sd, k) => (k < ops.length ? `${sd}${ops[k]}` : sd)).join("");
+  const rs = [...sides].reverse(), rops = [...ops].reverse().map((o) => flip[o]);
+  const rev = rs.map((sd, k) => (k < rops.length ? `${sd}${rops[k]}` : sd)).join("");
+  return fwd < rev ? fwd : rev;
 }
 
 // Parse an UNORDERED solution set: "x=2 or x=-3", "2, -3", "{2,-3}", "x=4"
 // (a single/double root). Returns a numerically-sorted array, or null.
 function parseSolutionSet(normalized) {
-  let s = normalized.replace(/[{}()[\]]/g, "").replace(/or/g, ",");
+  // Separators: commas, "or", "and" ("6 and -6").
+  let s = normalized.replace(/[{}()[\]]/g, "").replace(/or|and/g, ",");
   const parts = s.split(",").filter((p) => p !== "");
   if (parts.length === 0) return null;
   const nums = [];
   for (let p of parts) {
-    p = p.replace(/^[a-z]+=/, ""); // strip "x=", "r=", "lambda=", etc.
+    p = p.replace(/^[a-z]+[0-9]*=/, ""); // strip "x=", "r=", "lambda=", etc.
+    // "±6" / "x=±6" is the pair {6, -6}.
+    if (p.startsWith("±")) {
+      const n = parseNum(p.slice(1));
+      if (n === null) return null;
+      nums.push({ v: n, raw: p.slice(1) }, { v: -n, raw: "-" + p.slice(1) });
+      continue;
+    }
     const n = parseNum(p);
     if (n === null) return null;
-    nums.push(n);
+    nums.push({ v: n, raw: p });
   }
-  return nums.sort((a, b) => a - b);
+  // A solution SET: a double root is one solution. Generators that draw
+  // r1 === r2 emit "x = -4 or x = -4"; the learner's "x = -4" / "-4" is the
+  // correct set and must match (it used to fail on the length check).
+  nums.sort((a, b) => a.v - b.v);
+  return nums.filter((x, i) => i === 0 || Math.abs(x.v - nums[i - 1].v) > 1e-9);
 }
+
+const UNIT_SUFFIX_RE = /(?<=[\d.])(?:cm|mm|km|m|in|ft|yd|mi|kg|g|mg|lb|lbs|oz|ml|l|sec|seconds?|s|min|minutes?|hrs?|hours?|h|days?|weeks?|months?|years?|yrs?|units?|dollars?|cents?|mph|kph|cells|people|cars|items?|sq(?:uare)?(?:cm|m|ft|in|units?))(?:\^?[23]|²|³)?$/;
 
 // Pull a single number (and any leading variable name) out of answers like
 // "x = 7", "7", "x=-3.5", "1/2". Returns { n, v } where v is the variable letter
 // group if one was written (else null), so callers can require variables to
-// agree — "y=7" must not satisfy a step whose answer is "x=7".
-function extractNumber(s) {
-  const t = normalize(s);
-  const m = t.match(/^([a-z]+=)?(.+)$/); // optional "x=", "lambda=", etc.
+// agree: "y=7" must not satisfy a step whose answer is "x=7".
+function extractNumber(s, learnerInput = false) {
+  let t = normalize(s);
+  // "1x = 5" is "x = 5" (a unit coefficient generators used to print), and a
+  // bare number in parentheses is just that number: "(-5)/12".
+  t = t.replace(/^1([a-z]+[0-9]*=)/, "$1").replace(/=1([a-z]+[0-9]*)$/, "=$1")
+    .replace(/\((-?\d*\.?\d+)\)/g, "$1");
+  // A unit after a number is a label, not part of the value: "12 cm", "0kg",
+  // "3.5 hours", "40 m^2". (Only a closed list, since "5x" must stay an expression,
+  // and only for LEARNER input: an answer "5s" may be a Laplace-domain term.)
+  if (learnerInput) t = t.replace(UNIT_SUFFIX_RE, "");
+  // "7 = x" is the same statement as "x = 7".
+  const swapped = t.match(/^([^=]+)=([a-z]+[0-9]*)$/);
+  if (swapped && parseNum(swapped[1]) !== null) return { n: parseNum(swapped[1]), v: swapped[2] };
+  const m = t.match(/^([a-z]+[0-9]*=)?(.+)$/); // optional "x=", "lambda=", "c1=", etc.
   if (!m) return null;
   const n = parseNum(m[2]);
   if (n === null) return null;
@@ -331,6 +433,14 @@ function extractNumber(s) {
 // expression contains a free variable or can't be evaluated. This lets exact
 // forms compare by value: "5sqrt2" == "sqrt(50)" == "7.0710678", "16pi" == "50.27".
 function evalNumeric(normalized) {
+  return evalExpr(normalized, null);
+}
+
+// Tokenize an arithmetic expression for evaluation. Letter runs become pi, e,
+// sqrt, or (when `allowVars`) variable symbols split the same way the
+// polynomial engine splits them (Greek names whole, other letters singly,
+// trailing digits as a subscript). Returns tokens or null.
+function exprTokens(normalized, allowVars) {
   const toks = [];
   for (let i = 0; i < normalized.length; ) {
     const ch = normalized[i];
@@ -341,12 +451,35 @@ function evalNumeric(normalized) {
       if (w === "pi") toks.push({ t: "const", v: Math.PI });
       else if (w === "e") toks.push({ t: "const", v: Math.E });
       else if (w === "sqrt") toks.push({ t: "sqrt" });
-      else return null; // a free variable (or unsupported function)
+      else {
+        if (!allowVars) return null; // a free variable (or unsupported function)
+        for (const f of POLY_FUNCS) if (w.includes(f)) return null;
+        const syms = [];
+        let loose = 0;
+        for (let k = 0; k < w.length; ) {
+          const g = GREEK.find((n) => w.startsWith(n, k));
+          if (g) { syms.push(g); k += g.length; loose = 0; }
+          else { syms.push(w[k]); k++; if (++loose >= 4) return null; }
+        }
+        if (j < normalized.length && /[0-9]/.test(normalized[j])) {
+          let d = j; while (d < normalized.length && /[0-9]/.test(normalized[d])) d++;
+          syms[syms.length - 1] += normalized.slice(j, d);
+          j = d;
+        }
+        for (const v of syms) toks.push({ t: "var", v });
+      }
       i = j;
     } else if ("+-*/^()".includes(ch)) { toks.push({ t: ch }); i++; }
     else return null;
   }
-  if (toks.length === 0) return null;
+  return toks.length ? toks : null;
+}
+
+// Evaluate an expression with operator precedence. `env` maps variable
+// symbols to numbers (null = constants only). Returns a finite Number or null.
+function evalExpr(normalized, env) {
+  const toks = exprTokens(normalized, env !== null);
+  if (!toks) return null;
   let pos = 0;
   const peek = () => toks[pos];
   function expr() {
@@ -366,7 +499,7 @@ function evalNumeric(normalized) {
       const p = peek();
       if (p.t === "*") { pos++; const f = factor(); if (f === null) return null; acc *= f; }
       else if (p.t === "/") { pos++; const f = factor(); if (f === null || f === 0) return null; acc /= f; }
-      else if (p.t === "num" || p.t === "const" || p.t === "(" || p.t === "sqrt") { const f = factor(); if (f === null) return null; acc *= f; }
+      else if (p.t === "num" || p.t === "const" || p.t === "(" || p.t === "sqrt" || p.t === "var") { const f = factor(); if (f === null) return null; acc *= f; }
       else break;
     }
     return acc;
@@ -382,12 +515,44 @@ function evalNumeric(normalized) {
     if (p.t === "(") { pos++; const e = expr(); if (e === null || !peek() || peek().t !== ")") return null; pos++; return e; }
     if (p.t === "num") { pos++; return parseNum(p.v); }
     if (p.t === "const") { pos++; return p.v; }
-    if (p.t === "-") { pos++; const b = base(); return b === null ? null : -b; }
-    if (p.t === "+") { pos++; return base(); }
+    if (p.t === "var") { pos++; return env && Object.prototype.hasOwnProperty.call(env, p.v) ? env[p.v] : null; }
+    // A unary minus negates the whole power: "3*-2^2" is 3*(-(2^2)) = -12, not 12.
+    if (p.t === "-") { pos++; const b = factor(); return b === null ? null : -b; }
+    if (p.t === "+") { pos++; return factor(); }
     return null;
   }
   const r = expr();
   return r !== null && pos === toks.length && isFinite(r) ? r : null;
+}
+
+// Symbols (variables) an expression uses, or null if it can't be tokenized.
+function exprSymbols(normalized) {
+  const toks = exprTokens(normalized, true);
+  return toks ? new Set(toks.filter((t) => t.t === "var").map((t) => t.v)) : null;
+}
+
+// Are two expressions in the SAME variables identical as functions? Evaluated
+// at fixed, deliberately "unround" sample points (deterministic, so grading is
+// reproducible), skipping points where either side is undefined (a removable
+// hole like (x^2-1)/(x-1) at x = 1 never lands on one). This replaces
+// cross-multiplying a single top-level "/" split, which ignored precedence:
+// "1/4 * 2" was read as 1/(4*2), so the wrong answer 1/8 matched.
+const SAMPLE_PTS = [1.3719, 2.9137, 0.5311, 3.2903, 1.8357, 2.4473, 0.7741];
+function sameFunction(u, c) {
+  const su = exprSymbols(u), sc = exprSymbols(c);
+  if (!su || !sc || su.size === 0 || su.size > 4) return false;
+  if (su.size !== sc.size || [...su].some((v) => !sc.has(v))) return false;
+  const vars = [...su];
+  let compared = 0;
+  for (let k = 0; k < SAMPLE_PTS.length; k++) {
+    const env = {};
+    vars.forEach((v, i) => { env[v] = SAMPLE_PTS[(k + 3 * i) % SAMPLE_PTS.length] + 0.113 * i; });
+    const a = evalExpr(u, env), b = evalExpr(c, env);
+    if (a === null || b === null) continue;
+    if (Math.abs(a - b) > 1e-9 * Math.max(1, Math.abs(a), Math.abs(b))) return false;
+    compared++;
+  }
+  return compared >= 3;
 }
 
 // Is the input written as a product of factors (not an expanded sum)? Used to
@@ -417,7 +582,7 @@ function isFactoredForm(normalized) {
     else if (ch === ")") depth--;
     else if ((ch === "+" || ch === "-") && depth === 0 && i !== 0) return false;
   }
-  // Product shape confirmed — now reject "factorizations" that are really the
+  // Product shape confirmed: now reject "factorizations" that are really the
   // whole expression scaled by ±1, e.g. "1(x^2-5x+6)", "(1)(x^2-5x+6)", or
   // "(x^2-5x+6)*1": peeling off a unit coefficient is not factoring. Walk the
   // top-level factor units and demand either two non-constant factors or one
@@ -462,20 +627,211 @@ function isFactoredForm(normalized) {
   return s.split("=").some(sideIsFactored);
 }
 
+// Top-level factor units of one side of a product ("2x(3x+4)^2" -> 2x, (3x+4)^2)
+// as [{ unit, exp }], or null if the side is not a plain product.
+function factorUnits(side) {
+  const out = [];
+  let i = 0;
+  if (side[0] === "+" || side[0] === "-") i = 1;
+  while (i < side.length) {
+    if (side[i] === "*") { i++; continue; }
+    let unit;
+    if (side[i] === "(") {
+      let d = 0, j = i;
+      do { if (side[j] === "(") d++; else if (side[j] === ")") d--; j++; } while (j < side.length && d > 0);
+      if (d !== 0) return null;
+      unit = side.slice(i + 1, j - 1); i = j;
+    } else {
+      let j = i;
+      while (j < side.length && /[a-z0-9.]/.test(side[j])) j++;
+      if (j === i) return null;
+      unit = side.slice(i, j); i = j;
+    }
+    let exp = 1;
+    if (side[i] === "^") {
+      let j = i + 1;
+      if (side[j] === "(") { while (j < side.length && side[j] !== ")") j++; j++; }
+      else while (j < side.length && /[0-9]/.test(side[j])) j++;
+      exp = Number(side.slice(i + 1, j).replace(/[()]/g, ""));
+      if (!Number.isInteger(exp) || exp < 1) return null;
+      i = j;
+    }
+    out.push({ unit, exp });
+  }
+  return out;
+}
+
+// Multi-term factors of a factored side, with multiplicity, each flagged
+// primitive (integer content 1 and no variable common to every term).
+function multiTermFactors(side) {
+  const units = factorUnits(side);
+  if (!units) return null;
+  const res = [];
+  for (const { unit, exp } of units) {
+    const p = parsePoly(unit);
+    if (!p) return null;
+    const terms = pCompact(p).filter((t) => Math.abs(t.c) > 1e-9);
+    if (terms.length < 2) continue; // a constant or monomial factor
+    let primitive = true;
+    if (terms.every((t) => Number.isInteger(t.c))) {
+      if (terms.reduce((g, t) => gcdInt(g, t.c), 0) > 1) primitive = false;
+    }
+    const vars = new Set(terms.flatMap((t) => Object.keys(t.v).filter((k) => t.v[k] > 0)));
+    for (const v of vars) if (terms.every((t) => (t.v[v] || 0) > 0)) primitive = false;
+    for (let k = 0; k < exp; k++) res.push(primitive);
+  }
+  return res;
+}
+
+// "Factor completely": the learner must have at least as many multi-term
+// factors as the answer, and, when the answer's factors are all primitive, 
+// no learner factor may still hide a common factor. Catches "x(6x+8)" and
+// "2(3x^2+4x)" for 2x(3x+4), and "(6x-9)(2x+3)" for 3(2x-3)(2x+3).
+function factoredAsCompletely(u, answer) {
+  const a = normalize(answer);
+  const sideOf = (s) => s.split("=").find((sd) => /[a-z]/.test(sd) && sd.includes("("));
+  const as = sideOf(a), us = sideOf(u);
+  if (!as || !us) return true;
+  const af = multiTermFactors(as), uf = multiTermFactors(us);
+  if (!af || !uf) return true; // can't judge: leave it to equivalence
+  if (uf.length < af.length) return false;
+  if (af.every(Boolean) && !uf.every(Boolean)) return false;
+  return true;
+}
+
 // Half-a-unit-in-the-last-place tolerance for a plainly-written decimal (e.g.
 // "50.27" -> 0.005). Returns 0 for non-decimal inputs (integers, expressions),
-// which keeps exact answers exact — "7" must not match 7.07.
+// which keeps exact answers exact: "7" must not match 7.07.
 function decimalTol(s) {
   const m = String(s).match(/^-?\d+\.(\d+)$/);
   return m ? 0.5 * Math.pow(10, -m[1].length) : 0;
 }
 
+// --- Has the learner actually done the step? --------------------------------
+// The equivalence engine evaluates and expands everything, so on its own it
+// accepts the problem typed back ("7*8" for 56, "(x^2)^3" for x^6, the
+// un-simplified previous line of a proof). These gates refuse input that is
+// structurally MORE complex than the expected answer.
+
+// Split one side at its top-level binary + / - into additive terms.
+function topTerms(side) {
+  const terms = [];
+  let depth = 0, start = 0;
+  for (let i = 0; i < side.length; i++) {
+    const ch = side[i];
+    if (ch === "(") depth++;
+    else if (ch === ")") depth--;
+    else if ((ch === "+" || ch === "-") && depth === 0 && i > 0 && !"+-*/^(".includes(side[i - 1])) {
+      terms.push(side.slice(start, i)); start = i;
+    }
+  }
+  terms.push(side.slice(start));
+  return terms.filter((t) => t !== "" && t !== "+" && t !== "-");
+}
+
+// Does one side show work left undone? Like terms not combined (8x - 5x,
+// "+12 - 12"), or a variable repeated inside a single product (x^5*x^2).
+function sideUnsimplified(side) {
+  const keys = new Set();
+  for (const term of topTerms(side)) {
+    if (term.includes("(")) continue; // grouped terms are judged by the grouping rules
+    const toks = tokenizePoly(term.replace(/^[+-]/, ""));
+    if (!toks) return false;
+    const seen = new Set();
+    for (const tk of toks) {
+      if (tk.t !== "var") continue;
+      if (seen.has(tk.v)) return true;
+      seen.add(tk.v);
+    }
+    const p = parsePoly(term);
+    if (!p) return false;
+    const live = pCompact(p).filter((t) => Math.abs(t.c) > 1e-9);
+    if (live.length !== 1) continue;
+    const k = monoKey(live[0].v);
+    if (keys.has(k)) return true;
+    keys.add(k);
+  }
+  return false;
+}
+
+// Steps that ask the learner to WRITE/SET UP something accept any faithful
+// transcription ("x + x + 6 = 34"); only steps that ask for work to be done
+// are held to the answer's simplification level.
+const SETUP_STEP_RE = /^\s*(write|set up|translate|express|form|state)\b|\b(write|set up) (an?|the) (equation|expression|integrand|sum|product|inequality)/i;
+// Steps whose whole point is removing grouping / powers of groups.
+const UNGROUP_STEP_RE = /simplif|expand|distribut|multiply out|clear|remove the paren|combine|foil|exponent/i;
+
+// Is the learner's (equivalent) input an unworked restatement of the answer?
+//  - like terms left uncombined / a variable repeated inside one product
+//    (8x - 3 - 5x + 11 for 3x + 8; 3x + 12 - 12 for 3x; x^5*x^2 for x^7),
+//    unless the expected answer is itself such a setup form;
+//  - on simplify/expand/distribute steps, grouping the answer doesn't have
+//    (2(x+7)=40 for 2x+14=40; (x^2)^3 for x^6). Elsewhere a factored form of
+//    an expanded answer (5(x+6) for 5x+30) is a fine answer.
+function looksUnworked(u, c, instruction) {
+  if (SETUP_STEP_RE.test(instruction || "")) return false;
+  // Parens around a bare number or a sum-free product aren't grouping:
+  // "x^(2)", "3(x) + 3(4)", "(2x)+1". (Kept when raised to a power.)
+  const strip = (s) => s.replace(/\((-?[^()+\-]*)\)(?!\^)/g, "$1");
+  const us = strip(u), cs = strip(c);
+  const sides = (s) => s.split(/<=|>=|=|<|>/).filter((x) => x !== "");
+  const candSetup = sides(cs.replace(/[()]/g, "")).some(sideUnsimplified);
+  if (!candSetup && sides(us).some(sideUnsimplified)) return true;
+  if (UNGROUP_STEP_RE.test(instruction || "")) {
+    if (us.includes("(") && !cs.includes("(")) return true;
+    if (/\)\^/.test(us) && !/\)\^/.test(cs)) return true;
+  }
+  return false;
+}
+
+// Exact numeric forms a learner may legitimately give for a decimal answer:
+// 16pi for 50.27, 5sqrt2 for 7.07, e^2, 1.08*10^9.
+const EXACT_FORM_RE = /pi|sqrt|(?<![a-z])e(?![a-z])|\*10\^-?\d+$/;
+
+// Plain-language hypothesis-test decisions. "reject" / "fail to reject" are the
+// stored answers; learners naturally add "the null (hypothesis)" / "H0".
+function decisionWord(u) {
+  const m = u.match(/^(donot|dont|don't|failto|fail|doesnot)?reject(the)?(null(hypothesis)?|h0|ho|nullh0)?$/);
+  if (!m) return null;
+  return m[1] ? "failtoreject" : "reject";
+}
+
 // Compare a learner's answer to a step. Returns true if acceptable.
 export function checkStep(step, userAnswer) {
+  if (checkStepCore(step, userAnswer)) return true;
+  // "y = 2x + 1" and "2x + 1" name the same function. Accept the bare right
+  // side for a "y = …" answer, and a "y = …" / "f(x) = …" learner answer for a
+  // bare-expression answer.
+  const u = normalize(userAnswer);
+  const FN_LHS = /^(y|f\(x\)|g\(x\)|h\(x\)|p\(x\))=(.+)$/;
+  if (step.form !== "solutions") {
+    const lm = u.match(FN_LHS);
+    const cands = [step.answer, ...(step.accept || [])].map(normalize);
+    if (lm && cands.some((c) => !c.includes("=")) && checkStepCore(step, lm[2])) return true;
+    if (!u.includes("=")) {
+      for (const c of cands) {
+        const cm = c.match(FN_LHS);
+        if (cm && checkStepCore({ ...step, answer: cm[2], accept: [] }, userAnswer)) return true;
+      }
+    }
+  }
+  // "5.21%" may mean 5.21 (a percent-valued answer, handled by normalize,
+  // which drops the sign) OR the proportion 0.0521. Try the latter too.
+  const pct = String(userAnswer).trim().match(/^(.*?)\s*\\?%$/);
+  if (pct) {
+    const n = extractNumber(pct[1]);
+    if (n && !n.v) return checkStepCore(step, String(Math.round((n.n / 100) * 1e12) / 1e12));
+  }
+  return false;
+}
+
+function checkStepCore(step, userAnswer) {
   const u = normalize(userAnswer);
   if (u === "") return false;
-  // Factored-form steps must actually be factored, not the expanded equivalent.
+  // Factored-form steps must actually be factored, and as completely as the
+  // answer (not "x(6x+8)" for 2x(3x+4)).
   if (step.form === "factored" && !isFactoredForm(u)) return false;
+  if (step.form === "factored" && !factoredAsCompletely(u, step.answer)) return false;
 
   const candidates = [step.answer, ...(step.accept || [])];
 
@@ -486,50 +842,52 @@ export function checkStep(step, userAnswer) {
       if (normalize(cand) === u) return true;
       const cSet = parseSolutionSet(normalize(cand));
       if (uSet && cSet && uSet.length === cSet.length &&
-          uSet.every((v, i) => Math.abs(v - cSet[i]) < 1e-6)) return true;
+          uSet.every((x, i) => valuesAgree(x.v, cSet[i].v, x.raw, cSet[i].raw))) return true;
     }
     return false;
   }
 
   const uCanon = canonEquation(u);
   const uTuple = parseTuple(u);
-  const uNum = extractNumber(userAnswer);
+  const uNum = extractNumber(userAnswer, true);
   const uIneq = canonInequality(u);
   const uVal = evalNumeric(u);
-  const uRat = rationalParts(u);
+  const uRhs = u.replace(/^[a-z]+[0-9]*=/, "").replace(/=[a-z]+[0-9]*$/, "");
+  // A numeric learner answer is "plain" (a numeral, fraction or x = numeral)
+  // or an exact form (16pi); anything else is unworked arithmetic.
+  const uPlain = uNum !== null;
+  const uExactForm = EXACT_FORM_RE.test(u);
+  // "Lowest terms" steps: an unreduced fraction (3/9 for 1/3) is not done.
+  const fr = uRhs.match(/^(-?\d+)\/(-?\d+)$/);
+  const unreduced = !!fr && /lowest terms|simplest form|simplif|reduce/i.test(step.instruction || "") &&
+    gcdInt(Number(fr[1]), Number(fr[2])) > 1;
 
   for (const cand of candidates) {
     const c = normalize(cand);
-    if (c === u) return true;                                 // exact (normalized)
+    if (c === u) return true;                                 // exact (normalized): always honored
+    if (unreduced) continue;
+    const dw = decisionWord(u);
+    if (dw !== null && (c === "reject" || c === "failtoreject")) { if (dw === c) return true; continue; }
+    const cNum = extractNumber(cand);
+    // Numeric answer, non-numeral input: "7*8", "4+1", "(8+12+16)/3"; the
+    // learner restated the arithmetic instead of doing it.
+    if (cNum !== null && !uPlain && !uExactForm) continue;
+    const unworked = cNum === null && looksUnworked(u, c, step.instruction);
     const cCanon = canonEquation(c);
-    if (uCanon !== null && cCanon !== null && uCanon === cCanon) return true; // structural / algebraic
-    if (uIneq !== null && canonInequality(c) === uIneq) return true;          // inequality (direction-aware)
+    if (!unworked && uCanon !== null && cCanon !== null && uCanon === cCanon) return true; // structural / algebraic
+    if (!unworked && uIneq !== null && canonInequality(c) === uIneq) return true;          // inequality (direction-aware)
     const cTuple = parseTuple(c);
     if (uTuple && cTuple && uTuple.length === cTuple.length &&
-        uTuple.every((v, i) => Math.abs(v - cTuple[i]) < 1e-6)) return true;
-    const cNum = extractNumber(cand);
-    // Numbers must be equal AND, if BOTH sides name a variable, name the same one
+        uTuple.every((v, i) => valuesAgree(v, cTuple[i], uTuple.raw[i], cTuple.raw[i]))) return true;
+    // Numbers must agree AND, if BOTH sides name a variable, name the same one
     // (so "y=7" doesn't satisfy a step whose answer is "x=7").
-    if (uNum !== null && cNum !== null && Math.abs(uNum.n - cNum.n) < 1e-6 &&
+    if (uNum !== null && cNum !== null &&
+        valuesAgree(uNum.n, cNum.n, uRhs, c.replace(/^[a-z]+[0-9]*=/, "")) &&
         (!uNum.v || !cNum.v || uNum.v === cNum.v)) return true;
     const cVal = evalNumeric(c);                                              // radical / pi / e value
-    // Tolerance widens to the rounding grain of a plainly-written decimal — but
-    // the learner's OWN coarseness only counts when the expected answer is an
-    // exact form (16pi, 5sqrt2, 1/3): "50.27" still matches 16pi, yet "7.3" can
-    // no longer satisfy an answer authored to 2 decimals as "7.25".
-    if (uVal !== null && cVal !== null) {
-      const cIsPlain = /^-?\d*\.?\d+$/.test(c);
-      const tol = Math.max(1e-6, decimalTol(c), cIsPlain ? 0 : decimalTol(u), 1e-9 * Math.abs(cVal));
-      if (Math.abs(uVal - cVal) <= tol) return true;
-    }
-    // Rational-expression equality via cross-multiplication (only when a fraction
-    // is involved; bare polynomials are already handled by the canon path above).
-    if (uRat && (u.includes("/") || c.includes("/"))) {
-      const cRat = rationalParts(c);
-      try {
-        if (cRat && polyToString(pMul(uRat.num, cRat.den)) === polyToString(pMul(cRat.num, uRat.den))) return true;
-      } catch { /* term-count blowup — treat as not equal */ }
-    }
+    if (uVal !== null && cVal !== null && valuesAgree(uVal, cVal, u, c)) return true;
+    // Rational expressions (a fraction on either side): identical as functions?
+    if (!unworked && (u.includes("/") || c.includes("/")) && sameFunction(u, c)) return true;
   }
   return false;
 }
@@ -545,7 +903,7 @@ export class ProblemSource {
     this.lastId = null;
     this.lastPrompt = null;
     // Randomize the per-session seed base so two sessions (or reloads) that walk
-    // the same difficulty path don't replay the identical "random" sequence —
+    // the same difficulty path don't replay the identical "random" sequence:
     // and a problem missed earlier isn't re-served as the fresh prove-it problem.
     // Falls back to a content-derived base if Math.random is somehow unavailable.
     this.seedBase = (Math.floor(Math.random() * 0x7fffffff) || (topic.id || "t").length * 7919 + 13);

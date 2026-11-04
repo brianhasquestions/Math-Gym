@@ -1,0 +1,388 @@
+{
+  "id": "cryptography.aes-modes",
+  "subject": "cryptography",
+  "title": "AES Modes of Operation: ECB to GCM",
+  "prerequisites": ["cryptography.aes-finite-fields"],
+  "estimatedMinutes": 60,
+  "keyConcepts": [
+    {
+      "id": "ecb-cbc",
+      "label": "ECB and CBC: codebook vs chaining",
+      "microLesson": "ECB encrypts each block on its own, $C_i = E(P_i)$, so equal plaintext blocks give equal ciphertext blocks and patterns survive (the ECB penguin). CBC chains: $C_i = E(P_i \\oplus C_{i-1})$ with $C_0 = IV$, and decryption is $P_i = D(C_i) \\oplus C_{i-1}$. The IV must be unpredictable. CBC encryption is sequential (each block waits for the previous ciphertext) but decryption is parallel, and both ECB and CBC need padding to whole blocks. Neither authenticates."
+    },
+    {
+      "id": "stream-modes",
+      "label": "CTR, OFB, CFB: block cipher as stream cipher",
+      "microLesson": "Stream modes never encrypt the message directly; they make a keystream and XOR it on. CTR: $S_i = E(\\text{nonce} \\| i)$, $C_i = P_i \\oplus S_i$, fully parallel. OFB: $O_i = E(O_{i-1})$ with $O_0 = IV$, sequential. CFB: $C_i = P_i \\oplus E(C_{i-1})$, sequential to encrypt, parallel to decrypt. All three use only the forward cipher $E$ and need no padding. A repeated nonce or IV in CTR or OFB reuses keystream, which is the two-time pad."
+    },
+    {
+      "id": "mode-properties",
+      "label": "IVs, parallelism, padding and error propagation",
+      "microLesson": "For any mode, track: what the IV or nonce must be (ECB none, CBC and CFB unpredictable, OFB and CTR unique, GCM a unique 96-bit nonce), whether encryption and decryption parallelize, whether padding is needed (only ECB and CBC; PKCS#7 adds $k$ bytes of value $k$, $1 \\le k \\le 16$), and what one flipped ciphertext bit does. In CTR and OFB it flips the same plaintext bit; in CBC it garbles $P_i$ and flips that bit of $P_{i+1}$; in CFB it flips that bit of $P_i$ and garbles $P_{i+1}$; in ECB it garbles only $P_i$."
+    },
+    {
+      "id": "malleability",
+      "label": "Malleability and the CBC padding oracle",
+      "microLesson": "Without authentication, ciphertext is malleable. In CTR, XORing $\\Delta$ into $C$ XORs $\\Delta$ into $P$; in CBC, XORing $\\Delta$ into $C_{i-1}$ changes $P_i$ by $\\Delta$ and garbles $P_{i-1}$. A padding oracle turns this into full decryption: change the last byte of $C_{n-1}$ to guesses $g$ until the padding is valid; then the intermediate byte is $I = g \\oplus 1$ and the plaintext byte is $I \\oplus$ (original byte). That is at most $256$ queries per byte, $4096$ per 16-byte block. The fix is AEAD or encrypt-then-MAC, verified before decryption."
+    },
+    {
+      "id": "gcm-forbidden",
+      "label": "GCM tags and the forbidden attack",
+      "microLesson": "GCM encrypts in CTR mode and authenticates with GHASH, a polynomial in the secret hash key $H = E(0^{128})$ whose coefficients are the ciphertext blocks, masked by $S = E(J_0)$ from the nonce. If a nonce repeats, $S$ cancels when you subtract the two tags, leaving an equation in $H$ alone. In the toy version over $\\mathbb{Z}_p$ with $T = c_1 H^2 + c_2 H + S$, two messages differing only in $c_2$ give $H = (T_1 - T_2)(c_2 - c_2')^{-1} \\bmod p$; with $H$ and $S$ the attacker can forge tags without the AES key."
+    },
+    {
+      "id": "choosing-a-mode",
+      "label": "Choosing a mode: GCM, CCM, SIV, XTS",
+      "microLesson": "Only modes that output a tag authenticate: GCM (fast, parallel, unique 96-bit nonces), CCM (CBC-MAC plus CTR, used by WPA2 and Bluetooth LE), and SIV / GCM-SIV (nonce-misuse resistant: a repeated nonce only reveals whether the same message was sent twice). XTS is for disk sectors: same size in and out, tweaked by sector number, but no authentication. ECB, CBC, CFB, OFB and CTR need an external MAC. Random-nonce GCM is capped at $2^{32}$ messages per key."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## A block cipher is only half a cipher\n\nAES is a **keyed permutation on 128-bit blocks**: give it a 16-byte block and a key and it returns another 16-byte block, and $D_K$ undoes $E_K$. That is all. It says nothing about a 3-byte message, a 4 GB video, or how to tell whether someone tampered with the ciphertext. A **mode of operation** is the recipe that turns the block permutation into a cipher for real messages, and almost every famous \"AES break\" is really a mode break.\n\nNotation for this lesson: $P_i$ and $C_i$ are the $i$-th plaintext and ciphertext blocks, $E$ and $D$ are AES encryption and decryption under the key, $\\oplus$ is XOR, and the **IV** or **nonce** is the extra per-message value a mode needs. For every mode, ask five questions:\n\n1. What must the IV or nonce be: absent, unique, or unpredictable?\n2. Can encryption and decryption run in parallel?\n3. Does the message need padding to a whole number of blocks?\n4. If one ciphertext bit flips, what happens to the plaintext?\n5. Does the mode **authenticate**, that is, detect tampering?\n\nThe practice problems use a **toy cipher** on 4-bit blocks, $E(x) = (ax + b) \\bmod 16$ with $a$ odd. It is hopelessly insecure, but it is a permutation, so the plumbing of every mode behaves exactly as it does with AES.\n\n## ECB: the codebook\n\n**Electronic Codebook** encrypts each block on its own: $C_i = E(P_i)$.\n\n```plot\n{\"type\":\"graph\",\"width\":420,\"height\":220,\"nodeRadius\":16,\"nodes\":[{\"id\":\"P1\",\"x\":0,\"y\":2},{\"id\":\"E1\",\"label\":\"E\",\"x\":0,\"y\":1},{\"id\":\"C1\",\"x\":0,\"y\":0},{\"id\":\"P2\",\"x\":2,\"y\":2},{\"id\":\"E2\",\"label\":\"E\",\"x\":2,\"y\":1},{\"id\":\"C2\",\"x\":2,\"y\":0},{\"id\":\"P3\",\"x\":4,\"y\":2},{\"id\":\"E3\",\"label\":\"E\",\"x\":4,\"y\":1},{\"id\":\"C3\",\"x\":4,\"y\":0}],\"edges\":[{\"from\":\"P1\",\"to\":\"E1\",\"directed\":true},{\"from\":\"E1\",\"to\":\"C1\",\"directed\":true},{\"from\":\"P2\",\"to\":\"E2\",\"directed\":true},{\"from\":\"E2\",\"to\":\"C2\",\"directed\":true},{\"from\":\"P3\",\"to\":\"E3\",\"directed\":true},{\"from\":\"E3\",\"to\":\"C3\",\"directed\":true}],\"caption\":\"ECB: every block goes through E on its own. Equal plaintext blocks give equal ciphertext blocks.\"}\n```\n\nIt is fast and fully parallel, and it is broken for almost every use. ECB is **deterministic**: under one key, equal blocks always give equal ciphertext, so repetition in the plaintext survives encryption. Encrypt a bitmap of the Linux penguin and the outline is still there, just recolored: the **ECB penguin**. An attacker learns which blocks are equal, can cut and paste blocks between messages, and can build a dictionary of known blocks. ECB needs no IV, needs padding, and does not authenticate. Use it for nothing larger than a single random block.\n\n## CBC: chaining\n\n**Cipher Block Chaining** mixes each plaintext block with the previous ciphertext block before encrypting:\n\n$$C_i = E(P_i \\oplus C_{i-1}), \\qquad C_0 = IV, \\qquad P_i = D(C_i) \\oplus C_{i-1}.$$\n\n```plot\n{\"type\":\"graph\",\"width\":440,\"height\":280,\"nodeRadius\":16,\"nodes\":[{\"id\":\"IV\",\"x\":-1.6,\"y\":2,\"color\":\"warn\"},{\"id\":\"P1\",\"x\":0,\"y\":3},{\"id\":\"X1\",\"label\":\"⊕\",\"x\":0,\"y\":2},{\"id\":\"E1\",\"label\":\"E\",\"x\":0,\"y\":1},{\"id\":\"C1\",\"x\":0,\"y\":0},{\"id\":\"P2\",\"x\":3,\"y\":3},{\"id\":\"X2\",\"label\":\"⊕\",\"x\":3,\"y\":2},{\"id\":\"E2\",\"label\":\"E\",\"x\":3,\"y\":1},{\"id\":\"C2\",\"x\":3,\"y\":0}],\"edges\":[{\"from\":\"IV\",\"to\":\"X1\",\"directed\":true},{\"from\":\"P1\",\"to\":\"X1\",\"directed\":true},{\"from\":\"X1\",\"to\":\"E1\",\"directed\":true},{\"from\":\"E1\",\"to\":\"C1\",\"directed\":true},{\"from\":\"C1\",\"to\":\"X2\",\"directed\":true,\"dashed\":true,\"color\":\"warn\",\"label\":\"chain\"},{\"from\":\"P2\",\"to\":\"X2\",\"directed\":true},{\"from\":\"X2\",\"to\":\"E2\",\"directed\":true},{\"from\":\"E2\",\"to\":\"C2\",\"directed\":true}],\"caption\":\"CBC encryption: each plaintext block is XORed with the previous ciphertext block (the IV for block 1) before E.\"}\n```\n\nNow equal plaintext blocks encrypt differently, because each one is first scrambled by a different $C_{i-1}$. The IV must be **unpredictable** (random), not merely unique: TLS 1.0 used the last ciphertext block of the previous record as the next IV, and the 2011 BEAST attack exploited that predictability. Encryption is **sequential** (block $i$ waits for $C_{i-1}$), but decryption is **parallel**, since every $C_{i-1}$ is already in hand. CBC needs **padding**; the standard is PKCS#7, which appends $k$ bytes of value $k$ for some $1 \\le k \\le 16$ (a whole extra block when the message already fills its blocks, so the receiver can always strip it).\n\nFlip one bit of $C_i$ and $P_i$ becomes garbage while the *same* bit flips in $P_{i+1}$. That second effect is the dangerous one: it means an attacker can steer the plaintext.\n\n## CTR: a block cipher as a stream cipher\n\n**Counter mode** never puts the message through the cipher at all. It encrypts a sequence of counter blocks (a per-message nonce plus a block counter) to get a **keystream**, then XORs:\n\n$$S_i = E(\\text{nonce} \\,\\|\\, i), \\qquad C_i = P_i \\oplus S_i, \\qquad P_i = C_i \\oplus S_i.$$\n\n```plot\n{\"type\":\"graph\",\"width\":440,\"height\":280,\"nodeRadius\":17,\"nodes\":[{\"id\":\"K1\",\"label\":\"ctr1\",\"x\":0,\"y\":3,\"color\":\"warn\"},{\"id\":\"E1\",\"label\":\"E\",\"x\":0,\"y\":2},{\"id\":\"X1\",\"label\":\"⊕\",\"x\":0,\"y\":1},{\"id\":\"C1\",\"x\":0,\"y\":0},{\"id\":\"P1\",\"x\":-1.3,\"y\":1},{\"id\":\"K2\",\"label\":\"ctr2\",\"x\":3,\"y\":3,\"color\":\"warn\"},{\"id\":\"E2\",\"label\":\"E\",\"x\":3,\"y\":2},{\"id\":\"X2\",\"label\":\"⊕\",\"x\":3,\"y\":1},{\"id\":\"C2\",\"x\":3,\"y\":0},{\"id\":\"P2\",\"x\":1.7,\"y\":1}],\"edges\":[{\"from\":\"K1\",\"to\":\"E1\",\"directed\":true},{\"from\":\"E1\",\"to\":\"X1\",\"directed\":true,\"label\":\"S1\"},{\"from\":\"P1\",\"to\":\"X1\",\"directed\":true},{\"from\":\"X1\",\"to\":\"C1\",\"directed\":true},{\"from\":\"K2\",\"to\":\"E2\",\"directed\":true},{\"from\":\"E2\",\"to\":\"X2\",\"directed\":true,\"label\":\"S2\"},{\"from\":\"P2\",\"to\":\"X2\",\"directed\":true},{\"from\":\"X2\",\"to\":\"C2\",\"directed\":true}],\"caption\":\"CTR: E encrypts nonce-and-counter blocks into keystream S, which is XORed onto the plaintext. No block depends on another.\"}\n```\n\nCTR is the workhorse: both directions are **parallel**, any block can be decrypted on its own, no padding is needed (cut the last keystream block short), and only $E$ is ever used. The price is one absolute rule: **a (key, counter block) pair must never repeat.** Repeat a nonce and two messages share keystream, so $C_1 \\oplus C_2 = P_1 \\oplus P_2$: the two-time pad from the attacks topic. A bit flip in $C_i$ flips exactly that bit of $P_i$ and nothing else, which sounds friendly and is actually the problem (see malleability below).\n\n## OFB and CFB: the feedback modes\n\n**Output Feedback** makes keystream by encrypting the IV over and over: $O_1 = E(IV)$, $O_i = E(O_{i-1})$, $C_i = P_i \\oplus O_i$.\n\n```plot\n{\"type\":\"graph\",\"width\":440,\"height\":240,\"nodeRadius\":16,\"nodes\":[{\"id\":\"IV\",\"x\":-1.6,\"y\":2,\"color\":\"warn\"},{\"id\":\"E1\",\"label\":\"E\",\"x\":0,\"y\":2},{\"id\":\"X1\",\"label\":\"⊕\",\"x\":0,\"y\":1},{\"id\":\"C1\",\"x\":0,\"y\":0},{\"id\":\"P1\",\"x\":-1.3,\"y\":1},{\"id\":\"E2\",\"label\":\"E\",\"x\":3,\"y\":2},{\"id\":\"X2\",\"label\":\"⊕\",\"x\":3,\"y\":1},{\"id\":\"C2\",\"x\":3,\"y\":0},{\"id\":\"P2\",\"x\":1.7,\"y\":1}],\"edges\":[{\"from\":\"IV\",\"to\":\"E1\",\"directed\":true},{\"from\":\"E1\",\"to\":\"X1\",\"directed\":true,\"label\":\"O1\"},{\"from\":\"P1\",\"to\":\"X1\",\"directed\":true},{\"from\":\"X1\",\"to\":\"C1\",\"directed\":true},{\"from\":\"E1\",\"to\":\"E2\",\"directed\":true,\"dashed\":true,\"color\":\"warn\",\"label\":\"O1\"},{\"from\":\"E2\",\"to\":\"X2\",\"directed\":true,\"label\":\"O2\"},{\"from\":\"P2\",\"to\":\"X2\",\"directed\":true},{\"from\":\"X2\",\"to\":\"C2\",\"directed\":true}],\"caption\":\"OFB: the keystream is the IV encrypted again and again. Each output feeds the next E, independent of the message.\"}\n```\n\n**Cipher Feedback** (full-block CFB) encrypts the previous *ciphertext* block instead: $C_i = P_i \\oplus E(C_{i-1})$ with $C_0 = IV$.\n\n```plot\n{\"type\":\"graph\",\"width\":440,\"height\":240,\"nodeRadius\":16,\"nodes\":[{\"id\":\"IV\",\"x\":-1.6,\"y\":2,\"color\":\"warn\"},{\"id\":\"E1\",\"label\":\"E\",\"x\":0,\"y\":2},{\"id\":\"X1\",\"label\":\"⊕\",\"x\":0,\"y\":1},{\"id\":\"C1\",\"x\":0,\"y\":0},{\"id\":\"P1\",\"x\":-1.3,\"y\":1},{\"id\":\"E2\",\"label\":\"E\",\"x\":3,\"y\":2},{\"id\":\"X2\",\"label\":\"⊕\",\"x\":3,\"y\":1},{\"id\":\"C2\",\"x\":3,\"y\":0},{\"id\":\"P2\",\"x\":1.7,\"y\":1}],\"edges\":[{\"from\":\"IV\",\"to\":\"E1\",\"directed\":true},{\"from\":\"E1\",\"to\":\"X1\",\"directed\":true},{\"from\":\"P1\",\"to\":\"X1\",\"directed\":true},{\"from\":\"X1\",\"to\":\"C1\",\"directed\":true},{\"from\":\"C1\",\"to\":\"E2\",\"directed\":true,\"dashed\":true,\"color\":\"warn\",\"label\":\"C1\"},{\"from\":\"E2\",\"to\":\"X2\",\"directed\":true},{\"from\":\"P2\",\"to\":\"X2\",\"directed\":true},{\"from\":\"X2\",\"to\":\"C2\",\"directed\":true}],\"caption\":\"CFB: the previous CIPHERTEXT block is encrypted to make the next keystream block.\"}\n```\n\nBoth are stream modes: no padding, only $E$. OFB's keystream never depends on the message, so the IV must be **unique** (a reused OFB IV is a reused keystream), bit errors do not spread, and neither direction parallelizes because each $O_i$ needs $O_{i-1}$. CFB needs an **unpredictable** IV; its encryption is sequential but its decryption is parallel, and a flipped bit in $C_i$ flips the same bit of $P_i$ and garbles $P_{i+1}$ (the damaged block passes through $E$ on the next step). Both survive today mostly in older standards; CTR does their job with better properties.\n\n## The five classic modes side by side\n\n| Mode | IV / nonce | Parallel encrypt | Parallel decrypt | Padding | One bit of $C_i$ flips | Authenticates |\n|---|---|---|---|---|---|---|\n| ECB | none | yes | yes | yes | $P_i$ garbled | no |\n| CBC | unpredictable | no | yes | yes | $P_i$ garbled, same bit of $P_{i+1}$ flips | no |\n| CFB | unpredictable | no | yes | no | same bit of $P_i$ flips, $P_{i+1}$ garbled | no |\n| OFB | unique | no | no | no | same bit of $P_i$ flips | no |\n| CTR | unique | yes | yes | no | same bit of $P_i$ flips | no |\n\nLook at the last column. **None of the classic modes detects tampering.** That single fact is behind most of the real attacks.\n\n## Malleability: encryption is not integrity\n\nIn CTR, $P = C \\oplus S$. If an attacker XORs a mask $\\Delta$ into the ciphertext, the receiver decrypts $(C \\oplus \\Delta) \\oplus S = P \\oplus \\Delta$. The attacker never learns the key or the keystream, yet controls exactly which plaintext bits change. If they know a message says \"PAY 100\" at a known offset, then XORing '1' $\\oplus$ '9' $= 49 \\oplus 57 = 8$ into that byte makes it say \"PAY 900\", and the receiver has no way to tell.\n\nCBC is malleable too: XOR $\\Delta$ into $C_{i-1}$ and $P_i$ changes by exactly $\\Delta$, at the cost of garbling $P_{i-1}$, which the attacker can often aim at a field nobody checks. The lesson is blunt: **unauthenticated encryption is malleable.** Either use an AEAD mode (GCM, CCM, SIV, below) or **encrypt-then-MAC**: compute a MAC (such as HMAC) over the IV and ciphertext with a separate key, and verify it, in constant time, *before* decrypting anything.\n\n## The CBC padding oracle\n\nMalleability plus one bit of feedback is enough to decrypt everything. Suppose a server decrypts CBC ciphertext and reveals, through an error message or even just timing, whether the PKCS#7 padding was valid. Call $I = D(C_n)$ the \"intermediate\" block, so $P_n = I \\oplus C_{n-1}$. The attacker keeps $C_n$ and replaces the last byte of $C_{n-1}$ with guesses $g = 0, \\dots, 255$. The server computes the last plaintext byte as $I_{16} \\oplus g$, and the padding is valid when that byte is $1$. When the oracle says yes:\n\n$$I_{16} = g \\oplus 1, \\qquad P_{16} = I_{16} \\oplus (\\text{original last byte of } C_{n-1}).$$\n\nThen the attacker sets the last byte to $I_{16} \\oplus 2$ and attacks the second-to-last byte, aiming for the padding $02\\,02$, and so on. (A first \"valid\" answer can occasionally come from a longer accidental padding such as $02\\,02$; changing the second-to-last byte and asking again rules that out.) At most $256$ guesses per byte means at most $16 \\times 256 = 4096$ queries per block, with no key and no factoring. Vaudenay described the attack in 2002; POODLE (2014) applied it to SSL 3.0, and Lucky Thirteen (2013) recovered the same signal from tiny timing differences in TLS. The cure is the same as for malleability: authenticate first, and never let unauthenticated ciphertext reach the padding check.\n\n## GCM: counter mode plus a polynomial MAC\n\n**Galois/Counter Mode** is CTR encryption with an authenticator bolted on in one pass. With a 96-bit nonce $N$, set $J_0 = N \\,\\|\\, 0^{31}1$. The data is encrypted in CTR mode with counters starting right after $J_0$, and the tag is\n\n$$T = \\text{GHASH}_H(A, C) \\oplus E(J_0), \\qquad H = E(0^{128}),$$\n\nwhere GHASH evaluates the ciphertext blocks (and any associated data $A$, plus a length block) as coefficients of a polynomial in the secret **hash key** $H$, in the field $GF(2^{128})$ defined by $x^{128} + x^7 + x^2 + x + 1$. For two ciphertext blocks it looks like $c_1 H^3 \\oplus c_2 H^2 \\oplus L\\,H$, masked by $S = E(J_0)$.\n\n```plot\n{\"type\":\"graph\",\"width\":460,\"height\":320,\"nodeRadius\":17,\"nodes\":[{\"id\":\"K1\",\"label\":\"ctr2\",\"x\":0,\"y\":3,\"color\":\"warn\"},{\"id\":\"E1\",\"label\":\"E\",\"x\":0,\"y\":2},{\"id\":\"X1\",\"label\":\"⊕\",\"x\":0,\"y\":1},{\"id\":\"C1\",\"x\":0,\"y\":0},{\"id\":\"P1\",\"x\":-1.3,\"y\":1},{\"id\":\"K2\",\"label\":\"ctr3\",\"x\":2.6,\"y\":3,\"color\":\"warn\"},{\"id\":\"E2\",\"label\":\"E\",\"x\":2.6,\"y\":2},{\"id\":\"X2\",\"label\":\"⊕\",\"x\":2.6,\"y\":1},{\"id\":\"C2\",\"x\":2.6,\"y\":0},{\"id\":\"P2\",\"x\":1.3,\"y\":1},{\"id\":\"G1\",\"label\":\"·H\",\"x\":0,\"y\":-1.2},{\"id\":\"G2\",\"label\":\"·H\",\"x\":2.6,\"y\":-1.2},{\"id\":\"J0\",\"x\":5,\"y\":3,\"color\":\"warn\"},{\"id\":\"EJ\",\"label\":\"E\",\"x\":5,\"y\":2},{\"id\":\"XT\",\"label\":\"⊕\",\"x\":5,\"y\":-1.2},{\"id\":\"T\",\"label\":\"tag\",\"x\":5,\"y\":-2.3,\"color\":\"good\"}],\"edges\":[{\"from\":\"K1\",\"to\":\"E1\",\"directed\":true},{\"from\":\"E1\",\"to\":\"X1\",\"directed\":true},{\"from\":\"P1\",\"to\":\"X1\",\"directed\":true},{\"from\":\"X1\",\"to\":\"C1\",\"directed\":true},{\"from\":\"K2\",\"to\":\"E2\",\"directed\":true},{\"from\":\"E2\",\"to\":\"X2\",\"directed\":true},{\"from\":\"P2\",\"to\":\"X2\",\"directed\":true},{\"from\":\"X2\",\"to\":\"C2\",\"directed\":true},{\"from\":\"C1\",\"to\":\"G1\",\"directed\":true},{\"from\":\"G1\",\"to\":\"G2\",\"directed\":true},{\"from\":\"C2\",\"to\":\"G2\",\"directed\":true},{\"from\":\"G2\",\"to\":\"XT\",\"directed\":true,\"label\":\"GHASH\"},{\"from\":\"J0\",\"to\":\"EJ\",\"directed\":true},{\"from\":\"EJ\",\"to\":\"XT\",\"directed\":true,\"label\":\"S\"},{\"from\":\"XT\",\"to\":\"T\",\"directed\":true}],\"caption\":\"GCM: counter-mode encryption (counters start right after J0), plus GHASH, a polynomial in H = E(0) over the ciphertext, masked with S = E(J0) to give the tag.\"}\n```\n\nGCM is parallel, needs no padding, runs very fast with hardware AES and carry-less multiply instructions, and **authenticates**: the receiver recomputes the tag and releases nothing unless it matches. It is the default AEAD in TLS 1.3. Its sharp edges, laid out in Soatok's [\"Comparison of Symmetric Encryption Methods\"](https://soatok.blog/2020/07/12/comparison-of-symmetric-encryption-methods/), are worth knowing by heart:\n\n- The nonce is only **96 bits** and must **never repeat** under a key. With random nonces, NIST SP 800-38D caps a key at $2^{32}$ messages so a collision stays negligible.\n- One message can be at most $2^{36} - 32$ bytes: the 32-bit block counter leaves $2^{32} - 2$ usable 16-byte blocks.\n- GCM is **not key-committing**: one ciphertext can be crafted to decrypt validly under two different keys (the \"Invisible Salamanders\" attack), which matters in some protocols.\n- Without hardware AES, table-based software implementations can leak the key through cache timing.\n\n## The forbidden attack: one repeated nonce, total forgery\n\nEncrypt two messages with the same key and nonce and two things break at once. The keystream repeats, so confidentiality falls exactly as in CTR. Worse, both tags share the same mask $S = E(J_0)$ and the same $H$, so XORing the tags cancels $S$:\n\n$$T_1 \\oplus T_2 = \\text{GHASH}_H(C^{(1)}) \\oplus \\text{GHASH}_H(C^{(2)}),$$\n\na polynomial equation in $H$ whose coefficients the attacker knows. Its roots give a short list of candidates for $H$, and with $H$ in hand the attacker can compute valid tags for messages of their choosing. Joux pointed this out in 2006 and called it the \"forbidden attack\"; in 2016 Böck and coauthors scanned the internet and found HTTPS servers that really did repeat GCM nonces. The practice problems run a toy version over $\\mathbb{Z}_p$ with tags $T = c_1 H^2 + c_2 H + S$: when two same-nonce messages differ only in the last block, $T_1 - T_2 = (c_2 - c_2')H$, so $H = (T_1 - T_2)(c_2 - c_2')^{-1} \\bmod p$, which is one modular inverse.\n\n## CCM, SIV and XTS\n\n**CCM** (Counter with CBC-MAC) computes a CBC-MAC over the nonce, lengths, associated data and plaintext, then encrypts the plaintext and the tag in CTR mode. It authenticates using only the AES encryption direction, which suits small hardware, and it is the mode behind WPA2's CCMP and Bluetooth LE. The costs: two AES calls per block, a sequential MAC, and the message length must be known before you start.\n\n**SIV** (\"synthetic IV\", AES-SIV in RFC 5297, AES-GCM-SIV in RFC 8452) is built for systems that cannot promise unique nonces. It first computes a tag from the key, nonce, associated data **and the whole message**, then uses that tag as the CTR IV. If a nonce repeats, the only leak is whether the *same* message was encrypted twice: no keystream reuse, no forgery. This **nonce-misuse resistance** costs a second pass over the data, so encryption cannot stream.\n\n**XTS** is for disks, where a 512-byte sector must stay 512 bytes, leaving no room for a nonce or a tag. Each 16-byte block $j$ of a sector is encrypted as $C = E_{K_1}(P \\oplus T_j) \\oplus T_j$, where the tweak $T_j$ comes from encrypting the sector number under a second key $K_2$ and multiplying by $x^j$ in $GF(2^{128})$, so the same data in different places encrypts differently. A short final block is handled by ciphertext stealing. XTS does **not** authenticate: an attacker with write access can roll a 16-byte unit back to an older value or scramble it, and because XTS is deterministic per position, snapshots of the same disk reveal which units changed.\n\n## Choosing a mode\n\n| Situation | Choice |\n|---|---|\n| General-purpose encryption | an AEAD: AES-GCM with counter or random nonces inside the limits, through a vetted library |\n| Nonces might repeat | AES-GCM-SIV or AES-SIV |\n| Disk or sector encryption | XTS (and accept that it does not authenticate) |\n| Constrained hardware, existing standards | CCM |\n| Legacy CBC or CTR | encrypt-then-MAC, verify before decrypting |\n| ECB for data, unauthenticated CBC or CTR, any reused nonce | never |\n\nEvery row of that table is the same idea from the attacks topic: AES itself was never the weak point. The mode, the nonce, and the missing tag were."
+  },
+  "application": {
+    "summary": "Modes of operation decide whether AES actually protects data: ECB leaks patterns, CBC and CTR are malleable without a MAC, an unauthenticated CBC padding check decrypts everything, and a single repeated GCM nonce lets an attacker forge tags. Modern systems use AEAD modes (GCM, CCM, SIV) and XTS for disks.",
+    "domains": ["TLS and HTTPS", "Wi-Fi and Bluetooth", "disk encryption", "cloud key management", "CTF / security research"],
+    "workedExample": "**Recovering a GCM hash key from a repeated nonce (toy version).**\n\nA server signs messages with toy GCM tags over $\\mathbb{Z}_{13}$: $T = c_1 H^2 + c_2 H + S \\bmod 13$. A bug makes it reuse a nonce, so two messages share $H$ and $S$. You capture message A $= (4, 9)$ with tag $T_A = 6$ and message B $= (4, 2)$ with tag $T_B = 0$.\n\n*Step 1: cancel the mask.* Subtracting the tags removes $S$ and the shared $c_1 H^2$ term: $T_A - T_B = (9 - 2) H$, so $6 - 0 = 7H \\pmod{13}$.\n\n*Step 2: invert.* $7^{-1} \\bmod 13 = 2$, because $7 \\cdot 2 = 14 \\equiv 1$. So $H = 6 \\cdot 2 = 12 \\pmod{13}$.\n\n*Step 3: recover the mask.* $S = T_A - 4H^2 - 9H$. Since $H \\equiv -1$, $H^2 \\equiv 1$, and $S = 6 - 4 + 9 = 11 \\pmod{13}$.\n\n*Step 4: forge.* For a new message C $= (4, 5)$: $T_C = 4 \\cdot 1 + 5 \\cdot 12 + 11 = 75 \\equiv 10 \\pmod{13}$. The server will accept C with tag $10$ as authentic, and you never touched the AES key.\n\n*Check:* $T_A = 4 + 9 \\cdot 12 + 11 = 123 = 9 \\cdot 13 + 6$ and $T_B = 4 + 2 \\cdot 12 + 11 = 39 = 3 \\cdot 13 + 0$, matching the captured tags.\n\nReal GCM does the same thing in $GF(2^{128})$, where subtraction is XOR and the attacker finds the roots of a polynomial instead of dividing once. That is the forbidden attack, and it is why GCM nonces must be unique or why misuse-resistant AES-GCM-SIV exists.",
+    "domainNotes": [
+      "**TLS and HTTPS:** TLS 1.3 allows only AEAD modes (AES-GCM, ChaCha20-Poly1305, and AES-CCM) and derives each record's nonce from a sequence number so it cannot repeat. Older TLS used CBC with predictable IVs (exploited by BEAST) and MAC-then-encrypt (exploited by Lucky Thirteen and POODLE).",
+      "**Wi-Fi and Bluetooth:** WPA2's CCMP is AES-CCM with a 48-bit packet number as the nonce, and Bluetooth LE also uses AES-CCM. The 2017 KRACK attacks worked by forcing that packet number to reset, which recreated nonce reuse.",
+      "**Disk encryption:** BitLocker, FileVault and LUKS use AES-XTS with the sector number as the tweak. XTS keeps sectors the same size but cannot detect tampering.",
+      "**Cloud and key management:** services that encrypt huge numbers of messages under shared keys run into GCM's 96-bit nonce limits, which is one reason AES-GCM-SIV and key-derivation schemes exist.",
+      "**CTF / security research:** ECB detection, CBC bit-flipping, padding oracles and CTR nonce reuse are staples of Cryptopals and CryptoHack. Doing them by hand on tiny blocks first makes the real attacks feel obvious."
+    ]
+  },
+  "generators": [
+    "cr5-cbc-d1", "cr5-cbc-d2", "cr5-cbc-d3",
+    "cr5-str-d1", "cr5-str-d2", "cr5-str-d3",
+    "cr5-prop-d1", "cr5-prop-d2", "cr5-prop-d3",
+    "cr5-mal-d1", "cr5-mal-d2", "cr5-mal-d3",
+    "cr5-gcm-d1", "cr5-gcm-d2", "cr5-gcm-d3",
+    "cr5-pick-d1", "cr5-pick-d2", "cr5-pick-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.aes-modes.s01",
+      "concepts": ["ecb-cbc"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A toy block cipher encrypts one block with $E(x) = (7x + 3) \\bmod 16$ (4-bit blocks, values $0$ to $15$, all answers in decimal). Encrypt the message $P = (0, 8, 0)$ in ECB mode, where every block is encrypted on its own: $C_i = E(P_i)$.",
+      "steps": [
+        { "instruction": "Compute $C_1 = E(0)$.", "answer": "3", "accept": [], "hint": "$7 \\cdot 0 + 3 = 3$, and $3 \\bmod 16 = 3$." },
+        { "instruction": "Compute $C_2 = E(8)$.", "answer": "11", "accept": [], "hint": "$7 \\cdot 8 + 3 = 59$, and $59 \\bmod 16 = 11$." },
+        { "instruction": "Compute $C_3 = E(0)$.", "answer": "3", "accept": [], "hint": "Same input as block 1, same key, no chaining." },
+        { "instruction": "How many DISTINCT ciphertext values does $(C_1, C_2, C_3)$ contain?", "answer": "2", "accept": [], "hint": "Block 3 repeats block 1." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "ECB gives $C = (3, 11, 3)$. The repeated plaintext block shows up as a repeated ciphertext block, which is exactly the pattern leak behind the ECB penguin."
+    },
+    {
+      "id": "cryptography.aes-modes.s02",
+      "concepts": ["ecb-cbc"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Toy block cipher: $E(x) = (3x + 6) \\bmod 16$ (4-bit blocks, values $0$ to $15$, all answers in decimal). Encrypt $P = (13, 13)$ in CBC mode with $IV = 4$: $C_1 = E(P_1 \\oplus IV)$ and $C_2 = E(P_2 \\oplus C_1)$.",
+      "steps": [
+        { "instruction": "Compute $P_1 \\oplus IV = 13 \\oplus 4$.", "answer": "9", "accept": [], "hint": "$1101 \\oplus 0100 = 1001$." },
+        { "instruction": "Compute $C_1 = E(9)$.", "answer": "1", "accept": [], "hint": "$3 \\cdot 9 + 6 = 33$, and $33 \\bmod 16 = 1$." },
+        { "instruction": "Chain: compute $P_2 \\oplus C_1 = 13 \\oplus 1$.", "answer": "12", "accept": [], "hint": "$1101 \\oplus 0001 = 1100$." },
+        { "instruction": "Compute $C_2 = E(12)$.", "answer": "10", "accept": [], "hint": "$3 \\cdot 12 + 6 = 42$, and $42 \\bmod 16 = 10$." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "CBC gives $C = (1, 10)$. The two plaintext blocks were equal, yet the ciphertext blocks differ, because each block is first mixed with the previous ciphertext."
+    },
+    {
+      "id": "cryptography.aes-modes.s03",
+      "concepts": ["ecb-cbc"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Toy block cipher with inverse $D(y) = 9(y - 15) \\bmod 16$ (4-bit blocks, values $0$ to $15$, all answers in decimal). Decrypt the CBC ciphertext $IV = 7$, $C = (5, 5)$ using $P_i = D(C_i) \\oplus C_{i-1}$, with $C_0 = IV$.",
+      "steps": [
+        { "instruction": "Compute $D(C_1) = D(5)$.", "answer": "6", "accept": [], "hint": "$9(5 - 15) = -90$, and $-90 \\bmod 16 = 6$." },
+        { "instruction": "Compute $P_1 = D(C_1) \\oplus IV = 6 \\oplus 7$.", "answer": "1", "accept": [], "hint": "$0110 \\oplus 0111 = 0001$." },
+        { "instruction": "Compute $D(C_2) = D(5)$.", "answer": "6", "accept": [], "hint": "$9(5 - 15) = -90$, and $-90 \\bmod 16 = 6$." },
+        { "instruction": "Compute $P_2 = D(C_2) \\oplus C_1 = 6 \\oplus 5$.", "answer": "3", "accept": [], "hint": "$0110 \\oplus 0101 = 0011$." },
+        { "instruction": "CBC decryption needs only ciphertext blocks you already have. Can the decryption of a long message run in parallel? (yes or no)", "answer": "yes", "accept": [], "hint": "$P_i$ depends only on $C_i$ and $C_{i-1}$, which are all known up front." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$P_1 = 6 \\oplus 7 = 1$ and $P_2 = 6 \\oplus 5 = 3$. Encryption is strictly sequential (each block needs the previous ciphertext), but decryption parallelizes, since every $C_{i-1}$ is already on hand."
+    },
+    {
+      "id": "cryptography.aes-modes.s04",
+      "concepts": ["stream-modes"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Toy block cipher $E(x) = (7x + 10) \\bmod 16$ (4-bit blocks, values $0$ to $15$, all answers in decimal). In CTR mode the cipher encrypts a counter to make keystream, $S_i = E(\\text{ctr}_i)$, and $C_i = P_i \\oplus S_i$. Encrypt $P = (4, 10)$ with counter blocks $\\text{ctr}_1 = 6$ and $\\text{ctr}_2 = 7$.",
+      "steps": [
+        { "instruction": "Keystream block 1: $S_1 = E(6)$.", "answer": "4", "accept": [], "hint": "$7 \\cdot 6 + 10 = 52$, and $52 \\bmod 16 = 4$." },
+        { "instruction": "$C_1 = P_1 \\oplus S_1 = 4 \\oplus 4$.", "answer": "0", "accept": [], "hint": "$0100 \\oplus 0100 = 0000$." },
+        { "instruction": "Keystream block 2: $S_2 = E(7)$.", "answer": "11", "accept": [], "hint": "$7 \\cdot 7 + 10 = 59$, and $59 \\bmod 16 = 11$." },
+        { "instruction": "$C_2 = P_2 \\oplus S_2 = 10 \\oplus 11$.", "answer": "1", "accept": [], "hint": "$1010 \\oplus 1011 = 0001$." }
+      ],
+      "finalAnswer": { "value": "1", "unit": "" },
+      "solutionNarrative": "$S = (4, 11)$ and $C = (0, 1)$. Neither keystream block depends on the message, so all of them can be computed in parallel (or in advance), and decryption is the same XOR."
+    },
+    {
+      "id": "cryptography.aes-modes.s05",
+      "concepts": ["stream-modes"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Toy block cipher $E(x) = (7x + 13) \\bmod 16$ (4-bit blocks, values $0$ to $15$, all answers in decimal). OFB mode feeds the cipher's own output back in: $O_1 = E(IV)$, $O_2 = E(O_1)$, and $C_i = P_i \\oplus O_i$. Encrypt $P = (10, 13)$ with $IV = 6$.",
+      "steps": [
+        { "instruction": "$O_1 = E(6)$.", "answer": "7", "accept": [], "hint": "$7 \\cdot 6 + 13 = 55$, and $55 \\bmod 16 = 7$." },
+        { "instruction": "$C_1 = 10 \\oplus 7$.", "answer": "13", "accept": [], "hint": "$1010 \\oplus 0111 = 1101$." },
+        { "instruction": "$O_2 = E(O_1) = E(7)$.", "answer": "14", "accept": [], "hint": "$7 \\cdot 7 + 13 = 62$, and $62 \\bmod 16 = 14$." },
+        { "instruction": "$C_2 = 13 \\oplus 14$.", "answer": "3", "accept": [], "hint": "$1101 \\oplus 1110 = 0011$." },
+        { "instruction": "To DECRYPT OFB, the receiver regenerates the same $O_i$. Does that use the block cipher's encryption or decryption direction? (encryption or decryption)", "answer": "encryption", "accept": ["encrypt", "E"], "hint": "$O_1 = E(IV)$ on both sides; only the XOR is undone." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$O = (7, 14)$, so $C = (13, 3)$. Like CTR, OFB only ever calls $E$; decryption XORs the same keystream back off. Unlike CTR, each $O_i$ needs the previous one, so the keystream is sequential."
+    },
+    {
+      "id": "cryptography.aes-modes.s06",
+      "concepts": ["stream-modes"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Toy block cipher $E(x) = (13x + 1) \\bmod 16$ (4-bit blocks, values $0$ to $15$, all answers in decimal). Full-block CFB encrypts the previous CIPHERTEXT block to get the next keystream block: $C_i = P_i \\oplus E(C_{i-1})$ with $C_0 = IV$. You receive $IV = 12$ and $C = (14, 15)$. Decrypt.",
+      "steps": [
+        { "instruction": "Keystream for block 1: $E(IV) = E(12)$.", "answer": "13", "accept": [], "hint": "$13 \\cdot 12 + 1 = 157$, and $157 \\bmod 16 = 13$." },
+        { "instruction": "$P_1 = C_1 \\oplus E(IV) = 14 \\oplus 13$.", "answer": "3", "accept": [], "hint": "$1110 \\oplus 1101 = 0011$." },
+        { "instruction": "Keystream for block 2: $E(C_1) = E(14)$.", "answer": "7", "accept": [], "hint": "$13 \\cdot 14 + 1 = 183$, and $183 \\bmod 16 = 7$." },
+        { "instruction": "$P_2 = C_2 \\oplus E(C_1) = 15 \\oplus 7$.", "answer": "8", "accept": [], "hint": "$1111 \\oplus 0111 = 1000$." },
+        { "instruction": "Did CFB decryption ever need the inverse cipher $D$? (yes or no)", "answer": "no", "accept": [], "hint": "Every keystream block came from $E$ of something you already had." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$P_1 = 14 \\oplus 13 = 3$ and $P_2 = 15 \\oplus 7 = 8$. CFB, OFB and CTR all use only the forward cipher, so hardware that can only encrypt is enough. CFB decryption parallelizes (all $C_{i-1}$ are known) even though CFB encryption does not."
+    },
+    {
+      "id": "cryptography.aes-modes.s07",
+      "concepts": ["mode-properties"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 4-block message was encrypted with AES in CBC mode. In transit, ONE bit of ciphertext block $C_3$ flips. The receiver decrypts everything.",
+      "steps": [
+        { "instruction": "How many plaintext blocks come out wrong (in any way)?", "answer": "2", "accept": [], "hint": "Write the decryption formula for $P_3$ and $P_4$ and see which ones mention $C_3$." },
+        { "instruction": "How many of those blocks are completely scrambled (rather than having just that one bit flipped)?", "answer": "1", "accept": [], "hint": "A block is scrambled when the damaged bits pass through the block cipher; it gets a clean one-bit flip when they only pass through an XOR." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "blocks" },
+      "solutionNarrative": "$P_3 = D(C_3) \\oplus C_2$ is scrambled, and $P_4 = D(C_4) \\oplus C_3$ gets exactly the flipped bit. Note that a clean bit flip is not a feature: it is exactly the malleability an attacker exploits."
+    },
+    {
+      "id": "cryptography.aes-modes.s08",
+      "concepts": ["mode-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Consider AES in ECB mode on a long message. Answer each question with yes or no.",
+      "steps": [
+        { "instruction": "Can the AES calls for ENCRYPTION all run in parallel?", "answer": "yes", "accept": [], "hint": "Does block $i$'s cipher input depend on block $i-1$'s output?" },
+        { "instruction": "Can the AES calls for DECRYPTION all run in parallel?", "answer": "yes", "accept": [], "hint": "During decryption, the whole ciphertext is already known." },
+        { "instruction": "Does the plaintext have to be padded to a whole number of blocks?", "answer": "yes", "accept": [], "hint": "Modes that XOR a keystream can just cut the last keystream block short." },
+        { "instruction": "Does the mode get by with only the forward cipher $E$ (never calling $D$)?", "answer": "no", "accept": [], "hint": "Look at whether plaintext ever passes through the block cipher itself." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "ECB: Every block is independent, so everything parallelizes, but whole blocks are required (padding) and decryption needs $D$."
+    },
+    {
+      "id": "cryptography.aes-modes.s09",
+      "concepts": ["mode-properties"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A 7-byte message is encrypted two ways with AES (16-byte blocks). Option A is CBC with PKCS#7 padding and a 16-byte random IV sent in front. Option B is GCM with a 12-byte nonce sent in front and a 16-byte tag at the end. PKCS#7 always adds between 1 and 16 bytes, each equal to the number of bytes added.",
+      "steps": [
+        { "instruction": "How many padding bytes does PKCS#7 add to a 7-byte message?", "answer": "9", "accept": [], "hint": "Pad up to the next multiple of 16. If the length is already a multiple of 16, a whole extra block of 16 is added (so the receiver can always strip it)." },
+        { "instruction": "What is the value (in decimal) of each padding byte?", "answer": "9", "accept": [], "hint": "PKCS#7 writes the pad length into every pad byte." },
+        { "instruction": "Option A: total bytes sent (IV + padded ciphertext)?", "answer": "32", "accept": [], "hint": "$16 + 7 + 9$." },
+        { "instruction": "Option B: total bytes sent (nonce + ciphertext + tag)? GCM needs no padding.", "answer": "35", "accept": [], "hint": "$12 + 7 + 16$." }
+      ],
+      "finalAnswer": { "value": "35", "unit": "bytes" },
+      "solutionNarrative": "PKCS#7 adds 9 bytes of value 9, so CBC sends $16 + 16 = 32$ bytes. GCM is a counter mode, so ciphertext length equals plaintext length: $12 + 7 + 16 = 35$ bytes, and those 16 tag bytes buy authentication that CBC alone does not have."
+    },
+    {
+      "id": "cryptography.aes-modes.s10",
+      "concepts": ["malleability"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A bank message \"PAY 900\" is encrypted with AES-CTR and no authentication. The attacker knows the digit's position and that it is the character '9' (ASCII 57); its ciphertext byte is $C = 177$. The attacker wants it to decrypt to '2' (ASCII 50) instead. In CTR, $P = C \\oplus S$, so XORing a mask into $C$ XORs the same mask into $P$.",
+      "steps": [
+        { "instruction": "Compute the mask $57 \\oplus 50$ (old character XOR new character).", "answer": "11", "accept": [], "hint": "$00111001 \\oplus 00110010 = 00001011$." },
+        { "instruction": "Compute the forged ciphertext byte $C' = C \\oplus \\text{mask} = 177 \\oplus 11$.", "answer": "186", "accept": [], "hint": "$10110001 \\oplus 00001011 = 10111010$." },
+        { "instruction": "Without a MAC or tag, does the receiver have any way to notice the change? (yes or no)", "answer": "no", "accept": [], "hint": "CTR decrypts any byte string to some plaintext." }
+      ],
+      "finalAnswer": { "value": "186", "unit": "" },
+      "solutionNarrative": "The receiver computes $C' \\oplus S = (X \\oplus S \\oplus X \\oplus Y) \\oplus S = Y$, so \"PAY 900\" silently becomes \"PAY 200\". The attacker never learned the key or keystream. Encryption without authentication is malleable; use an AEAD mode (GCM, CCM, SIV) or encrypt-then-MAC."
+    },
+    {
+      "id": "cryptography.aes-modes.s11",
+      "concepts": ["malleability"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "CBC decryption computes $P_2 = D(C_2) \\oplus C_1$. An attacker sees $C_1 = 7$, $C_2 = 11$ (4-bit blocks, values $0$ to $15$, all answers in decimal) and knows $P_2 = 9$. They want the receiver to decrypt $P_2 = 4$ instead, by editing only $C_1$.",
+      "steps": [
+        { "instruction": "Mask needed: $9 \\oplus 4$.", "answer": "13", "accept": [], "hint": "$1001 \\oplus 0100 = 1101$." },
+        { "instruction": "Forged first block: $C_1' = C_1 \\oplus \\text{mask} = 7 \\oplus 13$.", "answer": "10", "accept": [], "hint": "$0111 \\oplus 1101 = 1010$." },
+        { "instruction": "The receiver now gets $P_2' = D(C_2) \\oplus C_1'$. What value is that?", "answer": "4", "accept": [], "hint": "$D(C_2) = P_2 \\oplus C_1$, so $P_2' = P_2 \\oplus C_1 \\oplus C_1'$." },
+        { "instruction": "Which plaintext block is scrambled as a side effect: the first or the second? (first or second)", "answer": "first", "accept": [], "hint": "$P_1 = D(C_1') \\oplus IV$, and $D$ of an edited block is unpredictable." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "XORing 13 into $C_1$ XORs 13 into $P_2$, giving 4, while $P_1$ becomes $D(10) \\oplus IV$ (here 9 instead of 2: junk). Attackers aim that junk block at a field nobody checks."
+    },
+    {
+      "id": "cryptography.aes-modes.s12",
+      "concepts": ["malleability"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Padding oracle on CBC with PKCS#7. The server reports whether padding is valid. The attacker replaces the last byte of the previous ciphertext block (really 215) with guesses $g = 0, 1, \\dots, 255$ and sends it with the target block. The server computes last plaintext byte $= I \\oplus g$, where $I$ is the last byte of $D(C_n)$. Padding is valid when that byte is $1$. The oracle says valid at $g = 222$ (assume this is the 1-byte pad, not a longer one).",
+      "steps": [
+        { "instruction": "Recover the intermediate byte: $I = g \\oplus 1 = 222 \\oplus 1$.", "answer": "223", "accept": [], "hint": "$I \\oplus g = 1$, so $I = g \\oplus 1$." },
+        { "instruction": "Recover the real plaintext byte: $P = I \\oplus 215$ (the original previous-block byte).", "answer": "8", "accept": [], "hint": "$11011111 \\oplus 11010111 = 00001000$." },
+        { "instruction": "To attack the next byte, the attacker needs the last byte to decrypt to $2$. What should they set the last byte to? ($I \\oplus 2$)", "answer": "221", "accept": [], "hint": "$11011111 \\oplus 00000010 = 11011101$." },
+        { "instruction": "Worst case, how many oracle queries does recovering a full 16-byte block take? (256 guesses per byte)", "answer": "4096", "accept": [], "hint": "$16 \\times 256$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$I = 222 \\oplus 1 = 223$ and $P = 223 \\oplus 215 = 8$. Setting the last byte to $223 \\oplus 2 = 221$ lines up the next round. At most $16 \\times 256 = 4096$ queries per block reveal the plaintext without the key, which is why CBC must be authenticated (encrypt-then-MAC) or replaced by an AEAD mode."
+    },
+    {
+      "id": "cryptography.aes-modes.s13",
+      "concepts": ["gcm-forbidden"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Toy GCM tag. Real GCM evaluates a polynomial in a secret hash key $H$ over $GF(2^{128})$; this toy uses $\\mathbb{Z}_{11}$. For ciphertext blocks $(c_1, c_2) = (6, 7)$, hash key $H = 10$ and mask $S = 1$ (in GCM, $S = E_K(\\text{nonce block})$), the tag is $T = c_1 H^2 + c_2 H + S \\bmod 11$.",
+      "steps": [
+        { "instruction": "Compute $H^2 \\bmod 11$.", "answer": "1", "accept": [], "hint": "$10^2 = 100$." },
+        { "instruction": "Compute $c_1 H^2 \\bmod 11$.", "answer": "6", "accept": [], "hint": "$6 \\cdot 1 = 6$." },
+        { "instruction": "Compute $c_2 H \\bmod 11$.", "answer": "4", "accept": [], "hint": "$7 \\cdot 10 = 70$." },
+        { "instruction": "Compute the tag $T = c_1 H^2 + c_2 H + S \\bmod 11$.", "answer": "0", "accept": [], "hint": "$6 + 4 + 1 = 11$." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "$T = 6 + 4 + 1 \\equiv 0 \\pmod{11}$. Without $H$ and $S$ an attacker cannot predict the tag, so any edit to $c_1$ or $c_2$ is caught. Real GHASH also folds in the associated data and a length block, but the structure is the same."
+    },
+    {
+      "id": "cryptography.aes-modes.s14",
+      "concepts": ["gcm-forbidden"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "The forbidden attack, toy version over $\\mathbb{Z}_{13}$. Tags are $T = c_1 H^2 + c_2 H + S$. A buggy server REUSED a nonce, so two messages share both $H$ and $S$. Message A is $(4, 9)$ with tag $4$; message B is $(4, 6)$ with tag $6$. Subtracting cancels $S$ and the $c_1$ term: $T_A - T_B = (c_2^A - c_2^B) H$.",
+      "steps": [
+        { "instruction": "Compute $T_A - T_B \\bmod 13$.", "answer": "11", "accept": [], "hint": "$4 - 6$, then add 13 if negative." },
+        { "instruction": "Compute $c_2^A - c_2^B \\bmod 13$.", "answer": "3", "accept": [], "hint": "$9 - 6$, then add 13 if negative." },
+        { "instruction": "Find $(c_2^A - c_2^B)^{-1} \\bmod 13$.", "answer": "9", "accept": [], "hint": "Find $x$ with $3x \\equiv 1 \\pmod{13}$." },
+        { "instruction": "Recover the hash key $H = (T_A - T_B)(c_2^A - c_2^B)^{-1} \\bmod 13$.", "answer": "8", "accept": [], "hint": "$11 \\cdot 9 = 99$." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$H = 11 \\cdot 9 \\equiv 8 \\pmod{13}$. In real GCM the difference is a polynomial in $H$ over $GF(2^{128})$ and the attacker finds its roots, but the lesson is identical: one repeated nonce leaks the authentication key."
+    },
+    {
+      "id": "cryptography.aes-modes.s15",
+      "concepts": ["gcm-forbidden"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Toy forbidden attack over $\\mathbb{Z}_{11}$ with tags $T = c_1 H^2 + c_2 H + S$. Under one REUSED nonce you capture message A $= (4, 8)$ with tag $7$ and message B $= (4, 9)$ with tag $3$. Recover the secrets, then forge a valid tag for message C $= (4, 10)$ under the same nonce.",
+      "steps": [
+        { "instruction": "Recover $H = (T_A - T_B)(c_2^A - c_2^B)^{-1} \\bmod 11$.", "answer": "7", "accept": [], "hint": "$T_A - T_B \\equiv 4$ and $c_2^A - c_2^B \\equiv 10$, whose inverse is 10." },
+        { "instruction": "Recover the mask $S = T_A - c_1 H^2 - c_2^A H \\bmod 11$.", "answer": "8", "accept": [], "hint": "$7 - 4 \\cdot 49 - 8 \\cdot 7 = -245$, then reduce." },
+        { "instruction": "Forge the tag for C: $T_C = c_1 H^2 + 10 H + S \\bmod 11$ (equivalently $T_A + (10 - 8)H$).", "answer": "10", "accept": [], "hint": "$7 + (2) \\cdot 7 = 21$, then reduce mod 11." },
+        { "instruction": "Did the forgery need the AES key itself? (yes or no)", "answer": "no", "accept": [], "hint": "You only used $H$ and $S$, both leaked by the nonce reuse." }
+      ],
+      "finalAnswer": { "value": "10", "unit": "" },
+      "solutionNarrative": "$H = 7$, $S = 8$, and the forged tag is $T_C = 10$. The server will accept message C as authentic. This is Joux's forbidden attack: after a nonce repeats, GCM loses not just confidentiality for those messages but authenticity, because $H$ is fixed for the whole key. Nonce-misuse-resistant modes (AES-GCM-SIV, AES-SIV) exist for systems that cannot guarantee unique nonces."
+    },
+    {
+      "id": "cryptography.aes-modes.s16",
+      "concepts": ["choosing-a-mode"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "Which AES mode fits this description? Authenticated encryption where nonces might accidentally repeat (many uncoordinated machines), and a repeat should leak only whether two messages are identical.",
+      "steps": [
+        { "instruction": "Name the mode. (one of: ECB, CBC, CFB, OFB, CTR, GCM, CCM, SIV, XTS)", "answer": "SIV", "accept": ["SIV mode", "AES SIV"], "hint": "Match the clue to the mode's structure: chaining, counter, feedback, tweak, or built-in tag." },
+        { "instruction": "Does SIV on its own detect tampering (authenticate the ciphertext)? (yes or no)", "answer": "yes", "accept": [], "hint": "Only modes that output a tag (GCM, CCM, SIV) authenticate." }
+      ],
+      "finalAnswer": { "value": "SIV", "unit": "" },
+      "solutionNarrative": "SIV. It is an AEAD mode: the tag catches any modified ciphertext."
+    },
+    {
+      "id": "cryptography.aes-modes.s17",
+      "concepts": ["choosing-a-mode"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Match each description to an AES mode (ECB, CBC, CFB, OFB, CTR, GCM, CCM, SIV, XTS).\n\n**A:** authenticated encryption on a small device that has only an AES encryption core, combining a CBC-MAC with counter mode (used by WPA2's CCMP and Bluetooth LE).\n\n**B:** a stream mode whose keystream is the IV encrypted over and over, each output feeding the next.",
+      "steps": [
+        { "instruction": "Which mode is described in A?", "answer": "CCM", "accept": ["CCM mode", "AES CCM"], "hint": "Look for the structural clue in A." },
+        { "instruction": "Which mode is described in B?", "answer": "OFB", "accept": ["OFB mode", "AES OFB"], "hint": "Look for the structural clue in B." },
+        { "instruction": "Does the mode in A authenticate on its own? (yes or no)", "answer": "yes", "accept": [], "hint": "GCM, CCM and SIV output a tag; the others do not." }
+      ],
+      "finalAnswer": { "value": "CCM", "unit": "" },
+      "solutionNarrative": "A is CCM and B is OFB. Of the nine, only GCM, CCM and SIV authenticate; XTS and the classic five need an external MAC (or, for XTS, accept that disk sectors are unauthenticated)."
+    },
+    {
+      "id": "cryptography.aes-modes.s18",
+      "concepts": ["choosing-a-mode"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Design review. (1) A team needs: authenticated encryption where nonces might accidentally repeat (many uncoordinated machines), and a repeat should leak only whether two messages are identical. (2) Elsewhere, 8 servers share ONE AES-GCM key and pick 96-bit nonces at random. NIST SP 800-38D caps random-nonce GCM at $2^{32}$ messages per key in total, so the chance of a repeated nonce stays negligible.",
+      "steps": [
+        { "instruction": "For (1), which mode fits? (one of: ECB, CBC, CFB, OFB, CTR, GCM, CCM, SIV, XTS)", "answer": "SIV", "accept": ["SIV mode", "AES SIV"], "hint": "Find the structural clue in the requirement." },
+        { "instruction": "For (2), split the $2^{32}$ budget evenly: how many messages may each server encrypt? Give the exponent $n$ in $2^n$.", "answer": "29", "accept": [], "hint": "$2^{32} / 8 = 2^{32 - 3}$." },
+        { "instruction": "If two of those messages ever DO share a nonce, can an attacker forge tags for that key? (yes or no)", "answer": "yes", "accept": [], "hint": "The forbidden attack recovers $H$, which is fixed for the whole key." }
+      ],
+      "finalAnswer": { "value": "SIV", "unit": "" },
+      "solutionNarrative": "(1) is SIV. (2) Each server gets $2^{32}/8 = 2^{29}$ = 536,870,912 messages before the shared key must rotate. A single repeated nonce leaks $H$ and enables forgeries, which is why counter-based nonces or a misuse-resistant mode such as AES-GCM-SIV are preferred at scale."
+    },
+    {
+      "id": "cryptography.aes-modes.s19",
+      "concepts": ["ecb-cbc"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Toy block cipher: $E(x) = (9x + 4) \\bmod 16$ (4-bit blocks, values $0$ to $15$, all answers in decimal). Encrypt $P = (15, 15)$ in CBC mode with $IV = 8$: $C_1 = E(P_1 \\oplus IV)$ and $C_2 = E(P_2 \\oplus C_1)$.",
+      "steps": [
+        { "instruction": "Compute $P_1 \\oplus IV = 15 \\oplus 8$.", "answer": "7", "accept": [], "hint": "$1111 \\oplus 1000 = 0111$." },
+        { "instruction": "Compute $C_1 = E(7)$.", "answer": "3", "accept": [], "hint": "$9 \\cdot 7 + 4 = 67$, and $67 \\bmod 16 = 3$." },
+        { "instruction": "Chain: compute $P_2 \\oplus C_1 = 15 \\oplus 3$.", "answer": "12", "accept": [], "hint": "$1111 \\oplus 0011 = 1100$." },
+        { "instruction": "Compute $C_2 = E(12)$.", "answer": "0", "accept": [], "hint": "$9 \\cdot 12 + 4 = 112$, and $112 \\bmod 16 = 0$." }
+      ],
+      "finalAnswer": { "value": "0", "unit": "" },
+      "solutionNarrative": "CBC gives $C = (3, 0)$. The two plaintext blocks were equal, yet the ciphertext blocks differ, because each block is first mixed with the previous ciphertext."
+    },
+    {
+      "id": "cryptography.aes-modes.s20",
+      "concepts": ["mode-properties"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A 8-block message was encrypted with AES in CBC mode. In transit, ONE bit of ciphertext block $C_3$ flips. The receiver decrypts everything.",
+      "steps": [
+        { "instruction": "How many plaintext blocks come out wrong (in any way)?", "answer": "2", "accept": [], "hint": "Write the decryption formula for $P_3$ and $P_4$ and see which ones mention $C_3$." },
+        { "instruction": "How many of those blocks are completely scrambled (rather than having just that one bit flipped)?", "answer": "1", "accept": [], "hint": "A block is scrambled when the damaged bits pass through the block cipher; it gets a clean one-bit flip when they only pass through an XOR." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "blocks" },
+      "solutionNarrative": "$P_3 = D(C_3) \\oplus C_2$ is scrambled, and $P_4 = D(C_4) \\oplus C_3$ gets exactly the flipped bit. Note that a clean bit flip is not a feature: it is exactly the malleability an attacker exploits."
+    },
+    {
+      "id": "cryptography.aes-modes.s21",
+      "concepts": ["malleability"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Padding oracle on CBC with PKCS#7. The server reports whether padding is valid. The attacker replaces the last byte of the previous ciphertext block (really 96) with guesses $g = 0, 1, \\dots, 255$ and sends it with the target block. The server computes last plaintext byte $= I \\oplus g$, where $I$ is the last byte of $D(C_n)$. Padding is valid when that byte is $1$. The oracle says valid at $g = 98$ (assume this is the 1-byte pad, not a longer one).",
+      "steps": [
+        { "instruction": "Recover the intermediate byte: $I = g \\oplus 1 = 98 \\oplus 1$.", "answer": "99", "accept": [], "hint": "$I \\oplus g = 1$, so $I = g \\oplus 1$." },
+        { "instruction": "Recover the real plaintext byte: $P = I \\oplus 96$ (the original previous-block byte).", "answer": "3", "accept": [], "hint": "$01100011 \\oplus 01100000 = 00000011$." },
+        { "instruction": "To attack the next byte, the attacker needs the last byte to decrypt to $2$. What should they set the last byte to? ($I \\oplus 2$)", "answer": "97", "accept": [], "hint": "$01100011 \\oplus 00000010 = 01100001$." },
+        { "instruction": "Worst case, how many oracle queries does recovering a full 16-byte block take? (256 guesses per byte)", "answer": "4096", "accept": [], "hint": "$16 \\times 256$." }
+      ],
+      "finalAnswer": { "value": "3", "unit": "" },
+      "solutionNarrative": "$I = 98 \\oplus 1 = 99$ and $P = 99 \\oplus 96 = 3$. Setting the last byte to $99 \\oplus 2 = 97$ lines up the next round. At most $16 \\times 256 = 4096$ queries per block reveal the plaintext without the key, which is why CBC must be authenticated (encrypt-then-MAC) or replaced by an AEAD mode."
+    },
+    {
+      "id": "cryptography.aes-modes.s22",
+      "concepts": ["choosing-a-mode"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "Match each description to an AES mode (ECB, CBC, CFB, OFB, CTR, GCM, CCM, SIV, XTS).\n\n**A:** full-disk encryption: each 512-byte sector must encrypt to exactly 512 bytes with no room for a nonce or tag, and the sector number serves as a tweak.\n\n**B:** authenticated encryption where nonces might accidentally repeat (many uncoordinated machines), and a repeat should leak only whether two messages are identical.",
+      "steps": [
+        { "instruction": "Which mode is described in A?", "answer": "XTS", "accept": ["XTS mode", "AES XTS"], "hint": "Look for the structural clue in A." },
+        { "instruction": "Which mode is described in B?", "answer": "SIV", "accept": ["SIV mode", "AES SIV"], "hint": "Look for the structural clue in B." },
+        { "instruction": "Does the mode in A authenticate on its own? (yes or no)", "answer": "no", "accept": [], "hint": "GCM, CCM and SIV output a tag; the others do not." }
+      ],
+      "finalAnswer": { "value": "XTS", "unit": "" },
+      "solutionNarrative": "A is XTS and B is SIV. Of the nine, only GCM, CCM and SIV authenticate; XTS and the classic five need an external MAC (or, for XTS, accept that disk sectors are unauthenticated)."
+    }
+  ]
+}

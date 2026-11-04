@@ -1,4 +1,4 @@
-// placement.js — a short diagnostic that samples one problem from a ladder of
+// placement.js: a short diagnostic that samples one problem from a ladder of
 // milestone topics, grades the learner's final answers, gives a head-start on
 // the topics they clearly know, and recommends where to begin. It never wipes
 // existing progress (head-start grades are merged onto any saved state).
@@ -49,7 +49,7 @@ export async function runPlacement(root) {
   root.textContent = "";
   root.appendChild(el("h1", {}, "Placement quiz"));
   root.appendChild(el("p", { class: "lede" },
-    "Answer as many as you can — one question from across the catalog, easy to hard. " +
+    "Answer as many as you can: one question from across the catalog, easy to hard. " +
     "Skip anything you haven't learned yet. We'll give you a head-start on what you already know."));
 
   let manifest;
@@ -71,7 +71,7 @@ export async function runPlacement(root) {
   const form = el("div", { class: "placement-form" });
   items.forEach((it, i) => {
     const q = el("section", { class: "card placement-q" });
-    q.appendChild(el("div", { class: "placement-meta" }, `${i + 1}. ${it.meta.subject} — ${it.meta.title}`));
+    q.appendChild(el("div", { class: "placement-meta" }, `${i + 1}. ${it.meta.subject}: ${it.meta.title}`));
     const prompt = el("div", { class: "placement-prompt" });
     renderProseInto(prompt, it.problem.prompt);
     q.appendChild(prompt);
@@ -92,7 +92,7 @@ export async function runPlacement(root) {
       const val = it.input.value.trim();
       const fa = it.problem.finalAnswer;
       // Grade with the final step's `form` semantics (e.g. "solutions" for a
-      // quadratic's root set) — without it, correct answers like "5, -1" for
+      // quadratic's root set): without it, correct answers like "5, -1" for
       // "x = 5, x = -1" are rejected and the quiz places the learner too low.
       const steps = it.problem.steps || [];
       const lastForm = steps.length ? steps[steps.length - 1].form : undefined;
@@ -123,10 +123,10 @@ function showResults(root, total, correct, firstMissed) {
     rec.appendChild(el("p", {}, `You cleared everything up to ${firstMissed.meta.subject}. A good place to dig in is:`));
     rec.appendChild(el("a", { class: "btn", href: `topic.html?id=${encodeURIComponent(firstMissed.id)}` }, `Start: ${firstMissed.meta.title}`));
   } else {
-    rec.appendChild(el("p", {}, "You cleared every milestone — impressive. Jump into any advanced subject, or pick a topic that looks new."));
+    rec.appendChild(el("p", {}, "You cleared every milestone. Impressive! Jump into any advanced subject, or pick a topic that looks new."));
   }
   rec.appendChild(el("p", { style: "margin-top: var(--space-3); color: var(--text-dim)" },
-    "We've given the topics you nailed a head-start — you'll see it on the home dashboard."));
+    "We've given the topics you nailed a head-start; you'll see it on the home dashboard."));
   const links = el("div", { style: "display:flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-2)" }, [
     el("a", { class: "btn secondary", href: "index.html" }, "Home & progress"),
   ]);

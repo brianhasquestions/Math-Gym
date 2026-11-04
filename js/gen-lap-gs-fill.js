@@ -146,7 +146,7 @@ fill["lap-basic-2"] = (rng, idx) => {
       { instruction: `Write $F(s)$: the numerator is $${isSin ? "b" : "s"}$ for ${isSin ? "sine" : "cosine"}.`, answer: F, accept: [], hint: isSin ? `$\\mathcal{L}\\{\\sin bt\\} = \\dfrac{b}{s^2+b^2}$.` : `$\\mathcal{L}\\{\\cos bt\\} = \\dfrac{s}{s^2+b^2}$.` },
     ],
     finalAnswer: { value: F, unit: "" },
-    solutionNarrative: `$\\mathcal{L}\\{\\${isSin ? "sin" : "cos"}(${b}t)\\} = \\dfrac{${isSin ? b : "s"}}{s^2 + ${b * b}}$ — sine puts $b$ on top, cosine puts $s$ on top.`,
+    solutionNarrative: `$\\mathcal{L}\\{\\${isSin ? "sin" : "cos"}(${b}t)\\} = \\dfrac{${isSin ? b : "s"}}{s^2 + ${b * b}}$: sine puts $b$ on top, cosine puts $s$ on top.`,
   };
 };
 
@@ -162,7 +162,7 @@ fill["lap-basic-3"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $${n}!$ for the $t^${n}$ entry.`, answer: `${f}`, accept: [], hint: `$${n}! = ${Array.from({ length: n }, (_, i) => n - i).join(" \\cdot ")}$.` },
       { instruction: `Write $\\mathcal{L}\\{t^${n}\\}$ as a rational function of $s$.`, answer: F1, accept: [], hint: `$\\dfrac{n!}{s^{n+1}}$ with $n = ${n}$.` },
-      { instruction: `Write $\\mathcal{L}\\{e^{${a}t}\\}$ as a rational function of $s$.`, answer: F2, accept: [], hint: `$\\dfrac{1}{s-a}$ with $a = ${a}$ — watch the sign.` },
+      { instruction: `Write $\\mathcal{L}\\{e^{${a}t}\\}$ as a rational function of $s$.`, answer: F2, accept: [], hint: `$\\dfrac{1}{s-a}$ with $a = ${a}$: watch the sign.` },
     ],
     finalAnswer: { value: F2, unit: "" },
     solutionNarrative: `$\\mathcal{L}\\{t^${n}\\} = \\dfrac{${f}}{s^${n + 1}}$ and $\\mathcal{L}\\{e^{${a}t}\\} = \\dfrac{1}{${sMinus(a)}}$.`,
@@ -348,7 +348,7 @@ fill["lap-ivp-3"] = (rng, idx) => {
     id: `gen.lap-ivp-3.${idx}`, generated: true, concepts: ["solve-ivp-with-laplace"], difficulty: 3, context: "applied",
     prompt: `A damped system obeys $y'' + ${P === 1 ? "" : P}y' + ${Q}y = 0$ with $y(0) = ${y0}$, $y'(0) = ${v0}$. Solve the IVP with the Laplace transform (the characteristic roots are $${r1}$ and $${r2}$).`,
     steps: [
-      { instruction: `Transform the whole equation ($\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$, $\\mathcal{L}\\{y'\\} = sY - y(0)$) and solve for $Y(s)$ as one rational function.`, answer: Y, accept: [Yfac], hint: `$(s^2 + ${P}s + ${Q})Y = ${y0}s + ${y0 * P} + (${v0})$ — collect the initial-condition terms on the right.` },
+      { instruction: `Transform the whole equation ($\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$, $\\mathcal{L}\\{y'\\} = sY - y(0)$) and solve for $Y(s)$ as one rational function.`, answer: Y, accept: [Yfac], hint: `$(s^2 + ${P}s + ${Q})Y = ${y0}s + ${y0 * P} + (${v0})$: collect the initial-condition terms on the right.` },
       { instruction: `Partial fractions: $Y(s) = \\dfrac{A}{${sMinus(r1)}} + \\dfrac{B}{${sMinus(r2)}}$. Find $A$ by cover-up at $s = ${r1}$.`, answer: `${A}`, accept: [`A = ${A}`], hint: `$A = \\dfrac{${y0}(${r1}) + ${m}}{${r1} - (${r2})} = \\dfrac{${y0 * r1 + m}}{${r1 - r2}}$.` },
       { instruction: `Find $B$ by cover-up at $s = ${r2}$.`, answer: `${B}`, accept: [`B = ${B}`], hint: `$B = \\dfrac{${y0}(${r2}) + ${m}}{${r2} - (${r1})} = \\dfrac{${y0 * r2 + m}}{${r2 - r1}}$.` },
       { instruction: `Write $y(t)$ (e.g. "3e^(-2t) - 4e^(-5t)").`, answer: y.answer, accept: y.accept, hint: `$y(t) = ${A}e^{${r1}t} ${B < 0 ? "-" : "+"} ${Math.abs(B)}e^{${r2}t}$. Check: $y(0) = ${A} + (${B}) = ${y0}$.` },
@@ -458,7 +458,7 @@ fill["gsq-two-1"] = (rng, idx) => {
       { instruction: `Compute $\\vec u_2 = \\vec v_2 - ${c}\\vec u_1$ as $\\langle x, y \\rangle$.`, answer: vec(u2), accept: [], hint: `Subtract $${c}${lvec(u1)}$ from $\\vec v_2$ component-wise.` },
     ],
     finalAnswer: { value: vec(u2), unit: "" },
-    solutionNarrative: `$\\vec v_2 \\cdot \\vec u_1 = ${c * n1}$ over $\\vec u_1 \\cdot \\vec u_1 = ${n1}$ gives coefficient $${c}$, so $\\vec u_2 = \\vec v_2 - ${c}\\vec u_1 = ${lvec(u2)}$ — check: $\\vec u_2 \\cdot \\vec u_1 = 0$.`,
+    solutionNarrative: `$\\vec v_2 \\cdot \\vec u_1 = ${c * n1}$ over $\\vec u_1 \\cdot \\vec u_1 = ${n1}$ gives coefficient $${c}$, so $\\vec u_2 = \\vec v_2 - ${c}\\vec u_1 = ${lvec(u2)}$: check: $\\vec u_2 \\cdot \\vec u_1 = 0$.`,
   };
 };
 
@@ -499,7 +499,7 @@ fill["gsq-two-3"] = (rng, idx) => {
       { instruction: `Compute $\\vec v_2 \\cdot \\vec u_1$.`, answer: `${c * n1}`, accept: [], hint: `$(${v2[0]})(${u1[0]}) + (${v2[1]})(${u1[1]}) + (${v2[2]})(${u1[2]})$.` },
       { instruction: `Compute the Gram-Schmidt coefficient $\\dfrac{\\vec v_2 \\cdot \\vec u_1}{\\vec u_1 \\cdot \\vec u_1}$ (note $\\vec u_1 \\cdot \\vec u_1 = ${n1}$).`, answer: `${c}`, accept: [], hint: `$${c * n1}/${n1}$.` },
       { instruction: `Compute $\\vec u_2 = \\vec v_2 - ${c}\\vec u_1$ as $\\langle x, y, z \\rangle$.`, answer: vec(u2), accept: [], hint: `Subtract component-wise.` },
-      { instruction: `Verify: $\\vec u_2 \\cdot \\vec u_1 = ?$`, answer: "0", accept: [], hint: `Orthogonal vectors have dot product zero — that is the whole point of the subtraction.` },
+      { instruction: `Verify: $\\vec u_2 \\cdot \\vec u_1 = ?$`, answer: "0", accept: [], hint: `Orthogonal vectors have dot product zero: that is the whole point of the subtraction.` },
     ],
     finalAnswer: { value: vec(u2), unit: "" },
     solutionNarrative: `The coefficient is $${c * n1}/${n1} = ${c}$, so $\\vec u_2 = \\vec v_2 - ${c}\\vec u_1 = ${lvec(u2)}$, and $\\vec u_2 \\cdot \\vec u_1 = 0$ confirms orthogonality.`,
@@ -523,7 +523,7 @@ fill["gsq-three-1"] = (rng, idx) => {
       { instruction: `Compute $\\vec u_3 = \\vec v_3 - ${a}\\vec u_1 ${b < 0 ? "+" : "-"} ${Math.abs(b)}\\vec u_2$ as $\\langle x, y, z \\rangle$.`, answer: vec(u3), accept: [], hint: `The first two components cancel completely.` },
     ],
     finalAnswer: { value: vec(u3), unit: "" },
-    solutionNarrative: `$c_1 = ${a}$ and $c_2 = ${b}$, so $\\vec u_3 = \\vec v_3 - ${a}\\vec u_1 - (${b})\\vec u_2 = ${lvec(u3)}$ — orthogonal to both $\\vec u_1$ and $\\vec u_2$.`,
+    solutionNarrative: `$c_1 = ${a}$ and $c_2 = ${b}$, so $\\vec u_3 = \\vec v_3 - ${a}\\vec u_1 - (${b})\\vec u_2 = ${lvec(u3)}$: orthogonal to both $\\vec u_1$ and $\\vec u_2$.`,
   };
 };
 

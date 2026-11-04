@@ -3,7 +3,7 @@
 //   - numerical-methods.numerical-integration   (prefix nm2-riemann-*, nm2-trapezoidal-*, nm2-simpson-*, nm2-intcompare-*)
 //   - numerical-methods.linear-systems          (prefix nm2-gauss-*, nm2-pivot-*, nm2-lu-*, nm2-cond-*)
 //   - numerical-methods.numerical-odes           (prefix nm2-euler-*, nm2-heun-*, nm2-rk4-*, nm2-odestab-*)
-// One generator per (concept, difficulty) — 36 total. Exports a `fill` map of
+// One generator per (concept, difficulty): 36 total. Exports a `fill` map of
 // template-name -> generator fn matching the shape used by js/generator.js.
 // Deterministic from the passed rng only; no imports from generator.js.
 //
@@ -79,7 +79,7 @@ fill["nm2-riemann-2"] = (rng, idx) => {
       { instruction: `Multiply the height sum by $\\Delta x = 1$ for the midpoint estimate. Round to 2 decimals.`, answer: rnd(sum, 2), accept: nbrs(sum, 2), hint: `$${rnd(sum, 2)} \\times 1$.` },
     ],
     finalAnswer: { value: rnd(sum, 2), unit: "" },
-    solutionNarrative: `Midpoint heights sum to $${rnd(sum, 2)}$; times $\\Delta x = 1$ gives $${rnd(sum, 2)}$ — closer to the exact $${rnd(n * n * n / 3, 3)}$ than a one-sided sum.`,
+    solutionNarrative: `Midpoint heights sum to $${rnd(sum, 2)}$; times $\\Delta x = 1$ gives $${rnd(sum, 2)}$: closer to the exact $${rnd(n * n * n / 3, 3)}$ than a one-sided sum.`,
   };
 };
 
@@ -105,7 +105,7 @@ fill["nm2-riemann-3"] = (rng, idx) => {
       { instruction: `Multiply by $\\Delta t = 1$ for the estimated distance.`, answer: `${dist}`, accept: nbrs(dist, 0), hint: `$${dist} \\times 1$.` },
     ],
     finalAnswer: { value: `${dist}`, unit: ctx.u },
-    solutionNarrative: `Midpoint velocities sum to $${dist}$ m/s·(count); times $\\Delta t = 1$ the estimated distance is $${dist}$ ${ctx.u} — exact here because $v$ is linear.`,
+    solutionNarrative: `Midpoint velocities sum to $${dist}$ m/s·(count); times $\\Delta t = 1$ the estimated distance is $${dist}$ ${ctx.u}: exact here because $v$ is linear.`,
   };
 };
 
@@ -149,7 +149,7 @@ fill["nm2-trapezoidal-2"] = (rng, idx) => {
       { instruction: `Add the endpoint-average to the interior sum and multiply by $\\Delta x = 1$. Round to 1 decimal.`, answer: rnd(T, 1), accept: nbrs(T, 1), hint: `$(${rnd(fn / 2, 1)} + ${interior}) \\times 1$.` },
     ],
     finalAnswer: { value: rnd(T, 1), unit: "" },
-    solutionNarrative: `Interior $= ${interior}$, endpoint-average $= ${rnd(fn / 2, 1)}$; $T = ${rnd(T, 1)}$. The exact value is $${rnd(n * n * n / 3, 3)}$ — trapezoids slightly overestimate a concave-up curve.`,
+    solutionNarrative: `Interior $= ${interior}$, endpoint-average $= ${rnd(fn / 2, 1)}$; $T = ${rnd(T, 1)}$. The exact value is $${rnd(n * n * n / 3, 3)}$: trapezoids slightly overestimate a concave-up curve.`,
   };
 };
 
@@ -202,7 +202,7 @@ fill["nm2-simpson-1"] = (rng, idx) => {
       { instruction: `Multiply by $\\dfrac{h}{3} = \\dfrac{${h}}{3}$. Compute $S$${S === Math.round(S) ? "" : " (round to 3 decimals)"}.`, answer: S === Math.round(S) ? `${S}` : rnd(S, 3), accept: S === Math.round(S) ? [] : nbrs(S, 3), hint: `$\\dfrac{${h}}{3} \\times ${scaled}$.` },
     ],
     finalAnswer: { value: S === Math.round(S) ? `${S}` : rnd(S, 3), unit: "" },
-    solutionNarrative: `$f_0 + 4f_1 + f_2 = ${scaled}$; $S = \\frac{${h}}{3}(${scaled}) = ${S === Math.round(S) ? S : rnd(S, 3)}$ — exact for $x^2$, since Simpson is exact on quadratics.`,
+    solutionNarrative: `$f_0 + 4f_1 + f_2 = ${scaled}$; $S = \\frac{${h}}{3}(${scaled}) = ${S === Math.round(S) ? S : rnd(S, 3)}$: exact for $x^2$, since Simpson is exact on quadratics.`,
   };
 };
 
@@ -290,7 +290,7 @@ fill["nm2-intcompare-2"] = (rng, idx) => {
   };
 };
 
-// d3: error-order reasoning — halving h and the factor (menu + numeric).
+// d3: error-order reasoning: halving h and the factor (menu + numeric).
 fill["nm2-intcompare-3"] = (rng, idx) => {
   const rule = rng.pick([
     { name: "the trapezoidal rule", order: 2, factor: 4 },
@@ -325,6 +325,8 @@ fill["nm2-gauss-1"] = (rng, idx) => {
   const x = rng.int(1, 5), y = rng.int(-4, 4);
   const a11 = 1, a12 = rng.int(1, 4);
   let a21 = rng.int(2, 4), a22 = rng.int(1, 4);
+  // reject det = a22 - a21*a12 = 0 (singular: no unique solution, y = 0/0)
+  while (a22 === a21 * a12) { a21 = rng.int(2, 4); a22 = rng.int(1, 4); }
   const b1 = a11 * x + a12 * y;
   const b2 = a21 * x + a22 * y;
   const m = a21 / a11;               // integer since a11=1
@@ -375,11 +377,19 @@ fill["nm2-gauss-3"] = (rng, idx) => {
   const x = rng.int(1, 3), y = rng.int(-2, 3), z = rng.int(1, 3);
   // Upper-triangular-friendly construction. Use small integer coefficients,
   // first pivot 1.
-  const A = [
+  // Redraw until the system is nonsingular and the second pivot (after
+  // eliminating x) is nonzero, so plain elimination needs no row swap.
+  const draw = () => [
     [1, rng.int(1, 2), rng.int(1, 2)],
     [rng.int(1, 3), rng.int(2, 4), rng.int(1, 3)],
     [rng.int(1, 3), rng.int(1, 3), rng.int(2, 4)],
   ];
+  const det3 = (M) =>
+    M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) -
+    M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0]) +
+    M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+  let A = draw();
+  while (det3(A) === 0 || A[1][1] - A[1][0] * A[0][1] === 0) A = draw();
   const b = [
     A[0][0] * x + A[0][1] * y + A[0][2] * z,
     A[1][0] * x + A[1][1] * y + A[1][2] * z,
@@ -404,11 +414,11 @@ fill["nm2-gauss-3"] = (rng, idx) => {
 
 // --- partial-pivoting --------------------------------------------------------
 
-// d1: menu — is a swap needed? (zero or tiny pivot).
+// d1: menu: is a swap needed? (zero or tiny pivot).
 fill["nm2-pivot-1"] = (rng, idx) => {
   const scen = rng.pick([
-    { top: 0, bot: 3, need: "yes", why: "the top pivot is exactly 0, so you cannot divide by it — you must swap in a nonzero row" },
-    { top: 2, bot: 5, need: "no", why: "the top pivot is a healthy nonzero number, so no swap is required" },
+    { top: 0, bot: 3, need: "yes", why: "the top pivot is exactly 0, so you cannot divide by it: you must swap in a nonzero row" },
+    { top: 2, bot: 5, need: "yes", why: "partial pivoting always brings the largest-magnitude entry to the pivot, and $|5| > |2|$, so swap even though 2 is nonzero" },
     { top: 0, bot: 4, need: "yes", why: "a zero pivot forces a row swap before elimination can proceed" },
     { top: 6, bot: 1, need: "no", why: "the current pivot is already the larger entry, so it is fine to keep" },
   ]);
@@ -419,11 +429,11 @@ fill["nm2-pivot-1"] = (rng, idx) => {
       { instruction: `Type "yes" or "no".`, answer: scen.need, accept: [], hint: scen.why + "." },
     ],
     finalAnswer: { value: scen.need, unit: "" },
-    solutionNarrative: `Answer: ${scen.need} — ${scen.why}.`,
+    solutionNarrative: `Answer: ${scen.need}: ${scen.why}.`,
   };
 };
 
-// d2: numeric — pick the pivot row (largest |entry|) and give its index.
+// d2: numeric: pick the pivot row (largest |entry|) and give its index.
 fill["nm2-pivot-2"] = (rng, idx) => {
   // three entries in a pivot column; partial pivoting picks the largest magnitude
   let e = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)];
@@ -440,11 +450,11 @@ fill["nm2-pivot-2"] = (rng, idx) => {
       { instruction: `Give the (1-based) row number holding that largest-magnitude entry.`, answer: `${rowIdx}`, accept: [], hint: `The entry $${e[rowIdx - 1]}$ has the largest size.` },
     ],
     finalAnswer: { value: `${rowIdx}`, unit: "" },
-    solutionNarrative: `The largest magnitude is $${maxMag}$ (row ${rowIdx}), so partial pivoting swaps that row up to be the pivot row — this keeps multipliers $\\le 1$ and limits round-off growth.`,
+    solutionNarrative: `The largest magnitude is $${maxMag}$ (row ${rowIdx}), so partial pivoting swaps that row up to be the pivot row: this keeps multipliers $\\le 1$ and limits round-off growth.`,
   };
 };
 
-// d3: menu + numeric — swap needed, then compute post-swap multiplier.
+// d3: menu + numeric: swap needed, then compute post-swap multiplier.
 fill["nm2-pivot-3"] = (rng, idx) => {
   // pivot col: top small, below large; swap, then multiplier = smaller/larger
   const big = rng.int(4, 8);
@@ -453,10 +463,10 @@ fill["nm2-pivot-3"] = (rng, idx) => {
   const mult = small / big;
   return {
     id: `gen.nm2-pivot-3.${idx}`, generated: true, concepts: ["partial-pivoting"], difficulty: 3, context: "abstract",
-    prompt: `A pivot column has $${small}$ on top and $${big}$ below. Without pivoting the multiplier would be $${big}/${small} = ${rnd(big / small, 4)}$ — larger than 1, which amplifies round-off. Apply partial pivoting.`,
+    prompt: `A pivot column has $${small}$ on top and $${big}$ below. Without pivoting the multiplier would be $${big}/${small} = ${rnd(big / small, 4)}$: larger than 1, which amplifies round-off. Apply partial pivoting.`,
     steps: [
       { instruction: `Should you swap the rows so the larger entry $${big}$ is the pivot? (Type "yes" or "no".)`, answer: "yes", accept: [], hint: `Partial pivoting always brings the largest-magnitude entry to the pivot.` },
-      { instruction: `After swapping, the multiplier for the other row is $${small}/${big}$. Compute it (round to 4 decimals).`, answer: rnd(mult, 4), accept: nbrs(mult, 4), hint: `$${small} \\div ${big}$ — now a number $\\le 1$.` },
+      { instruction: `After swapping, the multiplier for the other row is $${small}/${big}$. Compute it (round to 4 decimals).`, answer: rnd(mult, 4), accept: nbrs(mult, 4), hint: `$${small} \\div ${big}$: now a number $\\le 1$.` },
     ],
     finalAnswer: { value: rnd(mult, 4), unit: "" },
     solutionNarrative: `Swap $${big}$ to the pivot; the multiplier becomes $${small}/${big} = ${rnd(mult, 4)} \\le 1$, so round-off no longer grows during elimination.`,
@@ -535,7 +545,7 @@ fill["nm2-lu-3"] = (rng, idx) => {
 
 // --- condition-and-stability -------------------------------------------------
 
-// d1: menu — ill-conditioned means sensitive.
+// d1: menu: ill-conditioned means sensitive.
 fill["nm2-cond-1"] = (rng, idx) => {
   const q = rng.pick([
     { prompt: "A system is called **ill-conditioned** when a tiny change in the data causes a ___ change in the solution.", ans: "large", accept: ["big", "huge"] },
@@ -549,11 +559,11 @@ fill["nm2-cond-1"] = (rng, idx) => {
       { instruction: "Type the word that completes the sentence.", answer: q.ans, accept: q.accept, hint: "Ill-conditioning is about sensitivity to small data changes." },
     ],
     finalAnswer: { value: q.ans, unit: "" },
-    solutionNarrative: `Ill-conditioned systems amplify small data errors into large solution errors — the completing word is "${q.ans}".`,
+    solutionNarrative: `Ill-conditioned systems amplify small data errors into large solution errors: the completing word is "${q.ans}".`,
   };
 };
 
-// d2: numeric — compute a residual r = b - A x_approx for a 1-row check.
+// d2: numeric: compute a residual r = b - A x_approx for a 1-row check.
 fill["nm2-cond-2"] = (rng, idx) => {
   // single equation residual: a1*xa + a2*ya vs b
   const a1 = rng.int(1, 4), a2 = rng.int(1, 4);
@@ -573,7 +583,7 @@ fill["nm2-cond-2"] = (rng, idx) => {
   };
 };
 
-// d3: menu — a small residual does NOT guarantee a good solution.
+// d3: menu: a small residual does NOT guarantee a good solution.
 fill["nm2-cond-3"] = (rng, idx) => {
   const q = rng.pick([
     { prompt: "For an **ill-conditioned** system, a very small residual guarantees the computed solution is close to the true one.", ans: "false", accept: ["f", "no"] },
@@ -698,7 +708,7 @@ fill["nm2-heun-1"] = (rng, idx) => {
       { instruction: `End slope $f_1 = ${a}(${rnd(xp, 1)})${b === 0 ? "" : " + " + b + "(" + rnd(yp, 3) + ")"} = ${rnd(f1, 3)}$. Corrector $y_1 = ${y0} + \\tfrac{${rnd(h, 1)}}{2}(${f0} + ${rnd(f1, 3)})$. Round to 3 decimals.`, answer: rnd(y1, 3), accept: nbrs(y1, 3), hint: `Average the two slopes, then step.` },
     ],
     finalAnswer: { value: rnd(y1, 3), unit: "" },
-    solutionNarrative: `$f_0 = ${f0}$, predictor $y^* = ${rnd(yp, 3)}$, end slope $f_1 = ${rnd(f1, 3)}$; corrector $y_1 = ${rnd(y1, 3)}$ — closer to the true curve than plain Euler.`,
+    solutionNarrative: `$f_0 = ${f0}$, predictor $y^* = ${rnd(yp, 3)}$, end slope $f_1 = ${rnd(f1, 3)}$; corrector $y_1 = ${rnd(y1, 3)}$: closer to the true curve than plain Euler.`,
   };
 };
 
@@ -744,7 +754,7 @@ fill["nm2-heun-3"] = (rng, idx) => {
       { instruction: `End slope $f_1 = -${k}(${rnd(Tp, 3)} - ${env}) = ${rnd(f1, 4)}$. Corrector $T_1 = ${T0} + \\tfrac{1}{2}(${rnd(f0, 3)} + ${rnd(f1, 4)})$. Round to 3 decimals.`, answer: rnd(T1, 3), accept: nbrs(T1, 3), hint: `Average the two slopes and add to $T_0$.` },
     ],
     finalAnswer: { value: rnd(T1, 3), unit: "degrees" },
-    solutionNarrative: `Predictor $T^* = ${rnd(Tp, 3)}$, corrector $T_1 = ${rnd(T1, 3)}$° — Heun's slope averaging corrects Euler's overshoot on the flattening cooling curve.`,
+    solutionNarrative: `Predictor $T^* = ${rnd(Tp, 3)}$, corrector $T_1 = ${rnd(T1, 3)}$°: Heun's slope averaging corrects Euler's overshoot on the flattening cooling curve.`,
   };
 };
 
@@ -773,7 +783,7 @@ fill["nm2-rk4-1"] = (rng, idx) => {
       { instruction: `$k_3 = ${a}(${y0} + ${rnd(h / 2, 3)}\\cdot${rnd(k2, 4)}) = ${rnd(k3, 4)}$, $k_4 = ${a}(${y0} + ${rnd(h, 1)}\\cdot${rnd(k3, 4)}) = ${rnd(k4, 4)}$. Now $y_1 = ${y0} + \\tfrac{${rnd(h, 1)}}{6}(k_1 + 2k_2 + 2k_3 + k_4)$. Round to 4 decimals.`, answer: rnd(y1, 4), accept: nbrs(y1, 4), hint: `Weighted average: $\\tfrac{k_1 + 2k_2 + 2k_3 + k_4}{6}$ times $h$.` },
     ],
     finalAnswer: { value: rnd(y1, 4), unit: "" },
-    solutionNarrative: `$k_1 = ${k1}$, $k_2 = ${rnd(k2, 4)}$, $k_3 = ${rnd(k3, 4)}$, $k_4 = ${rnd(k4, 4)}$; $y_1 = ${rnd(y1, 4)}$ — RK4's four-slope blend is far more accurate than one Euler step.`,
+    solutionNarrative: `$k_1 = ${k1}$, $k_2 = ${rnd(k2, 4)}$, $k_3 = ${rnd(k3, 4)}$, $k_4 = ${rnd(k4, 4)}$; $y_1 = ${rnd(y1, 4)}$: RK4's four-slope blend is far more accurate than one Euler step.`,
   };
 };
 
@@ -829,7 +839,7 @@ fill["nm2-rk4-3"] = (rng, idx) => {
 
 // --- stability-and-step-size -------------------------------------------------
 
-// d1: menu — local vs global error.
+// d1: menu: local vs global error.
 fill["nm2-odestab-1"] = (rng, idx) => {
   const q = rng.pick([
     { prompt: "The error made in a **single** step of a method is called the ___ error.", ans: "local", accept: ["local truncation", "local truncation error"] },
@@ -846,7 +856,7 @@ fill["nm2-odestab-1"] = (rng, idx) => {
   };
 };
 
-// d2: numeric — halving h and the error factor for a given order method.
+// d2: numeric: halving h and the error factor for a given order method.
 fill["nm2-odestab-2"] = (rng, idx) => {
   const method = rng.pick([
     { name: "Euler's method", order: 1, factor: 2 },
@@ -867,7 +877,7 @@ fill["nm2-odestab-2"] = (rng, idx) => {
   };
 };
 
-// d3: menu + numeric — compare Euler vs RK4 error shrink, plus a menu.
+// d3: menu + numeric: compare Euler vs RK4 error shrink, plus a menu.
 fill["nm2-odestab-3"] = (rng, idx) => {
   // Given Euler error and the fact RK4 is order 4, which shrinks faster (menu),
   // and compute RK4 factor for halving.

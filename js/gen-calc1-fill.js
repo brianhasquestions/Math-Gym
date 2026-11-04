@@ -65,7 +65,7 @@ fill["c1i-diff-term-d2"] = (rng, idx) => {
   };
 };
 
-// d3: a product term m*x*y plus y^2 — product rule inside an implicit equation.
+// d3: a product term m*x*y plus y^2: product rule inside an implicit equation.
 fill["c1i-diff-term-d3"] = (rng, idx) => {
   const m = rng.int(2, 5);
   const c = rng.int(6, 48);
@@ -86,7 +86,7 @@ fill["c1i-diff-term-d3"] = (rng, idx) => {
 
 // --- solve-for-dydx ----------------------------------------------------------
 
-// d1: from a*x + b*y*y' = 0, isolate y' (answer is a rational in x, y — grades).
+// d1: from a*x + b*y*y' = 0, isolate y' (answer is a rational in x, y: grades).
 fill["c1i-solve-dydx-d1"] = (rng, idx) => {
   const b = rng.pick([2, 4, 6]);
   const m = rng.int(1, 3);
@@ -236,7 +236,7 @@ fill["c1i-tangent-d2"] = (rng, idx) => {
   };
 };
 
-// d3: applied — release along the tangent to a circle at a Pythagorean point.
+// d3: applied: release along the tangent to a circle at a Pythagorean point.
 fill["c1i-tangent-d3"] = (rng, idx) => {
   const [x0, y0, r] = rng.pick(TRIPLES);
   const g = gcd(x0, y0), p = x0 / g, q = y0 / g;
@@ -251,13 +251,13 @@ fill["c1i-tangent-d3"] = (rng, idx) => {
   ]);
   return {
     id: `gen.c1i-tangent-d3.${idx}`, generated: true, concepts: ["tangent-lines-implicit"], difficulty: 3, context: "applied",
-    prompt: `${ctx.who} at the point $(${x0}, ${y0})$ — ${ctx.track} $x^2 + y^2 = ${r * r}$ (meters) — and it travels along the tangent line. Find that line. (The circle's implicit derivative is $\\frac{dy}{dx} = -\\frac{x}{y}$.)`,
+    prompt: `${ctx.who} at the point $(${x0}, ${y0})$, ${ctx.track} $x^2 + y^2 = ${r * r}$ (meters), and it travels along the tangent line. Find that line. (The circle's implicit derivative is $\\frac{dy}{dx} = -\\frac{x}{y}$.)`,
     steps: [
       { instruction: `Find the slope at $(${x0}, ${y0})$. Give a reduced fraction or decimal.`, answer: slope, accept: [`-${x0}/${y0}`], hint: `$-\\frac{${x0}}{${y0}}$, then reduce.` },
       { instruction: "Write the tangent line in the form $y = mx + b$.", answer: line, accept: [`y=${mx}+${bFrac}`, `y = ${mx} + ${r * r}/${y0}`], hint: `Point–slope: $y - ${y0} = ${slope}(x - ${x0})$; the intercept is $\\frac{${r * r}}{${y0}}$ (i.e. $r^2/y_0$).` },
     ],
     finalAnswer: { value: line, unit: "" },
-    solutionNarrative: `Slope $= -\\frac{${x0}}{${y0}} = ${slope}$. Point–slope: $y - ${y0} = ${slope}(x - ${x0})$, so $y = ${mx} + ${bFrac}$ — the straight-line flight path.`,
+    solutionNarrative: `Slope $= -\\frac{${x0}}{${y0}} = ${slope}$. Point–slope: $y - ${y0} = ${slope}(x - ${x0})$, so $y = ${mx} + ${bFrac}$: the straight-line flight path.`,
   };
 };
 
@@ -308,8 +308,8 @@ fill["c1t-exp-d3"] = (rng, idx) => {
     id: `gen.c1t-exp-d3.${idx}`, generated: true, concepts: ["exp-derivatives"], difficulty: 3, context: "applied",
     prompt: `A radioactive sample has mass $m(t) = ${a}e^{-${k}t}$ grams after $t$ hours. Find the rate of change $m'(t)$, then the initial rate $m'(0)$.`,
     steps: [
-      { instruction: `Differentiate $m(t)$ — the inner derivative is $-${k}$, so watch the sign. (Type it like ${ans}.)`, answer: ans, accept: [`-${ak}e^{-${k}t}`, `-${ak}*e^(-${k}t)`, `-${ak}e^-${k}t`], hint: `$\\frac{d}{dt}e^{-${k}t} = -${k}e^{-${k}t}$, and $${a} \\cdot (-${k}) = -${ak}$.` },
-      { instruction: "Evaluate $m'(0)$. Give a number (grams per hour).", answer: `-${ak}`, accept: [`-${ak}e^0`], hint: `$e^0 = 1$, so $m'(0) = -${ak}$ — negative because the mass is shrinking.` },
+      { instruction: `Differentiate $m(t)$: the inner derivative is $-${k}$, so watch the sign. (Type it like ${ans}.)`, answer: ans, accept: [`-${ak}e^{-${k}t}`, `-${ak}*e^(-${k}t)`, `-${ak}e^-${k}t`], hint: `$\\frac{d}{dt}e^{-${k}t} = -${k}e^{-${k}t}$, and $${a} \\cdot (-${k}) = -${ak}$.` },
+      { instruction: "Evaluate $m'(0)$. Give a number (grams per hour).", answer: `-${ak}`, accept: [`-${ak}e^0`], hint: `$e^0 = 1$, so $m'(0) = -${ak}$: negative because the mass is shrinking.` },
     ],
     finalAnswer: { value: `-${ak}`, unit: "grams per hour" },
     solutionNarrative: `$m'(t) = -${ak}e^{-${k}t}$; at $t = 0$ the sample loses ${ak} grams per hour.`,
@@ -318,7 +318,7 @@ fill["c1t-exp-d3"] = (rng, idx) => {
 
 // --- log-derivatives ---------------------------------------------------------
 
-// d1: d/dx ln(kx) = 1/x — the constant cancels; rational answers grade.
+// d1: d/dx ln(kx) = 1/x: the constant cancels; rational answers grade.
 fill["c1t-log-d1"] = (rng, idx) => {
   const k = rng.int(2, 9);
   return {
@@ -326,10 +326,10 @@ fill["c1t-log-d1"] = (rng, idx) => {
     prompt: `Differentiate $f(x) = \\ln(${k}x)$ and simplify.`,
     steps: [
       { instruction: `Apply $\\frac{d}{dx}\\ln(u) = \\frac{u'}{u}$ with $u = ${k}x$.`, answer: `${k}/(${k}x)`, accept: ["1/x", `${k}/${k}x`], hint: `Derivative of the inside (${k}) over the inside ($${k}x$).` },
-      { instruction: "Simplify the fraction.", answer: "1/x", accept: [`${k}/(${k}x)`], hint: `The ${k}s cancel — $\\ln(kx)$ always has derivative $\\frac{1}{x}$.` },
+      { instruction: "Simplify the fraction.", answer: "1/x", accept: [`${k}/(${k}x)`], hint: `The ${k}s cancel: $\\ln(kx)$ always has derivative $\\frac{1}{x}$.` },
     ],
     finalAnswer: { value: "1/x", unit: "" },
-    solutionNarrative: `$\\frac{u'}{u} = \\frac{${k}}{${k}x} = \\frac{1}{x}$ — the inner constant cancels completely.`,
+    solutionNarrative: `$\\frac{u'}{u} = \\frac{${k}}{${k}x} = \\frac{1}{x}$: the inner constant cancels completely.`,
   };
 };
 
@@ -371,7 +371,7 @@ fill["c1t-log-d3"] = (rng, idx) => {
 fill["c1t-trig-d1"] = (rng, idx) => {
   const pair = rng.pick([
     { f: "\\sin x", ans: "cos(x)", accept: ["cosx", "cos x"], hintText: "The derivative of sine is cosine.", narrative: "$\\frac{d}{dx}\\sin x = \\cos x$." },
-    { f: "\\cos x", ans: "-sin(x)", accept: ["-sinx", "-sin x"], hintText: "Cosine's derivative is **negative** sine — mind the sign.", narrative: "$\\frac{d}{dx}\\cos x = -\\sin x$ — don't drop the minus." },
+    { f: "\\cos x", ans: "-sin(x)", accept: ["-sinx", "-sin x"], hintText: "Cosine's derivative is **negative** sine: mind the sign.", narrative: "$\\frac{d}{dx}\\cos x = -\\sin x$: don't drop the minus." },
   ]);
   return {
     id: `gen.c1t-trig-d1.${idx}`, generated: true, concepts: ["trig-derivatives"], difficulty: 1, context: "abstract",
@@ -396,7 +396,7 @@ fill["c1t-trig-d2"] = (rng, idx) => {
       { instruction: "Evaluate $f'(0)$. Give a number.", answer: `${k}`, accept: [`${k}cos(0)`], hint: `$\\cos 0 = 1$, so $f'(0) = ${k} \\cdot 1$.` },
     ],
     finalAnswer: { value: `${k}`, unit: "" },
-    solutionNarrative: `$f'(x) = ${k}\\cos(${k}x)$; at $x = 0$ the slope is ${k} — frequency scales the slope.`,
+    solutionNarrative: `$f'(x) = ${k}\\cos(${k}x)$; at $x = 0$ the slope is ${k}: frequency scales the slope.`,
   };
 };
 
@@ -410,7 +410,7 @@ fill["c1t-trig-d3"] = (rng, idx) => {
     id: `gen.c1t-trig-d3.${idx}`, generated: true, concepts: ["trig-derivatives"], difficulty: 3, context: "abstract",
     prompt: `Differentiate $f(x) = ${a}\\cos(${k}x)$, then evaluate $f'\\left(${xLatex}\\right)$.`,
     steps: [
-      { instruction: `Apply the chain rule — watch the sign. (Type it like ${ans}.)`, answer: ans, accept: [`-${ak}sin${k}x`, `-${ak}*sin(${k}x)`, `-${ak} sin(${k}x)`], hint: `$\\frac{d}{dx}\\cos(${k}x) = -${k}\\sin(${k}x)$, and $${a} \\cdot (-${k}) = -${ak}$.` },
+      { instruction: `Apply the chain rule: watch the sign. (Type it like ${ans}.)`, answer: ans, accept: [`-${ak}sin${k}x`, `-${ak}*sin(${k}x)`, `-${ak} sin(${k}x)`], hint: `$\\frac{d}{dx}\\cos(${k}x) = -${k}\\sin(${k}x)$, and $${a} \\cdot (-${k}) = -${ak}$.` },
       { instruction: `Evaluate at $x = ${xLatex}$, where $${k}x = \\frac{\\pi}{2}$ and $\\sin\\frac{\\pi}{2} = 1$. Give a number.`, answer: `-${ak}`, accept: [], hint: `$-${ak} \\cdot 1$.` },
     ],
     finalAnswer: { value: `-${ak}`, unit: "" },
@@ -438,7 +438,7 @@ fill["c1t-rate-d1"] = (rng, idx) => {
       { instruction: `Evaluate $P'(0)$. Give a number (${ctx.unit}).`, answer: `${k * P0}`, accept: [`${k * P0}e^0`], hint: "$e^0 = 1$." },
     ],
     finalAnswer: { value: `${k * P0}`, unit: ctx.unit },
-    solutionNarrative: `$P'(t) = ${k * P0}e^{${k}t}$; at $t = 0$ the rate is ${k * P0} ${ctx.unit} — always proportional to the current amount.`,
+    solutionNarrative: `$P'(t) = ${k * P0}e^{${k}t}$; at $t = 0$ the rate is ${k * P0} ${ctx.unit}: always proportional to the current amount.`,
   };
 };
 

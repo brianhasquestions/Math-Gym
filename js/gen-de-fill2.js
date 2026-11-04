@@ -17,7 +17,7 @@ const compact = (s) => s.replace(/\s+/g, "");
 export const fill = {};
 
 // ============================================================================
-// complementary-solution — solve the homogeneous part via the char. equation
+// complementary-solution: solve the homogeneous part via the char. equation
 // ============================================================================
 
 fill["def2-complementary-solution-d1"] = (rng, idx) => {
@@ -74,7 +74,7 @@ fill["def2-complementary-solution-d3"] = (rng, idx) => {
 };
 
 // ============================================================================
-// particular-form — choose the shape of y_p from the forcing term
+// particular-form: choose the shape of y_p from the forcing term
 // ============================================================================
 
 fill["def2-particular-form-d1"] = (rng, idx) => {
@@ -102,12 +102,12 @@ fill["def2-particular-form-d2"] = (rng, idx) => {
   const r1 = -rng.int(1, 4);
   let r2 = -rng.int(1, 4);
   if (r2 === r1) r2 -= 1;
-  const b = -(r1 + r2), c = r1 * r2; // both positive: a damped system, real roots — no resonance possible
+  const b = -(r1 + r2), c = r1 * r2; // both positive: a damped system, real roots: no resonance possible
   return {
     id: `gen.def2-particular-form-d2.${idx}`, generated: true, concepts: ["particular-form"], difficulty: 2, context: "abstract",
     prompt: `For $y'' + ${b}y' + ${c}y = ${k}\\sin(${w}t)$, choose the form of the particular solution.`,
     steps: [
-      { instruction: "Only sine appears in the forcing. Does $y_p$ still need a cosine term as well? Type 'yes' or 'no'.", answer: "yes", accept: ["y"], hint: "Differentiating sine produces cosine — the guess must be closed under differentiation." },
+      { instruction: "Only sine appears in the forcing. Does $y_p$ still need a cosine term as well? Type 'yes' or 'no'.", answer: "yes", accept: ["y"], hint: "Differentiating sine produces cosine: the guess must be closed under differentiation." },
       { instruction: "Write the form of $y_p$ (use A and B for the unknown coefficients).", answer: `A cos(${w}t) + B sin(${w}t)`, accept: [`Acos(${w}t)+Bsin(${w}t)`, `A sin(${w}t) + B cos(${w}t)`, `Asin(${w}t)+Bcos(${w}t)`], hint: `Sinusoidal forcing at frequency ${w} calls for $A\\cos(${w}t) + B\\sin(${w}t)$.` },
     ],
     finalAnswer: { value: `A cos(${w}t) + B sin(${w}t)`, unit: "" },
@@ -122,19 +122,19 @@ fill["def2-particular-form-d3"] = (rng, idx) => {
   const b = -(r1 + r2), c = r1 * r2, k = rng.int(2, 9);
   return {
     id: `gen.def2-particular-form-d3.${idx}`, generated: true, concepts: ["particular-form"], difficulty: 3, context: "applied",
-    prompt: `A forced system obeys $y'' ${signed(b)}y' ${signed(c)}y = ${k}e^{${r1}t}$ — the forcing matches part of the system's own natural response. Choose the form of $y_p$.`,
+    prompt: `A forced system obeys $y'' ${signed(b)}y' ${signed(c)}y = ${k}e^{${r1}t}$: the forcing matches part of the system's own natural response. Choose the form of $y_p$.`,
     steps: [
       { instruction: `Find the roots of the homogeneous part $r^2 ${signed(b)}r ${signed(c)} = 0$.`, form: "solutions", answer: `r = ${r1} or r = ${r2}`, accept: [`${r1}, ${r2}`, `${r2}, ${r1}`], hint: `$(r ${signed(-r1)})(r ${signed(-r2)}) = 0$.` },
       { instruction: `Is the forcing exponent ${r1} a root? Type 'yes' or 'no'.`, answer: "yes", accept: ["y"], hint: `The exponent ${r1} appears in your root list.` },
       { instruction: `The plain guess $Ae^{${r1}t}$ already solves the homogeneous equation, so it collapses to 0 when substituted. Multiply it by $t$ and write the corrected form of $y_p$.`, answer: `Ate^(${r1}t)`, accept: [`Ate^{${r1}t}`, `A*t*e^(${r1}t)`, `A t e^{${r1}t}`], hint: `The resonance bump: $t \\cdot Ae^{${r1}t}$.` },
     ],
     finalAnswer: { value: `Ate^(${r1}t)`, unit: "" },
-    solutionNarrative: `The exponent ${r1} IS a characteristic root — resonance. The guess must be bumped by a factor of $t$: $y_p = Ate^{${r1}t}$.`,
+    solutionNarrative: `The exponent ${r1} IS a characteristic root: resonance. The guess must be bumped by a factor of $t$: $y_p = Ate^{${r1}t}$.`,
   };
 };
 
 // ============================================================================
-// undetermined-coefficients — substitute y_p and solve for A, B (numeric core)
+// undetermined-coefficients: substitute y_p and solve for A, B (numeric core)
 // ============================================================================
 
 fill["def2-undetermined-coefficients-d1"] = (rng, idx) => {
@@ -154,7 +154,7 @@ fill["def2-undetermined-coefficients-d1"] = (rng, idx) => {
 
 fill["def2-undetermined-coefficients-d2"] = (rng, idx) => {
   const al = rng.int(1, 3), b = rng.int(1, 5), c = rng.int(1, 9);
-  const D = al * al + b * al + c; // always positive — never a resonance
+  const D = al * al + b * al + c; // always positive: never a resonance
   const k = rng.int(2, 12);
   const Astr = frac(k, D);
   return {
@@ -186,7 +186,7 @@ fill["def2-undetermined-coefficients-d3"] = (rng, idx) => {
 };
 
 // ============================================================================
-// general-solution-ivp — assemble y = y_c + y_p, then fit C1, C2 (2x2 system)
+// general-solution-ivp: assemble y = y_c + y_p, then fit C1, C2 (2x2 system)
 // ============================================================================
 
 fill["def2-general-solution-ivp-d1"] = (rng, idx) => {

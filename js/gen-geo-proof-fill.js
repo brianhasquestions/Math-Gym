@@ -93,7 +93,7 @@ fill["gpr-counterexample-d2"] = (rng, idx) => {
       steps: [
         { instruction: `Compute $2 \\times ${n}$. (Give a number.)`, answer: `${cex}`, accept: [], hint: `Double ${n}.` },
         { instruction: `Is ${cex} odd? (yes/no)`, answer: "no", accept: ["even", "it is even", "not odd"], hint: "It ends in an even digit." },
-        { instruction: `${cex} is a multiple of ${n} that is not odd — a counterexample. Is the claim true or false? (Answer: true or false)`, answer: "false", accept: ["the claim is false"], hint: "One counterexample settles it." },
+        { instruction: `${cex} is a multiple of ${n} that is not odd: a counterexample. Is the claim true or false? (Answer: true or false)`, answer: "false", accept: ["the claim is false"], hint: "One counterexample settles it." },
       ],
       finalAnswer: { value: "false", unit: "" },
       solutionNarrative: `$2 \\times ${n} = ${cex}$ is a multiple of ${n} but is even, so the claim is false. One counterexample is all it takes.`,
@@ -107,7 +107,7 @@ fill["gpr-counterexample-d2"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $3 \\times ${k}$. (Give a number.)`, answer: `${cex}`, accept: [], hint: `Triple ${k}.` },
       { instruction: `Is ${cex} divisible by ${2 * k}? (yes/no)`, answer: "no", accept: ["it is not", "not divisible"], hint: `$${cex} \\div ${2 * k} = 1.5$, not a whole number.` },
-      { instruction: `${cex} is divisible by ${k} but not by ${2 * k} — a counterexample. Is the claim true or false? (Answer: true or false)`, answer: "false", accept: ["the claim is false"], hint: "A single counterexample disproves a claim." },
+      { instruction: `${cex} is divisible by ${k} but not by ${2 * k}: a counterexample. Is the claim true or false? (Answer: true or false)`, answer: "false", accept: ["the claim is false"], hint: "A single counterexample disproves a claim." },
     ],
     finalAnswer: { value: "false", unit: "" },
     solutionNarrative: `$3 \\times ${k} = ${cex}$ is divisible by ${k} but not by ${2 * k}, so the claim is false.`,
@@ -127,12 +127,12 @@ fill["gpr-conditional-truth-d3"] = (rng, idx) => {
   const { a, b, n } = rng.pick(DIV_PAIRS);
   return {
     id: `gen.gpr-conditional-truth-d3.${idx}`, generated: true, concepts: ["conditionals-and-counterexamples"], difficulty: 3, context: "abstract",
-    prompt: `Consider the statement: "If a number is divisible by ${a}, then it is divisible by ${b}." Since $${a} = ${a / b} \\times ${b}$, every multiple of ${a} is automatically a multiple of ${b} — the statement is TRUE. Now investigate its converse.`,
+    prompt: `Consider the statement: "If a number is divisible by ${a}, then it is divisible by ${b}." Since $${a} = ${a / b} \\times ${b}$, every multiple of ${a} is automatically a multiple of ${b}: the statement is TRUE. Now investigate its converse.`,
     steps: [
       { instruction: "The converse swaps the parts: \"If a number is divisible by " + b + ", then it is divisible by " + a + ".\" What is this swap-only relative of a conditional called? (Answer with one of: converse, inverse, contrapositive)", answer: "converse", accept: ["the converse"], hint: "Swap only, no negation." },
       { instruction: `Test the converse with the number ${n}: compute $${n} \\div ${b}$. (Give a number.)`, answer: `${n / b}`, accept: [], hint: `${n} is a multiple of ${b}.` },
       { instruction: `So ${n} satisfies the converse's hypothesis. Is ${n} divisible by ${a}? (yes/no)`, answer: "no", accept: ["it is not", "not divisible"], hint: `$${n} \\div ${a}$ is not a whole number.` },
-      { instruction: `${n} is a counterexample to the converse. Is the converse true or false? (Answer: true or false)`, answer: "false", accept: ["the converse is false"], hint: "A true statement's converse can still be false — and here it is." },
+      { instruction: `${n} is a counterexample to the converse. Is the converse true or false? (Answer: true or false)`, answer: "false", accept: ["the converse is false"], hint: "A true statement's converse can still be false, and here it is." },
     ],
     finalAnswer: { value: "false", unit: "" },
     solutionNarrative: `The converse is "if divisible by ${b}, then divisible by ${a}." But $${n} = ${n / b} \\times ${b}$ is divisible by ${b} and not by ${a}, so the converse is false even though the original is true.`,

@@ -34,14 +34,14 @@ fill["mpl-det2x2-d2"] = (rng, idx) => {
     steps: [
       { instruction: "Compute the main-diagonal product $ad$, watching the sign.", answer: `${a * d}`, accept: [], hint: `$(${a})(${d})$.` },
       { instruction: "Compute the anti-diagonal product $bc$.", answer: `${b * c}`, accept: [], hint: `$(${b})(${c})$.` },
-      { instruction: "Compute $\\det = ad - bc$.", answer: `${det}`, accept: [], hint: `$${a * d} - ${b * c}$ — subtracting a positive makes it more negative.` },
+      { instruction: "Compute $\\det = ad - bc$.", answer: `${det}`, accept: [], hint: `$${a * d} - ${b * c}$: subtracting a positive makes it more negative.` },
     ],
     finalAnswer: { value: `${det}`, unit: "" },
     solutionNarrative: `$\\det = (${a})(${d}) - (${b})(${c}) = ${a * d} - ${b * c} = ${det}$.`,
   };
 };
 
-// determinant-2x2 d3: applied area scaling — det, |det|, then the new area.
+// determinant-2x2 d3: applied area scaling: det, |det|, then the new area.
 const AREA_CTX = [
   { thing: "logo", app: "design app" },
   { thing: "sprite", app: "game engine" },
@@ -69,7 +69,7 @@ fill["mpl-det2x2-d3"] = (rng, idx) => {
   };
 };
 
-// determinant-3x3 d1: lower-triangular 3x3 — top-row expansion, one surviving term.
+// determinant-3x3 d1: lower-triangular 3x3: top-row expansion, one surviving term.
 fill["mpl-det3x3-d1"] = (rng, idx) => {
   const d1 = rng.int(2, 5), d2 = rng.int(2, 5), d3 = rng.int(2, 5);
   const e = rng.int(1, 4), f = rng.int(1, 4), g = rng.int(1, 4);
@@ -82,7 +82,7 @@ fill["mpl-det3x3-d1"] = (rng, idx) => {
       { instruction: `Multiply the minor by the top-left entry ${d1} to get the determinant.`, answer: `${det}`, accept: [], hint: `$${d1} \\times ${d2 * d3}$.` },
     ],
     finalAnswer: { value: `${det}`, unit: "" },
-    solutionNarrative: `The top row is $[${d1}, 0, 0]$, so only the first cofactor survives: $\\det = ${d1} \\times \\left[(${d2})(${d3}) - 0\\right] = ${det}$ — the product of the diagonal.`,
+    solutionNarrative: `The top row is $[${d1}, 0, 0]$, so only the first cofactor survives: $\\det = ${d1} \\times \\left[(${d2})(${d3}) - 0\\right] = ${det}$: the product of the diagonal.`,
   };
 };
 
@@ -109,7 +109,7 @@ fill["mpl-det-invert-d1"] = (rng, idx) => {
       { instruction: `The determinant is ${det === 0 ? "zero" : "nonzero"}. Is the matrix invertible? Answer 'yes' or 'no'.`, answer: det === 0 ? "no" : "yes", accept: det === 0 ? ["n", "singular"] : ["y", "invertible"], hint: "Invertible exactly when the determinant is nonzero." },
     ],
     finalAnswer: { value: det === 0 ? "no" : "yes", unit: "" },
-    solutionNarrative: `$\\det = (${M[0][0]})(${M[1][1]}) - (${M[0][1]})(${M[1][0]}) = ${det}$, so the matrix is ${det === 0 ? "singular — row 2 is twice row 1, no inverse exists" : "invertible"}.`,
+    solutionNarrative: `$\\det = (${M[0][0]})(${M[1][1]}) - (${M[0][1]})(${M[1][0]}) = ${det}$, so the matrix is ${det === 0 ? "singular: row 2 is twice row 1, no inverse exists" : "invertible"}.`,
   };
 };
 
@@ -187,7 +187,7 @@ fill["mpl-det-applied-d1"] = (rng, idx) => {
   };
 };
 
-// determinant-applied d2: triangle area — half the determinant of the edge vectors.
+// determinant-applied d2: triangle area: half the determinant of the edge vectors.
 fill["mpl-det-applied-d2"] = (rng, idx) => {
   const u1 = 2 * rng.int(2, 3), u2 = rng.int(1, 3);
   const v1 = 2 * rng.int(1, 2);
@@ -229,7 +229,7 @@ fill["mpl-invert-test-d2"] = (rng, idx) => {
     prompt: `For $A = ${bmat(M)}$, find the determinant and decide whether $A$ is singular or invertible.`,
     steps: [
       { instruction: "Compute the determinant $ad - bc$, watching the signs.", answer: `${det}`, accept: [], hint: `$(${M[0][0]})(${M[1][1]}) - (${M[0][1]})(${M[1][0]})$.` },
-      { instruction: "Is $A$ 'invertible' or 'singular'?", answer: det === 0 ? "singular" : "invertible", accept: det === 0 ? ["not invertible", "noninvertible", "no"] : ["nonsingular", "yes"], hint: det === 0 ? "A zero determinant means no inverse — singular." : "A nonzero determinant means an inverse exists." },
+      { instruction: "Is $A$ 'invertible' or 'singular'?", answer: det === 0 ? "singular" : "invertible", accept: det === 0 ? ["not invertible", "noninvertible", "no"] : ["nonsingular", "yes"], hint: det === 0 ? "A zero determinant means no inverse: singular." : "A nonzero determinant means an inverse exists." },
     ],
     finalAnswer: { value: det === 0 ? "singular" : "invertible", unit: "" },
     solutionNarrative: `$\\det = (${M[0][0]})(${M[1][1]}) - (${M[0][1]})(${M[1][0]}) = ${det}$, so $A$ is ${det === 0 ? "singular (one row is a multiple of the other)" : "invertible"}.`,
@@ -253,7 +253,7 @@ fill["mpl-inverse2x2-d1"] = (rng, idx) => {
   };
 };
 
-// solve-with-inverse d1: A^{-1} given — just multiply it by b.
+// solve-with-inverse d1: A^{-1} given: just multiply it by b.
 fill["mpl-solve-inverse-d1"] = (rng, idx) => {
   const inv = [[rng.int(1, 3), rng.int(-3, -1)], [rng.int(-3, -1), rng.int(1, 3)]];
   const b = [rng.int(2, 6), rng.int(2, 6)];
@@ -267,7 +267,7 @@ fill["mpl-solve-inverse-d1"] = (rng, idx) => {
       { instruction: "Enter the solution as <x, y>.", answer: `<${x[0]}, ${x[1]}>`, accept: [vec(x)], hint: "Stack the two entries you found." },
     ],
     finalAnswer: { value: `<${x[0]}, ${x[1]}>`, unit: "" },
-    solutionNarrative: `$\\mathbf{x} = A^{-1}\\mathbf{b} = \\langle ${x[0]}, ${x[1]} \\rangle$ — multiplying by the inverse solves the system in one step.`,
+    solutionNarrative: `$\\mathbf{x} = A^{-1}\\mathbf{b} = \\langle ${x[0]}, ${x[1]} \\rangle$: multiplying by the inverse solves the system in one step.`,
   };
 };
 
@@ -289,7 +289,7 @@ fill["mpl-inv-applied-d1"] = (rng, idx) => {
       { instruction: `Enter the ${ctx.recovered} as <x, y>.`, answer: `<${x[0]}, ${x[1]}>`, accept: [vec(x)], hint: `Bottom entry: $${inv[1][0]}\\cdot${c[0]} + ${inv[1][1]}\\cdot${c[1]} = ${x[1]}$.` },
     ],
     finalAnswer: { value: `<${x[0]}, ${x[1]}>`, unit: "" },
-    solutionNarrative: `$A^{-1}\\mathbf{c} = \\langle ${x[0]}, ${x[1]} \\rangle$ — multiplying by the inverse undoes the original multiplication by $A$.`,
+    solutionNarrative: `$A^{-1}\\mathbf{c} = \\langle ${x[0]}, ${x[1]} \\rangle$: multiplying by the inverse undoes the original multiplication by $A$.`,
   };
 };
 
@@ -315,7 +315,7 @@ fill["mpl-inv-applied-d2"] = (rng, idx) => {
   };
 };
 
-// inverse-applied d3: full undo — det, inverse, then recover the original point.
+// inverse-applied d3: full undo: det, inverse, then recover the original point.
 const UNDO3_CTX = [
   { who: "A drawing program", did: "sheared a shape's anchor point with the transform", place: "landing it at", find: "find the original anchor point by reversing the transform" },
   { who: "A robot controller", did: "reoriented its gripper with the matrix", place: "the sensor now reads", find: "recover the gripper's original coordinates by reversing the transform" },
@@ -338,11 +338,11 @@ fill["mpl-inv-applied-d3"] = (rng, idx) => {
       { instruction: "Apply $\\mathbf{x} = A^{-1}\\mathbf{p}$ to recover the original pair. Enter as <x, y>.", answer: `<${x[0]}, ${x[1]}>`, accept: [vec(x)], hint: `Top: $${inv[0][0]}\\cdot${p[0]} + (${inv[0][1]})\\cdot${p[1]}$. Bottom: $${inv[1][0]}\\cdot${p[0]} + ${inv[1][1]}\\cdot${p[1]}$.` },
     ],
     finalAnswer: { value: `<${x[0]}, ${x[1]}>`, unit: "" },
-    solutionNarrative: `$\\det = 1$, so $A^{-1} = ${bmat(inv)}$. Then $A^{-1}\\mathbf{p} = \\langle ${x[0]}, ${x[1]} \\rangle$ — the pair before the transform.`,
+    solutionNarrative: `$\\det = 1$, so $A^{-1} = ${bmat(inv)}$. Then $A^{-1}\\mathbf{p} = \\langle ${x[0]}, ${x[1]} \\rangle$: the pair before the transform.`,
   };
 };
 
-// invertibility-test d3: applied — is the proposed matrix's job reversible?
+// invertibility-test d3: applied: is the proposed matrix's job reversible?
 const KEYTEST_CTX = [
   { lead: "An encoding scheme can only be decoded if its key matrix is invertible. An intern proposes the key", q: "Can messages encoded with this key be decoded?", need: "Decoding needs the inverse, which exists only when the determinant is nonzero." },
   { lead: "A graphics filter can only be undone if its transform matrix is invertible. A designer proposes the transform", q: "Can the filter be undone?", need: "Undo needs the inverse, which exists only when the determinant is nonzero." },
@@ -372,7 +372,7 @@ fill["mpl-invert-test-d3"] = (rng, idx) => {
       { instruction: `${ctx.q} Answer the invertibility question: type 'yes' or 'no'.`, answer: det === 0 ? "no" : "yes", accept: det === 0 ? ["n"] : ["y"], hint: ctx.need },
     ],
     finalAnswer: { value: det === 0 ? "no" : "yes", unit: "" },
-    solutionNarrative: `$\\det = (${M[0][0]})(${M[1][1]}) - (${M[0][1]})(${M[1][0]}) = ${det}$, so the matrix is ${det === 0 ? "singular — no inverse exists and the effect cannot be reversed" : "invertible, so its effect can be reversed"}.`,
+    solutionNarrative: `$\\det = (${M[0][0]})(${M[1][1]}) - (${M[0][1]})(${M[1][0]}) = ${det}$, so the matrix is ${det === 0 ? "singular, no inverse exists and the effect cannot be reversed" : "invertible, so its effect can be reversed"}.`,
   };
 };
 
@@ -398,7 +398,7 @@ fill["mpl-inverse2x2-d3"] = (rng, idx) => {
   };
 };
 
-// solve-with-inverse d3: full pipeline — det, inverse, then x = A^{-1}b.
+// solve-with-inverse d3: full pipeline: det, inverse, then x = A^{-1}b.
 fill["mpl-solve-inverse-d3"] = (rng, idx) => {
   const a = rng.int(2, 3), d = rng.int(2, 3);
   const b = a * d - 1; // det = 1, so the inverse has integer entries
@@ -454,7 +454,7 @@ fill["mpl-when-defined-d2"] = (rng, idx) => {
   };
 };
 
-// when-defined d3: applied — which of two products is meaningful, and its size.
+// when-defined d3: applied, which of two products is meaningful, and its size.
 const DEF_CTX = [
   { t1: "sales table $S$", r1: "stores", c1: "products", t2: "price table $P$", c2: "currencies", goal: "a table of each store's total value in each currency" },
   { t1: "usage table $S$", r1: "clinics", c1: "medications", t2: "cost table $P$", c2: "suppliers", goal: "a table of each clinic's total cost from each supplier" },
@@ -515,7 +515,7 @@ fill["mpl-product-d3"] = (rng, idx) => {
   };
 };
 
-// multiplication-properties d2: AB vs BA for two shear matrices — order matters.
+// multiplication-properties d2: AB vs BA for two shear matrices: order matters.
 fill["mpl-mult-props-d2"] = (rng, idx) => {
   const a = rng.int(2, 5), b = rng.int(2, 5);
   const A = [[1, a], [0, 1]], B = [[1, 0], [b, 1]];
@@ -529,7 +529,7 @@ fill["mpl-mult-props-d2"] = (rng, idx) => {
       { instruction: "Are $AB$ and $BA$ equal? Answer 'yes' or 'no'.", answer: "no", accept: ["n"], hint: `Compare the corner entries: ${AB[0][0]} versus ${BA[0][0]}.` },
     ],
     finalAnswer: { value: "no", unit: "" },
-    solutionNarrative: `$AB = ${bmat(AB)}$ but $BA = ${bmat(BA)}$ — different matrices, confirming multiplication is not commutative.`,
+    solutionNarrative: `$AB = ${bmat(AB)}$ but $BA = ${bmat(BA)}$: different matrices, confirming multiplication is not commutative.`,
   };
 };
 
@@ -547,7 +547,7 @@ fill["mpl-mult-props-d3"] = (rng, idx) => {
       { instruction: "Write the full $A^2$ as [[a, b], [c, d]].", answer: rows(A2), accept: [], hint: `Row 2: $0\\cdot${a}+${d}\\cdot0 = 0$ and $0\\cdot${b}+${d}\\cdot${d} = ${A2[1][1]}$.` },
     ],
     finalAnswer: { value: rows(A2), unit: "" },
-    solutionNarrative: `$A^2 = AA = ${bmat(A2)}$ — note the diagonal entries are the squares $${a}^2$ and $${d}^2$.`,
+    solutionNarrative: `$A^2 = AA = ${bmat(A2)}$: note the diagonal entries are the squares $${a}^2$ and $${d}^2$.`,
   };
 };
 
@@ -607,11 +607,11 @@ fill["mpl-dimensions-d3"] = (rng, idx) => {
       { instruction: "How many entries sit in each single row of $B$?", answer: `${n}`, accept: [], hint: "A row has one entry per column." },
     ],
     finalAnswer: { value: `${m * n} entries; not square`, unit: "" },
-    solutionNarrative: `A $${m} \\times ${n}$ matrix has $${m} \\times ${n} = ${m * n}$ entries. Since $${m} \\neq ${n}$ it is not square, and each row holds ${n} entries — one per column.`,
+    solutionNarrative: `A $${m} \\times ${n}$ matrix has $${m} \\times ${n} = ${m * n}$ entries. Since $${m} \\neq ${n}$ it is not square, and each row holds ${n} entries: one per column.`,
   };
 };
 
-// matrix-addition d2: subtraction with signs — one entry goes negative.
+// matrix-addition d2: subtraction with signs: one entry goes negative.
 fill["mpl-mat-add-d2"] = (rng, idx) => {
   const A = [[rng.int(4, 9), rng.int(2, 8)], [rng.int(3, 9), rng.int(0, 4)]];
   const B = [[rng.int(1, 3), rng.int(0, 2)], [rng.int(1, 2), A[1][1] + rng.int(2, 6)]];
@@ -648,7 +648,7 @@ fill["mpl-scalar-mult-d3"] = (rng, idx) => {
   };
 };
 
-// operations-applied d1: two-day totals — add two 2-entry sales columns.
+// operations-applied d1: two-day totals: add two 2-entry sales columns.
 const OPS1_CTX = [
   { where: "A bakery", i1: "cupcakes", i2: "cookies" },
   { where: "A farm stand", i1: "apple baskets", i2: "pear baskets" },
@@ -691,7 +691,7 @@ fill["mpl-ops-applied-d2"] = (rng, idx) => {
   };
 };
 
-// operations-applied d3: projection 2B + A — scale this period, add last period.
+// operations-applied d3: projection 2B + A: scale this period, add last period.
 const OPS3_CTX = [
   { rows: "products", cols: "two stores", what: "sales", when1: "Last month", when2: "This month", next: "next month", unit: "units" },
   { rows: "menu items", cols: "two locations", what: "orders", when1: "Last week", when2: "This week", next: "next week", unit: "orders" },
@@ -771,7 +771,7 @@ fill["mpl-compose-d2"] = (rng, idx) => {
       { instruction: "Compute the full product $BA$ and write it in row-major bracket form.", answer: rows(C), accept: [], hint: "The second transformation goes on the left; each entry is a row of $B$ dotted with a column of $A$." },
     ],
     finalAnswer: { value: rows(C), unit: "" },
-    solutionNarrative: `$BA = ${bmat(B.M)}${bmat(A.M)} = ${bmat(C)}$ — the second move multiplies from the left.`,
+    solutionNarrative: `$BA = ${bmat(B.M)}${bmat(A.M)} = ${bmat(C)}$: the second move multiplies from the left.`,
   };
 };
 
@@ -802,7 +802,7 @@ fill["mpl-compose-d3"] = (rng, idx) => {
       { instruction: `Apply the combined matrix to the ${ctx.pt} $(${P[0]}, ${P[1]})$. Give the new point.`, answer: vec(out), accept: [`<${out[0]}, ${out[1]}>`], hint: `Top: $${C[0][0]}\\cdot${P[0]} + (${C[0][1]})\\cdot${P[1]}$. Bottom: $${C[1][0]}\\cdot${P[0]} + (${C[1][1]})\\cdot${P[1]}$.` },
     ],
     finalAnswer: { value: vec(out), unit: "" },
-    solutionNarrative: `$SR = ${bmat(C)}$. Applying it to $(${P[0]}, ${P[1]})$ gives $(${out[0]}, ${out[1]})$ — both moves done in one multiply.`,
+    solutionNarrative: `$SR = ${bmat(C)}$. Applying it to $(${P[0]}, ${P[1]})$ gives $(${out[0]}, ${out[1]})$: both moves done in one multiply.`,
   };
 };
 
@@ -918,7 +918,7 @@ fill["mpl-solution-types-d3"] = (rng, idx) => {
         { instruction: "How many solutions does the system have? (one, none, or infinite)", answer: "none", accept: ["0", "no solution", "inconsistent", "zero"], hint: "A false row means the system is inconsistent." },
       ],
       finalAnswer: { value: "none", unit: "" },
-      solutionNarrative: `The bottom row asserts $0 = ${k}$, which is impossible, so the system is inconsistent — no solution.`,
+      solutionNarrative: `The bottom row asserts $0 = ${k}$, which is impossible, so the system is inconsistent, no solution.`,
     };
   }
   const a = rng.int(1, 3), b = rng.int(1, 3), p = rng.int(-5, 5), q = rng.int(-5, 5);
@@ -930,7 +930,7 @@ fill["mpl-solution-types-d3"] = (rng, idx) => {
       { instruction: "How many solutions does the system have? (one, none, or infinite)", answer: "infinite", accept: ["infinitely many", "infinite solutions", "many"], hint: "Each choice of the free variable gives a valid solution." },
     ],
     finalAnswer: { value: "infinite", unit: "" },
-    solutionNarrative: "The all-zero row removes one constraint, leaving $z$ free; with no contradictory row, every choice of $z$ yields a solution — infinitely many.",
+    solutionNarrative: "The all-zero row removes one constraint, leaving $z$ free; with no contradictory row, every choice of $z$ yields a solution: infinitely many.",
   };
 };
 

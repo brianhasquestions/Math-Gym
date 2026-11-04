@@ -66,7 +66,7 @@ fill["c3p-dot-scalar-d2"] = (rng, idx) => {
       { instruction: `Distributing $${k}$ over the sum makes the two sides identical. Does the identity hold for every scalar and every pair of vectors? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: "The distributive law finishes the proof." },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$(${k}\\vec{${A}}) \\cdot \\vec{${B}}$ expands to $${k}${A}_1${B}_1 + ${k}${A}_2${B}_2 + ${k}${A}_3${B}_3$, which is $${k}$ distributed over the dot product — the scalar pulls out.`,
+    solutionNarrative: `$(${k}\\vec{${A}}) \\cdot \\vec{${B}}$ expands to $${k}${A}_1${B}_1 + ${k}${A}_2${B}_2 + ${k}${A}_3${B}_3$, which is $${k}$ distributed over the dot product: the scalar pulls out.`,
   };
 };
 
@@ -114,7 +114,7 @@ fill["c3p-orth-plane-d1"] = (rng, idx) => {
   };
 };
 
-// d2: numeric, full 3D — verify perpendicularity to BOTH inputs.
+// d2: numeric, full 3D: verify perpendicularity to BOTH inputs.
 fill["c3p-orth-3d-d2"] = (rng, idx) => {
   const v = [rng.int(1, 3), rng.int(-2, 2), rng.int(0, 2)];
   const w = [rng.int(-2, 2), rng.int(1, 3), rng.int(0, 2)];
@@ -125,12 +125,12 @@ fill["c3p-orth-3d-d2"] = (rng, idx) => {
     prompt: `A graphics engine takes triangle edge vectors $\\vec{v} = ${Vt(v)}$ and $\\vec{w} = ${Vt(w)}$ and uses $\\vec{n} = \\vec{v} \\times \\vec{w}$ as the surface normal. Verify $\\vec{n}$ is perpendicular to both edges.`,
     steps: [
       { instruction: "Compute the normal $\\vec{n} = \\vec{v} \\times \\vec{w}$.", answer: V(...n), accept: [Pn(...n)], hint: `First: $${v[1]}(${w[2]}) - ${v[2]}(${w[1]})$; second: $${v[2]}(${w[0]}) - ${v[0]}(${w[2]})$; third: $${v[0]}(${w[1]}) - ${v[1]}(${w[0]})$.` },
-      { instruction: "Compute $\\vec{n} \\cdot \\vec{v}$.", answer: "0", accept: [], hint: `$(${n[0]})(${v[0]}) + (${n[1]})(${v[1]}) + (${n[2]})(${v[2]})$ — the terms cancel to 0.` },
-      { instruction: "Compute $\\vec{n} \\cdot \\vec{w}$.", answer: "0", accept: [], hint: `$(${n[0]})(${w[0]}) + (${n[1]})(${w[1]}) + (${n[2]})(${w[2]})$ — again 0.` },
+      { instruction: "Compute $\\vec{n} \\cdot \\vec{v}$.", answer: "0", accept: [], hint: `$(${n[0]})(${v[0]}) + (${n[1]})(${v[1]}) + (${n[2]})(${v[2]})$: the terms cancel to 0.` },
+      { instruction: "Compute $\\vec{n} \\cdot \\vec{w}$.", answer: "0", accept: [], hint: `$(${n[0]})(${w[0]}) + (${n[1]})(${w[1]}) + (${n[2]})(${w[2]})$: again 0.` },
       { instruction: "Is $\\vec{n}$ a valid normal for the triangle? Type 'yes' or 'no'.", answer: "yes", accept: [], hint: "It is perpendicular to both edge vectors." },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$\\vec{n} = ${Vt(n)}$ dots to 0 against both $\\vec{v}$ and $\\vec{w}$, so it is a genuine normal — guaranteed by the cross product's orthogonality theorem.`,
+    solutionNarrative: `$\\vec{n} = ${Vt(n)}$ dots to 0 against both $\\vec{v}$ and $\\vec{w}$, so it is a genuine normal: guaranteed by the cross product's orthogonality theorem.`,
   };
 };
 
@@ -152,7 +152,7 @@ fill["c3p-orth-symbolic-d3"] = (rng, idx) => {
       { instruction: `No values were ever assigned, so this holds for every $\\vec{${A}}$ and $\\vec{${B}}$. Is the cross product always perpendicular to $\\vec{${A}}$? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: "An identically-zero dot product means perpendicular, always." },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `Dotting the cross product back into $\\vec{${A}}$ gives six terms that cancel in pairs, leaving 0 for every choice of components — perpendicularity is proven, not assumed.`,
+    solutionNarrative: `Dotting the cross product back into $\\vec{${A}}$ gives six terms that cancel in pairs, leaving 0 for every choice of components: perpendicularity is proven, not assumed.`,
   };
 };
 
@@ -172,7 +172,7 @@ fill["c3p-lagrange-axis-d1"] = (rng, idx) => {
       { instruction: "Compute the dot product $\\vec{v} \\cdot \\vec{w}$.", answer: "0", accept: [], hint: `$${a}(0) + 0(${b}) + 0(0) = 0$.` },
       { instruction: "Compute $|\\vec{v}|^2 |\\vec{w}|^2$.", answer: `${prod}`, accept: [], hint: `$|\\vec{v}|^2 = ${a * a}$ and $|\\vec{w}|^2 = ${b * b}$.` },
       { instruction: "Compute the cross product $\\vec{v} \\times \\vec{w}$.", answer: V(0, 0, a * b), accept: [Pn(0, 0, a * b)], hint: `Only the third component survives: $${a}(${b}) - 0(0) = ${a * b}$.` },
-      { instruction: `Compute $|\\vec{v} \\times \\vec{w}|^2$ and compare with $${prod} - 0$. What is $|\\vec{v} \\times \\vec{w}|^2$?`, answer: `${prod}`, accept: [], hint: `$(${a * b})^2 = ${prod}$ — both sides agree.` },
+      { instruction: `Compute $|\\vec{v} \\times \\vec{w}|^2$ and compare with $${prod} - 0$. What is $|\\vec{v} \\times \\vec{w}|^2$?`, answer: `${prod}`, accept: [], hint: `$(${a * b})^2 = ${prod}$: both sides agree.` },
     ],
     finalAnswer: { value: `${prod}`, unit: "" },
     solutionNarrative: `Both sides equal ${prod}: $|\\vec{v} \\times \\vec{w}|^2 = (${a * b})^2$ and $|\\vec{v}|^2|\\vec{w}|^2 - 0 = ${prod}$. Lagrange's identity checks out.`,
@@ -198,7 +198,7 @@ fill["c3p-lagrange-d2"] = (rng, idx) => {
       { instruction: "Now compute the left side directly: find $\\vec{v} \\times \\vec{w}$ and take $|\\vec{v} \\times \\vec{w}|^2$. What do you get?", answer: `${rhs}`, accept: [], hint: `$\\vec{v} \\times \\vec{w} = ${Vt(cross(v, w))}$; sum the squares of its components.` },
     ],
     finalAnswer: { value: `${rhs}`, unit: "" },
-    solutionNarrative: `The right side gives $${m1}(${m2}) - ${d0 * d0} = ${rhs}$, and computing $\\vec{v} \\times \\vec{w} = ${Vt(cross(v, w))}$ directly gives $|\\vec{v} \\times \\vec{w}|^2 = ${rhs}$ as well — the identity holds.`,
+    solutionNarrative: `The right side gives $${m1}(${m2}) - ${d0 * d0} = ${rhs}$, and computing $\\vec{v} \\times \\vec{w} = ${Vt(cross(v, w))}$ directly gives $|\\vec{v} \\times \\vec{w}|^2 = ${rhs}$ as well: the identity holds.`,
   };
 };
 
@@ -207,7 +207,7 @@ fill["c3p-triple-cyclic-d3"] = (rng, idx) => {
   const a = rng.int(1, 3), b = rng.int(1, 3), c = rng.int(1, 3);
   const d = rng.int(0, 3), e = rng.int(0, 3);
   const u = [d, e, 1], v = [1, a, 0], w = [b, 1, c];
-  const n1 = cross(v, w); // <ac, -c, 1-ab> — never the zero vector since c >= 1
+  const n1 = cross(v, w); // <ac, -c, 1-ab>: never the zero vector since c >= 1
   const t = dot(u, n1);
   const n2 = cross(w, u);
   return {
@@ -218,7 +218,7 @@ fill["c3p-triple-cyclic-d3"] = (rng, idx) => {
       { instruction: "Compute $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w})$.", answer: `${t}`, accept: [], hint: `$${u[0]}(${n1[0]}) + ${u[1]}(${n1[1]}) + ${u[2]}(${n1[2]})$.` },
       { instruction: "Now compute $\\vec{w} \\times \\vec{u}$.", answer: V(...n2), accept: [Pn(...n2)], hint: `First: $${w[1]}(${u[2]}) - ${w[2]}(${u[1]})$; second: $${w[2]}(${u[0]}) - ${w[0]}(${u[2]})$; third: $${w[0]}(${u[1]}) - ${w[1]}(${u[0]})$.` },
       { instruction: "Compute $\\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$.", answer: `${t}`, accept: [], hint: `$${v[0]}(${n2[0]}) + ${v[1]}(${n2[1]}) + ${v[2]}(${n2[2]})$.` },
-      { instruction: "Do the two triple products agree, confirming the cyclic symmetry? Type 'yes' or 'no'.", answer: "yes", accept: [], hint: `Both equal ${t} — the signed volume doesn't care which vector leads the cycle.` },
+      { instruction: "Do the two triple products agree, confirming the cyclic symmetry? Type 'yes' or 'no'.", answer: "yes", accept: [], hint: `Both equal ${t}: the signed volume doesn't care which vector leads the cycle.` },
     ],
     finalAnswer: { value: `${t}`, unit: "" },
     solutionNarrative: `$\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = ${t}$ and $\\vec{v} \\cdot (\\vec{w} \\times \\vec{u}) = ${t}$: cycling the vectors leaves the scalar triple product unchanged.`,
@@ -267,7 +267,7 @@ fill["c3p-geom-midsegment-d2"] = (rng, idx) => {
       { instruction: "Find $M_2$, the midpoint of $AC$.", answer: V(...M2), accept: [Pn(...M2)], hint: "Halve $C$'s coordinates." },
       { instruction: "Compute the midsegment vector $M_2 - M_1$.", answer: V(...seg), accept: [Pn(...seg)], hint: `$(${r}-${p}, ${s}-${q})$.` },
       { instruction: "Compute the side vector $\\vec{BC} = C - B$.", answer: V(...side), accept: [Pn(...side)], hint: `$(${C[0]}-${B[0]}, ${C[1]}-${B[1]})$.` },
-      { instruction: "$\\vec{BC}$ is how many times the midsegment vector? (Give a number.)", answer: "2", accept: [], hint: `$${Vt(side)} = 2${Vt(seg)}$ — parallel, and the midsegment is half as long.` },
+      { instruction: "$\\vec{BC}$ is how many times the midsegment vector? (Give a number.)", answer: "2", accept: [], hint: `$${Vt(side)} = 2${Vt(seg)}$: parallel, and the midsegment is half as long.` },
     ],
     finalAnswer: { value: "2", unit: "" },
     solutionNarrative: `Midsegment $= ${Vt(seg)}$ and $\\vec{BC} = ${Vt(side)} = 2 \\cdot ${Vt(seg)}$: parallel and twice the midsegment, as the theorem promises.`,
@@ -288,6 +288,6 @@ fill["c3p-geom-gradient-d3"] = (rng, idx) => {
       { instruction: "Is the gradient perpendicular to the level curve at this point? Type 'yes' or 'no'.", answer: "yes", accept: [], hint: "The dot product with the tangent direction is zero." },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$\\nabla f(${x0},${y0}) = ${Vt(g)}$ and $${Vt(g)} \\cdot ${Vt(tan)} = ${g[0] * tan[0]} + ${g[1] * tan[1]} = 0$ — the gradient points straight out of the circle, perpendicular to the motion.`,
+    solutionNarrative: `$\\nabla f(${x0},${y0}) = ${Vt(g)}$ and $${Vt(g)} \\cdot ${Vt(tan)} = ${g[0] * tan[0]} + ${g[1] * tan[1]} = 0$: the gradient points straight out of the circle, perpendicular to the motion.`,
   };
 };

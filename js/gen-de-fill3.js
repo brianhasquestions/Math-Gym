@@ -52,7 +52,7 @@ function eigenPick(rng, lo = -4, hi = 4, opts = {}) {
 export const fill = {};
 
 // ============================================================================
-// matrix-form-and-verify — write x' = Ax, verify solutions, convert 2nd order
+// matrix-form-and-verify: write x' = Ax, verify solutions, convert 2nd order
 // ============================================================================
 
 fill["def3-matrix-form-1"] = (rng, idx) => {
@@ -82,7 +82,7 @@ fill["def3-matrix-form-2"] = (rng, idx) => {
       { instruction: "Both sides agree, so the proposal solves the system. Is $\\langle " + v1[0] + ", " + v1[1] + " \\rangle$ an eigenvector of $A$? Type 'yes' or 'no'.", answer: "yes", accept: ["y"], hint: `$A\\mathbf{v} = ${l1}\\mathbf{v}$ is exactly the eigenvector equation with $\\lambda = ${l1}$.` },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$A\\langle ${v1[0]}, ${v1[1]} \\rangle = \\langle ${Av[0]}, ${Av[1]} \\rangle = ${l1}\\langle ${v1[0]}, ${v1[1]} \\rangle$, matching $\\mathbf{x}'(0)$ — a straight-line eigen-solution with $\\lambda = ${l1}$.`,
+    solutionNarrative: `$A\\langle ${v1[0]}, ${v1[1]} \\rangle = \\langle ${Av[0]}, ${Av[1]} \\rangle = ${l1}\\langle ${v1[0]}, ${v1[1]} \\rangle$, matching $\\mathbf{x}'(0)$: a straight-line eigen-solution with $\\lambda = ${l1}$.`,
   };
 };
 
@@ -103,7 +103,7 @@ fill["def3-matrix-form-3"] = (rng, idx) => {
 };
 
 // ============================================================================
-// eigenvalue-method — eigenvalues via trace/det, eigenvectors normalized
+// eigenvalue-method: eigenvalues via trace/det, eigenvectors normalized
 // ============================================================================
 
 fill["def3-eigenvalue-method-1"] = (rng, idx) => {
@@ -132,7 +132,7 @@ fill["def3-eigenvalue-method-2"] = (rng, idx) => {
     steps: [
       { instruction: `Form $A - ${l1}I$ by subtracting ${l1} from each diagonal entry. What is its top-left entry?`, answer: `${d11}`, accept: [], hint: `$${A[0][0]} - (${l1})$.` },
       { instruction: `Row 1 of $(A - ${l1}I)\\mathbf{v} = \\mathbf{0}$ reads $${d11}v_1 ${signed(A[0][1])}v_2 = 0$. Set $v_1 = 1$ and solve for $v_2$.`, answer: `${m}`, accept: [`v2 = ${m}`, `v2=${m}`], hint: `$${d11} ${signed(A[0][1])}v_2 = 0$.` },
-      { instruction: "State the eigenvector with first component 1 as $\\langle v_1, v_2 \\rangle$.", answer: `<1, ${m}>`, accept: [`(1, ${m})`, `1, ${m}`], hint: `$\\langle 1, ${m} \\rangle$ — any scalar multiple is also an eigenvector, but the normalization pins this one down.` },
+      { instruction: "State the eigenvector with first component 1 as $\\langle v_1, v_2 \\rangle$.", answer: `<1, ${m}>`, accept: [`(1, ${m})`, `1, ${m}`], hint: `$\\langle 1, ${m} \\rangle$: any scalar multiple is also an eigenvector, but the normalization pins this one down.` },
     ],
     finalAnswer: { value: `<1, ${m}>`, unit: "" },
     solutionNarrative: `Row 1 of $A - ${l1}I$ gives $${d11} ${signed(A[0][1])}v_2 = 0$, so $v_2 = ${m}$ and the eigenvector is $\\langle 1, ${m} \\rangle$. Check: $A\\langle 1, ${m} \\rangle = ${l1}\\langle 1, ${m} \\rangle$.`,
@@ -150,7 +150,7 @@ fill["def3-eigenvalue-method-3"] = (rng, idx) => {
       { instruction: `Write the characteristic equation (trace $${T}$, determinant $${D}$).`, answer: eq, accept: [compact(eq)], hint: `$\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$.` },
       { instruction: "Solve for both eigenvalues.", form: "solutions", answer: `lambda = ${l1} or lambda = ${l2}`, accept: [`${l1}, ${l2}`, `${l2}, ${l1}`], hint: `$(\\lambda ${signed(-l1)})(\\lambda ${signed(-l2)}) = 0$.` },
       { instruction: `For $\\lambda = ${l1}$, row 1 of $(A - ${l1}I)\\mathbf{v} = \\mathbf{0}$ is $${A[0][0] - l1}v_1 ${signed(A[0][1])}v_2 = 0$. Give the eigenvector with first component 1 as $\\langle v_1, v_2 \\rangle$.`, answer: `<1, ${m}>`, accept: [`(1, ${m})`, `1, ${m}`], hint: `Set $v_1 = 1$: $${A[0][0] - l1} ${signed(A[0][1])}v_2 = 0$.` },
-      { instruction: `Verify: compute $A\\langle 1, ${m} \\rangle$ as a vector (it should equal $${l1}\\langle 1, ${m} \\rangle$).`, answer: vec(Av), accept: vecAccepts(Av), hint: `Multiply the eigenvector by $\\lambda = ${l1}$ — or do the matrix product directly; they must match.` },
+      { instruction: `Verify: compute $A\\langle 1, ${m} \\rangle$ as a vector (it should equal $${l1}\\langle 1, ${m} \\rangle$).`, answer: vec(Av), accept: vecAccepts(Av), hint: `Multiply the eigenvector by $\\lambda = ${l1}$, or do the matrix product directly; they must match.` },
     ],
     finalAnswer: { value: `<1, ${m}>`, unit: "" },
     solutionNarrative: `$${eq.replace(/lambda/g, "\\lambda ")}$ gives $\\lambda = ${l1}, ${l2}$. For $\\lambda = ${l1}$ the eigenvector is $\\langle 1, ${m} \\rangle$, and $A\\langle 1, ${m} \\rangle = \\langle ${Av[0]}, ${Av[1]} \\rangle = ${l1}\\langle 1, ${m} \\rangle$. ✓`,
@@ -158,7 +158,7 @@ fill["def3-eigenvalue-method-3"] = (rng, idx) => {
 };
 
 // ============================================================================
-// general-solutions-and-ivp — fit c1, c2 to initial conditions
+// general-solutions-and-ivp: fit c1, c2 to initial conditions
 // ============================================================================
 
 fill["def3-general-ivp-1"] = (rng, idx) => {
@@ -171,7 +171,7 @@ fill["def3-general-ivp-1"] = (rng, idx) => {
     id: `gen.def3-general-ivp-1.${idx}`, generated: true, concepts: ["general-solutions-and-ivp"], difficulty: 1, context: "abstract",
     prompt: `A system has general solution $\\mathbf{x}(t) = c_1 e^{${expT(l1)}}\\langle 1, 1 \\rangle + c_2 e^{${expT(l2)}}\\langle 1, -1 \\rangle$ with initial condition $\\mathbf{x}(0) = \\langle ${x01}, ${x02} \\rangle$. Find $c_1$ and $c_2$.`,
     steps: [
-      { instruction: `At $t = 0$ both exponentials equal 1, so $c_1\\langle 1, 1 \\rangle + c_2\\langle 1, -1 \\rangle = \\langle ${x01}, ${x02} \\rangle$. That means $c_1 + c_2 = ${x01}$ and $c_1 - c_2 = ${x02}$. Add the two equations: $2c_1 = ?$`, answer: `${2 * c1}`, accept: [], hint: `$${x01} + (${x02})$ — the $c_2$ terms cancel.` },
+      { instruction: `At $t = 0$ both exponentials equal 1, so $c_1\\langle 1, 1 \\rangle + c_2\\langle 1, -1 \\rangle = \\langle ${x01}, ${x02} \\rangle$. That means $c_1 + c_2 = ${x01}$ and $c_1 - c_2 = ${x02}$. Add the two equations: $2c_1 = ?$`, answer: `${2 * c1}`, accept: [], hint: `$${x01} + (${x02})$: the $c_2$ terms cancel.` },
       { instruction: "Solve for $c_1$.", answer: `${c1}`, accept: [`c1 = ${c1}`, `c1=${c1}`], hint: `Divide ${2 * c1} by 2.` },
       { instruction: "Now find $c_2$.", answer: `${c2}`, accept: [`c2 = ${c2}`, `c2=${c2}`], hint: `$c_2 = ${x01} - c_1 = ${x01} - (${c1})$.` },
     ],
@@ -202,7 +202,7 @@ fill["def3-general-ivp-2"] = (rng, idx) => {
 
 fill["def3-general-ivp-3"] = (rng, idx) => {
   const { A, l1, l2, m, n, T, D } = eigenPick(rng, -4, 4);
-  const c1 = rng.int(1, 3), c2 = rng.int(1, 3); // positive, nonzero — keeps the symbolic string join simple
+  const c1 = rng.int(1, 3), c2 = rng.int(1, 3); // positive, nonzero: keeps the symbolic string join simple
   const x01 = c1 + c2, x02 = c1 * m + c2 * n;
   const e = n - m;
   const termP = (c, l) => `${c === 1 ? "" : c}e^(${expT(l)})`;
@@ -231,7 +231,7 @@ fill["def3-general-ivp-3"] = (rng, idx) => {
 };
 
 // ============================================================================
-// phase-portraits-and-applications — classify the origin; applied systems
+// phase-portraits-and-applications: classify the origin; applied systems
 // ============================================================================
 
 const MENU = 'saddle, stable node, unstable node, spiral';
@@ -253,7 +253,7 @@ fill["def3-phase-portrait-1"] = (rng, idx) => {
       { instruction: `Classify the origin. Type exactly one of: ${MENU}.`, answer: kind, accept: accepts, hint: `Opposite signs → saddle; both negative → stable node; both positive → unstable node.` },
     ],
     finalAnswer: { value: kind, unit: "" },
-    solutionNarrative: `Eigenvalues ${l1} and ${l2}: ${pos} positive, so the origin is a ${kind} — ${behavior}.`,
+    solutionNarrative: `Eigenvalues ${l1} and ${l2}: ${pos} positive, so the origin is a ${kind}: ${behavior}.`,
   };
 };
 
@@ -288,10 +288,10 @@ fill["def3-phase-portrait-3"] = (rng, idx) => {
       { instruction: "Compute the trace $T$ of $A$.", answer: `${T}`, accept: [], hint: `$${a} + ${a}$.` },
       { instruction: "Compute the determinant $D$.", answer: `${D}`, accept: [], hint: `$(${a})(${a}) - (${-b})(${b})$.` },
       { instruction: "Compute the discriminant $T^2 - 4D$.", answer: `${disc}`, accept: [], hint: `$${T * T} - ${4 * D}$.` },
-      { instruction: "Is the discriminant negative? Type 'yes' or 'no'.", answer: "yes", accept: ["y"], hint: `$${disc} < 0$ — the square root in the quadratic formula goes imaginary.` },
+      { instruction: "Is the discriminant negative? Type 'yes' or 'no'.", answer: "yes", accept: ["y"], hint: `$${disc} < 0$: the square root in the quadratic formula goes imaginary.` },
       { instruction: `Complex eigenvalues make trajectories rotate around the equilibrium. Classify it. Type exactly one of: ${MENU}.`, answer: "spiral", accept: ["spiral point", "focus", "a spiral"], hint: "A negative discriminant always means a spiral (the trace's sign then decides growing vs decaying)." },
     ],
     finalAnswer: { value: "spiral", unit: "" },
-    solutionNarrative: `$T = ${T}$, $D = ${D}$, $T^2 - 4D = ${disc} < 0$: the eigenvalues are complex, so the populations ${a < 0 ? "spiral inward — oscillations that die out" : "spiral outward — growing oscillations"} around the equilibrium. Classification: spiral.`,
+    solutionNarrative: `$T = ${T}$, $D = ${D}$, $T^2 - 4D = ${disc} < 0$: the eigenvalues are complex, so the populations ${a < 0 ? "spiral inward: oscillations that die out" : "spiral outward: growing oscillations"} around the equilibrium. Classification: spiral.`,
   };
 };

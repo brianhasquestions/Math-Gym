@@ -29,7 +29,7 @@ fill["cr1-mod-d1"] = (rng, idx) => {
     id: `gen.cr1-mod-d1.${idx}`, generated: true, concepts: ["compute-mod"], difficulty: 1, context: "abstract",
     prompt: `Compute $${a} \\bmod ${n}$.`,
     steps: [
-      { instruction: `What is the largest multiple of ${n} that is at most ${a}?`, answer: `${q * n}`, accept: [`${q}*${n}`], hint: `$${n} \\cdot ${q} = ${q * n}$, while $${n} \\cdot ${q + 1} = ${(q + 1) * n}$ is too big.` },
+      { instruction: `What is the largest multiple of ${n} that is at most ${a}?`, answer: `${q * n}`, accept: [], hint: `$${n} \\cdot ${q} = ${q * n}$, while $${n} \\cdot ${q + 1} = ${(q + 1) * n}$ is too big.` },
       { instruction: `Subtract to get the remainder: $${a} \\bmod ${n} = $ ?`, answer: `${r}`, accept: [], hint: `$${a} - ${q * n}$.` },
     ],
     finalAnswer: { value: `${r}`, unit: "" },
@@ -42,7 +42,7 @@ fill["cr1-mod-d2"] = (rng, idx) => {
   const a = r - k * n; // negative by construction (r < n <= k*n)
   return {
     id: `gen.cr1-mod-d2.${idx}`, generated: true, concepts: ["compute-mod"], difficulty: 2, context: "abstract",
-    prompt: `Compute $${a} \\bmod ${n}$. (The answer must land in the range $0$ to $${n - 1}$ — decryption produces negatives like this all the time.)`,
+    prompt: `Compute $${a} \\bmod ${n}$. (The answer must land in the range $0$ to $${n - 1}$: decryption produces negatives like this all the time.)`,
     steps: [
       { instruction: `How many times must you add ${n} to ${a} to land in the range $0..${n - 1}$?`, answer: `${k}`, accept: [], hint: `Each addition of ${n} keeps the residue the same; count until you are no longer negative.` },
       { instruction: `So $${a} \\bmod ${n} = $ ?`, answer: `${r}`, accept: [], hint: `$${a} + ${k} \\cdot ${n} = ${r}$.` },
@@ -58,7 +58,7 @@ fill["cr1-mod-d3"] = (rng, idx) => {
   const congruent = rng.int(0, 1) === 1;
   const rb = congruent ? ra : mod(ra + rng.int(1, n - 1), n);
   const a = ra + rng.int(2, 6) * n;
-  const b = rb + rng.int(1, 5) * n;
+  let b; do { b = rb + rng.int(1, 5) * n; } while (b === a); // never ask "is 26 = 26?"
   const yn = congruent ? "yes" : "no";
   return {
     id: `gen.cr1-mod-d3.${idx}`, generated: true, concepts: ["compute-mod"], difficulty: 3, context: "abstract",
@@ -66,10 +66,10 @@ fill["cr1-mod-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $${a} \\bmod ${n}$.`, answer: `${ra}`, accept: [], hint: `Find the largest multiple of ${n} inside ${a} and subtract.` },
       { instruction: `Compute $${b} \\bmod ${n}$.`, answer: `${rb}`, accept: [], hint: `Find the largest multiple of ${n} inside ${b} and subtract.` },
-      { instruction: `Do they leave the same remainder — is $${a} \\equiv ${b} \\pmod{${n}}$? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: "Congruent means equal remainders mod the modulus." },
+      { instruction: `Do they leave the same remainder: is $${a} \\equiv ${b} \\pmod{${n}}$? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: "Congruent means equal remainders mod the modulus." },
     ],
     finalAnswer: { value: yn, unit: "" },
-    solutionNarrative: `$${a} \\bmod ${n} = ${ra}$ and $${b} \\bmod ${n} = ${rb}$ — ${congruent ? "equal residues, so yes, congruent" : "different residues, so no, not congruent"}.`,
+    solutionNarrative: `$${a} \\bmod ${n} = ${ra}$ and $${b} \\bmod ${n} = ${rb}$: ${congruent ? "equal residues, so yes, congruent" : "different residues, so no, not congruent"}.`,
   };
 };
 
@@ -93,11 +93,14 @@ fill["cr1-modops-d1"] = (rng, idx) => {
 
 fill["cr1-modops-d2"] = (rng, idx) => {
   const n = rng.int(5, 11);
-  const a = rng.int(n + 1, 5 * n), b = rng.int(n + 1, 5 * n);
+  // Nonzero residues: a multiple of n would make the product step a trivial 0.
+  let a, b;
+  do { a = rng.int(n + 1, 5 * n); } while (a % n === 0);
+  do { b = rng.int(n + 1, 5 * n); } while (b % n === 0);
   const ra = mod(a, n), rb = mod(b, n), p = ra * rb, r = mod(p, n);
   return {
     id: `gen.cr1-modops-d2.${idx}`, generated: true, concepts: ["modular-add-mult"], difficulty: 2, context: "abstract",
-    prompt: `Compute $(${a} \\cdot ${b}) \\bmod ${n}$ using reduce-as-you-go — never multiply the big numbers directly.`,
+    prompt: `Compute $(${a} \\cdot ${b}) \\bmod ${n}$ using reduce-as-you-go: never multiply the big numbers directly.`,
     steps: [
       { instruction: `Compute $${a} \\bmod ${n}$.`, answer: `${ra}`, accept: [], hint: `Largest multiple of ${n} in ${a}, then subtract.` },
       { instruction: `Compute $${b} \\bmod ${n}$.`, answer: `${rb}`, accept: [], hint: `Largest multiple of ${n} in ${b}, then subtract.` },
@@ -136,17 +139,24 @@ fill["cr1-modinv-d1"] = (rng, idx) => {
   const n = rng.pick([7, 9, 10, 11, 13]);
   let a; do { a = rng.int(2, n - 1); } while (gcd(a, n) !== 1);
   const inv = modInverse(a, n);
-  const p = a * inv;
+  // Half the time offer a wrong candidate, so the yes/no step is a real decision.
+  const isInv = rng.int(0, 1) === 1;
+  let c = inv;
+  if (!isInv) { do { c = rng.int(2, n - 1); } while (c === inv); }
+  const p = a * c, r = mod(p, n);
+  const yn = isInv ? "yes" : "no";
   return {
     id: `gen.cr1-modinv-d1.${idx}`, generated: true, concepts: ["modular-inverse"], difficulty: 1, context: "abstract",
-    prompt: `Is ${inv} the inverse of ${a} mod ${n}? (That is: does $${a} \\cdot ${inv} \\equiv 1 \\pmod{${n}}$?)`,
+    prompt: `Is ${c} the inverse of ${a} mod ${n}? (That is: does $${a} \\cdot ${c} \\equiv 1 \\pmod{${n}}$?)`,
     steps: [
-      { instruction: `Compute $${a} \\cdot ${inv}$.`, answer: `${p}`, accept: [], hint: "Just multiply." },
-      { instruction: `Reduce: $${p} \\bmod ${n} = $ ?`, answer: "1", accept: [], hint: `Subtract the largest multiple of ${n} in ${p}.` },
-      { instruction: `Did the product reduce to 1 — is ${inv} the inverse of ${a} mod ${n}? Type 'yes' or 'no'.`, answer: "yes", accept: ["y"], hint: "An inverse is exactly a number whose product with $a$ reduces to 1." },
+      { instruction: `Compute $${a} \\cdot ${c}$.`, answer: `${p}`, accept: [], hint: "Just multiply." },
+      { instruction: `Reduce: $${p} \\bmod ${n} = $ ?`, answer: `${r}`, accept: [], hint: `Subtract the largest multiple of ${n} in ${p}.` },
+      { instruction: `Did the product reduce to 1? Is ${c} the inverse of ${a} mod ${n}? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: "An inverse is exactly a number whose product with $a$ reduces to 1." },
     ],
-    finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$${a} \\cdot ${inv} = ${p} \\equiv 1 \\pmod{${n}}$, so yes — multiplying by ${inv} undoes multiplying by ${a} in mod-${n} arithmetic.`,
+    finalAnswer: { value: yn, unit: "" },
+    solutionNarrative: isInv
+      ? `$${a} \\cdot ${c} = ${p} \\equiv 1 \\pmod{${n}}$, so yes: multiplying by ${c} undoes multiplying by ${a} in mod-${n} arithmetic.`
+      : `$${a} \\cdot ${c} = ${p} \\equiv ${r} \\pmod{${n}}$, not 1, so no. (The actual inverse is ${inv}: $${a} \\cdot ${inv} = ${a * inv} \\equiv 1$.)`,
   };
 };
 
@@ -157,7 +167,7 @@ fill["cr1-modinv-d2"] = (rng, idx) => {
   const p = a * inv;
   return {
     id: `gen.cr1-modinv-d2.${idx}`, generated: true, concepts: ["modular-inverse"], difficulty: 2, context: "abstract",
-    prompt: `Find $${a}^{-1} \\bmod ${n}$ — the number $x$ in $1..${n - 1}$ with $${a}x \\equiv 1 \\pmod{${n}}$ — by testing candidates.`,
+    prompt: `Find $${a}^{-1} \\bmod ${n}$, the number $x$ in $1..${n - 1}$ with $${a}x \\equiv 1 \\pmod{${n}}$, by testing candidates.`,
     steps: [
       { instruction: `For $x$ to be the inverse, $${a}x \\bmod ${n}$ must equal what?`, answer: "1", accept: [], hint: "That is the definition of a modular inverse." },
       { instruction: `Test $x = 1, 2, 3, \\dots$ in turn: which $x$ works?`, answer: `${inv}`, accept: [`x=${inv}`], hint: `Multiply ${a} by each candidate and reduce mod ${n} until you hit 1.` },
@@ -189,7 +199,7 @@ fill["cr1-modinv-d3"] = (rng, idx) => {
     finalAnswer: { value: exists ? `${inv}` : "none", unit: "" },
     solutionNarrative: exists
       ? `$\\gcd(${a}, ${n}) = 1$, so an inverse exists; testing gives $${a} \\cdot ${inv} = ${a * inv} \\equiv 1 \\pmod{${n}}$.`
-      : `$\\gcd(${a}, ${n}) = ${g} \\ne 1$, so no inverse exists — every multiple of ${a} stays divisible by ${g} mod ${n} and can never reduce to 1.`,
+      : `$\\gcd(${a}, ${n}) = ${g} \\ne 1$, so no inverse exists: every multiple of ${a} stays divisible by ${g} mod ${n} and can never reduce to 1.`,
   };
 };
 
@@ -206,7 +216,7 @@ fill["cr1-modwild-d1"] = (rng, idx) => {
     prompt: `Today is ${today}. A password expires in ${k} days. What day of the week does it expire?`,
     steps: [
       { instruction: `Days of the week cycle mod 7. Compute $${k} \\bmod 7$.`, answer: `${shift}`, accept: [], hint: `Subtract the largest multiple of 7 that fits in ${k}.` },
-      { instruction: `Count ${shift} day${shift === 1 ? "" : "s"} forward from ${today}. What day is it? Type the day name.`, answer: then, accept: [then.slice(0, 3)], hint: "Full weeks wrap away; only the remainder moves the weekday." },
+      { instruction: `Count ${shift} day${shift === 1 ? "" : "s"} forward from ${today}. What day is it? Type the day name.`, answer: then, accept: [then.slice(0, 3), ...(then === "Tuesday" ? ["Tues"] : then === "Thursday" ? ["Thur", "Thurs"] : [])], hint: "Full weeks wrap away; only the remainder moves the weekday." },
     ],
     finalAnswer: { value: then, unit: "" },
     solutionNarrative: `$${k} \\bmod 7 = ${shift}$, so the expiry lands ${shift} weekday${shift === 1 ? "" : "s"} after ${today}: ${then}.`,
@@ -221,7 +231,7 @@ fill["cr1-modwild-d2"] = (rng, idx) => {
     id: `gen.cr1-modwild-d2.${idx}`, generated: true, concepts: ["mod-in-the-wild"], difficulty: 2, context: "applied",
     prompt: `A hash table has ${n} buckets. A key hashes to the value ${h}. Which bucket index ($0..${n - 1}$) stores it? (Index $=$ hash $\\bmod$ ${n}.)`,
     steps: [
-      { instruction: `What is the largest multiple of ${n} that is at most ${h}?`, answer: `${q * n}`, accept: [`${q}*${n}`], hint: `$${n} \\cdot ${q} = ${q * n}$.` },
+      { instruction: `What is the largest multiple of ${n} that is at most ${h}?`, answer: `${q * n}`, accept: [], hint: `$${n} \\cdot ${q} = ${q * n}$.` },
       { instruction: `So the bucket index is $${h} \\bmod ${n} = $ ?`, answer: `${r}`, accept: [], hint: `$${h} - ${q * n}$.` },
     ],
     finalAnswer: { value: `${r}`, unit: "" },
@@ -309,12 +319,12 @@ fill["cr1-prime-d2"] = (rng, idx) => {
     id: `gen.cr1-prime-d2.${idx}`, generated: true, concepts: ["primes-and-coprimality"], difficulty: 2, context: "abstract",
     prompt: `Find the prime factorization of ${n} by peeling off small primes.`,
     steps: [
-      { instruction: `Divide out the 2s: how many times does 2 divide ${n}?`, answer: `${a}`, accept: [], hint: `Halve repeatedly: ${n}${a >= 1 ? ` \\to ${n / 2}` : ""}${a >= 2 ? ` \\to ${n / 4}` : ""}${a >= 3 ? ` \\to ${n / 8}` : ""} — stop when the result is odd.` },
+      { instruction: `Divide out the 2s: how many times does 2 divide ${n}?`, answer: `${a}`, accept: [], hint: `Halve repeatedly: $${n}${a >= 1 ? ` \\to ${n / 2}` : ""}${a >= 2 ? ` \\to ${n / 4}` : ""}${a >= 3 ? ` \\to ${n / 8}` : ""}$, then stop because the result is odd.` },
       { instruction: `What odd number remains after removing all the 2s?`, answer: `${opt.m}`, accept: [], hint: `$${n} \\div ${2 ** a}$.` },
       { instruction: `Factor ${opt.m} into primes ($${opt.m} = ${opt.factors}$). In total, how many prime factors does ${n} have, counted with multiplicity?`, answer: `${totalCount}`, accept: [], hint: `${a} factor${a === 1 ? "" : "s"} of 2 plus ${opt.count} odd prime factor${opt.count === 1 ? "" : "s"}.` },
     ],
-    finalAnswer: { value: `${n} = 2^${a} * ${opt.m}`, unit: "" },
-    solutionNarrative: `$${n} = 2^{${a}} \\cdot ${opt.factors}$ — ${totalCount} prime factors with multiplicity. Unique factorization guarantees this is the only way it breaks down.`,
+    finalAnswer: { value: `${n} = ${a === 1 ? "2" : `2^${a}`} * ${opt.factors.replace(/ \\cdot /g, " * ")}`, unit: "" },
+    solutionNarrative: `$${n} = ${a === 1 ? "2" : `2^{${a}}`} \\cdot ${opt.factors}$: ${totalCount} prime factors with multiplicity. Unique factorization guarantees this is the only way it breaks down.`,
   };
 };
 
@@ -334,7 +344,7 @@ fill["cr1-prime-d3"] = (rng, idx) => {
       { instruction: `Coprime means $\\gcd = 1$. Are ${a} and ${b} coprime? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: `The gcd is ${g}.` },
     ],
     finalAnswer: { value: yn, unit: "" },
-    solutionNarrative: `$${a} = ${g} \\cdot ${p}$ and $${b} = ${g} \\cdot ${q}$ with $\\gcd(${p}, ${q}) = 1$, so $\\gcd(${a}, ${b}) = ${g}$ — ${coprime ? "coprime" : "NOT coprime"}.`,
+    solutionNarrative: `$${a} = ${g} \\cdot ${p}$ and $${b} = ${g} \\cdot ${q}$ with $\\gcd(${p}, ${q}) = 1$, so $\\gcd(${a}, ${b}) = ${g}$: ${coprime ? "coprime" : "NOT coprime"}.`,
   };
 };
 
@@ -351,7 +361,7 @@ fill["cr1-euclid-d1"] = (rng, idx) => {
     steps: [
       { instruction: `Divide ${a} by ${b}: what is the remainder? ($${a} = ${q1} \\cdot ${b} + r$)`, answer: `${g}`, accept: [], hint: `$${a} - ${q1 * b}$.` },
       { instruction: `Divide ${b} by ${g}: what is the remainder?`, answer: "0", accept: [], hint: `$${g} \\cdot ${q2} = ${b}$ exactly.` },
-      { instruction: `The remainder hit 0. What is the last NONZERO remainder — the gcd?`, answer: `${g}`, accept: [], hint: "Look one line up." },
+      { instruction: `The remainder hit 0. What is the last NONZERO remainder: the gcd?`, answer: `${g}`, accept: [], hint: "Look one line up." },
     ],
     finalAnswer: { value: `${g}`, unit: "" },
     solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${g}$; $${b} = ${q2} \\cdot ${g} + 0$. The last nonzero remainder is ${g}, so $\\gcd(${a}, ${b}) = ${g}$.`,
@@ -373,7 +383,7 @@ fill["cr1-euclid-d2"] = (rng, idx) => {
       { instruction: `So $\\gcd(${a}, ${b}) = $ ?`, answer: `${r2}`, accept: [], hint: "The last nonzero remainder." },
     ],
     finalAnswer: { value: `${r2}`, unit: "" },
-    solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${r1}$; $${b} = ${q2} \\cdot ${r1} + ${r2}$; $${r1} = ${q3} \\cdot ${r2} + 0$. So $\\gcd = ${r2}$ — no factoring required.`,
+    solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${r1}$; $${b} = ${q2} \\cdot ${r1} + ${r2}$; $${r1} = ${q3} \\cdot ${r2} + 0$. So $\\gcd = ${r2}$, no factoring required.`,
   };
 };
 
@@ -385,7 +395,7 @@ fill["cr1-euclid-d3"] = (rng, idx) => {
   const q1 = rng.int(1, 3), a = q1 * b + r1;
   return {
     id: `gen.cr1-euclid-d3.${idx}`, generated: true, concepts: ["euclidean-algorithm"], difficulty: 3, context: "abstract",
-    prompt: `Find $\\gcd(${a}, ${b})$ — four divisions of the Euclidean cascade. Track each remainder carefully.`,
+    prompt: `Find $\\gcd(${a}, ${b})$: four divisions of the Euclidean cascade. Track each remainder carefully.`,
     steps: [
       { instruction: `Divide ${a} by ${b}: what is the remainder? ($${b} \\cdot ${q1} = ${q1 * b}$)`, answer: `${r1}`, accept: [], hint: `$${a} - ${q1 * b}$.` },
       { instruction: `Divide ${b} by ${r1}: what is the remainder? ($${r1} \\cdot ${q2} = ${q2 * r1}$)`, answer: `${r2}`, accept: [], hint: `$${b} - ${q2 * r1}$.` },
@@ -428,7 +438,7 @@ fill["cr1-exteuclid-d2"] = (rng, idx) => {
   const q1 = rng.int(1, 3), a = q1 * b + r;
   return {
     id: `gen.cr1-exteuclid-d2.${idx}`, generated: true, concepts: ["extended-euclid"], difficulty: 2, context: "abstract",
-    prompt: `Express $\\gcd(${a}, ${b})$ as a combination $${a}x + ${b}y$. The Euclidean division is short here — one back-substitution does it.`,
+    prompt: `Express $\\gcd(${a}, ${b})$ as a combination $${a}x + ${b}y$. The Euclidean division is short here: one back-substitution does it.`,
     steps: [
       { instruction: `Divide ${a} by ${b}: what is the remainder? (This remainder is the gcd, since ${b} is a multiple of it.)`, answer: `${r}`, accept: [], hint: `$${a} - ${q1} \\cdot ${b}$.` },
       { instruction: `The division says $${a} = q \\cdot ${b} + ${r}$. What is the quotient $q$?`, answer: `${q1}`, accept: [], hint: `How many whole times does ${b} fit into ${a}?` },
@@ -436,27 +446,30 @@ fill["cr1-exteuclid-d2"] = (rng, idx) => {
       { instruction: `Verify: $${a} \\cdot 1 + ${b} \\cdot (${-q1}) = $ ?`, answer: `${r}`, accept: [], hint: `$${a} - ${q1 * b}$.` },
     ],
     finalAnswer: { value: `x = 1, y = ${-q1}`, unit: "" },
-    solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${r}$ and ${b} is a multiple of ${r}, so $\\gcd = ${r}$. Rearranging the division: $${r} = ${a} \\cdot 1 + ${b} \\cdot (${-q1})$ — Bézout coefficients $x = 1$, $y = ${-q1}$.`,
+    solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${r}$ and ${b} is a multiple of ${r}, so $\\gcd = ${r}$. Rearranging the division: $${r} = ${a} \\cdot 1 + ${b} \\cdot (${-q1})$: Bézout coefficients $x = 1$, $y = ${-q1}$.`,
   };
 };
 
 fill["cr1-exteuclid-d3"] = (rng, idx) => {
-  const n = rng.pick([20, 24, 26, 40]);
-  let a; do { a = rng.int(3, n - 3); } while (gcd(a, n) !== 1);
-  const inv = modInverse(a, n);
+  // Every phi here is a real (p-1)(q-1): 20 = 2*10, 40 = 4*10, 48 = 4*12,
+  // 60 = 6*10. (26 is not a totient at all, and mod 24 every unit is its own
+  // inverse.) Reject self-inverse e: a key with d = e is degenerate.
+  const n = rng.pick([20, 40, 48, 60]);
+  let a, inv;
+  do { a = rng.int(3, n - 3); inv = gcd(a, n) === 1 ? modInverse(a, n) : null; } while (inv === null || inv === a);
   const p = a * inv;
   const k = (p - 1) / n;
   return {
     id: `gen.cr1-exteuclid-d3.${idx}`, generated: true, concepts: ["extended-euclid"], difficulty: 3, context: "applied",
-    prompt: `Toy RSA key generation: the public exponent is $e = ${a}$ and $\\varphi = ${n}$. The private key is $d = e^{-1} \\bmod \\varphi$ — found with extended Euclid (run the divisions, then back-substitute; or test candidates and confirm).`,
+    prompt: `Toy RSA key generation: the public exponent is $e = ${a}$ and $\\varphi = ${n}$. The private key is $d = e^{-1} \\bmod \\varphi$: found with extended Euclid (run the divisions, then back-substitute; or test candidates and confirm).`,
     steps: [
       { instruction: `First the safety check: $\\gcd(${a}, ${n}) = $ ? (It must be 1 or no key exists.)`, answer: "1", accept: [], hint: `Run Euclid: keep dividing and taking remainders until 0; the last nonzero remainder is the gcd.` },
-      { instruction: `Find $d$ with $${a}d \\equiv 1 \\pmod{${n}}$, giving your answer in the range $0..${n - 1}$.`, answer: `${inv}`, accept: [`d=${inv}`, `${inv - n}`], hint: `Back-substitution yields some coefficient $x$ with $${a}x + ${n}y = 1$; if $x$ is negative, add ${n}.` },
+      { instruction: `Find $d$ with $${a}d \\equiv 1 \\pmod{${n}}$, giving your answer in the range $0..${n - 1}$.`, answer: `${inv}`, accept: [`d=${inv}`], hint: `Back-substitution yields some coefficient $x$ with $${a}x + ${n}y = 1$; if $x$ is negative, add ${n}.` },
       { instruction: `Check the key: $${a} \\cdot ${inv} = $ ?`, answer: `${p}`, accept: [], hint: "Multiply them out." },
       { instruction: `And $${p} \\bmod ${n} = $ ?`, answer: "1", accept: [], hint: `$${k} \\cdot ${n} = ${k * n}$.` },
     ],
     finalAnswer: { value: `${inv}`, unit: "" },
-    solutionNarrative: `$\\gcd(${a}, ${n}) = 1$, so the key exists. Extended Euclid gives $d = ${inv}$: check $${a} \\cdot ${inv} = ${p} = ${k} \\cdot ${n} + 1 \\equiv 1 \\pmod{${n}}$. This is byte-for-byte what OpenSSL does with 2048-bit numbers.`,
+    solutionNarrative: `$\\gcd(${a}, ${n}) = 1$, so the key exists. Extended Euclid gives $d = ${inv}$: check $${a} \\cdot ${inv} = ${p} = ${k} \\cdot ${n} + 1 \\equiv 1 \\pmod{${n}}$. Real RSA key generation runs this same inverse computation on 2048-bit numbers.`,
   };
 };
 
@@ -477,7 +490,7 @@ fill["cr1-gcdcrypto-d1"] = (rng, idx) => {
       { instruction: `Divide the denominator by the gcd: $${den} \\div ${g} = $ ?`, answer: `${q}`, accept: [], hint: "One division." },
     ],
     finalAnswer: { value: `${p}/${q}`, unit: "" },
-    solutionNarrative: `$\\gcd(${num}, ${den}) = ${g}$, so $\\frac{${num}}{${den}} = \\frac{${p}}{${q}}$ — lowest terms in a single gcd.`,
+    solutionNarrative: `$\\gcd(${num}, ${den}) = ${g}$, so $\\frac{${num}}{${den}} = \\frac{${p}}{${q}}$: lowest terms in a single gcd.`,
   };
 };
 
@@ -502,8 +515,8 @@ fill["cr1-gcdcrypto-d2"] = (rng, idx) => {
     ],
     finalAnswer: { value: yn, unit: "" },
     solutionNarrative: valid
-      ? `$\\varphi = ${phi}$ and $\\gcd(${e}, ${phi}) = 1$, so $e = ${e}$ is legal — its inverse $d$ exists and the key pair can be built.`
-      : `$\\varphi = ${phi}$ but $\\gcd(${e}, ${phi}) = ${g} \\ne 1$, so $e = ${e}$ has NO inverse mod ${phi} — key generation must pick a different $e$.`,
+      ? `$\\varphi = ${phi}$ and $\\gcd(${e}, ${phi}) = 1$, so $e = ${e}$ is legal: its inverse $d$ exists and the key pair can be built.`
+      : `$\\varphi = ${phi}$ but $\\gcd(${e}, ${phi}) = ${g} \\ne 1$, so $e = ${e}$ has NO inverse mod ${phi}: key generation must pick a different $e$.`,
   };
 };
 
@@ -516,7 +529,7 @@ fill["cr1-gcdcrypto-d3"] = (rng, idx) => {
   const l = g * p * q;
   return {
     id: `gen.cr1-gcdcrypto-d3.${idx}`, generated: true, concepts: ["gcd-in-crypto"], difficulty: 3, context: "applied",
-    prompt: `Two meshed cipher-machine rotors have ${a} and ${b} teeth, with painted marks currently aligned. The marks realign after $\\mathrm{lcm}(${a}, ${b})$ teeth have passed. Find when — and how many full turns each rotor makes.`,
+    prompt: `Two meshed cipher-machine rotors have ${a} and ${b} teeth, with painted marks currently aligned. The marks realign after $\\mathrm{lcm}(${a}, ${b})$ teeth have passed. Find when, and how many full turns each rotor makes.`,
     steps: [
       { instruction: `Compute $\\gcd(${a}, ${b})$.`, answer: `${g}`, accept: [], hint: `Run Euclid: $${Math.max(a, b)} \\bmod ${Math.min(a, b)}$, and so on.` },
       { instruction: `Compute $\\mathrm{lcm}(${a}, ${b}) = \\dfrac{${a} \\cdot ${b}}{\\gcd}$.`, answer: `${l}`, accept: [], hint: `$${a * b} \\div ${g}$.` },
@@ -524,6 +537,6 @@ fill["cr1-gcdcrypto-d3"] = (rng, idx) => {
       { instruction: `And the ${b}-tooth rotor?`, answer: `${p}`, accept: [], hint: `$${l} \\div ${b}$.` },
     ],
     finalAnswer: { value: `${l}`, unit: "teeth" },
-    solutionNarrative: `$\\gcd(${a}, ${b}) = ${g}$, so $\\mathrm{lcm} = \\frac{${a} \\cdot ${b}}{${g}} = ${l}$: the marks realign after ${l} teeth — ${q} turns of the ${a}-tooth rotor and ${p} of the ${b}-tooth one. Rotor-cycle alignment like this is what made Enigma's period structure attackable.`,
+    solutionNarrative: `$\\gcd(${a}, ${b}) = ${g}$, so $\\mathrm{lcm} = \\frac{${a} \\cdot ${b}}{${g}} = ${l}$: the marks realign after ${l} teeth: ${q} turns of the ${a}-tooth rotor and ${p} of the ${b}-tooth one. The shared factor ${g} cuts the period from $${a} \\cdot ${b} = ${a * b}$ to ${l} teeth, which is why cipher-wheel designers pick sizes with no common factor: a short period means repeating key patterns an attacker can exploit.`,
   };
 };

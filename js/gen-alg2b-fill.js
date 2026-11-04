@@ -48,7 +48,7 @@ const gcd = (a, b) => (b === 0 ? Math.abs(a) : gcd(b, a % b));
 // plot.js's curve-fn evaluator currently returns NaN for any expression with
 // an explicit binary + - * / (a self-capture bug in compileFn's expr/term
 // closures), so branch curves like "sqrt(25 - x*x)" render empty. We trace
-// conics with small `points` instead — reliable regardless of that bug.
+// conics with small `points` instead; reliable regardless of that bug.
 const f2 = (v) => Math.round(v * 100) / 100;
 const ellipsePts = (h, k, rx, ry, n = 40) => Array.from({ length: n }, (_, i) => {
   const t = (2 * Math.PI * i) / n;
@@ -70,7 +70,7 @@ const hyperbolaPts = (a, b, horiz, m, n = 17) => {
   }
   return out;
 };
-// Pythagorean triples [leg, leg, hyp] — both leg orders included so either can
+// Pythagorean triples [leg, leg, hyp]; both leg orders included so either can
 // play the role of a (ellipse: a = hyp of (b, c); hyperbola: c = hyp of (a, b)).
 const TRIPLES = [[3, 4, 5], [4, 3, 5], [6, 8, 10], [8, 6, 10], [5, 12, 13], [12, 5, 13], [9, 12, 15], [12, 9, 15], [8, 15, 17], [15, 8, 17]];
 
@@ -86,9 +86,9 @@ fill["a2c-circles-1"] = (rng, idx) => {
     id: `gen.a2c-circles-1.${idx}`, generated: true, concepts: ["circles-and-completing-square"], difficulty: 1, context: "abstract",
     prompt: `A circle has equation $${eq}$. Read off its center and radius from the standard form $(x - h)^2 + (y - k)^2 = r^2$.`,
     steps: [
-      { instruction: `What is the x-coordinate of the center? (Give a number — watch the sign inside the parenthesis.)`, answer: `${h}`, accept: [], hint: `Standard form has $(x - h)$: the term $${shiftSq("x", h).replace("^2", "")}$ means $h = ${h}$.` },
-      { instruction: `What is the y-coordinate of the center? (Give a number.)`, answer: `${k}`, accept: [], hint: `The term $${shiftSq("y", k).replace("^2", "")}$ means $k = ${k}$ — the sign flips coming out of the parenthesis.` },
-      { instruction: `The right side is $r^2 = ${r * r}$. What is the radius $r$? (Give a number.)`, answer: `${r}`, accept: [], hint: `$\\sqrt{${r * r}} = ${r}$ — the equation shows $r^2$, not $r$.` },
+      { instruction: `What is the x-coordinate of the center? (Give a number: watch the sign inside the parenthesis.)`, answer: `${h}`, accept: [], hint: `Standard form has $(x - h)$: the term $${shiftSq("x", h).replace("^2", "")}$ means $h = ${h}$.` },
+      { instruction: `What is the y-coordinate of the center? (Give a number.)`, answer: `${k}`, accept: [], hint: `The term $${shiftSq("y", k).replace("^2", "")}$ means $k = ${k}$: the sign flips coming out of the parenthesis.` },
+      { instruction: `The right side is $r^2 = ${r * r}$. What is the radius $r$? (Give a number.)`, answer: `${r}`, accept: [], hint: `$\\sqrt{${r * r}} = ${r}$: the equation shows $r^2$, not $r$.` },
     ],
     finalAnswer: { value: `center (${h}, ${k}), radius ${r}`, unit: "" },
     solutionNarrative: `Match against $(x - h)^2 + (y - k)^2 = r^2$: the center is $(${h}, ${k})$ (signs flip out of the parentheses) and $r = \\sqrt{${r * r}} = ${r}$.`,
@@ -133,10 +133,10 @@ fill["a2c-circles-3"] = (rng, idx) => {
       { instruction: `Divide every term by ${A} and write the resulting equation (still equal to 0).`, answer: divided, accept: [], hint: `Each coefficient shrinks by a factor of ${A}: $${gen.replace(" = 0", "")}$ becomes $${divided.replace(" = 0", "")}$.` },
       { instruction: `Complete the square in $x$: what is the center's x-coordinate $h$? (Give a number.)`, answer: `${h}`, accept: [], hint: `Half of $${D}$, sign-flipped: $h = ${h}$.` },
       { instruction: `Complete the square in $y$: what is the center's y-coordinate $k$? (Give a number.)`, answer: `${k}`, accept: [], hint: `Half of $${E}$, sign-flipped: $k = ${k}$.` },
-      { instruction: `The right side becomes $${-F} + ${h * h} + ${k * k} = ${r * r}$. What is the radius $r$? (Give a number.)`, answer: `${r}`, accept: [], hint: `$r = \\sqrt{${r * r}} = ${r}$ — remember the equation shows $r^2$.` },
+      { instruction: `The right side becomes $${-F} + ${h * h} + ${k * k} = ${r * r}$. What is the radius $r$? (Give a number.)`, answer: `${r}`, accept: [], hint: `$r = \\sqrt{${r * r}} = ${r}$: remember the equation shows $r^2$.` },
     ],
     finalAnswer: { value: `center (${h}, ${k}), radius ${r}`, unit: "" },
-    solutionNarrative: `Divide by ${A} first: $${divided}$. Completing both squares gives $${shiftSq("x", h)} + ${shiftSq("y", k)} = ${r * r}$ — center $(${h}, ${k})$, radius $${r}$. Forgetting to divide first is the classic error: it corrupts both the center and the radius.`,
+    solutionNarrative: `Divide by ${A} first: $${divided}$. Completing both squares gives $${shiftSq("x", h)} + ${shiftSq("y", k)} = ${r * r}$: center $(${h}, ${k})$, radius $${r}$. Forgetting to divide first is the classic error: it corrupts both the center and the radius.`,
   };
 };
 
@@ -152,7 +152,7 @@ fill["a2c-parabolas-1"] = (rng, idx) => {
     id: `gen.a2c-parabolas-1.${idx}`, generated: true, concepts: ["parabolas-focus-directrix"], difficulty: 1, context: "abstract",
     prompt: `A parabola has vertex form $${eq}$. Identify its vertex and which way it opens.`,
     steps: [
-      { instruction: `Give the vertex as an ordered pair (a, b).`, answer: `(${h}, ${k})`, accept: [], hint: `Vertex form is $y = a(x - h)^2 + k$ with vertex $(h, k)$ — flip the sign inside the parenthesis, keep the constant's sign.` },
+      { instruction: `Give the vertex as an ordered pair (a, b).`, answer: `(${h}, ${k})`, accept: [], hint: `Vertex form is $y = a(x - h)^2 + k$ with vertex $(h, k)$: flip the sign inside the parenthesis, keep the constant's sign.` },
       { instruction: `The leading coefficient is $${a}$. Does the parabola open up or down? (Answer 'up' or 'down'.)`, answer: dir, accept: [a > 0 ? "upward" : "downward", a > 0 ? "opens up" : "opens down"], hint: `Positive $a$ opens up; negative $a$ opens down.` },
       { instruction: `Write the equation of the axis of symmetry (a vertical line, like x = 2).`, answer: `x = ${h}`, accept: [], hint: `The axis passes through the vertex: $x = ${h}$.` },
     ],
@@ -169,7 +169,7 @@ fill["a2c-parabolas-2"] = (rng, idx) => {
     id: `gen.a2c-parabolas-2.${idx}`, generated: true, concepts: ["parabolas-focus-directrix"], difficulty: 2, context: "abstract",
     prompt: `The parabola $x^2 = ${N}y$ has its vertex at the origin. Use the form $x^2 = 4py$ to find its focus and directrix.`,
     steps: [
-      { instruction: `Match $x^2 = ${N}y$ to $x^2 = 4py$: what is $p$? (Give a number — keep its sign.)`, answer: `${p}`, accept: [], hint: `$4p = ${N}$, so $p = ${N}/4 = ${p}$.` },
+      { instruction: `Match $x^2 = ${N}y$ to $x^2 = 4py$: what is $p$? (Give a number: keep its sign.)`, answer: `${p}`, accept: [], hint: `$4p = ${N}$, so $p = ${N}/4 = ${p}$.` },
       { instruction: `The focus sits at $(0, p)$, inside the curve. Give the focus as an ordered pair (a, b).`, answer: `(0, ${p})`, accept: [], hint: `${p > 0 ? "The parabola opens up, so the focus is above the vertex" : "The parabola opens down, so the focus is below the vertex"}: $(0, ${p})$.` },
       { instruction: `The directrix is the horizontal line $y = -p$, on the opposite side of the vertex. Write its equation (like y = 3).`, answer: `y = ${-p}`, accept: [], hint: `Opposite side from the focus: $y = ${-p}$.` },
     ],
@@ -193,12 +193,12 @@ fill["a2c-parabolas-3"] = (rng, idx) => {
     prompt: `The parabola $${eq}$ is in vertex form $y = \\frac{1}{4p}(x - h)^2 + k$, where $p$ is the focal distance. Find its vertex, focus, and directrix.`,
     steps: [
       { instruction: `Give the vertex as an ordered pair (a, b).`, answer: `(${h}, ${k})`, accept: [], hint: `Vertex form: flip the sign inside $(x ${h > 0 ? "-" : "+"} ${Math.abs(h)})$, keep the constant $${k}$ as is.` },
-      { instruction: `The leading coefficient equals $\\frac{1}{4p}$. What is $p$? (Give a number — keep its sign.)`, answer: `${p}`, accept: [], hint: `$\\frac{1}{4p} = ${p > 0 ? `\\frac{1}{${4 * p}}` : `-\\frac{1}{${-4 * p}}`}$, so $4p = ${4 * p}$ and $p = ${p}$.` },
+      { instruction: `The leading coefficient equals $\\frac{1}{4p}$. What is $p$? (Give a number: keep its sign.)`, answer: `${p}`, accept: [], hint: `$\\frac{1}{4p} = ${p > 0 ? `\\frac{1}{${4 * p}}` : `-\\frac{1}{${-4 * p}}`}$, so $4p = ${4 * p}$ and $p = ${p}$.` },
       { instruction: `The focus is $p$ units ${p > 0 ? "above" : "below"} the vertex (vertical parabola). Give the focus as an ordered pair (a, b).`, answer: `(${h}, ${k + p})`, accept: [], hint: `Same x as the vertex; $y = ${k} + (${p}) = ${k + p}$.` },
       { instruction: `The directrix is the horizontal line $p$ units on the OTHER side of the vertex. Write its equation (like y = 3).`, answer: `y = ${k - p}`, accept: [], hint: `$y = ${k} - (${p}) = ${k - p}$.` },
     ],
     finalAnswer: { value: `focus (${h}, ${k + p}), directrix y = ${k - p}`, unit: "" },
-    solutionNarrative: `The vertex is $(${h}, ${k})$ and $\\frac{1}{4p} = ${p > 0 ? `\\frac{1}{${4 * p}}` : `-\\frac{1}{${-4 * p}}`}$ gives $p = ${p}$. The focus sits at $(${h}, ${k + p})$ and the directrix is $y = ${k - p}$ — vertex exactly halfway between them.`,
+    solutionNarrative: `The vertex is $(${h}, ${k})$ and $\\frac{1}{4p} = ${p > 0 ? `\\frac{1}{${4 * p}}` : `-\\frac{1}{${-4 * p}}`}$ gives $p = ${p}$. The focus sits at $(${h}, ${k + p})$ and the directrix is $y = ${k - p}$: vertex exactly halfway between them.`,
   };
 };
 
@@ -241,7 +241,7 @@ fill["a2c-ellipses-2"] = (rng, idx) => {
   const focus = horiz ? `(${c}, 0)` : `(0, ${c})`;
   return {
     id: `gen.a2c-ellipses-2.${idx}`, generated: true, concepts: ["ellipses"], difficulty: 2, context: "abstract",
-    prompt: `Find the foci of the ellipse $${eq}$ using $c^2 = a^2 - b^2$ (for an ellipse, SUBTRACT — the foci are inside the curve, closer to the center than the vertices).`,
+    prompt: `Find the foci of the ellipse $${eq}$ using $c^2 = a^2 - b^2$ (for an ellipse, SUBTRACT: the foci are inside the curve, closer to the center than the vertices).`,
     steps: [
       { instruction: `What is $a^2$, the larger denominator? (Give a number.)`, answer: `${a * a}`, accept: [], hint: `Compare $${a * a}$ and $${b * b}$: the bigger one is $a^2$.` },
       { instruction: `Compute $c^2 = a^2 - b^2 = ${a * a} - ${b * b}$. (Give a number.)`, answer: `${c * c}`, accept: [], hint: `$${a * a} - ${b * b} = ${c * c}$.` },
@@ -307,12 +307,12 @@ fill["a2c-hyperbolas-1"] = (rng, idx) => {
     id: `gen.a2c-hyperbolas-1.${idx}`, generated: true, concepts: ["hyperbolas"], difficulty: 1, context: "abstract",
     prompt: `Classify the conic $${eq}$ by comparing the coefficients of the squared terms.`,
     steps: [
-      { instruction: `What is the coefficient of $x^2$? (Give a number.)`, answer: `${A}`, accept: [], hint: `Read it straight off the $x^2$ term${A === 1 ? " — an invisible coefficient is 1" : ""}.` },
-      { instruction: `What is the coefficient of $y^2$? (Give a number — use 0 if there is no $y^2$ term.)`, answer: `${C}`, accept: [], hint: C === 0 ? `There is no $y^2$ term at all.` : `Include its sign.` },
+      { instruction: `What is the coefficient of $x^2$? (Give a number.)`, answer: `${A}`, accept: [], hint: `Read it straight off the $x^2$ term${A === 1 ? ": an invisible coefficient is 1" : ""}.` },
+      { instruction: `What is the coefficient of $y^2$? (Give a number: use 0 if there is no $y^2$ term.)`, answer: `${C}`, accept: [], hint: C === 0 ? `There is no $y^2$ term at all.` : `Include its sign.` },
       { instruction: `Equal coefficients: circle. Same sign, different values: ellipse. Opposite signs: hyperbola. Only one square: parabola. Which is this? (Answer 'circle', 'ellipse', 'parabola', or 'hyperbola'.)`, answer: kind, accept: [], hint: `Here ${why}.` },
     ],
     finalAnswer: { value: kind, unit: "" },
-    solutionNarrative: `The squared-term coefficients are $${A}$ and $${C}$: ${why}, so this is a ${kind}. No graphing needed — the classification lives entirely in those two coefficients.`,
+    solutionNarrative: `The squared-term coefficients are $${A}$ and $${C}$: ${why}, so this is a ${kind}. No graphing needed: the classification lives entirely in those two coefficients.`,
   };
 };
 fill["a2c-hyperbolas-2"] = (rng, idx) => {
@@ -327,7 +327,7 @@ fill["a2c-hyperbolas-2"] = (rng, idx) => {
   const R = c + 2;
   return {
     id: `gen.a2c-hyperbolas-2.${idx}`, generated: true, concepts: ["hyperbolas"], difficulty: 2, context: "abstract",
-    prompt: `Analyze the hyperbola $${eq}$: orientation, vertices, foci (via $c^2 = a^2 + b^2$ — for a hyperbola, ADD), and asymptote slopes.`,
+    prompt: `Analyze the hyperbola $${eq}$: orientation, vertices, foci (via $c^2 = a^2 + b^2$: for a hyperbola, ADD), and asymptote slopes.`,
     steps: [
       { instruction: `The POSITIVE term is the ${horiz ? "$x^2$" : "$y^2$"} term. Does the hyperbola open left-right (horizontal) or up-down (vertical)? (Answer 'horizontal' or 'vertical'.)`, answer: orient, accept: [horiz ? "left-right" : "up-down"], hint: `The hyperbola opens along the variable of the positive term.` },
       { instruction: `The vertices are $a = \\sqrt{${a * a}}$ units from the center along that axis. Give the vertex with a positive coordinate as an ordered pair (a, b).`, answer: vertex, accept: [], hint: `$a = ${a}$, along the ${horiz ? "x" : "y"}-axis.` },
@@ -370,8 +370,8 @@ fill["a2c-hyperbolas-3"] = (rng, idx) => {
     steps: [
       { instruction: `The center is the midpoint of the vertices. Give it as an ordered pair (a, b).`, answer: `(${h}, ${k})`, accept: [], hint: `Average the coordinates of $${v1}$ and $${v2}$.` },
       { instruction: `What is $a$, the distance from the center to a vertex? (Give a number.)`, answer: `${a}`, accept: [], hint: `From $(${h}, ${k})$ to $${v2}$.` },
-      { instruction: `What is $c$, the distance from the center to a focus? (Give a number.)`, answer: `${c}`, accept: [], hint: `From $(${h}, ${k})$ to $${f2}$ — for a hyperbola $c > a$, the foci sit OUTSIDE the vertices.` },
-      { instruction: `Compute $b^2 = c^2 - a^2$. (Give a number.)`, answer: `${b * b}`, accept: [], hint: `$${c * c} - ${a * a} = ${b * b}$ — for hyperbolas, $b^2$ comes from subtracting the other way around.` },
+      { instruction: `What is $c$, the distance from the center to a focus? (Give a number.)`, answer: `${c}`, accept: [], hint: `From $(${h}, ${k})$ to $${f2}$: for a hyperbola $c > a$, the foci sit OUTSIDE the vertices.` },
+      { instruction: `Compute $b^2 = c^2 - a^2$. (Give a number.)`, answer: `${b * b}`, accept: [], hint: `$${c * c} - ${a * a} = ${b * b}$: for hyperbolas, $b^2$ comes from subtracting the other way around.` },
       { instruction: `The transverse axis is ${horiz ? "horizontal" : "vertical"}, so the ${horiz ? "x" : "y"}-term is positive. Write the equation (like (x - 1)^2/9 - (y - 2)^2/16 = 1).`, answer: eq, accept: [eqSwap], hint: `$a^2 = ${a * a}$ under the positive ${horiz ? `$(x ${h > 0 ? "-" : "+"} ${Math.abs(h)})^2$` : `$(y ${k > 0 ? "-" : "+"} ${Math.abs(k)})^2$`} term; subtract the other term over $b^2 = ${b * b}$.` },
     ],
     finalAnswer: { value: eq, unit: "" },

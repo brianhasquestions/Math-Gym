@@ -1,10 +1,10 @@
 // gen-nt3-fill.js
 // Parametric generators for number-theory.orders-and-primitive-roots.
-// One template per (concept, difficulty) tier — 12 total. Self-contained pack:
+// One template per (concept, difficulty) tier: 12 total. Self-contained pack:
 // no imports; exports a `fill` map of template-name -> generator fn, matching
 // the pack pattern of gen-nt2-fill.js. Every answer is computed in-pack from
 // the SAME numbers shown in the prompt (orders, totients, and powers are all
-// recomputed by the helpers below — nothing hardcoded). Moduli stay <= 50 so
+// recomputed by the helpers below: nothing hardcoded). Moduli stay <= 50 so
 // everything is hand-computable.
 
 // ---------------------------------------------------------------------------
@@ -79,7 +79,7 @@ export const fill = {};
 // concept: multiplicative-order
 // ===========================================================================
 
-// d1: small prime modulus, base of small order — walk the powers to 1.
+// d1: small prime modulus, base of small order, walk the powers to 1.
 fill["nt3-order-1"] = (rng, idx) => {
   // (p, a) pairs chosen so the order is <= 5 (hand-walkable). Order is COMPUTED.
   const [p, a] = rng.pick([[7, 2], [7, 4], [5, 4], [11, 10], [13, 5], [13, 8], [11, 3], [13, 3]]);
@@ -88,17 +88,17 @@ fill["nt3-order-1"] = (rng, idx) => {
   const powers = powerList(a, p, k);
   return {
     id: `gen.nt3-order-1.${idx}`, generated: true, concepts: ["multiplicative-order"], difficulty: 1, context: "abstract",
-    prompt: `Find the multiplicative order of $${a}$ mod $${p}$ — the smallest $k \\geq 1$ with $${a}^k \\equiv 1 \\pmod{${p}}$.`,
+    prompt: `Find the multiplicative order of $${a}$ mod $${p}$: the smallest $k \\geq 1$ with $${a}^k \\equiv 1 \\pmod{${p}}$.`,
     steps: [
       { instruction: `Compute $${a}^2 \\bmod ${p}$.`, answer: `${sq}`, accept: [], hint: `$${a * a} \\bmod ${p}$.` },
       { instruction: `Keep multiplying by $${a}$ and reducing until you hit $1$. What is $\\mathrm{ord}_{${p}}(${a})$?`, answer: `${k}`, accept: [`k=${k}`], hint: `The powers run $${powers.join(", ")}$.` },
     ],
     finalAnswer: { value: `${k}`, unit: "" },
-    solutionNarrative: `The powers of $${a}$ mod $${p}$ run $${powers.join(", ")}$ — the first return to $1$ is at exponent $${k}$, so $\\mathrm{ord}_{${p}}(${a}) = ${k}$.`,
+    solutionNarrative: `The powers of $${a}$ mod $${p}$ run $${powers.join(", ")}$: the first return to $1$ is at exponent $${k}$, so $\\mathrm{ord}_{${p}}(${a}) = ${k}$.`,
   };
 };
 
-// d2: composite modulus — phi first, then the order.
+// d2: composite modulus: phi first, then the order.
 fill["nt3-order-2"] = (rng, idx) => {
   const n = rng.pick([9, 10, 14, 15]);
   let a;
@@ -111,16 +111,16 @@ fill["nt3-order-2"] = (rng, idx) => {
     id: `gen.nt3-order-2.${idx}`, generated: true, concepts: ["multiplicative-order"], difficulty: 2, context: "abstract",
     prompt: `Find $\\mathrm{ord}_{${n}}(${a})$. (Note $\\gcd(${a}, ${n}) = 1$, so the order exists.)`,
     steps: [
-      { instruction: `Compute $\\varphi(${n})$ — the order must divide it.`, answer: `${phi}`, accept: [], hint: `Count the integers in $1..${n}$ coprime to $${n}$, or use the product formula.` },
+      { instruction: `Compute $\\varphi(${n})$: the order must divide it.`, answer: `${phi}`, accept: [], hint: `Count the integers in $1..${n}$ coprime to $${n}$, or use the product formula.` },
       { instruction: `Compute $${a}^2 \\bmod ${n}$.`, answer: `${sq}`, accept: [], hint: `$${a * a} \\bmod ${n}$.` },
-      { instruction: `Continue the powers until $1$ appears. What is $\\mathrm{ord}_{${n}}(${a})$?`, answer: `${k}`, accept: [`k=${k}`], hint: `The powers run $${powers.join(", ")}$ — and $${k}$ divides $\\varphi(${n}) = ${phi}$.` },
+      { instruction: `Continue the powers until $1$ appears. What is $\\mathrm{ord}_{${n}}(${a})$?`, answer: `${k}`, accept: [`k=${k}`], hint: `The powers run $${powers.join(", ")}$, and $${k}$ divides $\\varphi(${n}) = ${phi}$.` },
     ],
     finalAnswer: { value: `${k}`, unit: "" },
-    solutionNarrative: `$\\varphi(${n}) = ${phi}$ and the powers of $${a}$ mod $${n}$ run $${powers.join(", ")}$, so $\\mathrm{ord}_{${n}}(${a}) = ${k}$ — a divisor of $${phi}$, as Lagrange requires.`,
+    solutionNarrative: `$\\varphi(${n}) = ${phi}$ and the powers of $${a}$ mod $${n}$ run $${powers.join(", ")}$, so $\\mathrm{ord}_{${n}}(${a}) = ${k}$: a divisor of $${phi}$, as Lagrange requires.`,
   };
 };
 
-// d3: the gcd guard — one base without an order, one with.
+// d3: the gcd guard: one base without an order, one with.
 fill["nt3-order-3"] = (rng, idx) => {
   const n = rng.pick([12, 15, 16, 18, 20]);
   let bad;
@@ -165,7 +165,7 @@ fill["nt3-orddiv-1"] = (rng, idx) => {
       { instruction: `Can any element mod $${p}$ have order $${nonDiv}$? (yes/no)`, answer: "no", accept: ["n"], hint: `$${nonDiv}$ does not divide $${phi}$.` },
     ],
     finalAnswer: { value: `${nd} possible orders: ${ds.join(", ")}`, unit: "" },
-    solutionNarrative: `$\\varphi(${p}) = ${phi}$ has $${nd}$ divisors ($${ds.join(", ")}$) — the only possible orders. $${nonDiv} \\nmid ${phi}$, so order $${nonDiv}$ is impossible.`,
+    solutionNarrative: `$\\varphi(${p}) = ${phi}$ has $${nd}$ divisors ($${ds.join(", ")}$): the only possible orders. $${nonDiv} \\nmid ${phi}$, so order $${nonDiv}$ is impossible.`,
   };
 };
 
@@ -191,14 +191,14 @@ fill["nt3-orddiv-2"] = (rng, idx) => {
   };
 };
 
-// d3: the a^2 ≡ -1 trick — order exactly 4, plus the Lagrange quotient.
+// d3: the a^2 ≡ -1 trick: order exactly 4, plus the Lagrange quotient.
 fill["nt3-orddiv-3"] = (rng, idx) => {
   // primes p ≡ 1 (mod 4) and an a <= p/2 with a^2 ≡ -1, found by search.
   const p = rng.pick([13, 17, 29, 37, 41]);
   const roots = [];
   for (let x = 2; x <= (p - 1) / 2; x++) if ((x * x) % p === p - 1) roots.push(x);
   const a = rng.pick(roots);
-  const k = ordOf(a, p); // always 4 — computed, not assumed
+  const k = ordOf(a, p); // always 4, computed, not assumed
   const q = (p - 1) / k;
   return {
     id: `gen.nt3-orddiv-3.${idx}`, generated: true, concepts: ["order-divides-phi"], difficulty: 3, context: "abstract",
@@ -227,7 +227,7 @@ fill["nt3-proot-1"] = (rng, idx) => {
     id: `gen.nt3-proot-1.${idx}`, generated: true, concepts: ["primitive-roots"], difficulty: 1, context: "abstract",
     prompt: `How many primitive roots does the prime $${p}$ have?`,
     steps: [
-      { instruction: `Compute $\\varphi(${p})$ — the order a primitive root must have.`, answer: `${phi}`, accept: [], hint: `$${p} - 1$.` },
+      { instruction: `Compute $\\varphi(${p})$: the order a primitive root must have.`, answer: `${phi}`, accept: [], hint: `$${p} - 1$.` },
       { instruction: `The count of primitive roots is $\\varphi(\\varphi(${p})) = \\varphi(${phi}) = $ ?`, answer: `${count}`, accept: [], hint: `Factor $${phi}$ and apply the totient product formula.` },
     ],
     finalAnswer: { value: `${count}`, unit: "" },
@@ -235,7 +235,7 @@ fill["nt3-proot-1"] = (rng, idx) => {
   };
 };
 
-// d2: safe primes p = 2q+1 — test whether a is a primitive root with two powers.
+// d2: safe primes p = 2q+1: test whether a is a primitive root with two powers.
 fill["nt3-proot-2"] = (rng, idx) => {
   const p = rng.pick([7, 11]); // p - 1 = 2q with q prime: orders are 1, 2, q, 2q
   const q = (p - 1) / 2;
@@ -246,7 +246,7 @@ fill["nt3-proot-2"] = (rng, idx) => {
   const isPR = ordOf(a, p) === p - 1;
   return {
     id: `gen.nt3-proot-2.${idx}`, generated: true, concepts: ["primitive-roots"], difficulty: 2, context: "abstract",
-    prompt: `Is $${a}$ a primitive root mod $${p}$? Since $\\varphi(${p}) = ${p - 1} = 2 \\cdot ${q}$, the only possible orders are $1, 2, ${q}, ${p - 1}$ — so it suffices to check $${a}^2$ and $${a}^{${q}}$.`,
+    prompt: `Is $${a}$ a primitive root mod $${p}$? Since $\\varphi(${p}) = ${p - 1} = 2 \\cdot ${q}$, the only possible orders are $1, 2, ${q}, ${p - 1}$, so it suffices to check $${a}^2$ and $${a}^{${q}}$.`,
     steps: [
       { instruction: `Compute $${a}^2 \\bmod ${p}$.`, answer: `${sq}`, accept: [], hint: `$${a * a} \\bmod ${p}$.` },
       { instruction: `Compute $${a}^{${q}} \\bmod ${p}$.`, answer: `${half}`, accept: half === p - 1 ? ["-1"] : [], hint: `Use $${a}^2$ from the last step and keep multiplying by $${a}$, reducing mod $${p}$.` },
@@ -284,7 +284,7 @@ fill["nt3-proot-3"] = (rng, idx) => {
 // concept: discrete-log-index
 // ===========================================================================
 
-// d1: Fermat reduction — a^(p-1) ≡ 1, then peel one extra factor.
+// d1: Fermat reduction: a^(p-1) ≡ 1, then peel one extra factor.
 fill["nt3-dlog-1"] = (rng, idx) => {
   const p = rng.pick([5, 7, 11, 13]);
   let a;
@@ -303,7 +303,7 @@ fill["nt3-dlog-1"] = (rng, idx) => {
   };
 };
 
-// d2: tiny discrete log — find x with g^x ≡ h for a primitive root g.
+// d2: tiny discrete log: find x with g^x ≡ h for a primitive root g.
 fill["nt3-dlog-2"] = (rng, idx) => {
   const [p, g] = rng.pick([[7, 3], [11, 2], [13, 2]]); // g = smallest primitive root (verified below)
   const x = rng.int(2, Math.min(6, p - 2));
@@ -320,7 +320,7 @@ fill["nt3-dlog-2"] = (rng, idx) => {
       { instruction: `Continue listing powers until $${h}$ appears. The index $x = $ ?`, answer: `${x}`, accept: [`x=${x}`], hint: `The powers run $${powers.join(", ")}$.` },
     ],
     finalAnswer: { value: `${x}`, unit: "" },
-    solutionNarrative: `Powers of $${g}$ mod $${p}$: $${powers.join(", ")}$ — the value $${h}$ first appears at exponent $${x}$, so the index of $${h}$ is $${x}$ (unique in $1..${p - 1}$ because $${g}$ is a primitive root).`,
+    solutionNarrative: `Powers of $${g}$ mod $${p}$: $${powers.join(", ")}$: the value $${h}$ first appears at exponent $${x}$, so the index of $${h}$ is $${x}$ (unique in $1..${p - 1}$ because $${g}$ is a primitive root).`,
   };
 };
 

@@ -1,14 +1,14 @@
 // gen-calc2b-fill.js
 // Self-contained generator pack for calculus-2.parametric-polar-calculus
-// (templates prefixed c2p-). One generator per (concept, difficulty) — 12 total.
+// (templates prefixed c2p-). One generator per (concept, difficulty): 12 total.
 // Exports a `fill` map of template-name -> generator fn matching the shape used
 // by js/generator.js (same pattern as gen-calc2-fill.js). Deterministic from the
 // passed rng only; no imports from generator.js.
 //
 // Grader-safety notes (verified against js/problem-engine.js):
 //   - All symbolic answers are POLYNOMIALS in one variable (t or x) or
-//     polynomial equations — these grade via the polynomial engine.
-//   - Polar areas are single numeric-pi values ("9pi/4") — evalNumeric grades
+//     polynomial equations: these grade via the polynomial engine.
+//   - Polar areas are single numeric-pi values ("9pi/4"): evalNumeric grades
 //     them; bare "9pi/4" was tested and self-checks.
 //   - Horizontal-tangent t-value sets use form:"solutions" with INTEGER roots
 //     (parseSolutionSet cannot evaluate pi-expressions).
@@ -71,7 +71,7 @@ export const fill = {};
 // Concept: parametric-curves
 // ============================================================================
 
-// d1: evaluate (x(t), y(t)) at a point — separate numeric x/y steps.
+// d1: evaluate (x(t), y(t)) at a point: separate numeric x/y steps.
 fill["c2p-param-curves-1"] = (rng, idx) => {
   const a = rng.int(2, 5), b = rng.int(-4, 4), c = rng.int(1, 3), d = rng.int(-4, 4);
   const t0 = rng.int(1, 3);
@@ -82,7 +82,7 @@ fill["c2p-param-curves-1"] = (rng, idx) => {
     prompt: `A point moves along the parametric curve $x(t) = ${xs}$, $y(t) = ${ys}$. Find its position at $t = ${t0}$.`,
     steps: [
       { instruction: `Compute $x(${t0})$ by substituting $t = ${t0}$ into $x(t) = ${xs}$.`, answer: `${x0}`, accept: [`x=${x0}`], hint: `$${a}(${t0}) ${b >= 0 ? "+" : "-"} ${Math.abs(b)}$.` },
-      { instruction: `Compute $y(${t0})$ by substituting $t = ${t0}$ into $y(t) = ${ys}$.`, answer: `${y0}`, accept: [`y=${y0}`], hint: `$${c === 1 ? "" : c}(${t0})^2 ${d >= 0 ? "+" : "-"} ${Math.abs(d)}$ — square first, then scale and shift.` },
+      { instruction: `Compute $y(${t0})$ by substituting $t = ${t0}$ into $y(t) = ${ys}$.`, answer: `${y0}`, accept: [`y=${y0}`], hint: `$${c === 1 ? "" : c}(${t0})^2 ${d >= 0 ? "+" : "-"} ${Math.abs(d)}$: square first, then scale and shift.` },
       { instruction: "Write the position as an ordered pair $(x, y)$.", answer: `(${x0}, ${y0})`, accept: [`${x0}, ${y0}`, `(${x0},${y0})`], hint: "The x-value you found first, then the y-value." },
     ],
     finalAnswer: { value: `(${x0}, ${y0})`, unit: "" },
@@ -103,7 +103,7 @@ fill["c2p-param-curves-2"] = (rng, idx) => {
     prompt: `Eliminate the parameter from $x = ${lin(1, a, "t")}$, $y = ${lin(b, c, "t")}$ to get a Cartesian equation for the curve.`,
     steps: [
       { instruction: `Solve the $x$-equation for $t$. (Type it like t = ${tSolved}.)`, answer: `t = ${tSolved}`, accept: [tSolved], hint: `Subtract ${a >= 0 ? a : `(${a})`} from both sides of $x = ${lin(1, a, "t")}$.` },
-      { instruction: `Substitute that expression for $t$ into $y = ${lin(b, c, "t")}$ and simplify. Write the result as y = ...`, answer: `y = ${yEq}`, accept: [yEq, `y = ${b}(${tSolved}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`], hint: `$y = ${b}(${tSolved}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}$ — distribute and combine constants.` },
+      { instruction: `Substitute that expression for $t$ into $y = ${lin(b, c, "t")}$ and simplify. Write the result as y = ...`, answer: `y = ${yEq}`, accept: [yEq, `y = ${b}(${tSolved}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`], hint: `$y = ${b}(${tSolved}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}$: distribute and combine constants.` },
     ],
     finalAnswer: { value: `y = ${yEq}`, unit: "" },
     solutionNarrative: `From the $x$-equation, $t = ${tSolved}$; substituting into the $y$-equation gives the line $y = ${yEq}$.`,
@@ -127,10 +127,10 @@ fill["c2p-param-curves-3"] = (rng, idx) => {
     steps: [
       { instruction: `Find the point $(x, y)$ at $t = ${t0}$.`, answer: `(${px}, ${py})`, accept: [`${px}, ${py}`, `(${px},${py})`], hint: `$x = ${t0} ${a >= 0 ? "+" : "-"} ${Math.abs(a)}$ and $y = ${t0}^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}(${t0}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}$.` },
       { instruction: `Solve the $x$-equation for $t$. (Type it like t = ${tSolved}.)`, answer: `t = ${tSolved}`, accept: [tSolved], hint: `Move the constant to the other side.` },
-      { instruction: `Substitute into the $y$-equation and expand fully. Write the result as y = ... (a polynomial in $x$).`, answer: `y = ${yEq}`, accept: [yEq, `y = (${tSolved})^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}(${tSolved}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`], hint: `$y = (${tSolved})^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}(${tSolved}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}$ — expand the square, then collect like terms.` },
+      { instruction: `Substitute into the $y$-equation and expand fully. Write the result as y = ... (a polynomial in $x$).`, answer: `y = ${yEq}`, accept: [yEq, `y = (${tSolved})^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}(${tSolved}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`], hint: `$y = (${tSolved})^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}(${tSolved}) ${c >= 0 ? "+" : "-"} ${Math.abs(c)}$: expand the square, then collect like terms.` },
     ],
     finalAnswer: { value: `y = ${yEq}`, unit: "" },
-    solutionNarrative: `At $t = ${t0}$ the point is $(${px}, ${py})$. Since $t = ${tSolved}$, substituting gives $y = ${yEq}$ — a parabola. (Check: $x = ${px}$ gives $y = ${py}$.)`,
+    solutionNarrative: `At $t = ${t0}$ the point is $(${px}, ${py})$. Since $t = ${tSolved}$, substituting gives $y = ${yEq}$: a parabola. (Check: $x = ${px}$ gives $y = ${py}$.)`,
   };
 };
 
@@ -160,7 +160,7 @@ fill["c2p-param-slope-1"] = (rng, idx) => {
   };
 };
 
-// d2: horizontal tangents — dy/dt = 3t^2 - 3m^2 = 0 gives INTEGER roots t = ±m.
+// d2: horizontal tangents: dy/dt = 3t^2 - 3m^2 = 0 gives INTEGER roots t = ±m.
 fill["c2p-param-slope-2"] = (rng, idx) => {
   const m = rng.int(1, 3);
   const a = rng.int(2, 4);
@@ -172,7 +172,7 @@ fill["c2p-param-slope-2"] = (rng, idx) => {
     prompt: `Find all values of $t$ where the parametric curve $x = ${a}t$, $y = ${ys}$ has a horizontal tangent line.`,
     steps: [
       { instruction: `Compute $\\dfrac{dy}{dt}$.`, answer: `3t^2 - ${k}`, accept: [`3(t^2 - ${m * m})`], hint: `Power rule term by term; the constant drops out.` },
-      { instruction: `A horizontal tangent needs $\\dfrac{dy}{dt} = 0$ (with $dx/dt \\neq 0$). Solve $3t^2 - ${k} = 0$ for ALL values of $t$.`, answer: `t = -${m}, t = ${m}`, accept: [`-${m}, ${m}`, `${m}, -${m}`, `t = ${m}, t = -${m}`], form: "solutions", hint: `$t^2 = ${m * m}$ has two roots — don't forget the negative one.` },
+      { instruction: `A horizontal tangent needs $\\dfrac{dy}{dt} = 0$ (with $dx/dt \\neq 0$). Solve $3t^2 - ${k} = 0$ for ALL values of $t$.`, answer: `t = -${m}, t = ${m}`, accept: [`-${m}, ${m}`, `${m}, -${m}`, `t = ${m}, t = -${m}`], form: "solutions", hint: `$t^2 = ${m * m}$ has two roots: don't forget the negative one.` },
       { instruction: `Confirm the tangent really is horizontal there: what is $\\dfrac{dx}{dt}$ (a nonzero constant)?`, answer: `${a}`, accept: [], hint: `$x = ${a}t$ differentiates to a constant.` },
     ],
     finalAnswer: { value: `t = -${m}, t = ${m}`, unit: "" },
@@ -180,7 +180,7 @@ fill["c2p-param-slope-2"] = (rng, idx) => {
   };
 };
 
-// d3: tangent line at a point — x = t^2 + c, y = t^3 + d at even t0, so the
+// d3: tangent line at a point: x = t^2 + c, y = t^3 + d at even t0, so the
 // slope 3t0/2 is an integer and the tangent line is an integer polynomial.
 fill["c2p-param-slope-3"] = (rng, idx) => {
   const t0 = rng.pick([-2, 2, 4]);
@@ -196,7 +196,7 @@ fill["c2p-param-slope-3"] = (rng, idx) => {
     steps: [
       { instruction: `Find the point of tangency $(x, y)$ at $t = ${t0}$.`, answer: `(${x0}, ${y0})`, accept: [`${x0}, ${y0}`, `(${x0},${y0})`], hint: `$x = (${t0})^2 ${c >= 0 ? "+" : "-"} ${Math.abs(c)}$, $y = (${t0})^3 ${d >= 0 ? "+" : "-"} ${Math.abs(d)}$.` },
       { instruction: `Evaluate $\\dfrac{dy}{dt}$ at $t = ${t0}$.`, answer: `${dy0}`, accept: [], hint: `$dy/dt = 3t^2$, so $3(${t0})^2$.` },
-      { instruction: `Evaluate $\\dfrac{dx}{dt}$ at $t = ${t0}$.`, answer: `${dx0}`, accept: [], hint: `$dx/dt = 2t$ — nonzero here, so the slope is defined.` },
+      { instruction: `Evaluate $\\dfrac{dx}{dt}$ at $t = ${t0}$.`, answer: `${dx0}`, accept: [], hint: `$dx/dt = 2t$: nonzero here, so the slope is defined.` },
       { instruction: `Compute the slope $\\dfrac{dy}{dx} = \\dfrac{dy/dt}{dx/dt}$ at $t = ${t0}$.`, answer: `${m}`, accept: [frac(dy0, dx0)], hint: `$\\dfrac{${dy0}}{${dx0}}$ reduces to an integer.` },
       { instruction: `Write the tangent line in the form y = mx + b, using the point $(${x0}, ${y0})$.`, answer: `y = ${tan}`, accept: [tan, `y = ${m}(${lin(1, -x0, "x")}) ${y0 >= 0 ? "+" : "-"} ${Math.abs(y0)}`], hint: `Point–slope: $y = ${m}(x ${x0 >= 0 ? "-" : "+"} ${Math.abs(x0)}) ${y0 >= 0 ? "+" : "-"} ${Math.abs(y0)}$, then expand.` },
     ],
@@ -209,7 +209,7 @@ fill["c2p-param-slope-3"] = (rng, idx) => {
 // Concept: parametric-arc-length
 // ============================================================================
 
-// d1: straight line — (dx/dt, dy/dt) is a Pythagorean pair, so the speed is a
+// d1: straight line: (dx/dt, dy/dt) is a Pythagorean pair, so the speed is a
 // whole number and the length is speed × time.
 fill["c2p-arc-length-1"] = (rng, idx) => {
   const [a, c, h] = rng.pick([[3, 4, 5], [4, 3, 5], [6, 8, 10], [8, 6, 10], [5, 12, 13], [12, 5, 13]]);
@@ -221,8 +221,8 @@ fill["c2p-arc-length-1"] = (rng, idx) => {
     id: `gen.c2p-arc-length-1.${idx}`, generated: true, concepts: ["parametric-arc-length"], difficulty: 1, context: "abstract",
     prompt: `Find the length of the parametric line $x = ${lin(a, b, "t")}$, $y = ${lin(s * c, d, "t")}$ for $0 \\le t \\le ${T}$, using $L = \\displaystyle\\int_0^{${T}} \\sqrt{\\left(\\tfrac{dx}{dt}\\right)^2 + \\left(\\tfrac{dy}{dt}\\right)^2}\\,dt$.`,
     steps: [
-      { instruction: `Compute $\\left(\\dfrac{dx}{dt}\\right)^2 + \\left(\\dfrac{dy}{dt}\\right)^2$ (a constant here).`, answer: `${sum}`, accept: [`${a}^2 + ${s * c}^2`], hint: `$dx/dt = ${a}$ and $dy/dt = ${s * c}$; square each and add — squaring kills the sign.` },
-      { instruction: `Take the square root to get the integrand (the speed).`, answer: `${h}`, accept: [`sqrt(${sum})`], hint: `$${sum} = ${h}^2$ — a Pythagorean triple.` },
+      { instruction: `Compute $\\left(\\dfrac{dx}{dt}\\right)^2 + \\left(\\dfrac{dy}{dt}\\right)^2$ (a constant here).`, answer: `${sum}`, accept: [`${a}^2 + ${s * c}^2`], hint: `$dx/dt = ${a}$ and $dy/dt = ${s * c}$; square each and add: squaring kills the sign.` },
+      { instruction: `Take the square root to get the integrand (the speed).`, answer: `${h}`, accept: [`sqrt(${sum})`], hint: `$${sum} = ${h}^2$: a Pythagorean triple.` },
       { instruction: `Integrate the constant speed from $0$ to $${T}$ to get the length.`, answer: `${h * T}`, accept: [], hint: `$\\int_0^{${T}} ${h}\\,dt = ${h} \\cdot ${T}$.` },
     ],
     finalAnswer: { value: `${h * T}`, unit: "" },
@@ -230,7 +230,7 @@ fill["c2p-arc-length-1"] = (rng, idx) => {
   };
 };
 
-// d2: x = t, y = (2/3)t^{3/2} — integrand 1 + t; limits k^2 - 1 make the
+// d2: x = t, y = (2/3)t^{3/2}: integrand 1 + t; limits k^2 - 1 make the
 // antiderivative (2/3)(1+t)^{3/2} evaluate to perfect cubes.
 fill["c2p-arc-length-2"] = (rng, idx) => {
   const j = rng.pick([1, 1, 1, 2]);
@@ -252,7 +252,7 @@ fill["c2p-arc-length-2"] = (rng, idx) => {
   };
 };
 
-// d3: x = a(t - t^3/3), y = a t^2 — integrand a^2(1+t^2)^2, a perfect square.
+// d3: x = a(t - t^3/3), y = a t^2: integrand a^2(1+t^2)^2, a perfect square.
 fill["c2p-arc-length-3"] = (rng, idx) => {
   const a = rng.pick([1, 3]);
   const T = rng.int(1, 3);
@@ -270,12 +270,12 @@ fill["c2p-arc-length-3"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $\\dfrac{dx}{dt}$.`, answer: dxAns, accept: [a === 1 ? "-(t^2 - 1)" : `3(1 - t^2)`], hint: `Differentiate term by term: the cubic term's derivative is $${a}t^2$ with a minus sign.` },
       { instruction: `Compute $\\dfrac{dy}{dt}$.`, answer: `${2 * a}t`, accept: [], hint: `Power rule on $${a === 1 ? "" : a}t^2$; the constant drops out.` },
-      { instruction: `Expand $\\left(\\dfrac{dx}{dt}\\right)^2 + \\left(\\dfrac{dy}{dt}\\right)^2$ fully as a polynomial in $t$.`, answer: sumAns, accept: [`${a * a === 1 ? "" : a * a}(1 + t^2)^2`, `(${sqrtAns})^2`], hint: `$(${dxAns})^2 + (${2 * a}t)^2$ — the cross terms combine: $-2t^2 + 4t^2 = +2t^2$ (times $${a * a}$).` },
+      { instruction: `Expand $\\left(\\dfrac{dx}{dt}\\right)^2 + \\left(\\dfrac{dy}{dt}\\right)^2$ fully as a polynomial in $t$.`, answer: sumAns, accept: [`${a * a === 1 ? "" : a * a}(1 + t^2)^2`, `(${sqrtAns})^2`], hint: `$(${dxAns})^2 + (${2 * a}t)^2$: the cross terms combine: $-2t^2 + 4t^2 = +2t^2$ (times $${a * a}$).` },
       { instruction: `That polynomial is a perfect square. Write its square root (valid for all $t$).`, answer: sqrtAns, accept: [a === 1 ? "(1 + t^2)" : "3(1 + t^2)"], hint: `$${sumAns} = (${sqrtAns})^2$.` },
       { instruction: `Integrate: $L = \\displaystyle\\int_0^{${T}} \\left(${sqrtAns}\\right)dt$. Give a fraction or decimal.`, answer: L, accept: [rnd(Lnum / 3, 2)], hint: `$\\left[${a}t + ${a === 1 ? "\\tfrac{t^3}{3}" : "t^3"}\\right]_0^{${T}}$.` },
     ],
     finalAnswer: { value: L, unit: "" },
-    solutionNarrative: `This curve is engineered so the integrand collapses: $(${dxAns})^2 + (${2 * a}t)^2 = ${a * a === 1 ? "" : a * a}(1 + t^2)^2$, so $L = \\int_0^{${T}} (${sqrtAns})\\,dt = ${L}$ — no numerical approximation needed.`,
+    solutionNarrative: `This curve is engineered so the integrand collapses: $(${dxAns})^2 + (${2 * a}t)^2 = ${a * a === 1 ? "" : a * a}(1 + t^2)^2$, so $L = \\int_0^{${T}} (${sqrtAns})\\,dt = ${L}$, no numerical approximation needed.`,
   };
 };
 
@@ -283,7 +283,7 @@ fill["c2p-arc-length-3"] = (rng, idx) => {
 // Concept: polar-area
 // ============================================================================
 
-// d1: circle r = a over a full/half/quarter sweep — A = (1/2) a^2 Δθ.
+// d1: circle r = a over a full/half/quarter sweep: A = (1/2) a^2 Δθ.
 fill["c2p-polar-area-1"] = (rng, idx) => {
   const a = rng.int(2, 6);
   const portion = rng.pick([
@@ -305,7 +305,7 @@ fill["c2p-polar-area-1"] = (rng, idx) => {
   };
 };
 
-// d2: circle r = 2a cos θ (or sin) — traced ONCE over the stated interval.
+// d2: circle r = 2a cos θ (or sin): traced ONCE over the stated interval.
 fill["c2p-polar-area-2"] = (rng, idx) => {
   const a = rng.int(1, 4);
   const useCos = rng.pick([true, false]);
@@ -321,14 +321,14 @@ fill["c2p-polar-area-2"] = (rng, idx) => {
       { instruction: `The curve $r = 2a${fn}\\theta$ is a circle of radius $a$. What is the radius here?`, answer: `${a}`, accept: [], hint: `Half the coefficient: $${2 * a} = 2a$ gives $a = ${a}$.` },
       { instruction: `What is the circle's center $(x, y)$?`, answer: center, accept: centerAcc, hint: useCos ? `A cosine circle sits on the positive $x$-axis, tangent to the pole.` : `A sine circle sits on the positive $y$-axis, tangent to the pole.` },
       { instruction: `The key integral: what is $\\displaystyle\\int ${fn}^2\\theta\\,d\\theta$ over the stated interval? (Type it like pi/2.)`, answer: "pi/2", accept: ["1.57"], hint: `Over a half-period, $${fn}^2$ averages $\\tfrac{1}{2}$, and the interval has width $\\pi$: $\\tfrac{1}{2}\\pi$.` },
-      { instruction: `So $A = \\dfrac{1}{2}(${2 * a})^2 \\cdot \\dfrac{\\pi}{2}$. Compute the area. (Type it like ${A}.)`, answer: A, accept: piAccepts(a * a, 1), hint: `$\\tfrac{1}{2} \\cdot ${4 * a * a} \\cdot \\tfrac{\\pi}{2} = ${a * a}\\pi$ — matching $\\pi r^2$ with $r = ${a}$.` },
+      { instruction: `So $A = \\dfrac{1}{2}(${2 * a})^2 \\cdot \\dfrac{\\pi}{2}$. Compute the area. (Type it like ${A}.)`, answer: A, accept: piAccepts(a * a, 1), hint: `$\\tfrac{1}{2} \\cdot ${4 * a * a} \\cdot \\tfrac{\\pi}{2} = ${a * a}\\pi$: matching $\\pi r^2$ with $r = ${a}$.` },
     ],
     finalAnswer: { value: A, unit: "" },
-    solutionNarrative: `$A = \\tfrac{1}{2}\\int ${2 * a === 2 ? "4" : (2 * a) * (2 * a)}${fn}^2\\theta\\,d\\theta = ${a * a}\\pi$, which agrees with $\\pi r^2$ for radius $${a}$. Integrating over all of $[0, 2\\pi]$ would trace the circle TWICE and double the answer — the classic polar-area trap.`,
+    solutionNarrative: `$A = \\tfrac{1}{2}\\int ${2 * a === 2 ? "4" : (2 * a) * (2 * a)}${fn}^2\\theta\\,d\\theta = ${a * a}\\pi$, which agrees with $\\pi r^2$ for radius $${a}$. Integrating over all of $[0, 2\\pi]$ would trace the circle TWICE and double the answer: the classic polar-area trap.`,
   };
 };
 
-// d3: cardioid r = a(1 + cos θ) over [0, 2π] — A = 3πa²/2.
+// d3: cardioid r = a(1 + cos θ) over [0, 2π]: A = 3πa²/2.
 fill["c2p-polar-area-3"] = (rng, idx) => {
   const a = rng.int(1, 4);
   const A = piFrac(3 * a * a, 2);
@@ -341,6 +341,6 @@ fill["c2p-polar-area-3"] = (rng, idx) => {
       { instruction: `Since $r^2 = ${a * a}(1 + \\cos\\theta)^2$, compute $A = \\dfrac{1}{2} \\cdot ${a * a} \\cdot 3\\pi$. (Type it like ${A}.)`, answer: A, accept: piAccepts(3 * a * a, 2), hint: `Half of $${3 * a * a}\\pi$.` },
     ],
     finalAnswer: { value: A, unit: "" },
-    solutionNarrative: `Expanding $r^2$ gives three pieces: the constant contributes $2\\pi$, the $\\cos\\theta$ term contributes 0 over a full period, and $\\cos^2\\theta$ contributes $\\pi$. So $A = \\tfrac{1}{2}(${a * a})(3\\pi) = ${A}$ — the known cardioid area $\\tfrac{3\\pi a^2}{2}$ with $a = ${a}$.`,
+    solutionNarrative: `Expanding $r^2$ gives three pieces: the constant contributes $2\\pi$, the $\\cos\\theta$ term contributes 0 over a full period, and $\\cos^2\\theta$ contributes $\\pi$. So $A = \\tfrac{1}{2}(${a * a})(3\\pi) = ${A}$: the known cardioid area $\\tfrac{3\\pi a^2}{2}$ with $a = ${a}$.`,
   };
 };

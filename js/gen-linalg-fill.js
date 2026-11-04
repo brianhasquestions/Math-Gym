@@ -64,7 +64,7 @@ fill["laf-span-membership-d2"] = (rng, idx) => {
   return {
     id: `gen.laf-span-membership-d2.${idx}`, generated: true, concepts: ["span-membership"], difficulty: 2, context: "abstract",
     prompt: `Is $\\vec{b} = \\langle ${b.join(", ")} \\rangle$ in the span of $\\langle ${v1.join(", ")} \\rangle$ and $\\langle ${v2.join(", ")} \\rangle$? Give the weights $c_1, c_2$.`,
-    steps: [{ instruction: "Solve $c_1 \\vec{v}_1 + c_2 \\vec{v}_2 = \\vec{b}$ for the weights.", form: "solutions", answer: `c1 = ${c1} or c1 = ${c1}`, accept: [`${c1}`], hint: `Since the two vectors are independent (det $= ${det} \\ne 0$), a unique solution exists.` }],
+    steps: [{ instruction: "Solve $c_1 \\vec{v}_1 + c_2 \\vec{v}_2 = \\vec{b}$ for the weights. Give them as $c_1, c_2$ (e.g. 3, -2).", answer: `${c1}, ${c2}`, accept: [`(${c1}, ${c2})`, `c1 = ${c1}, c2 = ${c2}`, `c_1 = ${c1}, c_2 = ${c2}`], hint: `Since the two vectors are independent (det $= ${det} \\ne 0$), a unique solution exists.` }],
     finalAnswer: { value: `c1 = ${c1}, c2 = ${c2}`, unit: "" }, solutionNarrative: `$c_1 = ${c1}$, $c_2 = ${c2}$: yes, $\\vec b$ is in the span.`,
   };
 };
@@ -81,7 +81,7 @@ fill["laf-span-membership-d3"] = (rng, idx) => {
       { instruction: "Any combination $c_1\\langle 1,0,0\\rangle + c_2\\langle 0,1,0\\rangle$ has what third entry?", answer: "0", accept: ["zero"], hint: "The third coordinate of both spanning vectors is 0." },
       { instruction: "Is $\\vec{b}$ in the span? (yes/no)", answer: inSpan ? "yes" : "no", accept: [], hint: `The target's third entry is ${target[2]}.` },
     ],
-    finalAnswer: { value: inSpan ? "yes" : "no", unit: "" }, solutionNarrative: inSpan ? "The third entry is 0, matching the span: yes." : `The third entry is ${target[2]} \\ne 0$, unreachable: no.`,
+    finalAnswer: { value: inSpan ? "yes" : "no", unit: "" }, solutionNarrative: inSpan ? "The third entry is 0, matching the span: yes." : `The third entry is $${target[2]} \\ne 0$, unreachable: no.`,
   };
 };
 
@@ -146,7 +146,7 @@ fill["laf-span-applied-d2"] = (rng, idx) => {
   return {
     id: `gen.laf-span-applied-d2.${idx}`, generated: true, concepts: ["span-applied"], difficulty: 2, context: "applied",
     prompt: `A smoothie bar blends two mixes described as (calories, protein) per scoop: mix A is $\\langle ${A.join(", ")} \\rangle$ and mix B is $\\langle ${B.join(", ")} \\rangle$. A customer's order totals $\\langle ${target.join(", ")} \\rangle$. How many scoops of each ($c_1$ of A, $c_2$ of B)?`,
-    steps: [{ instruction: "Solve $c_1\\langle ${A[0]},${A[1]}\\rangle + c_2\\langle ${B[0]},${B[1]}\\rangle = \\langle ${target[0]}, ${target[1]}\\rangle$ for $c_1, c_2$.", answer: `c1 = ${c1}, c2 = ${c2}`, accept: [`${c1}, ${c2}`], hint: "Set up and solve the 2x2 linear system from matching entries." }],
+    steps: [{ instruction: `Solve $c_1\\langle ${A[0]},${A[1]}\\rangle + c_2\\langle ${B[0]},${B[1]}\\rangle = \\langle ${target[0]}, ${target[1]}\\rangle$ for $c_1, c_2$.`, answer: `c1 = ${c1}, c2 = ${c2}`, accept: [`${c1}, ${c2}`], hint: "Set up and solve the 2x2 linear system from matching entries." }],
     finalAnswer: { value: `c1 = ${c1}, c2 = ${c2}`, unit: "scoops" }, solutionNarrative: `$c_1 = ${c1}$ scoops of A, $c_2 = ${c2}$ scoops of B.`,
   };
 };
@@ -272,7 +272,7 @@ fill["laf-dependency-relations-d3"] = (rng, idx) => {
     prompt: `In $\\mathbb{R}^3$, $\\vec{u} = \\langle ${u.join(", ")} \\rangle$ and $\\vec{v} = \\langle ${v.join(", ")} \\rangle$ are dependent. Find the scalar $c$ with $\\vec{v} = c\\,\\vec{u}$.`,
     steps: [
       { instruction: "Divide the second components to find a candidate $c$.", answer: `${c}`, accept: [], hint: `${v[1]} / ${u[1]}.` },
-      { instruction: "Verify: does $c$ also work for the third components? (yes/no)", answer: "yes", accept: [], hint: `${c} \\times ${u[2]} = ${c * u[2]}$, matching $\\vec v$'s third entry.` },
+      { instruction: "Verify: does $c$ also work for the third components? (yes/no)", answer: "yes", accept: [], hint: `$${c} \\times ${u[2]} = ${c * u[2]}$, matching $\\vec v$'s third entry.` },
     ],
     finalAnswer: { value: `${c}`, unit: "" }, solutionNarrative: `$c = ${v[1]}/${u[1]} = ${c}$, verified across all components.`,
   };
@@ -301,7 +301,7 @@ fill["laf-rank-and-independence-d2"] = (rng, idx) => {
     id: `gen.laf-rank-and-independence-d2.${idx}`, generated: true, concepts: ["rank-and-independence"], difficulty: 2, context: "abstract",
     prompt: `Find the rank of the set $\\{\\langle ${u.join(", ")} \\rangle, \\langle ${v.join(", ")} \\rangle, \\langle ${w.join(", ")} \\rangle\\}$ in $\\mathbb{R}^2$ (the maximum number of independent vectors among them).`,
     steps: [
-      { instruction: "Note that the second vector is a multiple of the first — how many independent directions remain from just those two?", answer: "1", accept: [], hint: `$\\langle ${v.join(", ")} \\rangle = ${c}\\langle ${u.join(", ")} \\rangle$.` },
+      { instruction: "Note that the second vector is a multiple of the first: how many independent directions remain from just those two?", answer: "1", accept: [], hint: `$\\langle ${v.join(", ")} \\rangle = ${c}\\langle ${u.join(", ")} \\rangle$.` },
       { instruction: "What is the rank of the full set of three vectors?", answer: `${rank}`, accept: [], hint: rank === 2 ? "The third vector adds a new, independent direction." : "The third vector is also dependent on the first." },
     ],
     finalAnswer: { value: `${rank}`, unit: "" }, solutionNarrative: `Rank $= ${rank}$ (at most 2 independent directions exist in $\\mathbb{R}^2$).`,
@@ -699,7 +699,7 @@ fill["laf-find-eigenvectors-d1"] = (rng, idx) => {
   return {
     id: `gen.laf-find-eigenvectors-d1.${idx}`, generated: true, concepts: ["find-eigenvectors"], difficulty: 1, context: "abstract",
     prompt: `The matrix $${mat2(A)}$ has eigenvalues $${a}$ and $${d}$. Find the eigenvector for $\\lambda = ${d}$ with first component 1 (i.e. $\\langle 1, t \\rangle$).`,
-    steps: [{ instruction: "Solve $(A - ${d}I)\\vec v = \\vec 0$ for $t$, using first component 1.", answer: `<1, ${t}>`, accept: [], hint: `Row 1 gives $(${a}-${d}) + ${b}t = 0$.` }],
+    steps: [{ instruction: `Solve $(A - ${d}I)\\vec v = \\vec 0$ for $t$, using first component 1.`, answer: `<1, ${t}>`, accept: [], hint: `Row 1 gives $(${a}-${d}) + ${b}t = 0$.` }],
     finalAnswer: { value: `<1, ${t}>`, unit: "" }, solutionNarrative: `Eigenvector $\\langle 1, ${t} \\rangle$.`,
   };
 };
@@ -712,7 +712,7 @@ fill["laf-find-eigenvectors-d2"] = (rng, idx) => {
     id: `gen.laf-find-eigenvectors-d2.${idx}`, generated: true, concepts: ["find-eigenvectors"], difficulty: 2, context: "abstract",
     prompt: `For $A = ${mat2(A)}$, one eigenvalue is $\\lambda = ${d}$. Solve $(A - ${d}I)\\vec v = \\vec 0$ to find the eigenvector with first component 1.`,
     steps: [
-      { instruction: "Write $A - \\lambda I$ for $\\lambda = ${d}$.", answer: mat2([[a - d, b], [0, 0]]), accept: [], hint: "Subtract $\\lambda$ from each diagonal entry." },
+      { instruction: `Write $A - \\lambda I$ for $\\lambda = ${d}$.`, answer: mat2([[a - d, b], [0, 0]]), accept: [], hint: "Subtract $\\lambda$ from each diagonal entry." },
       { instruction: "Solve for the eigenvector $\\langle 1, t \\rangle$.", answer: `<1, ${t}>`, accept: [], hint: `$(${a - d}) + ${b}t = 0$.` },
     ],
     finalAnswer: { value: `<1, ${t}>`, unit: "" }, solutionNarrative: `Eigenvector $\\langle 1, ${t} \\rangle$.`,
@@ -729,8 +729,8 @@ fill["laf-find-eigenvectors-d3"] = (rng, idx) => {
     prompt: `For $A = ${mat2(A)}$: verify the eigenvalues via trace/determinant, then find the eigenvector for $\\lambda = ${d}$ with first component 1.`,
     steps: [
       { instruction: "Confirm: trace and determinant of $A$.", answer: `tr = ${tr}, det = ${det}`, accept: [`${tr}, ${det}`], hint: "Trace is the diagonal sum, determinant is $ad$ here (upper triangular)." },
-      { instruction: "Solve $(A - ${d}I)\\vec v = \\vec 0$ for the eigenvector $\\langle 1, t \\rangle$.", answer: `<1, ${t}>`, accept: [], hint: `$(${a}-${d}) + ${b}t = 0$.` },
-      { instruction: "Verify: compute $A\\vec v$ and confirm it equals $${d}\\vec v$. State $A\\vec v$.", answer: `<${d}, ${round2(d * t)}>`, accept: [], hint: `$A\\langle 1, ${t}\\rangle$ should equal $\\langle ${d}, ${round2(d * t)} \\rangle$.` },
+      { instruction: `Solve $(A - ${d}I)\\vec v = \\vec 0$ for the eigenvector $\\langle 1, t \\rangle$.`, answer: `<1, ${t}>`, accept: [], hint: `$(${a}-${d}) + ${b}t = 0$.` },
+      { instruction: `Verify: compute $A\\vec v$ and confirm it equals $${d}\\vec v$. State $A\\vec v$.`, answer: `<${d}, ${round2(d * t)}>`, accept: [], hint: `$A\\langle 1, ${t}\\rangle$ should equal $\\langle ${d}, ${round2(d * t)} \\rangle$.` },
     ],
     finalAnswer: { value: `<1, ${t}>`, unit: "" }, solutionNarrative: `Eigenvector $\\langle 1, ${t} \\rangle$ for $\\lambda = ${d}$; verified $A\\vec v = ${d}\\vec v$.`,
   };
@@ -909,7 +909,7 @@ fill["laf-least-squares-applied-d3"] = (rng, idx) => {
     id: `gen.laf-least-squares-applied-d3.${idx}`, generated: true, concepts: ["least-squares-applied"], difficulty: 3, context: "applied",
     prompt: `Points $(${pts[0].join(",")}), (${pts[1].join(",")}), (${pts[2].join(",")})$ lie on a line. Find the best-fit slope $m$ and intercept $b$, then predict $y$ at $x = ${xNew}$.`,
     steps: [
-      { instruction: "Find the slope $m$.", answer: `${m}`, accept: [], hint: "Use consecutive points' rise over run — they're exactly collinear." },
+      { instruction: "Find the slope $m$.", answer: `${m}`, accept: [], hint: "Use consecutive points' rise over run: they're exactly collinear." },
       { instruction: "Find the intercept $b$ (value at $x=0$).", answer: `${c}`, accept: [], hint: "Read the y-value at $x=0$." },
       { instruction: `Predict $y$ at $x = ${xNew}$ using $y = mx + b$.`, answer: `${yPred}`, accept: [], hint: `${m}(${xNew}) + ${c}.` },
     ],

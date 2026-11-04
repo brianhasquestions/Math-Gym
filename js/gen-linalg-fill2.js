@@ -38,7 +38,7 @@ fill["laf2-eigen-recap-d1"] = (rng, idx) => {
     prompt: `Find the eigenvalues of $${mat2(A)}$ and state whether it is diagonalizable.`,
     steps: [
       { instruction: "A diagonal matrix shows its eigenvalues on the diagonal. State both.", form: "solutions", answer: `lambda = ${l1} or lambda = ${l2}`, accept: [`${l1}, ${l2}`, `${l2}, ${l1}`], hint: "Read the diagonal entries." },
-      { instruction: "The eigenvalues are distinct. Is the matrix diagonalizable? (yes/no)", answer: "yes", accept: ["y"], hint: "Distinct eigenvalues always give a full set of independent eigenvectors — and this matrix is already diagonal." },
+      { instruction: "The eigenvalues are distinct. Is the matrix diagonalizable? (yes/no)", answer: "yes", accept: ["y"], hint: "Distinct eigenvalues always give a full set of independent eigenvectors, and this matrix is already diagonal." },
     ],
     finalAnswer: { value: "yes", unit: "" }, solutionNarrative: `Eigenvalues $${l1}$ and $${l2}$ are distinct, so the matrix is diagonalizable (it is already diagonal).`,
   };
@@ -56,7 +56,7 @@ fill["laf2-eigen-recap-d2"] = (rng, idx) => {
     prompt: `Find the eigenvalues of the triangular matrix $A = ${mat2(A)}$ via the characteristic equation, then decide whether $A$ is diagonalizable.`,
     steps: [
       { instruction: "State the trace and determinant.", answer: `tr = ${tr}, det = ${det}`, accept: [`${tr}, ${det}`], hint: "Trace is the diagonal sum; determinant is $ad - bc$ (here $ad$ since the lower-left entry is 0)." },
-      { instruction: "Solve $\\lambda^2 - (\\text{tr})\\lambda + \\det = 0$ for both eigenvalues.", form: "solutions", answer: `lambda = ${a} or lambda = ${d}`, accept: [`${a}, ${d}`, `${d}, ${a}`], hint: "A triangular matrix wears its eigenvalues on the diagonal — the quadratic just confirms it." },
+      { instruction: "Solve $\\lambda^2 - (\\text{tr})\\lambda + \\det = 0$ for both eigenvalues.", form: "solutions", answer: `lambda = ${a} or lambda = ${d}`, accept: [`${a}, ${d}`, `${d}, ${a}`], hint: "A triangular matrix wears its eigenvalues on the diagonal: the quadratic just confirms it." },
       { instruction: "The eigenvalues are distinct. Is $A$ diagonalizable? (yes/no)", answer: "yes", accept: ["y"], hint: "Two distinct eigenvalues guarantee two independent eigenvectors." },
     ],
     finalAnswer: { value: "yes", unit: "" }, solutionNarrative: `Eigenvalues $${a}$ and $${d}$ (the diagonal of a triangular matrix) are distinct, so $A$ is diagonalizable.`,
@@ -110,7 +110,7 @@ fill["laf2-build-pd-d1"] = (rng, idx) => {
       { instruction: "Write $D$ with the eigenvalues in increasing order along the diagonal, as $[[a, b], [c, d]]$.", answer: mat2([[l1, 0], [0, l2]]), accept: [], hint: `$${l1}$ first, then $${l2}$; zeros off the diagonal.` },
       { instruction: "Write $P$ whose columns are the corresponding eigenvectors in the same order.", answer: mat2([[1, 1], [p, q]]), accept: [], hint: `Column 1 is $\\langle 1, ${p} \\rangle$ (for $\\lambda = ${l1}$), column 2 is $\\langle 1, ${q} \\rangle$.` },
     ],
-    finalAnswer: { value: mat2([[1, 1], [p, q]]), unit: "" }, solutionNarrative: `$D = ${mat2([[l1, 0], [0, l2]])}$, $P = ${mat2([[1, 1], [p, q]])}$ — column $k$ of $P$ matches slot $k$ of $D$.`,
+    finalAnswer: { value: mat2([[1, 1], [p, q]]), unit: "" }, solutionNarrative: `$D = ${mat2([[l1, 0], [0, l2]])}$, $P = ${mat2([[1, 1], [p, q]])}$: column $k$ of $P$ matches slot $k$ of $D$.`,
   };
 };
 
@@ -165,7 +165,7 @@ fill["laf2-matrix-powers-d1"] = (rng, idx) => {
       { instruction: `Raise the first diagonal entry to the ${k}th power: $(${d1v})^${k} = ?$`, answer: `${p1}`, accept: [], hint: `Multiply ${d1v} by itself ${k} times, watching the sign.` },
       { instruction: `Write the full matrix $D^${k}$ as $[[a, b], [c, d]]$.`, answer: mat2([[p1, 0], [0, p2]]), accept: [], hint: "Each diagonal entry is powered independently; zeros stay zero." },
     ],
-    finalAnswer: { value: mat2([[p1, 0], [0, p2]]), unit: "" }, solutionNarrative: `$D^${k} = ${mat2([[p1, 0], [0, p2]])}$ — powers of a diagonal matrix are entry-wise.`,
+    finalAnswer: { value: mat2([[p1, 0], [0, p2]]), unit: "" }, solutionNarrative: `$D^${k} = ${mat2([[p1, 0], [0, p2]])}$: powers of a diagonal matrix are entry-wise.`,
   };
 };
 
@@ -223,7 +223,7 @@ fill["laf2-dynamics-d1"] = (rng, idx) => {
     id: `gen.laf2-dynamics-d1.${idx}`, generated: true, concepts: ["dynamics-applications"], difficulty: 1, context: "applied",
     prompt: `A two-region migration model uses the Markov matrix $A = ${mat2(M)}$ (columns sum to 1). Find the dominant eigenvalue and the steady-state direction.`,
     steps: [
-      { instruction: "Every Markov matrix has the same dominant eigenvalue. What is it?", answer: "1", accept: ["lambda = 1"], hint: "The steady state is neither grown nor shrunk — it is scaled by exactly 1." },
+      { instruction: "Every Markov matrix has the same dominant eigenvalue. What is it?", answer: "1", accept: ["lambda = 1"], hint: "The steady state is neither grown nor shrunk: it is scaled by exactly 1." },
       { instruction: "Solve $(A - I)\\vec v = \\vec 0$ and give the steady-state eigenvector with smallest positive integer entries as $\\langle v_1, v_2 \\rangle$.", answer: `<${v[0]}, ${v[1]}>`, accept: [`(${v[0]}, ${v[1]})`, `${v[0]}, ${v[1]}`], hint: `The top row of $A - I$ gives $-${a / 10}v_1 + ${b / 10}v_2 = 0$, i.e. $${a}v_1 = ${b}v_2$.` },
     ],
     finalAnswer: { value: `<${v[0]}, ${v[1]}>`, unit: "" }, solutionNarrative: `The dominant eigenvalue of a Markov matrix is $1$; $(A - I)\\vec v = \\vec 0$ gives $${a}v_1 = ${b}v_2$, so the steady state is $\\langle ${v[0]}, ${v[1]} \\rangle$.`,
@@ -251,7 +251,9 @@ fill["laf2-dynamics-d2"] = (rng, idx) => {
 
 fill["laf2-dynamics-d3"] = (rng, idx) => {
   const l1 = rng.int(2, 4);            // dominant growth factor
-  const neg = rng.int(1, 3);
+  // neg < l1 keeps l1 the unique largest |lambda| and the fecundity a = l1 - neg > 0
+  let neg = rng.int(1, 3);
+  while (neg >= l1) neg = rng.int(1, 3);
   const l2 = -neg;                      // decaying/oscillating mode
   const a = l1 + l2;                    // trace
   const prod = l1 * neg;                // -det
@@ -266,7 +268,7 @@ fill["laf2-dynamics-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Solve the characteristic equation (trace ${a}, determinant ${-prod}) for both eigenvalues.`, form: "solutions", answer: `lambda = ${l1} or lambda = ${l2}`, accept: [`${l1}, ${l2}`, `${l2}, ${l1}`], hint: `$(\\lambda - ${l1})(\\lambda + ${neg}) = 0$.` },
       { instruction: "The dominant eigenvalue (largest $|\\lambda|$) is the long-run yearly growth factor. What is it?", answer: `${l1}`, accept: [], hint: `Compare $|${l1}|$ and $|${l2}|$.` },
-      { instruction: `Find the eigenvector for $\\lambda = ${l1}$ with smallest positive integer entries — the stable juvenile:adult structure.`, answer: `<${v[0]}, ${v[1]}>`, accept: [`(${v[0]}, ${v[1]})`, `${v[0]}, ${v[1]}`], hint: `Row 2 of $(A - ${l1}I)$ gives $${c}v_1 = ${l1}v_2$.` },
+      { instruction: `Find the eigenvector for $\\lambda = ${l1}$ with smallest positive integer entries: the stable juvenile:adult structure.`, answer: `<${v[0]}, ${v[1]}>`, accept: [`(${v[0]}, ${v[1]})`, `${v[0]}, ${v[1]}`], hint: `Row 2 of $(A - ${l1}I)$ gives $${c}v_1 = ${l1}v_2$.` },
     ],
     finalAnswer: { value: `<${v[0]}, ${v[1]}>`, unit: "" }, solutionNarrative: `Eigenvalues $${l1}$ and $${l2}$; the dominant $${l1}$ is the long-run growth factor, with stable structure $\\langle ${v[0]}, ${v[1]} \\rangle$. The $${l2}$ mode fades relative to it.`,
   };

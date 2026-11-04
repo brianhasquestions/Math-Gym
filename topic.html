@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>try { document.documentElement.setAttribute("data-theme", localStorage.getItem("mathgym.theme") || "light"); } catch (e) {}</script>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <title>MathGym — Topic</title>
+  <title>MathGym | Topic</title>
   <meta name="description" content="Learn and drill this topic with adaptive, step-by-step practice on MathGym." />
   <meta name="theme-color" content="#f5f8fc" />
   <link rel="canonical" href="https://mathgym.io/topic.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="MathGym" />
-  <meta property="og:title" content="MathGym — Topic" />
+  <meta property="og:title" content="MathGym | Topic" />
   <meta property="og:description" content="Learn and drill this topic with adaptive, step-by-step practice on MathGym." />
   <meta property="og:url" content="https://mathgym.io/topic.html" />
   <meta property="og:image" content="https://mathgym.io/assets/og.svg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="MathGym — Topic" />
+  <meta name="twitter:title" content="MathGym | Topic" />
   <meta name="twitter:description" content="Learn and drill this topic with adaptive, step-by-step practice on MathGym." />
   <meta name="twitter:image" content="https://mathgym.io/assets/og.svg" />
   <link rel="stylesheet" href="vendor/katex/katex.min.css" />
@@ -42,7 +42,7 @@
     if (!id) { showError(main, "No topic specified."); }
     else try {
       const topic = await loadTopic(id);
-      document.title = `MathGym — ${topic.title}`;
+      document.title = `MathGym | ${topic.title}`;
       const mastered = isTopicMastered(topic.id);
       const app = topic.application;
 
@@ -70,10 +70,10 @@
         tab.addEventListener("click", () => {
           activate(key);
           // The switcher sits BELOW the content, so after a swap the reader is
-          // at the END of the newly shown pane — bring them to its top, offset
+          // at the END of the newly shown pane, so bring them to its top, offset
           // so the pane heading clears the sticky site header. The swap changes
           // the page height, and the browser's scroll-position clamp lands a
-          // frame later and CANCELS any in-flight smooth scroll — so wait two
+          // frame later and CANCELS any in-flight smooth scroll, so wait two
           // frames and compute the target from the settled geometry.
           requestAnimationFrame(() => requestAnimationFrame(() => {
             const header = document.querySelector(".site-header");
@@ -127,7 +127,7 @@
         el("a", { class: "btn", href: `train.html?id=${encodeURIComponent(topic.id)}` },
           mastered ? "Re-train this topic" : "Start training"),
         mastered ? el("span", { class: "badge mastered" }, "Mastered")
-          : el("span", { class: "blurb", style: "color: var(--text-dim)" }, "Be ready to work — this won't let you coast."),
+          : el("span", { class: "blurb", style: "color: var(--text-dim)" }, "Be ready to work: this won't let you coast."),
       ]));
     } catch (e) {
       showError(main, `Could not load topic: ${e.message}`);

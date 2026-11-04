@@ -152,16 +152,20 @@ fill["gt2-zerosum-1"] = (rng, idx) => {
   };
 };
 fill["gt2-zerosum-2"] = (rng, idx) => {
-  const { M } = withSaddle(rng, 2);
+  // Redraw ties within a column: a tie makes both rows best responses, so the
+  // keyed single answer would be wrong for the other row.
+  let M, guard = 0;
+  do { M = withSaddle(rng, 2).M; guard++; } while ((M[0][0] === M[1][0] || M[0][1] === M[1][1]) && guard < 200);
+  if (M[0][0] === M[1][0] || M[0][1] === M[1][1]) M = [[5, 8], [1, 3]];
   const [[a, b], [c, d]] = M;
   // Row player compares own choices; best response reasoning off the raw matrix.
   return {
     id: `gen.gt2-zerosum-2.${idx}`, generated: true, concepts: ["zero-sum-payoffs"], difficulty: 2, context: "abstract",
     prompt: `A zero-sum game, entries = ROW player's payoff:\n\n${matrixText(M, ROW_LABELS, COL_LABELS)}\n\nThe row player wants the LARGEST payoff; the column player wants it as SMALL as possible.`,
     steps: [
-      { instruction: `Suppose the column player is committed to Left. The row player then chooses the row with the larger Left-column entry. Which action does the row player pick — "Up" or "Down"?`, answer: a >= c ? "Up" : "Down", accept: a >= c ? ["up"] : ["down"], hint: `Compare the two Left-column entries ${a} and ${c}.` },
+      { instruction: `Suppose the column player is committed to Left. The row player then chooses the row with the larger Left-column entry. Which action does the row player pick: "Up" or "Down"?`, answer: a >= c ? "Up" : "Down", accept: a >= c ? ["up"] : ["down"], hint: `Compare the two Left-column entries ${a} and ${c}.` },
       { instruction: `And the row player's payoff from that best response to Left? (A number.)`, answer: `${Math.max(a, c)}`, accept: [], hint: `The larger of ${a} and ${c}.` },
-      { instruction: `Now suppose the column player is committed to Right. Which action does the row player pick — "Up" or "Down"?`, answer: b >= d ? "Up" : "Down", accept: b >= d ? ["up"] : ["down"], hint: `Compare the two Right-column entries ${b} and ${d}.` },
+      { instruction: `Now suppose the column player is committed to Right. Which action does the row player pick: "Up" or "Down"?`, answer: b >= d ? "Up" : "Down", accept: b >= d ? ["up"] : ["down"], hint: `Compare the two Right-column entries ${b} and ${d}.` },
     ],
     finalAnswer: { value: b >= d ? "Up" : "Down", unit: "" },
     solutionNarrative: `The row player always answers a fixed column by taking the larger entry in that column. Against Left, ${a} vs ${c} favors ${a >= c ? "Up" : "Down"}; against Right, ${b} vs ${d} favors ${b >= d ? "Up" : "Down"}. Best responses are read straight off the single zero-sum matrix.`,
@@ -179,10 +183,10 @@ fill["gt2-zerosum-3"] = (rng, idx) => {
       { instruction: `What is the single BEST (largest) outcome anywhere in the table for Firm R? (A number.)`, answer: `${maxEntry}`, accept: [], hint: "Scan every entry for the maximum." },
       { instruction: `In that best-for-R cell, what is Firm C's profit change? (Negative of R's.)`, answer: `${-maxEntry}`, accept: [], hint: `Zero-sum: $-(${maxEntry})$.` },
       { instruction: `What is the WORST (smallest) outcome anywhere in the table for Firm R?`, answer: `${minEntry}`, accept: [], hint: "Scan for the minimum entry." },
-      { instruction: `Firm R cannot simply pick the cell with its best outcome. Whose choice controls which COLUMN is played — "Firm R" or "Firm C"? (Answer with the firm.)`, answer: "Firm C", accept: ["firmc", "c", "firm c"], hint: "R controls the row; the opponent controls the column." },
+      { instruction: `Firm R cannot simply pick the cell with its best outcome. Whose choice controls which COLUMN is played: "Firm R" or "Firm C"? (Answer with the firm.)`, answer: "Firm C", accept: ["firmc", "c", "firm c"], hint: "R controls the row; the opponent controls the column." },
     ],
     finalAnswer: { value: `${minEntry}`, unit: "" },
-    solutionNarrative: `R's best possible cell pays ${maxEntry} (C loses ${maxEntry}); R's worst pays ${minEntry}. But R only picks the row — Firm C picks the column — so R cannot guarantee its best cell. That tension is exactly what maximin resolves.`,
+    solutionNarrative: `R's best possible cell pays ${maxEntry} (C loses ${maxEntry}); R's worst pays ${minEntry}. But R only picks the row; Firm C picks the column, so R cannot guarantee its best cell. That tension is exactly what maximin resolves.`,
   };
 };
 
@@ -225,7 +229,7 @@ fill["gt2-maximin-3"] = (rng, idx) => {
     prompt: `A 3x3 zero-sum game (entries = ROW player's payoff):\n\n${matrixText(M, ROW_LABELS, COL_LABELS)}\n\nCompute the row player's maximin and the column player's minimax.`,
     steps: [
       { instruction: `List each row's minimum, then take the LARGEST. What is the maximin value?`, answer: `${rmm.val}`, accept: [], hint: `Row minimums: ${M.map((r) => Math.min(...r)).join(", ")}; take the max.` },
-      { instruction: `Which row achieves the maximin — "Up", "Down", or "Middle"?`, answer: ROW_LABELS[rmm.row], accept: [ROW_LABELS[rmm.row].toLowerCase()], hint: `The row whose minimum equals ${rmm.val}.` },
+      { instruction: `Which row achieves the maximin: "Up", "Down", or "Middle"?`, answer: ROW_LABELS[rmm.row], accept: [ROW_LABELS[rmm.row].toLowerCase()], hint: `The row whose minimum equals ${rmm.val}.` },
       { instruction: `List each column's maximum, then take the SMALLEST. What is the minimax value?`, answer: `${cmm.val}`, accept: [], hint: `Column maximums, then take the min.` },
       { instruction: `Do maximin and minimax coincide here? Type 'yes' or 'no'.`, answer: yn(rmm.val === cmm.val), accept: [], hint: `Compare ${rmm.val} and ${cmm.val}.` },
     ],
@@ -265,7 +269,7 @@ fill["gt2-saddle-2"] = (rng, idx) => {
     finalAnswer: { value: yn(info.hasSaddle), unit: "" },
     solutionNarrative: info.hasSaddle
       ? `Maximin $= ${info.rmm.val}$ equals minimax $= ${info.cmm.val}$, so a saddle point exists and the game has pure value ${info.value}.`
-      : `Maximin $= ${info.rmm.val}$ is strictly below minimax $= ${info.cmm.val}$, so NO pure saddle exists — the players must mix.`,
+      : `Maximin $= ${info.rmm.val}$ is strictly below minimax $= ${info.cmm.val}$, so NO pure saddle exists: the players must mix.`,
   };
 };
 fill["gt2-saddle-3"] = (rng, idx) => {
@@ -277,8 +281,8 @@ fill["gt2-saddle-3"] = (rng, idx) => {
     steps: [
       { instruction: `Is there a saddle point (does maximin equal minimax)? Type 'yes' or 'no'.`, answer: yn(info.hasSaddle), accept: [], hint: `Maximin ${info.rmm.val} vs minimax ${info.cmm.val}.` },
       { instruction: `What is the value of the game? (A number.)`, answer: `${info.value}`, accept: [], hint: `The shared maximin/minimax value.` },
-      { instruction: `Which ROW is the saddle in — "Up", "Down", or "Middle"?`, answer: ROW_LABELS[r], accept: [ROW_LABELS[r].toLowerCase()], hint: `The maximin-achieving row.` },
-      { instruction: `Which COLUMN is the saddle in — "Left", "Right", or "Center"?`, answer: COL_LABELS[c], accept: [COL_LABELS[c].toLowerCase()], hint: `The minimax-achieving column.` },
+      { instruction: `Which ROW is the saddle in: "Up", "Down", or "Middle"?`, answer: ROW_LABELS[r], accept: [ROW_LABELS[r].toLowerCase()], hint: `The maximin-achieving row.` },
+      { instruction: `Which COLUMN is the saddle in: "Left", "Right", or "Center"?`, answer: COL_LABELS[c], accept: [COL_LABELS[c].toLowerCase()], hint: `The minimax-achieving column.` },
     ],
     finalAnswer: { value: `${info.value}`, unit: "" },
     solutionNarrative: `Maximin $=$ minimax $= ${info.value}$, so the saddle is real. It sits at (${ROW_LABELS[r]}, ${COL_LABELS[c]}): that entry is simultaneously the smallest in its row and the largest in its column, so neither commander gains by deviating alone.`,
@@ -300,7 +304,7 @@ fill["gt2-mixedval-1"] = (rng, idx) => {
       { instruction: `What is the value of this symmetric game? (A number.)`, answer: "0", accept: [], hint: "Wins and losses cancel by symmetry." },
     ],
     finalAnswer: { value: "0", unit: "" },
-    solutionNarrative: `With payoffs $\\pm${w}$ arranged symmetrically there is no saddle, so both players mix 50/50. The value is 0 — a fair game, exactly like matching pennies.`,
+    solutionNarrative: `With payoffs $\\pm${w}$ arranged symmetrically there is no saddle, so both players mix 50/50. The value is 0: a fair game, exactly like matching pennies.`,
   };
 };
 fill["gt2-mixedval-2"] = (rng, idx) => {
@@ -433,12 +437,12 @@ fill["gt2-extform-2"] = (rng, idx) => {
     prompt: `Read the game tree (P1 moves L/R first, then P2 moves a/b; leaves are $(u_1,u_2)$). Focus on P2's incentives at each of its two decision nodes.`,
     plot: treePlot(T, "After L, P2 chooses between the two upper leaves; after R, between the two lower leaves."),
     steps: [
-      { instruction: `Suppose P1 has played L. P2 compares its own payoff at leaf (L,a) versus (L,b). Which gives P2 more — "a" or "b"?`, answer: T.p2AtN1, accept: [], hint: `Compare P2 payoffs ${T.LA[1]} (a) and ${T.LB[1]} (b).` },
+      { instruction: `Suppose P1 has played L. P2 compares its own payoff at leaf (L,a) versus (L,b). Which gives P2 more: "a" or "b"?`, answer: T.p2AtN1, accept: [], hint: `Compare P2 payoffs ${T.LA[1]} (a) and ${T.LB[1]} (b).` },
       { instruction: `Given that P2-best response after L, what payoff does P1 end up with? (A number.)`, answer: `${T.u1IfL}`, accept: [], hint: `P1 gets the $u_1$ of the leaf P2 selects.` },
-      { instruction: `Now suppose P1 has played R. Which does P2 prefer — "a" or "b"?`, answer: T.p2AtN2, accept: [], hint: `Compare P2 payoffs ${T.RA[1]} (a) and ${T.RB[1]} (b).` },
+      { instruction: `Now suppose P1 has played R. Which does P2 prefer: "a" or "b"?`, answer: T.p2AtN2, accept: [], hint: `Compare P2 payoffs ${T.RA[1]} (a) and ${T.RB[1]} (b).` },
     ],
     finalAnswer: { value: T.p2AtN2, unit: "" },
-    solutionNarrative: `After L, P2 picks ${T.p2AtN1} (its payoff ${Math.max(T.LA[1], T.LB[1])} beats ${Math.min(T.LA[1], T.LB[1])}), leaving P1 with ${T.u1IfL}. After R, P2 picks ${T.p2AtN2}. P2's choice depends only on P2's own payoffs at that node — the heart of reading a tree.`,
+    solutionNarrative: `After L, P2 picks ${T.p2AtN1} (its payoff ${Math.max(T.LA[1], T.LB[1])} beats ${Math.min(T.LA[1], T.LB[1])}), leaving P1 with ${T.u1IfL}. After R, P2 picks ${T.p2AtN2}. P2's choice depends only on P2's own payoffs at that node: the heart of reading a tree.`,
   };
 };
 fill["gt2-extform-3"] = (rng, idx) => {
@@ -455,7 +459,7 @@ fill["gt2-extform-3"] = (rng, idx) => {
       { instruction: `Can P2 unilaterally guarantee that best-for-P2 leaf regardless of P1? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `P1 controls the first move, so P2 only chooses within the branch P1 selected.` },
     ],
     finalAnswer: { value: `${Math.max(T.LA[1], T.LB[1], T.RA[1], T.RB[1])}`, unit: "" },
-    solutionNarrative: `Every leaf is read straight off the tree. P2's best possible payoff is ${Math.max(T.LA[1], T.LB[1], T.RA[1], T.RB[1])}, but P2 cannot force the branch that contains it — P1 moves first. Sequencing is exactly what backward induction exploits.`,
+    solutionNarrative: `Every leaf is read straight off the tree. P2's best possible payoff is ${Math.max(T.LA[1], T.LB[1], T.RA[1], T.RB[1])}, but P2 cannot force the branch that contains it: P1 moves first. Sequencing is exactly what backward induction exploits.`,
   };
 };
 
@@ -468,7 +472,7 @@ fill["gt2-backind-1"] = (rng, idx) => {
     prompt: `Fold this tree by backward induction. P1 moves L/R, then P2 moves a/b; leaves are $(u_1,u_2)$. Start at P2's nodes (the last movers).`,
     plot: treePlot(T, "Solve last-mover-first: fix P2's best reply in each branch, then let P1 choose."),
     steps: [
-      { instruction: `After L, P2 chooses its better leaf — "a" or "b"?`, answer: T.p2AtN1, accept: [], hint: `P2 payoffs: ${T.LA[1]} (a) vs ${T.LB[1]} (b).` },
+      { instruction: `After L, P2 chooses its better leaf: "a" or "b"?`, answer: T.p2AtN1, accept: [], hint: `P2 payoffs: ${T.LA[1]} (a) vs ${T.LB[1]} (b).` },
       { instruction: `After R, P2 chooses "a" or "b"?`, answer: T.p2AtN2, accept: [], hint: `P2 payoffs: ${T.RA[1]} (a) vs ${T.RB[1]} (b).` },
       { instruction: `Anticipating those replies, P1 gets ${T.u1IfL} from L and ${T.u1IfR} from R. Does P1 play "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `P1 takes the larger of ${T.u1IfL} and ${T.u1IfR}.` },
     ],
@@ -482,10 +486,10 @@ fill["gt2-backind-2"] = (rng, idx) => {
   return {
     id: `gen.gt2-backind-2.${idx}`, generated: true, concepts: ["backward-induction"], difficulty: 2, context: "abstract",
     prompt: `Solve this tree completely by backward induction and report the equilibrium OUTCOME payoffs. P1 moves L/R, P2 moves a/b; leaves are $(u_1,u_2)$.`,
-    plot: treePlot(T, "Backward induction yields one path from root to a leaf — the equilibrium outcome."),
+    plot: treePlot(T, "Backward induction yields one path from root to a leaf: the equilibrium outcome."),
     steps: [
-      { instruction: `What does P1 play at the root — "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `Compare P1's folded values ${T.u1IfL} (L) and ${T.u1IfR} (R).` },
-      { instruction: `What does P2 play in the branch P1 chose — "a" or "b"?`, answer: f.p2Choice, accept: [], hint: `P2's best reply inside the chosen branch.` },
+      { instruction: `What does P1 play at the root: "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `Compare P1's folded values ${T.u1IfL} (L) and ${T.u1IfR} (R).` },
+      { instruction: `What does P2 play in the branch P1 chose: "a" or "b"?`, answer: f.p2Choice, accept: [], hint: `P2's best reply inside the chosen branch.` },
       { instruction: `What is P1's equilibrium payoff $u_1$? (A number.)`, answer: `${f.outcome[0]}`, accept: [], hint: `First coordinate of the reached leaf.` },
       { instruction: `What is P2's equilibrium payoff $u_2$?`, answer: `${f.outcome[1]}`, accept: [], hint: `Second coordinate of the reached leaf.` },
     ],
@@ -520,15 +524,15 @@ fill["gt2-sgp-1"] = (rng, idx) => {
   const f = fold(T);
   return {
     id: `gen.gt2-sgp-1.${idx}`, generated: true, concepts: ["subgame-perfection"], difficulty: 1, context: "abstract",
-    prompt: `The subgame-perfect equilibrium (SPE) requires optimal play in EVERY subgame — including branches never reached. P1 moves L/R, P2 moves a/b; leaves $(u_1,u_2)$.`,
+    prompt: `The subgame-perfect equilibrium (SPE) requires optimal play in EVERY subgame: including branches never reached. P1 moves L/R, P2 moves a/b; leaves $(u_1,u_2)$.`,
     plot: treePlot(T, "SPE specifies P2's move in BOTH branches, then P1's move."),
     steps: [
-      { instruction: `In the SPE, what must P2 play after L — "a" or "b"?`, answer: T.p2AtN1, accept: [], hint: `P2's best reply after L.` },
-      { instruction: `In the SPE, what must P2 play after R — "a" or "b"? (Even though this branch may be off-path, SPE still requires it.)`, answer: T.p2AtN2, accept: [], hint: `P2's best reply after R.` },
+      { instruction: `In the SPE, what must P2 play after L: "a" or "b"?`, answer: T.p2AtN1, accept: [], hint: `P2's best reply after L.` },
+      { instruction: `In the SPE, what must P2 play after R: "a" or "b"? (Even though this branch may be off-path, SPE still requires it.)`, answer: T.p2AtN2, accept: [], hint: `P2's best reply after R.` },
       { instruction: `Given both replies, does P1 play "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `P1 maximizes its folded payoff.` },
     ],
     finalAnswer: { value: f.rootChoice, unit: "" },
-    solutionNarrative: `SPE = a full plan: P2 plays ${T.p2AtN1} after L and ${T.p2AtN2} after R, and P1 plays ${f.rootChoice}. Even the unreached branch must specify an optimal move — that is what makes an equilibrium "subgame perfect".`,
+    solutionNarrative: `SPE = a full plan: P2 plays ${T.p2AtN1} after L and ${T.p2AtN2} after R, and P1 plays ${f.rootChoice}. Even the unreached branch must specify an optimal move: that is what makes an equilibrium "subgame perfect".`,
   };
 };
 fill["gt2-sgp-2"] = (rng, idx) => {
@@ -543,12 +547,12 @@ fill["gt2-sgp-2"] = (rng, idx) => {
     prompt: `Entry game tree: Entrant plays Enter (L)/Stay Out (R); Incumbent plays Fight (a)/Accommodate (b). Leaves $(u_{\\text{entrant}}, u_{\\text{incumbent}})$. The Incumbent threatens to Fight if the Entrant enters.`,
     plot: treePlot(T, "Is the Incumbent's threat to Fight credible? Check its own payoffs after entry."),
     steps: [
-      { instruction: `After the Entrant enters (L), which action actually maximizes the Incumbent's payoff — "a" or "b"?`, answer: T.p2AtN1, accept: [], hint: `Incumbent payoffs ${T.LA[1]} (a=Fight) vs ${T.LB[1]} (b=Accommodate).` },
+      { instruction: `After the Entrant enters (L), which action actually maximizes the Incumbent's payoff: "a" or "b"?`, answer: T.p2AtN1, accept: [], hint: `Incumbent payoffs ${T.LA[1]} (a=Fight) vs ${T.LB[1]} (b=Accommodate).` },
       { instruction: `The Incumbent threatens action "${threatAction}". Is that threat credible (is it the Incumbent's best reply after entry)? Answer "credible" or "not credible".`, answer: threatAction === T.p2AtN1 ? "credible" : "not credible", accept: threatAction === T.p2AtN1 ? [] : ["notcredible"], hint: `A threat is credible only if carrying it out is actually optimal for the threatener.` },
       { instruction: `Does the subgame-perfect equilibrium include a non-credible threat? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `SPE prunes exactly the threats a player would not actually carry out.` },
     ],
     finalAnswer: { value: threatAction === T.p2AtN1 ? "credible" : "not credible", unit: "" },
-    solutionNarrative: `After entry the Incumbent's best reply is ${T.p2AtN1} (payoff ${Math.max(T.LA[1], T.LB[1])}). The threatened "${threatAction}" is ${threatAction === T.p2AtN1 ? "credible" : "not credible"}, because it ${threatAction === T.p2AtN1 ? "is" : "is not"} the Incumbent's own best move. SPE ignores non-credible threats — that is precisely how it refines Nash equilibrium.`,
+    solutionNarrative: `After entry the Incumbent's best reply is ${T.p2AtN1} (payoff ${Math.max(T.LA[1], T.LB[1])}). The threatened "${threatAction}" is ${threatAction === T.p2AtN1 ? "credible" : "not credible"}, because it ${threatAction === T.p2AtN1 ? "is" : "is not"} the Incumbent's own best move. SPE ignores non-credible threats: that is precisely how it refines Nash equilibrium.`,
   };
 };
 fill["gt2-sgp-3"] = (rng, idx) => {
@@ -591,7 +595,7 @@ fill["gt2-firstmover-1"] = (rng, idx) => {
       { instruction: `Is moving first at least as good as being forced onto the other branch (worth ${noFirstFloor})? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `${commitValue} vs ${noFirstFloor}.` },
     ],
     finalAnswer: { value: `${commitValue}`, unit: "" },
-    solutionNarrative: `By committing to ${f.rootChoice} first, P1 secures ${commitValue} — the better of its two folded branch values (${T.u1IfL} vs ${T.u1IfR}). The power to move first and commit is worth ${advantage >= 0 ? advantage : 0} here over being stuck on the worse branch.`,
+    solutionNarrative: `By committing to ${f.rootChoice} first, P1 secures ${commitValue}: the better of its two folded branch values (${T.u1IfL} vs ${T.u1IfR}). The power to move first and commit is worth ${advantage >= 0 ? advantage : 0} here over being stuck on the worse branch.`,
   };
 };
 fill["gt2-firstmover-2"] = (rng, idx) => {
@@ -605,7 +609,7 @@ fill["gt2-firstmover-2"] = (rng, idx) => {
     prompt: `Two firms decide capacity. As the LEADER, Firm 1 commits first (L/R); Firm 2 then best-responds (a/b). Leaves $(u_1,u_2)$ are profits. Quantify the value of committing first.`,
     plot: treePlot(T, "Leader commits; follower best-responds. Compare leader's payoff across its options."),
     steps: [
-      { instruction: `As leader, which commitment does Firm 1 make — "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `Firm 1 anticipates Firm 2's reply and picks the branch worth more (${T.u1IfL} vs ${T.u1IfR}).` },
+      { instruction: `As leader, which commitment does Firm 1 make: "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `Firm 1 anticipates Firm 2's reply and picks the branch worth more (${T.u1IfL} vs ${T.u1IfR}).` },
       { instruction: `What profit does Firm 1 earn from that commitment? (A number.)`, answer: `${commitValue}`, accept: [], hint: `The folded value of the chosen branch.` },
       { instruction: `Had Firm 1 been pushed onto the other branch it would earn ${worse}. What is the first-mover advantage (difference)? (A number.)`, answer: `${advantage}`, accept: [], hint: `$${commitValue} - ${worse}$.` },
     ],
@@ -614,27 +618,44 @@ fill["gt2-firstmover-2"] = (rng, idx) => {
   };
 };
 fill["gt2-firstmover-3"] = (rng, idx) => {
-  const T = buildTree(rng);
-  const f = fold(T);
-  // Also fold the tree with roles swapped: what if P1 were the FOLLOWER instead?
-  // If P2 moved first, P2 would pick the branch maximizing P2's folded payoff.
-  const p2IfL = (T.p2AtN1 === "a" ? T.LA : T.LB)[1];
-  const p2IfR = (T.p2AtN2 === "a" ? T.RA : T.RB)[1];
-  const p2Leads = p2IfL > p2IfR ? "L" : "R";
-  const p1AsFollower = p2Leads === "L" ? (T.p2AtN1 === "a" ? T.LA : T.LB)[0] : (T.p2AtN2 === "a" ? T.RA : T.RB)[0];
+  // Reversed order: Firm 2 commits to a or b FIRST, then Firm 1 picks L or R.
+  // Facing a, Firm 1 compares LA vs RA; facing b, LB vs RB. Firm 2 picks the
+  // action whose induced outcome pays Firm 2 more. Redraw until neither order
+  // has a tie at any decision and leading vs following differ.
+  let T, f, p1AsFollower, guard = 0;
+  const reversed = (T) => {
+    const f1Reply = (l, r) => (l[0] === r[0] ? null : l[0] > r[0] ? l : r);
+    const ifA = f1Reply(T.LA, T.RA), ifB = f1Reply(T.LB, T.RB);
+    if (!ifA || !ifB || ifA[1] === ifB[1]) return null;
+    return (ifA[1] > ifB[1] ? ifA : ifB)[0];
+  };
+  do {
+    T = buildTree(rng);
+    f = fold(T);
+    p1AsFollower = reversed(T);
+    guard++;
+  } while ((p1AsFollower === null || p1AsFollower === f.outcome[0]) && guard < 300);
+  if (p1AsFollower === null || p1AsFollower === f.outcome[0]) {
+    // Leading: n1 -> b (1,4), n2 -> a (2,5); Firm 1 takes R for 2.
+    // Following: vs a Firm 1 takes LA (3,1); vs b takes RB (4,2); Firm 2 picks b, Firm 1 gets 4.
+    const LA = [3, 1], LB = [1, 4], RA = [2, 5], RB = [4, 2];
+    T = { LA, LB, RA, RB, p2AtN1: "b", p2AtN2: "a", u1IfL: 1, u1IfR: 2 };
+    f = fold(T);
+    p1AsFollower = reversed(T);
+  }
   const leaderBetter = f.outcome[0] > p1AsFollower;
   return {
     id: `gen.gt2-firstmover-3.${idx}`, generated: true, concepts: ["first-mover-and-commitment"], difficulty: 3, context: "applied",
-    prompt: `A commitment game. When Firm 1 LEADS it commits first (L/R) and Firm 2 replies (a/b). Compare Firm 1's payoff as leader to its payoff if Firm 2 led instead. Leaves $(u_1,u_2)$.`,
+    prompt: `A commitment game. When Firm 1 LEADS it commits first (L/R) and Firm 2 replies (a/b). Compare Firm 1's payoff as leader to its payoff if Firm 2 led instead (Firm 2 commits to a or b first, then Firm 1 picks L or R). Leaves $(u_1,u_2)$.`,
     plot: treePlot(T, "Who benefits from moving first? Compare the two leadership orders."),
     steps: [
-      { instruction: `With Firm 1 leading, which branch does it commit to — "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `Larger folded value: ${T.u1IfL} (L) vs ${T.u1IfR} (R).` },
+      { instruction: `With Firm 1 leading, which branch does it commit to: "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `Larger folded value: ${T.u1IfL} (L) vs ${T.u1IfR} (R).` },
       { instruction: `Firm 1's payoff as leader? (A number.)`, answer: `${f.outcome[0]}`, accept: [], hint: `Folded leaf's first coordinate.` },
-      { instruction: `If instead Firm 2 led, it would choose the branch best for itself, leaving Firm 1 with ${p1AsFollower}. Is Firm 1 better off LEADING than following? Type 'yes' or 'no'.`, answer: yn(leaderBetter), accept: [], hint: `Compare ${f.outcome[0]} (leading) with ${p1AsFollower} (following).` },
+      { instruction: `If instead Firm 2 led, it would commit to a or b, Firm 1 would best-respond with L or R, and Firm 2 would pick the action that pays it more, leaving Firm 1 with ${p1AsFollower}. Is Firm 1 better off LEADING than following? Type 'yes' or 'no'.`, answer: yn(leaderBetter), accept: [], hint: `Compare ${f.outcome[0]} (leading) with ${p1AsFollower} (following).` },
       { instruction: `What is Firm 1's payoff difference between leading and following? (A number; leader minus follower.)`, answer: `${f.outcome[0] - p1AsFollower}`, accept: [], hint: `$${f.outcome[0]} - ${p1AsFollower}$.` },
     ],
     finalAnswer: { value: `${f.outcome[0] - p1AsFollower}`, unit: "" },
-    solutionNarrative: `Leading, Firm 1 commits to ${f.rootChoice} and earns ${f.outcome[0]}. If Firm 2 led it would steer to the branch worth ${p1AsFollower} for Firm 1. The gap is $${f.outcome[0]}-${p1AsFollower}=${f.outcome[0] - p1AsFollower}$, so Firm 1 ${leaderBetter ? "enjoys a genuine first-mover advantage" : "does not gain (or even loses) by moving first — first-mover advantage is not automatic"}.`,
+    solutionNarrative: `Leading, Firm 1 commits to ${f.rootChoice} and earns ${f.outcome[0]}. If Firm 2 led, it would commit to the action (a or b) whose outcome, after Firm 1's best reply, pays Firm 2 more, leaving Firm 1 with ${p1AsFollower}. The gap is $${f.outcome[0]}-${p1AsFollower}=${f.outcome[0] - p1AsFollower}$, so Firm 1 ${leaderBetter ? "enjoys a genuine first-mover advantage" : "does not gain (or even loses) by moving first: first-mover advantage is not automatic"}.`,
   };
 };
 
@@ -669,7 +690,7 @@ fill["gt2-finite-1"] = (rng, idx) => {
     prompt: `A Prisoner's Dilemma is played a FIXED, known ${n} times. Stage payoffs (own): mutual cooperation $R=${g.R}$, mutual defection $P=${g.P}$, defect-on-cooperator temptation $T=${g.T}$, sucker $S=${g.S}$. Reason by backward induction from the LAST round.`,
     steps: [
       { instruction: `In the very last (round ${n}) there is no future to protect. Does a rational player "Cooperate" or "Defect"?`, answer: "Defect", accept: ["defect"], hint: `With no future, defecting dominates: $T=${g.T} > R=${g.R}$ and $P=${g.P} > S=${g.S}$.` },
-      { instruction: `Knowing round ${n} is a sure mutual defection, what happens in round ${n - 1} — "Cooperate" or "Defect"?`, answer: "Defect", accept: ["defect"], hint: `The last round is already fixed, so round ${n - 1} is effectively the new "last" round.` },
+      { instruction: `Knowing round ${n} is a sure mutual defection, what happens in round ${n - 1}: "Cooperate" or "Defect"?`, answer: "Defect", accept: ["defect"], hint: `The last round is already fixed, so round ${n - 1} is effectively the new "last" round.` },
       { instruction: `By this unraveling, in how many of the ${n} rounds do players cooperate? (A number.)`, answer: "0", accept: [], hint: `Backward induction collapses every round to defection.` },
     ],
     finalAnswer: { value: "0", unit: "rounds" },
@@ -684,12 +705,12 @@ fill["gt2-finite-2"] = (rng, idx) => {
     id: `gen.gt2-finite-2.${idx}`, generated: true, concepts: ["finite-repetition"], difficulty: 2, context: "abstract",
     prompt: `The Prisoner's Dilemma above is repeated exactly ${n} times with $R=${g.R}$, $P=${g.P}$, $T=${g.T}$, $S=${g.S}$. Backward induction says both defect every round.`,
     steps: [
-      { instruction: `What action is played in EVERY round of the subgame-perfect equilibrium — "Cooperate" or "Defect"?`, answer: "Defect", accept: ["defect"], hint: `Unraveling from the last round.` },
-      { instruction: `What total payoff does each player get across all ${n} rounds? (A number — sum of the per-round $P$.)`, answer: `${totalDefect}`, accept: [], hint: `${n} rounds times $P=${g.P}$.` },
+      { instruction: `What action is played in EVERY round of the subgame-perfect equilibrium: "Cooperate" or "Defect"?`, answer: "Defect", accept: ["defect"], hint: `Unraveling from the last round.` },
+      { instruction: `What total payoff does each player get across all ${n} rounds? (A number: sum of the per-round $P$.)`, answer: `${totalDefect}`, accept: [], hint: `${n} rounds times $P=${g.P}$.` },
       { instruction: `Had both cooperated every round they'd each get ${n * g.R}. Is that MORE than the equilibrium total? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Compare ${n * g.R} with ${totalDefect}.` },
     ],
     finalAnswer: { value: `${totalDefect}`, unit: "" },
-    solutionNarrative: `Every round is mutual defection, for a total of $${n} \\times ${g.P} = ${totalDefect}$ each. Full cooperation would have paid $${n} \\times ${g.R} = ${n * g.R}$ — strictly more — yet backward induction rules it out. This is the finite-horizon paradox.`,
+    solutionNarrative: `Every round is mutual defection, for a total of $${n} \\times ${g.P} = ${totalDefect}$ each. Full cooperation would have paid $${n} \\times ${g.R} = ${n * g.R}$, strictly more, yet backward induction rules it out. This is the finite-horizon paradox.`,
   };
 };
 fill["gt2-finite-3"] = (rng, idx) => {
@@ -699,13 +720,13 @@ fill["gt2-finite-3"] = (rng, idx) => {
     id: `gen.gt2-finite-3.${idx}`, generated: true, concepts: ["finite-repetition"], difficulty: 3, context: "applied",
     prompt: `Two firms in a price war know they will interact exactly ${n} more quarters, then one exits for good. Each quarter is a Prisoner's Dilemma: cooperate = hold high prices ($R=${g.R}$), defect = undercut ($T=${g.T}$ against a cooperator), mutual undercut $P=${g.P}$, sucker $S=${g.S}$.`,
     steps: [
-      { instruction: `Because the horizon is KNOWN and finite, what does backward induction predict for the final quarter — "Cooperate" or "Defect"?`, answer: "Defect", accept: ["defect"], hint: `No future quarter means nothing restrains defection.` },
+      { instruction: `Because the horizon is KNOWN and finite, what does backward induction predict for the final quarter: "Cooperate" or "Defect"?`, answer: "Defect", accept: ["defect"], hint: `No future quarter means nothing restrains defection.` },
       { instruction: `Does the unraveling stop before quarter 1, allowing SOME early cooperation? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `Each fixed-defection round makes its predecessor the new last round.` },
       { instruction: `How many quarters of cooperation does the finite-horizon model predict? (A number.)`, answer: "0", accept: [], hint: `The unraveling reaches all the way to quarter 1.` },
       { instruction: `In reality firms often DO cooperate when the end date is uncertain. Is an UNKNOWN/indefinite horizon what breaks the unraveling? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Without a known last round, there is no place for backward induction to start.` },
     ],
     finalAnswer: { value: "0", unit: "quarters" },
-    solutionNarrative: `A known ${n}-quarter horizon unravels completely: 0 quarters of cooperation. The escape hatch is uncertainty — if the firms never know which quarter is last, backward induction has no anchor, and (with enough patience) cooperation can be sustained. Finite-known and infinite/uncertain horizons behave oppositely.`,
+    solutionNarrative: `A known ${n}-quarter horizon unravels completely: 0 quarters of cooperation. The escape hatch is uncertainty: if the firms never know which quarter is last, backward induction has no anchor, and (with enough patience) cooperation can be sustained. Finite-known and infinite/uncertain horizons behave oppositely.`,
   };
 };
 
@@ -824,7 +845,7 @@ fill["gt2-trigger-3"] = (rng, idx) => {
       { instruction: `Is $\\delta^*$ strictly between 0 and 1 (a valid discount factor)? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `With $T>R>P$, both $T-R$ and $T-P$ are positive and $T-R<T-P$.` },
     ],
     finalAnswer: { value: fracStr(tn, td), unit: "" },
-    solutionNarrative: `Cooperating forever beats a one-shot deviation exactly when $\\delta \\ge \\dfrac{T-R}{T-P} = \\dfrac{${tn}}{${td}} = ${fracStr(tn, td)}$. Since $0 < T-R < T-P$, the threshold lies strictly in $(0,1)$ — there is always SOME patience level that rescues cooperation.`,
+    solutionNarrative: `Cooperating forever beats a one-shot deviation exactly when $\\delta \\ge \\dfrac{T-R}{T-P} = \\dfrac{${tn}}{${td}} = ${fracStr(tn, td)}$. Since $0 < T-R < T-P$, the threshold lies strictly in $(0,1)$: there is always SOME patience level that rescues cooperation.`,
   };
 };
 
@@ -840,7 +861,7 @@ fill["gt2-folk-1"] = (rng, idx) => {
       { instruction: `Could a payoff BELOW the minimax floor $P=${g.P}$ (say ${g.P - 1}) ever be forced on a rational player in equilibrium? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `A player can always guarantee at least its minimax value by deviating.` },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `Cooperation's $R=${g.R}$ sits above the minimax floor $P=${g.P}$, so the Folk Theorem makes it sustainable for patient players. Nothing below the floor is ever enforceable — each player can unilaterally secure its guarantee. The theorem explains why repetition permits a whole RANGE of outcomes, not just defection.`,
+    solutionNarrative: `Cooperation's $R=${g.R}$ sits above the minimax floor $P=${g.P}$, so the Folk Theorem makes it sustainable for patient players. Nothing below the floor is ever enforceable: each player can unilaterally secure its guarantee. The theorem explains why repetition permits a whole RANGE of outcomes, not just defection.`,
   };
 };
 fill["gt2-folk-2"] = (rng, idx) => {
@@ -860,7 +881,7 @@ fill["gt2-folk-2"] = (rng, idx) => {
       { instruction: `At $\\delta=${fracStr(dn, dd)}$, is restraint sustainable (is $\\delta \\ge \\delta^*$)? Type 'yes' or 'no'.`, answer: yn(sustainable), accept: [], hint: `Compare ${delta.toFixed(3)} to ${thresh.toFixed(3)}.` },
     ],
     finalAnswer: { value: yn(sustainable), unit: "" },
-    solutionNarrative: `Restraint ($R=${g.R}$) beats the arms-race floor ($P=${g.P}$), so the Folk Theorem permits it — IF players are patient. Here $\\delta=${fracStr(dn, dd)} \\approx ${delta.toFixed(3)}$ is ${sustainable ? "at least" : "below"} the threshold $${fracStr(tn, td)} \\approx ${thresh.toFixed(3)}$, so restraint ${sustainable ? "is sustainable" : "collapses into an arms race"}. Patience, not preferences, decides.`,
+    solutionNarrative: `Restraint ($R=${g.R}$) beats the arms-race floor ($P=${g.P}$), so the Folk Theorem permits it, IF players are patient. Here $\\delta=${fracStr(dn, dd)} \\approx ${delta.toFixed(3)}$ is ${sustainable ? "at least" : "below"} the threshold $${fracStr(tn, td)} \\approx ${thresh.toFixed(3)}$, so restraint ${sustainable ? "is sustainable" : "collapses into an arms race"}. Patience, not preferences, decides.`,
   };
 };
 fill["gt2-folk-3"] = (rng, idx) => {
@@ -878,9 +899,9 @@ fill["gt2-folk-3"] = (rng, idx) => {
       { instruction: `Is a per-period payoff of ${above} (mutual compliance) above the floor and therefore Folk-Theorem sustainable? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `${above} vs floor ${g.P}.` },
       { instruction: `Is a per-period payoff of ${below} (below the floor) ever sustainable? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `No player accepts less than its minimax guarantee.` },
       { instruction: `Compute the patience threshold needed to sustain full compliance under grim trigger, $\\delta^* = \\dfrac{T-R}{T-P}$. (A fraction or decimal.)`, answer: fracStr(tn, td), accept: [`${tn}/${td}`, `${thresh.toFixed(6)}`], hint: `$(${g.T}-${g.R})/(${g.T}-${g.P})$.` },
-      { instruction: `Does the Folk Theorem imply a UNIQUE equilibrium payoff, or a whole RANGE of them? Answer "unique" or "range".`, answer: "range", accept: [], hint: `Every profile above the floor qualifies — a continuum.` },
+      { instruction: `Does the Folk Theorem imply a UNIQUE equilibrium payoff, or a whole RANGE of them? Answer "unique" or "range".`, answer: "range", accept: [], hint: `Every profile above the floor qualifies: a continuum.` },
     ],
     finalAnswer: { value: fracStr(tn, td), unit: "" },
-    solutionNarrative: `Compliance ($${above}$) is above the floor, so it is sustainable for patient players; anything below $P=${g.P}$ never is. Full compliance needs $\\delta \\ge ${fracStr(tn, td)} \\approx ${thresh.toFixed(3)}$. Crucially the Folk Theorem yields a RANGE of equilibria — repetition multiplies possibilities rather than pinning down one.`,
+    solutionNarrative: `Compliance ($${above}$) is above the floor, so it is sustainable for patient players; anything below $P=${g.P}$ never is. Full compliance needs $\\delta \\ge ${fracStr(tn, td)} \\approx ${thresh.toFixed(3)}$. Crucially the Folk Theorem yields a RANGE of equilibria: repetition multiplies possibilities rather than pinning down one.`,
   };
 };

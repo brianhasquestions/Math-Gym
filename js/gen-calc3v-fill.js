@@ -90,7 +90,7 @@ fill["c3v-param-eval-2"] = (rng, idx) => {
       { instruction: "Evaluate $\\vec{r}(\\pi)$ as a numeric vector.", answer: V(...rPi), accept: [Pn(...rPi)], hint: "$\\cos\\pi = -1$, $\\sin\\pi = 0$." },
     ],
     finalAnswer: { value: V(...rPi), unit: "" },
-    solutionNarrative: `Using the landmark values of sine and cosine: $\\vec{r}(0) = ${Vt(r0)}$, $\\vec{r}(\\pi/2) = ${Vt(rHalfPi)}$, $\\vec{r}(\\pi) = ${Vt(rPi)}$ — quarter turns around the circle.`,
+    solutionNarrative: `Using the landmark values of sine and cosine: $\\vec{r}(0) = ${Vt(r0)}$, $\\vec{r}(\\pi/2) = ${Vt(rHalfPi)}$, $\\vec{r}(\\pi) = ${Vt(rPi)}$: quarter turns around the circle.`,
   };
 };
 
@@ -170,7 +170,7 @@ fill["c3v-vel-accel-3"] = (rng, idx) => {
       { instruction: `Evaluate $\\vec{a}(${m})$ as a numeric vector.`, answer: V(...am), accept: [Pn(...am)], hint: `$\\vec{a}(t) = \\langle 6t,\\; ${2 * q} \\rangle$ at $t = ${m}$.` },
     ],
     finalAnswer: { value: V(...vm), unit: "" },
-    solutionNarrative: `$v_x = 3t^2 - ${p} = 0$ at $t = ${m}$. There $\\vec{v}(${m}) = ${Vt(vm)}$ — momentarily moving straight up — while $\\vec{a}(${m}) = ${Vt(am)}$.`,
+    solutionNarrative: `$v_x = 3t^2 - ${p} = 0$ at $t = ${m}$. There $\\vec{v}(${m}) = ${Vt(vm)}$, momentarily moving straight up, while $\\vec{a}(${m}) = ${Vt(am)}$.`,
   };
 };
 
@@ -230,12 +230,12 @@ fill["c3v-speed-arclen-3"] = (rng, idx) => {
     id: `gen.c3v-speed-arclen-3.${idx}`, generated: true, concepts: ["speed-and-arc-length"], difficulty: 3, context: "abstract",
     prompt: `Compute the arc length of $\\vec{r}(t) = \\langle t,\\; \\tfrac{2}{3}t^{3/2} \\rangle$ over $[0, ${b}]$. (The curve is engineered so the speed simplifies.)`,
     steps: [
-      { instruction: "With $\\vec{r}\\,'(t) = \\langle 1,\\; t^{1/2} \\rangle$, write $|\\vec{r}\\,'(t)|^2$ as a polynomial in $t$.", answer: "1 + t", accept: ["t + 1", "1+t"], hint: "$1^2 + (t^{1/2})^2$." },
+      { instruction: "With $\\vec{r}'(t) = \\langle 1,\\; t^{1/2} \\rangle$, write $|\\vec{r}'(t)|^2$ as a polynomial in $t$.", answer: "1 + t", accept: ["t + 1", "1+t"], hint: "$1^2 + (t^{1/2})^2$." },
       { instruction: `The antiderivative of $\\sqrt{1+t}$ is $\\tfrac{2}{3}(1+t)^{3/2}$. Evaluate $(1 + ${b})^{3/2}$.`, answer: `${k * k * k}`, accept: [], hint: `$${k * k}^{3/2} = (\\sqrt{${k * k}})^3 = ${k}^3$.` },
       { instruction: `Compute $L = \\tfrac{2}{3}\\left[(1+t)^{3/2}\\right]_0^{${b}} = \\tfrac{2}{3}(${k * k * k} - 1)$.`, answer: ans, accept: dec ? [dec] : [], hint: `$\\tfrac{2}{3} \\times ${k * k * k - 1}$.` },
     ],
     finalAnswer: { value: ans, unit: "" },
-    solutionNarrative: `$|\\vec{r}\\,'|^2 = 1 + t$ — a perfect setup — so $L = \\int_0^{${b}} \\sqrt{1+t}\\,dt = \\tfrac{2}{3}(${k}^3 - 1) = ${ans}$.`,
+    solutionNarrative: `$|\\vec{r}'|^2 = 1 + t$, a perfect setup, so $L = \\int_0^{${b}} \\sqrt{1+t}\\,dt = \\tfrac{2}{3}(${k}^3 - 1) = ${ans}$.`,
   };
 };
 
@@ -258,7 +258,7 @@ fill["c3v-tangent-motion-1"] = (rng, idx) => {
       { instruction: "Give the unit tangent $\\vec{T}$ as a numeric vector.", answer: V(...T), accept: [Pn(...T)], hint: `Divide $${Vt(v)}$ by ${s} and reduce the fractions.` },
     ],
     finalAnswer: { value: V(...T), unit: "" },
-    solutionNarrative: `$|\\vec{v}| = ${s}$, so $\\vec{T} = ${Vt(v)}/${s} = ${Vt(T)}$ — pure direction, length 1.`,
+    solutionNarrative: `$|\\vec{v}| = ${s}$, so $\\vec{T} = ${Vt(v)}/${s} = ${Vt(T)}$: pure direction, length 1.`,
   };
 };
 
@@ -281,7 +281,7 @@ fill["c3v-tangent-motion-2"] = (rng, idx) => {
   };
 };
 
-// d3: full projectile analysis — apex, landing, impact velocity.
+// d3: full projectile analysis: apex, landing, impact velocity.
 fill["c3v-tangent-motion-3"] = (rng, idx) => {
   const m = rng.int(1, 2);         // apex time (v1 = 32m)
   const r = rng.int(1, 2);
@@ -302,7 +302,7 @@ fill["c3v-tangent-motion-3"] = (rng, idx) => {
       { instruction: `Give the impact velocity $\\vec{v}(${n})$ as a numeric vector.`, answer: V(...impact), accept: [Pn(...impact)], hint: `$\\langle ${v0},\\; ${v1} - 32(${n}) \\rangle$.` },
     ],
     finalAnswer: { value: V(...impact), unit: "" },
-    solutionNarrative: `Apex at $t = ${v1}/32 = ${m}$ s (height ${apexY} ft). Landing at $t = ${n}$ s. Impact velocity $${Vt(impact)}$ — the horizontal ${v0} never changed; gravity only touched the vertical component.`,
+    solutionNarrative: `Apex at $t = ${v1}/32 = ${m}$ s (height ${apexY} ft). Landing at $t = ${n}$ s. Impact velocity $${Vt(impact)}$: the horizontal ${v0} never changed; gravity only touched the vertical component.`,
   };
 };
 
@@ -333,7 +333,7 @@ fill["c3v-field-potential-1"] = (rng, idx) => {
     finalAnswer: { value: conservative ? `${a}xy` : "not conservative", unit: "" },
     solutionNarrative: conservative
       ? `$P_y = ${a} = Q_x$, so the field is conservative with potential $f = ${a}xy$ (check: $\\nabla(${a}xy) = \\langle ${a}y, ${a}x \\rangle$).`
-      : `$P_y = ${a}$ but $Q_x = ${b}$. Since they differ, no potential exists — work done by this field depends on the path.`,
+      : `$P_y = ${a}$ but $Q_x = ${b}$. Since they differ, no potential exists: work done by this field depends on the path.`,
   };
 };
 
@@ -382,7 +382,7 @@ fill["c3v-field-potential-3"] = (rng, idx) => {
     finalAnswer: { value: conservative ? fStr : "not conservative", unit: "" },
     solutionNarrative: conservative
       ? `$P_y = ${2 * a}y = Q_x$ ✓, and integrating $P$ in $x$ gives $f = ${fStr}$ (the $y$-match adds nothing).`
-      : `$P_y = ${2 * a}y$ but $Q_x = ${2 * a}y + ${k}$ — off by ${k}, so no potential exists. (The field is a gradient plus the swirl $\\langle 0, ${k}x \\rangle$.)`,
+      : `$P_y = ${2 * a}y$ but $Q_x = ${2 * a}y + ${k}$: off by ${k}, so no potential exists. (The field is a gradient plus the swirl $\\langle 0, ${k}x \\rangle$.)`,
   };
 };
 
@@ -401,7 +401,7 @@ fill["c3v-scalar-line-1"] = (rng, idx) => {
     id: `gen.c3v-scalar-line-1.${idx}`, generated: true, concepts: ["scalar-line-integrals"], difficulty: 1, context: "abstract",
     prompt: `Compute $\\displaystyle\\int_C ${c === 1 ? "" : c}${varName}\\, ds$, where $C$ is the straight segment from $(0,0)$ to $${end}$.`,
     steps: [
-      { instruction: `Parametrize $C$ as $\\vec{r}(t) = ${param}$, $0 \\le t \\le ${L}$. What is the speed $|\\vec{r}\\,'(t)|$?`, answer: "1", accept: [], hint: "The velocity is a unit coordinate vector." },
+      { instruction: `Parametrize $C$ as $\\vec{r}(t) = ${param}$, $0 \\le t \\le ${L}$. What is the speed $|\\vec{r}'(t)|$?`, answer: "1", accept: [], hint: "The velocity is a unit coordinate vector." },
       { instruction: `Compute $\\displaystyle\\int_0^{${L}} ${c === 1 ? "" : c}t \\cdot 1\\, dt$.`, answer: ans, accept: dec ? [dec] : [], hint: `$${c}\\left[t^2/2\\right]_0^{${L}} = ${c} \\cdot ${L * L}/2$.` },
     ],
     finalAnswer: { value: ans, unit: "" },
@@ -422,7 +422,7 @@ fill["c3v-scalar-line-2"] = (rng, idx) => {
     id: `gen.c3v-scalar-line-2.${idx}`, generated: true, concepts: ["scalar-line-integrals"], difficulty: 2, context: "abstract",
     prompt: `Compute $\\displaystyle\\int_C (${fTxt})\\, ds$, where $C$ is the straight segment from $(0,0)$ to $(${end.join(", ")})$, parametrized as $\\vec{r}(t) = \\langle ${3 * m}t,\\; ${4 * m}t \\rangle$, $0 \\le t \\le 1$.`,
     steps: [
-      { instruction: "Compute the speed $|\\vec{r}\\,'(t)|$ (the segment's length, since $t$ runs over $[0,1]$).", answer: `${L}`, accept: [], hint: `$|\\langle ${3 * m}, ${4 * m} \\rangle| = \\sqrt{${9 * m * m} + ${16 * m * m}}$.` },
+      { instruction: "Compute the speed $|\\vec{r}'(t)|$ (the segment's length, since $t$ runs over $[0,1]$).", answer: `${L}`, accept: [], hint: `$|\\langle ${3 * m}, ${4 * m} \\rangle| = \\sqrt{${9 * m * m} + ${16 * m * m}}$.` },
       { instruction: "Substitute the path into the integrand: write $f(\\vec{r}(t))$ as a polynomial in $t$.", answer: `${A}t`, accept: [`${A}*t`], hint: `$${cf(p)}(${3 * m}t) + ${cf(q)}(${4 * m}t) = ${A}t$.` },
       { instruction: `Compute $\\displaystyle\\int_0^1 (${A}t)(${L})\\, dt$.`, answer: ans, accept: dec ? [dec] : [], hint: `$${A * L}\\left[t^2/2\\right]_0^1$.` },
     ],
@@ -452,7 +452,7 @@ fill["c3v-scalar-line-3"] = (rng, idx) => {
     id: `gen.c3v-scalar-line-3.${idx}`, generated: true, concepts: ["scalar-line-integrals"], difficulty: 3, context: "abstract",
     prompt: `Compute $\\displaystyle\\int_C (${fTxt})\\, ds$, where $C$ is the straight segment from $(0,0,0)$ to $(${end.join(", ")})$, parametrized as $\\vec{r}(t) = ${Vt(end.map((x) => `${cf(x)}t`))}$, $0 \\le t \\le 1$.`,
     steps: [
-      { instruction: "Compute the speed $|\\vec{r}\\,'(t)|$.", answer: `${L}`, accept: [], hint: `$|${Vt(end)}| = \\sqrt{${end.map((x) => x * x).join(" + ")}} = \\sqrt{${L * L}}$.` },
+      { instruction: "Compute the speed $|\\vec{r}'(t)|$.", answer: `${L}`, accept: [], hint: `$|${Vt(end)}| = \\sqrt{${end.map((x) => x * x).join(" + ")}} = \\sqrt{${L * L}}$.` },
       { instruction: "Write $f(\\vec{r}(t))$ as a polynomial in $t$.", answer: `${A}t`, accept: [`${A}*t`], hint: "Substitute each component and collect the $t$ terms." },
       { instruction: `Compute $\\displaystyle\\int_0^1 (${A}t)(${L})\\, dt$.`, answer: ans, accept: dec ? [dec] : [], hint: `$${A * L}\\left[t^2/2\\right]_0^1$.` },
     ],
@@ -463,7 +463,7 @@ fill["c3v-scalar-line-3"] = (rng, idx) => {
 
 // --- concept: work-integrals ---------------------------------------------------
 
-// d1: constant force, straight displacement — work is a dot product.
+// d1: constant force, straight displacement: work is a dot product.
 fill["c3v-work-1"] = (rng, idx) => {
   let a = rng.int(-4, 6), b = rng.int(-4, 6);
   if (a === 0 && b === 0) a = 3; // no zero force
@@ -481,7 +481,7 @@ fill["c3v-work-1"] = (rng, idx) => {
   };
 };
 
-// d2: F = <a y, b x> along a segment from the origin — full parametrized workflow.
+// d2: F = <a y, b x> along a segment from the origin: full parametrized workflow.
 fill["c3v-work-2"] = (rng, idx) => {
   const a = rng.int(1, 4), b = rng.int(1, 4); // a + b >= 2: integrand never identically zero
   const p = rng.int(1, 4), q = rng.int(1, 4);
@@ -492,8 +492,8 @@ fill["c3v-work-2"] = (rng, idx) => {
     id: `gen.c3v-work-2.${idx}`, generated: true, concepts: ["work-integrals"], difficulty: 2, context: "abstract",
     prompt: `Compute $\\displaystyle\\int_C \\vec{F} \\cdot d\\vec{r}$ for $\\vec{F} = \\langle ${cf(a)}y,\\; ${cf(b)}x \\rangle$ along the segment $\\vec{r}(t) = \\langle ${cf(p)}t,\\; ${cf(q)}t \\rangle$, $0 \\le t \\le 1$.`,
     steps: [
-      { instruction: "Write the velocity $\\vec{r}\\,'(t)$ as a numeric vector.", answer: V(p, q), accept: [Pn(p, q)], hint: "Differentiate each component." },
-      { instruction: "Evaluate the field on the path and dot with the velocity: write $\\vec{F}(\\vec{r}(t)) \\cdot \\vec{r}\\,'(t)$ as a polynomial in $t$.", answer: `${coefI}t`, accept: [`${coefI}*t`], hint: `$\\vec{F}(\\vec{r}(t)) = \\langle ${a * q}t, ${b * p}t \\rangle$; dot with $${Vt([p, q])}$: $${a * q * p}t + ${b * p * q}t$.` },
+      { instruction: "Write the velocity $\\vec{r}'(t)$ as a numeric vector.", answer: V(p, q), accept: [Pn(p, q)], hint: "Differentiate each component." },
+      { instruction: "Evaluate the field on the path and dot with the velocity: write $\\vec{F}(\\vec{r}(t)) \\cdot \\vec{r}'(t)$ as a polynomial in $t$.", answer: `${coefI}t`, accept: [`${coefI}*t`], hint: `$\\vec{F}(\\vec{r}(t)) = \\langle ${a * q}t, ${b * p}t \\rangle$; dot with $${Vt([p, q])}$: $${a * q * p}t + ${b * p * q}t$.` },
       { instruction: `Compute $W = \\displaystyle\\int_0^1 ${coefI}t\\, dt$.`, answer: ans, accept: dec ? [dec] : [], hint: `$${coefI}\\left[t^2/2\\right]_0^1$.` },
     ],
     finalAnswer: { value: ans, unit: "" },
@@ -501,7 +501,7 @@ fill["c3v-work-2"] = (rng, idx) => {
   };
 };
 
-// d3: conservative shortcut — potential endpoints only.
+// d3: conservative shortcut: potential endpoints only.
 fill["c3v-work-3"] = (rng, idx) => {
   const a = rng.int(1, 3), b = rng.int(0, 4);
   // f = a x^2 y + b x  =>  F = <2a x y + b, a x^2>
@@ -515,7 +515,7 @@ fill["c3v-work-3"] = (rng, idx) => {
   const fStr = b === 0 ? `${cf(a)}x^2y` : `${cf(a)}x^2y + ${b}x`;
   return {
     id: `gen.c3v-work-3.${idx}`, generated: true, concepts: ["work-integrals"], difficulty: 3, context: "abstract",
-    prompt: `Compute $\\displaystyle\\int_C \\vec{F} \\cdot d\\vec{r}$ for $\\vec{F} = \\langle ${Ptxt},\\; ${cf(a)}x^2 \\rangle$, where $C$ is ANY path from $(${x1}, ${y1})$ to $(${x2}, ${y2})$ — use the conservative shortcut.`,
+    prompt: `Compute $\\displaystyle\\int_C \\vec{F} \\cdot d\\vec{r}$ for $\\vec{F} = \\langle ${Ptxt},\\; ${cf(a)}x^2 \\rangle$, where $C$ is ANY path from $(${x1}, ${y1})$ to $(${x2}, ${y2})$: use the conservative shortcut.`,
     steps: [
       { instruction: `Compute $\\partial P/\\partial y$ for $P = ${Ptxt}$.`, answer: `${2 * a}x`, accept: [`${2 * a}*x`], hint: "The constant term (if any) vanishes." },
       { instruction: `Compute $\\partial Q/\\partial x$ for $Q = ${cf(a)}x^2$.`, answer: `${2 * a}x`, accept: [`${2 * a}*x`], hint: `Differentiate $${cf(a)}x^2$.` },
@@ -546,7 +546,7 @@ fill["c3v-greens-1"] = (rng, idx) => {
       { instruction: `The integrand is constant, so circulation $= (${d - c}) \\times \\text{Area}$. Compute it.`, answer: `${circ}`, accept: [], hint: `Area of the rectangle is $${a} \\times ${b} = ${a * b}$.` },
     ],
     finalAnswer: { value: `${circ}`, unit: "" },
-    solutionNarrative: `$Q_x - P_y = ${d} - ${c} = ${d - c}$, a constant, so the circulation is $${d - c} \\times ${a * b} = ${circ}$ — one multiplication instead of four edge integrals.`,
+    solutionNarrative: `$Q_x - P_y = ${d} - ${c} = ${d - c}$, a constant, so the circulation is $${d - c} \\times ${a * b} = ${circ}$: one multiplication instead of four edge integrals.`,
   };
 };
 

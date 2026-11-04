@@ -28,7 +28,7 @@
 //    expressions (cross-multiplied), and radicals like "5\sqrt{2}" which
 //    normalize to "5sqrt2" and evaluate numerically.
 //  - Money is computed in integer cents so decimal strings are exact.
-//  - No symbolic log/trig answers anywhere — log steps reduce to integers.
+//  - No symbolic log/trig answers anywhere; log steps reduce to integers.
 
 // ---------------------------------------------------------------------------
 // shared helpers
@@ -87,7 +87,7 @@ fill["a2l-compound-d1"] = (rng, idx) => {
       { instruction: `Multiply by the principal \\$${P} (round to the nearest cent).`, answer: money(cents), accept: [`${cents / 100}`], hint: `$${P} \\times ${f2Str}$.` },
     ],
     finalAnswer: { value: money(cents), unit: "dollars" },
-    solutionNarrative: `$A = ${P}(${factorStr})^2 = ${P} \\cdot ${f2Str} = \\$${money(cents)}$. The second year's interest is earned on the first year's interest too — that's compounding.`,
+    solutionNarrative: `$A = ${P}(${factorStr})^2 = ${P} \\cdot ${f2Str} = \\$${money(cents)}$. The second year's interest is earned on the first year's interest too: that's compounding.`,
   };
 };
 
@@ -116,7 +116,7 @@ fill["a2l-growth-decay-d3"] = (rng, idx) => {
       { instruction: `How many dollars did the ${item} ${grow ? "gain" : "lose"} over the 3 years?`, answer: `${change}`, accept: [`$${change}`], hint: grow ? `$${value} - ${P}$.` : `$${P} - ${value}$.` },
     ],
     finalAnswer: { value: `${value}`, unit: "dollars" },
-    solutionNarrative: `The ${grow ? "growth" : "decay"} factor is $${bStr}$, and $${bStr}^3 = ${b3Str}$, so after 3 years the ${item} is worth $${P} \\cdot ${b3Str} = \\$${value}$ — a ${grow ? "gain" : "loss"} of \\$${change}.`,
+    solutionNarrative: `The ${grow ? "growth" : "decay"} factor is $${bStr}$, and $${bStr}^3 = ${b3Str}$, so after 3 years the ${item} is worth $${P} \\cdot ${b3Str} = \\$${value}$, a ${grow ? "gain" : "loss"} of \\$${change}.`,
   };
 };
 
@@ -230,7 +230,7 @@ fill["a2l-domain-range-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Solve the square-root restriction $x - ${c} \\geq 0$. Give an inequality in $x$.`, answer: `x >= ${c}`, accept: [`x>=${c}`, `${c} <= x`], hint: `Add ${c} to both sides.` },
       { instruction: `Which single value does the denominator exclude?`, answer: `x = ${d}`, accept: [`${d}`, `x=${d}`], hint: `$x - ${d} = 0$ where?` },
-      { instruction: `The domain is $x \\geq ${c}$ with $x = ${d}$ removed. What is the SMALLEST number in the domain?`, answer: `${c}`, accept: [`x=${c}`], hint: `$x = ${c}$ makes the root $\\sqrt{0} = 0$, which is allowed — and $${c} \\neq ${d}$.` },
+      { instruction: `The domain is $x \\geq ${c}$ with $x = ${d}$ removed. What is the SMALLEST number in the domain?`, answer: `${c}`, accept: [`x=${c}`], hint: `$x = ${c}$ makes the root $\\sqrt{0} = 0$, which is allowed, and $${c} \\neq ${d}$.` },
     ],
     finalAnswer: { value: `x >= ${c}, x != ${d}`, unit: "" },
     solutionNarrative: `The root demands $x \\geq ${c}$; the denominator forbids $x = ${d}$. Both apply at once, so the domain is $x \\geq ${c}$ except $x = ${d}$, and its smallest member is $${c}$.`,
@@ -285,7 +285,7 @@ fill["a2l-composition-d3"] = (rng, idx) => {
       { instruction: `Evaluate the combined rule at $x = ${price}$ (round to the nearest cent).`, answer: money(cents), accept: [`${cents / 100}`], hint: `$${combined} \\times ${price}$.` },
     ],
     finalAnswer: { value: money(cents), unit: "dollars" },
-    solutionNarrative: `$f(g(x)) = ${c2}(${c1}x) = ${combined}x$ — the whole checkout is one multiplier. At $x = ${price}$ that gives $${combined} \\times ${price} = \\$${money(cents)}$.`,
+    solutionNarrative: `$f(g(x)) = ${c2}(${c1}x) = ${combined}x$: the whole checkout is one multiplier. At $x = ${price}$ that gives $${combined} \\times ${price} = \\$${money(cents)}$.`,
   };
 };
 
@@ -313,7 +313,7 @@ fill["a2l-inverse-d1"] = (rng, idx) => {
       { instruction: `Since $f(${k}) = ${v}$, the inverse must send ${v} back to the original input. Compute $f^{-1}(${v})$.`, answer: `${k}`, accept: [], hint: kind === "mul" ? `$${v} \\div ${a}$.` : kind === "add" ? `$${v} - ${a}$.` : `$${v} + ${a}$.` },
     ],
     finalAnswer: { value: inv, unit: "" },
-    solutionNarrative: `Swapping and solving gives $f^{-1}(x) = ${inv}$. Check the round trip: $f(${k}) = ${v}$ and $f^{-1}(${v}) = ${k}$ — the inverse undoes $f$.`,
+    solutionNarrative: `Swapping and solving gives $f^{-1}(x) = ${inv}$. Check the round trip: $f(${k}) = ${v}$ and $f^{-1}(${v}) = ${k}$: the inverse undoes $f$.`,
   };
 };
 
@@ -332,7 +332,7 @@ fill["a2l-inverse-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Write $y = ${fStr}$, swap $x$ and $y$: $x = ${a}y ${b < 0 ? "-" : "+"} ${Math.abs(b)}$. ${b < 0 ? `Add ${-b} to` : `Subtract ${b} from`} both sides.`, answer: `${lhs} = ${a}y`, accept: [`${squash(lhs)}=${a}y`, `${a}y = ${lhs}`], hint: `Isolate the term with $y$.` },
       { instruction: `Divide both sides by ${a} to get $f^{-1}(x)$.`, answer: inv, accept: [squash(inv)], hint: `The inverse ${b < 0 ? "adds" : "subtracts"} ${Math.abs(b)} first, then divides by ${a}.` },
-      { instruction: `Verify: $f(${k}) = ${v}$. Compute $f^{-1}(${v})$ — it should return the original input.`, answer: `${k}`, accept: [], hint: `$(${v} ${b < 0 ? "+" : "-"} ${Math.abs(b)})/${a} = ${a * k}/${a}$.` },
+      { instruction: `Verify: $f(${k}) = ${v}$. Compute $f^{-1}(${v})$: it should return the original input.`, answer: `${k}`, accept: [], hint: `$(${v} ${b < 0 ? "+" : "-"} ${Math.abs(b)})/${a} = ${a * k}/${a}$.` },
     ],
     finalAnswer: { value: inv, unit: "" },
     solutionNarrative: `Swap to $x = ${a}y ${b < 0 ? "-" : "+"} ${Math.abs(b)}$, isolate: $${lhs} = ${a}y$, divide by ${a}: $f^{-1}(x) = ${inv}$. Round trip: $f(${k}) = ${v}$ and $f^{-1}(${v}) = ${k}$. ✓`,
@@ -408,7 +408,7 @@ fill["a2l-solve-logs-d1"] = (rng, idx) => {
     id: `gen.a2l-solve-logs-d1.${idx}`, generated: true, concepts: ["solve-with-logs"], difficulty: 1, context: "abstract",
     prompt: `Solve for $x$: $\\log_{${b}}(x) = ${k}$.`,
     steps: [
-      { instruction: `Rewrite in exponential form: $x = ${b}^{${k}}$.`, answer: `x = ${b}^${k}`, accept: [`x=${b}^${k}`, `${b}^${k}`, `x = ${N}`], hint: `$\\log_b(y) = x$ means $b^x = y$ — the base raised to the log's value.` },
+      { instruction: `Rewrite in exponential form: $x = ${b}^{${k}}$.`, answer: `x = ${b}^${k}`, accept: [`x=${b}^${k}`, `${b}^${k}`, `x = ${N}`], hint: `$\\log_b(y) = x$ means $b^x = y$: the base raised to the log's value.` },
       { instruction: `Compute $${b}^{${k}}$ to find $x$.`, answer: `${N}`, accept: [`x=${N}`, `x = ${N}`], hint: `Multiply ${b} by itself ${k} times.` },
     ],
     finalAnswer: { value: `${N}`, unit: "" },
@@ -461,7 +461,7 @@ fill["a2l-simplify-rad-d1"] = (rng, idx) => {
       { instruction: `Check your answer: what is $${k}^2$?`, answer: `${N}`, accept: [], hint: `Squaring undoes the square root.` },
     ],
     finalAnswer: { value: `${k}`, unit: "" },
-    solutionNarrative: `$${k}^2 = ${N}$, so $\\sqrt{${N}} = ${k}$ — everything comes out of the root, leaving a plain integer.`,
+    solutionNarrative: `$${k}^2 = ${N}$, so $\\sqrt{${N}} = ${k}$: everything comes out of the root, leaving a plain integer.`,
   };
 };
 
@@ -514,7 +514,7 @@ fill["a2l-eval-roots-d2"] = (rng, idx) => {
     prompt: `Evaluate the decimal square root: $\\sqrt{${NStr}}$`,
     steps: [
       { instruction: `Ignore the decimal point for a moment: what is $\\sqrt{${k * k}}$?`, answer: `${k}`, accept: [], hint: `$${k} \\times ${k} = ${k * k}$.` },
-      { instruction: `Now place the decimal: what number squared gives ${NStr}?`, answer: rootStr, accept: [frac(k, 10)], hint: `$${rootStr} \\times ${rootStr} = ${NStr}$ — half the decimal places of the radicand.` },
+      { instruction: `Now place the decimal: what number squared gives ${NStr}?`, answer: rootStr, accept: [frac(k, 10)], hint: `$${rootStr} \\times ${rootStr} = ${NStr}$: half the decimal places of the radicand.` },
     ],
     finalAnswer: { value: rootStr, unit: "" },
     solutionNarrative: `$${rootStr}^2 = ${NStr}$, so $\\sqrt{${NStr}} = ${rootStr}$. Squaring doubles the decimal places, so rooting halves them.`,
@@ -577,7 +577,7 @@ fill["a2l-excluded-d2"] = (rng, idx) => {
       { instruction: `Solve for the excluded value $x$.`, answer: `x = ${c}`, accept: [`x=${c}`, `${c}`], hint: `Divide both sides by ${a}.` },
     ],
     finalAnswer: { value: `${c}`, unit: "" },
-    solutionNarrative: `The denominator $${denStr}$ is zero when $${a}x = ${b}$, i.e. $x = ${c}$ — the one excluded value.`,
+    solutionNarrative: `The denominator $${denStr}$ is zero when $${a}x = ${b}$, i.e. $x = ${c}$, the one excluded value.`,
   };
 };
 
@@ -592,7 +592,7 @@ fill["a2l-excluded-d3"] = (rng, idx) => {
     prompt: `Find ALL excluded values of $\\dfrac{${m}}{${denStr}}$.`,
     steps: [
       { instruction: `Factor the denominator $${denStr}$.`, form: "factored", answer: `${fmtFactor(p)}${fmtFactor(q)}`, accept: [`${fmtFactor(q)}${fmtFactor(p)}`], hint: `Two numbers multiplying to ${p * q} and adding to ${p + q}.` },
-      { instruction: `Set each factor to zero and give both excluded values (e.g. "x = 1 or x = 2").`, form: "solutions", answer: `x = ${p} or x = ${q}`, accept: [`${p}, ${q}`, `${q}, ${p}`], hint: `$${fmtFactor(p)} = 0$ and $${fmtFactor(q)} = 0$ — flip the sign inside each factor.` },
+      { instruction: `Set each factor to zero and give both excluded values (e.g. "x = 1 or x = 2").`, form: "solutions", answer: `x = ${p} or x = ${q}`, accept: [`${p}, ${q}`, `${q}, ${p}`], hint: `$${fmtFactor(p)} = 0$ and $${fmtFactor(q)} = 0$: flip the sign inside each factor.` },
     ],
     finalAnswer: { value: `x = ${p}, x = ${q}`, unit: "" },
     solutionNarrative: `$${denStr} = ${fmtFactor(p)}${fmtFactor(q)}$, which is zero at $x = ${p}$ and $x = ${q}$; both are excluded.`,
@@ -638,7 +638,7 @@ fill["a2l-simplify-rational-d3"] = (rng, idx) => {
       { instruction: `Evaluate the simplified expression at $x = ${k}$. Give a fraction in lowest terms.`, answer: val, accept: [`${k + a}/${k + b}`], hint: `$\\dfrac{${k} + ${a}}{${k} + ${b}} = \\dfrac{${k + a}}{${k + b}}$.` },
     ],
     finalAnswer: { value: val, unit: "" },
-    solutionNarrative: `$\\dfrac{(x - ${c})(x + ${a})}{(x - ${c})(x + ${b})} = \\dfrac{x + ${a}}{x + ${b}}$ after cancelling $(x - ${c})$ — though $x = ${c}$ stays excluded. At $x = ${k}$ the value is $${val}$.`,
+    solutionNarrative: `$\\dfrac{(x - ${c})(x + ${a})}{(x - ${c})(x + ${b})} = \\dfrac{x + ${a}}{x + ${b}}$ after cancelling $(x - ${c})$, though $x = ${c}$ stays excluded. At $x = ${k}$ the value is $${val}$.`,
   };
 };
 
@@ -730,11 +730,11 @@ fill["a2l-arith-series-d1"] = (rng, idx) => {
       { instruction: `Use $S_n = \\dfrac{n}{2}(a_1 + a_n)$ with $n = 10$.`, answer: `${S}`, accept: [], hint: `$\\dfrac{10}{2}(${a1} + ${a10}) = 5 \\times ${a1 + a10}$.` },
     ],
     finalAnswer: { value: `${S}`, unit: "" },
-    solutionNarrative: `$a_{10} = ${a1} + 9(${d}) = ${a10}$, so $S_{10} = \\tfrac{10}{2}(${a1} + ${a10}) = 5 \\times ${a1 + a10} = ${S}$ — ten terms times the average of the first and last.`,
+    solutionNarrative: `$a_{10} = ${a1} + 9(${d}) = ${a10}$, so $S_{10} = \\tfrac{10}{2}(${a1} + ${a10}) = 5 \\times ${a1 + a10} = ${S}$: ten terms times the average of the first and last.`,
   };
 };
 
-// --- arithmetic-series d3: growing deposits — last term, total, and average ---
+// --- arithmetic-series d3: growing deposits; last term, total, and average ---
 const SAVE_CTX = [
   { plan: "savings plan", put: "deposit", period: "week" },
   { plan: "fundraising drive", put: "donation collected", period: "week" },
@@ -753,10 +753,10 @@ fill["a2l-arith-series-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Find the ${ctx.put} in ${ctx.period} ${n} using $a_n = a_1 + (n-1)d$.`, answer: `${an}`, accept: [`$${an}`], hint: `$${a1} + (${n} - 1)(${d}) = ${a1} + ${(n - 1) * d}$.` },
       { instruction: `Use $S_n = \\dfrac{n}{2}(a_1 + a_n)$ to total all ${n} ${ctx.period}s, in dollars.`, answer: `${S}`, accept: [`$${S}`], hint: `$\\dfrac{${n}}{2}(${a1} + ${an}) = \\dfrac{${n} \\times ${a1 + an}}{2}$.` },
-      { instruction: `The average ${ctx.put} per ${ctx.period} is $S_n / n$ — which equals the average of the first and last. Compute it, in dollars.`, answer: `${avg}`, accept: [`$${avg}`, `${S}/${n}`], hint: `$\\dfrac{${a1} + ${an}}{2}$.` },
+      { instruction: `The average ${ctx.put} per ${ctx.period} is $S_n / n$: which equals the average of the first and last. Compute it, in dollars.`, answer: `${avg}`, accept: [`$${avg}`, `${S}/${n}`], hint: `$\\dfrac{${a1} + ${an}}{2}$.` },
     ],
     finalAnswer: { value: `${S}`, unit: "dollars" },
-    solutionNarrative: `${ctx.period.charAt(0).toUpperCase() + ctx.period.slice(1)} ${n}'s ${ctx.put} is $${a1} + ${n - 1}(${d}) = \\$${an}$. The total is $S_{${n}} = \\tfrac{${n}}{2}(${a1} + ${an}) = \\$${S}$, which averages $\\$${avg}$ per ${ctx.period} — exactly the mean of the first and last ${ctx.put}s.`,
+    solutionNarrative: `${ctx.period.charAt(0).toUpperCase() + ctx.period.slice(1)} ${n}'s ${ctx.put} is $${a1} + ${n - 1}(${d}) = \\$${an}$. The total is $S_{${n}} = \\tfrac{${n}}{2}(${a1} + ${an}) = \\$${S}$, which averages $\\$${avg}$ per ${ctx.period}: exactly the mean of the first and last ${ctx.put}s.`,
   };
 };
 
@@ -780,7 +780,7 @@ fill["a2l-geom-series-d1"] = (rng, idx) => {
 };
 
 // ===========================================================================
-// WAVE 2 — the 16 remaining thin algebra-2 pools (seeds <= 2, no generator):
+// WAVE 2; the 16 remaining thin algebra-2 pools (seeds <= 2, no generator):
 //   exponential-functions: evaluate-exponential d3, growth-and-decay d1
 //   logarithms:            log-definition d2+d3, solve-with-logs d3,
 //                          log-applications d2+d3
@@ -854,7 +854,7 @@ fill["a2l-log-def-d2"] = (rng, idx) => {
       prompt: `Evaluate $\\log_{${b}}\\left(\\dfrac{1}{${M}}\\right)$.`,
       steps: [
         { instruction: `First compute $${b}^{${k}}$.`, answer: `${M}`, accept: [], hint: `Multiply ${b} by itself ${k} times.` },
-        { instruction: `So $\\dfrac{1}{${M}} = ${b}^{?}$. Enter that exponent — it is the value of the log.`, answer: `${-k}`, accept: [], hint: `$${b}^{-${k}} = \\dfrac{1}{${b}^{${k}}}$.` },
+        { instruction: `So $\\dfrac{1}{${M}} = ${b}^{?}$. Enter that exponent: it is the value of the log.`, answer: `${-k}`, accept: [], hint: `$${b}^{-${k}} = \\dfrac{1}{${b}^{${k}}}$.` },
       ],
       finalAnswer: { value: `${-k}`, unit: "" },
       solutionNarrative: `$${b}^{-${k}} = \\dfrac{1}{${M}}$, so $\\log_{${b}}\\!\\left(\\dfrac{1}{${M}}\\right) = ${-k}$. Reciprocals flip the sign of the exponent.`,
@@ -870,7 +870,7 @@ fill["a2l-log-def-d2"] = (rng, idx) => {
       { instruction: `Check backward: what is $${b}^{${k}}$?`, answer: `${N}`, accept: [], hint: `The log and the power undo each other.` },
     ],
     finalAnswer: { value: `${k}`, unit: "" },
-    solutionNarrative: `$${b}^{${k}} = ${N}$ converts to $\\log_{${b}}(${N}) = ${k}$ — the log IS the exponent.`,
+    solutionNarrative: `$${b}^{${k}} = ${N}$ converts to $\\log_{${b}}(${N}) = ${k}$: the log IS the exponent.`,
   };
 };
 
@@ -890,7 +890,7 @@ fill["a2l-log-def-d3"] = (rng, idx) => {
       { instruction: `If $\\log_{${B}}(${N}) = x$, then $${B}^x = ${N}$, i.e. $${b}^{${m}x} = ${b}^{${j}}$. Solve $${m}x = ${j}$ for $x$. Give a fraction.`, answer: val, accept: [`x=${val}`, ...dec], hint: `Divide both sides by ${m}.` },
     ],
     finalAnswer: { value: val, unit: "" },
-    solutionNarrative: `$${B} = ${b}^{${m}}$ and $${N} = ${b}^{${j}}$, so $${b}^{${m}x} = ${b}^{${j}}$ forces $${m}x = ${j}$: $\\log_{${B}}(${N}) = ${val}$. Logs can be fractions — the base just isn't the natural unit here.`,
+    solutionNarrative: `$${B} = ${b}^{${m}}$ and $${N} = ${b}^{${j}}$, so $${b}^{${m}x} = ${b}^{${j}}$ forces $${m}x = ${j}$: $\\log_{${B}}(${N}) = ${val}$. Logs can be fractions: the base just isn't the natural unit here.`,
   };
 };
 
@@ -944,7 +944,7 @@ fill["a2l-log-apps-d2"] = (rng, idx) => {
   };
 };
 
-// --- log-applications d3: run the scale BACKWARD — from a ratio to a reading ---
+// --- log-applications d3: run the scale BACKWARD; from a ratio to a reading ---
 fill["a2l-log-apps-d3"] = (rng, idx) => {
   const quake = rng.int(0, 1) === 1;
   const d = rng.int(2, 4);
@@ -1137,7 +1137,7 @@ fill["a2l-geom-series-d3"] = (rng, idx) => {
       { instruction: `Use $S_n = a_1 \\cdot \\dfrac{r^{n} - 1}{r - 1}$ to total all ${n} weeks, in dollars.`, answer: `${S}`, accept: [`$${S}`], hint: `$${a1} \\cdot \\dfrac{${rn} - 1}{${r - 1}} = ${a1} \\cdot ${(rn - 1) / (r - 1)}$.` },
     ],
     finalAnswer: { value: `${S}`, unit: "dollars" },
-    solutionNarrative: `With $a_1 = ${a1}$, $r = ${r}$, $n = ${n}$: $S_{${n}} = ${a1} \\cdot \\dfrac{${rn} - 1}{${r - 1}} = ${a1} \\cdot ${(rn - 1) / (r - 1)} = \\$${S}$. Late weeks dominate — the last week alone brings in \\$${a1 * r ** (n - 1)}.`,
+    solutionNarrative: `With $a_1 = ${a1}$, $r = ${r}$, $n = ${n}$: $S_{${n}} = ${a1} \\cdot \\dfrac{${rn} - 1}{${r - 1}} = ${a1} \\cdot ${(rn - 1) / (r - 1)} = \\$${S}$. Late weeks dominate: the last week alone brings in \\$${a1 * r ** (n - 1)}.`,
   };
 };
 
@@ -1211,7 +1211,7 @@ fill["a2l-domain-range-d2"] = (rng, idx) => {
       { instruction: `Check a nearby ALLOWED input: what is the denominator $${denom}$ at $x = ${c + 1}$?`, answer: `1`, accept: [], hint: `$${c + 1} ${c < 0 ? "+" : "-"} ${Math.abs(c)}$.` },
     ],
     finalAnswer: { value: `x != ${c}`, unit: "" },
-    solutionNarrative: `$${denom} = 0$ exactly at $x = ${c}$, so the domain is all real numbers except $x = ${c}$. Everywhere else — like $x = ${c + 1}$, where the denominator is 1 — the function is fine.`,
+    solutionNarrative: `$${denom} = 0$ exactly at $x = ${c}$, so the domain is all real numbers except $x = ${c}$. Everywhere else (like $x = ${c + 1}$, where the denominator is 1) the function is fine.`,
   };
 };
 

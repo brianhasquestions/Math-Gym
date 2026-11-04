@@ -1,4 +1,4 @@
-/* animations.css — reward & feedback motion (theme-neutral). Terminal-specific
+/* animations.css: reward & feedback motion (theme-neutral). Terminal-specific
    styling (uppercase banners, glow, blinking cursor) lives in theme.css.
    All effects are gated in JS by prefers-reduced-motion + a user toggle. */
 
@@ -25,7 +25,7 @@
 }
 .step-stamp { animation: stamp 0.32s cubic-bezier(.2,.8,.2,1); }
 
-/* Reward banner — earned "mastered" moment (neutral; terminal adds glow/uppercase). */
+/* Reward banner: earned "mastered" moment (neutral; terminal adds glow/uppercase). */
 .reward-banner {
   position: fixed; left: 50%; top: 84px; translate: -50% -20px;
   background: var(--surface); color: var(--accent);

@@ -1,6 +1,6 @@
 // animations.js
 // Reward/feedback animations. Every effect here fires on GENUINE progress
-// (a correct step, a concept mastered, a topic cleared) — never on streaks,
+// (a correct step, a concept mastered, a topic cleared): never on streaks,
 // clicks, or time spent (ROADMAP §8). All effects respect prefers-reduced-motion
 // and a user toggle, degrading to instant state changes.
 
@@ -31,7 +31,7 @@ export function stampStep(el) {
   el.addEventListener("animationend", () => el.classList.remove("step-stamp"), { once: true });
 }
 
-// The earned "concept mastered" moment — a distinct, meaningful celebration.
+// The earned "concept mastered" moment: a distinct, meaningful celebration.
 export function celebrateConcept(label) {
   banner(`>> skill mastered: ${label} <<`, "concept");
   if (!motionOff()) burst(18);

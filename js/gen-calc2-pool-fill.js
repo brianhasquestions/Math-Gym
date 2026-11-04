@@ -137,7 +137,7 @@ fill["c2l-antideriv-rules-d1"] = (rng, idx) => {
     prompt: `Find $\\int ${K}x^{${n}}\\,dx$. Include $+ C$.`,
     steps: [
       { instruction: `Pull the constant ${K} out front and integrate $x^${n}$, giving $${K} \\cdot \\frac{x^${n + 1}}{${n + 1}}$. What number multiplies $x^${n + 1}$?`, answer: `${m}`, accept: [`${K}/${n + 1}`], hint: `$${K} \\div ${n + 1}$.` },
-      { instruction: "Write the antiderivative. Include $+ C$.", answer: ans, accept: [], hint: `$${m}x^${n + 1} + C$ — check by differentiating: it returns $${K}x^${n}$.` },
+      { instruction: "Write the antiderivative. Include $+ C$.", answer: ans, accept: [], hint: `$${m}x^${n + 1} + C$: check by differentiating: it returns $${K}x^${n}$.` },
     ],
     finalAnswer: { value: ans, unit: "" },
     solutionNarrative: `$${K}\\int x^${n}\\,dx = ${K} \\cdot \\frac{x^${n + 1}}{${n + 1}} + C = ${m}x^${n + 1} + C$. Differentiating gives $${K}x^${n}$. ✓`,
@@ -160,10 +160,10 @@ fill["c2l-antideriv-rules-d3"] = (rng, idx) => {
   const f2 = polyJoin([{ k: 1, p: 1 }, { k: b2, p: 0 }]);
   return {
     id: `gen.c2l-antideriv-rules-d3.${idx}`, generated: true, concepts: ["antiderivative-rules"], difficulty: 3, context: "abstract",
-    prompt: `Rewrite and integrate $\\int (${f1})(${f2})\\,dx$. There is no product rule for integrals — expand first. Include $+ C$.`,
+    prompt: `Rewrite and integrate $\\int (${f1})(${f2})\\,dx$. There is no product rule for integrals: expand first. Include $+ C$.`,
     steps: [
       { instruction: "Expand the product into a sum of power terms.", answer: expanded, accept: [], hint: `$(${f1})(${f2}) = ${a1}x \\cdot x ${b2 >= 0 ? "+" : "-"} ${Math.abs(b2 * a1)}x ${b1 >= 0 ? "+" : "-"} ${Math.abs(b1)}x ${Cc >= 0 ? "+" : "-"} ${Math.abs(Cc)}$; combine the $x$ terms.` },
-      { instruction: "Integrate the expanded polynomial term by term. Include $+ C$.", answer: anti, accept: [], hint: `$\\int ${A}x^2 = ${antiMag(A, 2)}$, $\\int ${Math.abs(B)}x = ${antiMag(Math.abs(B), 1)}$, $\\int ${Math.abs(Cc)} = ${tmag(Math.abs(Cc), 1)}$ — keep each sign.` },
+      { instruction: "Integrate the expanded polynomial term by term. Include $+ C$.", answer: anti, accept: [], hint: `$\\int ${A}x^2 = ${antiMag(A, 2)}$, $\\int ${Math.abs(B)}x = ${antiMag(Math.abs(B), 1)}$, $\\int ${Math.abs(Cc)} = ${tmag(Math.abs(Cc), 1)}$: keep each sign.` },
       { instruction: `Check your work: what is the derivative of the $x^2$ term of your antiderivative?`, answer: polyJoin([{ k: B, p: 1 }]), accept: [`${B}x`], hint: `The $x^2$ term is $${antiMag(B, 1)}$ with sign ${B < 0 ? "minus" : "plus"}; its derivative should be the middle term of the expansion.` },
     ],
     finalAnswer: { value: anti, unit: "" },
@@ -184,7 +184,7 @@ fill["c2l-ivp-d1"] = (rng, idx) => {
     id: `gen.c2l-ivp-d1.${idx}`, generated: true, concepts: ["initial-value-problems"], difficulty: 1, context: "abstract",
     prompt: `$F'(x) = ${2 * a}x$ and $F(0) = ${y0}$. The general antiderivative is $F(x) = ${gen} + C$. Find the specific $F(x)$.`,
     steps: [
-      { instruction: `Substitute $x = 0$, $F = ${y0}$ into $${gen} + C$ and solve for $C$.`, answer: `${y0}`, accept: [`C = ${y0}`, `C=${y0}`], hint: `$${a === 1 ? "" : a}(0)^2 + C = ${y0}$ — the squared term vanishes.` },
+      { instruction: `Substitute $x = 0$, $F = ${y0}$ into $${gen} + C$ and solve for $C$.`, answer: `${y0}`, accept: [`C = ${y0}`, `C=${y0}`], hint: `$${a === 1 ? "" : a}(0)^2 + C = ${y0}$: the squared term vanishes.` },
       { instruction: "Write the specific function $F(x)$.", answer: `${gen} + ${y0}`, accept: [], hint: `Put your value of $C$ back into $${gen} + C$.` },
     ],
     finalAnswer: { value: `${gen} + ${y0}`, unit: "" },
@@ -342,7 +342,7 @@ fill["c2l-avg-value-d3"] = (rng, idx) => {
       { instruction: `Divide by the interval width $${T}$ to get the average value (${ctx.unit}).`, answer: `${avg}`, accept: [], hint: `$${total} \\div ${T}$.` },
     ],
     finalAnswer: { value: `${avg}`, unit: ctx.unit },
-    solutionNarrative: `$\\int_0^{${T}} (${c} - ${3 * m}t^2)\\,dt = [${anti}]_0^{${T}} = ${total}$. Average $= \\frac{${total}}{${T}} = ${avg}$ ${ctx.unit} — the constant level that would give the same total.`,
+    solutionNarrative: `$\\int_0^{${T}} (${c} - ${3 * m}t^2)\\,dt = [${anti}]_0^{${T}} = ${total}$. Average $= \\frac{${total}}{${T}} = ${avg}$ ${ctx.unit}: the constant level that would give the same total.`,
   };
 };
 
@@ -422,7 +422,7 @@ fill["c2l-volume-rev-d1"] = (rng, idx) => {
       { instruction: `Multiply by $\\pi \\approx 3.14$ to get the volume.`, answer: vol, accept: nbrs(I * 3.14, 2), hint: `$${I} \\times 3.14$.` },
     ],
     finalAnswer: { value: vol, unit: "cm^3" },
-    solutionNarrative: `$V = \\pi \\int_0^{${L}} ${R}^2\\,dx = \\pi \\cdot ${I} \\approx ${vol}$ cm³ — the familiar cylinder volume $\\pi r^2 h$.`,
+    solutionNarrative: `$V = \\pi \\int_0^{${L}} ${R}^2\\,dx = \\pi \\cdot ${I} \\approx ${vol}$ cm³: the familiar cylinder volume $\\pi r^2 h$.`,
   };
 };
 
@@ -526,7 +526,7 @@ fill["c2l-riemann-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Add the three midpoint speeds $v(1) + v(3) + v(5)$.`, answer: `${sum}`, accept: [], hint: `$${a} + ${9 * a} + ${25 * a}$.` },
       { instruction: `Multiply the speed-sum by the rectangle width $\\Delta t = 2$ to estimate the distance.`, answer: `${est}`, accept: [], hint: `$${sum} \\times 2$.` },
-      { instruction: `The exact distance is $\\int_0^6 ${fn}\\,dt = ${exact}$ m. Is the midpoint estimate an overestimate or an underestimate here?`, answer: "underestimate", accept: ["under", "an underestimate", "underestimates"], hint: `Compare $${est}$ to $${exact}$ — for a curve bending upward, midpoint rectangles miss a little area.` },
+      { instruction: `The exact distance is $\\int_0^6 ${fn}\\,dt = ${exact}$ m. Is the midpoint estimate an overestimate or an underestimate here?`, answer: "underestimate", accept: ["under", "an underestimate", "underestimates"], hint: `Compare $${est}$ to $${exact}$: for a curve bending upward, midpoint rectangles miss a little area.` },
     ],
     finalAnswer: { value: `${est}`, unit: ctx.unit },
     solutionNarrative: `Midpoint speeds $${a}, ${9 * a}, ${25 * a}$ sum to $${sum}$; times width 2 gives $${est}$ m. The exact integral is $${exact}$ m, so the midpoint sum slightly underestimates this upward-bending curve.`,
@@ -570,7 +570,7 @@ fill["c2l-area-under-d3"] = (rng, idx) => {
   const anti = `${c}x - ${tmag(m, 3)}`;
   return {
     id: `gen.c2l-area-under-d3.${idx}`, generated: true, concepts: ["area-under-curve"], difficulty: 3, context: "abstract",
-    prompt: `Find the exact area under $f(x) = ${c} - ${3 * m}x^2$ from $x = 1$ to $x = ${L}$. (The function stays positive on this interval — but the lower limit is not 0, so both evaluations count.)`,
+    prompt: `Find the exact area under $f(x) = ${c} - ${3 * m}x^2$ from $x = 1$ to $x = ${L}$. (The function stays positive on this interval, but the lower limit is not 0, so both evaluations count.)`,
     steps: [
       { instruction: `Find an antiderivative of $${c} - ${3 * m}x^2$.`, answer: anti, accept: [`${anti} + C`], hint: `Antiderivative of $${c}$ is $${c}x$; of $-${3 * m}x^2$ is $-${tmag(m, 3)}$.` },
       { instruction: `Evaluate $F(${L})$.`, answer: `${FL}`, accept: [], hint: `$${c}(${L}) - ${m}(${L})^3 = ${c * L} - ${m * L ** 3}$.` },
@@ -633,7 +633,7 @@ fill["c2l-net-change-d3"] = (rng, idx) => {
       { instruction: `Compute $F(4) - F(1)$ (${ctx.unit}).`, answer: `${net}`, accept: [], hint: `$${F4} - ${F1}$.` },
     ],
     finalAnswer: { value: `${net}`, unit: ctx.unit },
-    solutionNarrative: `$F(t) = ${anti}$; $F(4) = ${F4}$, $F(1) = ${F1}$, so the net change is $${F4} - ${F1} = ${net}$ ${ctx.unit} — the losses late in the window partly cancel the early gains.`,
+    solutionNarrative: `$F(t) = ${anti}$; $F(4) = ${F4}$, $F(1) = ${F1}$, so the net change is $${F4} - ${F1} = ${net}$ ${ctx.unit}: the losses late in the window partly cancel the early gains.`,
   };
 };
 
@@ -657,7 +657,7 @@ fill["c2l-riemann-d2"] = (rng, idx) => {
       { instruction: `Multiply the speed-sum by $\\Delta t = 1$ to estimate the distance.`, answer: `${sum}`, accept: [`${sum} meters`, `${sum} m`], hint: `$${sum} \\times 1$.` },
     ],
     finalAnswer: { value: `${sum}`, unit: "meters" },
-    solutionNarrative: `Left-edge speeds $${vals.join(", ")}$ sum to $${sum}$; times width 1 gives $${sum}$ m. (The exact distance $\\int_0^4 (${a}t + ${b})\\,dt = ${8 * a + 4 * b}$ m is a bit more — left sums undercount an increasing speed.)`,
+    solutionNarrative: `Left-edge speeds $${vals.join(", ")}$ sum to $${sum}$; times width 1 gives $${sum}$ m. (The exact distance $\\int_0^4 (${a}t + ${b})\\,dt = ${8 * a + 4 * b}$ m is a bit more: left sums undercount an increasing speed.)`,
   };
 };
 
@@ -942,7 +942,7 @@ fill["c2l-choosing-u-d3"] = (rng, idx) => {
       { instruction: `In the rewritten integral $${kk}\\int u^{?}\\,du$, what power of $u$ appears?`, answer: `${n}`, accept: [`u^${n}`], hint: `The power on the parenthesis carries straight over to $u$.` },
     ],
     finalAnswer: { value: `du = ${2 * a}t dt, k = ${kk}`, unit: "" },
-    solutionNarrative: `$\\frac{du}{dt} = ${2 * a}t$, so $du = ${2 * a}t\\,dt$ and $${c}t\\,dt = ${kk}\\,du$. The integral becomes $${kk}\\int u^{${n}}\\,du$ — no $t$ survives, so the choice of $u$ was right.`,
+    solutionNarrative: `$\\frac{du}{dt} = ${2 * a}t$, so $du = ${2 * a}t\\,dt$ and $${c}t\\,dt = ${kk}\\,du$. The integral becomes $${kk}\\int u^{${n}}\\,du$, no $t$ survives, so the choice of $u$ was right.`,
   };
 };
 
@@ -980,7 +980,7 @@ fill["c2l-indef-sub-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $\\frac{du}{dx}$ for $u = x^3 + ${b}$.`, answer: "3x^2", accept: [], hint: `Differentiate $x^3 + ${b}$.` },
       { instruction: `Since $du = 3x^2\\,dx$, solve for the constant $c$ in $${K}x^2\\,dx = c\\,du$.`, answer: `${m + 1}`, accept: [`c = ${m + 1}`, `c=${m + 1}`], hint: `$${K} \\div 3$.` },
-      { instruction: `Integrate $${m + 1}\\int u^{${m}}\\,du$ and back-substitute $u = x^3 + ${b}$ (include + C).`, answer: xAns, accept: [`(x^3 + ${b})^${m + 1} + C`], hint: `$${m + 1}\\cdot\\frac{u^{${m + 1}}}{${m + 1}} = u^{${m + 1}}$ — the constant cancels the denominator exactly.` },
+      { instruction: `Integrate $${m + 1}\\int u^{${m}}\\,du$ and back-substitute $u = x^3 + ${b}$ (include + C).`, answer: xAns, accept: [`(x^3 + ${b})^${m + 1} + C`], hint: `$${m + 1}\\cdot\\frac{u^{${m + 1}}}{${m + 1}} = u^{${m + 1}}$: the constant cancels the denominator exactly.` },
     ],
     finalAnswer: { value: xAns, unit: "" },
     solutionNarrative: `$du = 3x^2\\,dx$, so $${K}x^2\\,dx = ${m + 1}\\,du$. Then $${m + 1}\\int u^{${m}}\\,du = u^{${m + 1}} + C = (x^3+${b})^{${m + 1}} + C$.`,
@@ -1068,12 +1068,12 @@ fill["c2l-choosing-u-d2"] = (rng, idx) => {
     id: `gen.c2l-choosing-u-d2.${idx}`, generated: true, concepts: ["choosing-u"], difficulty: 2, context: "abstract",
     prompt: `For $\\int x\\,(x^2 ${bs})^{${n}}\\,dx$, find $u$, then find the constant $k$ so that $x\\,dx = k\\,du$.`,
     steps: [
-      { instruction: "Choose the inner function $u$. Enter it as an expression in $x$.", answer: u, accept: [`x^2${b < 0 ? "-" : "+"}${Math.abs(b)}`], hint: "Take $u$ to be the base of the power — the inside of the parentheses." },
+      { instruction: "Choose the inner function $u$. Enter it as an expression in $x$.", answer: u, accept: [`x^2${b < 0 ? "-" : "+"}${Math.abs(b)}`], hint: "Take $u$ to be the base of the power: the inside of the parentheses." },
       { instruction: "Compute $\\frac{du}{dx}$.", answer: "2x", accept: [], hint: `Differentiate $x^2 ${bs}$; the constant drops out.` },
       { instruction: `Since $du = 2x\\,dx$, solve for the constant $k$ in $x\\,dx = k\\,du$.`, answer: "1/2", accept: ["0.5"], hint: "$x\\,dx$ is half of $2x\\,dx$." },
     ],
     finalAnswer: { value: `u = ${u}, k = 1/2`, unit: "" },
-    solutionNarrative: `$u = x^2 ${bs}$ gives $du = 2x\\,dx$, so $x\\,dx = \\tfrac{1}{2}\\,du$ — the integral becomes $\\tfrac{1}{2}\\int u^{${n}}\\,du$ with no $x$ left over.`,
+    solutionNarrative: `$u = x^2 ${bs}$ gives $du = 2x\\,dx$, so $x\\,dx = \\tfrac{1}{2}\\,du$: the integral becomes $\\tfrac{1}{2}\\int u^{${n}}\\,du$ with no $x$ left over.`,
   };
 };
 
@@ -1149,7 +1149,7 @@ fill["c2l-conv-tests-d3"] = (rng, idx) => {
       steps: [
         { instruction: `Simplify the ratio $\\dfrac{a_{n+1}}{a_n} = \\dfrac{${c}^{n+1}/(n+1)!}{${c}^n/n!}$.`, answer: `${c}/(n+1)`, accept: [`${c}/(n + 1)`], hint: `$\\dfrac{${c}^{n+1}}{${c}^n} = ${c}$ and $\\dfrac{n!}{(n+1)!} = \\dfrac{1}{n+1}$.` },
         { instruction: "Find the limit $L$ as $n \\to \\infty$.", answer: "0", accept: [], hint: `$\\dfrac{${c}}{n+1} \\to 0$.` },
-        { instruction: "Since $L < 1$, does the series converge or diverge?", answer: "converges", accept: ["convergent"], hint: "$L < 1$ means convergence — the factorial in the denominator wins." },
+        { instruction: "Since $L < 1$, does the series converge or diverge?", answer: "converges", accept: ["convergent"], hint: "$L < 1$ means convergence: the factorial in the denominator wins." },
       ],
       finalAnswer: { value: "converges", unit: "" },
       solutionNarrative: `The ratio simplifies to $\\dfrac{${c}}{n+1}$, with limit $L = 0 < 1$: the factorial outgrows the power, so the series converges.`,
@@ -1157,14 +1157,14 @@ fill["c2l-conv-tests-d3"] = (rng, idx) => {
   }
   const c = rng.int(2, 4);
   return { ...base,
-    prompt: `Use the ratio test on $\\sum_{n=1}^{\\infty} \\dfrac{n!}{${c}^n}$. (Careful — the factorial is on TOP this time.)`,
+    prompt: `Use the ratio test on $\\sum_{n=1}^{\\infty} \\dfrac{n!}{${c}^n}$. (Careful: the factorial is on TOP this time.)`,
     steps: [
       { instruction: `Simplify the ratio $\\dfrac{a_{n+1}}{a_n} = \\dfrac{(n+1)!/${c}^{n+1}}{n!/${c}^n}$.`, answer: `(n+1)/${c}`, accept: [`(n + 1)/${c}`], hint: `$\\dfrac{(n+1)!}{n!} = n+1$ and $\\dfrac{${c}^n}{${c}^{n+1}} = \\dfrac{1}{${c}}$.` },
       { instruction: `What happens to $\\dfrac{n+1}{${c}}$ as $n \\to \\infty$? (Type a number, or 'infinity'.)`, answer: "infinity", accept: ["infinite", "unbounded", "does not exist", "dne"], hint: "The numerator grows without bound while the denominator stays fixed." },
-      { instruction: "Since $L > 1$ (in fact infinite), does the series converge or diverge?", answer: "diverges", accept: ["divergent"], hint: "Ratio test: $L > 1$ means divergence — the factorial on top swamps the power." },
+      { instruction: "Since $L > 1$ (in fact infinite), does the series converge or diverge?", answer: "diverges", accept: ["divergent"], hint: "Ratio test: $L > 1$ means divergence: the factorial on top swamps the power." },
     ],
     finalAnswer: { value: "diverges", unit: "" },
-    solutionNarrative: `The ratio is $\\dfrac{n+1}{${c}} \\to \\infty > 1$, so by the ratio test the series diverges — factorials beat exponentials.`,
+    solutionNarrative: `The ratio is $\\dfrac{n+1}{${c}} \\to \\infty > 1$, so by the ratio test the series diverges: factorials beat exponentials.`,
   };
 };
 
@@ -1207,7 +1207,7 @@ fill["c2l-pseries-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Rewrite $${pick.tex}$ as $\\dfrac{1}{n^p}$ and state $p$.`, answer: pick.p, accept: [pick.dec], hint: `${pick.why}.` },
       { instruction: "Is $p$ greater than 1? (yes/no)", answer: pick.conv ? "yes" : "no", accept: [], hint: `Compare $${pick.p}$ to 1.` },
-      { instruction: "So does the series converge or diverge?", answer: word, accept: [word === "converges" ? "convergent" : "divergent"], hint: "A p-series converges exactly when $p > 1$ — the harmonic case $p = 1$ already diverges." },
+      { instruction: "So does the series converge or diverge?", answer: word, accept: [word === "converges" ? "convergent" : "divergent"], hint: "A p-series converges exactly when $p > 1$: the harmonic case $p = 1$ already diverges." },
     ],
     finalAnswer: { value: word, unit: "" },
     solutionNarrative: `${pick.why}, so $p = ${pick.p}$. Since $p ${pick.conv ? ">" : "\\leq"} 1$, the series ${word}.`,
@@ -1237,7 +1237,7 @@ fill["c2l-series-apps-d3"] = (rng, idx) => {
   const r = pct / 100;
   const first = H * r;          // first rebound height (integer for these H)
   const a = 2 * first;          // first up-and-down rebound term
-  const reb = a / (1 - r);      // 2H (r = 0.5) or 6H (r = 0.75) — integer
+  const reb = a / (1 - r);      // 2H (r = 0.5) or 6H (r = 0.75): integer
   const total = H + reb;
   const second = first * r;
   const rs = r === 0.5 ? "0.5" : "0.75";

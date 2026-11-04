@@ -3,7 +3,7 @@
 //   number-theory.arithmetic-functions
 //   number-theory.quadratic-residues
 //   number-theory.continued-fractions
-// One template per (concept, difficulty) tier — 12 per topic, 36 total — so the
+// One template per (concept, difficulty) tier: 12 per topic, 36 total, so the
 // adaptive engine can serve fresh problems at every level. Self-contained: no
 // imports from generator.js. Exports a `fill` map of template-name -> generator
 // fn, matching the pack pattern of gen-crypto1-fill.js. Every answer is computed
@@ -182,7 +182,7 @@ fill["nt2-divfun-1"] = (rng, idx) => {
   };
 };
 
-// d2: prime power p^k — d(n) = k+1, sigma via geometric sum.
+// d2: prime power p^k: d(n) = k+1, sigma via geometric sum.
 fill["nt2-divfun-2"] = (rng, idx) => {
   const p = rng.pick([2, 3, 5]);
   const k = rng.int(2, p === 2 ? 4 : 3);
@@ -192,7 +192,7 @@ fill["nt2-divfun-2"] = (rng, idx) => {
     id: `gen.nt2-divfun-2.${idx}`, generated: true, concepts: ["divisor-functions"], difficulty: 2, context: "abstract",
     prompt: `For $${n} = ${p}^{${k}}$, compute $d(${n})$ and $\\sigma(${n})$.`,
     steps: [
-      { instruction: `The exponent is ${k}, so $d(p^k) = k + 1$. What is $d(${n})$?`, answer: `${d}`, accept: [], hint: `The divisors are $${p}^0, ${p}^1, \\dots, ${p}^{${k}}$ — that is $${k} + 1$ of them.` },
+      { instruction: `The exponent is ${k}, so $d(p^k) = k + 1$. What is $d(${n})$?`, answer: `${d}`, accept: [], hint: `The divisors are $${p}^0, ${p}^1, \\dots, ${p}^{${k}}$, that is $${k} + 1$ of them.` },
       { instruction: `Use $\\sigma(p^k) = \\dfrac{p^{k+1} - 1}{p - 1}$. What is $\\sigma(${n})$?`, answer: `${s}`, accept: [], hint: `$\\dfrac{${p}^{${k + 1}} - 1}{${p} - 1} = \\dfrac{${p ** (k + 1) - 1}}{${p - 1}}$.` },
     ],
     finalAnswer: { value: `${s}`, unit: "" },
@@ -200,7 +200,7 @@ fill["nt2-divfun-2"] = (rng, idx) => {
   };
 };
 
-// d3: general n = p^a * q — combine per-prime factors.
+// d3: general n = p^a * q: combine per-prime factors.
 fill["nt2-divfun-3"] = (rng, idx) => {
   const combos = [[2, 2, 3], [2, 3, 3], [2, 2, 5], [3, 2, 5], [2, 2, 7], [2, 3, 5]];
   const [p, a, q] = rng.pick(combos);
@@ -240,7 +240,7 @@ fill["nt2-mult-1"] = (rng, idx) => {
   };
 };
 
-// d2: recognize whether a described function is multiplicative — menu.
+// d2: recognize whether a described function is multiplicative, menu.
 fill["nt2-mult-2"] = (rng, idx) => {
   const items = [
     { label: "the totient $\\varphi(n)$", mult: true },
@@ -286,7 +286,7 @@ fill["nt2-mult-3"] = (rng, idx) => {
 
 // --- perfect-and-special-numbers ---
 
-// d1: classify a small n as perfect/abundant/deficient — menu.
+// d1: classify a small n as perfect/abundant/deficient, menu.
 fill["nt2-perfect-1"] = (rng, idx) => {
   const n = rng.pick([6, 8, 10, 12, 14, 15, 16, 20, 28]);
   const s = sigmaDivisors(n), twoN = 2 * n;
@@ -303,7 +303,7 @@ fill["nt2-perfect-1"] = (rng, idx) => {
   };
 };
 
-// d2: numeric — compute sigma(n) - 2n (the "abundance").
+// d2: numeric: compute sigma(n) - 2n (the "abundance").
 fill["nt2-perfect-2"] = (rng, idx) => {
   const n = rng.pick([12, 18, 20, 24, 6, 28, 8, 16, 27, 15]);
   const s = sigmaDivisors(n), twoN = 2 * n, ab = s - twoN;
@@ -346,7 +346,7 @@ fill["nt2-perfect-3"] = (rng, idx) => {
 
 // --- qr-basics ---
 
-// d1: is a specific a a QR mod p? — menu yes/no.
+// d1: is a specific a a QR mod p? Menu yes/no.
 fill["nt2-qrbasic-1"] = (rng, idx) => {
   const p = rng.pick([5, 7, 11, 13]);
   const qrs = quadraticResidues(p);
@@ -364,7 +364,7 @@ fill["nt2-qrbasic-1"] = (rng, idx) => {
   };
 };
 
-// d2: count the QRs mod p (should be (p-1)/2) — numeric.
+// d2: count the QRs mod p (should be (p-1)/2), numeric.
 fill["nt2-qrbasic-2"] = (rng, idx) => {
   const p = rng.pick([7, 11, 13, 17, 19]);
   const qrs = quadraticResidues(p);
@@ -375,7 +375,7 @@ fill["nt2-qrbasic-2"] = (rng, idx) => {
     id: `gen.nt2-qrbasic-2.${idx}`, generated: true, concepts: ["qr-basics"], difficulty: 2, context: "abstract",
     prompt: `Work with quadratic residues mod ${p}.`,
     steps: [
-      { instruction: `Compute $${sq}^2 \\bmod ${p}$ — one specific quadratic residue.`, answer: `${val}`, accept: [], hint: `$${sq * sq} \\bmod ${p}$.` },
+      { instruction: `Compute $${sq}^2 \\bmod ${p}$: one specific quadratic residue.`, answer: `${val}`, accept: [], hint: `$${sq * sq} \\bmod ${p}$.` },
       { instruction: `Exactly half of the nonzero residues are QRs. How many nonzero quadratic residues are there mod ${p}? (i.e. $(p-1)/2$)`, answer: `${count}`, accept: [], hint: `$(${p} - 1)/2$.` },
     ],
     finalAnswer: { value: `${count}`, unit: "" },
@@ -404,7 +404,7 @@ fill["nt2-qrbasic-3"] = (rng, idx) => {
 
 // --- legendre-symbol ---
 
-// d1: Legendre symbol via Euler's criterion, small p — answer +1/-1.
+// d1: Legendre symbol via Euler's criterion, small p: answer +1/-1.
 fill["nt2-legendre-1"] = (rng, idx) => {
   const p = rng.pick([5, 7, 11, 13]);
   let a; do { a = rng.int(2, p - 1); } while (a % p === 0);
@@ -482,11 +482,11 @@ fill["nt2-euler-1"] = (rng, idx) => {
       { instruction: `So $\\left(\\dfrac{-1}{${p}}\\right) = $ ? (Give $+1$ or $-1$.)`, answer: `${sym}`, accept: [], hint: `$p \\equiv 1$ gives $+1$; $p \\equiv 3$ gives $-1$.` },
     ],
     finalAnswer: { value: `${sym}`, unit: "" },
-    solutionNarrative: `$${p} \\equiv ${r} \\pmod 4$, so $\\left(\\frac{-1}{${p}}\\right) = ${sym}$ — $-1$ is ${sym === 1 ? "" : "not "}a QR mod ${p}.`,
+    solutionNarrative: `$${p} \\equiv ${r} \\pmod 4$, so $\\left(\\frac{-1}{${p}}\\right) = ${sym}$: $-1$ is ${sym === 1 ? "" : "not "}a QR mod ${p}.`,
   };
 };
 
-// d2: use Euler's criterion + multiplicativity to decide a QR question — menu.
+// d2: use Euler's criterion + multiplicativity to decide a QR question, menu.
 fill["nt2-euler-2"] = (rng, idx) => {
   const p = rng.pick([7, 11, 13, 17]);
   let a; do { a = rng.int(2, p - 1); } while (a % p === 0);
@@ -783,7 +783,7 @@ fill["nt2-approx-1"] = (rng, idx) => {
       { instruction: `Compute $\\dfrac{p_1}{q_1} = \\dfrac{${a1}\\cdot${a0}+1}{${a1}}$ as a fraction.`, answer: `${ps[1]}/${qs[1]}`, accept: [], hint: `$\\frac{${ps[1]}}{${qs[1]}}$.` },
     ],
     finalAnswer: { value: `${ps[1]}/${qs[1]}`, unit: "" },
-    solutionNarrative: `The first convergent of $[${a0}; ${a1}, ${a2}]$ is $\\frac{${ps[1]}}{${qs[1]}}$ — a compact rational approximation to the full value.`,
+    solutionNarrative: `The first convergent of $[${a0}; ${a1}, ${a2}]$ is $\\frac{${ps[1]}}{${qs[1]}}$: a compact rational approximation to the full value.`,
   };
 };
 

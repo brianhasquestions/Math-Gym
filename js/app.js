@@ -1,4 +1,4 @@
-// app.js — shared bootstrapping and small UI helpers used across pages.
+// app.js: shared bootstrapping and small UI helpers used across pages.
 
 export function qs(name) {
   return new URLSearchParams(location.search).get(name);

@@ -2,7 +2,7 @@
 // Self-contained parametric generator pack for the Trigonometry subject's
 // inverse-trig-functions and polar-coordinates topics. Exports a `fill` map of
 // template-name -> generator fn, matching the shape of js/generator.js's
-// registry (same pattern as js/gen-trig2-fill.js — no imports from
+// registry (same pattern as js/gen-trig2-fill.js: no imports from
 // generator.js).
 //
 // Conventions (must match the topic JSON + grader):
@@ -34,7 +34,7 @@ const QACC = {
   IV: ["4", "four", "quadrant 4", "quadrant iv", "q4"],
 };
 
-// Pythagorean triples [leg, leg, hypotenuse] — all sides integers, so every
+// Pythagorean triples [leg, leg, hypotenuse]: all sides integers, so every
 // missing-side and ratio answer is exact.
 const TRIPLES = [
   [3, 4, 5], [6, 8, 10], [5, 12, 13], [8, 15, 17],
@@ -75,7 +75,7 @@ fill["trg3-inverse-values-1"] = (rng, idx) => {
     prompt: `Evaluate $${t.f}\\left(${t.vl}\\right)$ in degrees.`,
     steps: [
       { instruction: `$${t.f}$ asks: which angle in $${t.range}$ has ${t.name} equal to $${t.vl}$? Answer in degrees.`, answer: `${t.ans}`, accept: [`${t.ans} degrees`], hint: `Read the special-value table backwards: $${t.base} ${t.ans}^\\circ = ${t.vl}$.` },
-      { instruction: `Check your answer: what is $${t.base} ${t.ans}^\\circ$? (Exact.)`, answer: t.vp, accept: [], hint: `It must reproduce the input $${t.vl}$ — that is what makes $${t.ans}^\\circ$ the inverse's output.` },
+      { instruction: `Check your answer: what is $${t.base} ${t.ans}^\\circ$? (Exact.)`, answer: t.vp, accept: [], hint: `It must reproduce the input $${t.vl}$: that is what makes $${t.ans}^\\circ$ the inverse's output.` },
     ],
     finalAnswer: { value: `${t.ans}`, unit: "degrees" },
     solutionNarrative: `$${t.base} ${t.ans}^\\circ = ${t.vl}$ and $${t.ans}^\\circ$ lies in $${t.f}$'s range $${t.range}$, so $${t.f}(${t.vl}) = ${t.ans}^\\circ$.`,
@@ -99,7 +99,7 @@ fill["trg3-inverse-values-2"] = (rng, idx) => {
     id: `gen.trg3-inverse-values-2.${idx}`, generated: true, concepts: ["inverse-trig-values"], difficulty: 2, context: "abstract",
     prompt: `Evaluate $${t.f}\\left(${t.vl}\\right)$ in degrees. Watch the range: the sign of the input decides where the answer can live.`,
     steps: [
-      { instruction: "What is the reference angle — ignore the minus sign? (Degrees.)", answer: `${t.ref}`, accept: [`${t.ref} degrees`], hint: `The special-value table gives $${t.ref}^\\circ$ for this magnitude.` },
+      { instruction: "What is the reference angle: ignore the minus sign? (Degrees.)", answer: `${t.ref}`, accept: [`${t.ref} degrees`], hint: `The special-value table gives $${t.ref}^\\circ$ for this magnitude.` },
       { instruction: `${t.rule} Give the value in degrees.`, answer: `${t.ans}`, accept: [`${t.ans} degrees`], hint: t.ans < 0 ? `Negate the reference angle: $-${t.ref}^\\circ$.` : `$180^\\circ - ${t.ref}^\\circ$.` },
     ],
     finalAnswer: { value: `${t.ans}`, unit: "degrees" },
@@ -146,7 +146,7 @@ fill["trg3-inverse-domain-1"] = (rng, idx) => {
     id: `gen.trg3-inverse-domain-1.${idx}`, generated: true, concepts: ["domain-range-restrictions"], difficulty: 1, context: "abstract",
     prompt: `Decide whether $${fn.f}(${v})$ is defined.`,
     steps: [
-      { instruction: `What is the LARGEST value $${fn.base}\\theta$ can ever equal?`, answer: "1", accept: [], hint: `On the unit circle, ${fn.name} is a coordinate of a point on a radius-1 circle — it cannot exceed the radius.` },
+      { instruction: `What is the LARGEST value $${fn.base}\\theta$ can ever equal?`, answer: "1", accept: [], hint: `On the unit circle, ${fn.name} is a coordinate of a point on a radius-1 circle: it cannot exceed the radius.` },
       { instruction: `And the SMALLEST value $${fn.base}\\theta$ can ever equal?`, answer: "-1", accept: [], hint: "The coordinate can be at most 1 to the other side: $-1$." },
       { instruction: `So $${fn.f}$ only accepts inputs in $[-1, 1]$. Is $${fn.f}(${v})$ defined? (yes/no)`, answer: yn, accept: [yn === "yes" ? "y" : "n"], hint: `Is $${v}$ between $-1$ and $1$ inclusive?` },
     ],
@@ -166,9 +166,9 @@ fill["trg3-inverse-domain-2"] = (rng, idx) => {
   const x = rng.pick(t.out);
   return {
     id: `gen.trg3-inverse-domain-2.${idx}`, generated: true, concepts: ["domain-range-restrictions"], difficulty: 2, context: "abstract",
-    prompt: `The function $${t.f}$ only ever returns angles from one fixed window — its range. Identify that window, then use it.`,
+    prompt: `The function $${t.f}$ only ever returns angles from one fixed window: its range. Identify that window, then use it.`,
     steps: [
-      { instruction: `What is the smallest angle (in degrees) $${t.f}$ can return${t.f === "\\arctan" ? " — the lower bound its outputs approach" : ""}?`, answer: `${t.lo}`, accept: [`${t.lo} degrees`], hint: `The range of $${t.f}$ is ${t.word}.` },
+      { instruction: `What is the smallest angle (in degrees) $${t.f}$ can return${t.f === "\\arctan" ? ": the lower bound its outputs approach" : ""}?`, answer: `${t.lo}`, accept: [`${t.lo} degrees`], hint: `The range of $${t.f}$ is ${t.word}.` },
       { instruction: `What is the largest (or upper-bound) angle in degrees?`, answer: `${t.hi}`, accept: [`${t.hi} degrees`], hint: `The range of $${t.f}$ is ${t.word}.` },
       { instruction: `Could $${t.f}$ ever return $${x}^\\circ$? (yes/no)`, answer: "no", accept: ["n"], hint: `Is $${x}^\\circ$ inside ${t.word}?` },
     ],
@@ -194,7 +194,7 @@ fill["trg3-inverse-domain-3"] = (rng, idx) => {
   const innerExpr = `${B}(${t.A}^\\circ)`; // parenthesized so negative angles typeset cleanly
   return {
     id: `gen.trg3-inverse-domain-3.${idx}`, generated: true, concepts: ["domain-range-restrictions"], difficulty: 3, context: "abstract",
-    prompt: `Evaluate $${F}\\left(${innerExpr}\\right)$ — careful: the answer is NOT $${t.A}^\\circ$.`,
+    prompt: `Evaluate $${F}\\left(${innerExpr}\\right)$: careful: the answer is NOT $${t.A}^\\circ$.`,
     steps: [
       { instruction: `Work inside-out: what is $${innerExpr}$? (Exact.)`, answer: t.inner, accept: [], hint: t.kind === "sin" ? `$${t.A}^\\circ$ is in QII where sine is positive; its reference angle is $${180 - t.A}^\\circ$.` : `Cosine is even: $\\cos(${t.A}^\\circ) = \\cos(${-t.A}^\\circ)$.` },
       { instruction: `Now $${F}\\left(${t.innerL}\\right)$ must land in ${rangeWord}. What is it, in degrees?`, answer: `${t.out}`, accept: [`${t.out} degrees`], hint: `Which angle INSIDE the range has ${t.kind === "sin" ? "sine" : "cosine"} $${t.innerL}$?` },
@@ -218,10 +218,10 @@ fill["trg3-inverse-comp-1"] = (rng, idx) => {
   ]);
   return {
     id: `gen.trg3-inverse-comp-1.${idx}`, generated: true, concepts: ["compositions"], difficulty: 1, context: "abstract",
-    prompt: `Evaluate $${mode.outer}\\left(${mode.inner}\\frac{${known}}{${c}}\\right)$ exactly — no calculator needed.`,
+    prompt: `Evaluate $${mode.outer}\\left(${mode.inner}\\frac{${known}}{${c}}\\right)$ exactly: no calculator needed.`,
     steps: [
       { instruction: `Let $\\theta = ${mode.inner}\\frac{${known}}{${c}}$: an angle with ${mode.knownSide} side ${known} and hypotenuse ${c}. Use the Pythagorean theorem to find the ${mode.findSide} side.`, answer: `${other}`, accept: [], hint: `$\\sqrt{${c}^2 - ${known}^2} = \\sqrt{${c * c - known * known}}$.` },
-      { instruction: `Now read off $${mode.outer}\\theta = \\frac{\\text{${mode.outer === "\\sin" ? "opposite" : "adjacent"}}}{\\text{hypotenuse}}$. What is the value?`, answer: `${other}/${c}`, accept: [], hint: `$\\frac{${other}}{${c}}$ — the triangle turns the composition into one ratio.` },
+      { instruction: `Now read off $${mode.outer}\\theta = \\frac{\\text{${mode.outer === "\\sin" ? "opposite" : "adjacent"}}}{\\text{hypotenuse}}$. What is the value?`, answer: `${other}/${c}`, accept: [], hint: `$\\frac{${other}}{${c}}$: the triangle turns the composition into one ratio.` },
     ],
     finalAnswer: { value: `${other}/${c}`, unit: "" },
     solutionNarrative: `Draw the right triangle for $\\theta$: ${mode.knownSide} ${known}, hypotenuse ${c}, so the ${mode.findSide} side is $\\sqrt{${c * c} - ${known * known}} = ${other}$. Then $${mode.outer}\\theta = \\frac{${other}}{${c}}$.`,
@@ -289,7 +289,7 @@ fill["trg3-inverse-applied-1"] = (rng, idx) => {
       prompt: `${ctx.thing}. Find ${ctx.ask}, exactly.`,
       steps: [
         { instruction: `You know the side OPPOSITE the angle (${h}) and the HYPOTENUSE (${L}). What is $\\sin\\theta$?`, answer: "1/2", accept: ["0.5", `${h}/${L}`], hint: `$\\frac{${h}}{${L}}$ reduces.` },
-        { instruction: `Apply the inverse: $\\theta = \\arcsin\\frac{1}{2}$ = ? (degrees)`, answer: "30", accept: ["30 degrees"], hint: `$\\sin 30^\\circ = \\frac{1}{2}$ — a special value, so no calculator needed.` },
+        { instruction: `Apply the inverse: $\\theta = \\arcsin\\frac{1}{2}$ = ? (degrees)`, answer: "30", accept: ["30 degrees"], hint: `$\\sin 30^\\circ = \\frac{1}{2}$: a special value, so no calculator needed.` },
       ],
       finalAnswer: { value: "30", unit: "degrees" },
       solutionNarrative: `Opposite over hypotenuse gives $\\sin\\theta = \\frac{${h}}{${L}} = \\frac{1}{2}$, so $\\theta = \\arcsin\\frac{1}{2} = 30^\\circ$.`,
@@ -306,7 +306,7 @@ fill["trg3-inverse-applied-1"] = (rng, idx) => {
     prompt: `${ctx.thing}. Find ${ctx.ask}, exactly.`,
     steps: [
       { instruction: `You know the side OPPOSITE the angle (${a}) and the side ADJACENT to it (${a}). What is $\\tan\\theta$?`, answer: "1", accept: [`${a}/${a}`], hint: `$\\frac{${a}}{${a}}$.` },
-      { instruction: `Apply the inverse: $\\theta = \\arctan 1$ = ? (degrees)`, answer: "45", accept: ["45 degrees"], hint: `$\\tan 45^\\circ = 1$ — rise equals run means a $45^\\circ$ slope.` },
+      { instruction: `Apply the inverse: $\\theta = \\arctan 1$ = ? (degrees)`, answer: "45", accept: ["45 degrees"], hint: `$\\tan 45^\\circ = 1$: rise equals run means a $45^\\circ$ slope.` },
     ],
     finalAnswer: { value: "45", unit: "degrees" },
     solutionNarrative: `Rise over run gives $\\tan\\theta = \\frac{${a}}{${a}} = 1$, so $\\theta = \\arctan 1 = 45^\\circ$.`,
@@ -327,7 +327,7 @@ fill["trg3-inverse-applied-2"] = (rng, idx) => {
     id: `gen.trg3-inverse-applied-2.${idx}`, generated: true, concepts: ["applied-angle-recovery"], difficulty: 2, context: "applied",
     prompt: `${ctx.thing}. Find ${ctx.ask}. Round to 1 decimal place.`,
     steps: [
-      { instruction: `The vertical side is opposite the angle and the horizontal side is adjacent. What is $\\tan\\theta$ as a fraction (reduce or not — your choice)?`, answer: `${p}/${q}`, accept: [`${p}0/${q}0`], hint: `$\\frac{${p}0}{${q}0} = \\frac{${p}}{${q}}$.` },
+      { instruction: `The vertical side is opposite the angle and the horizontal side is adjacent. What is $\\tan\\theta$ as a fraction (reduce or not: your choice)?`, answer: `${p}/${q}`, accept: [`${p}0/${q}0`], hint: `$\\frac{${p}0}{${q}0} = \\frac{${p}}{${q}}$.` },
       { instruction: `Compute $\\theta = \\arctan\\frac{${p}}{${q}}$ in degree mode and round to 1 decimal place.`, answer: ang, accept: [`${ang} degrees`], hint: `$\\frac{${p}}{${q}} \\approx ${r4(p / q)}$; take $\\tan^{-1}$ of that.` },
     ],
     finalAnswer: { value: ang, unit: "degrees" },
@@ -361,7 +361,7 @@ fill["trg3-inverse-applied-3"] = (rng, idx) => {
       { instruction: `Compute $\\theta = \\arctan\\frac{${t.rise}}{${t.run}}$ and round to 1 decimal place (degrees).`, answer: ang1, accept: [`${ang1} degrees`], hint: `$\\frac{${t.rise}}{${t.run}} = ${r4(t.rise / t.run)}$; take $\\tan^{-1}$ in degree mode.` },
       { instruction: `Does the ramp comply with the $4.8^\\circ$ limit? (yes/no)`, answer: yn, accept: [ok ? "y" : "n"], hint: `Compare $${ang1}^\\circ$ with $4.8^\\circ$.` },
     ],
-    finalAnswer: { value: `${ang1} degrees — ${ok ? "complies" : "does NOT comply"}`, unit: "" },
+    finalAnswer: { value: `${ang1} degrees: ${ok ? "complies" : "does NOT comply"}`, unit: "" },
     solutionNarrative: `$\\theta = \\arctan\\frac{${t.rise}}{${t.run}} \\approx ${ang1}^\\circ$, which is ${ok ? "under" : "over"} the $4.8^\\circ$ limit, so the ramp ${ok ? "complies" : "must be rebuilt with a longer run"}.`,
   };
 };
@@ -417,7 +417,7 @@ fill["trg3-polar-torect-2"] = (rng, idx) => {
   const ys = sval(t.y[0], h, t.y[1]);
   return {
     id: `gen.trg3-polar-torect-2.${idx}`, generated: true, concepts: ["polar-to-rectangular"], difficulty: 2, context: "abstract",
-    prompt: `Convert the polar point $(r, \\theta) = (${r}, ${th}^\\circ)$ to rectangular coordinates. Give exact values — signs matter.`,
+    prompt: `Convert the polar point $(r, \\theta) = (${r}, ${th}^\\circ)$ to rectangular coordinates. Give exact values: signs matter.`,
     steps: [
       { instruction: `Which quadrant does the angle $${th}^\\circ$ put the point in? (Roman numeral.)`, answer: t.q, accept: QACC[t.q], hint: `Between which two axes does the $${th}^\\circ$ arm point?` },
       { instruction: `Compute $x = ${r}\\cos ${th}^\\circ$. (Exact; $\\cos ${th}^\\circ$ = ${t.cx}.)`, answer: xs, accept: [], hint: `$${r} \\cdot$ (${t.cx}).` },
@@ -440,13 +440,13 @@ fill["trg3-polar-torect-3"] = (rng, idx) => {
   const ys = r2(r * sinD(th));
   return {
     id: `gen.trg3-polar-torect-3.${idx}`, generated: true, concepts: ["polar-to-rectangular"], difficulty: 3, context: "applied",
-    prompt: `${ctx.thing} range ${r} ${ctx.unit}, bearing $${th}^\\circ$ counterclockwise from east — the polar point $(${r}, ${th}^\\circ)$. Convert to rectangular $(x, y)$ for the mapping software. Round each coordinate to 2 decimal places.`,
+    prompt: `${ctx.thing} range ${r} ${ctx.unit}, bearing $${th}^\\circ$ counterclockwise from east: the polar point $(${r}, ${th}^\\circ)$. Convert to rectangular $(x, y)$ for the mapping software. Round each coordinate to 2 decimal places.`,
     steps: [
       { instruction: `Compute $x = ${r}\\cos ${th}^\\circ$, rounded to 2 decimal places.`, answer: xs, accept: [], hint: `$\\cos ${th}^\\circ \\approx ${r4(cosD(th))}$; multiply by ${r}.` },
       { instruction: `Compute $y = ${r}\\sin ${th}^\\circ$, rounded to 2 decimal places.`, answer: ys, accept: [], hint: `$\\sin ${th}^\\circ \\approx ${r4(sinD(th))}$; multiply by ${r}.` },
     ],
     finalAnswer: { value: `(${xs}, ${ys})`, unit: ctx.unit },
-    solutionNarrative: `$x = ${r}\\cos ${th}^\\circ \\approx ${xs}$ and $y = ${r}\\sin ${th}^\\circ \\approx ${ys}$ ${ctx.unit} — the same two formulas work in every quadrant because cosine and sine carry the signs.`,
+    solutionNarrative: `$x = ${r}\\cos ${th}^\\circ \\approx ${xs}$ and $y = ${r}\\sin ${th}^\\circ \\approx ${ys}$ ${ctx.unit}: the same two formulas work in every quadrant because cosine and sine carry the signs.`,
   };
 };
 
@@ -516,7 +516,7 @@ fill["trg3-polar-topolar-3"] = (rng, idx) => {
       { instruction: `Place the reference angle in Q${quad}: compute $\\theta = ${adjText}$.`, answer: `${th}`, accept: [`${th} degrees`], hint: `QII: $180 - $ ref; QIII: $180 + $ ref; QIV: $360 - $ ref.` },
     ],
     finalAnswer: { value: `(${c}, ${th}°)`, unit: "" },
-    solutionNarrative: `$r = ${c}$ from the ${p}-${q}-${c} triple. The point is in Q${quad} with reference angle $${ref}^\\circ$, so $\\theta = ${adjText} = ${th}^\\circ$ — the quadrant adjustment is the step a bare calculator $\\tan^{-1}$ skips.`,
+    solutionNarrative: `$r = ${c}$ from the ${p}-${q}-${c} triple. The point is in Q${quad} with reference angle $${ref}^\\circ$, so $\\theta = ${adjText} = ${th}^\\circ$: the quadrant adjustment is the step a bare calculator $\\tan^{-1}$ skips.`,
   };
 };
 
@@ -534,7 +534,7 @@ fill["trg3-polar-eqconv-1"] = (rng, idx) => {
         { instruction: `Square both sides of $r = ${k}$ and substitute. Write the rectangular equation.`, answer: `x^2 + y^2 = ${k2}`, accept: [`x^2 + y^2 - ${k2} = 0`], hint: `$r^2 = ${k2}$ becomes $x^2 + y^2 = ${k2}$.` },
       ],
       finalAnswer: { value: `x^2 + y^2 = ${k2}`, unit: "" },
-      solutionNarrative: `Squaring gives $r^2 = ${k2}$; substituting $r^2 = x^2 + y^2$ yields $x^2 + y^2 = ${k2}$ — a circle of radius ${k} centered at the origin, exactly what "all points at distance ${k} from the pole" should be.`,
+      solutionNarrative: `Squaring gives $r^2 = ${k2}$; substituting $r^2 = x^2 + y^2$ yields $x^2 + y^2 = ${k2}$: a circle of radius ${k} centered at the origin, exactly what "all points at distance ${k} from the pole" should be.`,
     };
   }
   return {
@@ -558,11 +558,11 @@ fill["trg3-polar-eqconv-2"] = (rng, idx) => {
       id: `gen.trg3-polar-eqconv-2.${idx}`, generated: true, concepts: ["polar-equations-conversion"], difficulty: 2, context: "abstract",
       prompt: `Convert the polar equation $r = ${m}\\cos\\theta$ to rectangular coordinates.`,
       steps: [
-        { instruction: `Neither $r$ alone nor $\\cos\\theta$ alone substitutes cleanly — but $r^2$ and $r\\cos\\theta$ both do. Multiply BOTH sides by $r$ and write the result (type theta for $\\theta$).`, answer: `r^2 = ${m}rcos(theta)`, accept: [`r^2 = ${m}rcosθ`, `${m}rcos(theta) = r^2`, `r^2 = ${m}r cos(theta)`], hint: `$r \\cdot r = r^2$ on the left, $${m}r\\cos\\theta$ on the right.` },
+        { instruction: `Neither $r$ alone nor $\\cos\\theta$ alone substitutes cleanly, but $r^2$ and $r\\cos\\theta$ both do. Multiply BOTH sides by $r$ and write the result (type theta for $\\theta$).`, answer: `r^2 = ${m}rcos(theta)`, accept: [`r^2 = ${m}rcosθ`, `${m}rcos(theta) = r^2`, `r^2 = ${m}r cos(theta)`], hint: `$r \\cdot r = r^2$ on the left, $${m}r\\cos\\theta$ on the right.` },
         { instruction: `Substitute $r^2 = x^2 + y^2$ and $r\\cos\\theta = x$. Write the rectangular equation.`, answer: `x^2 + y^2 = ${m}x`, accept: [`x^2 + y^2 - ${m}x = 0`], hint: `Both substitutions come straight from the conversion triangle.` },
       ],
       finalAnswer: { value: `x^2 + y^2 = ${m}x`, unit: "" },
-      solutionNarrative: `Multiplying by $r$ gives $r^2 = ${m}r\\cos\\theta$; substituting $r^2 = x^2 + y^2$ and $r\\cos\\theta = x$ gives $x^2 + y^2 = ${m}x$ — a circle through the origin.`,
+      solutionNarrative: `Multiplying by $r$ gives $r^2 = ${m}r\\cos\\theta$; substituting $r^2 = x^2 + y^2$ and $r\\cos\\theta = x$ gives $x^2 + y^2 = ${m}x$: a circle through the origin.`,
     };
   }
   // rectangular -> polar (sine version)
@@ -596,7 +596,7 @@ fill["trg3-polar-eqconv-3"] = (rng, idx) => {
       { instruction: `What is the radius?`, answer: `${a}`, accept: [], hint: `The right side is $${a * a} = ${a}^2$.` },
     ],
     finalAnswer: { value: `circle, center ${center}, radius ${a}`, unit: "" },
-    solutionNarrative: `Multiplying by $r$ and substituting gives $${rect}$; completing the square yields $${completed}$ — a circle centered at $${center}$ with radius ${a}, tangent to the pole.`,
+    solutionNarrative: `Multiplying by $r$ and substituting gives $${rect}$; completing the square yields $${completed}$: a circle centered at $${center}$ with radius ${a}, tangent to the pole.`,
   };
 };
 
@@ -615,7 +615,7 @@ fill["trg3-polar-curves-1"] = (rng, idx) => {
         { instruction: `What is its radius?`, answer: `${k}`, accept: [], hint: `$r$ is constant at ${k}.` },
       ],
       finalAnswer: { value: `circle of radius ${k}`, unit: "" },
-      solutionNarrative: `$r = ${k}$ holds for every $\\theta$: all points at distance ${k} from the pole — a circle of radius ${k} centered at the origin.`,
+      solutionNarrative: `$r = ${k}$ holds for every $\\theta$: all points at distance ${k} from the pole: a circle of radius ${k} centered at the origin.`,
     };
   }
   const cdeg = rng.pick([30, 45, 60, 120, 135, 150]);
@@ -623,7 +623,7 @@ fill["trg3-polar-curves-1"] = (rng, idx) => {
     id: `gen.trg3-polar-curves-1.${idx}`, generated: true, concepts: ["polar-curves-recognition"], difficulty: 1, context: "abstract",
     prompt: `Consider the polar equation $\\theta = ${cdeg}^\\circ$ (with $r$ allowed to be any real number).`,
     steps: [
-      { instruction: `${MENU}`, answer: "line", accept: ["a line"], hint: `The direction is fixed; only the distance varies — every point along one direction through the pole.` },
+      { instruction: `${MENU}`, answer: "line", accept: ["a line"], hint: `The direction is fixed; only the distance varies: every point along one direction through the pole.` },
       { instruction: `What angle (in degrees) does it make with the positive $x$-axis?`, answer: `${cdeg}`, accept: [`${cdeg} degrees`], hint: `The equation names the angle directly.` },
     ],
     finalAnswer: { value: `line at ${cdeg}° through the pole`, unit: "" },
@@ -642,7 +642,7 @@ fill["trg3-polar-curves-2"] = (rng, idx) => {
     steps: [
       { instruction: `The constant term (${a}) EQUALS the coefficient of $${fn}\\theta$ (${a}). ${MENU}`, answer: "cardioid", accept: ["a cardioid"], hint: `$r = a \\pm a\\cos\\theta$ or $r = a \\pm a\\sin\\theta$ is the heart-shaped curve.` },
       { instruction: `What is the MAXIMUM value of $r$ on this curve?`, answer: `${2 * a}`, accept: [], hint: `It occurs where $${fn}\\theta = ${minus ? "-1" : "1"}$: $${a} + ${a} = ${2 * a}$.` },
-      { instruction: `What is the MINIMUM value of $r$?`, answer: "0", accept: [], hint: `Where $${fn}\\theta = ${minus ? "1" : "-1"}$ the two terms cancel — the cardioid touches the pole, which makes its signature cusp.` },
+      { instruction: `What is the MINIMUM value of $r$?`, answer: "0", accept: [], hint: `Where $${fn}\\theta = ${minus ? "1" : "-1"}$ the two terms cancel: the cardioid touches the pole, which makes its signature cusp.` },
     ],
     finalAnswer: { value: `cardioid (max r = ${2 * a})`, unit: "" },
     solutionNarrative: `Constant equal to coefficient marks a cardioid. $r$ swings between $0$ (the cusp at the pole) and $${2 * a}$ (the far tip).`,

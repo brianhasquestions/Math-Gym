@@ -14,7 +14,7 @@
 // pi-as-3.14 arithmetic (this subject's seed convention) that lands on exact
 // 2-decimal values.
 
-// Pythagorean triples [leg, leg, hypotenuse] — primitives plus friendly multiples.
+// Pythagorean triples [leg, leg, hypotenuse]: primitives plus friendly multiples.
 const TRIPLES = [
   [3, 4, 5],
   [6, 8, 10],
@@ -70,7 +70,7 @@ fill["gpl-angle-pairs-d3"] = (rng, idx) => {
   const a = rng.int(2, 4);
   const x = rng.int(10, 30);
   let b = rng.int(1, 15);
-  if (a * x + b === 90) b += 1;      // never a 90/90 tie — "larger angle" must exist
+  if (a * x + b === 90) b += 1;      // never a 90/90 tie: "larger angle" must exist
   const ang1 = a * x + b;            // 21..136, != 90
   const d = 180 - ang1 - x;          // >= 15 by construction
   const ang2 = 180 - ang1;
@@ -129,7 +129,7 @@ fill["gpl-transversal-d1"] = (rng, idx) => {
     id: `gen.gpl-transversal-d1.${idx}`, generated: true, concepts: ["parallel-lines-transversal"], difficulty: 1, context: "abstract",
     prompt: `A transversal crosses two parallel lines. One angle measures $${t}^\\circ$. Find its ${r.rel} at the other crossing.`,
     steps: [
-      { instruction: `Between parallel lines, is a ${r.rel} pair equal or supplementary?`, answer: r.equal ? "equal" : "supplementary", accept: r.equal ? ["congruent", "the same"] : ["they sum to 180", "supplementary angles"], hint: r.equal ? "This pair makes an F/Z-style pattern — the angles match." : "Same-side interior angles make a C-style pattern — they add to $180^\\circ$." },
+      { instruction: `Between parallel lines, is a ${r.rel} pair equal or supplementary?`, answer: r.equal ? "equal" : "supplementary", accept: r.equal ? ["congruent", "the same"] : ["they sum to 180", "supplementary angles"], hint: r.equal ? "This pair makes an F/Z-style pattern: the angles match." : "Same-side interior angles make a C-style pattern: they add to $180^\\circ$." },
       { instruction: "So what is the angle's measure, in degrees?", answer: `${ans}`, accept: [`${ans} degrees`], hint: r.equal ? `It equals $${t}^\\circ$.` : `$180 - ${t}$.` },
     ],
     finalAnswer: { value: `${ans}`, unit: "degrees" },
@@ -160,7 +160,7 @@ fill["gpl-angle-arith-d1"] = (rng, idx) => {
   const ans = rng.int(60, 100);
   const a = rng.int(70, 110);
   const b = rng.int(70, 110);
-  const c = 360 - ans - a - b; // 40..160 by construction — no reflex givens
+  const c = 360 - ans - a - b; // 40..160 by construction: no reflex givens
   return { ...base,
     prompt: `Four angles meet around a single point. Three of them measure $${a}^\\circ$, $${b}^\\circ$, and $${c}^\\circ$. Find the fourth angle.`,
     steps: [
@@ -221,7 +221,7 @@ fill["gpl-circle-d3"] = (rng, idx) => {
   const obj = rng.pick(["circular pond", "round fire-pit ring", "circular rug", "round splash pad"]);
   return {
     id: `gen.gpl-circle-d3.${idx}`, generated: true, concepts: ["circle-circumference-area"], difficulty: 3, context: "applied",
-    prompt: `The edging around a ${obj} measures ${C} ft — that is its circumference. Using $\\pi \\approx 3.14$, work backward to the radius, then find the area inside.`,
+    prompt: `The edging around a ${obj} measures ${C} ft: that is its circumference. Using $\\pi \\approx 3.14$, work backward to the radius, then find the area inside.`,
     steps: [
       { instruction: `Circumference is $C = 2\\pi r \\approx 6.28r$. Solve $${C} = 6.28r$ for the radius $r$ (feet).`, answer: `${r}`, accept: [`r=${r}`, `${r} ft`], hint: `${C} ÷ 6.28.` },
       { instruction: "Square the radius.", answer: `${r * r}`, accept: [], hint: `$${r}^2$.` },
@@ -304,11 +304,11 @@ fill["gpl-hypotenuse-d3"] = (rng, idx) => {
     prompt: `A ${place} is ${A} m by ${B} m. You can walk along its two sides from one corner to the opposite corner, or cut straight across the diagonal. How much distance does the diagonal shortcut save?`,
     steps: [
       { instruction: "The two sides are the legs of a right triangle. Add their squares.", answer: `${A * A + B * B}`, accept: [], hint: `$${A}^2 + ${B}^2 = ${A * A} + ${B * B}$.` },
-      { instruction: "Take the square root to find the diagonal (meters).", answer: `${C}`, accept: [`c=${C}`, `${C} m`], hint: `$\\sqrt{${A * A + B * B}}$ — it comes out whole.` },
+      { instruction: "Take the square root to find the diagonal (meters).", answer: `${C}`, accept: [`c=${C}`, `${C} m`], hint: `$\\sqrt{${A * A + B * B}}$: it comes out whole.` },
       { instruction: `Walking the two sides covers $${A} + ${B} = ${A + B}$ m. How many meters does the diagonal save?`, answer: `${saved}`, accept: [`${saved} m`, `${saved} meters`], hint: `$${A + B} - ${C}$.` },
     ],
     finalAnswer: { value: `${saved}`, unit: "meters" },
-    solutionNarrative: `The diagonal is $\\sqrt{${A}^2 + ${B}^2} = \\sqrt{${A * A + B * B}} = ${C}$ m — the $(${A}, ${B}, ${C})$ right triangle. The two sides total ${A + B} m, so the shortcut saves $${A + B} - ${C} = ${saved}$ m.`,
+    solutionNarrative: `The diagonal is $\\sqrt{${A}^2 + ${B}^2} = \\sqrt{${A * A + B * B}} = ${C}$ m: the $(${A}, ${B}, ${C})$ right triangle. The two sides total ${A + B} m, so the shortcut saves $${A + B} - ${C} = ${saved}$ m.`,
   };
 };
 
@@ -323,13 +323,13 @@ fill["gpl-distance-d3"] = (rng, idx) => {
     id: `gen.gpl-distance-d3.${idx}`, generated: true, concepts: ["distance-between-points"], difficulty: 3, context: "abstract",
     prompt: `Find the distance between the points $(${x1}, ${y1})$ and $(${x2}, ${y2})$.`,
     steps: [
-      { instruction: "Find the horizontal gap, $x_2 - x_1$.", answer: `${a}`, accept: [], hint: `$${x2} - (${x1})$ — subtracting a negative adds.` },
+      { instruction: "Find the horizontal gap, $x_2 - x_1$.", answer: `${a}`, accept: [], hint: `$${x2} - (${x1})$: subtracting a negative adds.` },
       { instruction: "Find the vertical gap, $y_2 - y_1$.", answer: `${b}`, accept: [], hint: `$${y2} - (${y1})$.` },
       { instruction: "Add the squares of the gaps.", answer: `${a * a + b * b}`, accept: [], hint: `$${a}^2 + ${b}^2 = ${a * a} + ${b * b}$.` },
-      { instruction: "Take the square root to find the distance.", answer: `${c}`, accept: [`d=${c}`], hint: `$\\sqrt{${a * a + b * b}}$ — it comes out whole.` },
+      { instruction: "Take the square root to find the distance.", answer: `${c}`, accept: [`d=${c}`], hint: `$\\sqrt{${a * a + b * b}}$: it comes out whole.` },
     ],
     finalAnswer: { value: `${c}`, unit: "" },
-    solutionNarrative: `Gaps: $${x2} - (${x1}) = ${a}$ and $${y2} - (${y1}) = ${b}$. Then $d = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${a * a + b * b}} = ${c}$ — the $(${a}, ${b}, ${c})$ triple.`,
+    solutionNarrative: `Gaps: $${x2} - (${x1}) = ${a}$ and $${y2} - (${y1}) = ${b}$. Then $d = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${a * a + b * b}} = ${c}$: the $(${a}, ${b}, ${c})$ triple.`,
   };
 };
 
@@ -382,7 +382,7 @@ fill["gpl-find-leg-d1"] = (rng, idx) => {
       { instruction: "Take the square root to find the pole's height (meters).", answer: `${missing}`, accept: [`${missing} m`, `${missing} meters`], hint: `$\\sqrt{${missing * missing}}$.` },
     ],
     finalAnswer: { value: `${missing}`, unit: "meters" },
-    solutionNarrative: `Height $= \\sqrt{${c}^2 - ${known}^2} = \\sqrt{${missing * missing}} = ${missing}$ m — the $(${a}, ${b}, ${c})$ triple.`,
+    solutionNarrative: `Height $= \\sqrt{${c}^2 - ${known}^2} = \\sqrt{${missing * missing}} = ${missing}$ m: the $(${a}, ${b}, ${c})$ triple.`,
   };
 };
 
@@ -440,12 +440,12 @@ fill["gpl-trig-ratios-d3"] = (rng, idx) => {
     id: `gen.gpl-trig-ratios-d3.${idx}`, generated: true, concepts: ["trig-ratios"], difficulty: 3, context: "applied",
     prompt: `A ${ctx.thing} runs ${c} ${ctx.unit} along its slope and rises ${a} ${ctx.unit} vertically. Let $\\theta$ be its incline angle, so $\\sin\\theta = ${a}/${c}$. Find the horizontal run, then $\\cos\\theta$ and $\\tan\\theta$ as exact fractions.`,
     steps: [
-      { instruction: `Use the Pythagorean theorem to find the horizontal run (${ctx.unit}).`, answer: `${b}`, accept: [`${b} ${ctx.unit}`], hint: `$\\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c - a * a}}$ — it comes out whole.` },
+      { instruction: `Use the Pythagorean theorem to find the horizontal run (${ctx.unit}).`, answer: `${b}`, accept: [`${b} ${ctx.unit}`], hint: `$\\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c - a * a}}$: it comes out whole.` },
       { instruction: "Find $\\cos\\theta = \\frac{\\text{adjacent}}{\\text{hypotenuse}}$ as a fraction.", answer: `${b}/${c}`, accept: [], hint: `The run ${b} is adjacent; the slope ${c} is the hypotenuse.` },
       { instruction: "Find $\\tan\\theta = \\frac{\\text{opposite}}{\\text{adjacent}}$ as a fraction.", answer: `${a}/${b}`, accept: [], hint: `Rise ${a} over run ${b}.` },
     ],
     finalAnswer: { value: `${b}/${c}, ${a}/${b}`, unit: "" },
-    solutionNarrative: `The run is $\\sqrt{${c}^2 - ${a}^2} = ${b}$ — the $(${a}, ${b}, ${c})$ triple. Then $\\cos\\theta = ${b}/${c}$ and $\\tan\\theta = ${a}/${b}$.`,
+    solutionNarrative: `The run is $\\sqrt{${c}^2 - ${a}^2} = ${b}$: the $(${a}, ${b}, ${c})$ triple. Then $\\cos\\theta = ${b}/${c}$ and $\\tan\\theta = ${a}/${b}$.`,
   };
 };
 
@@ -582,7 +582,7 @@ fill["gpl-vol-prisms-d2"] = (rng, idx) => {
     steps: [
       { instruction: "Find the volume of the cube ($s^3$), in cubic feet.", answer: `${V1}`, accept: [`${V1} ft^3`], hint: `$${s} \\times ${s} \\times ${s}$.` },
       { instruction: "Find the volume of the box, in cubic feet.", answer: `${V2}`, accept: [`${V2} ft^3`], hint: `$${l} \\times ${w} \\times ${h}$.` },
-      { instruction: `Which holds more — the cube or the box?`, answer: bigger, accept: [`the ${bigger}`], hint: `Compare ${V1} with ${V2}.` },
+      { instruction: `Which holds more: the cube or the box?`, answer: bigger, accept: [`the ${bigger}`], hint: `Compare ${V1} with ${V2}.` },
       { instruction: "Subtract to find the difference (cubic feet).", answer: `${diff}`, accept: [`${diff} ft^3`], hint: `$${Math.max(V1, V2)} - ${Math.min(V1, V2)}$.` },
     ],
     finalAnswer: { value: `${diff}`, unit: "cubic feet" },
@@ -681,12 +681,12 @@ fill["gpl-tri-ineq-d2"] = (rng, idx) => {
     steps: [
       { instruction: "Add the two shorter lengths (meters).", answer: `${a + b}`, accept: [], hint: `$${a} + ${b}$.` },
       { instruction: `Is that sum greater than the longest length (${c})? Answer yes or no.`, answer: yn, accept: [], hint: `Compare ${a + b} with ${c}.` },
-      { instruction: "So can these lengths form a triangle? Answer yes or no.", answer: yn, accept: [], hint: works ? "The two shorter sides can reach past the longest — the triangle closes." : "The triangle inequality fails, so they cannot close into a triangle." },
+      { instruction: "So can these lengths form a triangle? Answer yes or no.", answer: yn, accept: [], hint: works ? "The two shorter sides can reach past the longest: the triangle closes." : "The triangle inequality fails, so they cannot close into a triangle." },
     ],
     finalAnswer: { value: yn, unit: "" },
     solutionNarrative: works
-      ? `The two shorter ${rods} sum to $${a} + ${b} = ${a + b}$ m, which beats the longest (${c} m), so the triangle closes — yes.`
-      : `The two shorter ${rods} sum to $${a} + ${b} = ${a + b}$ m, which does not exceed the longest (${c} m), so they cannot form a triangle — no.`,
+      ? `The two shorter ${rods} sum to $${a} + ${b} = ${a + b}$ m, which beats the longest (${c} m), so the triangle closes: yes.`
+      : `The two shorter ${rods} sum to $${a} + ${b} = ${a + b}$ m, which does not exceed the longest (${c} m), so they cannot form a triangle: no.`,
   };
 };
 
@@ -729,7 +729,7 @@ fill["gpl-transversal-d3"] = (rng, idx) => {
   if (kind === "cointerior") {
     const { m, n, xlo, xhi } = rng.pick(TRANS_PAIRS);
     let x = rng.int(xlo, xhi);
-    if (n * x === 90) x += 1;          // never a 90/90 tie — "larger" must exist
+    if (n * x === 90) x += 1;          // never a 90/90 tie: "larger" must exist
     const b = 180 - (m + n) * x;       // stays >= 5 by the ranges above
     const ang2 = n * x;
     const ang1 = 180 - ang2;           // = m*x + b
@@ -951,11 +951,11 @@ fill["gpl-find-leg-d3"] = (rng, idx) => {
     prompt: `A ${c} ft ${obj} must reach a window ledge. For safe footing its base sits ${a} ft from the wall. The job requires it to reach at least ${req} ft up the wall. Does it? First find how high it actually reaches.`,
     steps: [
       { instruction: `The ${obj} (${c}) is the hypotenuse and the base distance (${a}) is a leg. Subtract their squares.`, answer: `${b * b}`, accept: [], hint: `$${c}^2 - ${a}^2 = ${c * c} - ${a * a}$.` },
-      { instruction: "Take the square root to find the height reached (feet).", answer: `${b}`, accept: [`a=${b}`, `${b} ft`, `${b} feet`], hint: `$\\sqrt{${b * b}}$ — it comes out whole.` },
+      { instruction: "Take the square root to find the height reached (feet).", answer: `${b}`, accept: [`a=${b}`, `${b} ft`, `${b} feet`], hint: `$\\sqrt{${b * b}}$: it comes out whole.` },
       { instruction: `It reaches ${b} ft. Does that meet the ${req} ft minimum? Type 'yes' or 'no'.`, answer: yn, accept: works ? ["y"] : ["n"], hint: `Compare ${b} to ${req}.` },
     ],
     finalAnswer: { value: `${b}`, unit: "feet" },
-    solutionNarrative: `Height $= \\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c - a * a}} = ${b}$ ft, which ${works ? "meets" : "falls short of"} the ${req} ft minimum — this is the $(${a}, ${b}, ${c})$ triple.`,
+    solutionNarrative: `Height $= \\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c - a * a}} = ${b}$ ft, which ${works ? "meets" : "falls short of"} the ${req} ft minimum: this is the $(${a}, ${b}, ${c})$ triple.`,
   };
 };
 
@@ -976,7 +976,7 @@ fill["gpl-pyth-app-d3"] = (rng, idx) => {
     prompt: `A carpenter stiffens a ${obj.thing} with a ${obj.brace}. The ${obj.thing.replace("rectangular ", "")} is ${a} ft wide, and the diagonal measures ${c} ft. How tall is it?`,
     steps: [
       { instruction: `The diagonal (${c}) is the hypotenuse and the width (${a}) is a leg. Subtract their squares to get the height's square.`, answer: `${b * b}`, accept: [], hint: `$${c}^2 - ${a}^2 = ${c * c} - ${a * a}$.` },
-      { instruction: "Take the square root to find the height (feet).", answer: `${b}`, accept: [`a=${b}`, `${b} ft`, `${b} feet`], hint: `$\\sqrt{${b * b}}$ — it comes out whole.` },
+      { instruction: "Take the square root to find the height (feet).", answer: `${b}`, accept: [`a=${b}`, `${b} ft`, `${b} feet`], hint: `$\\sqrt{${b * b}}$: it comes out whole.` },
     ],
     finalAnswer: { value: `${b}`, unit: "feet" },
     solutionNarrative: `Height $= \\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c} - ${a * a}} = \\sqrt{${b * b}} = ${b}$ ft. This is the $(${a}, ${b}, ${c})$ triple.`,
@@ -994,7 +994,7 @@ fill["gpl-hypotenuse-d2"] = (rng, idx) => {
       prompt: `You walk ${a} blocks ${d1} and then ${b} blocks ${d2}. How far are you from your starting point in a straight line?`,
       steps: [
         { instruction: `The two walks are the legs, ${a} and ${b}. Add the squares of the legs.`, answer: `${a * a + b * b}`, accept: [], hint: `$${a}^2 + ${b}^2 = ${a * a} + ${b * b}$.` },
-        { instruction: "Take the square root to find the straight-line distance (blocks).", answer: `${c}`, accept: [`c=${c}`, `${c} blocks`], hint: `$\\sqrt{${a * a + b * b}}$ — it comes out whole.` },
+        { instruction: "Take the square root to find the straight-line distance (blocks).", answer: `${c}`, accept: [`c=${c}`, `${c} blocks`], hint: `$\\sqrt{${a * a + b * b}}$: it comes out whole.` },
       ],
       finalAnswer: { value: `${c}`, unit: "blocks" },
       solutionNarrative: `$c = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${a * a + b * b}} = ${c}$ blocks. This is the $(${a}, ${b}, ${c})$ triple.`,
@@ -1007,10 +1007,10 @@ fill["gpl-hypotenuse-d2"] = (rng, idx) => {
     prompt: `A ${obj} is ${w} inches wide and ${h} inches tall. ${obj === "TV" ? "TVs" : "These"} are sized by the diagonal. What is the diagonal measurement?`,
     steps: [
       { instruction: "The width and height are the legs. Add their squares.", answer: `${w * w + h * h}`, accept: [], hint: `$${w}^2 + ${h}^2 = ${w * w} + ${h * h}$.` },
-      { instruction: "Take the square root to find the diagonal (inches).", answer: `${dgn}`, accept: [`c=${dgn}`, `${dgn} inches`, `${dgn} in`], hint: `$\\sqrt{${w * w + h * h}}$ — it comes out whole.` },
+      { instruction: "Take the square root to find the diagonal (inches).", answer: `${dgn}`, accept: [`c=${dgn}`, `${dgn} inches`, `${dgn} in`], hint: `$\\sqrt{${w * w + h * h}}$: it comes out whole.` },
     ],
     finalAnswer: { value: `${dgn}`, unit: "inches" },
-    solutionNarrative: `Diagonal $= \\sqrt{${w}^2 + ${h}^2} = \\sqrt{${w * w + h * h}} = ${dgn}$ inches — the $(3, 4, 5)$ pattern scaled by ${k}.`,
+    solutionNarrative: `Diagonal $= \\sqrt{${w}^2 + ${h}^2} = \\sqrt{${w * w + h * h}} = ${dgn}$ inches: the $(3, 4, 5)$ pattern scaled by ${k}.`,
   };
 };
 
@@ -1059,7 +1059,7 @@ fill["gpl-tri-types-d3"] = (rng, idx) => {
       { instruction: `The three angles sum to 180. Combine $${p === 1 ? "x" : `${p}x`} + ${q === 1 ? "x" : `${q}x`} + ${w}x$ and write it equal to 180.`, answer: `${k}x = 180`, accept: [`${k}x=180`], hint: `The coefficients add to ${k}.` },
       { instruction: "Solve for $x$ (degrees).", answer: `${x}`, accept: [`x=${x}`], hint: `Divide 180 by ${k}.` },
       { instruction: `The largest angle is $${w}x$. What is it (degrees)?`, answer: `${big}`, accept: [`${big} degrees`], hint: `${w} times ${x}.` },
-      { instruction: `The largest angle is $${big}^\\circ$. Classify by angles — answer acute, right, or obtuse.`, answer: cls, accept: [], hint: cls === "right" ? "Exactly one 90-degree angle." : cls === "obtuse" ? "One angle is bigger than 90 degrees." : "All three angles are under 90 degrees." },
+      { instruction: `The largest angle is $${big}^\\circ$. Classify by angles: answer acute, right, or obtuse.`, answer: cls, accept: [], hint: cls === "right" ? "Exactly one 90-degree angle." : cls === "obtuse" ? "One angle is bigger than 90 degrees." : "All three angles are under 90 degrees." },
     ],
     finalAnswer: { value: cls, unit: "" },
     solutionNarrative: `$${k}x = 180$, so $x = ${x}^\\circ$. The angles are $${p * x}^\\circ$, $${q * x}^\\circ$, $${big}^\\circ$; the largest is $${big}^\\circ$, so the triangle is ${cls}.`,
@@ -1199,14 +1199,14 @@ fill["gpl-tri-perim-area-d3"] = (rng, idx) => {
   const area = a * b;
   return {
     id: `gen.gpl-tri-perim-area-d3.${idx}`, generated: true, concepts: ["perimeter-and-basic-area"], difficulty: 3, context: "applied",
-    prompt: `An isosceles triangular ${obj} has two equal sides of ${c} in and a base of ${baseLen} in. Its height is not given — find it first, then find the area and the perimeter.`,
+    prompt: `An isosceles triangular ${obj} has two equal sides of ${c} in and a base of ${baseLen} in. Its height is not given: find it first, then find the area and the perimeter.`,
     steps: [
       { instruction: "The height from the apex splits the base in half. How long is each half (inches)?", answer: `${a}`, accept: [], hint: `$${baseLen} \\div 2$.` },
-      { instruction: "That half-base and the height are the legs of a right triangle whose hypotenuse is an equal side. Find the height (inches).", answer: `${b}`, accept: [`h=${b}`], hint: `$\\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c - a * a}}$ — it comes out whole.` },
+      { instruction: "That half-base and the height are the legs of a right triangle whose hypotenuse is an equal side. Find the height (inches).", answer: `${b}`, accept: [`h=${b}`], hint: `$\\sqrt{${c}^2 - ${a}^2} = \\sqrt{${c * c - a * a}}$: it comes out whole.` },
       { instruction: "Area: $\\tfrac{1}{2} \\times$ base $\\times$ height (square inches).", answer: `${area}`, accept: [`${area} in^2`], hint: `$\\tfrac{1}{2} \\times ${baseLen} \\times ${b}$.` },
       { instruction: "Perimeter: add the three sides (inches).", answer: `${per}`, accept: [`${per} in`], hint: `$${c} + ${c} + ${baseLen}$.` },
     ],
     finalAnswer: { value: `${area}`, unit: "square inches" },
-    solutionNarrative: `The height splits the base into ${a}-in halves, so $h = \\sqrt{${c}^2 - ${a}^2} = ${b}$ in — the $(${a}, ${b}, ${c})$ triple. Area $= \\tfrac{1}{2}(${baseLen})(${b}) = ${area}$ in²; perimeter $= ${c} + ${c} + ${baseLen} = ${per}$ in.`,
+    solutionNarrative: `The height splits the base into ${a}-in halves, so $h = \\sqrt{${c}^2 - ${a}^2} = ${b}$ in: the $(${a}, ${b}, ${c})$ triple. Area $= \\tfrac{1}{2}(${baseLen})(${b}) = ${area}$ in²; perimeter $= ${c} + ${c} + ${baseLen} = ${per}$ in.`,
   };
 };

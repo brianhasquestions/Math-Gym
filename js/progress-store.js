@@ -38,7 +38,7 @@ function sanitizeConcept(id, c) {
   };
 }
 
-// Return a store whose shape downstream code can trust — `topics` is always a
+// Return a store whose shape downstream code can trust: `topics` is always a
 // plain object, any topic state that isn't a well-formed concept map is
 // dropped, and every surviving field is coerced to its expected type. This is
 // what guards against a hand-edited or maliciously-crafted imported file.
@@ -124,6 +124,6 @@ export function importProgress(jsonText) {
   if (data.schemaVersion !== SCHEMA_VERSION) {
     throw new Error("Incompatible progress file version.");
   }
-  // Sanitize BEFORE persisting — imported files are untrusted input.
+  // Sanitize BEFORE persisting: imported files are untrusted input.
   save(sanitizeStore(data));
 }

@@ -88,7 +88,7 @@ fill["as2-joint-tables-1"] = (rng, idx) => {
       { instruction: `What is the MARGINAL probability that one ${ctx.rname} (regardless of the other product)? Give a fraction in lowest terms.`, answer: fs(marg), accept: [`${c + d}/${N}`], hint: `Sum the "${ctx.rows[1]}" row: $${c} + ${d}$, then divide by ${N}.` },
     ],
     finalAnswer: { value: fs(marg), unit: "" },
-    solutionNarrative: `The table holds ${N} ${ctx.thing}. The joint probability is the single cell $\\frac{${d}}{${N}} = ${fs(both)}$, while the marginal sums the whole row: $\\frac{${c + d}}{${N}} = ${fs(marg)}$. Marginals live in the margins — row and column totals over the grand total.`,
+    solutionNarrative: `The table holds ${N} ${ctx.thing}. The joint probability is the single cell $\\frac{${d}}{${N}} = ${fs(both)}$, while the marginal sums the whole row: $\\frac{${c + d}}{${N}} = ${fs(marg)}$. Marginals live in the margins: row and column totals over the grand total.`,
   };
 };
 fill["as2-joint-tables-2"] = (rng, idx) => {
@@ -104,7 +104,7 @@ fill["as2-joint-tables-2"] = (rng, idx) => {
       { instruction: `Compute the marginal $P(X=1)$ by summing the $X=1$ row. Give a fraction in lowest terms.`, answer: fs(marg), accept: [`${c + m}/20`], hint: `$\\frac{${c}}{20} + \\frac{${m}}{20}$.` },
     ],
     finalAnswer: { value: fs(marg), unit: "" },
-    solutionNarrative: `The three known cells sum to ${fs(given)}, forcing the missing cell to $1 - ${fs(given)} = ${fs(miss)}$. The marginal $P(X=1)$ adds its row: $\\frac{${c}}{20} + \\frac{${m}}{20} = ${fs(marg)}$. A joint table is a complete budget of probability — it must spend exactly 1.`,
+    solutionNarrative: `The three known cells sum to ${fs(given)}, forcing the missing cell to $1 - ${fs(given)} = ${fs(miss)}$. The marginal $P(X=1)$ adds its row: $\\frac{${c}}{20} + \\frac{${m}}{20} = ${fs(marg)}$. A joint table is a complete budget of probability: it must spend exactly 1.`,
   };
 };
 fill["as2-joint-tables-3"] = (rng, idx) => {
@@ -124,7 +124,7 @@ fill["as2-joint-tables-3"] = (rng, idx) => {
       { instruction: `Marginal: $P(Y = 0)$. Give a fraction in lowest terms.`, answer: fs(pCol), accept: [`${col0}/${N}`], hint: `Sum the $Y=0$ column: $${c[0][0]}+${c[1][0]}+${c[2][0]}$.` },
     ],
     finalAnswer: { value: fs(pDiag), unit: "" },
-    solutionNarrative: `With ${N} customers, $P(X=2) = ${fs(pRow)}$ (row sum), $P(X=Y) = \\frac{${diag}}{${N}} = ${fs(pDiag)}$ (diagonal), and $P(Y=0) = ${fs(pCol)}$ (column sum). Any event is just a set of cells — add them.`,
+    solutionNarrative: `With ${N} customers, $P(X=2) = ${fs(pRow)}$ (row sum), $P(X=Y) = \\frac{${diag}}{${N}} = ${fs(pDiag)}$ (diagonal), and $P(Y=0) = ${fs(pCol)}$ (column sum). Any event is just a set of cells: add them.`,
   };
 };
 
@@ -138,11 +138,11 @@ fill["as2-cond-joint-1"] = (rng, idx) => {
     id: `gen.as2-cond-joint-1.${idx}`, generated: true, concepts: ["conditional-from-joint"], difficulty: 1, context: "applied",
     prompt: `A survey of ${ctx.thing} gave these COUNTS:\n\n${md22(ctx.rows, ctx.cols, [[a, b], [c, d]])}\n\nGiven that one of them ${ctx.cname}, what is the probability they also ${ctx.rname}? Conditioning restricts you to ONE column.`,
     steps: [
-      { instruction: `How many ${ctx.thing} are in the "${ctx.cols[1]}" column? (Give a number.)`, answer: `${colTot}`, accept: [], hint: `$${b} + ${d}$ — the condition shrinks the world to this column.` },
+      { instruction: `How many ${ctx.thing} are in the "${ctx.cols[1]}" column? (Give a number.)`, answer: `${colTot}`, accept: [], hint: `$${b} + ${d}$: the condition shrinks the world to this column.` },
       { instruction: `Of those, how many also ${ctx.rname}? Then give $P(\\text{${ctx.rows[1]}} \\mid \\text{${ctx.cols[1]}})$ as a fraction in lowest terms.`, answer: fs(cond), accept: [`${d}/${colTot}`], hint: `Cell $${d}$ over the column total $${colTot}$.` },
     ],
     finalAnswer: { value: fs(cond), unit: "" },
-    solutionNarrative: `Conditioning on "${ctx.cols[1]}" throws away the other column: the reduced world has ${colTot} ${ctx.thing}, of whom ${d} also ${ctx.rname}. So the conditional probability is $\\frac{${d}}{${colTot}} = ${fs(cond)}$ — cell over column total, not cell over grand total.`,
+    solutionNarrative: `Conditioning on "${ctx.cols[1]}" throws away the other column: the reduced world has ${colTot} ${ctx.thing}, of whom ${d} also ${ctx.rname}. So the conditional probability is $\\frac{${d}}{${colTot}} = ${fs(cond)}$: cell over column total, not cell over grand total.`,
   };
 };
 fill["as2-cond-joint-2"] = (rng, idx) => {
@@ -255,7 +255,7 @@ fill["as2-covariance-3"] = (rng, idx) => {
       { instruction: `$\\mathrm{Cov}(X,Y) = ${fs(EXY)} - ${fs(EX)} \\cdot ${fs(EY)}$. Give a fraction in lowest terms (sign included).`, answer: fs(cov), accept: [], hint: `$E[X]E[Y] = ${fs(fmul(EX, EY))}$.` },
     ],
     finalAnswer: { value: fs(cov), unit: "" },
-    solutionNarrative: `$E[X] = ${fs(EX)}$, $E[Y] = ${fs(EY)}$, $E[XY] = ${fs(EXY)}$, so $\\mathrm{Cov} = ${fs(cov)}$. ${cov.n > 0 ? "The assets tend to move together — holding both gives less diversification." : "The assets tend to move oppositely — a natural hedge."}`,
+    solutionNarrative: `$E[X] = ${fs(EX)}$, $E[Y] = ${fs(EY)}$, $E[XY] = ${fs(EXY)}$, so $\\mathrm{Cov} = ${fs(cov)}$. ${cov.n > 0 ? "The assets tend to move together: holding both gives less diversification." : "The assets tend to move oppositely: a natural hedge."}`,
   };
 };
 
@@ -286,7 +286,7 @@ fill["as2-corr-indep-1"] = (rng, idx) => {
       { instruction: `The joint ${t.indep ? "equals" : "does NOT equal"} the product. Are $X$ and $Y$ independent? Type 'independent' or 'not independent'.`, answer: verdict, accept: t.indep ? [] : ["dependent"], hint: `Independence means the joint EXACTLY equals the product of marginals.` },
     ],
     finalAnswer: { value: verdict, unit: "" },
-    solutionNarrative: `$P(X=1,Y=1) = ${fs(p11)}$ while $P(X=1)P(Y=1) = ${fs(px)} \\cdot ${fs(py)} = ${fs(prod)}$. ${t.indep ? "They match, so the variables are independent — the table factors perfectly into its margins." : "They differ, so the variables are NOT independent — the table cannot be rebuilt from its margins alone."}`,
+    solutionNarrative: `$P(X=1,Y=1) = ${fs(p11)}$ while $P(X=1)P(Y=1) = ${fs(px)} \\cdot ${fs(py)} = ${fs(prod)}$. ${t.indep ? "They match, so the variables are independent: the table factors perfectly into its margins." : "They differ, so the variables are NOT independent: the table cannot be rebuilt from its margins alone."}`,
   };
 };
 // sigma table for clean sqrt: variance fraction -> sigma fraction.
@@ -336,7 +336,7 @@ fill["as2-corr-indep-3"] = (rng, idx) => {
     steps: [
       { instruction: `$E[XY] = P(X=1, Y=1)$. Give a fraction in lowest terms.`, answer: fs(exy), accept: [`${n11}/20`], hint: `The bottom-right cell over 20.` },
       { instruction: `$\\mathrm{Cov}(X,Y) = ${fs(exy)} - ${fs(ex)} \\cdot ${fs(ey)}$. Give a fraction in lowest terms (sign included).`, answer: fs(cov), accept: [], hint: `$E[X]E[Y] = ${fs(fmul(ex, ey))}$.` },
-      { instruction: `$\\sigma_X \\sigma_Y = \\sqrt{${fs(VAR20[t.r])}} \\cdot \\sqrt{${fs(VAR20[t.c])}}$. Give a fraction in lowest terms.`, answer: fs(prod), accept: [], hint: `$\\sigma_X = ${fs(sx)}$ and $\\sigma_Y = ${fs(sy)}$ — both variances are perfect squares.` },
+      { instruction: `$\\sigma_X \\sigma_Y = \\sqrt{${fs(VAR20[t.r])}} \\cdot \\sqrt{${fs(VAR20[t.c])}}$. Give a fraction in lowest terms.`, answer: fs(prod), accept: [], hint: `$\\sigma_X = ${fs(sx)}$ and $\\sigma_Y = ${fs(sy)}$: both variances are perfect squares.` },
       { instruction: `$\\rho = \\dfrac{${fs(cov)}}{${fs(prod)}}$. Give a fraction in lowest terms (sign included).`, answer: fs(rho), accept: [], hint: `Multiply by the reciprocal of $${fs(prod)}$.` },
       { instruction: `Since $\\rho \\ne 0$, are $X$ and $Y$ independent? Type 'independent' or 'not independent'.`, answer: "not independent", accept: ["dependent"], hint: `Any nonzero correlation rules out independence.` },
     ],
@@ -371,7 +371,7 @@ fill["as2-point-est-1"] = (rng, idx) => {
       { instruction: `Compute the sample proportion $\\hat{p} = \\dfrac{${x}}{20}$. Give a fraction in lowest terms.`, answer: fs(ph), accept: [`${x}/20`], hint: `Successes over sample size, then reduce.` },
     ],
     finalAnswer: { value: fs(ph), unit: "" },
-    solutionNarrative: `"${s.desc}" is a ${s.ans}. The point estimate is $\\hat{p} = \\frac{${x}}{20} = ${fs(ph)}$ — a statistic used to estimate the unknown population proportion $p$.`,
+    solutionNarrative: `"${s.desc}" is a ${s.ans}. The point estimate is $\\hat{p} = \\frac{${x}}{20} = ${fs(ph)}$: a statistic used to estimate the unknown population proportion $p$.`,
   };
 };
 const DEV2 = [
@@ -419,7 +419,7 @@ fill["as2-point-est-3"] = (rng, idx) => {
       { instruction: `Is $s^2$, computed from this sample, a statistic or a parameter? Type 'statistic' or 'parameter'.`, answer: "statistic", accept: [], hint: `It was computed from sampled data to ESTIMATE the population parameter $\\sigma^2$.` },
     ],
     finalAnswer: { value: `${t.s}`, unit: "minutes" },
-    solutionNarrative: `$\\bar{x} = ${m}$, $\\sum(x_i - \\bar{x})^2 = ${t.ssd}$, so $s^2 = ${t.s2}$ and $s = ${t.s}$. All three are statistics — sample-based estimates of the population parameters $\\mu$, $\\sigma^2$, $\\sigma$.`,
+    solutionNarrative: `$\\bar{x} = ${m}$, $\\sum(x_i - \\bar{x})^2 = ${t.ssd}$, so $s^2 = ${t.s2}$ and $s = ${t.s}$. All three are statistics: sample-based estimates of the population parameters $\\mu$, $\\sigma^2$, $\\sigma$.`,
   };
 };
 
@@ -452,7 +452,7 @@ fill["as2-bias-mse-2"] = (rng, idx) => {
     prompt: `An estimator satisfies $E[\\hat{\\theta}] = \\theta ${c < 0 ? "-" : "+"} ${Math.abs(c)}$ and $\\mathrm{Var}(\\hat{\\theta}) = ${v}$. Compute its mean squared error, $\\mathrm{MSE} = \\mathrm{Var}(\\hat{\\theta}) + \\mathrm{bias}^2$.`,
     steps: [
       { instruction: `Read off the bias $E[\\hat{\\theta}] - \\theta$. (Give a number, sign included.)`, answer: `${c}`, accept: [], hint: `Whatever is added to $\\theta$ in the expected value.` },
-      { instruction: `Square it: $\\mathrm{bias}^2$. (Give a number.)`, answer: `${c * c}`, accept: [], hint: `$(${c})^2$ — the sign disappears.` },
+      { instruction: `Square it: $\\mathrm{bias}^2$. (Give a number.)`, answer: `${c * c}`, accept: [], hint: `$(${c})^2$: the sign disappears.` },
       { instruction: `$\\mathrm{MSE} = ${v} + ${c * c}$. (Give a number.)`, answer: `${mse}`, accept: [], hint: `Variance plus squared bias.` },
     ],
     finalAnswer: { value: `${mse}`, unit: "" },
@@ -480,7 +480,7 @@ fill["as2-bias-mse-3"] = (rng, idx) => {
       { instruction: `Which has the SMALLER mean squared error? Type 'estimator A' or 'estimator B'.`, answer: winner, accept: [winner === "estimator A" ? "a" : "b"], hint: `Compare $${mA}$ with $${mB}$.` },
     ],
     finalAnswer: { value: winner, unit: "" },
-    solutionNarrative: `$\\mathrm{MSE}_A = ${mA}$ and $\\mathrm{MSE}_B = ${t.vB} + ${t.c * t.c} = ${mB}$, so ${winner} wins. ${mB < mA ? "A little bias can be a good trade if it buys a large variance reduction — the classic bias-variance tradeoff." : "Here the bias costs more than the variance reduction saves — unbiasedness wins this round."}`,
+    solutionNarrative: `$\\mathrm{MSE}_A = ${mA}$ and $\\mathrm{MSE}_B = ${t.vB} + ${t.c * t.c} = ${mB}$, so ${winner} wins. ${mB < mA ? "A little bias can be a good trade if it buys a large variance reduction: the classic bias-variance tradeoff." : "Here the bias costs more than the variance reduction saves: unbiasedness wins this round."}`,
   };
 };
 
@@ -515,7 +515,7 @@ fill["as2-se-2"] = (rng, idx) => {
     prompt: `A poll of $n = ${c.n}$ voters gives sample proportion $\\hat{p} = ${c.pH / 100}$. Find the standard error of $\\hat{p}$: $\\mathrm{SE} = \\sqrt{\\dfrac{\\hat{p}(1 - \\hat{p})}{n}}$.`,
     steps: [
       { instruction: `Compute $\\hat{p}(1 - \\hat{p}) = ${c.pH / 100} \\times ${qH / 100}$. (Give a decimal.)`, answer: `${pq}`, accept: [], hint: `$1 - ${c.pH / 100} = ${qH / 100}$.` },
-      { instruction: `Divide by $n$: $\\dfrac{${pq}}{${c.n}}$. (Give a decimal.)`, answer: `${varU / 1e6}`, accept: [], hint: `Move the decimal point ${c.n === 100 ? "two" : "between four and five"} places — the result is $${varU / 1e6}$... check by multiplying back.` },
+      { instruction: `Divide by $n$: $\\dfrac{${pq}}{${c.n}}$. (Give a decimal.)`, answer: `${varU / 1e6}`, accept: [], hint: `Move the decimal point ${c.n === 100 ? "two" : "between four and five"} places: the result is $${varU / 1e6}$... check by multiplying back.` },
       { instruction: `Take the square root. (Give a decimal.)`, answer: d1000(c.seT), accept: [`sqrt(${varU / 1e6})`], hint: `$${d1000(c.seT)}^2 = ${varU / 1e6}$.` },
     ],
     finalAnswer: { value: d1000(c.seT), unit: "" },
@@ -535,7 +535,7 @@ fill["as2-se-3"] = (rng, idx) => {
       { instruction: `If the lab later QUADRUPLES $n$, the SE gets multiplied by what factor? (Give a fraction or decimal.)`, answer: "1/2", accept: ["0.5", "half"], hint: `$\\sqrt{4n} = 2\\sqrt{n}$, and $\\sqrt{n}$ sits in the denominator.` },
     ],
     finalAnswer: { value: `${k * k}`, unit: "" },
-    solutionNarrative: `$\\sqrt{n} = ${sigma}/${m} = ${k}$, so $n = ${k * k}$. Because precision improves only with $\\sqrt{n}$, quadrupling the sample merely halves the SE — accuracy is bought at a steep quadratic price.`,
+    solutionNarrative: `$\\sqrt{n} = ${sigma}/${m} = ${k}$, so $n = ${k * k}$. Because precision improves only with $\\sqrt{n}$, quadrupling the sample merely halves the SE: accuracy is bought at a steep quadratic price.`,
   };
 };
 
@@ -638,7 +638,7 @@ fill["as2-prior-post-1"] = (rng, idx) => {
       { instruction: `Posterior: $P(A \\mid \\text{defect}) = \\dfrac{${fs(ja)}}{${fs(tot)}}$. Give a fraction in lowest terms.`, answer: fs(post), accept: [], hint: `A's share of the total evidence.` },
     ],
     finalAnswer: { value: fs(post), unit: "" },
-    solutionNarrative: `Joints: A contributes ${fs(ja)}, B contributes ${fs(jb)}, total ${fs(tot)}. The posterior is A's share: $${fs(post)}$ — moved ${post.n * t.pa.d > t.pa.n * post.d ? "up" : "down"} from the prior $${fs(t.pa)}$ because the defect is ${t.la.n * t.lb.d > t.lb.n * t.la.d ? "more" : "less"} typical of machine A.`,
+    solutionNarrative: `Joints: A contributes ${fs(ja)}, B contributes ${fs(jb)}, total ${fs(tot)}. The posterior is A's share: $${fs(post)}$: moved ${post.n * t.pa.d > t.pa.n * post.d ? "up" : "down"} from the prior $${fs(t.pa)}$ because the defect is ${t.la.n * t.lb.d > t.lb.n * t.la.d ? "more" : "less"} typical of machine A.`,
   };
 };
 fill["as2-prior-post-2"] = (rng, idx) => {
@@ -652,7 +652,7 @@ fill["as2-prior-post-2"] = (rng, idx) => {
   const post = F(TP, TP + FP);
   return {
     id: `gen.as2-prior-post-2.${idx}`, generated: true, concepts: ["prior-to-posterior"], difficulty: 2, context: "applied",
-    prompt: `A condition affects $${fs(prev)}$ of a population. A screening test detects it with probability $${fs(sens)}$ (sensitivity) but also flags healthy people with probability $${fs(fpr)}$ (false-positive rate). Work with NATURAL FREQUENCIES: imagine 1000 people, all tested. A person tests positive — find the posterior probability they have the condition.`,
+    prompt: `A condition affects $${fs(prev)}$ of a population. A screening test detects it with probability $${fs(sens)}$ (sensitivity) but also flags healthy people with probability $${fs(fpr)}$ (false-positive rate). Work with NATURAL FREQUENCIES: imagine 1000 people, all tested. A person tests positive: find the posterior probability they have the condition.`,
     steps: [
       { instruction: `Of the 1000 people, how many have the condition? (Give a number.)`, answer: `${D}`, accept: [], hint: `$1000 \\times ${fs(prev)}$.` },
       { instruction: `TRUE positives: how many of those ${D} test positive? (Give a number.)`, answer: `${TP}`, accept: [], hint: `$${D} \\times ${fs(sens)}$.` },
@@ -660,7 +660,7 @@ fill["as2-prior-post-2"] = (rng, idx) => {
       { instruction: `Posterior: $P(\\text{condition} \\mid +) = \\dfrac{${TP}}{${TP} + ${FP}}$. Give a fraction in lowest terms.`, answer: fs(post), accept: [`${TP}/${TP + FP}`], hint: `True positives over ALL positives.` },
     ],
     finalAnswer: { value: fs(post), unit: "" },
-    solutionNarrative: `Among 1000 people: ${D} sick (${TP} test positive) and ${H} healthy (${FP} falsely positive). Of the ${TP + FP} positives, only ${TP} are real: posterior $= ${fs(post)}$. The prior (base rate) does heavy lifting — ignoring it is base-rate neglect.`,
+    solutionNarrative: `Among 1000 people: ${D} sick (${TP} test positive) and ${H} healthy (${FP} falsely positive). Of the ${TP + FP} positives, only ${TP} are real: posterior $= ${fs(post)}$. The prior (base rate) does heavy lifting: ignoring it is base-rate neglect.`,
   };
 };
 const PP3 = [
@@ -708,7 +708,7 @@ fill["as2-seq-update-1"] = (rng, idx) => {
       { instruction: `Now use $${fs(r1.post)}$ as the NEW prior and update on the second head. Give the new posterior as a fraction in lowest terms.`, answer: fs(r2.post), accept: [], hint: `Joints: $${fs(r1.post)} \\cdot ${fs(t.la)} = ${fs(r2.ja)}$ versus $${fs(fsub(fone, r1.post))} \\cdot ${fs(t.lb)} = ${fs(r2.jb)}$.` },
     ],
     finalAnswer: { value: fs(r2.post), unit: "" },
-    solutionNarrative: `First head: posterior for fair drops to ${fs(r1.post)}. Feeding that back as the prior, the second head drops it to ${fs(r2.post)}. Yesterday's posterior is today's prior — evidence compounds one observation at a time.`,
+    solutionNarrative: `First head: posterior for fair drops to ${fs(r1.post)}. Feeding that back as the prior, the second head drops it to ${fs(r2.post)}. Yesterday's posterior is today's prior: evidence compounds one observation at a time.`,
   };
 };
 const SEQ2 = [
@@ -728,7 +728,7 @@ fill["as2-seq-update-2"] = (rng, idx) => {
       { instruction: `Use $${fs(r1.post)}$ as the new prior and update on word 2. Give the final posterior as a fraction in lowest terms.`, answer: fs(r2.post), accept: [], hint: `Joints: $${fs(r1.post)} \\cdot ${fs(t.l2s)} = ${fs(r2.ja)}$ versus $${fs(fsub(fone, r1.post))} \\cdot ${fs(t.l2h)} = ${fs(r2.jb)}$.` },
     ],
     finalAnswer: { value: fs(r2.post), unit: "" },
-    solutionNarrative: `Word 1 lifts the spam probability from ${fs(t.pa)} to ${fs(r1.post)}; word 2 lifts it again to ${fs(r2.post)}. Real Bayesian spam filters chain hundreds of such updates — each word's evidence multiplies in.`,
+    solutionNarrative: `Word 1 lifts the spam probability from ${fs(t.pa)} to ${fs(r1.post)}; word 2 lifts it again to ${fs(r2.post)}. Real Bayesian spam filters chain hundreds of such updates: each word's evidence multiplies in.`,
   };
 };
 const SEQ3 = [
@@ -749,7 +749,7 @@ fill["as2-seq-update-3"] = (rng, idx) => {
       { instruction: `Now the prior is $${fs(r1.post)}$. Update on the second positive: $\\dfrac{${fs(r1.post)} \\cdot ${fs(t.s2)}}{${fs(r1.post)} \\cdot ${fs(t.s2)} + ${fs(fsub(fone, r1.post))} \\cdot ${fs(t.f2)}}$. Give a fraction in lowest terms.`, answer: fs(r2.post), accept: [], hint: `Joints: $${fs(r2.ja)}$ versus $${fs(r2.jb)}$.` },
     ],
     finalAnswer: { value: fs(r2.post), unit: "" },
-    solutionNarrative: `Test 1 raises the probability from ${fs(t.prev)} to ${fs(r1.post)}; the second independent positive raises it to ${fs(r2.post)}. This is exactly why screening protocols confirm with a second test before treating — posteriors compound.`,
+    solutionNarrative: `Test 1 raises the probability from ${fs(t.prev)} to ${fs(r1.post)}; the second independent positive raises it to ${fs(r2.post)}. This is exactly why screening protocols confirm with a second test before treating: posteriors compound.`,
   };
 };
 
@@ -816,7 +816,7 @@ fill["as2-bayes-odds-3"] = (rng, idx) => {
       { instruction: `Posterior probability $= \\dfrac{${fs(po)}}{1 + ${fs(po)}}$. Give a fraction in lowest terms.`, answer: fs(prob), accept: [], hint: `Odds $a/b$ $\\to$ $\\frac{a}{a+b}$.` },
     ],
     finalAnswer: { value: fs(prob), unit: "" },
-    solutionNarrative: `The evidence combines into LR $= ${lrTot}$; posterior odds $= ${fs(po)}$, probability ${fs(prob)}. Multiplying Bayes factors is how forensic and diagnostic evidence stacks — as long as the pieces are truly independent.`,
+    solutionNarrative: `The evidence combines into LR $= ${lrTot}$; posterior odds $= ${fs(po)}$, probability ${fs(prob)}. Multiplying Bayes factors is how forensic and diagnostic evidence stacks: as long as the pieces are truly independent.`,
   };
 };
 
@@ -835,7 +835,7 @@ fill["as2-bayes-freq-1"] = (rng, idx) => {
       { instruction: `In the frequentist framework, is the true parameter treated as fixed or random? Type 'fixed' or 'random'.`, answer: "fixed", accept: [], hint: `To a frequentist, only the DATA (and hence the interval) vary from sample to sample.` },
     ],
     finalAnswer: { value: "credible interval", unit: "" },
-    solutionNarrative: `Only a Bayesian CREDIBLE interval supports "the parameter is in here with probability such-and-such" — because Bayesians put a distribution on the parameter. Frequentists hold the parameter fixed, so a 95% CONFIDENCE interval promises only that 95% of intervals built this way would capture it.`,
+    solutionNarrative: `Only a Bayesian CREDIBLE interval supports "the parameter is in here with probability such-and-such", because Bayesians put a distribution on the parameter. Frequentists hold the parameter fixed, so a 95% CONFIDENCE interval promises only that 95% of intervals built this way would capture it.`,
   };
 };
 const BF2 = [
@@ -862,7 +862,7 @@ fill["as2-bayes-freq-2"] = (rng, idx) => {
       { instruction: `Does the Bayesian conclusion depend on the choice of prior? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `The posterior is prior times likelihood, renormalized.` },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `Probability statements about the parameter given the data are Bayesian; statements about how the procedure behaves over hypothetical repetitions are frequentist. And yes — a Bayesian posterior always inherits some influence from the prior, which shrinks as data accumulate.`,
+    solutionNarrative: `Probability statements about the parameter given the data are Bayesian; statements about how the procedure behaves over hypothetical repetitions are frequentist. And yes: a Bayesian posterior always inherits some influence from the prior, which shrinks as data accumulate.`,
   };
 };
 const LOSS3 = [
@@ -885,6 +885,6 @@ fill["as2-bayes-freq-3"] = (rng, idx) => {
       { instruction: `Which action minimizes expected loss? Type 'recall' or 'ship'.`, answer: decision, accept: [], hint: `Compare $${t.c}$ with $${elShip}$.` },
     ],
     finalAnswer: { value: decision, unit: "" },
-    solutionNarrative: `Expected losses: recall $${t.c}$, ship $${elShip}$. The Bayesian decision rule picks the minimum: ${decision}. This is the payoff of a posterior — it plugs directly into decisions, which a p-value alone cannot do.`,
+    solutionNarrative: `Expected losses: recall $${t.c}$, ship $${elShip}$. The Bayesian decision rule picks the minimum: ${decision}. This is the payoff of a posterior: it plugs directly into decisions, which a p-value alone cannot do.`,
   };
 };

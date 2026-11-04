@@ -1,7 +1,7 @@
 // gen-calc3-pool-fill.js
 // Thin-pool eliminator pack for the calculus-3 subject (template prefix c3l-).
 // One parametric generator per (topic, keyConcept, difficulty) pool that had
-// exactly one seed problem and no generator at that tier — 20 templates across
+// exactly one seed problem and no generator at that tier: 20 templates across
 // 6 topics. Self-contained: exports a `fill` map of template-name ->
 // (rng, idx) => problem, matching js/generator.js's `generators` shape (same
 // pattern as gen-calc3v-fill.js / gen-calc3s-fill.js).
@@ -75,13 +75,13 @@ fill["c3l-angle-between-d1"] = (rng, idx) => {
     const a = mk([[i, m]]);
     const b = mk([[j, n], [k2, rng.int(0, 3)]]);
     return { ...base,
-      prompt: `Find the angle between $\\vec{a} = ${Vt(a)}$ and $\\vec{b} = ${Vt(b)}$ — no calculator needed once you see the dot product.`,
+      prompt: `Find the angle between $\\vec{a} = ${Vt(a)}$ and $\\vec{b} = ${Vt(b)}$: no calculator needed once you see the dot product.`,
       steps: [
         { instruction: "Compute the dot product $\\vec{a} \\cdot \\vec{b}$.", answer: "0", accept: [], hint: `Each product pairs a component of $\\vec{a}$ with a zero (or vice versa).` },
         { instruction: "What is the angle between the vectors, in degrees?", answer: "90", accept: [], hint: "A zero dot product between nonzero vectors means perpendicular." },
       ],
       finalAnswer: { value: "90", unit: "degrees" },
-      solutionNarrative: `$\\vec{a} \\cdot \\vec{b} = 0$, so $\\cos\\theta = 0$ and $\\theta = 90^\\circ$ — the vectors are perpendicular.`,
+      solutionNarrative: `$\\vec{a} \\cdot \\vec{b} = 0$, so $\\cos\\theta = 0$ and $\\theta = 90^\\circ$: the vectors are perpendicular.`,
     };
   }
   if (kind === "para" || kind === "anti") {
@@ -116,7 +116,7 @@ fill["c3l-angle-between-d1"] = (rng, idx) => {
     steps: [
       { instruction: "Compute the dot product $\\vec{a} \\cdot \\vec{b}$.", answer: `${d}`, accept: [], hint: `Only the matching component survives: $${m}(${s * n})$.` },
       { instruction: "Compute the product of the magnitudes $|\\vec{a}|\\,|\\vec{b}|$ (3 decimal places, or exact).", answer: pm, accept: [`${m * n}sqrt(2)`, `${m * n}sqrt2`, pmVal.toFixed(2)], hint: `$|\\vec{a}| = ${m}$ and $|\\vec{b}| = ${n}\\sqrt{2}$.` },
-      { instruction: "Find $\\theta = \\arccos\\!\\left(\\frac{\\vec{a}\\cdot\\vec{b}}{|\\vec{a}||\\vec{b}|}\\right)$, in degrees.", answer: theta, accept: [], hint: `$\\cos\\theta = ${s === 1 ? "" : "-"}1/\\sqrt{2}$ — a landmark value.` },
+      { instruction: "Find $\\theta = \\arccos\\!\\left(\\frac{\\vec{a}\\cdot\\vec{b}}{|\\vec{a}||\\vec{b}|}\\right)$, in degrees.", answer: theta, accept: [], hint: `$\\cos\\theta = ${s === 1 ? "" : "-"}1/\\sqrt{2}$: a landmark value.` },
     ],
     finalAnswer: { value: theta, unit: "degrees" },
     solutionNarrative: `$\\cos\\theta = \\dfrac{${d}}{${m}\\cdot${n}\\sqrt{2}} = ${s === 1 ? "" : "-"}\\dfrac{1}{\\sqrt{2}}$, so $\\theta = ${theta}^\\circ$.`,
@@ -147,7 +147,7 @@ fill["c3l-angle-between-d2"] = (rng, idx) => {
   };
 };
 
-// d3: interior angle of a triangle from three points — build the edge vectors
+// d3: interior angle of a triangle from three points: build the edge vectors
 // first, then run the angle formula. Multi-step synthesis.
 fill["c3l-angle-between-d3"] = (rng, idx) => {
   const pair = rng.pick(ANGLE_PAIRS);
@@ -213,7 +213,7 @@ fill["c3l-cross-product-d1"] = (rng, idx) => {
       { instruction: "Write the full cross product as a vector.", answer: V(0, 0, D), accept: [Pn(0, 0, D)], hint: "The x- and y-components are zero; the z-component is what you just computed." },
     ],
     finalAnswer: { value: V(0, 0, D), unit: "" },
-    solutionNarrative: `With $a_3 = b_3 = 0$, the formula collapses to $\\vec{a} \\times \\vec{b} = \\langle 0,\\; 0,\\; a_1 b_2 - a_2 b_1 \\rangle = ${Vt([0, 0, D])}$ — perpendicular to the plane of the two vectors.`,
+    solutionNarrative: `With $a_3 = b_3 = 0$, the formula collapses to $\\vec{a} \\times \\vec{b} = \\langle 0,\\; 0,\\; a_1 b_2 - a_2 b_1 \\rangle = ${Vt([0, 0, D])}$: perpendicular to the plane of the two vectors.`,
   };
 };
 
@@ -337,7 +337,7 @@ fill["c3l-directional-deriv-d1"] = (rng, idx) => {
     u = rng.pick([[1, 0], [0, 1], [-1, 0], [0, -1]]);
     uTxt = Vt(u);
     D = a * u[0] + b * u[1];
-    hint = `$(${a})(${u[0]}) + (${b})(${u[1]})$ — an axis direction just picks out (±) one component.`;
+    hint = `$(${a})(${u[0]}) + (${b})(${u[1]})$: an axis direction just picks out (±) one component.`;
   } else {
     const s1 = rng.pick([1, -1]), s2 = rng.pick([1, -1]);
     a = rng.int(-4, 6);
@@ -348,7 +348,7 @@ fill["c3l-directional-deriv-d1"] = (rng, idx) => {
     if (D === 0) { b += 5 * 1; D = (s1 * 3 * a + s2 * 4 * b) / 5; } // shift by a full period: D changes by ±4, still an integer
     u = [`${s1 === -1 ? "-" : ""}3/5`, `${s2 === -1 ? "-" : ""}4/5`];
     uTxt = `\\langle ${s1 === -1 ? "-" : ""}\\tfrac{3}{5},\\; ${s2 === -1 ? "-" : ""}\\tfrac{4}{5} \\rangle`;
-    hint = `$(${a})\\left(${s1 === -1 ? "-" : ""}\\tfrac{3}{5}\\right) + (${b})\\left(${s2 === -1 ? "-" : ""}\\tfrac{4}{5}\\right)$ — the fifths combine to a whole number.`;
+    hint = `$(${a})\\left(${s1 === -1 ? "-" : ""}\\tfrac{3}{5}\\right) + (${b})\\left(${s2 === -1 ? "-" : ""}\\tfrac{4}{5}\\right)$: the fifths combine to a whole number.`;
   }
   const inc = D > 0;
   return { ...base,
@@ -562,7 +562,7 @@ fill["c3l-lagrange-d2"] = (rng, idx) => {
         { instruction: `Find $y$, then compute the minimum value $f = x^2 + y^2$.`, answer: `${fVal}`, accept: [`f=${fVal}`], hint: `$y = ${q * t}$, so $f = ${t * t} + ${q * q * t * t}$.` },
       ],
       finalAnswer: { value: `${fVal}`, unit: "" },
-      solutionNarrative: `$2x = \\lambda$ and $2y = ${q}\\lambda$ give $y = ${q}x$. Then $x + ${q * q}x = ${c}$ so $x = ${t}$, $y = ${q * t}$, and $f = ${fVal}$ — the squared distance from the origin to the line.`,
+      solutionNarrative: `$2x = \\lambda$ and $2y = ${q}\\lambda$ give $y = ${q}x$. Then $x + ${q * q}x = ${c}$ so $x = ${t}$, $y = ${q * t}$, and $f = ${fVal}$: the squared distance from the origin to the line.`,
     };
   }
   // constraint q x + y = c; gradients: 2x = λq, 2y = λ  =>  x = q y
@@ -609,7 +609,7 @@ fill["c3l-optimization-applied-d1"] = (rng, idx) => {
 // TOPIC: calculus-3.multiple-integrals
 // ============================================================================
 
-// d1 double-integrals-general: constant integrand over a triangular region —
+// d1 double-integrals-general: constant integrand over a triangular region: 
 // the inner integral produces the variable upper limit.
 fill["c3l-double-general-d1"] = (rng, idx) => {
   const k = rng.int(1, 3), cSlope = rng.pick([1, 2]), aLim = rng.int(2, 4);
@@ -625,7 +625,7 @@ fill["c3l-double-general-d1"] = (rng, idx) => {
       { instruction: `Outer integral: $\\int_0^{${aLim}} ${cf(inner)}x\\,dx$.`, answer: total, accept: totalDec ? [totalDec] : [], hint: `$${cf(inner)}\\cdot\\tfrac{x^2}{2}\\Big|_0^{${aLim}} = ${inner} \\cdot ${aLim * aLim}/2$.` },
     ],
     finalAnswer: { value: total, unit: "" },
-    solutionNarrative: `The inner integral gives $${cf(inner)}x$ (the strip height grows with $x$); then $\\int_0^{${aLim}} ${cf(inner)}x\\,dx = ${total}$ — which is ${k} times the triangle's area.`,
+    solutionNarrative: `The inner integral gives $${cf(inner)}x$ (the strip height grows with $x$); then $\\int_0^{${aLim}} ${cf(inner)}x\\,dx = ${total}$, which is ${k} times the triangle's area.`,
   };
 };
 
@@ -642,7 +642,7 @@ fill["c3l-triple-box-d1"] = (rng, idx) => {
       { instruction: `Outer integral $\\int_0^{${A}} ${s2}\\,dx$.`, answer: `${s3}`, accept: [], hint: `Constant ${s2} over an $x$-interval of length ${A}.` },
     ],
     finalAnswer: { value: `${s3}`, unit: "" },
-    solutionNarrative: `Peeling off each integral: $${s1}$, then $${s2}$, then $${s3}$ — that is ${k} times the volume of the $${A}\\times${B}\\times${C}$ box.`,
+    solutionNarrative: `Peeling off each integral: $${s1}$, then $${s2}$, then $${s3}$: that is ${k} times the volume of the $${A}\\times${B}\\times${C}$ box.`,
   };
 };
 
@@ -650,7 +650,7 @@ fill["c3l-triple-box-d1"] = (rng, idx) => {
 // ============================================================================
 // WAVE-15 EXTENSION: two-seed pools. One template per (topic, keyConcept,
 // difficulty) pool that had exactly TWO seed problems and no generator at that
-// tier — 29 more templates across the same 6 topics. Same conventions,
+// tier: 29 more templates across the same 6 topics. Same conventions,
 // helpers, and grading constraints as the wave-14 section above.
 // ============================================================================
 // ============================================================================
@@ -660,7 +660,7 @@ const cross3 = (a, b) => [
   a[2] * b[0] - a[0] * b[2],
   a[0] * b[1] - a[1] * b[0],
 ];
-// Nonzero integer draw (returns 1 in the zero case — bias is cosmetic only).
+// Nonzero integer draw (returns 1 in the zero case: bias is cosmetic only).
 const nzi = (rng, lo, hi) => { const v = rng.int(lo, hi); return v === 0 ? 1 : v; };
 // Signed trailing CONSTANT: sgn(0)="", sgn(3)=" + 3", sgn(-3)=" - 3".
 const sgn = (n) => (n === 0 ? "" : n > 0 ? ` + ${n}` : ` - ${-n}`);
@@ -691,11 +691,11 @@ fill["c3l-dot-product-d3"] = (rng, idx) => {
     id: `gen.c3l-dot-product-d3.${idx}`, generated: true, concepts: ["dot-product"], difficulty: 3, context: "abstract",
     prompt: `For the nonzero vectors $\\vec{a} = ${Vt(u)}$ and $\\vec{b} = ${Vt(v)}$, compute the dot product and decide what it says about the angle between them.`,
     steps: [
-      { instruction: "Compute the dot product $\\vec{a} \\cdot \\vec{b}$.", answer: `${d}`, accept: [], hint: `$${u[0]}(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]})$ — watch the signs.` },
+      { instruction: "Compute the dot product $\\vec{a} \\cdot \\vec{b}$.", answer: `${d}`, accept: [], hint: `$${u[0]}(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]})$: watch the signs.` },
       { instruction: "Is the angle between the vectors acute, right, or obtuse? Answer acute, right, or obtuse.", answer: word, accept: kind === "right" ? ["perpendicular"] : [], hint: "Positive dot product: acute. Zero: right angle. Negative: obtuse." },
     ],
     finalAnswer: { value: word, unit: "" },
-    solutionNarrative: `$\\vec{a} \\cdot \\vec{b} = ${d}$, which is ${d === 0 ? "zero, so the vectors are perpendicular — a right angle" : d > 0 ? "positive, so $\\cos\\theta > 0$ and the angle is acute" : "negative, so $\\cos\\theta < 0$ and the angle is obtuse"}.`,
+    solutionNarrative: `$\\vec{a} \\cdot \\vec{b} = ${d}$, which is ${d === 0 ? "zero, so the vectors are perpendicular: a right angle" : d > 0 ? "positive, so $\\cos\\theta > 0$ and the angle is acute" : "negative, so $\\cos\\theta < 0$ and the angle is obtuse"}.`,
   };
 };
 
@@ -710,11 +710,11 @@ fill["c3l-cross-product-d3"] = (rng, idx) => {
     prompt: `Compute the cross product $\\vec{a} \\times \\vec{b}$ for $\\vec{a} = ${Vt(a)}$ and $\\vec{b} = ${Vt(b)}$.`,
     steps: [
       { instruction: "Compute the first component $a_2 b_3 - a_3 b_2$.", answer: `${c[0]}`, accept: [], hint: `$(${a[1]})(${b[2]}) - (${a[2]})(${b[1]})$.` },
-      { instruction: "Compute the second component $a_3 b_1 - a_1 b_3$ — note the reversed pairing.", answer: `${c[1]}`, accept: [], hint: `$(${a[2]})(${b[0]}) - (${a[0]})(${b[2]})$.` },
+      { instruction: "Compute the second component $a_3 b_1 - a_1 b_3$: note the reversed pairing.", answer: `${c[1]}`, accept: [], hint: `$(${a[2]})(${b[0]}) - (${a[0]})(${b[2]})$.` },
       { instruction: "Compute the third component $a_1 b_2 - a_2 b_1$, then state the full vector.", answer: V(...c), accept: [Pn(...c)], hint: `Third: $(${a[0]})(${b[1]}) - (${a[1]})(${b[0]}) = ${c[2]}$.` },
     ],
     finalAnswer: { value: V(...c), unit: "" },
-    solutionNarrative: `$\\vec{a} \\times \\vec{b} = \\langle (${a[1]})(${b[2]})-(${a[2]})(${b[1]}),\\; (${a[2]})(${b[0]})-(${a[0]})(${b[2]}),\\; (${a[0]})(${b[1]})-(${a[1]})(${b[0]}) \\rangle = ${Vt(c)}$ — perpendicular to both inputs.`,
+    solutionNarrative: `$\\vec{a} \\times \\vec{b} = \\langle (${a[1]})(${b[2]})-(${a[2]})(${b[1]}),\\; (${a[2]})(${b[0]})-(${a[0]})(${b[2]}),\\; (${a[0]})(${b[1]})-(${a[1]})(${b[0]}) \\rangle = ${Vt(c)}$: perpendicular to both inputs.`,
   };
 };
 
@@ -762,14 +762,14 @@ fill["c3l-gradient-applied-d1"] = (rng, idx) => {
   return {
     id: `gen.c3l-gradient-applied-d1.${idx}`, generated: true, concepts: ["gradient-applied"], difficulty: 1, context: "applied",
     prompt: hill
-      ? `A hill's elevation (meters) is $h(x,y) = ${fStr}$, with $x$ east and $y$ north (km). A hiker stands at $(${p}, ${q})$. Find the gradient $\\nabla h$ there — the arrow pointing straight uphill — as a numeric vector.`
-      : `The temperature on a metal plate (degrees) is $T(x,y) = ${fStr}$. Find the gradient $\\nabla T$ at the point $(${p}, ${q})$ — the direction of fastest warming — as a numeric vector.`,
+      ? `A hill's elevation (meters) is $h(x,y) = ${fStr}$, with $x$ east and $y$ north (km). A hiker stands at $(${p}, ${q})$. Find the gradient $\\nabla h$ there, the arrow pointing straight uphill, as a numeric vector.`
+      : `The temperature on a metal plate (degrees) is $T(x,y) = ${fStr}$. Find the gradient $\\nabla T$ at the point $(${p}, ${q})$, the direction of fastest warming, as a numeric vector.`,
     steps: [
       { instruction: `Write $\\nabla ${name} = \\langle ${name}_x, ${name}_y \\rangle$ in terms of $x$ and $y$.`, answer: sym, accept: [], hint: `$${name}_x = ${-2 * a}x$ and $${name}_y = ${-2 * b}y$.` },
       { instruction: `Evaluate at $(${p}, ${q})$ as a numeric vector.`, answer: V(...g), accept: [Pn(...g)], hint: `$${-2 * a}(${p}) = ${g[0]}$ and $${-2 * b}(${q}) = ${g[1]}$.` },
     ],
     finalAnswer: { value: V(...g), unit: "" },
-    solutionNarrative: `$\\nabla ${name} = \\langle ${-2 * a}x, ${-2 * b}y \\rangle$; at $(${p}, ${q})$ this is $${Vt(g)}$${hill ? " — uphill points back toward the peak" : " — the direction of fastest temperature increase"}.`,
+    solutionNarrative: `$\\nabla ${name} = \\langle ${-2 * a}x, ${-2 * b}y \\rangle$; at $(${p}, ${q})$ this is $${Vt(g)}$${hill ? ": uphill points back toward the peak" : ": the direction of fastest temperature increase"}.`,
   };
 };
 
@@ -825,7 +825,7 @@ fill["c3l-directional-deriv-d3"] = (rng, idx) => {
       { instruction: "Compute $D_{\\vec u} f = \\nabla f \\cdot \\vec u$.", answer: D, accept: [dec, `${n}/5`], hint: `$${g[0]}\\left(${s1 === -1 ? "-" : ""}\\tfrac{3}{5}\\right) + ${g[1]}\\left(${s2 === -1 ? "-" : ""}\\tfrac{4}{5}\\right) = \\tfrac{${n}}{5}$.` },
     ],
     finalAnswer: { value: D, unit: "" },
-    solutionNarrative: `$\\nabla f(${p},${q}) = ${Vt(g)}$; with $\\vec u = \\langle ${u.join(",\\; ")} \\rangle$, $D_{\\vec u} f = \\tfrac{${n}}{5} = ${dec}$ — $f$ is ${n > 0 ? "increasing" : "decreasing"} in that direction.`,
+    solutionNarrative: `$\\nabla f(${p},${q}) = ${Vt(g)}$; with $\\vec u = \\langle ${u.join(",\\; ")} \\rangle$, $D_{\\vec u} f = \\tfrac{${n}}{5} = ${dec}$: $f$ is ${n > 0 ? "increasing" : "decreasing"} in that direction.`,
   };
 };
 
@@ -868,7 +868,7 @@ fill["c3l-double-general-d3"] = (rng, idx) => {
       { instruction: `Outer integral: $\\int_0^{${m}} (${innerStr})\\,dx$.`, answer: total, accept: acc, hint: `$${cf(k * m)}\\tfrac{x^2}{2} - ${cf(k)}\\tfrac{x^3}{3}\\Big|_0^{${m}} = \\tfrac{${k * m ** 3}}{2} - \\tfrac{${k * m ** 3}}{3}$.` },
     ],
     finalAnswer: { value: total, unit: "" },
-    solutionNarrative: `Inner: $${innerStr}$. Outer: $\\tfrac{${num}}{2} - \\tfrac{${num}}{3} = \\tfrac{${num}}{6} = ${total}$${k > 1 ? ` — ${k} times the area between the curves` : ", the area between the curves"}.`,
+    solutionNarrative: `Inner: $${innerStr}$. Outer: $\\tfrac{${num}}{2} - \\tfrac{${num}}{3} = \\tfrac{${num}}{6} = ${total}$${k > 1 ? `: ${k} times the area between the curves` : ", the area between the curves"}.`,
   };
 };
 
@@ -1045,7 +1045,7 @@ fill["c3l-optimization-applied-d3"] = (rng, idx) => {
       { instruction: `Compute the maximum profit $P(${x0}, ${y0})$, in \\$thousands.`, answer: `${V3}`, accept: [`P=${V3}`], hint: `$-${x0 * x0} - ${y0 * y0} - ${x0 * y0} + ${A2 * x0} + ${B2 * y0}$.` },
     ],
     finalAnswer: { value: `${V3}`, unit: "thousand dollars" },
-    solutionNarrative: `Solving $2x + y = ${A2}$ and $x + 2y = ${B2}$ gives $(${x0}, ${y0})$. The discriminant is $D = (-2)(-2) - (-1)^2 = 3 > 0$ with $P_{xx} = -2 < 0$ — a genuine maximum — and $P(${x0},${y0}) = ${V3}$ thousand dollars.`,
+    solutionNarrative: `Solving $2x + y = ${A2}$ and $x + 2y = ${B2}$ gives $(${x0}, ${y0})$. The discriminant is $D = (-2)(-2) - (-1)^2 = 3 > 0$ with $P_{xx} = -2 < 0$, a genuine maximum, and $P(${x0},${y0}) = ${V3}$ thousand dollars.`,
   };
 };
 
@@ -1075,7 +1075,7 @@ fill["c3l-lagrange-d1"] = (rng, idx) => {
       { instruction: "Compute the minimum value $f = x^2 + y^2$.", answer: `${2 * s * s}`, accept: [`f=${2 * s * s}`], hint: `$${s}^2 + ${s}^2$.` },
     ],
     finalAnswer: { value: `${2 * s * s}`, unit: "" },
-    solutionNarrative: `$2x = \\lambda = 2y$ forces $x = y$; the constraint gives $x = y = ${s}$, so the minimum is $f = ${s * s} + ${s * s} = ${2 * s * s}$ — the closest point on the line to the origin.`,
+    solutionNarrative: `$2x = \\lambda = 2y$ forces $x = y$; the constraint gives $x = y = ${s}$, so the minimum is $f = ${s * s} + ${s * s} = ${2 * s * s}$: the closest point on the line to the origin.`,
   };
 };
 
@@ -1186,7 +1186,7 @@ fill["c3l-partials-applied-d2"] = (rng, idx) => {
       sym: `${a}y + 2x`, symAcc: [`2x + ${a}y`], symHint: `Differentiate $${a}xy + x^2$ in $x$: $${a}xy \\to ${a}y$ and $x^2 \\to 2x$.`,
       evalTxt: `Evaluate $R_x$ at $x = ${u0}$, $y = ${v0}$.`, evalHint: `$${a}(${v0}) + 2(${u0})$.`,
       unit: "dollars per dozen drinks",
-      narrative: `$R_x = ${a}y + 2x$; at $(${u0}, ${v0})$ this is $${val}$ — each extra dozen drinks adds about \\$${val}, pastry sales held fixed.`,
+      narrative: `$R_x = ${a}y + 2x$; at $(${u0}, ${v0})$ this is $${val}$: each extra dozen drinks adds about \\$${val}, pastry sales held fixed.`,
     },
     {
       prompt: `A greenhouse's weekly yield (kg) is $Y(w, f) = ${a}wf + w^2$, where $w$ is water units and $f$ fertilizer units. Currently $w = ${u0}$, $f = ${v0}$. Find $\\partial Y/\\partial w$ and evaluate it at the current settings.`,
@@ -1220,7 +1220,7 @@ fill["c3l-partials-applied-d3"] = (rng, idx) => {
       sym: `${2 * a}x + ${b}y`, symAcc: [`${b}y + ${2 * a}x`], symHint: `Differentiate $${cf(a)}x^2 + ${b}xy$ in $x$: $${cf(a)}x^2 \\to ${2 * a}x$ and $${b}xy \\to ${b}y$.`,
       evalTxt: `Evaluate $R_x$ at $x = ${p}$, $y = ${q}$.`, evalHint: `$${2 * a}(${p}) + ${b}(${q}) = ${2 * a * p} + ${b * q}$.`,
       unit: "thousand dollars per thousand spent",
-      narrative: `$R_x = ${2 * a}x + ${b}y$; at $(${p}, ${q})$ this is $${2 * a * p} + ${b * q} = ${val}$ — each extra \\$1k of online ads adds about \\$${val}k, TV spend held fixed.`,
+      narrative: `$R_x = ${2 * a}x + ${b}y$; at $(${p}, ${q})$ this is $${2 * a * p} + ${b * q} = ${val}$: each extra \\$1k of online ads adds about \\$${val}k, TV spend held fixed.`,
     },
     {
       prompt: `A farm's harvest (bushels) is $H(f, w) = ${cf(a)}f^2 + ${b}fw$, where $f$ is fertilizer units and $w$ irrigation units. At $f = ${p}$, $w = ${q}$, find the marginal yield of fertilizer $\\partial H/\\partial f$ and evaluate it.`,
@@ -1270,7 +1270,7 @@ fill["c3l-vector-components-d2"] = (rng, idx) => {
   };
 };
 
-// d3 vector-components: recover the TAIL point from the vector and the tip —
+// d3 vector-components: recover the TAIL point from the vector and the tip: 
 // the tip-minus-tail relation run in reverse.
 fill["c3l-vector-components-d3"] = (rng, idx) => {
   const P = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5)];
@@ -1301,7 +1301,7 @@ fill["c3l-magnitude-unit-d2"] = (rng, idx) => {
     prompt: `For $\\vec{v} = ${Vt(v)}$, find its magnitude and then the unit vector in its direction.`,
     steps: [
       { instruction: "Compute the magnitude $\\sqrt{a^2 + b^2 + c^2}$.", answer: `${h}`, accept: [], hint: `$\\sqrt{${v[0] * v[0]} + ${v[1] * v[1]} + ${v[2] * v[2]}} = \\sqrt{${h * h}}$.` },
-      { instruction: "Divide each component by the magnitude to get the unit vector.", answer: V(...unit), accept: [Pn(...unit)], hint: `$\\hat{u} = \\langle ${unit.join(",\\; ")} \\rangle$ — signs ride along unchanged.` },
+      { instruction: "Divide each component by the magnitude to get the unit vector.", answer: V(...unit), accept: [Pn(...unit)], hint: `$\\hat{u} = \\langle ${unit.join(",\\; ")} \\rangle$: signs ride along unchanged.` },
     ],
     finalAnswer: { value: V(...unit), unit: "" },
     solutionNarrative: `$\\|\\vec{v}\\| = \\sqrt{${h * h}} = ${h}$ (a Pythagorean quadruple), so $\\hat{u} = ${Vt(unit)}$.`,
@@ -1323,8 +1323,8 @@ fill["c3l-magnitude-unit-d3"] = (rng, idx) => {
     return { ...base,
       prompt: `For $\\vec{v} = ${Vt(w)}$, find its magnitude and the unit vector in its direction.`,
       steps: [
-        { instruction: "Compute $\\|\\vec{v}\\|$.", answer: `${k * h}`, accept: [], hint: `$\\sqrt{${w[0] * w[0]} + ${w[1] * w[1]} + ${w[2] * w[2]}} = \\sqrt{${k * h * k * h}}$ — or spot that $\\vec{v} = ${k}${Vt(v)}$.` },
-        { instruction: "Divide each component by the magnitude and reduce the fractions fully.", answer: V(...unit), accept: [Pn(...unit)], hint: `$${w[0]}/${k * h}$ reduces to $${unit[0]}$, and so on — the common factor ${k} cancels.` },
+        { instruction: "Compute $\\|\\vec{v}\\|$.", answer: `${k * h}`, accept: [], hint: `$\\sqrt{${w[0] * w[0]} + ${w[1] * w[1]} + ${w[2] * w[2]}} = \\sqrt{${k * h * k * h}}$, or spot that $\\vec{v} = ${k}${Vt(v)}$.` },
+        { instruction: "Divide each component by the magnitude and reduce the fractions fully.", answer: V(...unit), accept: [Pn(...unit)], hint: `$${w[0]}/${k * h}$ reduces to $${unit[0]}$, and so on: the common factor ${k} cancels.` },
       ],
       finalAnswer: { value: V(...unit), unit: "" },
       solutionNarrative: `$\\|\\vec{v}\\| = ${k * h}$, and every fraction $${w[0]}/${k * h}, \\dots$ reduces by the common factor ${k}: $\\hat{u} = ${Vt(unit)}$. Scaling a vector never changes its unit direction.`,
@@ -1370,7 +1370,7 @@ fill["c3l-vectors-applied-d1"] = (rng, idx) => {
       { instruction: "Add the two velocities component by component.", answer: V(e, c), accept: [Pn(e, c)], hint: `$\\langle ${e}+0,\\; 0+${c} \\rangle$.` },
     ],
     finalAnswer: { value: V(e, c), unit: "km/h" },
-    solutionNarrative: `Net velocity $= \\langle ${e}, 0 \\rangle + \\langle 0, ${c} \\rangle = ${Vt([e, c])}$ km/h — the two effects add component by component.`,
+    solutionNarrative: `Net velocity $= \\langle ${e}, 0 \\rangle + \\langle 0, ${c} \\rangle = ${Vt([e, c])}$ km/h: the two effects add component by component.`,
   };
 };
 
@@ -1393,7 +1393,7 @@ fill["c3l-vectors-applied-d2"] = (rng, idx) => {
       { instruction: "Compute the magnitude of the resultant.", answer: `${mag}`, accept: [], hint: `$\\sqrt{${R[0] * R[0]} + ${R[1] * R[1]} + ${R[2] * R[2]}} = \\sqrt{${mag * mag}}$.` },
     ],
     finalAnswer: { value: `${mag}`, unit: "N" },
-    solutionNarrative: `Resultant $= ${Vt(R)}$ N; its magnitude is $\\sqrt{${mag * mag}} = ${mag}$ N — exact, because the resultant is a scaled Pythagorean quadruple.`,
+    solutionNarrative: `Resultant $= ${Vt(R)}$ N; its magnitude is $\\sqrt{${mag * mag}} = ${mag}$ N: exact, because the resultant is a scaled Pythagorean quadruple.`,
   };
 };
 
@@ -1416,6 +1416,6 @@ fill["c3l-vectors-applied-d3"] = (rng, idx) => {
       { instruction: "Compute the magnitude of the resultant.", answer: `${mag}`, accept: [], hint: `$\\sqrt{${R[0] * R[0]} + ${R[1] * R[1]} + ${R[2] * R[2]}} = \\sqrt{${mag * mag}}$.` },
     ],
     finalAnswer: { value: `${mag}`, unit: "N" },
-    solutionNarrative: `Resultant $= ${Vt(R)}$ N with magnitude $\\sqrt{${mag * mag}} = ${mag}$ N — the components were engineered as a scaled Pythagorean quadruple.`,
+    solutionNarrative: `Resultant $= ${Vt(R)}$ N with magnitude $\\sqrt{${mag * mag}} = ${mag}$ N: the components were engineered as a scaled Pythagorean quadruple.`,
   };
 };

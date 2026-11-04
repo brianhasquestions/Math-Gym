@@ -130,7 +130,7 @@ fill["as4-anova-setup-3"] = (rng, idx) => {
     id: `gen.as4-anova-setup-3.${idx}`, generated: true, concepts: ["anova-setup"], difficulty: 3, context: "applied",
     prompt: `An agronomist runs a one-way ANOVA on ${ctx.y} for $k = ${k}$ versions of a ${ctx.thing}, with $n = ${n}$ plots per version. State the hypotheses and the full degrees-of-freedom bookkeeping.`,
     steps: [
-      { instruction: `The null hypothesis $H_0$ says: type 'all group means are equal' or 'at least one mean differs'.`, answer: "all group means are equal", accept: ["all means are equal", "the group means are all equal", "all equal"], hint: `$H_0$ is the boring default — no treatment effect at all.` },
+      { instruction: `The null hypothesis $H_0$ says: type 'all group means are equal' or 'at least one mean differs'.`, answer: "all group means are equal", accept: ["all means are equal", "the group means are all equal", "all equal"], hint: `$H_0$ is the boring default: no treatment effect at all.` },
       { instruction: `The alternative $H_a$ says: type 'all group means are equal' or 'at least one mean differs'.`, answer: "at least one mean differs", accept: ["at least one differs", "at least one mean is different"], hint: `The opposite of "all equal" is not "all different".` },
       { instruction: `Between-groups degrees of freedom: $k - 1$. (Give a number.)`, answer: `${k - 1}`, accept: [], hint: `One less than the number of groups.` },
       { instruction: `Within-groups degrees of freedom: $N - k$ with $N = ${N}$. (Give a number.)`, answer: `${N - k}`, accept: [], hint: `$${N} - ${k}$.` },
@@ -168,7 +168,7 @@ fill["as4-anova-ss-2"] = (rng, idx) => {
   const cDevs = d.pats[2].join(", ");
   return {
     id: `gen.as4-anova-ss-2.${idx}`, generated: true, concepts: ["sums-of-squares"], difficulty: 2, context: "applied",
-    prompt: `Measured ${ctx.y} for ${ctx.groups} — ${rows(d.obs)}. Find the group means and the within-groups sum of squares $SSW$.`,
+    prompt: `Measured ${ctx.y} for ${ctx.groups}: ${rows(d.obs)}. Find the group means and the within-groups sum of squares $SSW$.`,
     steps: [
       { instruction: `Mean of group A: $\\dfrac{${d.obs[0].join(" + ")}}{3}$. (Give a whole number.)`, answer: `${d.means[0]}`, accept: [], hint: `Add the three values and divide by three.` },
       { instruction: `Mean of group B. (Give a whole number.)`, answer: `${d.means[1]}`, accept: [], hint: `$(${d.obs[1].join("+")})/3$.` },
@@ -176,7 +176,7 @@ fill["as4-anova-ss-2"] = (rng, idx) => {
       { instruction: `Group A's squared deviations from ITS OWN mean sum to ${d.ssParts[0]}, and group B's sum to ${d.ssParts[1]}. Group C's deviations are $${cDevs}$. Add group C's squared deviations to get its contribution, then total everything: $SSW = ?$ (Give a number.)`, answer: `${target}`, accept: [], hint: `Group C contributes $${d.ssParts[2]}$; then $${d.ssParts[0]} + ${d.ssParts[1]} + ${d.ssParts[2]}$.` },
     ],
     finalAnswer: { value: `${target}`, unit: "" },
-    solutionNarrative: `Group means: $${d.means.join(", ")}$. Within-group squared deviations contribute $${d.ssParts.join(" + ")} = ${target}$, so $SSW = ${target}$ — the noise left over after each group explains its own center.`,
+    solutionNarrative: `Group means: $${d.means.join(", ")}$. Within-group squared deviations contribute $${d.ssParts.join(" + ")} = ${target}$, so $SSW = ${target}$: the noise left over after each group explains its own center.`,
   };
 };
 fill["as4-anova-ss-3"] = (rng, idx) => {
@@ -188,7 +188,7 @@ fill["as4-anova-ss-3"] = (rng, idx) => {
   const devSq = sum(pat.dm.map((v) => v * v));
   return {
     id: `gen.as4-anova-ss-3.${idx}`, generated: true, concepts: ["sums-of-squares"], difficulty: 3, context: "applied",
-    prompt: `A trial of ${ctx.groups} records ${ctx.y} — ${rows(d.obs)}. The group means are $${d.means[0]}$, $${d.means[1]}$, and $${d.means[2]}$. Build both ANOVA sums of squares.`,
+    prompt: `A trial of ${ctx.groups} records ${ctx.y}: ${rows(d.obs)}. The group means are $${d.means[0]}$, $${d.means[1]}$, and $${d.means[2]}$. Build both ANOVA sums of squares.`,
     steps: [
       { instruction: `Grand mean of all nine observations. (Give a whole number.)`, answer: `${d.g}`, accept: [], hint: `With equal group sizes, average the three group means.` },
       { instruction: `Between: $SSB = 3\\left[(${d.means[0]} - ${d.g})^2 + (${d.means[1]} - ${d.g})^2 + (${d.means[2]} - ${d.g})^2\\right]$. (Give a number.)`, answer: `${pat.ssb}`, accept: [], hint: `The mean deviations are $${pat.dm.join(", ")}$; their squares sum to $${devSq}$.` },
@@ -212,7 +212,7 @@ fill["as4-anova-f-1"] = (rng, idx) => {
       { instruction: `$F = \\dfrac{MSB}{MSW} = \\dfrac{${c.msb}}{${c.msw}}$. (Give a number.)`, answer: c.F, accept: [], hint: `Signal over noise.` },
     ],
     finalAnswer: { value: c.F, unit: "" },
-    solutionNarrative: `$MSB = ${c.msb}$, $MSW = ${c.msw}$, so $F = ${c.F}$ — the between-group signal is ${c.F} times the within-group noise.`,
+    solutionNarrative: `$MSB = ${c.msb}$, $MSW = ${c.msw}$, so $F = ${c.F}$: the between-group signal is ${c.F} times the within-group noise.`,
   };
 };
 fill["as4-anova-f-2"] = (rng, idx) => {
@@ -275,7 +275,7 @@ fill["as4-anova-decide-1"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: reject ? "reject" : "fail to reject", accept: reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Beyond the critical value means significant.` },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$F = ${c.F}$ ${reject ? ">" : "\\le"} ${crit.fstarS}$, so we ${reject ? "reject $H_0$: at least one group mean differs" : "fail to reject $H_0$: the group differences are within noise"}.`,
+    solutionNarrative: `$F = ${c.F} ${reject ? ">" : "\\le"} ${crit.fstarS}$, so we ${reject ? "reject $H_0$: at least one group mean differs" : "fail to reject $H_0$: the group differences are within noise"}.`,
   };
 };
 fill["as4-anova-decide-2"] = (rng, idx) => {
@@ -295,7 +295,7 @@ fill["as4-anova-decide-2"] = (rng, idx) => {
       { instruction: interp.q, answer: interp.a, accept: [], hint: interp.h },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$F = ${c.F}$ ${reject ? ">" : "\\le"} F^* = ${crit.fstarS}$: ${reject ? "reject $H_0$. But rejection says only that at least one mean differs — not that every pair does" : "fail to reject $H_0$. That is a shrug, not a proof that the means are equal"}.`,
+    solutionNarrative: `$F = ${c.F} ${reject ? ">" : "\\le"} F^* = ${crit.fstarS}$: ${reject ? "reject $H_0$. But rejection says only that at least one mean differs, not that every pair does" : "fail to reject $H_0$. That is a shrug, not a proof that the means are equal"}.`,
   };
 };
 fill["as4-anova-decide-3"] = (rng, idx) => {
@@ -370,7 +370,7 @@ fill["as4-reg-resid-1"] = (rng, idx) => {
       { instruction: `Does the point sit ABOVE or BELOW the fitted line? Type 'above' or 'below'.`, answer: r > 0 ? "above" : "below", accept: [], hint: `Positive residual means above.` },
     ],
     finalAnswer: { value: `${r}`, unit: "" },
-    solutionNarrative: `$\\hat{y} = ${yhat}$, so the residual is $${y0} - ${yhat} = ${r}$: the point lies ${r > 0 ? "above" : "below"} the line — the part of $y$ the model did not explain.`,
+    solutionNarrative: `$\\hat{y} = ${yhat}$, so the residual is $${y0} - ${yhat} = ${r}$: the point lies ${r > 0 ? "above" : "below"} the line: the part of $y$ the model did not explain.`,
   };
 };
 fill["as4-reg-resid-2"] = (rng, idx) => {
@@ -454,7 +454,7 @@ fill["as4-reg-slope-2"] = (rng, idx) => {
       { instruction: `Upper bound: $${d10(bT)} + ${d100k(mU)}$. Give the exact value.`, answer: d100k(hiU), accept: [], hint: `Slope plus margin.` },
     ],
     finalAnswer: { value: `(${d100k(loU)}, ${d100k(hiU)})`, unit: "" },
-    solutionNarrative: `Margin $= ${conf.t} \\times ${d100(seH)} = ${d100k(mU)}$, so the 95% CI for $\\beta$ is $(${d100k(loU)}, ${d100k(hiU)})$ — the range of slopes compatible with the data.`,
+    solutionNarrative: `Margin $= ${conf.t} \\times ${d100(seH)} = ${d100k(mU)}$, so the 95% CI for $\\beta$ is $(${d100k(loU)}, ${d100k(hiU)})$: the range of slopes compatible with the data.`,
   };
 };
 fill["as4-reg-slope-3"] = (rng, idx) => {
@@ -473,7 +473,7 @@ fill["as4-reg-slope-3"] = (rng, idx) => {
   const reject = absT > conf.tstar;
   const ctx = rng.pick(REG_CTX);
   const interp = reject
-    ? { q: `Rejecting supports that the true slope $\\beta$ differs from zero — i.e. a real linear relationship. Type 'yes' or 'no': is that what this test result supports?`, a: "yes", h: `That is exactly what rejecting $H_0: \\beta = 0$ means.` }
+    ? { q: `Rejecting supports that the true slope $\\beta$ differs from zero: i.e. a real linear relationship. Type 'yes' or 'no': is that what this test result supports?`, a: "yes", h: `That is exactly what rejecting $H_0: \\beta = 0$ means.` }
     : { q: `Does failing to reject PROVE the true slope is exactly zero? Type 'yes' or 'no'.`, a: "no", h: `The data are merely compatible with a zero slope; a small sample proves nothing.` };
   return {
     id: `gen.as4-reg-slope-3.${idx}`, generated: true, concepts: ["slope-inference"], difficulty: 3, context: "applied",
@@ -485,7 +485,7 @@ fill["as4-reg-slope-3"] = (rng, idx) => {
       { instruction: interp.q, answer: interp.a, accept: [], hint: interp.h },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$t = ${t}$, $|t| = ${absT}$ ${reject ? ">" : "\\le"} ${conf.t}$: ${reject ? "reject $H_0$ — the data support a genuine linear relationship between the variables" : "fail to reject $H_0$ — but that does not prove the slope is zero, only that this sample could not distinguish it from zero"}.`,
+    solutionNarrative: `$t = ${t}$, $|t| = ${absT} ${reject ? ">" : "\\le"} ${conf.t}$: ${reject ? "reject $H_0$: the data support a genuine linear relationship between the variables" : "fail to reject $H_0$, but that does not prove the slope is zero, only that this sample could not distinguish it from zero"}.`,
   };
 };
 
@@ -533,7 +533,7 @@ fill["as4-reg-rsq-2"] = (rng, idx) => {
       { instruction: `Does this $r^2$ prove that ${ctx.x} CAUSES ${ctx.y}? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `$r^2$ measures fit, not mechanism.` },
     ],
     finalAnswer: { value: c.r2, unit: "" },
-    solutionNarrative: `$r^2 = ${c.ssr}/${c.sst} = ${c.r2}$: the line explains ${c.pct}% of the variation in ${ctx.y}. A good fit is not a causal proof — a lurking variable could drive both.`,
+    solutionNarrative: `$r^2 = ${c.ssr}/${c.sst} = ${c.r2}$: the line explains ${c.pct}% of the variation in ${ctx.y}. A good fit is not a causal proof: a lurking variable could drive both.`,
   };
 };
 fill["as4-reg-rsq-3"] = (rng, idx) => {
@@ -551,7 +551,7 @@ fill["as4-reg-rsq-3"] = (rng, idx) => {
       { instruction: `A colleague says the high $r^2$ shows ${ctx.x} causes ${ctx.y}. Is that a valid conclusion? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `Correlation and fit never establish causation by themselves.` },
     ],
     finalAnswer: { value: c.r2, unit: "" },
-    solutionNarrative: `$SSR = ${ssr}$, so $r^2 = ${c.r2}$: ${c.pct}% explained, ${unpct}% residual. And $r^2$ is silent about causation — only a randomized experiment can speak to that.`,
+    solutionNarrative: `$SSR = ${ssr}$, so $r^2 = ${c.r2}$: ${c.pct}% explained, ${unpct}% residual. And $r^2$ is silent about causation: only a randomized experiment can speak to that.`,
   };
 };
 
@@ -605,7 +605,7 @@ fill["as4-reg-pred-3"] = (rng, idx) => {
     steps: [
       { instruction: `Mechanically, the line outputs $${a} + ${b} \\times ${xstar}$. (Give a number.)`, answer: `${yhat}`, accept: [], hint: `Plug in and evaluate.` },
       { instruction: `Predicting at $x^* = ${xstar}$ is interpolation or extrapolation? Type one.`, answer: "extrapolation", accept: ["extrapolating"], hint: `Compare $${xstar}$ with the observed range $[${lo}, ${hi}]$.` },
-      { instruction: `Should a prediction interval built here be trusted as much as one inside $[${lo}, ${hi}]$? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `The linear pattern was never observed out there — it may bend.` },
+      { instruction: `Should a prediction interval built here be trusted as much as one inside $[${lo}, ${hi}]$? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `The linear pattern was never observed out there: it may bend.` },
     ],
     finalAnswer: { value: "extrapolation", unit: "" },
     solutionNarrative: `The formula happily returns ${yhat}, but $x^* = ${xstar}$ sits far outside $[${lo}, ${hi}]$: this is extrapolation, and both the point forecast and any interval around it rest on an unverified assumption that the line keeps going straight.`,
@@ -677,7 +677,7 @@ fill["as4-des-sampling-2"] = (rng, idx) => {
       { instruction: `Which sampling method is this? ${SAMPLING_MENU}`, answer: "systematic", accept: SAMPLING_ACCEPT["systematic"], hint: `A fixed counting rule after a random start.` },
     ],
     finalAnswer: { value: `${k}`, unit: "" },
-    solutionNarrative: `$k = ${N}/${n} = ${k}$: take every ${k}th item after a random start — systematic sampling. It spreads the sample evenly along the list, but a hidden cycle in the list matching $k$ would bias it.`,
+    solutionNarrative: `$k = ${N}/${n} = ${k}$: take every ${k}th item after a random start: systematic sampling. It spreads the sample evenly along the list, but a hidden cycle in the list matching $k$ would bias it.`,
   };
 };
 fill["as4-des-sampling-3"] = (rng, idx) => {
@@ -687,7 +687,7 @@ fill["as4-des-sampling-3"] = (rng, idx) => {
   const first = stratFirst ? strat : clus, second = stratFirst ? clus : strat;
   return {
     id: `gen.as4-des-sampling-3.${idx}`, generated: true, concepts: ["sampling-methods"], difficulty: 3, context: "applied",
-    prompt: `Two designs that both use groups — but in opposite ways. Design A: ${first.mk(rng)}. Design B: ${second.mk(rng)}. Classify each.`,
+    prompt: `Two designs that both use groups, but in opposite ways. Design A: ${first.mk(rng)}. Design B: ${second.mk(rng)}. Classify each.`,
     steps: [
       { instruction: `Design A is which method? ${SAMPLING_MENU}`, answer: first.cat, accept: SAMPLING_ACCEPT[first.cat], hint: `Does it sample SOME members from EVERY group, or ALL members from SOME groups?` },
       { instruction: `Design B is which method? ${SAMPLING_MENU}`, answer: second.cat, accept: SAMPLING_ACCEPT[second.cat], hint: `The opposite of Design A.` },
@@ -711,7 +711,7 @@ const BIAS_TEMPLATES = [
   { cat: "undercoverage", mk: (rng) => `A city survey samples from the property-tax roll; renters are absent from that list entirely, so they cannot possibly be drawn` },
   { cat: "nonresponse", mk: (rng) => `Questionnaires go out to a properly drawn random sample of ${rng.int(3, 9) * 100} residents, but only a small share mail them back, and the people who bother to reply may differ from those who do not` },
   { cat: "nonresponse", mk: (rng) => `A well-designed random sample of customers is emailed a survey; most chosen customers simply never answer it, and the few who do tend to be the angriest` },
-  { cat: "response", mk: (rng) => `A survey asks, "Do you agree that the city's reckless and wasteful stadium project should be stopped?" — wording that pushes respondents toward one answer` },
+  { cat: "response", mk: (rng) => `A survey asks, "Do you agree that the city's reckless and wasteful stadium project should be stopped?": wording that pushes respondents toward one answer` },
   { cat: "response", mk: (rng) => `In face-to-face interviews about exercise, respondents systematically overstate their weekly workouts to look good to the interviewer` },
   { cat: "selection", mk: (rng) => `An interviewer told to find ${rng.int(30, 80)} shoppers approaches only the people who look friendly and unhurried, personally deciding who gets asked` },
   { cat: "selection", mk: (rng) => `A talk show invites viewers to call in and vote on a policy question, so the sample consists of whoever feels strongly enough to volunteer themselves` },
@@ -741,7 +741,7 @@ fill["as4-des-bias-2"] = (rng, idx) => {
       { instruction: `Study B suffers from which bias? ${BIAS_MENU}`, answer: b.cat, accept: BIAS_ACCEPT[b.cat], hint: `It is a different flaw than Study A's.` },
     ],
     finalAnswer: { value: b.cat, unit: "" },
-    solutionNarrative: `Study A shows ${a.cat} bias; Study B shows ${b.cat} bias. Naming the flaw precisely matters because each has a different fix — and some have no fix after the fact.`,
+    solutionNarrative: `Study A shows ${a.cat} bias; Study B shows ${b.cat} bias. Naming the flaw precisely matters because each has a different fix, and some have no fix after the fact.`,
   };
 };
 fill["as4-des-bias-3"] = (rng, idx) => {
@@ -755,7 +755,7 @@ fill["as4-des-bias-3"] = (rng, idx) => {
       { instruction: `Random sampling error shrinks as the sample grows. Does bias shrink the same way? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `Bias is a fixed offset, not noise.` },
     ],
     finalAnswer: { value: "no", unit: "" },
-    solutionNarrative: `This is ${t.cat} bias, a systematic tilt. Enlarging the sample shrinks random error but leaves the tilt untouched — a million tilted answers are just a very confident wrong answer. The fix is changing the DESIGN, not the size.`,
+    solutionNarrative: `This is ${t.cat} bias, a systematic tilt. Enlarging the sample shrinks random error but leaves the tilt untouched: a million tilted answers are just a very confident wrong answer. The fix is changing the DESIGN, not the size.`,
   };
 };
 
@@ -776,7 +776,7 @@ fill["as4-des-causation-1"] = (rng, idx) => {
       { instruction: `Can this design, by itself, support a cause-and-effect conclusion? Type 'yes' or 'no'.`, answer: s.canCause, accept: [], hint: `Random assignment is what rules out lurking variables.` },
     ],
     finalAnswer: { value: s.kind, unit: "" },
-    solutionNarrative: `${s.kind === "experiment" ? "The researchers randomly assigned the treatment, so this is an experiment — and randomization balances lurking variables, licensing a causal conclusion." : "Nobody assigned anything; the groups formed themselves. Observational data can show association, but lurking variables block any causal claim."}`,
+    solutionNarrative: `${s.kind === "experiment" ? "The researchers randomly assigned the treatment, so this is an experiment, and randomization balances lurking variables, licensing a causal conclusion." : "Nobody assigned anything; the groups formed themselves. Observational data can show association, but lurking variables block any causal claim."}`,
   };
 };
 const EXPL_SCEN = [
@@ -813,12 +813,12 @@ fill["as4-des-causation-3"] = (rng, idx) => {
     id: `gen.as4-des-causation-3.${idx}`, generated: true, concepts: ["experiments-vs-observation"], difficulty: 3, context: "applied",
     prompt: `An observational study finds that ${s.a} is associated with ${s.b}. Before anyone claims causation, consider confounding: a third variable that influences BOTH the explanatory and the response variable.`,
     steps: [
-      { instruction: `Which is the more plausible confounder here? Type '${optA}' or '${optB}'.`, answer: s.conf, accept: [], hint: `A confounder must plausibly drive BOTH variables at once — ${s.why}.` },
+      { instruction: `Which is the more plausible confounder here? Type '${optA}' or '${optB}'.`, answer: s.conf, accept: [], hint: `A confounder must plausibly drive BOTH variables at once: ${s.why}.` },
       { instruction: `Does the observed association alone prove that ${s.a} causes ${s.b}? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `The confounder offers a rival explanation.` },
       { instruction: `Which design could settle the causal question? Type 'randomized experiment' or 'larger observational study'.`, answer: "randomized experiment", accept: ["a randomized experiment", "randomized controlled experiment", "an experiment"], hint: `Random assignment breaks the confounder's grip; more observational data just repeats the confounding.` },
     ],
     finalAnswer: { value: "randomized experiment", unit: "" },
-    solutionNarrative: `${s.conf.charAt(0).toUpperCase() + s.conf.slice(1)} plausibly drives both ${s.a} and ${s.b} (${s.why}), so the association proves nothing causal. Only random assignment — a randomized experiment — severs the link to lurking variables.`,
+    solutionNarrative: `${s.conf.charAt(0).toUpperCase() + s.conf.slice(1)} plausibly drives both ${s.a} and ${s.b} (${s.why}), so the association proves nothing causal. Only random assignment, a randomized experiment, severs the link to lurking variables.`,
   };
 };
 
@@ -888,6 +888,6 @@ fill["as4-des-random-3"] = (rng, idx) => {
       { instruction: `Blocking is done to: type 'reduce variation' or 'increase sample size'.`, answer: "reduce variation", accept: ["to reduce variation", "reduces variation", "reduce variation from a known factor"], hint: `Comparing treatments among similar subjects removes the block factor's noise from the comparison.` },
     ],
     finalAnswer: { value: `${m}`, unit: "" },
-    solutionNarrative: `Each block holds ${N}/${B} = ${T * m} subjects, and each treatment gets ${m} per block. Blocking removes the known nuisance factor's variation from the treatment comparison — "block what you can, randomize what you cannot."`,
+    solutionNarrative: `Each block holds ${N}/${B} = ${T * m} subjects, and each treatment gets ${m} per block. Blocking removes the known nuisance factor's variation from the treatment comparison: "block what you can, randomize what you cannot."`,
   };
 };

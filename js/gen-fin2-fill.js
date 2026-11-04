@@ -16,7 +16,7 @@
 //
 // Grader notes honored throughout (js/problem-engine.js):
 //  - Money answers are emitted as exact two-decimal strings ("973.27") and the
-//    instruction says to round to the nearest cent, no $ or commas. The sum of
+//    instruction says to round to the nearest cent, no \\$ or commas. The sum of
 //    displayed rounded parts is used as the primary answer so intermediate
 //    steps are internally consistent.
 //  - Rate/percent answers state "as a percent (a number, no % sign)" and match
@@ -65,12 +65,12 @@ fill["fm2-bond-pricing-1"] = (rng, idx) => {
     prompt: `A ${n}-year bond has face value \\$1,000 and an annual coupon of \\$${C} (coupon rate ${pct(rate, 2)}%). The market rate equals the coupon rate at ${pct(r, 2)}% per year. Price it with $C=${C}$, $r=${r}$, $n=${n}$.`,
     steps: [
       { instruction: `Compute the annuity factor $\\dfrac{1-(1+${r})^{-${n}}}{${r}}$ (round to 6 decimal places).`, answer: rnd(af, 6), accept: [], hint: `$(1+${r})^{-${n}} = ${rnd(Math.pow(1 + r, -n), 6)}$.` },
-      { instruction: `Value the coupons: multiply the annuity factor by the \\$${C} coupon (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
-      { instruction: `Value the face amount: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
-      { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `A par bond prices at face value.` },
+      { instruction: `Value the coupons: multiply the annuity factor by the \\$${C} coupon (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
+      { instruction: `Value the face amount: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
+      { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `A par bond prices at face value.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `Coupons worth $${C}\\cdot${rnd(af, 6)} = \\$${money(coupPV)}$, face worth \\$${money(facePV)}$; the price is \\$${money(price)}$ — par, because the coupon rate equals the market rate.`,
+    solutionNarrative: `Coupons worth $${C}\\cdot${rnd(af, 6)} = \\$${money(coupPV)}$, face worth \\$${money(facePV)}$; the price is \\$${money(price)}$: par, because the coupon rate equals the market rate.`,
   };
 };
 
@@ -89,12 +89,12 @@ fill["fm2-bond-pricing-2"] = (rng, idx) => {
     prompt: `A ${n}-year bond has face value \\$1,000 and a ${pct(couponRate, 2)}% annual coupon (\\$${C} per year). The market rate is ${pct(r, 2)}% per year. Price it with $C=${C}$, $r=${r}$, $n=${n}$.`,
     steps: [
       { instruction: `Compute the annuity factor $\\dfrac{1-(1+${r})^{-${n}}}{${r}}$ (round to 6 decimal places).`, answer: rnd(af, 6), accept: [], hint: `$(1+${r})^{-${n}} = ${rnd(Math.pow(1 + r, -n), 6)}$.` },
-      { instruction: `Value the coupons: $${C} \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
-      { instruction: `Value the face amount: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
-      { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(price), accept: [money(coupPV + facePV)], hint: `A discount bond prices below \\$1,000.` },
+      { instruction: `Value the coupons: $${C} \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
+      { instruction: `Value the face amount: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
+      { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(coupPV + facePV)], hint: `A discount bond prices below \\$1,000.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `Coupons worth \\$${money(coupPV)}, face worth \\$${money(facePV)}; price \\$${money(price)} — a discount, since the ${pct(couponRate, 2)}% coupon is below the ${pct(r, 2)}% market rate.`,
+    solutionNarrative: `Coupons worth \\$${money(coupPV)}, face worth \\$${money(facePV)}; price \\$${money(price)}: a discount, since the ${pct(couponRate, 2)}% coupon is below the ${pct(r, 2)}% market rate.`,
   };
 };
 
@@ -113,12 +113,12 @@ fill["fm2-bond-pricing-3"] = (rng, idx) => {
     prompt: `A ${n}-year bond has face value \\$1,000 and a ${pct(couponRate, 2)}% annual coupon (\\$${C} per year). The market rate is ${pct(r, 2)}% per year. Price it with $C=${C}$, $r=${r}$, $n=${n}$.`,
     steps: [
       { instruction: `Compute the annuity factor $\\dfrac{1-(1+${r})^{-${n}}}{${r}}$ (round to 6 decimal places).`, answer: rnd(af, 6), accept: [], hint: `$(1+${r})^{-${n}} = ${rnd(Math.pow(1 + r, -n), 6)}$.` },
-      { instruction: `Value the coupons: $${C} \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
-      { instruction: `Value the face amount: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
-      { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(price), accept: [money(coupPV + facePV)], hint: `A premium bond prices above \\$1,000.` },
+      { instruction: `Value the coupons: $${C} \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
+      { instruction: `Value the face amount: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
+      { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(coupPV + facePV)], hint: `A premium bond prices above \\$1,000.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `Coupons worth \\$${money(coupPV)}, face worth \\$${money(facePV)}; price \\$${money(price)} — a premium, since the ${pct(couponRate, 2)}% coupon beats the ${pct(r, 2)}% market rate.`,
+    solutionNarrative: `Coupons worth \\$${money(coupPV)}, face worth \\$${money(facePV)}; price \\$${money(price)}: a premium, since the ${pct(couponRate, 2)}% coupon beats the ${pct(r, 2)}% market rate.`,
   };
 };
 
@@ -134,7 +134,7 @@ fill["fm2-premium-par-discount-1"] = (rng, idx) => {
       { instruction: `A coupon rate higher than the market rate means the bond sells at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.`, answer: "premium", accept: ["at a premium"], hint: `A richer-than-market coupon commands a price above face value.` },
     ],
     finalAnswer: { value: "premium", unit: "" },
-    solutionNarrative: `The coupon rate (${coupon}%) exceeds the market rate (${market}%), so the bond sells above face value — at a premium.`,
+    solutionNarrative: `The coupon rate (${coupon}%) exceeds the market rate (${market}%), so the bond sells above face value: at a premium.`,
   };
 };
 
@@ -165,7 +165,7 @@ fill["fm2-premium-par-discount-3"] = (rng, idx) => {
       { instruction: `When the coupon rate equals the market rate, the bond sells at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.`, answer: "par", accept: ["at par"], hint: `Equal rates mean the price equals the face value.` },
     ],
     finalAnswer: { value: "par", unit: "" },
-    solutionNarrative: `When the coupon rate equals the market rate, there is no reason to price above or below face value — the bond trades at par.`,
+    solutionNarrative: `When the coupon rate equals the market rate, there is no reason to price above or below face value: the bond trades at par.`,
   };
 };
 
@@ -218,7 +218,7 @@ fill["fm2-current-yield-ytm-3"] = (rng, idx) => {
     id: `gen.fm2-current-yield-ytm-3.${idx}`, generated: true, concepts: ["current-yield-and-ytm"], difficulty: 3, context: "applied",
     prompt: `A bond has face value \\$1,000, an annual coupon of \\$${coupon}, price \\$${P}, and ${n} years to maturity. Approximate its yield to maturity using $\\text{YTM} \\approx \\dfrac{C + (F-P)/n}{(F+P)/2}$ with $C=${coupon}$, $F=1000$, $P=${P}$, $n=${n}$. Give the result as a percent (round to 2 decimal places).`,
     steps: [
-      { instruction: `Compute the amortized gain/loss $(F-P)/n = (1000-${P})/${n}$ (give a number, watch the sign).`, answer: `${amort}`, accept: [], hint: `$(1000 - ${P}) = ${F - P}$, divided by ${n}$.` },
+      { instruction: `Compute the amortized gain/loss $(F-P)/n = (1000-${P})/${n}$ (give a number, watch the sign).`, answer: `${amort}`, accept: [], hint: `$(1000 - ${P}) = ${F - P}$, divided by ${n}.` },
       { instruction: `Add it to the coupon for the numerator: $${coupon} + (${amort})$ (give a number).`, answer: `${numer}`, accept: [], hint: `$C + (F-P)/n$.` },
       { instruction: `Compute the denominator, the average of face and price: $(1000+${P})/2$ (give a number).`, answer: `${denom}`, accept: [], hint: `$${F + P} / 2$.` },
       { instruction: `Divide numerator by denominator, multiply by 100, and round to 2 decimals. Enter the YTM as a percent (a number, no % sign).`, answer: pct(ytmDec, 2), accept: [], hint: `$${numer} / ${denom} = ${rnd(ytmDec, 6)}$, times 100.` },
@@ -261,12 +261,12 @@ fill["fm2-rate-sensitivity-2"] = (rng, idx) => {
     steps: [
       { instruction: `Will the new price be above or below \\$1,000? Answer exactly one of: above, below.`, answer: "below", accept: ["under", "lower"], hint: `Rates rose above the coupon, so the price falls below face value.` },
       { instruction: `Compute the annuity factor $\\dfrac{1-(1+${r})^{-${n}}}{${r}}$ (round to 6 decimal places).`, answer: rnd(af, 6), accept: [], hint: `$(1+${r})^{-${n}} = ${rnd(Math.pow(1 + r, -n), 6)}$.` },
-      { instruction: `Value the coupons: $${C} \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
-      { instruction: `Value the face: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
-      { instruction: `Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `Sum the two present values.` },
+      { instruction: `Value the coupons: $${C} \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
+      { instruction: `Value the face: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
+      { instruction: `Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `Sum the two present values.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `At ${pct(r, 2)}%: coupons \\$${money(coupPV)}, face \\$${money(facePV)}, price \\$${money(price)} — below par, confirming a rate rise pushes the price down.`,
+    solutionNarrative: `At ${pct(r, 2)}%: coupons \\$${money(coupPV)}, face \\$${money(facePV)}, price \\$${money(price)}: below par, confirming a rate rise pushes the price down.`,
   };
 };
 
@@ -286,12 +286,12 @@ fill["fm2-rate-sensitivity-3"] = (rng, idx) => {
     steps: [
       { instruction: `Will the new price be above or below \\$1,000? Answer exactly one of: above, below.`, answer: "above", accept: ["over", "higher"], hint: `The coupon now beats the market rate, so the price is a premium.` },
       { instruction: `Compute the annuity factor $\\dfrac{1-(1+${r})^{-${n}}}{${r}}$ (round to 6 decimal places).`, answer: rnd(af, 6), accept: [], hint: `$(1+${r})^{-${n}} = ${rnd(Math.pow(1 + r, -n), 6)}$.` },
-      { instruction: `Value the coupons: $${C} \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
-      { instruction: `Value the face: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
-      { instruction: `Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `Sum the two present values.` },
+      { instruction: `Value the coupons: $${C} \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(coupPV), accept: [], hint: `$${C} \\times ${rnd(af, 6)}$.` },
+      { instruction: `Value the face: $\\dfrac{1000}{(1+${r})^{${n}}}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(facePV), accept: [], hint: `$1000 / ${rnd(Math.pow(1 + r, n), 6)}$.` },
+      { instruction: `Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `Sum the two present values.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `At ${pct(r, 2)}%: coupons \\$${money(coupPV)}, face \\$${money(facePV)}, price \\$${money(price)} — a premium, confirming a rate drop lifts the price.`,
+    solutionNarrative: `At ${pct(r, 2)}%: coupons \\$${money(coupPV)}, face \\$${money(facePV)}, price \\$${money(price)}: a premium, confirming a rate drop lifts the price.`,
   };
 };
 
@@ -312,8 +312,8 @@ fill["fm2-net-present-value-1"] = (rng, idx) => {
     id: `gen.fm2-net-present-value-1.${idx}`, generated: true, concepts: ["net-present-value"], difficulty: 1, context: "applied",
     prompt: `A project costs \\$${C0} today and returns a single \\$${cf1} one year from now. The required rate is ${pct(r, 2)}%. Find the NPV using $\\text{NPV} = \\dfrac{CF_1}{1+r} - C_0$.`,
     steps: [
-      { instruction: `Discount the \\$${cf1} back one year: $${cf1}/(1+${r})$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(pv1), accept: [], hint: `$${cf1} \\div ${1 + r}$.` },
-      { instruction: `Subtract the \\$${C0} initial cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(npv), accept: [], hint: `$${money(pv1)} - ${C0}$.` },
+      { instruction: `Discount the \\$${cf1} back one year: $${cf1}/(1+${r})$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(pv1), accept: [], hint: `$${cf1} \\div ${1 + r}$.` },
+      { instruction: `Subtract the \\$${C0} initial cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(npv), accept: [], hint: `$${money(pv1)} - ${C0}$.` },
     ],
     finalAnswer: { value: money(npv), unit: "dollars" },
     solutionNarrative: `The \\$${cf1} is worth $${cf1}/(1+${r}) = \\$${money(pv1)}$ today; minus the \\$${C0} cost, NPV $= \\$${money(npv)}$.`,
@@ -333,10 +333,10 @@ fill["fm2-net-present-value-2"] = (rng, idx) => {
     id: `gen.fm2-net-present-value-2.${idx}`, generated: true, concepts: ["net-present-value"], difficulty: 2, context: "applied",
     prompt: `A project costs \\$${C0} today and returns \\$${cf1} at the end of year 1 and \\$${cf2} at the end of year 2. The required rate is ${pct(r, 2)}%. Find the NPV.`,
     steps: [
-      { instruction: `Present value of year 1: $${cf1}/(1+${r})$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(pv1), accept: [], hint: `$${cf1} \\div ${1 + r}$.` },
-      { instruction: `Present value of year 2: $${cf2}/(1+${r})^2$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(pv2), accept: [], hint: `$${cf2} \\div ${rnd(Math.pow(1 + r, 2), 4)}$.` },
-      { instruction: `Add the two present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(sumPV), accept: [money(pv1 + pv2)], hint: `$${money(pv1)} + ${money(pv2)}$.` },
-      { instruction: `Subtract the \\$${C0} cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(npv), accept: [money(pv1 + pv2 - C0)], hint: `$${money(sumPV)} - ${C0}$.` },
+      { instruction: `Present value of year 1: $${cf1}/(1+${r})$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(pv1), accept: [], hint: `$${cf1} \\div ${1 + r}$.` },
+      { instruction: `Present value of year 2: $${cf2}/(1+${r})^2$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(pv2), accept: [], hint: `$${cf2} \\div ${rnd(Math.pow(1 + r, 2), 4)}$.` },
+      { instruction: `Add the two present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(sumPV), accept: [money(pv1 + pv2)], hint: `$${money(pv1)} + ${money(pv2)}$.` },
+      { instruction: `Subtract the \\$${C0} cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(npv), accept: [money(pv1 + pv2 - C0)], hint: `$${money(sumPV)} - ${C0}$.` },
     ],
     finalAnswer: { value: money(npv), unit: "dollars" },
     solutionNarrative: `PVs are \\$${money(pv1)} and \\$${money(pv2)}, summing to \\$${money(sumPV)}. NPV $= ${money(sumPV)} - ${C0} = \\$${money(npv)}$.`,
@@ -357,11 +357,11 @@ fill["fm2-net-present-value-3"] = (rng, idx) => {
     id: `gen.fm2-net-present-value-3.${idx}`, generated: true, concepts: ["net-present-value"], difficulty: 3, context: "applied",
     prompt: `A project costs \\$${C0} today and returns \\$${cf1}, \\$${cf2}, and \\$${cf3} at the ends of years 1, 2, and 3. The required rate is ${pct(r, 2)}%. Find the NPV.`,
     steps: [
-      { instruction: `PV of year 1: $${cf1}/(1+${r})$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(pv1), accept: [], hint: `$${cf1} \\div ${1 + r}$.` },
-      { instruction: `PV of year 2: $${cf2}/(1+${r})^2$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(pv2), accept: [], hint: `$${cf2} \\div ${rnd(Math.pow(1 + r, 2), 6)}$.` },
-      { instruction: `PV of year 3: $${cf3}/(1+${r})^3$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(pv3), accept: [], hint: `$${cf3} \\div ${rnd(Math.pow(1 + r, 3), 6)}$.` },
-      { instruction: `Sum the three present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(sumPV), accept: [money(pv1 + pv2 + pv3)], hint: `Add the three PVs.` },
-      { instruction: `Subtract the \\$${C0} cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(npv), accept: [money(pv1 + pv2 + pv3 - C0)], hint: `$${money(sumPV)} - ${C0}$.` },
+      { instruction: `PV of year 1: $${cf1}/(1+${r})$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(pv1), accept: [], hint: `$${cf1} \\div ${1 + r}$.` },
+      { instruction: `PV of year 2: $${cf2}/(1+${r})^2$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(pv2), accept: [], hint: `$${cf2} \\div ${rnd(Math.pow(1 + r, 2), 6)}$.` },
+      { instruction: `PV of year 3: $${cf3}/(1+${r})^3$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(pv3), accept: [], hint: `$${cf3} \\div ${rnd(Math.pow(1 + r, 3), 6)}$.` },
+      { instruction: `Sum the three present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(sumPV), accept: [money(pv1 + pv2 + pv3)], hint: `Add the three PVs.` },
+      { instruction: `Subtract the \\$${C0} cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(npv), accept: [money(pv1 + pv2 + pv3 - C0)], hint: `$${money(sumPV)} - ${C0}$.` },
     ],
     finalAnswer: { value: money(npv), unit: "dollars" },
     solutionNarrative: `The PVs are \\$${money(pv1)}, \\$${money(pv2)}, \\$${money(pv3)}, summing to \\$${money(sumPV)}. NPV $= ${money(sumPV)} - ${C0} = \\$${money(npv)}$.`,
@@ -522,8 +522,8 @@ fill["fm2-comparing-projects-2"] = (rng, idx) => {
     id: `gen.fm2-comparing-projects-2.${idx}`, generated: true, concepts: ["comparing-projects"], difficulty: 2, context: "applied",
     prompt: `Two independent one-year projects, each costing \\$1,000 at a ${pct(r, 2)}% required rate. Project A returns \\$${retA}; Project B returns \\$${retB}. Rank them by NPV.`,
     steps: [
-      { instruction: `NPV of A: $${retA}/(1+${r}) - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(npvA), accept: [], hint: `$${retA}/(1+${r}) = ${money(retA / (1 + r))}$, minus 1000.` },
-      { instruction: `NPV of B: $${retB}/(1+${r}) - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(npvB), accept: [], hint: `$${retB}/(1+${r}) = ${money(retB / (1 + r))}$, minus 1000.` },
+      { instruction: `NPV of A: $${retA}/(1+${r}) - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(npvA), accept: [], hint: `$${retA}/(1+${r}) = ${money(retA / (1 + r))}$, minus 1000.` },
+      { instruction: `NPV of B: $${retB}/(1+${r}) - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(npvB), accept: [], hint: `$${retB}/(1+${r}) = ${money(retB / (1 + r))}$, minus 1000.` },
       { instruction: `Which project has the higher NPV? Answer exactly one of: A, B.`, answer: "A", accept: ["project a"], hint: `A returns more, so its NPV is higher.` },
     ],
     finalAnswer: { value: "A", unit: "" },
@@ -570,7 +570,7 @@ fill["fm2-straight-line-1"] = (rng, idx) => {
     prompt: `A machine costs \\$${cost}, has a salvage value of \\$${salvage}, and a useful life of ${life} years. Find the annual straight-line depreciation using $\\dfrac{\\text{cost} - \\text{salvage}}{\\text{life}}$.`,
     steps: [
       { instruction: `Compute the depreciable amount: cost minus salvage, $${cost} - ${salvage}$ (give a number).`, answer: `${depreciable}`, accept: [], hint: `$${cost} - ${salvage}$.` },
-      { instruction: `Divide by the ${life}-year life for the annual depreciation (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(deprec), accept: [`${deprec}`], hint: `$${depreciable} \\div ${life}$.` },
+      { instruction: `Divide by the ${life}-year life for the annual depreciation (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(deprec), accept: [`${deprec}`], hint: `$${depreciable} \\div ${life}$.` },
     ],
     finalAnswer: { value: money(deprec), unit: "dollars per year" },
     solutionNarrative: `Depreciable amount $${cost} - ${salvage} = \\$${depreciable}$, over ${life} years: \\$${money(deprec)} per year.`,
@@ -590,9 +590,9 @@ fill["fm2-straight-line-2"] = (rng, idx) => {
     id: `gen.fm2-straight-line-2.${idx}`, generated: true, concepts: ["straight-line-depreciation"], difficulty: 2, context: "applied",
     prompt: `A \\$${cost} machine has a salvage value of \\$${salvage} and a ${life}-year life. Find its book value after ${k} years using straight-line depreciation.`,
     steps: [
-      { instruction: `Annual depreciation: $(${cost} - ${salvage})/${life}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(deprec), accept: [`${deprec}`], hint: `$${cost - salvage} \\div ${life}$.` },
+      { instruction: `Annual depreciation: $(${cost} - ${salvage})/${life}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(deprec), accept: [`${deprec}`], hint: `$${cost - salvage} \\div ${life}$.` },
       { instruction: `Total depreciation over ${k} years: $${k} \\times ${deprec}$ (give a number).`, answer: `${totalDep}`, accept: [], hint: `$${k} \\times ${deprec}$.` },
-      { instruction: `Book value: cost minus ${k} years of depreciation, $${cost} - ${totalDep}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(book), accept: [`${book}`], hint: `$${cost} - ${totalDep}$.` },
+      { instruction: `Book value: cost minus ${k} years of depreciation, $${cost} - ${totalDep}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(book), accept: [`${book}`], hint: `$${cost} - ${totalDep}$.` },
     ],
     finalAnswer: { value: money(book), unit: "dollars" },
     solutionNarrative: `Annual depreciation \\$${money(deprec)}; after ${k} years the book value is $${cost} - ${k}\\cdot${deprec} = \\$${money(book)}$.`,
@@ -612,9 +612,9 @@ fill["fm2-straight-line-3"] = (rng, idx) => {
     id: `gen.fm2-straight-line-3.${idx}`, generated: true, concepts: ["straight-line-depreciation"], difficulty: 3, context: "applied",
     prompt: `A vehicle costs \\$${cost}, has a salvage value of \\$${salvage}, and a ${life}-year life. Find its book value after ${k} years using straight-line depreciation.`,
     steps: [
-      { instruction: `Annual depreciation: $(${cost} - ${salvage})/${life}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(deprec), accept: [`${deprec}`], hint: `$${cost - salvage} \\div ${life}$.` },
+      { instruction: `Annual depreciation: $(${cost} - ${salvage})/${life}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(deprec), accept: [`${deprec}`], hint: `$${cost - salvage} \\div ${life}$.` },
       { instruction: `Total depreciation over ${k} years: $${k} \\times ${deprec}$ (give a number).`, answer: `${totalDep}`, accept: [], hint: `$${k} \\times ${deprec}$.` },
-      { instruction: `Book value: $${cost} - ${totalDep}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(book), accept: [`${book}`], hint: `$${cost} - ${totalDep}$.` },
+      { instruction: `Book value: $${cost} - ${totalDep}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(book), accept: [`${book}`], hint: `$${cost} - ${totalDep}$.` },
     ],
     finalAnswer: { value: money(book), unit: "dollars" },
     solutionNarrative: `Annual depreciation \\$${money(deprec)}; after ${k} years the book value is $${cost} - ${k}\\cdot${deprec} = \\$${money(book)}$.`,
@@ -634,7 +634,7 @@ fill["fm2-declining-balance-1"] = (rng, idx) => {
     steps: [
       { instruction: `Compute the double-declining rate $d = 2/${life}$ (give the decimal).`, answer: rnd(d, 4), accept: [`2/${life}`], hint: `$2 \\div ${life}$.` },
       { instruction: `Each year keeps $(1 - d)$ of value. Compute $1 - ${rnd(d, 4)}$ (give the decimal).`, answer: rnd(keep, 4), accept: [], hint: `$1 - ${rnd(d, 4)}$.` },
-      { instruction: `Book value after 1 year: $${cost} \\times ${rnd(keep, 4)}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(book1), accept: [], hint: `$${cost} \\times ${rnd(keep, 4)}$.` },
+      { instruction: `Book value after 1 year: $${cost} \\times ${rnd(keep, 4)}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(book1), accept: [], hint: `$${cost} \\times ${rnd(keep, 4)}$.` },
     ],
     finalAnswer: { value: money(book1), unit: "dollars" },
     solutionNarrative: `$d = 2/${life} = ${rnd(d, 4)}$, so each year keeps ${rnd(keep, 4)}; after 1 year the book value is $${cost}\\cdot${rnd(keep, 4)} = \\$${money(book1)}$.`,
@@ -654,7 +654,7 @@ fill["fm2-declining-balance-2"] = (rng, idx) => {
     prompt: `A \\$${cost} asset with a ${life}-year life is depreciated by double-declining balance ($d = ${rnd(d, 4)}$). Find its book value after ${k} years using $\\text{book value} = \\text{cost}\\cdot(1-d)^k$.`,
     steps: [
       { instruction: `The yearly retention factor is $1 - ${rnd(d, 4)} = ${rnd(keep, 4)}$. Compute $${rnd(keep, 4)}^${k}$ (round to 4 decimal places).`, answer: rnd(factor, 4), accept: [], hint: `Multiply ${rnd(keep, 4)} by itself ${k} times.` },
-      { instruction: `Book value after ${k} years: $${cost} \\times ${rnd(factor, 4)}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(book), accept: [], hint: `$${cost} \\times ${rnd(factor, 4)}$.` },
+      { instruction: `Book value after ${k} years: $${cost} \\times ${rnd(factor, 4)}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(book), accept: [], hint: `$${cost} \\times ${rnd(factor, 4)}$.` },
     ],
     finalAnswer: { value: money(book), unit: "dollars" },
     solutionNarrative: `$${rnd(keep, 4)}^${k} = ${rnd(factor, 4)}$, so the book value after ${k} years is $${cost}\\cdot${rnd(factor, 4)} = \\$${money(book)}$.`,
@@ -677,7 +677,7 @@ fill["fm2-declining-balance-3"] = (rng, idx) => {
     steps: [
       { instruction: `Double-declining rate $d = 2/${life}$ (give the decimal).`, answer: rnd(d, 4), accept: ["1/2"], hint: `$2 \\div ${life}$.` },
       { instruction: `Yearly retention factor $1 - ${rnd(d, 4)}$ (give the decimal).`, answer: rnd(keep, 4), accept: [], hint: `$1 - ${rnd(d, 4)}$.` },
-      { instruction: `Book value after ${k} years: $${cost} \\times ${rnd(keep, 4)}^${k} = ${cost} \\times ${rnd(factor, 4)}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(book), accept: [], hint: `$${cost} \\times ${rnd(factor, 4)}$.` },
+      { instruction: `Book value after ${k} years: $${cost} \\times ${rnd(keep, 4)}^${k} = ${cost} \\times ${rnd(factor, 4)}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(book), accept: [], hint: `$${cost} \\times ${rnd(factor, 4)}$.` },
       { instruction: `Is \\$${money(book)} above the \\$${salvage} salvage floor? Answer exactly one of: yes, no.`, answer: aboveSalvage ? "yes" : "no", accept: aboveSalvage ? ["above"] : ["below"], hint: `Compare the book value to the salvage value.` },
     ],
     finalAnswer: { value: money(book), unit: "dollars" },
@@ -697,7 +697,7 @@ fill["fm2-inflation-real-1"] = (rng, idx) => {
     prompt: `An item costs \\$${P} today. With inflation at ${pct(i, 2)}% per year, what will it cost in ${n} year${n > 1 ? "s" : ""}? Use $\\text{future cost} = P\\cdot(1+i)^n$ with $P=${P}$, $i=${i}$, $n=${n}$.`,
     steps: [
       { instruction: `Compute the inflation factor $(1+${i})^${n}$ (round to 4 decimal places).`, answer: rnd(factor, 4), accept: [], hint: `$${1 + i}$ raised to the ${n}.` },
-      { instruction: `Multiply by \\$${P} for the future cost (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(future), accept: [], hint: `$${P} \\times ${rnd(factor, 4)}$.` },
+      { instruction: `Multiply by \\$${P} for the future cost (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(future), accept: [], hint: `$${P} \\times ${rnd(factor, 4)}$.` },
     ],
     finalAnswer: { value: money(future), unit: "dollars" },
     solutionNarrative: `$${P}\\cdot(1+${i})^${n} = ${P}\\cdot${rnd(factor, 4)} = \\$${money(future)}$.`,
@@ -716,7 +716,7 @@ fill["fm2-inflation-real-2"] = (rng, idx) => {
     prompt: `You keep \\$${P} in cash for ${n} years while inflation runs ${pct(i, 2)}% per year. What is its real value (purchasing power in today's dollars)? Use $\\text{real value} = \\dfrac{${P}}{(1+i)^n}$.`,
     steps: [
       { instruction: `Compute the inflation factor $(1+${i})^${n}$ (round to 6 decimal places).`, answer: rnd(factor, 6), accept: [], hint: `Multiply ${1 + i} by itself ${n} times.` },
-      { instruction: `Divide \\$${P} by that factor for the real value (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(real), accept: [], hint: `$${P} / ${rnd(factor, 6)}$.` },
+      { instruction: `Divide \\$${P} by that factor for the real value (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(real), accept: [], hint: `$${P} / ${rnd(factor, 6)}$.` },
     ],
     finalAnswer: { value: money(real), unit: "dollars" },
     solutionNarrative: `The nominal \\$${P} still reads \\$${P}, but $${P}/(1+${i})^${n} = \\$${money(real)}$ of today's purchasing power.`,
@@ -735,10 +735,10 @@ fill["fm2-inflation-real-3"] = (rng, idx) => {
     prompt: `A retiree wants a \\$${P} annual budget in today's dollars. With inflation at ${pct(i, 2)}% per year, what will that same lifestyle cost in ${n} years (its future nominal cost)?`,
     steps: [
       { instruction: `Compute the inflation factor $(1+${i})^${n}$ (round to 6 decimal places).`, answer: rnd(factor, 6), accept: [], hint: `$${1 + i}$ raised to the ${n}.` },
-      { instruction: `Multiply by \\$${P} for the future nominal cost (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.`, answer: money(future), accept: [money(P * factor)], hint: `$${P} \\times ${rnd(factor, 6)}$.` },
+      { instruction: `Multiply by \\$${P} for the future nominal cost (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(future), accept: [money(P * factor)], hint: `$${P} \\times ${rnd(factor, 6)}$.` },
     ],
     finalAnswer: { value: money(future), unit: "dollars" },
-    solutionNarrative: `$${P}\\cdot(1+${i})^${n} = ${P}\\cdot${rnd(factor, 6)} = \\$${money(future)}$ — the budget balloons in raw dollars, the core reason plans must use real values.`,
+    solutionNarrative: `$${P}\\cdot(1+${i})^${n} = ${P}\\cdot${rnd(factor, 6)} = \\$${money(future)}$: the budget balloons in raw dollars, the core reason plans must use real values.`,
   };
 };
 
@@ -797,6 +797,6 @@ fill["fm2-fisher-rate-3"] = (rng, idx) => {
       { instruction: `Convert to a percent, round to 2 decimals. Enter the real rate as a percent (a number, no % sign).`, answer: pct(real, 2), accept: [], hint: `$${rnd(real, 6)} \\times 100$.` },
     ],
     finalAnswer: { value: pct(real, 2), unit: "percent" },
-    solutionNarrative: `$r_{\\text{real}} = \\dfrac{${1 + nom}}{${1 + infl}} - 1 = ${rnd(real, 6)} = ${pct(real, 2)}\\%$ — notably below the ${shortcut}% shortcut, since Fisher divides rather than subtracts.`,
+    solutionNarrative: `$r_{\\text{real}} = \\dfrac{${1 + nom}}{${1 + infl}} - 1 = ${rnd(real, 6)} = ${pct(real, 2)}\\%$: notably below the ${shortcut}% shortcut, since Fisher divides rather than subtracts.`,
   };
 };

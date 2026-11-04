@@ -72,7 +72,7 @@ fill["stat-desc-center-d1"] = (rng, idx) => {
       { instruction: `Divide the sum by the count $n = 5$ to get the mean. (Give a whole number.)`, answer: `${m}`, accept: [], hint: `$${s} / 5$.` },
     ],
     finalAnswer: { value: `${m}`, unit: "" },
-    solutionNarrative: `The mean is $\\bar{x} = \\frac{${shown.join("+")}}{5} = \\frac{${s}}{5} = ${m}$ — the balance point of the data.`,
+    solutionNarrative: `The mean is $\\bar{x} = \\frac{${shown.join("+")}}{5} = \\frac{${s}}{5} = ${m}$: the balance point of the data.`,
   };
 };
 fill["stat-desc-center-d2"] = (rng, idx) => {
@@ -89,7 +89,7 @@ fill["stat-desc-center-d2"] = (rng, idx) => {
     prompt: `For the data set $\\{${data.join(", ")}\\}$ ($n = 7$), find the mode (the most frequent value) and the median.`,
     steps: [
       { instruction: "Which value appears most often (the mode)? (Give a number.)", answer: `${modeVal}`, accept: [], hint: `One value occurs three times.` },
-      { instruction: "Sort the data, then give the middle (4th) value — the median. (Give a number.)", answer: `${med}`, accept: [], hint: `Sorted: $${sorted.join(", ")}$.` },
+      { instruction: "Sort the data, then give the middle (4th) value: the median. (Give a number.)", answer: `${med}`, accept: [], hint: `Sorted: $${sorted.join(", ")}$.` },
     ],
     finalAnswer: { value: `${modeVal}`, unit: "" },
     solutionNarrative: `The value ${modeVal} occurs three times, more than any other, so the mode is ${modeVal}. Sorted the data is $${sorted.join(", ")}$, whose middle (4th) value is the median ${med}.`,
@@ -109,11 +109,11 @@ fill["stat-desc-center-d3"] = (rng, idx) => {
     prompt: `Five households report incomes (in thousands of dollars): $\\{${data.join(", ")}\\}$. Compute the mean and the median, then decide which better represents a typical household.`,
     steps: [
       { instruction: `Compute the mean: the sum is ${s}, divided by $n = 5$. (Give a whole number in thousands.)`, answer: `${m}`, accept: [], hint: `$${s} / 5$.` },
-      { instruction: "Find the median (the middle value of the sorted data). (Give a number in thousands.)", answer: `${med}`, accept: [], hint: `Sorted: $${sorted.join(", ")}$ — the 3rd value.` },
-      { instruction: "Which statistic better represents a typical household — the one that resists the large value? Answer: mean or median.", answer: "median", accept: [], hint: `One value, ${outlier}, drags the mean far above what most households earn.` },
+      { instruction: "Find the median (the middle value of the sorted data). (Give a number in thousands.)", answer: `${med}`, accept: [], hint: `Sorted: $${sorted.join(", ")}$: the 3rd value.` },
+      { instruction: "Which statistic better represents a typical household: the one that resists the large value? Answer: mean or median.", answer: "median", accept: [], hint: `One value, ${outlier}, drags the mean far above what most households earn.` },
     ],
     finalAnswer: { value: "median", unit: "" },
-    solutionNarrative: `The mean is $${s}/5 = ${m}$, but four of the five households earn ${base[3]} or less — the mean is inflated by the outlier ${outlier}. The median ${med} sits among the actual data, the honest summary under right skew.`,
+    solutionNarrative: `The mean is $${s}/5 = ${m}$, but four of the five households earn ${base[3]} or less: the mean is inflated by the outlier ${outlier}. The median ${med} sits among the actual data, the honest summary under right skew.`,
   };
 };
 
@@ -174,7 +174,7 @@ fill["stat-desc-spread-d3"] = (rng, idx) => {
       { instruction: `Sample variance divides by $n - 1 = 4$: compute $${ss}/4$, then take its square root for the sample SD (round to 2 decimals).`, answer: `${rnd(sampSD, 2)}`, accept: [`sqrt(${sampV})`], hint: `$${ss}/4 = ${sampV}$, and $\\sqrt{${sampV}} \\approx ${rnd(sampSD, 2)}$.` },
     ],
     finalAnswer: { value: `${rnd(sampSD, 2)}`, unit: "" },
-    solutionNarrative: `Squared deviations sum to ${ss}. Population SD $= \\sqrt{${ss}/5} = \\sqrt{${popV}} \\approx ${rnd(popSD, 2)}$; sample SD $= \\sqrt{${ss}/4} = \\sqrt{${sampV}} \\approx ${rnd(sampSD, 2)}$. Dividing by the smaller $n-1$ makes the sample SD larger — Bessel's correction.`,
+    solutionNarrative: `Squared deviations sum to ${ss}. Population SD $= \\sqrt{${ss}/5} = \\sqrt{${popV}} \\approx ${rnd(popSD, 2)}$; sample SD $= \\sqrt{${ss}/4} = \\sqrt{${sampV}} \\approx ${rnd(sampSD, 2)}$. Dividing by the smaller $n-1$ makes the sample SD larger: Bessel's correction.`,
   };
 };
 
@@ -217,19 +217,22 @@ fill["stat-desc-out-d3"] = (rng, idx) => {
   b.sort((x, y) => x - y);
   const base7 = b.slice(0, 7); // seven moderate values
   // Actually build 8 sorted values: 7 moderate + 1 big outlier.
-  const moderate = [];
-  let cur = rng.int(2, 5);
-  for (let i = 0; i < 7; i++) { moderate.push(cur); cur += rng.int(1, 3); }
   // quartiles by median-of-halves on n=8: lower half = first 4, upper half = last 4.
-  // Choose outlier so it clearly exceeds the fence.
-  const lowerVals = moderate.slice(0, 4);
-  const q1 = (lowerVals[1] + lowerVals[2]) / 2;
-  // upper half will be moderate[4], moderate[5], moderate[6], outlier
-  let outlier = moderate[6] + rng.int(15, 30);
-  const upperVals = [moderate[4], moderate[5], moderate[6], outlier];
-  const q3 = (upperVals[1] + upperVals[2]) / 2;
-  const iqr = q3 - q1;
-  const fence = q3 + 1.5 * iqr;
+  // Resample until the outlier clears the fence by at least 1 (no near-ties).
+  let moderate, lowerVals, q1, outlier, upperVals, q3, iqr, fence;
+  do {
+    moderate = [];
+    let cur = rng.int(2, 5);
+    for (let i = 0; i < 7; i++) { moderate.push(cur); cur += rng.int(1, 3); }
+    lowerVals = moderate.slice(0, 4);
+    q1 = (lowerVals[1] + lowerVals[2]) / 2;
+    // upper half is moderate[4], moderate[5], moderate[6], outlier
+    outlier = moderate[6] + rng.int(15, 30);
+    upperVals = [moderate[4], moderate[5], moderate[6], outlier];
+    q3 = (upperVals[1] + upperVals[2]) / 2;
+    iqr = q3 - q1;
+    fence = q3 + 1.5 * iqr;
+  } while (outlier < fence + 1);
   const data = [...moderate, outlier];
   const isOut = outlier > fence;
   return {
@@ -239,10 +242,10 @@ fill["stat-desc-out-d3"] = (rng, idx) => {
       { instruction: `$Q_1$ is the median of the lower half $\\{${lowerVals.join(", ")}\\}$: average the two middle values. (Give a number.)`, answer: `${q1}`, accept: [], hint: `$(${lowerVals[1]} + ${lowerVals[2]})/2$.` },
       { instruction: `$Q_3$ is the median of the upper half $\\{${upperVals.join(", ")}\\}$: average the two middle values. (Give a number.)`, answer: `${q3}`, accept: [], hint: `$(${upperVals[1]} + ${upperVals[2]})/2$.` },
       { instruction: "Compute the IQR $= Q_3 - Q_1$. (Give a number.)", answer: `${iqr}`, accept: [], hint: `$${q3} - ${q1}$.` },
-      { instruction: `Compute the upper fence $Q_3 + 1.5\\,\\text{IQR}$, then answer: is ${outlier} above it, making it an outlier? Answer yes or no.`, answer: "yes", accept: [], hint: `Upper fence $= ${q3} + 1.5(${iqr}) = ${fence}$; ${outlier} exceeds it.` },
+      { instruction: `Compute the upper fence $Q_3 + 1.5\\,\\text{IQR}$, then answer: is ${outlier} above it, making it an outlier? Answer yes or no.`, answer: isOut ? "yes" : "no", accept: [], hint: `Upper fence $= ${q3} + 1.5(${iqr}) = ${fence}$; ${isOut ? `${outlier} exceeds it` : `${outlier} does not exceed it`}.` },
     ],
-    finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$Q_1 = ${q1}$, $Q_3 = ${q3}$, IQR $= ${iqr}$, so the upper fence is $${q3} + 1.5(${iqr}) = ${fence}$. Since $${outlier} > ${fence}$, the ${outlier} ms request is a genuine outlier${isOut ? "" : ""}.`,
+    finalAnswer: { value: isOut ? "yes" : "no", unit: "" },
+    solutionNarrative: `$Q_1 = ${q1}$, $Q_3 = ${q3}$, IQR $= ${iqr}$, so the upper fence is $${q3} + 1.5(${iqr}) = ${fence}$. ${isOut ? `Since $${outlier} > ${fence}$, the ${outlier} ms request is a genuine outlier.` : `Since $${outlier} \\le ${fence}$, the ${outlier} ms request is not an outlier.`}`,
   };
 };
 
@@ -780,7 +783,7 @@ fill["stat-cond-bayes-d1"] = (rng, idx) => {
       { instruction: "The patient needs $P(\\text{disease} \\mid \\text{positive})$, not $P(\\text{positive} \\mid \\text{disease})$. Are these two conditionals the same quantity? Type 'yes' or 'no'.", answer: "no", accept: [], hint: "Bayes reverses the conditioning; the values differ." },
     ],
     finalAnswer: { value: "no", unit: "" },
-    solutionNarrative: `A specificity of ${spec} means a false-positive rate of ${fpr}, and sensitivity $P(+ \\mid D)$ differs from the patient's target $P(D \\mid +)$ — Bayes reverses the arrow.`,
+    solutionNarrative: `A specificity of ${spec} means a false-positive rate of ${fpr}, and sensitivity $P(+ \\mid D)$ differs from the patient's target $P(D \\mid +)$: Bayes reverses the arrow.`,
   };
 };
 fill["stat-cond-bayes-d2"] = (rng, idx) => {
@@ -857,8 +860,12 @@ fill["stat-cond-bayes-d3"] = (rng, idx) => {
 // --- expected-value ---
 fill["stat-rv-ev-d1"] = (rng, idx) => {
   // Two-value RV, each prob 0.5. E[X] = (a+b)/2, forced even so E is clean.
-  let a = rng.int(0, 8), b = rng.int(0, 8);
-  if ((a + b) % 2 !== 0) b = b + 1 <= 9 ? b + 1 : b - 1;
+  // Resample while the two values coincide (a one-point "distribution").
+  let a, b;
+  do {
+    a = rng.int(0, 8); b = rng.int(0, 8);
+    if ((a + b) % 2 !== 0) b = b + 1 <= 9 ? b + 1 : b - 1;
+  } while (a === b);
   const t1 = a * 0.5, t2 = b * 0.5, ev = (a + b) / 2;
   return {
     id: `gen.stat-rv-ev-d1.${idx}`, generated: true, concepts: ["expected-value"], difficulty: 1, context: "abstract",
@@ -1055,7 +1062,9 @@ fill["stat-rv-dec-d2"] = (rng, idx) => {
   // Warranty vs expected repair. Expected cost = cost*p; compare to warranty price.
   const repair = 100 * rng.int(2, 6), p = rng.int(3, 8) / 100;
   const exp = Math.round(repair * p * 100) / 100;
-  const warranty = rng.int(Math.max(5, Math.round(exp) - 8), Math.round(exp) + 15);
+  // Exclude ties (warranty = expected cost has no definite yes/no).
+  let warranty;
+  do { warranty = rng.int(Math.max(5, Math.round(exp) - 8), Math.round(exp) + 15); } while (warranty === exp);
   const worth = warranty < exp ? "yes" : "no";
   return {
     id: `gen.stat-rv-dec-d2.${idx}`, generated: true, concepts: ["decisions-with-ev"], difficulty: 2, context: "applied",
@@ -1195,7 +1204,7 @@ fill["stat-norm-emp-d2"] = (rng, idx) => {
       { instruction: `Upper bound: $\\mu + 2\\sigma = ${c.mu} + 2(${c.sigma})$.`, answer: `${hi}`, accept: [], hint: `$${c.mu} + ${2 * c.sigma}$.` },
     ],
     finalAnswer: { value: `${hi}`, unit: "" },
-    solutionNarrative: `$\\pm 2\\sigma$ spans $${c.mu} \\pm ${2 * c.sigma}$, i.e. ${lo} to ${hi} — the range holding about $95\\%$.`,
+    solutionNarrative: `$\\pm 2\\sigma$ spans $${c.mu} \\pm ${2 * c.sigma}$, i.e. ${lo} to ${hi}: the range holding about $95\\%$.`,
   };
 };
 fill["stat-norm-emp-d3"] = (rng, idx) => {
@@ -1345,7 +1354,7 @@ fill["stat-disp-shape-d1"] = (rng, idx) => {
   const variants = [
     { desc: "most of its bars piled up on the LEFT, with a long thin tail stretching to the RIGHT toward high values", ans: "right", tail: "high (right)" },
     { desc: "most of its bars piled up on the RIGHT, with a long thin tail stretching to the LEFT toward low values", ans: "left", tail: "low (left)" },
-    { desc: "a mirror image about its center — the left half looks just like the right half, with a single central peak", ans: "symmetric", tail: "neither" },
+    { desc: "a mirror image about its center: the left half looks just like the right half, with a single central peak", ans: "symmetric", tail: "neither" },
   ];
   const v = rng.pick(variants);
   return {
@@ -1375,7 +1384,7 @@ fill["stat-disp-shape-d2"] = (rng, idx) => {
       { instruction: `The mean is dragged toward the tail. Since the mean sits ${cmp === "greater" ? "above" : "below"} the median, the tail points toward the ${tail} values. Name the skew. Answer: left, right, or symmetric.`, answer: skew, accept: [], hint: `Mean ${cmp === "greater" ? "above" : "below"} median means the tail points ${skew}.` },
     ],
     finalAnswer: { value: skew, unit: "" },
-    solutionNarrative: `The mean (${meanV}) is ${cmp} than the median (${medianV}), so the mean is pulled toward ${tail} values — the tail points ${skew}. The distribution is skewed ${skew}.`,
+    solutionNarrative: `The mean (${meanV}) is ${cmp} than the median (${medianV}), so the mean is pulled toward ${tail} values: the tail points ${skew}. The distribution is skewed ${skew}.`,
   };
 };
 fill["stat-disp-shape-d3"] = (rng, idx) => {
@@ -1383,13 +1392,13 @@ fill["stat-disp-shape-d3"] = (rng, idx) => {
   const p1 = rng.int(10, 20), p2 = rng.int(40, 55);
   return {
     id: `gen.stat-disp-shape-d3.${idx}`, generated: true, concepts: ["histograms-and-shape"], difficulty: 3, context: "applied",
-    prompt: `A histogram of daily commute times shows two distinct, well-separated peaks — a cluster near ${p1} minutes and another near ${p2} minutes — suggesting two kinds of commuters mixed together. How many modes does this distribution have? (Give a number.)`,
+    prompt: `A histogram of daily commute times shows two distinct, well-separated peaks: a cluster near ${p1} minutes and another near ${p2} minutes, suggesting two kinds of commuters mixed together. How many modes does this distribution have? (Give a number.)`,
     steps: [
       { instruction: "Count the number of distinct peaks in the histogram. (Give a number.)", answer: "2", accept: [], hint: `One cluster near ${p1} min and one near ${p2} min.` },
       { instruction: "A distribution with exactly two peaks is called bimodal. Confirm the number of peaks. (Give a number.)", answer: "2", accept: [], hint: "Bimodal means two modes." },
     ],
     finalAnswer: { value: "2", unit: "" },
-    solutionNarrative: `Two distinct peaks make the distribution bimodal — usually a sign of two subpopulations mixed in one chart.`,
+    solutionNarrative: `Two distinct peaks make the distribution bimodal, usually a sign of two subpopulations mixed in one chart.`,
   };
 };
 
@@ -1563,6 +1572,6 @@ fill["stat-disp-cmp-d3"] = (rng, idx) => {
       { instruction: "The smaller range is more predictable. Which server is more predictable? Answer: a or b.", answer: "a", accept: [], hint: `A's range ${rangeA} is much smaller than B's ${rangeB}.` },
     ],
     finalAnswer: { value: "a", unit: "" },
-    solutionNarrative: `Both servers share the same median, but Server A's range (${rangeA} ms) is far tighter than Server B's (${rangeB} ms) — Server A delivers more predictable latency.`,
+    solutionNarrative: `Both servers share the same median, but Server A's range (${rangeA} ms) is far tighter than Server B's (${rangeB} ms): Server A delivers more predictable latency.`,
   };
 };

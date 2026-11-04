@@ -23,22 +23,22 @@
     {
       "id": "model-real-oscillation",
       "label": "Building a sinusoidal model",
-      "microLesson": "Anything that oscillates — tides, daylight, Ferris wheels, AC voltage — fits $y = A\\sin(Bt) + D$ or $y = D - A\\cos(Bt)$. Recipe: amplitude $A = \\frac{\\max - \\min}{2}$; midline $D = \\frac{\\max + \\min}{2}$; $B = \\frac{2\\pi}{\\text{period}}$; then pick sine (starts at midline going up) or negative cosine (starts at the minimum, like boarding a Ferris wheel at the bottom). A tide swinging 2 m to 10 m every 12 h: $h = 4\\sin(\\frac{\\pi}{6}t) + 6$."
+      "microLesson": "Anything that oscillates (tides, daylight, Ferris wheels, AC voltage) fits $y = A\\sin(Bt) + D$ or $y = D - A\\cos(Bt)$. Recipe: amplitude $A = \\frac{\\max - \\min}{2}$; midline $D = \\frac{\\max + \\min}{2}$; $B = \\frac{2\\pi}{\\text{period}}$; then pick sine (starts at midline going up) or negative cosine (starts at the minimum, like boarding a Ferris wheel at the bottom). A tide swinging 2 m to 10 m every 12 h: $h = 4\\sin(\\frac{\\pi}{6}t) + 6$."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## The shape of everything that repeats\n\nHigh tide comes back every 12.4 hours. Your house's AC voltage flips 60 times a second. A Ferris wheel gondola rises and falls every rotation. Wildly different phenomena, but plot any of them against time and you get the *same* picture: a smooth, endlessly repeating wave. That wave is the graph of sine (or cosine — the same curve slid over), and one four-parameter template captures all of it:\n\n$$y = A\\sin(Bx) + D.$$\n\nMaster the three dials $A$, $B$, $D$ and you can read or build a model of anything periodic. (A fourth dial, the phase shift, waits for a later course — here we choose the start of the clock so we don't need it.)\n\nHere is one full period of the plainest wave, $y = \\sin x$: it starts at the midline $0$, climbs to $1$ at $\\frac{\\pi}{2}$, returns to $0$ at $\\pi$, drops to $-1$ at $\\frac{3\\pi}{2}$, and closes the cycle at $2\\pi$.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 6.2832], \"yRange\": [-1.5, 1.5], \"grid\": true, \"curves\": [ { \"fn\": \"sin(x)\", \"label\": \"y=sin(x)\", \"color\": \"accent\", \"labelAt\": 1.3 } ], \"caption\": \"One period of y = sin(x): swings between -1 and 1 about the midline y = 0\" }\n```\n\n## Dial 1 and 2: midline $D$ and amplitude $A$\n\nPlain $\\sin x$ oscillates between $-1$ and $1$ around $y = 0$. Adding $D$ lifts the whole wave so it oscillates around the **midline** $y = D$; multiplying by $A$ stretches the swing so it reaches $|A|$ above and below. So:\n\n$$\\max = D + |A|, \\qquad \\min = D - |A|.$$\n\nReal data usually hands you the max and min, and you recover the dials:\n\n$$A = \\frac{\\max - \\min}{2}, \\qquad D = \\frac{\\max + \\min}{2}.$$\n\nA harbor tide running from 2 m to 10 m has amplitude $\\frac{10-2}{2} = 4$ and midline $\\frac{10+2}{2} = 6$: the water level is a 4 m swing around 6 m.\n\n## Dial 3: the period, hiding inside $B$\n\n$\\sin x$ takes $2\\pi$ to complete a cycle. In $\\sin(Bx)$ the input runs $B$ times as fast, so a full cycle finishes in\n\n$$T = \\frac{2\\pi}{B} \\qquad \\Longleftrightarrow \\qquad B = \\frac{2\\pi}{T}.$$\n\nThe **frequency** $f = \\frac{1}{T}$ counts cycles per unit of time — hertz, when time is in seconds. US household voltage, $V = 170\\sin(120\\pi t)$, has $B = 120\\pi$, period $\\frac{2\\pi}{120\\pi} = \\frac{1}{60}$ s, frequency 60 Hz. That '60 Hz' stamped on appliances is literally the $B$-dial of a sine graph.\n\nAll three dials at once: $y = 3\\sin(2x) + 1$ has amplitude $3$ (it reaches $4$ and $-2$), midline $y = 1$, and — because $B = 2$ — period $\\frac{2\\pi}{2} = \\pi$, so it fits two full cycles in the width of one plain-sine cycle.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 6.2832], \"yRange\": [-3, 5], \"grid\": true, \"curves\": [ { \"fn\": \"3*sin(2*x)+1\", \"label\": \"y=3sin(2x)+1\", \"color\": \"accent\", \"labelAt\": 0.35 } ], \"segments\": [ { \"from\": [0, 1], \"to\": [6.2832, 1], \"dashed\": true, \"label\": \"midline y=1\", \"color\": \"dim\" } ], \"caption\": \"y = 3 sin(2x) + 1: amplitude 3, midline y = 1, period pi\" }\n```\n\n## Reading a value off the model\n\nTo evaluate $y = A\\sin(Bt) + D$ at a specific time, work **inside-out**: (1) compute the inner angle $Bt$, (2) evaluate the trig function there with your unit-circle values, (3) multiply by $A$, (4) add $D$. For the tide $h = 4\\sin(\\frac{\\pi}{6}t) + 6$ at $t = 3$ h: inner angle $\\frac{\\pi}{2}$, $\\sin\\frac{\\pi}{2} = 1$, so $h = 4(1) + 6 = 10$ m — high tide, three hours after the midline crossing.\n\n## Building the model yourself\n\nGiven a described oscillation, the recipe is always: amplitude from $\\frac{\\max-\\min}{2}$, midline from $\\frac{\\max+\\min}{2}$, $B$ from the period, then choose the starting shape. **Sine** starts at the midline heading up. **Negative cosine**, $y = D - A\\cos(Bt)$, starts at the *minimum* — exactly right for a Ferris wheel ride that begins at the bottom platform. Pick the form that matches where your story starts, and the rest is filling in three numbers."
+    "body": "## The shape of everything that repeats\n\nHigh tide comes back every 12.4 hours. Your house's AC voltage flips 60 times a second. A Ferris wheel gondola rises and falls every rotation. Wildly different phenomena, but plot any of them against time and you get the *same* picture: a smooth, endlessly repeating wave. That wave is the graph of sine (or cosine: the same curve slid over), and one four-parameter template captures all of it:\n\n$$y = A\\sin(Bx) + D.$$\n\nMaster the three dials $A$, $B$, $D$ and you can read or build a model of anything periodic. (A fourth dial, the phase shift, waits for a later course: here we choose the start of the clock so we don't need it.)\n\nHere is one full period of the plainest wave, $y = \\sin x$: it starts at the midline $0$, climbs to $1$ at $\\frac{\\pi}{2}$, returns to $0$ at $\\pi$, drops to $-1$ at $\\frac{3\\pi}{2}$, and closes the cycle at $2\\pi$.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 6.2832], \"yRange\": [-1.5, 1.5], \"grid\": true, \"curves\": [ { \"fn\": \"sin(x)\", \"label\": \"y=sin(x)\", \"color\": \"accent\", \"labelAt\": 1.3 } ], \"caption\": \"One period of y = sin(x): swings between -1 and 1 about the midline y = 0\" }\n```\n\n## Dial 1 and 2: midline $D$ and amplitude $A$\n\nPlain $\\sin x$ oscillates between $-1$ and $1$ around $y = 0$. Adding $D$ lifts the whole wave so it oscillates around the **midline** $y = D$; multiplying by $A$ stretches the swing so it reaches $|A|$ above and below. So:\n\n$$\\max = D + |A|, \\qquad \\min = D - |A|.$$\n\nReal data usually hands you the max and min, and you recover the dials:\n\n$$A = \\frac{\\max - \\min}{2}, \\qquad D = \\frac{\\max + \\min}{2}.$$\n\nA harbor tide running from 2 m to 10 m has amplitude $\\frac{10-2}{2} = 4$ and midline $\\frac{10+2}{2} = 6$: the water level is a 4 m swing around 6 m.\n\n## Dial 3: the period, hiding inside $B$\n\n$\\sin x$ takes $2\\pi$ to complete a cycle. In $\\sin(Bx)$ the input runs $B$ times as fast, so a full cycle finishes in\n\n$$T = \\frac{2\\pi}{B} \\qquad \\Longleftrightarrow \\qquad B = \\frac{2\\pi}{T}.$$\n\nThe **frequency** $f = \\frac{1}{T}$ counts cycles per unit of time: hertz, when time is in seconds. US household voltage, $V = 170\\sin(120\\pi t)$, has $B = 120\\pi$, period $\\frac{2\\pi}{120\\pi} = \\frac{1}{60}$ s, frequency 60 Hz. That '60 Hz' stamped on appliances is literally the $B$-dial of a sine graph.\n\nAll three dials at once: $y = 3\\sin(2x) + 1$ has amplitude $3$ (it reaches $4$ and $-2$), midline $y = 1$, and, because $B = 2$, period $\\frac{2\\pi}{2} = \\pi$, so it fits two full cycles in the width of one plain-sine cycle.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 6.2832], \"yRange\": [-3, 5], \"grid\": true, \"curves\": [ { \"fn\": \"3*sin(2*x)+1\", \"label\": \"y=3sin(2x)+1\", \"color\": \"accent\", \"labelAt\": 0.35 } ], \"segments\": [ { \"from\": [0, 1], \"to\": [6.2832, 1], \"dashed\": true, \"label\": \"midline y=1\", \"color\": \"dim\" } ], \"caption\": \"y = 3 sin(2x) + 1: amplitude 3, midline y = 1, period pi\" }\n```\n\n## Reading a value off the model\n\nTo evaluate $y = A\\sin(Bt) + D$ at a specific time, work **inside-out**: (1) compute the inner angle $Bt$, (2) evaluate the trig function there with your unit-circle values, (3) multiply by $A$, (4) add $D$. For the tide $h = 4\\sin(\\frac{\\pi}{6}t) + 6$ at $t = 3$ h: inner angle $\\frac{\\pi}{2}$, $\\sin\\frac{\\pi}{2} = 1$, so $h = 4(1) + 6 = 10$ m: high tide, three hours after the midline crossing.\n\n## Building the model yourself\n\nGiven a described oscillation, the recipe is always: amplitude from $\\frac{\\max-\\min}{2}$, midline from $\\frac{\\max+\\min}{2}$, $B$ from the period, then choose the starting shape. **Sine** starts at the midline heading up. **Negative cosine**, $y = D - A\\cos(Bt)$, starts at the *minimum*: exactly right for a Ferris wheel ride that begins at the bottom platform. Pick the form that matches where your story starts, and the rest is filling in three numbers."
   },
   "application": {
     "summary": "One template, y = A sin(Bx) + D, models every smooth oscillation: tides for harbor pilots, daylight hours for farmers, Ferris wheel height, AC voltage, and sound waves. Amplitude, midline, and period are read straight off max/min values and the repeat time.",
     "domains": ["oceanography", "electrical engineering", "astronomy", "everyday life"],
-    "workedExample": "**When is the harbor deep enough?**\n\nA harbor's tide runs from a low of 2 m to a high of 10 m and repeats every 12 hours, crossing its average depth (rising) at $t = 0$. Build the model.\n\n- Amplitude: $A = \\frac{10 - 2}{2} = 4$.\n- Midline: $D = \\frac{10 + 2}{2} = 6$.\n- Period 12 h, so $B = \\frac{2\\pi}{12} = \\frac{\\pi}{6}$.\n- Rising through the midline at $t = 0$: that's a sine start.\n\n$$h(t) = 4\\sin\\!\\left(\\frac{\\pi}{6}t\\right) + 6.$$\n\nNow the model answers real questions: at $t = 3$ h the depth is $4\\sin\\frac{\\pi}{2} + 6 = 10$ m (high tide); at $t = 9$ h it's $4\\sin\\frac{3\\pi}{2} + 6 = 2$ m (low tide). A pilot whose ship needs 8 m of water reads the safe window straight off the curve — the same arithmetic that schedules cargo ships into every tidal port on Earth.",
+    "workedExample": "**When is the harbor deep enough?**\n\nA harbor's tide runs from a low of 2 m to a high of 10 m and repeats every 12 hours, crossing its average depth (rising) at $t = 0$. Build the model.\n\n- Amplitude: $A = \\frac{10 - 2}{2} = 4$.\n- Midline: $D = \\frac{10 + 2}{2} = 6$.\n- Period 12 h, so $B = \\frac{2\\pi}{12} = \\frac{\\pi}{6}$.\n- Rising through the midline at $t = 0$: that's a sine start.\n\n$$h(t) = 4\\sin\\!\\left(\\frac{\\pi}{6}t\\right) + 6.$$\n\nNow the model answers real questions: at $t = 3$ h the depth is $4\\sin\\frac{\\pi}{2} + 6 = 10$ m (high tide); at $t = 9$ h it's $4\\sin\\frac{3\\pi}{2} + 6 = 2$ m (low tide). A pilot whose ship needs 8 m of water reads the safe window straight off the curve: the same arithmetic that schedules cargo ships into every tidal port on Earth.",
     "domainNotes": [
       "**Oceanography/shipping:** tide tables are sinusoid evaluations; harbor pilots time deep-draft arrivals to the crest of the curve.",
-      "**Electrical engineering:** AC voltage $V = 170\\sin(120\\pi t)$ — amplitude sets peak voltage, $B$ sets the 60 Hz standard; audio signals stack sinusoids.",
-      "**Astronomy/agriculture:** daylight hours over the year are a sinusoid with period 365 days — midline 12 h, amplitude set by latitude.",
-      "**Everyday life:** Ferris wheel height, a bobbing buoy, a swinging pendulum's displacement — all read from the same three dials."
+      "**Electrical engineering:** AC voltage $V = 170\\sin(120\\pi t)$: amplitude sets peak voltage, $B$ sets the 60 Hz standard; audio signals stack sinusoids.",
+      "**Astronomy/agriculture:** daylight hours over the year are a sinusoid with period 365 days: midline 12 h, amplitude set by latitude.",
+      "**Everyday life:** Ferris wheel height, a bobbing buoy, a swinging pendulum's displacement: all read from the same three dials."
     ]
   },
   "generators": [
@@ -92,7 +92,7 @@
         { "instruction": "What is the amplitude? (Amplitude is always positive.)", "answer": "3", "accept": [], "hint": "Amplitude is $|A| = |-3|$." },
         { "instruction": "What is the maximum value of $y$?", "answer": "5", "accept": [], "hint": "Max $= D + |A| = 2 + 3$." },
         { "instruction": "What is the minimum value of $y$?", "answer": "-1", "accept": [], "hint": "Min $= D - |A| = 2 - 3$." },
-        { "instruction": "At $x = 0$, is the graph at its maximum or its minimum? (Type max or min.)", "answer": "min", "accept": ["minimum", "its minimum"], "hint": "$y(0) = -3\\cos 0 + 2 = -3 + 2$ — compare with your min and max." }
+        { "instruction": "At $x = 0$, is the graph at its maximum or its minimum? (Type max or min.)", "answer": "min", "accept": ["minimum", "its minimum"], "hint": "$y(0) = -3\\cos 0 + 2 = -3 + 2$: compare with your min and max." }
       ],
       "finalAnswer": { "value": "amplitude 3, max 5, min -1, starts at min", "unit": "" },
       "solutionNarrative": "Amplitude $|-3| = 3$, so the wave runs from $2-3 = -1$ up to $2+3 = 5$. At $x=0$, $y = -3(1) + 2 = -1$: a negative cosine starts at its minimum."
@@ -107,7 +107,7 @@
         { "instruction": "Apply $T = \\frac{2\\pi}{B}$.", "answer": "2pi/3", "accept": ["2π/3"], "hint": "$B = 3$, so $T = \\frac{2\\pi}{3}$." }
       ],
       "finalAnswer": { "value": "2pi/3", "unit": "" },
-      "solutionNarrative": "With $B = 3$, the period is $\\frac{2\\pi}{3}$ — the wave repeats three times as fast as plain $\\sin x$."
+      "solutionNarrative": "With $B = 3$, the period is $\\frac{2\\pi}{3}$: the wave repeats three times as fast as plain $\\sin x$."
     },
     {
       "id": "trigonometry.sine-cosine-graphs.s05",
@@ -129,11 +129,11 @@
       "prompt": "US household voltage is modeled by $V = 170\\sin(120\\pi t)$, with $t$ in seconds.",
       "steps": [
         { "instruction": "What is $B$ in this model? (Exact, in terms of $\\pi$.)", "answer": "120pi", "accept": ["120π"], "hint": "It's the coefficient of $t$ inside the sine." },
-        { "instruction": "Find the period $T = \\frac{2\\pi}{B}$ as an exact fraction of a second.", "answer": "1/60", "accept": [], "hint": "$\\frac{2\\pi}{120\\pi}$ — the $\\pi$'s cancel." },
+        { "instruction": "Find the period $T = \\frac{2\\pi}{B}$ as an exact fraction of a second.", "answer": "1/60", "accept": [], "hint": "$\\frac{2\\pi}{120\\pi}$: the $\\pi$'s cancel." },
         { "instruction": "Find the frequency $f = \\frac{1}{T}$ in hertz (cycles per second).", "answer": "60", "accept": ["60 hz"], "hint": "The reciprocal of $\\frac{1}{60}$." }
       ],
       "finalAnswer": { "value": "60", "unit": "Hz (period 1/60 s)" },
-      "solutionNarrative": "$B = 120\\pi$ gives $T = \\frac{2\\pi}{120\\pi} = \\frac{1}{60}$ s, so $f = 60$ Hz — the North American power-grid standard."
+      "solutionNarrative": "$B = 120\\pi$ gives $T = \\frac{2\\pi}{120\\pi} = \\frac{1}{60}$ s, so $f = 60$ Hz: the North American power-grid standard."
     },
     {
       "id": "trigonometry.sine-cosine-graphs.s07",
@@ -146,7 +146,7 @@
         { "instruction": "Compute $y = 5(1) + 7$.", "answer": "12", "accept": [], "hint": "Multiply by 5, then add 7." }
       ],
       "finalAnswer": { "value": "12", "unit": "" },
-      "solutionNarrative": "$\\sin\\frac{\\pi}{2} = 1$, so $y = 5 \\cdot 1 + 7 = 12$ — the maximum of the wave."
+      "solutionNarrative": "$\\sin\\frac{\\pi}{2} = 1$, so $y = 5 \\cdot 1 + 7 = 12$: the maximum of the wave."
     },
     {
       "id": "trigonometry.sine-cosine-graphs.s08",
@@ -231,7 +231,7 @@
         { "instruction": "What is the midline value $D$?", "answer": "0", "accept": ["y=0", "y = 0"], "hint": "No constant is added, so the wave centers on the $x$-axis." }
       ],
       "finalAnswer": { "value": "amplitude 7, midline y = 0", "unit": "" },
-      "solutionNarrative": "With no vertical shift, the midline is $y = 0$ and the amplitude is 7 — the graph swings from $-7$ to $7$."
+      "solutionNarrative": "With no vertical shift, the midline is $y = 0$ and the amplitude is 7: the graph swings from $-7$ to $7$."
     },
     {
       "id": "trigonometry.sine-cosine-graphs.s14",
@@ -240,7 +240,7 @@
       "context": "applied",
       "prompt": "Daylight hours repeat with a period of 365 days. What value of $B$ does a model $y = A\\sin(Bt) + D$ (with $t$ in days) need? Give an exact answer.",
       "steps": [
-        { "instruction": "Apply $B = \\frac{2\\pi}{T}$ with $T = 365$.", "answer": "2pi/365", "accept": ["2π/365"], "hint": "Just substitute — the fraction does not reduce." }
+        { "instruction": "Apply $B = \\frac{2\\pi}{T}$ with $T = 365$.", "answer": "2pi/365", "accept": ["2π/365"], "hint": "Just substitute: the fraction does not reduce." }
       ],
       "finalAnswer": { "value": "2pi/365", "unit": "" },
       "solutionNarrative": "$B = \\frac{2\\pi}{365}$: one full cycle of the sine as $t$ runs through 365 days."
@@ -252,7 +252,7 @@
       "context": "abstract",
       "prompt": "Evaluate $y = 10\\sin(x) + 2$ at $x = \\frac{7\\pi}{6}$.",
       "steps": [
-        { "instruction": "What is $\\sin\\frac{7\\pi}{6}$? (Exact — mind the sign.)", "answer": "-1/2", "accept": [], "hint": "QIII with reference angle $\\frac{\\pi}{6}$: sine is negative there." },
+        { "instruction": "What is $\\sin\\frac{7\\pi}{6}$? (Exact: mind the sign.)", "answer": "-1/2", "accept": [], "hint": "QIII with reference angle $\\frac{\\pi}{6}$: sine is negative there." },
         { "instruction": "Compute $y = 10 \\cdot \\left(-\\frac{1}{2}\\right) + 2$.", "answer": "-3", "accept": [], "hint": "$-5 + 2$." }
       ],
       "finalAnswer": { "value": "-3", "unit": "" },
@@ -314,7 +314,7 @@
         { "instruction": "The curve reaches up to $4$ and down to $-4$. What is the amplitude?", "answer": "4", "accept": [], "hint": "Amplitude is how far it swings from the midline $y = 0$." }
       ],
       "finalAnswer": { "value": "period pi/2, amplitude 4", "unit": "" },
-      "solutionNarrative": "Two full cycles fit in $\\pi$, so one cycle is $\\dfrac{\\pi}{2}$ — matching $T = \\dfrac{2\\pi}{B} = \\dfrac{2\\pi}{4}$. The curve peaks at $\\pm 4$, so the amplitude is $4$."
+      "solutionNarrative": "Two full cycles fit in $\\pi$, so one cycle is $\\dfrac{\\pi}{2}$: matching $T = \\dfrac{2\\pi}{B} = \\dfrac{2\\pi}{4}$. The curve peaks at $\\pm 4$, so the amplitude is $4$."
     },
     {
       "id": "trigonometry.sine-cosine-graphs.s20",

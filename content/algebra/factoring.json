@@ -13,12 +13,12 @@
     {
       "id": "difference-of-squares",
       "label": "Difference of squares",
-      "microLesson": "When you see a *square minus a square* — $a^2 - b^2$ — it factors instantly into $(a - b)(a + b)$. Recognize the pattern: both terms are perfect squares and there's a minus between them. $x^2 - 9 = (x - 3)(x + 3)$; $25x^2 - 4 = (5x - 2)(5x + 2)$. A *sum* of squares ($a^2 + b^2$) does not factor over the real numbers."
+      "microLesson": "When you see a *square minus a square*, $a^2 - b^2$, it factors instantly into $(a - b)(a + b)$. Recognize the pattern: both terms are perfect squares and there's a minus between them. $x^2 - 9 = (x - 3)(x + 3)$; $25x^2 - 4 = (5x - 2)(5x + 2)$. A *sum* of squares ($a^2 + b^2$) does not factor over the real numbers."
     },
     {
       "id": "trinomial-simple",
       "label": "Trinomials (leading coefficient 1)",
-      "microLesson": "To factor $x^2 + bx + c$, find two numbers that **multiply to $c$ and add to $b$**. Those two numbers become the factors. For $x^2 + 5x + 6$: which pair multiplies to $6$ and adds to $5$? That's $2$ and $3$, so it's $(x + 2)(x + 3)$. Watch signs: for $x^2 - x - 6$ you need a pair multiplying to $-6$ and adding to $-1$ — that's $-3$ and $2$."
+      "microLesson": "To factor $x^2 + bx + c$, find two numbers that **multiply to $c$ and add to $b$**. Those two numbers become the factors. For $x^2 + 5x + 6$: which pair multiplies to $6$ and adds to $5$? That's $2$ and $3$, so it's $(x + 2)(x + 3)$. Watch signs: for $x^2 - x - 6$ you need a pair multiplying to $-6$ and adding to $-1$: that's $-3$ and $2$."
     },
     {
       "id": "trinomial-leading",
@@ -28,12 +28,12 @@
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## Factoring is multiplication, run backwards\n\nExpanding takes $(x + 2)(x + 3)$ and turns it into $x^2 + 5x + 6$. **Factoring** is the reverse: you're handed $x^2 + 5x + 6$ and asked to recover the two things that were multiplied to make it. Why bother running multiplication backwards? Because the factored form reveals structure the expanded form hides — most importantly, **the values that make the whole thing zero**.\n\n## The payoff: the zero-product property\n\nHere's the single most useful fact in all of factoring:\n\n$$\\text{if } A \\cdot B = 0, \\text{ then } A = 0 \\text{ or } B = 0.$$\n\nA product is zero only when one of its pieces is zero. So once an expression is factored, finding where it equals zero becomes trivial — you just set each factor to zero. A ball's height might be $-16t^2 + 32t$; factored, that's $-16t(t - 2)$, which is zero at $t = 0$ (launch) and $t = 2$ (landing). The factored form *tells you when the ball lands.* That's why factoring matters.\n\n## The four moves, in order\n\nWhen you're asked to factor, try these in this order:\n\n1. **GCF first, always.** Pull out the greatest common factor shared by every term. $6x^2 + 9x = 3x(2x + 3)$. Even when more factoring remains, doing this first makes everything smaller and easier.\n2. **Difference of squares.** A square minus a square factors on sight: $a^2 - b^2 = (a - b)(a + b)$. So $x^2 - 25 = (x - 5)(x + 5)$.\n3. **Simple trinomial** $x^2 + bx + c$. Find two numbers that multiply to $c$ and add to $b$; they become the factors. $x^2 + 7x + 12 = (x + 3)(x + 4)$.\n4. **Trinomial with a leading coefficient** $ax^2 + bx + c$. Use the AC method (multiply $a \\cdot c$, split the middle term, group).\n\n## Always check\n\nFactoring has a free built-in check: **multiply your factors back out.** If you don't recover the original expression exactly, you made a sign or arithmetic slip. $(x - 3)(x + 5) = x^2 + 2x - 15$ ✓. This habit catches almost every mistake."
+    "body": "## Factoring is multiplication, run backwards\n\nExpanding takes $(x + 2)(x + 3)$ and turns it into $x^2 + 5x + 6$. **Factoring** is the reverse: you're handed $x^2 + 5x + 6$ and asked to recover the two things that were multiplied to make it. Why bother running multiplication backwards? Because the factored form reveals structure the expanded form hides: most importantly, **the values that make the whole thing zero**.\n\n## The payoff: the zero-product property\n\nHere's the single most useful fact in all of factoring:\n\n$$\\text{if } A \\cdot B = 0, \\text{ then } A = 0 \\text{ or } B = 0.$$\n\nA product is zero only when one of its pieces is zero. So once an expression is factored, finding where it equals zero becomes trivial: you just set each factor to zero. A ball's height might be $-16t^2 + 32t$; factored, that's $-16t(t - 2)$, which is zero at $t = 0$ (launch) and $t = 2$ (landing). The factored form *tells you when the ball lands.* That's why factoring matters.\n\n## The four moves, in order\n\nWhen you're asked to factor, try these in this order:\n\n1. **GCF first, always.** Pull out the greatest common factor shared by every term. $6x^2 + 9x = 3x(2x + 3)$. Even when more factoring remains, doing this first makes everything smaller and easier.\n2. **Difference of squares.** A square minus a square factors on sight: $a^2 - b^2 = (a - b)(a + b)$. So $x^2 - 25 = (x - 5)(x + 5)$.\n3. **Simple trinomial** $x^2 + bx + c$. Find two numbers that multiply to $c$ and add to $b$; they become the factors. $x^2 + 7x + 12 = (x + 3)(x + 4)$.\n4. **Trinomial with a leading coefficient** $ax^2 + bx + c$. Use the AC method (multiply $a \\cdot c$, split the middle term, group).\n\n## Always check\n\nFactoring has a free built-in check: **multiply your factors back out.** If you don't recover the original expression exactly, you made a sign or arithmetic slip. $(x - 3)(x + 5) = x^2 + 2x - 15$ ✓. This habit catches almost every mistake."
   },
   "application": {
-    "summary": "Factoring is how you find the inputs that make a quantity hit zero — when a projectile lands, when profit breaks even, when a structure's net force vanishes — and how you recover unknown dimensions from an area or volume expression.",
+    "summary": "Factoring is how you find the inputs that make a quantity hit zero (when a projectile lands, when profit breaks even, when a structure's net force vanishes) and how you recover unknown dimensions from an area or volume expression.",
     "domains": ["physics", "business", "engineering", "construction"],
-    "workedExample": "**When does the ball land?**\n\nA ball is thrown straight up; its height in feet after $t$ seconds is $h = -16t^2 + 32t$. When does it hit the ground ($h = 0$)?\n\nFactor first — GCF is $-16t$:\n\n$$-16t^2 + 32t = -16t(t - 2).$$\n\nBy the zero-product property, $-16t(t - 2) = 0$ when $-16t = 0$ (so $t = 0$, the launch) or when $t - 2 = 0$ (so $t = 2$). **The ball lands at $t = 2$ seconds.** No graphing, no quadratic formula — factoring handed us the answer directly. The identical move finds a product's break-even sales level (where profit $= 0$) and the times an oscillating circuit's value crosses zero.",
+    "workedExample": "**When does the ball land?**\n\nA ball is thrown straight up; its height in feet after $t$ seconds is $h = -16t^2 + 32t$. When does it hit the ground ($h = 0$)?\n\nFactor first; GCF is $-16t$:\n\n$$-16t^2 + 32t = -16t(t - 2).$$\n\nBy the zero-product property, $-16t(t - 2) = 0$ when $-16t = 0$ (so $t = 0$, the launch) or when $t - 2 = 0$ (so $t = 2$). **The ball lands at $t = 2$ seconds.** No graphing, no quadratic formula: factoring handed us the answer directly. The identical move finds a product's break-even sales level (where profit $= 0$) and the times an oscillating circuit's value crosses zero.",
     "domainNotes": [
       "**Physics:** times a projectile is at ground level, or a velocity is zero.",
       "**Business:** break-even points where a profit polynomial equals zero.",
@@ -141,7 +141,7 @@
       "prompt": "A rectangular patio has area $x^2 + 9x + 20$ square feet. Its length and width are each of the form $(x + \\text{number})$. Find the two side-length expressions.",
       "steps": [
         { "instruction": "Find two integers that multiply to 20 and add to 9. Enter them comma-separated.", "answer": "4, 5", "accept": ["5, 4"], "hint": "Factor pairs of 20: (1,20), (2,10), (4,5). Which adds to 9?" },
-        { "instruction": "Write the area in factored form — these are the side lengths.", "form": "factored", "answer": "(x + 4)(x + 5)", "accept": [], "hint": "Area = length × width = $(x + 4)(x + 5)$." }
+        { "instruction": "Write the area in factored form: these are the side lengths.", "form": "factored", "answer": "(x + 4)(x + 5)", "accept": [], "hint": "Area = length × width = $(x + 4)(x + 5)$." }
       ],
       "finalAnswer": { "value": "(x + 4)(x + 5)", "unit": "feet" },
       "solutionNarrative": "$x^2 + 9x + 20 = (x + 4)(x + 5)$, so the sides are $(x + 4)$ and $(x + 5)$ feet."
@@ -228,7 +228,7 @@
       "context": "applied",
       "prompt": "A rectangular banner has area $6x^2 + 11x + 3$ square feet, and both sides are binomials with integer coefficients. Factor the area to recover the two side-length expressions.",
       "steps": [
-        { "instruction": "Factor the area into two binomials — these are the side lengths.", "form": "factored", "answer": "(3x + 1)(2x + 3)", "accept": ["(2x + 3)(3x + 1)"], "hint": "AC method: $a \\cdot c = 18$; 9 and 2 multiply to 18 and add to 11." }
+        { "instruction": "Factor the area into two binomials: these are the side lengths.", "form": "factored", "answer": "(3x + 1)(2x + 3)", "accept": ["(2x + 3)(3x + 1)"], "hint": "AC method: $a \\cdot c = 18$; 9 and 2 multiply to 18 and add to 11." }
       ],
       "finalAnswer": { "value": "(3x + 1)(2x + 3)", "unit": "feet" },
       "solutionNarrative": "$6x^2 + 11x + 3 = (3x + 1)(2x + 3)$, so the sides are $(3x + 1)$ and $(2x + 3)$ feet."

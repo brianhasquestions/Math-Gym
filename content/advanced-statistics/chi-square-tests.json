@@ -8,7 +8,7 @@
     {
       "id": "expected-counts",
       "label": "Expected counts",
-      "microLesson": "Every chi-square test starts by asking: *if the null hypothesis were true, what counts SHOULD the table show?* For goodness-of-fit, each category expects $E_i = n \\cdot p_i$ — 120 die rolls expect $120 \\times \\tfrac{1}{6} = 20$ per face. For a two-way table testing independence, each cell expects $E = \\dfrac{\\text{row total} \\times \\text{column total}}{\\text{grand total}}$: each row gets its fair share of each column. Expected counts must always sum to the same totals as the observed ones — a free arithmetic check."
+      "microLesson": "Every chi-square test starts by asking: *if the null hypothesis were true, what counts SHOULD the table show?* For goodness-of-fit, each category expects $E_i = n \\cdot p_i$: 120 die rolls expect $120 \\times \\tfrac{1}{6} = 20$ per face. For a two-way table testing independence, each cell expects $E = \\dfrac{\\text{row total} \\times \\text{column total}}{\\text{grand total}}$: each row gets its fair share of each column. Expected counts must always sum to the same totals as the observed ones: a free arithmetic check."
     },
     {
       "id": "gof-statistic",
@@ -18,25 +18,25 @@
     {
       "id": "independence-tests",
       "label": "Tests of independence",
-      "microLesson": "Are two categorical variables related — location and vote, age group and answer? Cross-tabulate the counts, compute each cell's expected value from $\\tfrac{\\text{row} \\times \\text{col}}{\\text{total}}$, and sum $\\tfrac{(O-E)^2}{E}$ over ALL cells. Degrees of freedom: $\\mathrm{df} = (r-1)(c-1)$ — a 2×2 table has just 1, because one cell's deviation forces the other three. Compare with the critical value for that df: beyond it, reject independence and conclude the variables are associated."
+      "microLesson": "Are two categorical variables related: location and vote, age group and answer? Cross-tabulate the counts, compute each cell's expected value from $\\tfrac{\\text{row} \\times \\text{col}}{\\text{total}}$, and sum $\\tfrac{(O-E)^2}{E}$ over ALL cells. Degrees of freedom: $\\mathrm{df} = (r-1)(c-1)$: a 2×2 table has just 1, because one cell's deviation forces the other three. Compare with the critical value for that df: beyond it, reject independence and conclude the variables are associated."
     },
     {
       "id": "conditions-and-interpretation",
       "label": "Conditions and interpretation",
-      "microLesson": "Chi-square has two famous fine-print clauses. (1) It eats raw **counts**, never percentages — 34% of 40 people and 34% of 4000 carry very different evidence, and only counts know the difference. Rule of thumb: every EXPECTED count at least 5, or the approximation breaks. (2) Rejecting independence means the variables are **associated** — it does NOT say which causes which, or whether a lurking third variable drives both. And failing to reject never proves independence; it just means this sample couldn't tell."
+      "microLesson": "Chi-square has two famous fine-print clauses. (1) It eats raw **counts**, never percentages: 34% of 40 people and 34% of 4000 carry very different evidence, and only counts know the difference. Rule of thumb: every EXPECTED count at least 5, or the approximation breaks. (2) Rejecting independence means the variables are **associated**: it does NOT say which causes which, or whether a lurking third variable drives both. And failing to reject never proves independence; it just means this sample couldn't tell."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## When the data are categories, not numbers\n\nMeans and proportions handle numeric outcomes and yes/no outcomes. But much of the world arrives as **counts in categories**: which of three candidates, which day of the week, which phenotype, improved / unchanged / worse. The **chi-square test** is the hypothesis test for count data, and it answers one question in two costumes:\n\n- **Goodness-of-fit:** does one categorical variable follow a claimed distribution? (Is this die fair?)\n- **Independence:** are two categorical variables related? (Does vote depend on location?)\n\nBoth run on the same engine: compare the counts you SAW with the counts the null hypothesis EXPECTED.\n\n## Expected counts: the null's prediction\n\n**Goodness-of-fit.** If category $i$ has claimed probability $p_i$ and you take $n$ observations, you expect\n\n$$E_i = n \\cdot p_i.$$\n\nA claimed ticket split of $0.5, 0.3, 0.2$ over $n = 200$ tickets predicts $E = 100, 60, 40$. (Expected counts may legitimately be decimals — they are long-run averages, not real tallies. Only observed counts must be whole numbers.)\n\n**Independence.** In a two-way table, independence means each row spreads across the columns in the same proportions — every row gets its fair share of every column:\n\n$$E = \\frac{\\text{row total} \\times \\text{column total}}{\\text{grand total}}.$$\n\nWith 120 in row A and 50 total yes-answers among 200 people: $E_{A,\\text{yes}} = \\tfrac{120 \\times 50}{200} = 30$.\n\nEither way, expected counts inherit the observed totals — rows, columns, and grand total all match. If yours don't, recheck the arithmetic before going anywhere near $\\chi^2$.\n\n## The statistic: total squared surprise\n\n$$\\chi^2 = \\sum_{\\text{all cells}} \\frac{(O - E)^2}{E}.$$\n\nEach term is one cell's disappointment, measured RELATIVE to what was expected: squaring removes the sign (raw deviations always cancel to zero) and dividing by $E$ rescales — a miss of 4 on an expected 5 is an 80% overshoot; on an expected 500 it is noise.\n\n**Worked example (goodness-of-fit).** A spinner claims 3 equal regions; $n = 60$ spins land $24, 18, 18$. Expected: $20, 20, 20$.\n\n$$\\chi^2 = \\frac{(24-20)^2}{20} + \\frac{(18-20)^2}{20} + \\frac{(18-20)^2}{20} = 0.8 + 0.2 + 0.2 = 1.2.$$\n\nDegrees of freedom: $\\mathrm{df} = k - 1 = 2$ (the counts must total $n$, costing one freedom).\n\n## The decision: right tail only\n\nUnder the null, $\\chi^2$ follows a chi-square distribution with the appropriate df. Only LARGE values indict the null — a tiny $\\chi^2$ means the fit is fine (suspiciously tiny sometimes means the data were doctored, but that is another course). So the test is always right-tailed: reject when $\\chi^2$ exceeds the critical value.\n\n| df | $\\alpha = 0.05$ | $\\alpha = 0.01$ |\n|---|---|---|\n| 1 | 3.841 | 6.635 |\n| 2 | 5.991 | 9.210 |\n| 3 | 7.815 | 11.345 |\n| 4 | 9.488 | 13.277 |\n| 6 | 12.592 | 16.812 |\n\nOur spinner: $\\chi^2 = 1.2 < 5.991$ (df 2, $\\alpha = 0.05$): fail to reject — the spins are consistent with equal regions.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 12], \"yRange\": [0, 0.5], \"grid\": false, \"curves\": [ { \"fn\": \"0.5*exp(-x/2)\", \"color\": \"accent\", \"fillRange\": [5.991, 12] } ], \"segments\": [ { \"from\": [5.991, 0], \"to\": [5.991, 0.28], \"dashed\": true, \"color\": \"warn\", \"label\": \"5.991\" }, { \"from\": [1.2, 0], \"to\": [1.2, 0.27], \"color\": \"error\", \"label\": \"chi2 = 1.2\" } ], \"caption\": \"The chi-square density for df = 2 with the alpha = 0.05 rejection region shaded beyond 5.991. The spinner's 1.2 lands deep in the compatible zone.\" }\n```\n\n## Independence in a two-way table\n\n**Worked example.** 200 voters, 100 urban and 100 rural, choose among 3 candidates. Observed — urban: $26, 14, 60$; rural: $14, 26, 60$. Column totals $40, 40, 120$ give expected counts $20, 20, 60$ in each row.\n\n1. $\\mathrm{df} = (r-1)(c-1) = (2-1)(3-1) = 2$.\n2. Four cells miss by $\\pm 6$: each contributes $\\tfrac{36}{20} = 1.8$. The third-column cells hit exactly: 0 each.\n3. $\\chi^2 = 4 \\times 1.8 = 7.2$.\n4. $7.2 > 5.991$ (df 2, $\\alpha = 0.05$): **reject** — candidate preference is associated with location.\n\nWhy $(r-1)(c-1)$? With the margins fixed, only that many cells are free: in a 2×2 table, set one cell and the other three follow — df = 1.\n\n## The fine print, which is where the points are lost\n\n**Counts, not percentages.** The statistic's magnitude scales with $n$. Feeding chi-square the percentages $60\\%, 30\\%, 10\\%$ discards the sample size and produces nonsense — the same percentages from $n = 4000$ are overwhelming evidence, from $n = 40$ barely a hint. Always convert back to raw counts first.\n\n**Expected counts at least 5.** The chi-square curve is a large-sample approximation. The standard rule: every EXPECTED count $\\ge 5$ (it is fine for observed counts to be small or zero). A category expecting $200 \\times 0.02 = 4$ breaks the rule — combine it with a neighbor or enlarge the sample ($n \\ge 250$ fixes it, since $250 \\times 0.02 = 5$).\n\n**Association is not causation.** Rejecting independence between screen time and sleep quality does not prove screens ruin sleep: age could drive both. The test certifies a PATTERN, never a mechanism.\n\n**Failing to reject proves nothing.** A small sample can miss a real association; 'fail to reject' means 'this table couldn't tell', not 'independent'.\n\n### Common pitfalls\n\n- Running $\\chi^2$ on percentages or proportions (throws away $n$; answers become meaningless).\n- Using $\\mathrm{df} = k$ or $\\mathrm{df} = rc - 1$ instead of $k - 1$ and $(r-1)(c-1)$.\n- Checking OBSERVED counts against the $\\ge 5$ rule — the rule is about EXPECTED counts.\n- Reading a rejection as causal, or a non-rejection as proof of independence."
+    "body": "## When the data are categories, not numbers\n\nMeans and proportions handle numeric outcomes and yes/no outcomes. But much of the world arrives as **counts in categories**: which of three candidates, which day of the week, which phenotype, improved / unchanged / worse. The **chi-square test** is the hypothesis test for count data, and it answers one question in two costumes:\n\n- **Goodness-of-fit:** does one categorical variable follow a claimed distribution? (Is this die fair?)\n- **Independence:** are two categorical variables related? (Does vote depend on location?)\n\nBoth run on the same engine: compare the counts you SAW with the counts the null hypothesis EXPECTED.\n\n## Expected counts: the null's prediction\n\n**Goodness-of-fit.** If category $i$ has claimed probability $p_i$ and you take $n$ observations, you expect\n\n$$E_i = n \\cdot p_i.$$\n\nA claimed ticket split of $0.5, 0.3, 0.2$ over $n = 200$ tickets predicts $E = 100, 60, 40$. (Expected counts may legitimately be decimals: they are long-run averages, not real tallies. Only observed counts must be whole numbers.)\n\n**Independence.** In a two-way table, independence means each row spreads across the columns in the same proportions: every row gets its fair share of every column:\n\n$$E = \\frac{\\text{row total} \\times \\text{column total}}{\\text{grand total}}.$$\n\nWith 120 in row A and 50 total yes-answers among 200 people: $E_{A,\\text{yes}} = \\tfrac{120 \\times 50}{200} = 30$.\n\nEither way, expected counts inherit the observed totals: rows, columns, and grand total all match. If yours don't, recheck the arithmetic before going anywhere near $\\chi^2$.\n\n## The statistic: total squared surprise\n\n$$\\chi^2 = \\sum_{\\text{all cells}} \\frac{(O - E)^2}{E}.$$\n\nEach term is one cell's disappointment, measured RELATIVE to what was expected: squaring removes the sign (raw deviations always cancel to zero) and dividing by $E$ rescales: a miss of 4 on an expected 5 is an 80% overshoot; on an expected 500 it is noise.\n\n**Worked example (goodness-of-fit).** A spinner claims 3 equal regions; $n = 60$ spins land $24, 18, 18$. Expected: $20, 20, 20$.\n\n$$\\chi^2 = \\frac{(24-20)^2}{20} + \\frac{(18-20)^2}{20} + \\frac{(18-20)^2}{20} = 0.8 + 0.2 + 0.2 = 1.2.$$\n\nDegrees of freedom: $\\mathrm{df} = k - 1 = 2$ (the counts must total $n$, costing one freedom).\n\n## The decision: right tail only\n\nUnder the null, $\\chi^2$ follows a chi-square distribution with the appropriate df. Only LARGE values indict the null: a tiny $\\chi^2$ means the fit is fine (suspiciously tiny sometimes means the data were doctored, but that is another course). So the test is always right-tailed: reject when $\\chi^2$ exceeds the critical value.\n\n| df | $\\alpha = 0.05$ | $\\alpha = 0.01$ |\n|---|---|---|\n| 1 | 3.841 | 6.635 |\n| 2 | 5.991 | 9.210 |\n| 3 | 7.815 | 11.345 |\n| 4 | 9.488 | 13.277 |\n| 6 | 12.592 | 16.812 |\n\nOur spinner: $\\chi^2 = 1.2 < 5.991$ (df 2, $\\alpha = 0.05$): fail to reject: the spins are consistent with equal regions.\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 12], \"yRange\": [0, 0.5], \"grid\": false, \"curves\": [ { \"fn\": \"0.5*exp(-x/2)\", \"color\": \"accent\", \"fillRange\": [5.991, 12] } ], \"segments\": [ { \"from\": [5.991, 0], \"to\": [5.991, 0.28], \"dashed\": true, \"color\": \"warn\", \"label\": \"5.991\" }, { \"from\": [1.2, 0], \"to\": [1.2, 0.27], \"color\": \"error\", \"label\": \"chi2 = 1.2\" } ], \"caption\": \"The chi-square density for df = 2 with the alpha = 0.05 rejection region shaded beyond 5.991. The spinner's 1.2 lands deep in the compatible zone.\" }\n```\n\n## Independence in a two-way table\n\n**Worked example.** 200 voters, 100 urban and 100 rural, choose among 3 candidates. Observed: urban: $26, 14, 60$; rural: $14, 26, 60$. Column totals $40, 40, 120$ give expected counts $20, 20, 60$ in each row.\n\n1. $\\mathrm{df} = (r-1)(c-1) = (2-1)(3-1) = 2$.\n2. Four cells miss by $\\pm 6$: each contributes $\\tfrac{36}{20} = 1.8$. The third-column cells hit exactly: 0 each.\n3. $\\chi^2 = 4 \\times 1.8 = 7.2$.\n4. $7.2 > 5.991$ (df 2, $\\alpha = 0.05$): **reject**: candidate preference is associated with location.\n\nWhy $(r-1)(c-1)$? With the margins fixed, only that many cells are free: in a 2×2 table, set one cell and the other three follow: df = 1.\n\n## The fine print, which is where the points are lost\n\n**Counts, not percentages.** The statistic's magnitude scales with $n$. Feeding chi-square the percentages $60\\%, 30\\%, 10\\%$ discards the sample size and produces nonsense: the same percentages from $n = 4000$ are overwhelming evidence, from $n = 40$ barely a hint. Always convert back to raw counts first.\n\n**Expected counts at least 5.** The chi-square curve is a large-sample approximation. The standard rule: every EXPECTED count $\\ge 5$ (it is fine for observed counts to be small or zero). A category expecting $200 \\times 0.02 = 4$ breaks the rule: combine it with a neighbor or enlarge the sample ($n \\ge 250$ fixes it, since $250 \\times 0.02 = 5$).\n\n**Association is not causation.** Rejecting independence between screen time and sleep quality does not prove screens ruin sleep: age could drive both. The test certifies a PATTERN, never a mechanism.\n\n**Failing to reject proves nothing.** A small sample can miss a real association; 'fail to reject' means 'this table couldn't tell', not 'independent'.\n\n### Common pitfalls\n\n- Running $\\chi^2$ on percentages or proportions (throws away $n$; answers become meaningless).\n- Using $\\mathrm{df} = k$ or $\\mathrm{df} = rc - 1$ instead of $k - 1$ and $(r-1)(c-1)$.\n- Checking OBSERVED counts against the $\\ge 5$ rule: the rule is about EXPECTED counts.\n- Reading a rejection as causal, or a non-rejection as proof of independence."
   },
   "application": {
     "summary": "Chi-square is the workhorse test for categorical data: A/B tests with more than two outcomes, election polls cross-tabulated by region, genetics ratios, and manufacturing defect categories all reduce to comparing observed counts against the counts a null hypothesis predicts.",
     "domains": ["elections and polling", "A/B testing and product analytics", "genetics and medicine", "manufacturing quality control"],
-    "workedExample": "**Is the defect mix changing? (Goodness-of-fit in a factory.)**\n\nA plant's historical defect log says defects split across four causes — misalignment, scratch, discoloration, other — in equal proportions. This month's $n = 100$ defects: $35, 15, 30, 20$.\n\n*Step 1 — expected counts.* Equal proportions over 100 defects: $E = 25$ per category. All expecteds are $\\ge 5$; the raw numbers are counts, not percentages. Conditions cleared.\n\n*Step 2 — the statistic.* Deviations $+10, -10, +5, -5$:\n$$\\chi^2 = \\frac{100}{25} + \\frac{100}{25} + \\frac{25}{25} + \\frac{25}{25} = 4 + 4 + 1 + 1 = 10.$$\n\n*Step 3 — decision.* $\\mathrm{df} = 4 - 1 = 3$; at $\\alpha = 0.05$ the critical value is $7.815$. Since $10 > 7.815$: reject — the defect mix has genuinely shifted. (At $\\alpha = 0.01$ the bar is $11.345$, and $10 < 11.345$ would NOT reject: the strength of the evidence depends on the bar you set in advance.)\n\n*Step 4 — read the terms, not just the total.* The two big contributions ($4 + 4$) come from misalignment (up) and scratches (down). That is actionable: something changed around the alignment stage. The per-cell terms of $\\chi^2$ are a built-in diagnostic report — the total says 'something changed', the terms say WHERE.",
+    "workedExample": "**Is the defect mix changing? (Goodness-of-fit in a factory.)**\n\nA plant's historical defect log says defects split across four causes (misalignment, scratch, discoloration, other) in equal proportions. This month's $n = 100$ defects: $35, 15, 30, 20$.\n\n*Step 1: expected counts.* Equal proportions over 100 defects: $E = 25$ per category. All expecteds are $\\ge 5$; the raw numbers are counts, not percentages. Conditions cleared.\n\n*Step 2: the statistic.* Deviations $+10, -10, +5, -5$:\n$$\\chi^2 = \\frac{100}{25} + \\frac{100}{25} + \\frac{25}{25} + \\frac{25}{25} = 4 + 4 + 1 + 1 = 10.$$\n\n*Step 3: decision.* $\\mathrm{df} = 4 - 1 = 3$; at $\\alpha = 0.05$ the critical value is $7.815$. Since $10 > 7.815$: reject: the defect mix has genuinely shifted. (At $\\alpha = 0.01$ the bar is $11.345$, and $10 < 11.345$ would NOT reject: the strength of the evidence depends on the bar you set in advance.)\n\n*Step 4: read the terms, not just the total.* The two big contributions ($4 + 4$) come from misalignment (up) and scratches (down). That is actionable: something changed around the alignment stage. The per-cell terms of $\\chi^2$ are a built-in diagnostic report: the total says 'something changed', the terms say WHERE.",
     "domainNotes": [
       "**Polling:** 'does candidate preference depend on region?' is a test of independence on a region-by-candidate table; the headline 'statistical dead heat' often means the table failed to reject.",
-      "**Product analytics:** A/B/C tests with outcomes like bought / browsed / bounced form 3×3 tables — chi-square handles multi-outcome experiments that two-proportion z-tests cannot.",
+      "**Product analytics:** A/B/C tests with outcomes like bought / browsed / bounced form 3×3 tables: chi-square handles multi-outcome experiments that two-proportion z-tests cannot.",
       "**Genetics:** Mendel's 9:3:3:1 ratios are goodness-of-fit nulls; modern labs run the same test on observed offspring counts.",
       "**Manufacturing:** defect-category drift and shift-by-defect tables are chi-square territory; the per-cell terms point straight at the process step that moved."
     ]
@@ -59,7 +59,7 @@
         { "instruction": "The six expected counts must sum to what number?", "answer": "120", "accept": [], "hint": "Expecteds always match the observed total." }
       ],
       "finalAnswer": { "value": "20", "unit": "" },
-      "solutionNarrative": "Each face expects $120/6 = 20$, and the six expecteds total 120 — the same as the observed rolls, a built-in check."
+      "solutionNarrative": "Each face expects $120/6 = 20$, and the six expecteds total 120: the same as the observed rolls, a built-in check."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s02",
@@ -88,7 +88,7 @@
         { "instruction": "Is every expected count at least 5? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The smallest expected here is 20." }
       ],
       "finalAnswer": { "value": "30, 30, 20, 20", "unit": "" },
-      "solutionNarrative": "Expected counts: 30, 30, 20, 20 — each row splits 50/50 across the columns because independence gives every row the columns' overall proportions. All are comfortably at least 5."
+      "solutionNarrative": "Expected counts: 30, 30, 20, 20: each row splits 50/50 across the columns because independence gives every row the columns' overall proportions. All are comfortably at least 5."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s04",
@@ -116,7 +116,7 @@
         { "instruction": "Degrees of freedom: $k - 1$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$k = 3$ regions." }
       ],
       "finalAnswer": { "value": "1.2", "unit": "" },
-      "solutionNarrative": "$\\chi^2 = 0.8 + 0.2 + 0.2 = 1.2$ with df 2 — far below the 5.991 critical value, so these spins are entirely consistent with equal regions."
+      "solutionNarrative": "$\\chi^2 = 0.8 + 0.2 + 0.2 = 1.2$ with df 2: far below the 5.991 critical value, so these spins are entirely consistent with equal regions."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s06",
@@ -131,7 +131,7 @@
         { "instruction": "Degrees of freedom: $k - 1$. (Give a whole number.)", "answer": "3", "accept": [], "hint": "$k = 4$ lanes." }
       ],
       "finalAnswer": { "value": "4", "unit": "" },
-      "solutionNarrative": "Every lane misses by exactly 5, each contributing 1, so $\\chi^2 = 4$ with df 3 — below the 7.815 bar, consistent with equal traffic."
+      "solutionNarrative": "Every lane misses by exactly 5, each contributing 1, so $\\chi^2 = 4$ with df 3: below the 7.815 bar, consistent with equal traffic."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s07",
@@ -147,7 +147,7 @@
         { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Chi-square rejects in the right tail only." }
       ],
       "finalAnswer": { "value": "reject", "unit": "" },
-      "solutionNarrative": "$\\chi^2 = 10 > 7.815$ (df 3): reject — the defect mix has shifted. The two 4-point terms finger the first two categories as the movers."
+      "solutionNarrative": "$\\chi^2 = 10 > 7.815$ (df 3): reject: the defect mix has shifted. The two 4-point terms finger the first two categories as the movers."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s08",
@@ -162,7 +162,7 @@
         { "instruction": "Degrees of freedom: $k - 1$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$k = 3$ pages." }
       ],
       "finalAnswer": { "value": "2.4", "unit": "" },
-      "solutionNarrative": "$\\chi^2 = 1.6 + 0.4 + 0.4 = 2.4$ with df 2 — under the 5.991 critical value, so the observed imbalance is within chance for 120 visits."
+      "solutionNarrative": "$\\chi^2 = 1.6 + 0.4 + 0.4 = 2.4$ with df 2: under the 5.991 critical value, so the observed imbalance is within chance for 120 visits."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s09",
@@ -176,14 +176,14 @@
         { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Beyond the critical value means significant." }
       ],
       "finalAnswer": { "value": "reject", "unit": "" },
-      "solutionNarrative": "$\\mathrm{df} = 2$ and $7.3 > 5.991$: reject independence — the two variables are associated."
+      "solutionNarrative": "$\\mathrm{df} = 2$ and $7.3 > 5.991$: reject independence: the two variables are associated."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s10",
       "concepts": ["independence-tests"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "200 customers (100 per age group) answer yes/no. Observed — group 1: 55 yes, 45 no; group 2: 45 yes, 55 no. Column totals are 100 yes, 100 no. Compute the chi-square statistic.",
+      "prompt": "200 customers (100 per age group) answer yes/no. Observed: group 1: 55 yes, 45 no; group 2: 45 yes, 55 no. Column totals are 100 yes, 100 no. Compute the chi-square statistic.",
       "steps": [
         { "instruction": "Expected count for (group 1, yes): $\\dfrac{100 \\times 100}{200}$. (Give a whole number.)", "answer": "50", "accept": [], "hint": "Row times column over total." },
         { "instruction": "Term for that cell: $\\dfrac{(55 - 50)^2}{50}$. (Give a decimal.)", "answer": "0.5", "accept": ["25/50", "0.50"], "hint": "$5^2 = 25$." },
@@ -191,14 +191,14 @@
         { "instruction": "Degrees of freedom: $(2-1)(2-1)$. (Give a whole number.)", "answer": "1", "accept": [], "hint": "A 2×2 table." }
       ],
       "finalAnswer": { "value": "2", "unit": "" },
-      "solutionNarrative": "All expecteds are 50 and every cell misses by 5: $\\chi^2 = 4(0.5) = 2$ with df 1 — under the 3.841 bar, so the answer pattern is compatible with independence."
+      "solutionNarrative": "All expecteds are 50 and every cell misses by 5: $\\chi^2 = 4(0.5) = 2$ with df 1: under the 3.841 bar, so the answer pattern is compatible with independence."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s11",
       "concepts": ["independence-tests"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "200 voters (100 urban, 100 rural) choose among 3 candidates. Observed — urban: $26, 14, 60$; rural: $14, 26, 60$. Column totals $40, 40, 120$ give expected counts $20, 20, 60$ in each row. Test independence at $\\alpha = 0.05$: with the correct df the critical value is $5.991$, reject when $\\chi^2 > 5.991$.",
+      "prompt": "200 voters (100 urban, 100 rural) choose among 3 candidates. Observed: urban: $26, 14, 60$; rural: $14, 26, 60$. Column totals $40, 40, 120$ give expected counts $20, 20, 60$ in each row. Test independence at $\\alpha = 0.05$: with the correct df the critical value is $5.991$, reject when $\\chi^2 > 5.991$.",
       "steps": [
         { "instruction": "Degrees of freedom: $(2-1)(3-1)$. (Give a whole number.)", "answer": "2", "accept": [], "hint": "$(r-1)(c-1)$." },
         { "instruction": "Term for (urban, candidate 1): $\\dfrac{(26 - 20)^2}{20}$. (Give a decimal.)", "answer": "1.8", "accept": ["36/20"], "hint": "$6^2 = 36$." },
@@ -207,7 +207,7 @@
         { "instruction": "Decision: type 'reject' or 'fail to reject'.", "answer": "reject", "accept": ["reject the null"], "hint": "Beyond the critical value means significant." }
       ],
       "finalAnswer": { "value": "reject", "unit": "" },
-      "solutionNarrative": "$\\mathrm{df} = 2$, $\\chi^2 = 7.2 > 5.991$: reject — candidate preference is associated with location. Candidates 1 and 2 split urban and rural in opposite directions; candidate 3 draws evenly."
+      "solutionNarrative": "$\\mathrm{df} = 2$, $\\chi^2 = 7.2 > 5.991$: reject: candidate preference is associated with location. Candidates 1 and 2 split urban and rural in opposite directions; candidate 3 draws evenly."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s12",
@@ -221,7 +221,7 @@
         { "instruction": "For a 3×4 table: $(3-1)(4-1)$. (Give a whole number.)", "answer": "6", "accept": [], "hint": "$2 \\times 3$." }
       ],
       "finalAnswer": { "value": "6", "unit": "" },
-      "solutionNarrative": "$\\mathrm{df} = (r-1)(c-1)$: 1, 4, and 6. The margins eat one row and one column of freedom — set that many cells and the rest of the table is forced."
+      "solutionNarrative": "$\\mathrm{df} = (r-1)(c-1)$: 1, 4, and 6. The margins eat one row and one column of freedom: set that many cells and the rest of the table is forced."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s13",
@@ -262,7 +262,7 @@
         { "instruction": "If the test had instead FAILED to reject, would that prove the variables are independent? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Absence of evidence is not evidence of absence." }
       ],
       "finalAnswer": { "value": "associated", "unit": "" },
-      "solutionNarrative": "Rejection certifies an association — the table is too lopsided for chance — but not causation: age plausibly drives both screen habits and sleep. And a non-rejection would only have meant this sample couldn't tell."
+      "solutionNarrative": "Rejection certifies an association, the table is too lopsided for chance, but not causation: age plausibly drives both screen habits and sleep. And a non-rejection would only have meant this sample couldn't tell."
     },
     {
       "id": "advanced-statistics.chi-square-tests.s16",
@@ -273,10 +273,10 @@
       "steps": [
         { "instruction": "What is the smallest expected count? (Give a number.)", "answer": "4", "accept": [], "hint": "Scan the four values." },
         { "instruction": "Is the every-expected-at-least-5 condition met? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Compare 4 with 5." },
-        { "instruction": "The condition is about which counts — 'expected' or 'observed'?", "answer": "expected", "accept": ["expected counts", "the expected"], "hint": "Observed cells may be small or even zero." }
+        { "instruction": "The condition is about which counts: 'expected' or 'observed'?", "answer": "expected", "accept": ["expected counts", "the expected"], "hint": "Observed cells may be small or even zero." }
       ],
       "finalAnswer": { "value": "no", "unit": "" },
-      "solutionNarrative": "The smallest expected count is 4 < 5, so the chi-square approximation is shaky — collect more data or combine categories. The rule constrains EXPECTED counts; observed zeros are fine."
+      "solutionNarrative": "The smallest expected count is 4 < 5, so the chi-square approximation is shaky: collect more data or combine categories. The rule constrains EXPECTED counts; observed zeros are fine."
     }
   ]
 }

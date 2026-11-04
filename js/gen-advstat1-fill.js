@@ -64,17 +64,17 @@ fill["as1-binomial-setting-1"] = (rng, idx) => {
     steps: [
       { instruction: `How many trials $n$ are there?`, answer: `${n}`, accept: [], hint: `One trial per question.` },
       { instruction: `What is the success probability $p$ per trial? (Give a decimal.)`, answer: p, accept: [`1/${ch}`], hint: `One correct choice out of ${ch}.` },
-      { instruction: `Binary, independent, fixed number, same $p$ — does $X$ follow a binomial distribution? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Random guessing satisfies all four BINS conditions.` },
+      { instruction: `Binary, independent, fixed number, same $p$: does $X$ follow a binomial distribution? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Random guessing satisfies all four BINS conditions.` },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `Each question is a binary trial, guesses are independent, $n = ${n}$ is fixed, and $p = ${p}$ never changes — $X$ is Binomial(${n}, ${p}).`,
+    solutionNarrative: `Each question is a binary trial, guesses are independent, $n = ${n}$ is fixed, and $p = ${p}$ never changes: $X$ is Binomial(${n}, ${p}).`,
   };
 };
 fill["as1-binomial-setting-2"] = (rng, idx) => {
   const scen = rng.pick([
     { desc: "You draw 6 cards from a shuffled deck WITHOUT replacement and count the red cards", fails: "independence", faccept: ["same-probability", "independent"], binom: "no", why: "each card drawn changes the deck, so the trials are not independent" },
-    { desc: "You roll a fair die repeatedly UNTIL the first 6 appears and count the rolls needed", fails: "fixed-number", faccept: ["fixed number", "n"], binom: "no", why: "there is no fixed number of trials — the experiment stops when a 6 lands" },
-    { desc: "You flip a fair coin 20 times and count the heads", fails: "none", faccept: [], binom: "yes", why: "binary, independent, fixed 20 flips, constant p = 0.5 — all four conditions hold" },
+    { desc: "You roll a fair die repeatedly UNTIL the first 6 appears and count the rolls needed", fails: "fixed-number", faccept: ["fixed number", "n"], binom: "no", why: "there is no fixed number of trials: the experiment stops when a 6 lands" },
+    { desc: "You flip a fair coin 20 times and count the heads", fails: "none", faccept: [], binom: "yes", why: "binary, independent, fixed 20 flips, constant p = 0.5: all four conditions hold" },
     { desc: "A machine's defect rate drifts upward as it heats through the day; you count defects among 30 consecutive parts", fails: "same-probability", faccept: ["same probability", "constant-p"], binom: "no", why: "the success probability changes from trial to trial as the machine heats" },
   ]);
   return {
@@ -103,7 +103,7 @@ fill["as1-binomial-setting-3"] = (rng, idx) => {
       { instruction: `Is $X$ binomial? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Binary, independent, fixed ${n}, same $p$.` },
     ],
     finalAnswer: { value: `${mu}`, unit: "drives" },
-    solutionNarrative: `"Success" is whatever you count — here a failure with $p = ${dec(pT, 1)}$. $X$ is Binomial(${n}, ${dec(pT, 1)}) with mean $np = ${mu}$ failed drives.`,
+    solutionNarrative: `"Success" is whatever you count: here a failure with $p = ${dec(pT, 1)}$. $X$ is Binomial(${n}, ${dec(pT, 1)}) with mean $np = ${mu}$ failed drives.`,
   };
 };
 
@@ -167,7 +167,7 @@ fill["as1-binomial-prob-3"] = (rng, idx) => {
       { instruction: `Using your rounded value: $P(X \\ge 1) = 1 - ${dec(r, 4)}$.`, answer: dec(10000 - r, 4), accept: [], hint: `The complement of zero defects.` },
     ],
     finalAnswer: { value: dec(10000 - r, 4), unit: "" },
-    solutionNarrative: `$P(X = 0) = (${dec(qT, 1)})^{${n}} \\approx ${dec(r, 4)}$, so $P(X \\ge 1) = 1 - ${dec(r, 4)} = ${dec(10000 - r, 4)}$ — the one-subtraction shortcut for "at least one".`,
+    solutionNarrative: `$P(X = 0) = (${dec(qT, 1)})^{${n}} \\approx ${dec(r, 4)}$, so $P(X \\ge 1) = 1 - ${dec(r, 4)} = ${dec(10000 - r, 4)}$: the one-subtraction shortcut for "at least one".`,
   };
 };
 
@@ -726,7 +726,7 @@ fill["as1-ev-continuous-1"] = (rng, idx) => {
       { instruction: `Multiply by $${kDesc}$: $E[X]$. (Give a fraction.)`, answer: ev, accept: [`${2 * c}/3`], hint: `The coefficient of $x$ in the density scales the integral.` },
     ],
     finalAnswer: { value: ev, unit: "" },
-    solutionNarrative: `$E[X] = ${kDesc} \\int_0^{${c}} x^2\\,dx = ${kDesc} \\cdot ${inner} = ${ev}$ — past the midpoint $${frac(c, 2)}$ because the density rises.`,
+    solutionNarrative: `$E[X] = ${kDesc} \\int_0^{${c}} x^2\\,dx = ${kDesc} \\cdot ${inner} = ${ev}$: past the midpoint $${frac(c, 2)}$ because the density rises.`,
   };
 };
 fill["as1-ev-continuous-2"] = (rng, idx) => {
@@ -764,6 +764,6 @@ fill["as1-ev-continuous-3"] = (rng, idx) => {
       { instruction: `The interval midpoint is ${mid}. Is $E[X]$ 'greater' or 'less' than the midpoint? Type one.`, answer: "greater", accept: [], hint: `The density piles weight toward ${c}.` },
     ],
     finalAnswer: { value: ev, unit: "" },
-    solutionNarrative: `$E[X] = ${kDesc} \\cdot ${inner} = ${ev}$, which exceeds the midpoint ${mid} — a rising density always pulls the mean right of center.`,
+    solutionNarrative: `$E[X] = ${kDesc} \\cdot ${inner} = ${ev}$, which exceeds the midpoint ${mid}: a rising density always pulls the mean right of center.`,
   };
 };

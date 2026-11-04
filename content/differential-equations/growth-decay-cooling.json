@@ -8,12 +8,12 @@
     {
       "id": "exponential-growth",
       "label": "Exponential growth",
-      "microLesson": "When something grows at a rate proportional to its current size — bacteria, money at continuous interest, an unchecked population — it follows $\\frac{dP}{dt} = kP$, whose solution is $P(t) = P_0 e^{kt}$ with $k > 0$. Here $P_0$ is the starting amount and $k$ is the growth rate. The **doubling time** is $t = \\frac{\\ln 2}{k}$: the time for the quantity to grow to twice its size, independent of where you start."
+      "microLesson": "When something grows at a rate proportional to its current size (bacteria, money at continuous interest, an unchecked population) it follows $\\frac{dP}{dt} = kP$, whose solution is $P(t) = P_0 e^{kt}$ with $k > 0$. Here $P_0$ is the starting amount and $k$ is the growth rate. The **doubling time** is $t = \\frac{\\ln 2}{k}$: the time for the quantity to grow to twice its size, independent of where you start."
     },
     {
       "id": "radioactive-decay",
       "label": "Radioactive decay & half-life",
-      "microLesson": "Decay is the same law with a negative rate: $\\frac{dN}{dt} = -kN$ gives $N(t) = N_0 e^{-kt}$ with $k > 0$. The **half-life** $t_{1/2} = \\frac{\\ln 2}{k}$ is the time for half the material to disappear. Knowing the half-life lets you find $k = \\frac{\\ln 2}{t_{1/2}}$, and knowing how much remains lets you solve for **age**: $t = \\frac{\\ln(N_0/N)}{k}$ — the heart of carbon dating."
+      "microLesson": "Decay is the same law with a negative rate: $\\frac{dN}{dt} = -kN$ gives $N(t) = N_0 e^{-kt}$ with $k > 0$. The **half-life** $t_{1/2} = \\frac{\\ln 2}{k}$ is the time for half the material to disappear. Knowing the half-life lets you find $k = \\frac{\\ln 2}{t_{1/2}}$, and knowing how much remains lets you solve for **age**: $t = \\frac{\\ln(N_0/N)}{k}$: the heart of carbon dating."
     },
     {
       "id": "newtons-cooling",
@@ -23,22 +23,22 @@
     {
       "id": "limiting-and-logistic",
       "label": "Limiting & logistic growth",
-      "microLesson": "Real populations can't grow forever — resources run out. **Logistic growth** $\\frac{dP}{dt} = rP\\left(1 - \\frac{P}{K}\\right)$ has solution $P(t) = \\frac{K}{1 + A e^{-rt}}$, which rises in an S-curve toward the **carrying capacity** $K$. As $t \\to \\infty$, the $e^{-rt}$ term vanishes and $P \\to K$. That **limiting value** $K$ is what the population settles at; you can read it straight from the model or compute the value approached over long times."
+      "microLesson": "Real populations can't grow forever: resources run out. **Logistic growth** $\\frac{dP}{dt} = rP\\left(1 - \\frac{P}{K}\\right)$ has solution $P(t) = \\frac{K}{1 + A e^{-rt}}$, which rises in an S-curve toward the **carrying capacity** $K$. As $t \\to \\infty$, the $e^{-rt}$ term vanishes and $P \\to K$. That **limiting value** $K$ is what the population settles at; you can read it straight from the model or compute the value approached over long times."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## One equation behind four real phenomena\n\nMoney compounding in an account, a culture of bacteria in a dish, a lump of uranium losing atoms, a coffee cooling on the counter — these look unrelated, but they all obey the **same kind of differential equation**: the rate of change is proportional to something. Once you can solve that one pattern, you can predict all four.\n\nThe master pattern is\n\n$$\\frac{dQ}{dt} = kQ,$$\n\nread as *\"the faster there is, the faster it changes.\"* Separating variables and integrating gives the solution we'll use everywhere:\n\n$$Q(t) = Q_0 e^{kt},$$\n\nwhere $Q_0$ is the starting amount. The sign of $k$ decides the story: **$k > 0$ is growth, $k < 0$ is decay.**\n\nHere are the two behaviors side by side — same starting amount $Q_0 = 100$, opposite rates $k = \\pm 0.05$:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,30],\"yRange\":[0,500],\"grid\":true,\"curves\":[{\"fn\":\"100*exp(0.05*x)\",\"label\":\"k = 0.05\",\"color\":\"accent\",\"labelAt\":25},{\"fn\":\"100*exp(-0.05*x)\",\"label\":\"k = -0.05\",\"color\":\"warn\",\"labelAt\":8}],\"points\":[{\"x\":0,\"y\":100,\"label\":\"Q0 = 100\",\"color\":\"dim\"}],\"caption\":\"Q = 100e^(0.05t) grows ever faster while Q = 100e^(-0.05t) decays toward zero (horizontal axis is t)\"}\n```\n\n## Growth: populations and money\n\nWhen $k > 0$, the quantity explodes. A bacterial colony, a viral video's view count, or an investment earning continuous interest all follow $P(t) = P_0 e^{kt}$. The single most useful number is the **doubling time** — how long until you have twice as much:\n\n$$2P_0 = P_0 e^{kt} \\;\\Rightarrow\\; t = \\frac{\\ln 2}{k}.$$\n\nNotice $P_0$ cancels: doubling time doesn't depend on how much you started with. \\$1{,}000 and \\$1{,}000{,}000 both double in the same time at the same rate.\n\n## Decay: radioactivity and medicine\n\nFlip the sign. With $k > 0$, $N(t) = N_0 e^{-kt}$ describes a radioactive sample, a drug clearing your bloodstream, or the carbon-14 in an ancient bone. The signature number here is the **half-life**, the time to lose half the material:\n\n$$\\tfrac{1}{2}N_0 = N_0 e^{-k t_{1/2}} \\;\\Rightarrow\\; t_{1/2} = \\frac{\\ln 2}{k}.$$\n\nRun it backwards and you get **dating**: if a fossil has a known fraction of its original carbon-14 left, solve $N = N_0 e^{-kt}$ for $t$ to find its age.\n\n## Cooling: coffee and crime scenes\n\nA hot object doesn't decay to zero — it cools toward the room. **Newton's law of cooling** adds the ambient temperature $T_s$:\n\n$$\\frac{dT}{dt} = -k(T - T_s) \\;\\Rightarrow\\; T(t) = T_s + (T_0 - T_s)e^{-kt}.$$\n\nThe *temperature gap* $T - T_s$ decays exponentially, so $T$ slides toward $T_s$ and levels off. Forensic investigators run this backwards on a body's temperature to estimate a time of death.\n\nConcretely, a 90°C coffee in a 20°C room with $k = 0.1$ obeys $T(t) = 20 + 70e^{-0.1t}$ — the 70-degree gap decays exponentially, so the curve slides down onto the ambient line and levels off:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,40],\"yRange\":[0,100],\"grid\":true,\"curves\":[{\"fn\":\"20+70*exp(-0.1*x)\",\"label\":\"T(t)\",\"color\":\"accent\",\"labelAt\":6}],\"segments\":[{\"from\":[0,20],\"to\":[40,20],\"dashed\":true,\"label\":\"ambient 20°C\",\"color\":\"dim\"}],\"points\":[{\"x\":0,\"y\":90,\"label\":\"T(0) = 90\",\"color\":\"warn\"}],\"caption\":\"Newton’s cooling with k = 0.1: T(t) = 20 + 70e^(-0.1t) slides onto the dashed ambient line but never crosses it (t in minutes)\"}\n```\n\n## Limited growth: when reality pushes back\n\nNothing grows forever. Add a brake — a **carrying capacity** $K$ — and you get the **logistic model**:\n\n$$\\frac{dP}{dt} = rP\\left(1 - \\frac{P}{K}\\right) \\;\\Rightarrow\\; P(t) = \\frac{K}{1 + A e^{-rt}}.$$\n\nEarly on it looks exponential, but as $P$ nears $K$ the growth chokes off, tracing an S-curve. The **limiting value** is the punchline: as $t \\to \\infty$, $e^{-rt} \\to 0$ and $P \\to K$. A fishery, a spreading rumor, or a new product's adoption all flatten out at their own ceiling."
+    "body": "## One equation behind four real phenomena\n\nMoney compounding in an account, a culture of bacteria in a dish, a lump of uranium losing atoms, a coffee cooling on the counter: these look unrelated, but they all obey the **same kind of differential equation**: the rate of change is proportional to something. Once you can solve that one pattern, you can predict all four.\n\nThe master pattern is\n\n$$\\frac{dQ}{dt} = kQ,$$\n\nread as *\"the faster there is, the faster it changes.\"* Separating variables and integrating gives the solution we'll use everywhere:\n\n$$Q(t) = Q_0 e^{kt},$$\n\nwhere $Q_0$ is the starting amount. The sign of $k$ decides the story: **$k > 0$ is growth, $k < 0$ is decay.**\n\nHere are the two behaviors side by side: same starting amount $Q_0 = 100$, opposite rates $k = \\pm 0.05$:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,30],\"yRange\":[0,500],\"grid\":true,\"curves\":[{\"fn\":\"100*exp(0.05*x)\",\"label\":\"k = 0.05\",\"color\":\"accent\",\"labelAt\":25},{\"fn\":\"100*exp(-0.05*x)\",\"label\":\"k = -0.05\",\"color\":\"warn\",\"labelAt\":8}],\"points\":[{\"x\":0,\"y\":100,\"label\":\"Q0 = 100\",\"color\":\"dim\"}],\"caption\":\"Q = 100e^(0.05t) grows ever faster while Q = 100e^(-0.05t) decays toward zero (horizontal axis is t)\"}\n```\n\n## Growth: populations and money\n\nWhen $k > 0$, the quantity explodes. A bacterial colony, a viral video's view count, or an investment earning continuous interest all follow $P(t) = P_0 e^{kt}$. The single most useful number is the **doubling time**: how long until you have twice as much:\n\n$$2P_0 = P_0 e^{kt} \\;\\Rightarrow\\; t = \\frac{\\ln 2}{k}.$$\n\nNotice $P_0$ cancels: doubling time doesn't depend on how much you started with. \\$1{,}000 and \\$1{,}000{,}000 both double in the same time at the same rate.\n\n## Decay: radioactivity and medicine\n\nFlip the sign. With $k > 0$, $N(t) = N_0 e^{-kt}$ describes a radioactive sample, a drug clearing your bloodstream, or the carbon-14 in an ancient bone. The signature number here is the **half-life**, the time to lose half the material:\n\n$$\\tfrac{1}{2}N_0 = N_0 e^{-k t_{1/2}} \\;\\Rightarrow\\; t_{1/2} = \\frac{\\ln 2}{k}.$$\n\nRun it backwards and you get **dating**: if a fossil has a known fraction of its original carbon-14 left, solve $N = N_0 e^{-kt}$ for $t$ to find its age.\n\n## Cooling: coffee and crime scenes\n\nA hot object doesn't decay to zero: it cools toward the room. **Newton's law of cooling** adds the ambient temperature $T_s$:\n\n$$\\frac{dT}{dt} = -k(T - T_s) \\;\\Rightarrow\\; T(t) = T_s + (T_0 - T_s)e^{-kt}.$$\n\nThe *temperature gap* $T - T_s$ decays exponentially, so $T$ slides toward $T_s$ and levels off. Forensic investigators run this backwards on a body's temperature to estimate a time of death.\n\nConcretely, a 90°C coffee in a 20°C room with $k = 0.1$ obeys $T(t) = 20 + 70e^{-0.1t}$: the 70-degree gap decays exponentially, so the curve slides down onto the ambient line and levels off:\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,40],\"yRange\":[0,100],\"grid\":true,\"curves\":[{\"fn\":\"20+70*exp(-0.1*x)\",\"label\":\"T(t)\",\"color\":\"accent\",\"labelAt\":6}],\"segments\":[{\"from\":[0,20],\"to\":[40,20],\"dashed\":true,\"label\":\"ambient 20°C\",\"color\":\"dim\"}],\"points\":[{\"x\":0,\"y\":90,\"label\":\"T(0) = 90\",\"color\":\"warn\"}],\"caption\":\"Newton’s cooling with k = 0.1: T(t) = 20 + 70e^(-0.1t) slides onto the dashed ambient line but never crosses it (t in minutes)\"}\n```\n\n## Limited growth: when reality pushes back\n\nNothing grows forever. Add a brake, a **carrying capacity** $K$, and you get the **logistic model**:\n\n$$\\frac{dP}{dt} = rP\\left(1 - \\frac{P}{K}\\right) \\;\\Rightarrow\\; P(t) = \\frac{K}{1 + A e^{-rt}}.$$\n\nEarly on it looks exponential, but as $P$ nears $K$ the growth chokes off, tracing an S-curve. The **limiting value** is the punchline: as $t \\to \\infty$, $e^{-rt} \\to 0$ and $P \\to K$. A fishery, a spreading rumor, or a new product's adoption all flatten out at their own ceiling."
   },
   "application": {
     "summary": "A single proportional-rate law predicts population and investment growth, radioactive dating and drug clearance, the cooling of food and bodies, and the leveling-off of limited populations. You set up the model, plug in known data to find the rate constant, then solve for an amount, a time, or the limiting value.",
     "domains": ["biology", "finance", "archaeology", "medicine", "forensics", "ecology"],
-    "workedExample": "**Dating a charcoal sample.**\n\nCarbon-14 has a half-life of 5730 years. An archaeologist finds charcoal in which only 25% of the original carbon-14 remains. How old is it?\n\nFirst get the decay constant from the half-life:\n\n$$k = \\frac{\\ln 2}{5730} \\approx 0.00012097 \\text{ per year}.$$\n\nNow the sample has $N/N_0 = 0.25$, so solve $0.25 = e^{-kt}$ for $t$:\n\n$$t = \\frac{-\\ln(0.25)}{k} = \\frac{\\ln 4}{k} \\approx \\frac{1.3863}{0.00012097} \\approx 11460 \\text{ years}.$$\n\nThat's exactly **two half-lives** — which makes sense, since 25% is half of a half. The same machinery tells a pharmacist when a drug drops to a safe level and tells an investor how long until savings double.",
+    "workedExample": "**Dating a charcoal sample.**\n\nCarbon-14 has a half-life of 5730 years. An archaeologist finds charcoal in which only 25% of the original carbon-14 remains. How old is it?\n\nFirst get the decay constant from the half-life:\n\n$$k = \\frac{\\ln 2}{5730} \\approx 0.00012097 \\text{ per year}.$$\n\nNow the sample has $N/N_0 = 0.25$, so solve $0.25 = e^{-kt}$ for $t$:\n\n$$t = \\frac{-\\ln(0.25)}{k} = \\frac{\\ln 4}{k} \\approx \\frac{1.3863}{0.00012097} \\approx 11460 \\text{ years}.$$\n\nThat's exactly **two half-lives**, which makes sense, since 25% is half of a half. The same machinery tells a pharmacist when a drug drops to a safe level and tells an investor how long until savings double.",
     "domainNotes": [
       "**Biology/ecology:** bacterial and animal populations grow exponentially when unchecked, then follow a logistic curve toward a carrying capacity once food or space runs short.",
       "**Finance:** continuously compounded interest is pure exponential growth; doubling time ($\\ln 2 / k$) is the quick rule of thumb savers use.",
       "**Archaeology/geology:** carbon-14 and other isotopes date bones, charcoal, and rock by the fraction of material still remaining.",
-      "**Medicine:** drug half-lives set dosing schedules — how long until a dose clears to a safe or ineffective level.",
+      "**Medicine:** drug half-lives set dosing schedules: how long until a dose clears to a safe or ineffective level.",
       "**Forensics:** Newton's law of cooling estimates time of death from a body's temperature and the ambient temperature."
     ]
   },
@@ -100,14 +100,14 @@
       "concepts": ["exponential-growth"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A bacterial population grows continuously as $P(t) = 2000\\, e^{kt}$. It is observed to grow to 3200 in 4 hours, so $k = \\frac{\\ln 1.6}{4}$. First find $k$ (round to 5 decimals), then predict the population after 25 hours (round to the nearest whole cell). Use $\\ln 1.6 \\approx 0.4700$ and $e \\approx 2.718$.",
+      "prompt": "A bacterial population grows continuously as $P(t) = 2000\\, e^{kt}$. It is observed to grow to 3200 in 4 hours, so $k = \\frac{\\ln 1.6}{4}$. First find $k$ (round to 5 decimals), then predict the population after 25 hours (round to the nearest whole cell). Use $\\ln 1.6 \\approx 0.4700$, and your calculator's $e^x$ key for the last step.",
       "steps": [
         { "instruction": "Compute the growth constant $k = \\frac{\\ln 1.6}{4}$ (round to 5 decimals).", "answer": "0.11750", "accept": ["0.1175"], "hint": "Divide 0.4700 by 4." },
         { "instruction": "Compute the exponent $k \\times 25$ (round to 4 decimals).", "answer": "2.9375", "accept": ["2.9375"], "hint": "Multiply your $k$ by 25." },
-        { "instruction": "Evaluate $2000\\, e^{2.9375}$ and round to the nearest whole cell.", "answer": "37703", "accept": ["37703", "37702", "37704"], "hint": "$e^{2.9375} \\approx 18.85$; multiply by 2000." }
+        { "instruction": "Evaluate $2000\\, e^{2.9375}$ and round to the nearest whole cell.", "answer": "37737", "accept": ["37726"], "hint": "$e^{2.9375} \\approx 18.8686$; multiply by 2000." }
       ],
-      "finalAnswer": { "value": "37703", "unit": "cells" },
-      "solutionNarrative": "From the data $k = \\frac{\\ln 1.6}{4} \\approx 0.11750$. After 25 hours the exponent is $0.11750 \\cdot 25 = 2.9375$, so $P = 2000\\, e^{2.9375} \\approx 2000 \\cdot 18.85 \\approx 37703$ cells."
+      "finalAnswer": { "value": "37737", "unit": "cells" },
+      "solutionNarrative": "From the data $k = \\frac{\\ln 1.6}{4} \\approx 0.11750$. After 25 hours the exponent is $0.11750 \\cdot 25 = 2.9375$, so $P = 2000\\, e^{2.9375} \\approx 2000 \\cdot 18.8686 \\approx 37737$ cells. (Using $e \\approx 2.718$ instead gives 37726: small rounding in $e$ grows when the exponent is large.)"
     },
     {
       "id": "differential-equations.growth-decay-cooling.s06",
@@ -133,7 +133,7 @@
         { "instruction": "So how many half-lives produce 25% remaining?", "answer": "2", "accept": [], "hint": "100% to 50% to 25% is two halvings." }
       ],
       "finalAnswer": { "value": "2", "unit": "half-lives" },
-      "solutionNarrative": "100% halves to 50%, then to 25% — that is 2 half-lives, since 25% is half of a half."
+      "solutionNarrative": "100% halves to 50%, then to 25%: that is 2 half-lives, since 25% is half of a half."
     },
     {
       "id": "differential-equations.growth-decay-cooling.s08",
@@ -214,7 +214,7 @@
         { "instruction": "With that term gone, the denominator becomes $1 + 0 = 1$. What does $P$ approach?", "answer": "5000", "accept": [], "hint": "$P \\to 5000/(1+0)$." }
       ],
       "finalAnswer": { "value": "5000", "unit": "fish" },
-      "solutionNarrative": "As $t \\to \\infty$, $e^{-0.4t} \\to 0$, so $P \\to \\frac{5000}{1+0} = 5000$ fish — the carrying capacity."
+      "solutionNarrative": "As $t \\to \\infty$, $e^{-0.4t} \\to 0$, so $P \\to \\frac{5000}{1+0} = 5000$ fish: the carrying capacity."
     },
     {
       "id": "differential-equations.growth-decay-cooling.s14",
@@ -256,7 +256,7 @@
         { "instruction": "What is the long-run carrying capacity (the value $P$ approaches as $t \\to \\infty$)?", "answer": "1200", "accept": [], "hint": "As $t \\to \\infty$ the $e^{-0.5t}$ term vanishes, leaving $1200/1$." }
       ],
       "finalAnswer": { "value": "853", "unit": "elk" },
-      "solutionNarrative": "At $t = 4$ the exponent is $-2$, so the denominator is $1 + 3 e^{-2} \\approx 1.40602$ and $P = 1200/1.40602 \\approx 853$ elk. As $t \\to \\infty$, the exponential vanishes and $P \\to 1200$ — the carrying capacity."
+      "solutionNarrative": "At $t = 4$ the exponent is $-2$, so the denominator is $1 + 3 e^{-2} \\approx 1.40602$ and $P = 1200/1.40602 \\approx 853$ elk. As $t \\to \\infty$, the exponential vanishes and $P \\to 1200$: the carrying capacity."
     },
     {
       "id": "differential-equations.growth-decay-cooling.s17",
@@ -281,7 +281,7 @@
         { "instruction": "With that term gone, what temperature does $T$ approach?", "answer": "70", "accept": [], "hint": "$T \\to 70 + 95 \\cdot 0$, the room temperature." }
       ],
       "finalAnswer": { "value": "70", "unit": "°F" },
-      "solutionNarrative": "As $t \\to \\infty$, $e^{-0.1t} \\to 0$, so $T \\to 70 + 95 \\cdot 0 = 70$°F — the roast cools to room temperature."
+      "solutionNarrative": "As $t \\to \\infty$, $e^{-0.1t} \\to 0$, so $T \\to 70 + 95 \\cdot 0 = 70$°F: the roast cools to room temperature."
     }
   ]
 }

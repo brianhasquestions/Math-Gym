@@ -106,7 +106,7 @@ fill["def-separable-recognition-d1"] = (rng, idx) => {
   return {
     id: `gen.def-separable-recognition-d1.${idx}`, generated: true, concepts: ["separable-recognition"], difficulty: 1, context: "abstract",
     prompt: `Consider $\\frac{dy}{dx} = ${rhs}$.`,
-    steps: [{ instruction: "Is this equation separable? Type 'separable' or 'not separable'.", answer: sep ? "separable" : "not separable", accept: sep ? [] : ["nonseparable", "not-separable"], hint: sep ? `The right side is a constant times a $y$-only factor: $${c} \\cdot y$.` : "This has no $y$ on the right at all, so it's just a function of $x$ — which IS separable (constant y-part). Reconsider." }],
+    steps: [{ instruction: "Is this equation separable? Type 'separable' or 'not separable'.", answer: sep ? "separable" : "not separable", accept: sep ? [] : ["nonseparable", "not-separable"], hint: sep ? `The right side is a constant times a $y$-only factor: $${c} \\cdot y$.` : "This has no $y$ on the right at all, so it's just a function of $x$, which IS separable (constant y-part). Reconsider." }],
     finalAnswer: { value: sep ? "separable" : "not separable", unit: "" }, solutionNarrative: sep ? `The right side is $${c}y$, a product of a constant and a $y$-part, so it's separable.` : `The right side depends only on $x$, which is still technically separable (a constant $y$-part), but here we intend the equation as not mixing $x$ and $y$ multiplicatively in a nontrivial way.`,
   };
 };
@@ -139,16 +139,17 @@ fill["def-separable-recognition-d3"] = (rng, idx) => {
 
 // slope-fields: d2, d3
 fill["def-slope-fields-d2"] = (rng, idx) => {
-  const a = nz(rng, -4, 4), x = rng.int(-3, 4), y = rng.int(-3, 4);
-  const slope = a * x * x - y;
+  // Redraw zero slopes (a horizontal tangent is neither increasing nor decreasing).
+  let a, x, y, slope;
+  do { a = nz(rng, -4, 4); x = rng.int(-3, 4); y = rng.int(-3, 4); slope = a * x * x - y; } while (slope === 0);
   return {
     id: `gen.def-slope-fields-d2.${idx}`, generated: true, concepts: ["slope-fields"], difficulty: 2, context: "abstract",
     prompt: `For $\\frac{dy}{dx} = ${a}x^2 - y$, a solution curve passes through $(${x}, ${y})$.`,
     steps: [
       { instruction: `Find the slope $\\frac{dy}{dx}$ at $(${x}, ${y})$.`, answer: `${slope}`, accept: [], hint: `$\\frac{dy}{dx} = ${a}x^2 - y = ${a}(${x})^2 - (${y})$.` },
-      { instruction: "Is the solution curve increasing or decreasing at that point? Type 'increasing' or 'decreasing'.", answer: slope >= 0 ? "increasing" : "decreasing", accept: slope >= 0 ? ["rising"] : ["falling"], hint: slope >= 0 ? "A nonnegative slope means the curve is rising." : "A negative slope means the curve is falling." },
+      { instruction: "Is the solution curve increasing or decreasing at that point? Type 'increasing' or 'decreasing'.", answer: slope > 0 ? "increasing" : "decreasing", accept: slope > 0 ? ["rising"] : ["falling"], hint: slope > 0 ? "A positive slope means the curve is rising." : "A negative slope means the curve is falling." },
     ],
-    finalAnswer: { value: `${slope}`, unit: "" }, solutionNarrative: `At $(${x}, ${y})$, $\\frac{dy}{dx} = ${a}(${x})^2 - ${y} = ${slope}$, so the curve is ${slope >= 0 ? "increasing" : "decreasing"}.`,
+    finalAnswer: { value: `${slope}`, unit: "" }, solutionNarrative: `At $(${x}, ${y})$, $\\frac{dy}{dx} = ${a}(${x})^2 - (${y}) = ${slope}$, so the curve is ${slope > 0 ? "increasing" : "decreasing"}.`,
   };
 };
 fill["def-slope-fields-d3"] = (rng, idx) => {
@@ -451,7 +452,7 @@ fill["def-circuits-and-applied-d3"] = (rng, idx) => {
       { instruction: "Compute $e^{-1}$ to four decimals (use $e \\approx 2.718$).", answer: "0.3679", accept: ["0.368"], hint: "$e^{-1} = 1/2.718$." },
       { instruction: `Compute $i(1) = ${iMax}(1 - e^{-1})$, rounded to two decimals.`, answer: `${val}`, accept: [], hint: `$${iMax}(1 - 0.3679)$.` },
     ],
-    finalAnswer: { value: `${val}`, unit: "amperes" }, solutionNarrative: `$i(1) = ${iMax}(1-e^{-1}) \\approx ${val}$ A — about 63% of the final ${iMax} A.`,
+    finalAnswer: { value: `${val}`, unit: "amperes" }, solutionNarrative: `$i(1) = ${iMax}(1-e^{-1}) \\approx ${val}$ A: about 63% of the final ${iMax} A.`,
   };
 };
 
@@ -568,7 +569,7 @@ fill["def-limiting-and-logistic-d1"] = (rng, idx) => {
       { instruction: `As $t \\to \\infty$, the term $e^{-${r} t}$ approaches what number?`, answer: "0", accept: [], hint: "A negative exponential decays toward zero over time." },
       { instruction: `With that term gone, the denominator becomes $1 + 0 = 1$. What does $P$ approach?`, answer: `${K}`, accept: [], hint: `$P \\to ${K}/(1+0)$.` },
     ],
-    finalAnswer: { value: `${K}`, unit: "" }, solutionNarrative: `As $t \\to \\infty$, $e^{-${r}t} \\to 0$, so $P \\to \\frac{${K}}{1+0} = ${K}$ — the carrying capacity.`,
+    finalAnswer: { value: `${K}`, unit: "" }, solutionNarrative: `As $t \\to \\infty$, $e^{-${r}t} \\to 0$, so $P \\to \\frac{${K}}{1+0} = ${K}$: the carrying capacity.`,
   };
 };
 fill["def-limiting-and-logistic-d3"] = (rng, idx) => {
@@ -859,7 +860,7 @@ fill["def-step-size-and-error-d3"] = (rng, idx) => {
     steps: [
       { instruction: `One step, $h = 1$: slope $= -y = -${y0}$, so $y_1 = ${y0} + 1(-${y0})$. Compute $y_1$.`, answer: `${oneStep}`, accept: [], hint: `$${y0} - ${y0}$.` },
       { instruction: `Two steps, $h = 0.5$: step 1 slope $= -${y0}$, $y_1 = ${y0} + 0.5(-${y0}) = ${twoStepY1}$; step 2 slope $= -${twoStepY1}$, $y_2 = ${twoStepY1} + 0.5(-${twoStepY1})$. Compute $y_2$.`, answer: `${twoStepY2}`, accept: [], hint: `$${twoStepY1} - ${round2(twoStepY1 * 0.5)}$.` },
-      { instruction: `Which estimate is closer to ${exact} — type the error of the better one, $|${exact} - ${twoStepY2}|$, rounded to 4 decimals.`, answer: `${errBetter}`, accept: [], hint: `The $h=0.5$ estimate is ${twoStepY2}; compute $${exact} - ${twoStepY2}$.` },
+      { instruction: `Which estimate is closer to ${exact}: type the error of the better one, $|${exact} - ${twoStepY2}|$, rounded to 4 decimals.`, answer: `${errBetter}`, accept: [], hint: `The $h=0.5$ estimate is ${twoStepY2}; compute $${exact} - ${twoStepY2}$.` },
     ],
     finalAnswer: { value: `${errBetter}`, unit: "" }, solutionNarrative: `With $h=1$: $y_1=${oneStep}$. With $h=0.5$: $y_2=${twoStepY2}$ (error $|${exact}-${twoStepY2}|=${errBetter}$), the finer step is closer.`,
   };

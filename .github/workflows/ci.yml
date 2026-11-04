@@ -20,7 +20,18 @@ jobs:
         run: node tools/test.mjs
       - name: Validate all content (0 failing required)
         run: node tools/validate.mjs --quiet-warnings
+      # validate.mjs only proves answers self-grade; this renders every lecture,
+      # seed and 25 draws per generator through the real renderer + KaTeX and
+      # fails on anything a learner would see broken (KaTeX errors, unpaired $,
+      # double-escaped LaTeX, ${} placeholders, float noise, broken tables).
+      - name: Render lint (every learner-visible string)
+        run: node tools/render-lint.mjs
+      # Independent recomputation of generated answers (tools/oracles/*.mjs):
+      # catches generators whose stated answer is wrong on some draws, which
+      # self-grading can never see.
+      - name: Generator oracles (300 draws each)
+        run: node tools/oracles.mjs
       - name: Regenerate sitemap and check it is committed
         run: |
           node tools/gen-sitemap.mjs
-          git diff --exit-code sitemap.xml || (echo "sitemap.xml is stale — run 'node tools/gen-sitemap.mjs' and commit" && exit 1)
+          git diff --exit-code sitemap.xml || (echo "sitemap.xml is stale; run 'node tools/gen-sitemap.mjs' and commit" && exit 1)

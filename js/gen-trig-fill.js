@@ -229,7 +229,7 @@ fill["trg-ref-eval-d3"] = (rng, idx) => {
     prompt: `Evaluate $${fnTex} ${radTex(a.n, a.d)}$ exactly using a reference angle.`,
     steps: [
       quadStep(a.quad, `$${radTex(a.n, a.d)} = ${a.deg}^\\circ$.`),
-      { instruction: "What is the reference angle, in radians? (Exact.)", answer: REF_RAD[a.ref], accept: [`${a.ref}pi/180`], hint: `The acute angle between the terminal side and the $x$-axis is $${a.ref}^\\circ$ — convert it.` },
+      { instruction: "What is the reference angle, in radians? (Exact.)", answer: REF_RAD[a.ref], accept: [`${a.ref}pi/180`], hint: `The acute angle between the terminal side and the $x$-axis is $${a.ref}^\\circ$: convert it.` },
       { instruction: `Is ${which === "sin" ? "sine" : which === "cos" ? "cosine" : "tangent"} positive or negative in that quadrant?`, answer: sign, accept: sign === "positive" ? ["+", "pos"] : ["-", "neg"], hint: "All Students Take Calculus." },
       { instruction: `So what is $${fnTex} ${radTex(a.n, a.d)}$? Exact.`, answer: val, accept: [], hint: `${which === "tan" ? `$\\tan ${a.ref}^\\circ = ${TAN_BASE_TEX[a.ref]}$` : "Use the reference angle's value"}, with the sign you found.` },
     ],
@@ -267,7 +267,7 @@ fill["trg-arc-d2"] = (rng, idx) => {
     prompt: `A ${ctx} spins at ${rpm} revolutions per minute. Find its angular velocity in radians per second (exact).`,
     steps: [
       { instruction: "How many radians is one revolution? (Exact.)", answer: "2pi", accept: ["2π"], hint: "One full turn of the circle." },
-      { instruction: `Convert: $\\omega = ${rpm} \\cdot \\frac{2\\pi}{60}$ rad/s. Simplify. (Exact.)`, answer: w, accept: [`${rpm}pi/30`, `${2 * rpm}pi/60`], hint: `$\\frac{${rpm} \\cdot 2}{60}$ reduces — then attach $\\pi$.` },
+      { instruction: `Convert: $\\omega = ${rpm} \\cdot \\frac{2\\pi}{60}$ rad/s. Simplify. (Exact.)`, answer: w, accept: [`${rpm}pi/30`, `${2 * rpm}pi/60`], hint: `$\\frac{${rpm} \\cdot 2}{60}$ reduces, then attach $\\pi$.` },
     ],
     finalAnswer: { value: w, unit: "rad/s" },
     solutionNarrative: `${rpm} rpm is $${rpm} \\cdot \\frac{2\\pi}{60} = ${radTex(rpm, 30)}$ rad/s.`,
@@ -317,9 +317,12 @@ fill["trg-amp-mid-d1"] = (rng, idx) => {
 
 // amplitude-midline: d2 (from max/min)
 fill["trg-amp-mid-d2"] = (rng, idx) => {
-  const A = rng.int(2, 8), D = rng.int(-3, 9);
-  const M = D + A, m = D - A;
+  const A = rng.int(2, 8);
   const ctx = rng.pick(["A buoy's height above the seabed", "A city's daily temperature", "The water depth at a pier", "A vibrating spring's length"]);
+  // Heights, depths and lengths cannot go negative: keep min = D - A >= 1.
+  // Only temperature may dip below zero.
+  const D = ctx.includes("temperature") ? rng.int(-3, 9) : rng.int(A + 1, A + 8);
+  const M = D + A, m = D - A;
   return {
     id: `gen.trg-amp-mid-d2.${idx}`, generated: true, concepts: ["amplitude-midline"], difficulty: 2, context: "applied",
     prompt: `${ctx} oscillates sinusoidally between a minimum of ${m} and a maximum of ${M}. Find the amplitude and midline of the model.`,
@@ -343,7 +346,7 @@ fill["trg-amp-mid-d3"] = (rng, idx) => {
       { instruction: "What is the amplitude? (Amplitude is always positive.)", answer: `${A}`, accept: [], hint: `Amplitude is $|-${A}|$.` },
       { instruction: "What is the maximum value of $y$?", answer: `${D + A}`, accept: [], hint: `Max $= D + |A| = ${D} + ${A}$.` },
       { instruction: "What is the minimum value of $y$?", answer: `${D - A}`, accept: [], hint: `Min $= D - |A| = ${D} - ${A}$.` },
-      { instruction: "At $x = 0$, is the graph at its maximum or minimum? (Type max or min.)", answer: "min", accept: ["minimum", "its minimum"], hint: `$y(0) = -${A}\\cos 0 + ${D} = ${D - A}$ — compare with your extremes.` },
+      { instruction: "At $x = 0$, is the graph at its maximum or minimum? (Type max or min.)", answer: "min", accept: ["minimum", "its minimum"], hint: `$y(0) = -${A}\\cos 0 + ${D} = ${D - A}$: compare with your extremes.` },
     ],
     finalAnswer: { value: `amplitude ${A}, max ${D + A}, min ${D - A}, starts at min`, unit: "" },
     solutionNarrative: `Amplitude $${A}$, so the wave runs from $${D - A}$ to $${D + A}$; the negative cosine starts at its minimum, $y(0) = ${D - A}$.`,
@@ -394,7 +397,7 @@ fill["trg-period-d3"] = (rng, idx) => {
     prompt: `${ctx} follows $y = ${A}\\sin(${2 * f}\\pi t)$, with $t$ in seconds.`,
     steps: [
       { instruction: "What is $B$? (Exact, in terms of $\\pi$.)", answer: `${2 * f}pi`, accept: [`${2 * f}π`], hint: "The coefficient of $t$ inside the sine." },
-      { instruction: "Find the period $T = \\frac{2\\pi}{B}$ as an exact fraction of a second.", answer: `1/${f}`, accept: [], hint: `$\\frac{2\\pi}{${2 * f}\\pi}$ — the $\\pi$'s cancel.` },
+      { instruction: "Find the period $T = \\frac{2\\pi}{B}$ as an exact fraction of a second.", answer: `1/${f}`, accept: [], hint: `$\\frac{2\\pi}{${2 * f}\\pi}$: the $\\pi$'s cancel.` },
       { instruction: "Find the frequency $f = \\frac{1}{T}$ in hertz.", answer: `${f}`, accept: [`${f} hz`], hint: "The reciprocal of the period." },
     ],
     finalAnswer: { value: `${f}`, unit: `Hz (period 1/${f} s)` },
@@ -525,7 +528,7 @@ fill["trg-model-d3"] = (rng, idx) => {
     steps: [
       { instruction: "What is the amplitude $A$?", answer: `${r}`, accept: [], hint: "You swing one radius above and below the hub." },
       { instruction: "What is the midline $D$?", answer: `${hub}`, accept: [], hint: "The hub height is the center of the swing." },
-      { instruction: `Find $B$ from the ${T}-second period. (Exact.)`, answer: piFrac(1, k), accept: [`2pi/${T}`], hint: `$B = \\frac{2\\pi}{${T}}$ — reduce it.` },
+      { instruction: `Find $B$ from the ${T}-second period. (Exact.)`, answer: piFrac(1, k), accept: [`2pi/${T}`], hint: `$B = \\frac{2\\pi}{${T}}$: reduce it.` },
       { instruction: "Check the start: what is your height at $t = 0$?", answer: `${hub - r}`, accept: [], hint: `$h(0) = ${hub} - ${r}\\cos 0$.` },
       { instruction: "Write the full equation.", answer: eq, accept: [`h=${hub}-${r}cos(pit/${k})`, `h = ${hub} - ${r}cos((pi/${k})t)`, `h = ${hub} - ${r}cos(pi*t/${k})`, `${hub} - ${r}cos(pi t/${k})`, `h(t) = ${hub} - ${r}cos(pi t/${k})`], hint: `Drop $D = ${hub}$, $A = ${r}$, $B = \\frac{\\pi}{${k}}$ into $h = D - A\\cos(Bt)$.` },
     ],
@@ -568,7 +571,7 @@ fill["trg-pyth-d2"] = (rng, idx) => {
     steps: [
       { instruction: `Is cosine positive or negative in Quadrant ${q}?`, answer: cosSign > 0 ? "positive" : "negative", accept: cosSign > 0 ? ["+", "pos"] : ["-", "neg"], hint: "Cosine is the $x$-coordinate: positive on the right half of the circle." },
       { instruction: "Apply the Pythagorean identity with that sign. What is $\\cos\\theta$?", answer: cosStr, accept: [], hint: `$\\cos^2\\theta = 1 - \\frac{${a * a}}{${c * c}} = \\frac{${b * b}}{${c * c}}$.` },
-      { instruction: "Find $\\tan\\theta$.", answer: tanStr, accept: [], hint: `Divide: $\\sin\\theta / \\cos\\theta$ — track the signs.` },
+      { instruction: "Find $\\tan\\theta$.", answer: tanStr, accept: [], hint: `Divide: $\\sin\\theta / \\cos\\theta$: track the signs.` },
     ],
     finalAnswer: { value: `cos = ${cosStr}, tan = ${tanStr}`, unit: "" },
     solutionNarrative: `The ${a}-${b}-${c} triple gives magnitudes; Quadrant ${q} sets the signs: $\\cos\\theta = ${cosSign < 0 ? "-" : ""}\\frac{${b}}{${c}}$, $\\tan\\theta = ${tanSign < 0 ? "-" : ""}\\frac{${a}}{${b}}$.`,
@@ -590,7 +593,7 @@ fill["trg-pyth-d3"] = (rng, idx) => {
     steps: [
       { instruction: "What is $\\cos^2\\theta$?", answer: frac(k2 - 1, k2), accept: [], hint: `$1 - \\frac{1}{${k2}}$.` },
       { instruction: "Root it and attach the Quadrant II sign. What is $\\cos\\theta$?", answer: `-${o.cos}`, accept: o.cosAlt.map((s) => `-${s}`), hint: `Cosine is negative in QII; $\\sqrt{${k2 - 1}}$ may simplify.` },
-      { instruction: "Find $\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$, rationalized.", answer: `-${o.tan}`, accept: o.tanAlt.map((s) => `-${s}`), hint: `$\\frac{1/${o.k}}{\\cos\\theta}$ — the ${o.k}'s cancel; then rationalize.` },
+      { instruction: "Find $\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$, rationalized.", answer: `-${o.tan}`, accept: o.tanAlt.map((s) => `-${s}`), hint: `$\\frac{1/${o.k}}{\\cos\\theta}$: the ${o.k}'s cancel; then rationalize.` },
     ],
     finalAnswer: { value: `cos = -${o.cos}, tan = -${o.tan}`, unit: "" },
     solutionNarrative: `$\\cos^2\\theta = \\frac{${k2 - 1}}{${k2}}$, and QII makes cosine negative: $\\cos\\theta = -${o.cos}$; dividing gives $\\tan\\theta = -${o.tan}$.`,
@@ -762,7 +765,7 @@ fill["trg-dbl-d3"] = (rng, idx) => {
       { instruction: "Find $\\sin\\theta$, with the Quadrant III sign.", answer: frac(-a, c), accept: [], hint: `${Math.min(a, b)}-${Math.max(a, b)}-${c} magnitudes; sine is negative in QIII.` },
       { instruction: "Apply $\\sin 2\\theta = 2\\sin\\theta\\cos\\theta$. Watch the signs.", answer: sin2, accept: [], hint: "Two negatives multiply to a positive." },
       { instruction: "Apply $\\cos 2\\theta = 2\\cos^2\\theta - 1$.", answer: cos2, accept: [], hint: `$2 \\cdot \\frac{${b * b}}{${c * c}} - 1$.` },
-      { instruction: "Divide to get $\\tan 2\\theta$.", answer: tan2, accept: [], hint: `$\\sin 2\\theta / \\cos 2\\theta$ — the $${c * c}$'s cancel.` },
+      { instruction: "Divide to get $\\tan 2\\theta$.", answer: tan2, accept: [], hint: `$\\sin 2\\theta / \\cos 2\\theta$: the $${c * c}$'s cancel.` },
     ],
     finalAnswer: { value: `sin 2θ = ${sin2}, cos 2θ = ${cos2}, tan 2θ = ${tan2}`, unit: "" },
     solutionNarrative: `QIII gives $\\sin\\theta = -\\frac{${a}}{${c}}$; then $\\sin 2\\theta = ${sin2}$, $\\cos 2\\theta = ${cos2}$, and $\\tan 2\\theta = ${tan2}$.`,

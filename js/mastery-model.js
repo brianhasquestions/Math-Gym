@@ -17,7 +17,7 @@ export const CONFIG = {
   hintGainPenalty: 0.5,     // multiplier applied to gain when hints were used
   wrongPenalty: 0.12,       // proficiency lost on a miss
   // Post-mastery review (spaced repetition): a mastered topic comes due for a
-  // retention check on this escalating day ladder — each fully-held review
+  // retention check on this escalating day ladder: each fully-held review
   // climbs a rung, any lapse sends the concept back into normal training.
   reviewIntervalsDays: [3, 7, 14, 30, 60],
   reviewLapseProficiency: 0.6, // where a lapsed concept's proficiency falls back to
@@ -39,7 +39,7 @@ function freshConcept(id) {
     mastered: false,
     // §6.4 guardrail: set true once the learner has been shown a full worked
     // solution for this concept. While true, progress is frozen until they solve
-    // a FRESH problem with no hints — proving the lesson actually landed.
+    // a FRESH problem with no hints: proving the lesson actually landed.
     mustProveClean: false,
   };
 }
@@ -68,7 +68,7 @@ export function initState(topicId, conceptIds, existing) {
   return state;
 }
 
-// Pick the concept to drill — BLOCKED practice: stay on the current focus skill
+// Pick the concept to drill: BLOCKED practice: stay on the current focus skill
 // until it's mastered, then advance to the next unmastered skill in topic order.
 // (We deliberately do NOT hop to the weakest skill after every problem; the
 // learner grinds one skill to mastery before the next opens up.)
@@ -117,7 +117,7 @@ export function grade(state, result) {
   const c = state.concepts[result.conceptId];
   if (!c) return { error: "unknown concept" };
   const now = Number.isFinite(result.now) ? result.now : Date.now();
-  // Credit is capped at the difficulty of the problem actually SERVED — if a
+  // Credit is capped at the difficulty of the problem actually SERVED: if a
   // thin pool substitutes an easier problem (relaxed fallback), it can't earn
   // top-tier gain, count toward the mastery streak, or drive escalation.
   const served = Number.isFinite(result.difficulty)
@@ -146,7 +146,7 @@ export function grade(state, result) {
   };
 
   if (result.correct && c.mustProveClean && !clean) {
-    // They saw the full solution and now leaned on hints again — not proof.
+    // They saw the full solution and now leaned on hints again: not proof.
     // Freeze all progress (no gain, streaks reset) until they do one unaided.
     c.consecutiveWrong = 0;
     c.consecutiveCorrect = 0;
@@ -156,7 +156,7 @@ export function grade(state, result) {
   } else if (result.correct) {
     c.consecutiveWrong = 0;
     if (c.mustProveClean && clean) {
-      // Fresh problem solved unaided — the lesson landed. Resume normal progress.
+      // Fresh problem solved unaided: the lesson landed. Resume normal progress.
       c.mustProveClean = false;
       summary.provedIt = true;
     }
@@ -249,7 +249,7 @@ export function reviewStatus(state, now = Date.now()) {
 
 // Apply one review-session problem. Only a CLEAN solve (no hints, no wrong
 // attempts) holds the concept; anything else lapses it back into normal
-// training — mastery revoked, tier knocked down a rung, proficiency capped —
+// training: mastery revoked, tier knocked down a rung, proficiency capped,
 // so retention is re-earned rather than assumed.
 export function applyReviewResult(state, result) {
   const c = state.concepts[result.conceptId];

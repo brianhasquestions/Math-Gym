@@ -217,7 +217,7 @@ fill["gt3-coalition-3"] = (rng, idx) => {
       { instruction: `Extra value from the grand coalition: $${e.gr} - ${bestPair}$. Give a number.`, answer: `${extra}`, accept: [], hint: `Grand value minus the best split.` },
     ],
     finalAnswer: { value: `${extra}`, unit: "" },
-    solutionNarrative: `The best pair-plus-singleton split is $${bestPair} + 0 = ${bestPair}$, below $v(N) = ${e.gr}$, so merging all three adds $\\$${extra}$M — the game is superadditive.`,
+    solutionNarrative: `The best pair-plus-singleton split is $${bestPair} + 0 = ${bestPair}$, below $v(N) = ${e.gr}$, so merging all three adds $\\$${extra}$M: the game is superadditive.`,
   };
 };
 
@@ -300,7 +300,7 @@ fill["gt3-format-1"] = (rng, idx) => {
 };
 fill["gt3-format-2"] = (rng, idx) => {
   const scen = rng.pick([
-    { open: "ascending English", ans: "second-price", acc: ["second price", "vickrey"], why: "the winner pays roughly where the last rival dropped out — the second-highest value" },
+    { open: "ascending English", ans: "second-price", acc: ["second price", "vickrey"], why: "the winner pays roughly where the last rival dropped out: the second-highest value" },
     { open: "descending Dutch", ans: "first-price", acc: ["first price"], why: "a bidder commits to an accept-price before learning the outcome, exactly the sealed first-price problem" },
   ]);
   return {
@@ -380,7 +380,7 @@ fill["gt3-vickrey-3"] = (rng, idx) => {
       { instruction: `Overbidding gave negative surplus. Would honest bidding (bid $\\$${value}$, lose, surplus 0) have been better? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Zero beats a loss.` },
     ],
     finalAnswer: { value: `${loss}`, unit: "dollars" },
-    solutionNarrative: `Overbidding wins but forces payment of the rival's $\\$${rival}$, netting $${value} - ${rival} = \\$${loss}$. Honest bidding would have lost at zero surplus — strictly better, which is why truthfulness is dominant.`,
+    solutionNarrative: `Overbidding wins but forces payment of the rival's $\\$${rival}$, netting $${value} - ${rival} = \\$${loss}$. Honest bidding would have lost at zero surplus: strictly better, which is why truthfulness is dominant.`,
   };
 };
 
@@ -401,7 +401,7 @@ fill["gt3-firstprice-1"] = (rng, idx) => {
       { instruction: `Shading factor $\\tfrac{n-1}{n} = \\tfrac{${c.n - 1}}{${c.n}}$, then bid $\\tfrac{${c.num}}{${c.den}} \\times ${v}$. Give a number.`, answer: `${bid}`, accept: [], hint: `Multiply your value by the shade.` },
     ],
     finalAnswer: { value: `${bid}`, unit: "" },
-    solutionNarrative: `$b(v) = \\tfrac{${c.num}}{${c.den}}(${v}) = ${bid}$ — you shade below your value, less so with more rivals.`,
+    solutionNarrative: `$b(v) = \\tfrac{${c.num}}{${c.den}}(${v}) = ${bid}$: you shade below your value, less so with more rivals.`,
   };
 };
 fill["gt3-firstprice-2"] = (rng, idx) => {
@@ -465,7 +465,7 @@ fill["gt3-revenue-2"] = (rng, idx) => {
       { instruction: `First-price revenue equals that winning bid. Give a number.`, answer: `${fpBid}`, accept: [], hint: `The winner pays their own bid.` },
     ],
     finalAnswer: { value: `${fpBid}`, unit: "dollars" },
-    solutionNarrative: `Second-price collects $\\$${second}$; first-price collects the shaded winning bid $\\tfrac12(${win}) = \\$${fpBid}$. Single draws can differ — revenue equivalence holds only in expectation.`,
+    solutionNarrative: `Second-price collects $\\$${second}$; first-price collects the shaded winning bid $\\tfrac12(${win}) = \\$${fpBid}$. Single draws can differ: revenue equivalence holds only in expectation.`,
   };
 };
 fill["gt3-revenue-3"] = (rng, idx) => {
@@ -500,7 +500,7 @@ fill["gt3-ess-1"] = (rng, idx) => {
       { instruction: `A strictly dominant strategy is a strict best response to itself (condition (i) holds). Is ${dom} an ESS? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Strict dominance implies $E(${dom},${dom}) > E(\\text{other},${dom})$.` },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `Strict dominance gives $E(${dom},${dom}) > E(\\text{other},${dom})$, so condition (i) holds and ${dom} is an ESS — no mutant can invade.`,
+    solutionNarrative: `Strict dominance gives $E(${dom},${dom}) > E(\\text{other},${dom})$, so condition (i) holds and ${dom} is an ESS: no mutant can invade.`,
   };
 };
 fill["gt3-ess-2"] = (rng, idx) => {
@@ -514,12 +514,12 @@ fill["gt3-ess-2"] = (rng, idx) => {
     prompt: `A symmetric 2×2 game has focal-player payoffs:\n\n${table}\n\nUse condition (i): $A$ is an ESS if $E(A,A) > E(B,A)$. Determine whether $A$ is an ESS.`,
     steps: [
       { instruction: `Read $E(A,A)$ (row A, column A). Give a number.`, answer: `${AA}`, accept: [], hint: `Focal A vs opponent A.` },
-      { instruction: `Read $E(B,A)$ (row B, column A) — the B-mutant against the A-population. Give a number.`, answer: `${BA}`, accept: [], hint: `Focal B vs opponent A.` },
+      { instruction: `Read $E(B,A)$ (row B, column A): the B-mutant against the A-population. Give a number.`, answer: `${BA}`, accept: [], hint: `Focal B vs opponent A.` },
       { instruction: `Is $E(A,A) > E(B,A)$, i.e. $${AA} > ${BA}$? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Compare the two.` },
       { instruction: `So is $A$ an ESS? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Condition (i) holds.` },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$E(A,A) = ${AA} > ${BA} = E(B,A)$, so $A$ strictly beats a $B$-mutant against an all-$A$ population — condition (i) holds and $A$ is an ESS.`,
+    solutionNarrative: `$E(A,A) = ${AA} > ${BA} = E(B,A)$, so $A$ strictly beats a $B$-mutant against an all-$A$ population: condition (i) holds and $A$ is an ESS.`,
   };
 };
 fill["gt3-ess-3"] = (rng, idx) => {
@@ -536,7 +536,7 @@ fill["gt3-ess-3"] = (rng, idx) => {
       { instruction: `Since neither pure strategy resists invasion, the stable outcome is a MIXED population. Type 'mixed'.`, answer: "mixed", accept: ["mixed strategy", "polymorphism", "polymorphic"], hint: `Anti-coordination gives an interior mixed ESS.` },
     ],
     finalAnswer: { value: "mixed", unit: "" },
-    solutionNarrative: `Each pure strategy is invaded by the other ($${AA} < ${BA}$ and $${BB} < ${AB}$), so the ESS is a stable mix — a polymorphism, as in the costly Hawk–Dove game.`,
+    solutionNarrative: `Each pure strategy is invaded by the other ($${AA} < ${BA}$ and $${BB} < ${AB}$), so the ESS is a stable mix: a polymorphism, as in the costly Hawk–Dove game.`,
   };
 };
 
@@ -634,7 +634,7 @@ fill["gt3-hawkdove-3"] = (rng, idx) => {
       { instruction: `If the fight cost $C$ increases (with $V$ fixed), does the Hawk fraction $V/C$ rise or fall? Type 'rise' or 'fall'.`, answer: "fall", accept: ["decrease", "falls"], hint: `A larger denominator shrinks the fraction.` },
     ],
     finalAnswer: { value: c.dec, unit: "" },
-    solutionNarrative: `$p^* = ${c.V}/${c.C} = ${c.dec}$. Because $p^* = V/C$, a larger cost $C$ lowers the Hawk fraction — costlier fights sustain fewer aggressors.`,
+    solutionNarrative: `$p^* = ${c.V}/${c.C} = ${c.dec}$. Because $p^* = V/C$, a larger cost $C$ lowers the Hawk fraction: costlier fights sustain fewer aggressors.`,
   };
 };
 
