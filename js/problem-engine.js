@@ -39,7 +39,8 @@ function normalize(s) {
     // Subscripts: c_1, v_{2} -> c1, v2 (the polynomial engine reads letter+digits as one symbol).
     .replace(/([a-zA-Z])_\{?(\d+)\}?/g, "$1$2")
     // Plus-minus: \pm, +/- -> a single ± marker (expanded by parseSolutionSet).
-    .replace(/\\pm|\+\/-/g, "±")
+    // Not the \pmod of congruence notation.
+    .replace(/\\pm(?!od)|\+\/-/g, "±")
     // Infinity spellings: \infty, ∞, infinity -> inf.
     .replace(/\\infty|∞|infinity/gi, "inf")
     .toLowerCase()
@@ -75,6 +76,18 @@ function parseNum(s) {
 }
 
 const gcdInt = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) [a, b] = [b, a % b]; return a; };
+
+// Is `uRaw` a division written out ("3072/256", "24/2", "(36)/(3)") where the
+// expected value `cRaw` is a whole number? That is the learner restating the
+// arithmetic, not answering. A genuine fraction can never equal a whole
+// number, so any fraction with a denominator other than 1 is refused here;
+// fractions stay fine where the answer is a decimal or a fraction (3/4 for
+// 0.75, 2/3 for 2/3).
+function restatedDivision(uRaw, cRaw) {
+  if (!/^-?\d+$/.test(String(cRaw))) return false;
+  const m = String(uRaw).replace(/\((-?\d*\.?\d+)\)/g, "$1").match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);
+  return !!m && Math.abs(parseFloat(m[2])) !== 1;
+}
 
 // Significant figures in a plainly-written number ("0.030" -> 2, "50.27" -> 4).
 function sigFigs(s) {
@@ -342,6 +355,7 @@ function parseTuple(normalized) {
 //   - a 1e-12 relative slack for float noise (NOT 1e-9: that accepted
 //     1080000001 for 1080000000).
 function valuesAgree(u, c, uRaw, cRaw) {
+  if (restatedDivision(uRaw, cRaw)) return false;
   const cIsPlain = /^-?\d*\.?\d+$/.test(String(cRaw));
   const learnerGrain = !cIsPlain && sigFigs(uRaw) >= 2 ? decimalTol(uRaw) : 0;
   const tol = Math.max(absFloor(c), decimalTol(cRaw), learnerGrain, 1e-12 * Math.abs(c));
@@ -822,7 +836,46 @@ export function checkStep(step, userAnswer) {
     const n = extractNumber(pct[1]);
     if (n && !n.v) return checkStepCore(step, String(Math.round((n.n / 100) * 1e12) / 1e12));
   }
+  // Congruence notation for a residue: "≡ 5", "\equiv 5", "5 mod 11",
+  // "x ≡ 5 (mod 11)". Graded as the bare residue, which must be reduced.
+  const cong = congruenceResidue(step, userAnswer);
+  if (cong !== null && checkStepCore(step, cong)) return true;
   return false;
+}
+
+// Moduli a step names in its instruction: "\bmod 11", "\pmod{13}", "mod 7",
+// "modulo 17". Empty when the modulus is symbolic or not stated there.
+function stepModuli(instruction) {
+  const out = new Set();
+  const re = /(?:\\[pb]?mod|\bmod(?:ulo)?)\s*\{?\s*(\d+)/g;
+  for (let m; (m = re.exec(String(instruction || ""))); ) out.add(Number(m[1]));
+  return out;
+}
+
+const MOD_SUFFIX_RE = /^(.+?)(?:\((?:\\bmod|\\mod|modulo|mod)(\d+)\)|\\pmod(\d+)|(?:\\bmod|\\mod|modulo|mod)(\d+))$/;
+
+// Strip congruence notation from a learner answer and return the residue
+// ("5", or "x=5" for "x ≡ 5"), or null when there is none or it is not
+// acceptable. A trailing "mod n" must name the step's modulus when the
+// instruction states one (any n otherwise), and the residue must be a
+// reduced non-negative integer: "16 mod 11" stays wrong for 5.
+function congruenceResidue(step, userAnswer) {
+  let u = normalize(userAnswer);
+  let changed = false;
+  const lead = u.match(/^([a-z]+[0-9]*)?(?:\\equiv|≡)(.+)$/);
+  if (lead) { u = (lead[1] ? `${lead[1]}=` : "") + lead[2]; changed = true; }
+  const tail = u.match(MOD_SUFFIX_RE);
+  let n = null;
+  if (tail) { u = tail[1]; n = Number(tail[2] || tail[3] || tail[4]); changed = true; }
+  if (!changed) return null;
+  const r = u.match(/^(?:[a-z]+[0-9]*=)?(\d+)$/);
+  if (!r) return null;
+  if (n !== null) {
+    if (n < 1 || Number(r[1]) >= n) return null;
+    const named = stepModuli(step.instruction);
+    if (named.size && !named.has(n)) return null;
+  }
+  return u;
 }
 
 function checkStepCore(step, userAnswer) {
@@ -872,6 +925,9 @@ function checkStepCore(step, userAnswer) {
     // Numeric answer, non-numeral input: "7*8", "4+1", "(8+12+16)/3"; the
     // learner restated the arithmetic instead of doing it.
     if (cNum !== null && !uPlain && !uExactForm) continue;
+    // "3072/256" for 12: the division restated, on every comparison path
+    // (numeric, polynomial canon, rational identity).
+    if (restatedDivision(uRhs, c.replace(/^[a-z]+[0-9]*=/, ""))) continue;
     const unworked = cNum === null && looksUnworked(u, c, step.instruction);
     const cCanon = canonEquation(c);
     if (!unworked && uCanon !== null && cCanon !== null && uCanon === cCanon) return true; // structural / algebraic

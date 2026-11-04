@@ -400,6 +400,44 @@ eq("bare RHS for a y = answer", checkStep({ answer: "y = 2x + 1" }, "2x + 1"), t
 eq("y = for a bare-expression answer", checkStep({ answer: "x - 6" }, "y = x - 6"), true);
 eq("bare RHS still has to be right", checkStep({ answer: "y = 2x + 1" }, "2x - 1"), false);
 
+group("grader: a restated division is not a whole-number answer");
+eq("3072/256 for 12", checkStep({ answer: "12" }, "3072/256"), false);
+eq("24/2 for x = 12", checkStep({ answer: "x = 12" }, "x = 24/2"), false);
+eq("(36)/(3) for 12", checkStep({ answer: "12" }, "(36)/(3)"), false);
+eq("-24/2 for -12", checkStep({ answer: "-12" }, "-24/2"), false);
+eq("decimal division 3/0.25 for 12", checkStep({ answer: "12" }, "3/0.25"), false);
+eq("restated division inside a tuple", checkStep({ answer: "(12, 3)" }, "(24/2, 3)"), false);
+eq("restated division in a solution set", checkStep({ form: "solutions", answer: "x = 12 or x = 3" }, "x = 24/2 or x = 3"), false);
+eq("restated division for an integer accept entry", checkStep({ answer: "0.9", accept: ["1"] }, "4/4"), false);
+eq("12/1 is still 12", checkStep({ answer: "12" }, "12/1"), true);
+eq("the answer itself still passes", checkStep({ answer: "12" }, "12"), true);
+eq("a listed fraction accept entry is honored", checkStep({ answer: "12", accept: ["24/2"] }, "24/2"), true);
+eq("3/4 still passes for 0.75", checkStep({ answer: "0.75" }, "3/4"), true);
+eq("reduced fraction for a fraction answer", checkStep({ answer: "3/4" }, "3/4"), true);
+eq("fraction answer still takes its decimal", checkStep({ answer: "3/4" }, "0.75"), true);
+eq("unreduced fraction for a fraction answer (no lowest-terms ask)", checkStep({ answer: "3/4" }, "6/8"), true);
+eq("lowest-terms steps still refuse 6/8", checkStep({ answer: "3/4", instruction: "Write in lowest terms." }, "6/8"), false);
+
+group("grader: congruence notation for a residue");
+const modStep = { answer: "5", instruction: "Compute $3^4 \\bmod 11$." };
+eq("≡ 5", checkStep(modStep, "≡ 5"), true);
+eq("\\equiv 5", checkStep(modStep, "\\equiv 5"), true);
+eq("5 mod 11", checkStep(modStep, "5 mod 11"), true);
+eq("5 (mod 11)", checkStep(modStep, "5 (mod 11)"), true);
+eq("5 \\pmod{11}", checkStep(modStep, "5 \\pmod{11}"), true);
+eq("x \\equiv 5 \\pmod{11}", checkStep(modStep, "x \\equiv 5 \\pmod{11}"), true);
+eq("≡ 5 (mod 11)", checkStep(modStep, "≡ 5 (mod 11)"), true);
+eq("\\pmod{13} instruction", checkStep({ answer: "5", instruction: "Reduce $x \\pmod{13}$." }, "5 (mod 13)"), true);
+eq("unreduced residue 16 mod 11 for 5", checkStep(modStep, "16 mod 11"), false);
+eq("unreduced residue ≡ 16 for 5", checkStep(modStep, "≡ 16"), false);
+eq("wrong residue 6 mod 11", checkStep(modStep, "6 mod 11"), false);
+eq("negative residue -6 mod 11", checkStep(modStep, "-6 mod 11"), false);
+eq("modulus must match the step", checkStep(modStep, "5 mod 13"), false);
+eq("unknown modulus: any n", checkStep({ answer: "5", instruction: "Compute $3^4 \\bmod p$." }, "5 mod 7"), true);
+eq("unknown modulus: residue still reduced", checkStep({ answer: "5", instruction: "Compute $3^4 \\bmod p$." }, "5 mod 3"), false);
+eq("echoing the problem: 91 mod 77 for 14", checkStep({ answer: "14", instruction: "Compute $91 \\bmod 77$." }, "91 mod 77"), false);
+eq("\\pm still means plus-minus", checkStep({ form: "solutions", answer: "x = 6 or x = -6" }, "x = \\pm 6"), true);
+
 group("generator: display cleanup keeps meaningful 1s (81f77a6 regression)");
 {
   const { generate, makeRng } = await imp("js/generator.js");
