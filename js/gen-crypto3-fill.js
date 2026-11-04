@@ -106,7 +106,7 @@ fill["cr3-xor-d3"] = (rng, idx) => {
     id: `gen.cr3-xor-d3.${idx}`, generated: true, concepts: ["xor-and-otp"], difficulty: 3, context: "applied",
     prompt: `An operator reuses a one-time-pad key byte $K$ on two messages: $C_1 = M_1 \\oplus K = ${C1}$ and $C_2 = M_2 \\oplus K = ${C2}$. An analyst learns (from a predictable header) that $M_1 = ${M1}$. Recover the key and the second message. All answers in DECIMAL.`,
     steps: [
-      { instruction: "First, XOR the two ciphertexts: $C_1 \\oplus C_2$. (The key cancels, leaving $M_1 \\oplus M_2$.)", answer: `${D}`, accept: [], hint: "$(M_1 \\oplus K) \\oplus (M_2 \\oplus K) = M_1 \\oplus M_2$ — the $K$'s cancel." },
+      { instruction: "First, XOR the two ciphertexts: $C_1 \\oplus C_2$. (The key cancels, leaving $M_1 \\oplus M_2$.)", answer: `${D}`, accept: [], hint: "$(M_1 \\oplus K) \\oplus (M_2 \\oplus K) = M_1 \\oplus M_2$: the $K$'s cancel." },
       { instruction: "Recover the key: $K = C_1 \\oplus M_1$.", answer: `${K}`, accept: [], hint: `XOR $${C1}$ with the known plaintext $${M1}$.` },
       { instruction: "Recover the second message: $M_2 = C_2 \\oplus K$.", answer: `${M2}`, accept: [], hint: `XOR $${C2}$ with the key you just found.` },
     ],
@@ -181,7 +181,7 @@ fill["cr3-gf28-d2"] = (rng, idx) => {
     id: `gen.cr3-gf28-d2.${idx}`, generated: true, concepts: ["gf28-multiplication"], difficulty: 2, context: "abstract",
     prompt: `Compute $\\texttt{xtime}(${b})$ in $GF(2^8)$. Since $${b} \\ge 128$, the left shift overflows past $x^7$, so you must reduce by XOR-ing with 283 ($= 100011011_2$, the bit pattern of $x^8+x^4+x^3+x+1$).`,
     steps: [
-      { instruction: `Shift first: what is $2 \\times ${b}$, before any reduction? (Decimal — it may exceed 255.)`, answer: `${raw}`, accept: [], hint: "Just double it; the 9-bit overflow is handled in the next step." },
+      { instruction: `Shift first: what is $2 \\times ${b}$, before any reduction? (Decimal: it may exceed 255.)`, answer: `${raw}`, accept: [], hint: "Just double it; the 9-bit overflow is handled in the next step." },
       { instruction: `Now reduce: XOR your result with 283. What byte remains? (Decimal.)`, answer: `${red}`, accept: [], hint: `Write $${raw}$ and 283 in binary (9 bits each) and XOR column by column.` },
     ],
     finalAnswer: { value: `${red}`, unit: "" }, solutionNarrative: `$2 \\times ${b} = ${raw} \\ge 256$, so reduce: $${raw} \\oplus 283 = ${red}$. That XOR is exactly 'subtracting' the modulus polynomial $x^8+x^4+x^3+x+1$.`,
@@ -193,12 +193,12 @@ fill["cr3-gf28-d3"] = (rng, idx) => {
   const overflow = b >= 128;
   const steps = [];
   if (overflow) {
-    steps.push({ instruction: `Step 1 — $\\texttt{xtime}(${b})$: first shift. What is $2 \\times ${b}$ before reduction? (Decimal.)`, answer: `${2 * b}`, accept: [], hint: "Double it; reduction comes next." });
+    steps.push({ instruction: `Step 1: $\\texttt{xtime}(${b})$: first shift. What is $2 \\times ${b}$ before reduction? (Decimal.)`, answer: `${2 * b}`, accept: [], hint: "Double it; reduction comes next." });
     steps.push({ instruction: `The shift overflowed ($\\ge 256$), so XOR with 283. What is $\\texttt{xtime}(${b})$? (Decimal.)`, answer: `${t}`, accept: [], hint: `$${2 * b} \\oplus 283$.` });
   } else {
     steps.push({ instruction: `Step 1: compute $\\texttt{xtime}(${b})$. (${b} < 128, so no reduction is needed.) Decimal.`, answer: `${t}`, accept: [], hint: "Just double it." });
   }
-  steps.push({ instruction: `Step 2 — since $3 = x + 1$, we have $3 \\cdot ${b} = \\texttt{xtime}(${b}) \\oplus ${b}$. Compute it. (Decimal.)`, answer: `${result}`, accept: [], hint: `XOR $${t}$ with $${b}$ bit by bit.` });
+  steps.push({ instruction: `Step 2, since $3 = x + 1$, we have $3 \\cdot ${b} = \\texttt{xtime}(${b}) \\oplus ${b}$. Compute it. (Decimal.)`, answer: `${result}`, accept: [], hint: `XOR $${t}$ with $${b}$ bit by bit.` });
   return {
     id: `gen.cr3-gf28-d3.${idx}`, generated: true, concepts: ["gf28-multiplication"], difficulty: 3, context: "applied",
     prompt: `MixColumns multiplies state bytes by the constant 3 in $GF(2^8)$. Compute $3 \\cdot ${b}$ using the xtime trick: $3 \\cdot b = \\texttt{xtime}(b) \\oplus b$.`,
@@ -217,7 +217,7 @@ fill["cr3-aes-d1"] = (rng, idx) => {
   const v = rng.pick(variants);
   return {
     id: `gen.cr3-aes-d1.${idx}`, generated: true, concepts: ["aes-big-picture"], difficulty: 1, context: "applied",
-    prompt: `AES comes in three key sizes — 128, 192 and 256 bits — running 10, 12 and 14 rounds respectively. Each round applies SubBytes, ShiftRows, MixColumns and AddRoundKey (the final round leaves out MixColumns).`,
+    prompt: `AES comes in three key sizes (128, 192 and 256 bits) running 10, 12 and 14 rounds respectively. Each round applies SubBytes, ShiftRows, MixColumns and AddRoundKey (the final round leaves out MixColumns).`,
     steps: [
       { instruction: `How many rounds does AES-${v.bits} run?`, answer: `${v.rounds}`, accept: [], hint: "128→10, 192→12, 256→14: two extra rounds per key-size step." },
       { instruction: "Which round step combines the round key with the state, using plain XOR? (SubBytes, ShiftRows, MixColumns, or AddRoundKey)", answer: "AddRoundKey", accept: [], hint: "The name says it: it's the only step that touches the key." },
@@ -305,7 +305,7 @@ const membershipGen = (rng, idx, c, diff, tpl) => {
       { instruction: `Compute the right side: $x^3 + ${c.a === 1 ? "" : c.a}x + ${c.b} = ${x}^3 + ${c.a === 1 ? "" : c.a + " \\cdot "}${x} + ${c.b} \\bmod ${c.p}$.`, answer: `${rhs}`, accept: [], hint: `Cube ${x}, add ${c.a === 1 ? "" : c.a + " times "}${x} and ${c.b}, then reduce mod ${c.p}.` },
       { instruction: "Do the two sides match: is the point on the curve? Type 'yes' or 'no'.", answer: on ? "yes" : "no", accept: [], hint: "The point is on the curve exactly when both sides give the same residue." },
     ],
-    finalAnswer: { value: on ? "yes" : "no", unit: "" }, solutionNarrative: `$y^2 \\equiv ${lhs}$ and $x^3 + ${coefX(c.a)}x + ${c.b} \\equiv ${rhs} \\pmod{${c.p}}$ — ${on ? "equal, so the point IS on the curve." : "not equal, so the point is NOT on the curve."}`,
+    finalAnswer: { value: on ? "yes" : "no", unit: "" }, solutionNarrative: `$y^2 \\equiv ${lhs}$ and $x^3 + ${coefX(c.a)}x + ${c.b} \\equiv ${rhs} \\pmod{${c.p}}$: ${on ? "equal, so the point IS on the curve." : "not equal, so the point is NOT on the curve."}`,
   };
 };
 fill["cr3-ecc-mem-d1"] = (rng, idx) => membershipGen(rng, idx, C11, 1, "cr3-ecc-mem-d1");
@@ -461,7 +461,7 @@ fill["cr3-ecdh-d2"] = (rng, idx) => {
       { instruction: `Alice sends $A = ${a}G$. Which point is that? (Use the table.)`, answer: tup(A), accept: [], hint: `Look up ${a}G.` },
       { instruction: `Bob sends $B = ${b}G$. Which point?`, answer: tup(B), accept: [], hint: `Look up ${b}G.` },
       { instruction: `Alice computes $aB = ${a} \\cdot ${b}G = (ab)G$. First: $ab \\bmod 13$?`, answer: `${s}`, accept: [], hint: `$${a} \\cdot ${b} = ${a * b}$; the group has order 13, so reduce mod 13.` },
-      { instruction: `So the shared secret point is $${s}G$. Which point is it?`, answer: tup(S), accept: [], hint: `Look up ${s}G — Bob gets the same point from $bA$.` },
+      { instruction: `So the shared secret point is $${s}G$. Which point is it?`, answer: tup(S), accept: [], hint: `Look up ${s}G: Bob gets the same point from $bA$.` },
     ],
     finalAnswer: { value: tup(S), unit: "" }, solutionNarrative: `$A = ${tup(A)}$, $B = ${tup(B)}$; both sides land on $(ab)G = ${s}G = ${tup(S)}$. An eavesdropper sees $A$ and $B$ but must solve a discrete log to find $a$ or $b$.`,
   };

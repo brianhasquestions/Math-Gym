@@ -44,7 +44,7 @@ fill["cr4-ksr-d1"] = (rng, idx) => {
     id: `gen.cr4-ksr-d1.${idx}`, generated: true, concepts: ["keystream-reuse"], difficulty: 1, context: "applied",
     prompt: `A stream cipher reused its keystream nibble $K$ on two messages: $C_1 = M_1 \\oplus K = ${C1}$ and $C_2 = M_2 \\oplus K = ${C2}$ (4-bit values). You know the first message was $M_1 = ${M1}$. Recover the key. (All answers in decimal.)`,
     steps: [
-      { instruction: `Compute $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$. (This equals $M_1 \\oplus M_2$ — the key cancels.)`, answer: `${xC}`, accept: [], hint: `$${bin4(C1)} \\oplus ${bin4(C2)}$, column by column.` },
+      { instruction: `Compute $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$. (This equals $M_1 \\oplus M_2$: the key cancels.)`, answer: `${xC}`, accept: [], hint: `$${bin4(C1)} \\oplus ${bin4(C2)}$, column by column.` },
       { instruction: `Recover the key: $K = C_1 \\oplus M_1 = ${C1} \\oplus ${M1}$.`, answer: `${K}`, accept: [], hint: `$${bin4(C1)} \\oplus ${bin4(M1)}$.` },
     ],
     finalAnswer: { value: `${K}`, unit: "" },
@@ -335,6 +335,6 @@ fill["cr4-rsa-d3"] = (rng, idx) => {
       { instruction: `Recover the private key $d = e^{-1} \\bmod \\varphi = ${e}^{-1} \\bmod ${phi}$.`, answer: `${d}`, accept: [], hint: `Find $d$ with $${e}d \\equiv 1 \\pmod{${phi}}$.` },
     ],
     finalAnswer: { value: `${d}`, unit: "" },
-    solutionNarrative: `One gcd factors $n_1 = ${p} \\times ${q1}$, giving $\\varphi = ${phi}$ and $d = ${e}^{-1} \\bmod ${phi} = ${d}$ — the whole private key. The defense is key generation from a properly seeded CSPRNG, which vetted libraries provide (padding cannot help once the primes are shared). See Soatok, "Cryptography Engineering Has An Intrinsic Duty of Care".`,
+    solutionNarrative: `One gcd factors $n_1 = ${p} \\times ${q1}$, giving $\\varphi = ${phi}$ and $d = ${e}^{-1} \\bmod ${phi} = ${d}$: the whole private key. The defense is key generation from a properly seeded CSPRNG, which vetted libraries provide (padding cannot help once the primes are shared). See Soatok, "Cryptography Engineering Has An Intrinsic Duty of Care".`,
   };
 };

@@ -495,7 +495,7 @@ fill["cr2-whyworks-d1"] = (rng, idx) => {
       { instruction: `Reduce: what is $${e * d} \\bmod ${phi}$?`, answer: "1", accept: [], hint: `$${e * d} = ${(e * d - 1) / phi} \\times ${phi} + 1$.` },
     ],
     finalAnswer: { value: "1", unit: "" },
-    solutionNarrative: `$${e} \\cdot ${d} = ${e * d} \\equiv 1 \\pmod{${phi}}$ — so $m^{ed} = m^{k\\varphi + 1} \\equiv m$ by Euler's theorem (for $m$ coprime to $n$; the Chinese remainder theorem extends it to every $m$), and decryption is guaranteed to undo encryption.`,
+    solutionNarrative: `$${e} \\cdot ${d} = ${e * d} \\equiv 1 \\pmod{${phi}}$, so $m^{ed} = m^{k\\varphi + 1} \\equiv m$ by Euler's theorem (for $m$ coprime to $n$; the Chinese remainder theorem extends it to every $m$), and decryption is guaranteed to undo encryption.`,
   };
 };
 

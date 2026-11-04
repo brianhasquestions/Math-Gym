@@ -324,7 +324,7 @@ fill["cr1-prime-d2"] = (rng, idx) => {
       { instruction: `Factor ${opt.m} into primes ($${opt.m} = ${opt.factors}$). In total, how many prime factors does ${n} have, counted with multiplicity?`, answer: `${totalCount}`, accept: [], hint: `${a} factor${a === 1 ? "" : "s"} of 2 plus ${opt.count} odd prime factor${opt.count === 1 ? "" : "s"}.` },
     ],
     finalAnswer: { value: `${n} = ${a === 1 ? "2" : `2^${a}`} * ${opt.factors.replace(/ \\cdot /g, " * ")}`, unit: "" },
-    solutionNarrative: `$${n} = ${a === 1 ? "2" : `2^{${a}}`} \\cdot ${opt.factors}$ — ${totalCount} prime factors with multiplicity. Unique factorization guarantees this is the only way it breaks down.`,
+    solutionNarrative: `$${n} = ${a === 1 ? "2" : `2^{${a}}`} \\cdot ${opt.factors}$: ${totalCount} prime factors with multiplicity. Unique factorization guarantees this is the only way it breaks down.`,
   };
 };
 
@@ -537,6 +537,6 @@ fill["cr1-gcdcrypto-d3"] = (rng, idx) => {
       { instruction: `And the ${b}-tooth rotor?`, answer: `${p}`, accept: [], hint: `$${l} \\div ${b}$.` },
     ],
     finalAnswer: { value: `${l}`, unit: "teeth" },
-    solutionNarrative: `$\\gcd(${a}, ${b}) = ${g}$, so $\\mathrm{lcm} = \\frac{${a} \\cdot ${b}}{${g}} = ${l}$: the marks realign after ${l} teeth — ${q} turns of the ${a}-tooth rotor and ${p} of the ${b}-tooth one. The shared factor ${g} cuts the period from $${a} \\cdot ${b} = ${a * b}$ to ${l} teeth, which is why cipher-wheel designers pick sizes with no common factor: a short period means repeating key patterns an attacker can exploit.`,
+    solutionNarrative: `$\\gcd(${a}, ${b}) = ${g}$, so $\\mathrm{lcm} = \\frac{${a} \\cdot ${b}}{${g}} = ${l}$: the marks realign after ${l} teeth: ${q} turns of the ${a}-tooth rotor and ${p} of the ${b}-tooth one. The shared factor ${g} cuts the period from $${a} \\cdot ${b} = ${a * b}$ to ${l} teeth, which is why cipher-wheel designers pick sizes with no common factor: a short period means repeating key patterns an attacker can exploit.`,
   };
 };
