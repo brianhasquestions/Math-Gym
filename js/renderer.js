@@ -2,7 +2,7 @@
 // Renders our "markdown+latex" content into safe HTML. We support a small,
 // predictable markdown subset and delegate all math (delimited by $...$ and
 // $$...$$) to KaTeX. Text is HTML-escaped before formatting, so content files
-// can't inject markup — only the formatting we explicitly allow.
+// can't inject markup: only the formatting we explicitly allow.
 //
 // Depends on global `katex` (loaded from vendor/ in the page).
 
@@ -89,7 +89,7 @@ export function renderMarkdown(src) {
   // A line opens a standalone display block only if it starts with $$ and its
   // first closing $$ is either the line's end or absent (block continues on
   // later lines). "$$…$$ (note …)" or "$$a$$ and $$b$$" are prose with inline
-  // display math — treating them as one block fed "a$$ (note…" to KaTeX.
+  // display math: treating them as one block fed "a$$ (note…" to KaTeX.
   const isDisplayBlock = (l) => {
     const t = l.trim();
     if (!t.startsWith("$$")) return false;

@@ -1,6 +1,6 @@
 // Validate ONE topic file. Usage:
-//   node checkone.mjs <topic.json>                      — full check (generators must be wired)
-//   node checkone.mjs <topic.json> --pack <pack.js>     — pre-wiring: merge a fill pack for self-test
+//   node checkone.mjs <topic.json>: full check (generators must be wired)
+//   node checkone.mjs <topic.json> --pack <pack.js>: pre-wiring: merge a fill pack for self-test
 import { pathToFileURL } from "node:url";
 import path from "node:path";
 import { validateTopic } from "./harness.mjs";

@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>try { document.documentElement.setAttribute("data-theme", localStorage.getItem("mathgym.theme") || "light"); } catch (e) {}</script>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <title>MathGym — Learning Map</title>
-  <meta name="description" content="Explore a subject's learning map on MathGym — topics ordered so each builds on the last, with adaptive, step-by-step practice." />
+  <title>MathGym | Learning Map</title>
+  <meta name="description" content="Explore a subject's learning map on MathGym: topics ordered so each builds on the last, with adaptive, step-by-step practice." />
   <meta name="theme-color" content="#f5f8fc" />
   <link rel="canonical" href="https://mathgym.io/subject.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="MathGym" />
-  <meta property="og:title" content="MathGym — Learning Map" />
-  <meta property="og:description" content="Explore a subject's learning map on MathGym — topics ordered so each builds on the last, with adaptive, step-by-step practice." />
+  <meta property="og:title" content="MathGym | Learning Map" />
+  <meta property="og:description" content="Explore a subject's learning map on MathGym: topics ordered so each builds on the last, with adaptive, step-by-step practice." />
   <meta property="og:url" content="https://mathgym.io/subject.html" />
   <meta property="og:image" content="https://mathgym.io/assets/og.svg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="MathGym — Learning Map" />
-  <meta name="twitter:description" content="Explore a subject's learning map on MathGym — topics ordered so each builds on the last, with adaptive, step-by-step practice." />
+  <meta name="twitter:title" content="MathGym | Learning Map" />
+  <meta name="twitter:description" content="Explore a subject's learning map on MathGym: topics ordered so each builds on the last, with adaptive, step-by-step practice." />
   <meta name="twitter:image" content="https://mathgym.io/assets/og.svg" />
   <link rel="stylesheet" href="vendor/katex/katex.min.css" />
   <link rel="stylesheet" href="css/theme.css" />
@@ -39,7 +39,7 @@
     if (!id) { showError(main, "No subject specified."); }
     else try {
       const map = await subjectMap(id);
-      document.title = `MathGym — ${map.subject.title} Learning Map`;
+      document.title = `MathGym | ${map.subject.title} Learning Map`;
       render(map);
     } catch (e) {
       showError(main, `Could not build learning map: ${e.message}`);
@@ -55,26 +55,26 @@
     function render(map) {
       const { subject, topics, recommendedId, weakConcepts, summary } = map;
 
-      main.appendChild(el("h1", {}, `${subject.title} — Learning Map`));
+      main.appendChild(el("h1", {}, `${subject.title}: Learning Map`));
       if (subject.blurb) main.appendChild(el("p", { class: "lede" }, subject.blurb));
 
       // Progress-at-a-glance strip.
       main.appendChild(el("p", { class: "blurb", style: "color: var(--text-dim)" },
-        `${summary.mastered} mastered · ${summary.inProgress} in progress · ${summary.notStarted} not started — ${summary.total} topics total. ` +
+        `${summary.mastered} mastered · ${summary.inProgress} in progress · ${summary.notStarted} not started, ${summary.total} topics total. ` +
         `Topics are ordered so each builds on the ones above it.`));
 
       // Recommended next-step callout.
       const rec = topics.find((t) => t.id === recommendedId);
       if (rec) {
         const reason = rec.status.started
-          ? "You've started this and its prerequisites are solid — pick up here."
+          ? "You've started this and its prerequisites are solid. Pick up here."
           : rec.prereqs.length
             ? "Its prerequisites are mastered, so you're ready for it."
             : "A natural place to begin this subject.";
         main.appendChild(el("div", { class: "insight-banner recommend" }, [
           el("div", { class: "insight-body" }, [
             el("strong", {}, rec.status.started ? "Pick up here: " : "Start here: "),
-            el("span", {}, `${rec.title} — ${reason}`),
+            el("span", {}, `${rec.title}: ${reason}`),
           ]),
           el("a", { class: "btn", href: `topic.html?id=${encodeURIComponent(rec.id)}` }, "Go to topic"),
         ]));

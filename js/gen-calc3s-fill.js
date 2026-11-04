@@ -8,7 +8,7 @@
 // Grading notes baked into the answers (verified against the real checkStep):
 // - Vector/tuple answers <a, b, c> only cross-grade when every entry is a
 //   plain number, so all generated vector answers are EVALUATED at a point
-//   (or are constant vectors) — numeric entries only.
+//   (or are constant vectors): numeric entries only.
 // - Curl COMPONENTS as polynomials ("2z", "4y") are asked as separate scalar
 //   steps, which grade via full polynomial equivalence.
 // - "36pi" and "36*pi" both evaluate via evalNumeric; both forms are listed.
@@ -42,7 +42,7 @@ export const fill = {};
 // concept: divergence-and-curl
 // ============================================================================
 
-// d1: F = <a x, b y, c z> — constant divergence, zero curl, classify.
+// d1: F = <a x, b y, c z>: constant divergence, zero curl, classify.
 fill["c3s-div-curl-1"] = (rng, idx) => {
   const a = rng.int(1, 4), b = rng.int(1, 4), c = rng.int(1, 4);
   const k = a + b + c; // >= 3: divergence never zero, so 'irrotational' is unambiguous
@@ -85,7 +85,7 @@ fill["c3s-div-curl-2"] = (rng, idx) => {
   };
 };
 
-// d3: classify — irrotational (gradient), incompressible (div = 0, the
+// d3: classify: irrotational (gradient), incompressible (div = 0, the
 // intentional zero case), or neither. Curl here is a CONSTANT vector, asked
 // numerically.
 fill["c3s-div-curl-3"] = (rng, idx) => {
@@ -99,7 +99,7 @@ fill["c3s-div-curl-3"] = (rng, idx) => {
       id: `gen.c3s-div-curl-3.${idx}`, generated: true, concepts: ["divergence-and-curl"], difficulty: 3, context: "abstract",
       prompt: `Classify the field $\\vec{F} = \\langle ${2 * a}x + ${cf(c)}y,\\; ${cf(c)}x + ${2 * b}y,\\; ${2 * e}z \\rangle$ as irrotational, incompressible, or neither, by computing its curl and divergence.`,
       steps: [
-        { instruction: `Compute the z-component of the curl, $Q_x - P_y$, for $Q = ${cf(c)}x + ${2 * b}y$ and $P = ${2 * a}x + ${cf(c)}y$.`, answer: "0", accept: [], hint: `$Q_x = ${c}$ and $P_y = ${c}$ — they cancel.` },
+        { instruction: `Compute the z-component of the curl, $Q_x - P_y$, for $Q = ${cf(c)}x + ${2 * b}y$ and $P = ${2 * a}x + ${cf(c)}y$.`, answer: "0", accept: [], hint: `$Q_x = ${c}$ and $P_y = ${c}$: they cancel.` },
         { instruction: "The x- and y-components also vanish. Give $\\operatorname{curl}\\vec{F}$ as a numeric vector.", answer: V(0, 0, 0), accept: [Pn(0, 0, 0)], hint: "All three components are differences of matching cross-partials." },
         { instruction: "Compute $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$.", answer: `${k}`, accept: [], hint: `$${2 * a} + ${2 * b} + ${2 * e}$.` },
         { instruction: "Classify the field: type 'irrotational', 'incompressible', or 'neither'.", answer: "irrotational", accept: ["curl-free", "curl free"], hint: `Curl $\\vec{0}$ everywhere, divergence $${k} \\neq 0$.` },
@@ -124,7 +124,7 @@ fill["c3s-div-curl-3"] = (rng, idx) => {
     ],
     finalAnswer: { value: label, unit: "" },
     solutionNarrative: label === "incompressible"
-      ? `$\\operatorname{div}\\vec{F} = 0$ everywhere — the field is incompressible — but $\\operatorname{curl}\\vec{F} = ${Vt(curl)} \\neq \\vec{0}$, so it is not irrotational.`
+      ? `$\\operatorname{div}\\vec{F} = 0$ everywhere, the field is incompressible, but $\\operatorname{curl}\\vec{F} = ${Vt(curl)} \\neq \\vec{0}$, so it is not irrotational.`
       : `$\\operatorname{div}\\vec{F} = ${d} \\neq 0$ and $\\operatorname{curl}\\vec{F} = ${Vt(curl)} \\neq \\vec{0}$: the field is neither irrotational nor incompressible.`,
   };
 };
@@ -167,7 +167,7 @@ fill["c3s-surface-2"] = (rng, idx) => {
       { instruction: `Compute $\\displaystyle\\iint_S ${k}\\, dS = ${k} \\cdot ${s} \\cdot \\text{Area}(R)$.`, answer: `${total}`, accept: [], hint: `Area of $R$ is $${p} \\times ${q} = ${area}$.` },
     ],
     finalAnswer: { value: `${total}`, unit: "" },
-    solutionNarrative: `$dS = \\sqrt{1 + ${sa * sa} + ${sb * sb}}\\, dA = ${s}\\, dA$ — exact by construction — so the integral is $${k} \\times ${s} \\times ${area} = ${total}$.`,
+    solutionNarrative: `$dS = \\sqrt{1 + ${sa * sa} + ${sb * sb}}\\, dA = ${s}\\, dA$, exact by construction, so the integral is $${k} \\times ${s} \\times ${area} = ${total}$.`,
   };
 };
 
@@ -197,7 +197,7 @@ fill["c3s-surface-3"] = (rng, idx) => {
 // concept: divergence-theorem
 // ============================================================================
 
-// d1: closed box, constant divergence — flux = div × volume.
+// d1: closed box, constant divergence: flux = div × volume.
 fill["c3s-div-thm-1"] = (rng, idx) => {
   const p = rng.int(1, 3), q = rng.int(1, 3), w = rng.int(1, 3);
   const k = p + q + w; // >= 3, never zero
@@ -212,16 +212,16 @@ fill["c3s-div-thm-1"] = (rng, idx) => {
       { instruction: `The divergence is constant, so flux $= ${k} \\times \\text{Volume}$. Compute it.`, answer: `${flux}`, accept: [], hint: `$${k} \\times ${vol}$.` },
     ],
     finalAnswer: { value: `${flux}`, unit: "" },
-    solutionNarrative: `$\\operatorname{div}\\vec{F} = ${p} + ${q} + ${w} = ${k}$, a constant, so the outward flux is $${k} \\times ${vol} = ${flux}$ — one multiplication instead of six face integrals.`,
+    solutionNarrative: `$\\operatorname{div}\\vec{F} = ${p} + ${q} + ${w} = ${k}$, a constant, so the outward flux is $${k} \\times ${vol} = ${flux}$: one multiplication instead of six face integrals.`,
   };
 };
 
-// d2: sphere, constant divergence — flux = div × (4/3)πR³, exact multiple of π.
+// d2: sphere, constant divergence: flux = div × (4/3)πR³, exact multiple of π.
 fill["c3s-div-thm-2"] = (rng, idx) => {
   const p = rng.int(1, 3), q = rng.int(1, 3), w = rng.int(1, 3);
   const k = p + q + w;
   const R = rng.pick([3, 6]);
-  const volPi = (4 * R * R * R) / 3; // 36 or 288 — integer by construction
+  const volPi = (4 * R * R * R) / 3; // 36 or 288: integer by construction
   const fluxPi = k * volPi;
   const volDec = `${Math.round(volPi * Math.PI * 100) / 100}`;
   const fluxDec = `${Math.round(fluxPi * Math.PI * 100) / 100}`;
@@ -238,13 +238,13 @@ fill["c3s-div-thm-2"] = (rng, idx) => {
   };
 };
 
-// d3: closed box, LINEAR divergence — genuine triple integral, exact integers.
+// d3: closed box, LINEAR divergence: genuine triple integral, exact integers.
 fill["c3s-div-thm-3"] = (rng, idx) => {
   const c = rng.int(1, 3), d = rng.int(1, 3), e = rng.int(1, 3);
   const a = rng.int(2, 4), b = rng.int(1, 3), h = rng.int(1, 3);
   // F = <c x^2, d y, e z>  =>  div = 2c x + (d + e); both pieces nonzero
   const de = d + e;
-  const inner = c * a * a + de * a; // ∫0^a (2c x + de) dx — positive, never zero
+  const inner = c * a * a + de * a; // ∫0^a (2c x + de) dx: positive, never zero
   const flux = inner * b * h;
   return {
     id: `gen.c3s-div-thm-3.${idx}`, generated: true, concepts: ["divergence-theorem"], difficulty: 3, context: "abstract",
@@ -280,7 +280,7 @@ fill["c3s-stokes-1"] = (rng, idx) => {
       { instruction: `The integrand is constant, so circulation $= ${k} \\times \\text{Area}$. Compute it.`, answer: `${circ}`, accept: [], hint: `Area of the rectangle is $${a} \\times ${b} = ${a * b}$.` },
     ],
     finalAnswer: { value: `${circ}`, unit: "" },
-    solutionNarrative: `$(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = ${q} - ${p} = ${k}$, a constant, so the circulation is $${k} \\times ${a * b} = ${circ}$ — exactly Green's theorem lifted to the plane $z = ${zc}$.`,
+    solutionNarrative: `$(\\operatorname{curl}\\vec{F}) \\cdot \\vec{k} = ${q} - ${p} = ${k}$, a constant, so the circulation is $${k} \\times ${a * b} = ${circ}$: exactly Green's theorem lifted to the plane $z = ${zc}$.`,
   };
 };
 
@@ -303,7 +303,7 @@ fill["c3s-stokes-2"] = (rng, idx) => {
   };
 };
 
-// d3: rectangle in the plane z = c with a LINEAR curl·k — genuine double
+// d3: rectangle in the plane z = c with a LINEAR curl·k: genuine double
 // integral; guarded against the accidental zero total.
 fill["c3s-stokes-3"] = (rng, idx) => {
   const q = rng.int(1, 3);

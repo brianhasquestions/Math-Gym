@@ -105,7 +105,7 @@ fill["cr3-xor-d3"] = (rng, idx) => {
     id: `gen.cr3-xor-d3.${idx}`, generated: true, concepts: ["xor-and-otp"], difficulty: 3, context: "applied",
     prompt: `An operator reuses a one-time-pad key byte $K$ on two messages: $C_1 = M_1 \\oplus K = ${C1}$ and $C_2 = M_2 \\oplus K = ${C2}$. An analyst learns (from a predictable header) that $M_1 = ${M1}$. Recover the key and the second message. All answers in DECIMAL.`,
     steps: [
-      { instruction: "First, XOR the two ciphertexts: $C_1 \\oplus C_2$. (The key cancels, leaving $M_1 \\oplus M_2$.)", answer: `${D}`, accept: [bin8(D)], hint: "$(M_1 \\oplus K) \\oplus (M_2 \\oplus K) = M_1 \\oplus M_2$ — the $K$'s cancel." },
+      { instruction: "First, XOR the two ciphertexts: $C_1 \\oplus C_2$. (The key cancels, leaving $M_1 \\oplus M_2$.)", answer: `${D}`, accept: [bin8(D)], hint: "$(M_1 \\oplus K) \\oplus (M_2 \\oplus K) = M_1 \\oplus M_2$: the $K$'s cancel." },
       { instruction: "Recover the key: $K = C_1 \\oplus M_1$.", answer: `${K}`, accept: [bin8(K)], hint: `XOR $${C1}$ with the known plaintext $${M1}$.` },
       { instruction: "Recover the second message: $M_2 = C_2 \\oplus K$.", answer: `${M2}`, accept: [bin8(M2)], hint: `XOR $${C2}$ with the key you just found.` },
     ],
@@ -150,13 +150,13 @@ fill["cr3-b2p-d3"] = (rng, idx) => {
   const cancelled = A & B;
   return {
     id: `gen.cr3-b2p-d3.${idx}`, generated: true, concepts: ["bytes-as-polynomials"], difficulty: 3, context: "abstract",
-    prompt: `In $GF(2^8)$, ADDITION of field elements is bitwise XOR — coefficients add mod 2, so matching terms cancel. Add the elements $A = ${A}$ ($${polyOf(A)}$) and $B = ${B}$ ($${polyOf(B)}$).`,
+    prompt: `In $GF(2^8)$, ADDITION of field elements is bitwise XOR: coefficients add mod 2, so matching terms cancel. Add the elements $A = ${A}$ ($${polyOf(A)}$) and $B = ${B}$ ($${polyOf(B)}$).`,
     steps: [
       { instruction: "How many terms cancel (appear in both polynomials)?", answer: `${popcount(cancelled)}`, accept: [], hint: "A term cancels when its bit is 1 in BOTH bytes, since $x^i + x^i = 2x^i \\equiv 0$ mod 2." },
       { instruction: "Compute the sum $A \\oplus B$ as a DECIMAL byte.", answer: `${S}`, accept: [bin8(S)], hint: `XOR the binary forms: $${bin8(A)} \\oplus ${bin8(B)}$.` },
       { instruction: "Write the sum as a (mod-2 reduced) polynomial in $x$.", answer: polyOf(S), accept: [], hint: "Convert your decimal answer's bits to powers of $x$." },
     ],
-    finalAnswer: { value: `${S}`, unit: "" }, solutionNarrative: `Shared terms cancel (coefficients are mod 2), leaving $${polyOf(S)}$, i.e. the byte ${S}. Note ${A} + ${B} would be ${A + B} in ordinary arithmetic — field addition is NOT integer addition.`,
+    finalAnswer: { value: `${S}`, unit: "" }, solutionNarrative: `Shared terms cancel (coefficients are mod 2), leaving $${polyOf(S)}$, i.e. the byte ${S}. Note ${A} + ${B} would be ${A + B} in ordinary arithmetic: field addition is NOT integer addition.`,
   };
 };
 
@@ -165,7 +165,7 @@ fill["cr3-gf28-d1"] = (rng, idx) => {
   const b = rng.int(20, 127);
   return {
     id: `gen.cr3-gf28-d1.${idx}`, generated: true, concepts: ["gf28-multiplication"], difficulty: 1, context: "abstract",
-    prompt: `Compute $\\texttt{xtime}(${b})$ — multiplication by $x$ in $GF(2^8)$. Rule: shift left one bit; if the result is 256 or more, XOR with 283 (the modulus byte pattern of $x^8+x^4+x^3+x+1$).`,
+    prompt: `Compute $\\texttt{xtime}(${b})$: multiplication by $x$ in $GF(2^8)$. Rule: shift left one bit; if the result is 256 or more, XOR with 283 (the modulus byte pattern of $x^8+x^4+x^3+x+1$).`,
     steps: [
       { instruction: `First: is ${b} at least 128 (i.e. is bit 7 set, so the shift overflows)? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: "128 is the threshold: below it, doubling stays inside one byte." },
       { instruction: `So no reduction is needed. What is $\\texttt{xtime}(${b})$? (Decimal.)`, answer: `${2 * b}`, accept: [bin8(2 * b)], hint: "Just double it." },
@@ -180,7 +180,7 @@ fill["cr3-gf28-d2"] = (rng, idx) => {
     id: `gen.cr3-gf28-d2.${idx}`, generated: true, concepts: ["gf28-multiplication"], difficulty: 2, context: "abstract",
     prompt: `Compute $\\texttt{xtime}(${b})$ in $GF(2^8)$. Since $${b} \\ge 128$, the left shift overflows past $x^7$, so you must reduce by XOR-ing with 283 ($= 100011011_2$, the bit pattern of $x^8+x^4+x^3+x+1$).`,
     steps: [
-      { instruction: `Shift first: what is $2 \\times ${b}$, before any reduction? (Decimal — it may exceed 255.)`, answer: `${raw}`, accept: [], hint: "Just double it; the 9-bit overflow is handled in the next step." },
+      { instruction: `Shift first: what is $2 \\times ${b}$, before any reduction? (Decimal: it may exceed 255.)`, answer: `${raw}`, accept: [], hint: "Just double it; the 9-bit overflow is handled in the next step." },
       { instruction: `Now reduce: XOR your result with 283. What byte remains? (Decimal.)`, answer: `${red}`, accept: [bin8(red)], hint: `Write $${raw}$ and 283 in binary (9 bits each) and XOR column by column.` },
     ],
     finalAnswer: { value: `${red}`, unit: "" }, solutionNarrative: `$2 \\times ${b} = ${raw} \\ge 256$, so reduce: $${raw} \\oplus 283 = ${red}$. That XOR is exactly 'subtracting' the modulus polynomial $x^8+x^4+x^3+x+1$.`,
@@ -192,12 +192,12 @@ fill["cr3-gf28-d3"] = (rng, idx) => {
   const overflow = b >= 128;
   const steps = [];
   if (overflow) {
-    steps.push({ instruction: `Step 1 — $\\texttt{xtime}(${b})$: first shift. What is $2 \\times ${b}$ before reduction? (Decimal.)`, answer: `${2 * b}`, accept: [], hint: "Double it; reduction comes next." });
+    steps.push({ instruction: `Step 1: $\\texttt{xtime}(${b})$: first shift. What is $2 \\times ${b}$ before reduction? (Decimal.)`, answer: `${2 * b}`, accept: [], hint: "Double it; reduction comes next." });
     steps.push({ instruction: `The shift overflowed ($\\ge 256$), so XOR with 283. What is $\\texttt{xtime}(${b})$? (Decimal.)`, answer: `${t}`, accept: [bin8(t)], hint: `$${2 * b} \\oplus 283$.` });
   } else {
-    steps.push({ instruction: `Step 1 — compute $\\texttt{xtime}(${b})$. (${b} < 128, so no reduction is needed.) Decimal.`, answer: `${t}`, accept: [], hint: "Just double it." });
+    steps.push({ instruction: `Step 1: compute $\\texttt{xtime}(${b})$. (${b} < 128, so no reduction is needed.) Decimal.`, answer: `${t}`, accept: [], hint: "Just double it." });
   }
-  steps.push({ instruction: `Step 2 — since $3 = x + 1$, we have $3 \\cdot ${b} = \\texttt{xtime}(${b}) \\oplus ${b}$. Compute it. (Decimal.)`, answer: `${result}`, accept: [bin8(result)], hint: `XOR $${t}$ with $${b}$ bit by bit.` });
+  steps.push({ instruction: `Step 2, since $3 = x + 1$, we have $3 \\cdot ${b} = \\texttt{xtime}(${b}) \\oplus ${b}$. Compute it. (Decimal.)`, answer: `${result}`, accept: [bin8(result)], hint: `XOR $${t}$ with $${b}$ bit by bit.` });
   return {
     id: `gen.cr3-gf28-d3.${idx}`, generated: true, concepts: ["gf28-multiplication"], difficulty: 3, context: "applied",
     prompt: `MixColumns multiplies state bytes by the constant 3 in $GF(2^8)$. Compute $3 \\cdot ${b}$ using the xtime trick: $3 \\cdot b = \\texttt{xtime}(b) \\oplus b$.`,
@@ -216,7 +216,7 @@ fill["cr3-aes-d1"] = (rng, idx) => {
   const v = rng.pick(variants);
   return {
     id: `gen.cr3-aes-d1.${idx}`, generated: true, concepts: ["aes-big-picture"], difficulty: 1, context: "applied",
-    prompt: `AES comes in three key sizes — 128, 192 and 256 bits — running 10, 12 and 14 rounds respectively. Each round applies SubBytes, ShiftRows, MixColumns and AddRoundKey.`,
+    prompt: `AES comes in three key sizes (128, 192 and 256 bits) running 10, 12 and 14 rounds respectively. Each round applies SubBytes, ShiftRows, MixColumns and AddRoundKey.`,
     steps: [
       { instruction: `How many rounds does AES-${v.bits} run?`, answer: `${v.rounds}`, accept: [], hint: "128→10, 192→12, 256→14: two extra rounds per key-size step." },
       { instruction: "Which round step combines the round key with the state, using plain XOR? (SubBytes, ShiftRows, MixColumns, or AddRoundKey)", answer: "AddRoundKey", accept: [], hint: "The name says it: it's the only step that touches the key." },
@@ -227,9 +227,9 @@ fill["cr3-aes-d1"] = (rng, idx) => {
 fill["cr3-aes-d2"] = (rng, idx) => {
   const pool = [
     { desc: "multiplies each state column by a fixed matrix, using $GF(2^8)$ multiplication by the constants 2 and 3", ans: "MixColumns" },
-    { desc: "replaces each byte via an S-box built from INVERSION in $GF(2^8)$ — the only nonlinear step", ans: "SubBytes" },
+    { desc: "replaces each byte via an S-box built from INVERSION in $GF(2^8)$: the only nonlinear step", ans: "SubBytes" },
     { desc: "is a pure permutation: it just rotates the bytes within each row, moving no values through any arithmetic", ans: "ShiftRows" },
-    { desc: "XORs the round key into the state — bitwise addition in $GF(2)$", ans: "AddRoundKey" },
+    { desc: "XORs the round key into the state: bitwise addition in $GF(2)$", ans: "AddRoundKey" },
   ];
   const i = rng.int(0, 3);
   let j = rng.int(0, 3);
@@ -269,7 +269,7 @@ fill["cr3-aes-d3"] = (rng, idx) => {
         { instruction: `Against a quantum attacker running Grover, AES-${n}'s effective security drops to $2^k$ steps. What is $k$?`, answer: `${n / 2}`, accept: [], hint: "$\\sqrt{2^n} = 2^{n/2}$: halve the exponent." },
         { instruction: `Is $2^{${n / 2}}$ still considered computationally infeasible today (the usual bar is $2^{128}$ or more)? Type 'yes' or 'no'.`, answer: n / 2 >= 128 ? "yes" : "no", accept: [], hint: "Compare the exponent to 128." },
       ],
-      finalAnswer: { value: `${n / 2}`, unit: "" }, solutionNarrative: `Grover halves the exponent: AES-${n} gives $2^{${n / 2}}$ post-quantum. ${n / 2 >= 128 ? "That clears the $2^{128}$ bar — which is exactly why AES-256 is called post-quantum comfortable." : "That is below the $2^{128}$ bar, which is why AES-128 is the variant people worry about long-term."}`,
+      finalAnswer: { value: `${n / 2}`, unit: "" }, solutionNarrative: `Grover halves the exponent: AES-${n} gives $2^{${n / 2}}$ post-quantum. ${n / 2 >= 128 ? "That clears the $2^{128}$ bar, which is exactly why AES-256 is called post-quantum comfortable." : "That is below the $2^{128}$ bar, which is why AES-128 is the variant people worry about long-term."}`,
     };
   }
   const pairs = [[128, 128], [128, 64], [192, 64], [64, 64]];
@@ -280,7 +280,7 @@ fill["cr3-aes-d3"] = (rng, idx) => {
     steps: [
       { instruction: `The total keyspace is $2^{${a}} \\cdot 2^{${b}} = 2^k$. What is $k$?`, answer: `${a + b}`, accept: [], hint: "Multiplying powers adds exponents." },
     ],
-    finalAnswer: { value: `${a + b}`, unit: "" }, solutionNarrative: `$2^{${a}} \\cdot 2^{${b}} = 2^{${a + b}}$ — independent choices multiply, exponents add.`,
+    finalAnswer: { value: `${a + b}`, unit: "" }, solutionNarrative: `$2^{${a}} \\cdot 2^{${b}} = 2^{${a + b}}$: independent choices multiply, exponents add.`,
   };
 };
 
@@ -302,9 +302,9 @@ const membershipGen = (rng, idx, c, diff, tpl) => {
     steps: [
       { instruction: `Compute the left side: $y^2 = ${y}^2 \\bmod ${c.p}$. (Give a value from 0 to ${c.p - 1}.)`, answer: `${lhs}`, accept: [], hint: `Square ${y}, then take the remainder on division by ${c.p}.` },
       { instruction: `Compute the right side: $x^3 + ${c.a === 1 ? "" : c.a}x + ${c.b} = ${x}^3 + ${c.a === 1 ? "" : c.a + " \\cdot "}${x} + ${c.b} \\bmod ${c.p}$.`, answer: `${rhs}`, accept: [], hint: `Cube ${x}, add ${c.a === 1 ? "" : c.a + " times "}${x} and ${c.b}, then reduce mod ${c.p}.` },
-      { instruction: "Do the two sides match — is the point on the curve? Type 'yes' or 'no'.", answer: on ? "yes" : "no", accept: [], hint: "The point is on the curve exactly when both sides give the same residue." },
+      { instruction: "Do the two sides match: is the point on the curve? Type 'yes' or 'no'.", answer: on ? "yes" : "no", accept: [], hint: "The point is on the curve exactly when both sides give the same residue." },
     ],
-    finalAnswer: { value: on ? "yes" : "no", unit: "" }, solutionNarrative: `$y^2 \\equiv ${lhs}$ and $x^3 + ${c.a}x + ${c.b} \\equiv ${rhs} \\pmod{${c.p}}$ — ${on ? "equal, so the point IS on the curve." : "not equal, so the point is NOT on the curve."}`,
+    finalAnswer: { value: on ? "yes" : "no", unit: "" }, solutionNarrative: `$y^2 \\equiv ${lhs}$ and $x^3 + ${c.a}x + ${c.b} \\equiv ${rhs} \\pmod{${c.p}}$: ${on ? "equal, so the point IS on the curve." : "not equal, so the point is NOT on the curve."}`,
   };
 };
 fill["cr3-ecc-mem-d1"] = (rng, idx) => membershipGen(rng, idx, C11, 1, "cr3-ecc-mem-d1");
@@ -322,7 +322,7 @@ fill["cr3-ecc-mem-d3"] = (rng, idx) => {
       { instruction: `Check: is $y = ${y}$ a solution of $y^2 \\equiv ${rhs} \\pmod{23}$? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `Square ${y} and reduce mod 23.` },
       { instruction: `Square roots mod a prime come in pairs $y$ and $p - y$. What is the OTHER $y$-value on the curve at $x = ${x}$?`, answer: `${other}`, accept: [], hint: `Compute $23 - ${y}$.` },
     ],
-    finalAnswer: { value: `${other}`, unit: "" }, solutionNarrative: `RHS $\\equiv ${rhs}$; both $y = ${y}$ and $y = ${other}$ square to it, since $(23-y)^2 \\equiv y^2$. Curve points off the x-axis always come in mirror pairs — that mirror is exactly the negative of a point.`,
+    finalAnswer: { value: `${other}`, unit: "" }, solutionNarrative: `RHS $\\equiv ${rhs}$; both $y = ${y}$ and $y = ${other}$ square to it, since $(23-y)^2 \\equiv y^2$. Curve points off the x-axis always come in mirror pairs: that mirror is exactly the negative of a point.`,
   };
 };
 
@@ -443,7 +443,7 @@ fill["cr3-ecdh-d1"] = (rng, idx) => {
       { instruction: `How many times longer is the RSA key than the ECC key? (Compute $${r[2]} / ${r[1]}$.)`, answer: `${ratio}`, accept: [`${r[2]}/${r[1]}`], hint: "Straight division." },
       { instruction: `An ECC key of $n$ bits gives about $n/2$ bits of security (the best generic attack takes $2^{n/2}$ steps). How many bits of security does a ${r[1]}-bit ECC key give?`, answer: `${r[0]}`, accept: [], hint: `Halve ${r[1]}.` },
     ],
-    finalAnswer: { value: `${ratio}`, unit: "" }, solutionNarrative: `$${r[2]}/${r[1]} = ${ratio}$ — the RSA key is ${ratio}× longer for the same ${r[0]}-bit strength, because sub-exponential attacks exist for factoring but not for elliptic-curve discrete logs.`,
+    finalAnswer: { value: `${ratio}`, unit: "" }, solutionNarrative: `$${r[2]}/${r[1]} = ${ratio}$: the RSA key is ${ratio}× longer for the same ${r[0]}-bit strength, because sub-exponential attacks exist for factoring but not for elliptic-curve discrete logs.`,
   };
 };
 fill["cr3-ecdh-d2"] = (rng, idx) => {
@@ -460,7 +460,7 @@ fill["cr3-ecdh-d2"] = (rng, idx) => {
       { instruction: `Alice sends $A = ${a}G$. Which point is that? (Use the table.)`, answer: tup(A), accept: [], hint: `Look up ${a}G.` },
       { instruction: `Bob sends $B = ${b}G$. Which point?`, answer: tup(B), accept: [], hint: `Look up ${b}G.` },
       { instruction: `Alice computes $aB = ${a} \\cdot ${b}G = (ab)G$. First: $ab \\bmod 13$?`, answer: `${s}`, accept: a * b < 13 ? [] : [`${a * b}`], hint: `${a} \\cdot ${b} = ${a * b}; the group has order 13, so reduce mod 13.` },
-      { instruction: `So the shared secret point is $${s}G$. Which point is it?`, answer: tup(S), accept: [], hint: `Look up ${s}G — Bob gets the same point from $bA$.` },
+      { instruction: `So the shared secret point is $${s}G$. Which point is it?`, answer: tup(S), accept: [], hint: `Look up ${s}G: Bob gets the same point from $bA$.` },
     ],
     finalAnswer: { value: tup(S), unit: "" }, solutionNarrative: `$A = ${tup(A)}$, $B = ${tup(B)}$; both sides land on $(ab)G = ${s}G = ${tup(S)}$. An eavesdropper sees $A$ and $B$ but must solve a discrete log to find $a$ or $b$.`,
   };

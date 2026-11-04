@@ -1,6 +1,6 @@
 // gen-geo3-fill.js
 // Parametric generators for geometry.triangle-congruence.
-// One template per (concept, difficulty) tier — 12 total. Self-contained pack:
+// One template per (concept, difficulty) tier: 12 total. Self-contained pack:
 // no imports; exports a `fill` map of template-name -> generator fn, matching
 // the pack pattern of gen-nt2-fill.js. Every answer is computed in-pack from
 // the SAME numbers shown in the prompt.
@@ -96,7 +96,7 @@ fill["geo3-cpctc-1"] = (rng, idx) => {
   return {
     id: `gen.geo3-cpctc-1.${idx}`, generated: true, concepts: ["congruence-and-cpctc"], difficulty: 1, context: "abstract",
     prompt: `$\\triangle ABC \\cong \\triangle DEF$, with $AB = ${a}$, $BC = ${b}$, $CA = ${c}$. Use the letter order to read off parts of $\\triangle DEF$.`,
-    plot: twinTrianglePlot(["A", "B", "C"], ["D", "E", "F"], "△ABC ≅ △DEF — match parts by letter order."),
+    plot: twinTrianglePlot(["A", "B", "C"], ["D", "E", "F"], "△ABC ≅ △DEF: match parts by letter order."),
     steps: [
       { instruction: `Which side of $\\triangle DEF$ corresponds to $AB$? (Type the two letters, e.g. DF.)`, answer: "DE", accept: ["ED"], hint: `First two letters pair with first two letters: $A \\to D$, $B \\to E$.` },
       { instruction: `By CPCTC, what is the length of $DE$?`, answer: `${a}`, accept: [`DE=${a}`], hint: `$DE \\cong AB = ${a}$.` },
@@ -123,7 +123,7 @@ fill["geo3-cpctc-2"] = (rng, idx) => {
   };
 };
 
-// d3: scrambled correspondence △ABC ≅ △PNM — read side and angle across it.
+// d3: scrambled correspondence △ABC ≅ △PNM: read side and angle across it.
 fill["geo3-cpctc-3"] = (rng, idx) => {
   const a = rng.int(5, 16);
   const theta = rng.int(25, 130);
@@ -136,7 +136,7 @@ fill["geo3-cpctc-3"] = (rng, idx) => {
       { instruction: `What is $m\\angle N$ in degrees?`, answer: `${theta}`, accept: [`${theta} degrees`], hint: `$\\angle N$ corresponds to $\\angle B$.` },
     ],
     finalAnswer: { value: `PN = ${a}, m∠N = ${theta}°`, unit: "" },
-    solutionNarrative: `The correspondence is $A \\to P$, $B \\to N$, $C \\to M$, so $PN = ${a}$ and $m\\angle N = ${theta}^\\circ$ — regardless of how the picture is drawn.`,
+    solutionNarrative: `The correspondence is $A \\to P$, $B \\to N$, $C \\to M$, so $PN = ${a}$ and $m\\angle N = ${theta}^\\circ$: regardless of how the picture is drawn.`,
   };
 };
 
@@ -163,11 +163,11 @@ fill["geo3-criteria-1"] = (rng, idx) => {
       { instruction: `Which criterion applies? ${MENU4}`, answer: c.answer, accept: c.accept, hint: sc.why },
     ],
     finalAnswer: { value: c.answer, unit: "" },
-    solutionNarrative: `${sc.desc[0].toUpperCase()}${sc.desc.slice(1)} — that is exactly the ${c.answer} criterion. ${sc.why}`,
+    solutionNarrative: `${sc.desc[0].toUpperCase()}${sc.desc.slice(1)}: that is exactly the ${c.answer} criterion. ${sc.why}`,
   };
 };
 
-// d2: two sides + one angle — included gives SAS, non-included is the SSA trap.
+// d2: two sides + one angle: included gives SAS, non-included is the SSA trap.
 fill["geo3-criteria-2"] = (rng, idx) => {
   const included = rng.pick([true, false]);
   const c = included ? CRIT.SAS : CRIT.NONE;
@@ -179,12 +179,12 @@ fill["geo3-criteria-2"] = (rng, idx) => {
     prompt: `Two triangles have two pairs of sides marked congruent, plus one pair of congruent angles: ${angleDesc}. Decide what can be concluded.`,
     steps: [
       { instruction: `Is the marked angle INCLUDED between the two marked sides? (yes/no)`, answer: included ? "yes" : "no", accept: included ? ["y"] : ["n"], hint: `Included = the angle's vertex is the endpoint the two sides share.` },
-      { instruction: `Which criterion, if any, applies? ${MENU5}`, answer: c.answer, accept: c.accept, hint: included ? `Side, included angle, side.` : `Two sides + non-included angle is SSA — the swinging door.` },
+      { instruction: `Which criterion, if any, applies? ${MENU5}`, answer: c.answer, accept: c.accept, hint: included ? `Side, included angle, side.` : `Two sides + non-included angle is SSA: the swinging door.` },
     ],
     finalAnswer: { value: c.answer, unit: "" },
     solutionNarrative: included
       ? `The angle sits between the two marked sides, so SAS applies.`
-      : `The angle is NOT between the marked sides — this is the SSA pattern, which can produce two different triangles, so nothing can be concluded.`,
+      : `The angle is NOT between the marked sides: this is the SSA pattern, which can produce two different triangles, so nothing can be concluded.`,
   };
 };
 
@@ -251,7 +251,7 @@ fill["geo3-solve-3"] = (rng, idx) => {
   const b = rng.int(1, 6);
   const L = m * x0 + b; // 7..30
   // other two sides: ranges tied to L so the triangle inequality is always
-  // satisfiable (s2 + s3 > L needs s2, s3 near or above L/2 — guaranteed here).
+  // satisfiable (s2 + s3 > L needs s2, s3 near or above L/2: guaranteed here).
   let s2, s3;
   do {
     s2 = rng.int(L - 4, L + 4); s3 = rng.int(L - 4, L + 4);
@@ -278,7 +278,7 @@ fill["geo3-solve-3"] = (rng, idx) => {
 // concept: congruence-proofs
 // ===========================================================================
 
-// d1: shared-diagonal proof — reflexive property, then SSS.
+// d1: shared-diagonal proof: reflexive property, then SSS.
 fill["geo3-proof-1"] = (rng, idx) => {
   const [A, B, C, D] = rng.pick([["A", "B", "C", "D"], ["P", "Q", "R", "S"], ["W", "X", "Y", "Z"]]);
   return {
@@ -289,11 +289,11 @@ fill["geo3-proof-1"] = (rng, idx) => {
       { instruction: `Three side pairs now match. Which criterion? ${MENU4}`, answer: CRIT.SSS.answer, accept: CRIT.SSS.accept, hint: `$${A}${B}/${C}${B}$, $${A}${D}/${C}${D}$, and the shared $${B}${D}$.` },
     ],
     finalAnswer: { value: "reflexive property; SSS", unit: "" },
-    solutionNarrative: `The shared diagonal $${B}${D}$ is congruent to itself by the reflexive property, giving three side pairs — SSS.`,
+    solutionNarrative: `The shared diagonal $${B}${D}$ is congruent to itself by the reflexive property, giving three side pairs: SSS.`,
   };
 };
 
-// d2: butterfly proof — vertical angles, SAS, CPCTC.
+// d2: butterfly proof: vertical angles, SAS, CPCTC.
 fill["geo3-proof-2"] = (rng, idx) => {
   const [A, B, C, D, X] = rng.pick([["A", "B", "C", "D", "X"], ["P", "Q", "R", "S", "M"], ["J", "K", "L", "N", "O"]]);
   return {
@@ -302,7 +302,7 @@ fill["geo3-proof-2"] = (rng, idx) => {
     plot: butterflyPlot(A, B, C, D, X),
     steps: [
       { instruction: `Statement: $\\angle ${A}${X}${B} \\cong \\angle ${C}${X}${D}$. Reason? ${RMENU}`, answer: REASON.vertical.answer, accept: REASON.vertical.accept, hint: `Opposite angles at the crossing point $${X}$.` },
-      { instruction: `Two side pairs with the included angle pair — which criterion? ${MENU4}`, answer: CRIT.SAS.answer, accept: CRIT.SAS.accept, hint: `The angle at $${X}$ sits between $${A}${X}$ and $${B}${X}$.` },
+      { instruction: `Two side pairs with the included angle pair, which criterion? ${MENU4}`, answer: CRIT.SAS.answer, accept: CRIT.SAS.accept, hint: `The angle at $${X}$ sits between $${A}${X}$ and $${B}${X}$.` },
       { instruction: `Which reason justifies $${A}${B} \\cong ${C}${D}$? ${RMENU}`, answer: REASON.cpctc.answer, accept: REASON.cpctc.accept, hint: `Corresponding parts, after the congruence is sealed.` },
     ],
     finalAnswer: { value: "vertical angles; SAS; CPCTC", unit: "" },
@@ -310,7 +310,7 @@ fill["geo3-proof-2"] = (rng, idx) => {
   };
 };
 
-// d3: midpoint proof with a numeric CPCTC transfer — 4 steps.
+// d3: midpoint proof with a numeric CPCTC transfer: 4 steps.
 fill["geo3-proof-3"] = (rng, idx) => {
   const k = rng.int(4, 15);
   return {

@@ -32,7 +32,7 @@ export const fill = {};
 // exponents  (power-rules d1, scientific-notation d1 & d3)
 // ============================================================================
 
-// d1: power of a power — one rule, one step.
+// d1: power of a power; one rule, one step.
 fill["apl-power-rules-d1"] = (rng, idx) => {
   const v = rng.pick(["x", "y", "m"]);
   const [a, b] = rng.pick([[2, 2], [2, 3], [3, 2], [2, 4], [4, 2]]);
@@ -118,7 +118,7 @@ fill["apl-gcf-d3"] = (rng, idx) => {
   };
 };
 
-// d3: difference of squares hiding behind a GCF — factor completely in stages.
+// d3: difference of squares hiding behind a GCF; factor completely in stages.
 const DSQ_PAIRS = [[2, 3], [3, 4], [2, 5], [3, 5], [4, 5], [2, 7], [5, 6], [3, 7]];
 fill["apl-diff-squares-d3"] = (rng, idx) => {
   const g = rng.pick([2, 3, 5]);
@@ -225,7 +225,7 @@ fill["apl-interval-d3"] = (rng, idx) => {
     prompt: `Solve $\\frac{x}{${k}} - ${m} ${OP_LATEX[op]} ${c}$ and write the solution as an inequality. (In interval notation this is $${iv}$.)`,
     steps: [
       { instruction: `Add ${m} to both sides.`, answer: `x/${k} ${op} ${e}`, accept: [], hint: `Undo the $-${m}$ first: $${c} + ${m} = ${e}$.` },
-      { instruction: `Multiply both sides by ${k}. (Multiplying by a positive number does NOT flip the sign.)`, answer: `x ${op} ${E}`, accept: [`${E} ${OP_FLIP[op]} x`], hint: `${op === "<=" || op === ">=" ? `The endpoint ${E} is included — square bracket` : `The endpoint ${E} is NOT included — round parenthesis`} in $${iv}$.` },
+      { instruction: `Multiply both sides by ${k}. (Multiplying by a positive number does NOT flip the sign.)`, answer: `x ${op} ${E}`, accept: [`${E} ${OP_FLIP[op]} x`], hint: `${op === "<=" || op === ">=" ? `The endpoint ${E} is included, square bracket` : `The endpoint ${E} is NOT included, round parenthesis`} in $${iv}$.` },
     ],
     finalAnswer: { value: `x ${op} ${E}`, unit: "" },
     solutionNarrative: `Adding ${m} gives $\\frac{x}{${k}} ${OP_LATEX[op]} ${e}$; multiplying by ${k} (positive, no flip) gives $x ${OP_LATEX[op]} ${E}$, or $${iv}$.`,
@@ -285,7 +285,7 @@ fill["apl-poly-addsub-d3"] = (rng, idx) => {
   };
 };
 
-// d3: applied — expand an area, then state degree and classification.
+// d3: applied; expand an area, then state degree and classification.
 const AREA_CTX = [
   { thing: "banner", unit: "feet" },
   { thing: "patio slab", unit: "feet" },
@@ -388,7 +388,7 @@ fill["apl-quad-factor-d1"] = (rng, idx) => {
   };
 };
 
-// d3: applied projectile — divide out -16, factor, keep the physical root.
+// d3: applied projectile; divide out -16, factor, keep the physical root.
 const LAUNCH_CTX = [
   { obj: "ball", place: "ledge" },
   { obj: "rock", place: "cliff" },
@@ -436,7 +436,7 @@ fill["apl-sqrt-method-d3"] = (rng, idx) => {
 // Shared count-words for discriminant answers.
 const COUNT_ACCEPT = { none: ["0", "zero"], one: ["1"], two: ["2"] };
 
-// d2: how many real solutions — all three discriminant signs.
+// d2: how many real solutions; all three discriminant signs.
 fill["apl-discriminant-d2"] = (rng, idx) => {
   const kind = rng.pick(["two", "one", "none"]);
   const sign = rng.pick([1, -1]);
@@ -492,10 +492,10 @@ fill["apl-discriminant-d3"] = (rng, idx) => {
     prompt: `${who} profit (in thousands of dollars) at price $x$ is modeled by $-${a}x^2 + ${Bp}x - ${Cp}$. Break-even is where profit $= 0$: $${a}x^2 - ${Bp}x + ${Cp} = 0$. Use the discriminant to decide how many break-even prices exist.`,
     steps: [
       { instruction: `Compute the discriminant $b^2 - 4ac$ for $${a}x^2 - ${Bp}x + ${Cp} = 0$ (here $a=${a}$, $b=-${Bp}$, $c=${Cp}$).`, answer: `${D}`, accept: [], hint: `$(-${Bp})^2 - 4(${a})(${Cp}) = ${Bp * Bp} - ${4 * a * Cp}$.` },
-      { instruction: "How many real break-even prices are there? Type 'two', 'one', or 'none'.", answer: kind, accept: COUNT_ACCEPT[kind], hint: kind === "none" ? "A negative discriminant means no real solutions — the business never breaks even." : kind === "one" ? "A zero discriminant means the profit curve just touches zero once." : "A positive discriminant means the profit curve crosses zero twice." },
+      { instruction: "How many real break-even prices are there? Type 'two', 'one', or 'none'.", answer: kind, accept: COUNT_ACCEPT[kind], hint: kind === "none" ? "A negative discriminant means no real solutions: the business never breaks even." : kind === "one" ? "A zero discriminant means the profit curve just touches zero once." : "A positive discriminant means the profit curve crosses zero twice." },
     ],
     finalAnswer: { value: kind, unit: "" },
-    solutionNarrative: `Discriminant $= ${Bp * Bp} - ${4 * a * Cp} = ${D}$, which is ${D > 0 ? "positive" : D === 0 ? "zero" : "negative"} — ${phrase}.`,
+    solutionNarrative: `Discriminant $= ${Bp * Bp} - ${4 * a * Cp} = ${D}$, which is ${D > 0 ? "positive" : D === 0 ? "zero" : "negative"}: ${phrase}.`,
   };
 };
 
@@ -592,7 +592,7 @@ fill["apl-proportion-d3"] = (rng, idx) => {
   };
 };
 
-// d3: reverse percent — the part is known, find the whole.
+// d3: reverse percent; the part is known, find the whole.
 const PCT_CTX = [
   { a: "A salesperson earned a", pn: "commission", wn: "total sales" },
   { a: "A museum collected a", pn: "single donation", wn: "annual fund" },
@@ -613,7 +613,7 @@ fill["apl-percent-of-d3"] = (rng, idx) => {
       { instruction: `Solve for $x$ by dividing both sides by ${dec}.`, answer: `x = ${W}`, accept: [`${W}`], hint: `${part} ÷ ${dec}.` },
     ],
     finalAnswer: { value: `${W}`, unit: "dollars" },
-    solutionNarrative: `$${dec}x = ${part}$, so $x = ${part} \\div ${dec} = \\$${W}$ — the ${ctx.wn}.`,
+    solutionNarrative: `$${dec}x = ${part}$, so $x = ${part} \\div ${dec} = \\$${W}$, the ${ctx.wn}.`,
   };
 };
 
@@ -664,12 +664,12 @@ fill["apl-abs-value-d3"] = (rng, idx) => {
     id: `gen.apl-abs-value-d3.${idx}`, generated: true, concepts: ["absolute-value"], difficulty: 3, context: "applied",
     prompt: `${ctx.duo}: one is at $${a}$ ${ctx.unit} and the other at $${b}$ ${ctx.unit}. How far apart are the two readings?`,
     steps: [
-      { instruction: `Compute the difference $${a} - ${b}$.`, answer: `${a - b}`, accept: [], hint: `$${a} - ${b} = ${a - b}$ — negative, because we subtracted the larger value.` },
-      { instruction: `The distance between them is the absolute value $|${a - b}|$. Evaluate it.`, answer: `${diff}`, accept: [`|${a - b}|`], hint: "Distance is never negative — drop the sign." },
-      { instruction: `A sensor sits exactly halfway between the two. What is its ${ctx.noun}? (Average the two values.)`, answer: `${mid}`, accept: [], hint: `$(${a} + ${b}) \\div 2$ — mind the signs.` },
+      { instruction: `Compute the difference $${a} - ${b}$.`, answer: `${a - b}`, accept: [], hint: `$${a} - ${b} = ${a - b}$: negative, because we subtracted the larger value.` },
+      { instruction: `The distance between them is the absolute value $|${a - b}|$. Evaluate it.`, answer: `${diff}`, accept: [`|${a - b}|`], hint: "Distance is never negative: drop the sign." },
+      { instruction: `A sensor sits exactly halfway between the two. What is its ${ctx.noun}? (Average the two values.)`, answer: `${mid}`, accept: [], hint: `$(${a} + ${b}) \\div 2$: mind the signs.` },
     ],
     finalAnswer: { value: `${diff}`, unit: ctx.unit },
-    solutionNarrative: `$|${a} - ${b}| = |${a - b}| = ${diff}$ ${ctx.unit} apart. The halfway point is $(${a} + ${b})/2 = ${mid}$ ${ctx.unit} — note the distance uses the absolute value, but the midpoint keeps its sign.`,
+    solutionNarrative: `$|${a} - ${b}| = |${a - b}| = ${diff}$ ${ctx.unit} apart. The halfway point is $(${a} + ${b})/2 = ${mid}$ ${ctx.unit}: note the distance uses the absolute value, but the midpoint keeps its sign.`,
   };
 };
 
@@ -740,12 +740,12 @@ fill["apl-classify-d1"] = (rng, idx) => {
     id: `gen.apl-classify-d1.${idx}`, generated: true, concepts: ["classify-solution"], difficulty: 1, context: "abstract",
     prompt: `How many solutions does this system have? $\\begin{cases} ${line1} \\\\ ${line2} \\end{cases}$`,
     steps: [
-      { instruction: "Set the two right-hand sides equal (both equal $y$) and simplify. What statement results?", answer: `${b1} = ${b1}`, accept: ["0 = 0"], hint: `$${mx} ${sgnC(b1)} = ${b1} ${m < 0 ? `- ${coefTerm(-m, "x")}` : `+ ${coefTerm(m, "x")}`}$ — the $x$ terms cancel.` },
+      { instruction: "Set the two right-hand sides equal (both equal $y$) and simplify. What statement results?", answer: `${b1} = ${b1}`, accept: ["0 = 0"], hint: `$${mx} ${sgnC(b1)} = ${b1} ${m < 0 ? `- ${coefTerm(-m, "x")}` : `+ ${coefTerm(m, "x")}`}$: the $x$ terms cancel.` },
       { instruction: "Is that statement always true? Type 'true' or 'false'.", answer: "true", accept: ["t"], hint: `Does $${b1} = ${b1}$ always hold?` },
       { instruction: "So how many solutions? Type 'none', 'one', or 'infinite'.", answer: "infinite", accept: ["infinitely many", "many"], hint: "The two equations describe the same line, just written in a different order." },
     ],
     finalAnswer: { value: "infinite", unit: "" },
-    solutionNarrative: `The second equation is the first with its terms reordered — the same line. Setting them equal gives $${b1} = ${b1}$, always true: infinitely many solutions.`,
+    solutionNarrative: `The second equation is the first with its terms reordered: the same line. Setting them equal gives $${b1} = ${b1}$, always true: infinitely many solutions.`,
   };
 };
 
@@ -765,18 +765,18 @@ fill["apl-classify-d2"] = (rng, idx) => {
     id: `gen.apl-classify-d2.${idx}`, generated: true, concepts: ["classify-solution"], difficulty: 2, context: "abstract",
     prompt: `How many solutions does this system have? $\\begin{cases} ${line1} \\\\ ${eq2} \\end{cases}$`,
     steps: [
-      { instruction: `Substitute $${line1.replace("y = ", "y = ")}$ into $${eq2}$ and simplify completely. What statement results?`, answer: stmt, accept: isInf ? ["0 = 0"] : [`0 = ${k * d}`, `${k * d} = 0`], hint: `$${k * aa}x + ${k}(${coefTerm(-aa, "x")} + ${c}) = ${k * c2}$ — watch the $x$ terms cancel.` },
+      { instruction: `Substitute $${line1.replace("y = ", "y = ")}$ into $${eq2}$ and simplify completely. What statement results?`, answer: stmt, accept: isInf ? ["0 = 0"] : [`0 = ${k * d}`, `${k * d} = 0`], hint: `$${k * aa}x + ${k}(${coefTerm(-aa, "x")} + ${c}) = ${k * c2}$: watch the $x$ terms cancel.` },
       { instruction: "Is that statement always true? Type 'true' or 'false'.", answer: isInf ? "true" : "false", accept: [isInf ? "t" : "f"], hint: `Does $${stmt}$ hold?` },
-      { instruction: "So how many solutions? Type 'none', 'one', or 'infinite'.", answer: isInf ? "infinite" : "none", accept: isInf ? ["infinitely many", "many"] : ["no solution", "0", "zero"], hint: isInf ? "The two equations are the same line." : "The lines are parallel — they never meet." },
+      { instruction: "So how many solutions? Type 'none', 'one', or 'infinite'.", answer: isInf ? "infinite" : "none", accept: isInf ? ["infinitely many", "many"] : ["no solution", "0", "zero"], hint: isInf ? "The two equations are the same line." : "The lines are parallel: they never meet." },
     ],
     finalAnswer: { value: isInf ? "infinite" : "none", unit: "" },
     solutionNarrative: isInf
-      ? `Substituting makes the $x$ terms cancel: $${k * c} = ${k * c}$, always true — the second equation is just ${k} times the first, so infinitely many solutions.`
-      : `Substituting makes the $x$ terms cancel: $${k * c} = ${k * c2}$, false — the lines are parallel, so no solution.`,
+      ? `Substituting makes the $x$ terms cancel: $${k * c} = ${k * c}$, always true: the second equation is just ${k} times the first, so infinitely many solutions.`
+      : `Substituting makes the $x$ terms cancel: $${k * c} = ${k * c2}$, false: the lines are parallel, so no solution.`,
   };
 };
 
-// d3: applied classify — plans with the same rate (none) or a rescaled sheet (infinite).
+// d3: applied classify; plans with the same rate (none) or a rescaled sheet (infinite).
 const PLAN_CTX3 = [
   { item: "ride service", per: "mile", fee: "pickup fee" },
   { item: "moving crew", per: "hour", fee: "truck fee" },
@@ -794,7 +794,7 @@ fill["apl-classify-d3"] = (rng, idx) => {
       steps: [
         { instruction: "Set the two costs equal and simplify. What statement results?", answer: `0 = ${F}`, accept: [`${m}x = ${m}x + ${F}`, `${F} = 0`], hint: `$${m}x = ${m}x + ${F}$; subtract $${m}x$.` },
         { instruction: "Is that true or false? Type 'true' or 'false'.", answer: "false", accept: ["f"], hint: `Can 0 equal ${F}?` },
-        { instruction: "So how many usages make them equal? Type 'none', 'one', or 'infinite'.", answer: "none", accept: ["no solution", "0", "zero"], hint: `Same per-${ctx.per} rate, different ${ctx.fee} — B is always \\$${F} more.` },
+        { instruction: "So how many usages make them equal? Type 'none', 'one', or 'infinite'.", answer: "none", accept: ["no solution", "0", "zero"], hint: `Same per-${ctx.per} rate, different ${ctx.fee}: B is always \\$${F} more.` },
       ],
       finalAnswer: { value: "none", unit: "" },
       solutionNarrative: `Both grow at \\$${m}/${ctx.per} but B starts \\$${F} higher, so $0 = ${F}$ (false): they're never equal.`,
@@ -806,12 +806,12 @@ fill["apl-classify-d3"] = (rng, idx) => {
     id: `gen.apl-classify-d3.${idx}`, generated: true, concepts: ["classify-solution"], difficulty: 3, context: "applied",
     prompt: `A ${ctx.item}'s price sheet lists the same plan two ways: $y = ${m}x + ${f}$ and $${k}y = ${k * m}x + ${k * f}$ (total cost $y$ for $x$ ${ctx.per}s). How many $(x, y)$ pairs satisfy both equations?`,
     steps: [
-      { instruction: `Substitute $y = ${m}x + ${f}$ into the second equation and simplify completely. What statement results?`, answer: `${k * f} = ${k * f}`, accept: ["0 = 0"], hint: `$${k}(${m}x + ${f}) = ${k * m}x + ${k * f}$ — the $x$ terms cancel.` },
+      { instruction: `Substitute $y = ${m}x + ${f}$ into the second equation and simplify completely. What statement results?`, answer: `${k * f} = ${k * f}`, accept: ["0 = 0"], hint: `$${k}(${m}x + ${f}) = ${k * m}x + ${k * f}$: the $x$ terms cancel.` },
       { instruction: "Is that statement always true? Type 'true' or 'false'.", answer: "true", accept: ["t"], hint: `Does $${k * f} = ${k * f}$ always hold?` },
-      { instruction: "So how many solutions? Type 'none', 'one', or 'infinite'.", answer: "infinite", accept: ["infinitely many", "many"], hint: `The second equation is just the first multiplied by ${k} — the same line.` },
+      { instruction: "So how many solutions? Type 'none', 'one', or 'infinite'.", answer: "infinite", accept: ["infinitely many", "many"], hint: `The second equation is just the first multiplied by ${k}: the same line.` },
     ],
     finalAnswer: { value: "infinite", unit: "" },
-    solutionNarrative: `The second equation is ${k} times the first, so every point on the line satisfies both: $${k * f} = ${k * f}$ (always true) — infinitely many solutions.`,
+    solutionNarrative: `The second equation is ${k} times the first, so every point on the line satisfies both: $${k * f} = ${k * f}$ (always true): infinitely many solutions.`,
   };
 };
 
@@ -931,7 +931,7 @@ fill["apl-combine-terms-d2"] = (rng, idx) => {
   };
 };
 
-// d2: applied — undo a division and an addition to isolate x.
+// d2: applied; undo a division and an addition to isolate x.
 const SPLIT_CTX = [
   { group: "friends", bill: "dinner bill", extra: "tip share" },
   { group: "roommates", bill: "utility bill", extra: "late-fee share" },
@@ -1239,7 +1239,7 @@ fill["apl-substitution-d3"] = (rng, idx) => {
     id: `gen.apl-substitution-d3.${idx}`, generated: true, concepts: ["substitution"], difficulty: 3, context: "abstract",
     prompt: `Solve: $\\begin{cases} x = ${a}y ${sgnC(b)} \\\\ ${c}x + ${coefTerm(d, "y")} = ${e} \\end{cases}$`,
     steps: [
-      { instruction: `Substitute $x = ${a}y ${sgnC(b)}$ into the second equation and simplify to $(\\text{number})y = (\\text{number})$.`, answer: `${K}y = ${M}`, accept: [`${M} = ${K}y`], hint: `$${c}(${a}y ${sgnC(b)}) + ${coefTerm(d, "y")} = ${e}$ — distribute, then combine and move the constant.` },
+      { instruction: `Substitute $x = ${a}y ${sgnC(b)}$ into the second equation and simplify to $(\\text{number})y = (\\text{number})$.`, answer: `${K}y = ${M}`, accept: [`${M} = ${K}y`], hint: `$${c}(${a}y ${sgnC(b)}) + ${coefTerm(d, "y")} = ${e}$: distribute, then combine and move the constant.` },
       { instruction: "Solve for $y$.", answer: `y = ${y0}`, accept: [`${y0}`], hint: `Divide by ${K}.` },
       { instruction: `Find $x$ using $x = ${a}y ${sgnC(b)}$.`, answer: `x = ${x0}`, accept: [`${x0}`], hint: `$x = ${a}(${y0}) ${sgnC(b)}$.` },
       { instruction: "Write the solution as an ordered pair.", answer: `(${x0}, ${y0})`, accept: [`x=${x0}, y=${y0}`, `${x0},${y0}`], hint: "(x, y)." },

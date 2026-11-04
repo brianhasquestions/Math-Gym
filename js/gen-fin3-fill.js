@@ -1,7 +1,7 @@
 // gen-fin3-fill.js
 // Parametric generators for the wave-14 Financial Mathematics topic:
 //   financial-mathematics.perpetuities
-// One template per (concept, difficulty) tier — 12 total. Self-contained: no
+// One template per (concept, difficulty) tier: 12 total. Self-contained: no
 // imports from generator.js. Exports a `fill` map of template-name -> generator
 // fn, matching the pack pattern of gen-nt2-fill.js. Every answer is COMPUTED
 // in-pack from the SAME numbers shown in the prompt. All rate arithmetic is
@@ -55,11 +55,11 @@ fill["fm3-level-1"] = (rng, idx) => {
       { instruction: `Compute $PV = \\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PV), accept: moneyAccepts(PV), hint: `Dividing by ${rateStr(iP)} is multiplying by ${100 / iP}.` },
     ],
     finalAnswer: { value: money(PV), unit: "dollars" },
-    solutionNarrative: `$PV = \\dfrac{${C}}{${rateStr(iP)}} = \\$${disp(PV)}$ — a finite price for an infinite stream, because distant payments are worth almost nothing today.`,
+    solutionNarrative: `$PV = \\dfrac{${C}}{${rateStr(iP)}} = \\$${disp(PV)}$: a finite price for an infinite stream, because distant payments are worth almost nothing today.`,
   };
 };
 
-// d2: monthly perpetuity — convert the annual rate first.
+// d2: monthly perpetuity: convert the annual rate first.
 fill["fm3-level-2"] = (rng, idx) => {
   const annualP = rng.pick([6, 12]);          // monthly rate 0.005 or 0.01
   const im = annualP / 1200;                  // exact in binary-safe integers: 6/1200, 12/1200
@@ -78,7 +78,7 @@ fill["fm3-level-2"] = (rng, idx) => {
   };
 };
 
-// d3: endowment — PV, first-year interest, principal intact.
+// d3: endowment: PV, first-year interest, principal intact.
 fill["fm3-level-3"] = (rng, idx) => {
   const iP = rng.pick([4, 5, 8]);
   const k = rng.int(10, 60);
@@ -89,11 +89,11 @@ fill["fm3-level-3"] = (rng, idx) => {
     prompt: `A donor wants to endow a \\$${C}-per-year prize forever, with the fund earning ${iP}\\% per year and the prize paid from interest at the end of each year. Find the required endowment, the interest earned in year one, and the fund balance after the first prize is paid. Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Required endowment $PV = \\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PV), accept: moneyAccepts(PV), hint: `Level perpetuity: $C/i$.` },
-      { instruction: `Interest earned in year one: $PV \\times ${rateStr(iP)}$. Enter a number.`, answer: money(C), accept: moneyAccepts(C), hint: `It exactly equals the prize — that is the whole design.` },
+      { instruction: `Interest earned in year one: $PV \\times ${rateStr(iP)}$. Enter a number.`, answer: money(C), accept: moneyAccepts(C), hint: `It exactly equals the prize: that is the whole design.` },
       { instruction: `Balance after paying the \\$${C} prize: $${disp(PV)} + ${disp(C)} - ${disp(C)}$. Enter a number.`, answer: money(PV), accept: moneyAccepts(PV), hint: `Interest in, prize out: the principal never shrinks.` },
     ],
     finalAnswer: { value: money(PV), unit: "dollars" },
-    solutionNarrative: `$PV = ${disp(PV)}$; year-one interest is $PV \\cdot i = \\$${disp(C)}$, which funds the prize exactly, leaving the principal untouched — a perpetuity is self-sustaining by construction.`,
+    solutionNarrative: `$PV = ${disp(PV)}$; year-one interest is $PV \\cdot i = \\$${disp(C)}$, which funds the prize exactly, leaving the principal untouched: a perpetuity is self-sustaining by construction.`,
   };
 };
 
@@ -111,14 +111,14 @@ fill["fm3-due-1"] = (rng, idx) => {
     prompt: `A ground lease pays \\$${C} at the BEGINNING of each year, forever, at ${iP}\\% per year. Compute the ordinary perpetuity value first, then multiply by $(1 + i)$ for the perpetuity-due. Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Ordinary value: $\\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PV0), accept: moneyAccepts(PV0), hint: `End-of-year version first.` },
-      { instruction: `Multiply by $(1 + ${rateStr(iP)})$. Enter a number.`, answer: money(due), accept: moneyAccepts(due), hint: `$${disp(PV0)} \\times ${1 + iP / 100}$ — equivalently the ordinary value plus one payment.` },
+      { instruction: `Multiply by $(1 + ${rateStr(iP)})$. Enter a number.`, answer: money(due), accept: moneyAccepts(due), hint: `$${disp(PV0)} \\times ${1 + iP / 100}$: equivalently the ordinary value plus one payment.` },
     ],
     finalAnswer: { value: money(due), unit: "dollars" },
-    solutionNarrative: `Ordinary $PV = \\$${disp(PV0)}$; paid up front, the stream is worth $${disp(PV0)} \\times ${1 + iP / 100} = \\$${disp(due)}$ — exactly one extra payment of \\$${C}, since the first one arrives today undiscounted.`,
+    solutionNarrative: `Ordinary $PV = \\$${disp(PV0)}$; paid up front, the stream is worth $${disp(PV0)} \\times ${1 + iP / 100} = \\$${disp(due)}$: exactly one extra payment of \\$${C}, since the first one arrives today undiscounted.`,
   };
 };
 
-// d2: deferred perpetuity — discount C/i back m years with a STATED factor.
+// d2: deferred perpetuity: discount C/i back m years with a STATED factor.
 fill["fm3-due-2"] = (rng, idx) => {
   let iP, m, k, Fint;
   do {
@@ -143,7 +143,7 @@ fill["fm3-due-2"] = (rng, idx) => {
   };
 };
 
-// d3: ordinary vs due — the difference is exactly one payment.
+// d3: ordinary vs due: the difference is exactly one payment.
 fill["fm3-due-3"] = (rng, idx) => {
   const iP = rng.pick([4, 5, 8, 10]);
   const k = rng.int(5, 20);
@@ -159,7 +159,7 @@ fill["fm3-due-3"] = (rng, idx) => {
       { instruction: `Premium $= Y - X$. Enter a number.`, answer: money(C), accept: moneyAccepts(C), hint: `It equals one full payment.` },
     ],
     finalAnswer: { value: money(C), unit: "dollars" },
-    solutionNarrative: `X is worth \\$${disp(PV0)} and Y is worth \\$${disp(due)}. The gap is exactly \\$${C} — the first payment of Y arrives today and is not discounted at all, while every later payment matches X one-for-one.`,
+    solutionNarrative: `X is worth \\$${disp(PV0)} and Y is worth \\$${disp(due)}. The gap is exactly \\$${C}: the first payment of Y arrives today and is not discounted at all, while every later payment matches X one-for-one.`,
   };
 };
 
@@ -185,7 +185,7 @@ fill["fm3-grow-1"] = (rng, idx) => {
   };
 };
 
-// d2: last payment just made — grow it one step first.
+// d2: last payment just made: grow it one step first.
 fill["fm3-grow-2"] = (rng, idx) => {
   const gP = rng.pick([2, 5, 10]);
   const sP = rng.pick([4, 5]);
@@ -207,7 +207,7 @@ fill["fm3-grow-2"] = (rng, idx) => {
   };
 };
 
-// d3: implied required return — i = C/PV + g.
+// d3: implied required return: i = C/PV + g.
 fill["fm3-grow-3"] = (rng, idx) => {
   const gP = rng.pick([1, 2, 3]);
   const sP = rng.pick([2, 4, 5]);
@@ -242,11 +242,11 @@ fill["fm3-app-1"] = (rng, idx) => {
       { instruction: `Price $= \\dfrac{${money(D)}}{${rateStr(iP)}}$. Enter a number.`, answer: money(P), accept: moneyAccepts(P), hint: `Dividend over required return.` },
     ],
     finalAnswer: { value: money(P), unit: "dollars" },
-    solutionNarrative: `Price $= \\dfrac{${money(D)}}{${rateStr(iP)}} = \\$${disp(P)}$ — preferred stock is the textbook real-world perpetuity: a fixed dividend with no maturity date.`,
+    solutionNarrative: `Price $= \\dfrac{${money(D)}}{${rateStr(iP)}} = \\$${disp(P)}$: preferred stock is the textbook real-world perpetuity: a fixed dividend with no maturity date.`,
   };
 };
 
-// d2: cap rate — rate from NOI/price, then revalue at a different cap rate.
+// d2: cap rate: rate from NOI/price, then revalue at a different cap rate.
 fill["fm3-app-2"] = (rng, idx) => {
   let k, r1P, r2P, price, NOI, v2;
   do {
@@ -259,17 +259,17 @@ fill["fm3-app-2"] = (rng, idx) => {
   } while (!Number.isInteger(v2));
   return {
     id: `gen.fm3-app-2.${idx}`, generated: true, concepts: ["perpetuity-applications"], difficulty: 2, context: "applied",
-    prompt: `A rental building sells for \\$${price} and produces a net operating income (NOI) of \\$${NOI} per year. Its cap rate is $\\text{NOI}/\\text{price}$ — exactly the perpetuity rate $i = C/PV$. Find the cap rate, then what the building would fetch if the market cap rate moved to ${r2P}\\%.`,
+    prompt: `A rental building sells for \\$${price} and produces a net operating income (NOI) of \\$${NOI} per year. Its cap rate is $\\text{NOI}/\\text{price}$: exactly the perpetuity rate $i = C/PV$. Find the cap rate, then what the building would fetch if the market cap rate moved to ${r2P}\\%.`,
     steps: [
       { instruction: `Cap rate $= \\dfrac{${NOI}}{${price}}$. Enter as a percent number (e.g. enter 6 for 6%).`, answer: `${r1P}`, accept: [], hint: `Divide, then multiply by 100.` },
       { instruction: `Revalue at a ${r2P}\\% cap rate: $\\dfrac{${NOI}}{${rateStr(r2P)}}$. Enter a number, no \\$ or commas.`, answer: money(v2), accept: moneyAccepts(v2), hint: `Same income, new perpetuity rate.` },
     ],
     finalAnswer: { value: money(v2), unit: "dollars" },
-    solutionNarrative: `Cap rate $= ${NOI}/${price} = ${r1P}\\%$. At a ${r2P}\\% cap rate the same \\$${NOI} income is worth $\\dfrac{${NOI}}{${rateStr(r2P)}} = \\$${disp(v2)}$ — ${r2P < r1P ? "lower rates inflate" : "higher rates deflate"} property values, exactly as $C/i$ predicts.`,
+    solutionNarrative: `Cap rate $= ${NOI}/${price} = ${r1P}\\%$. At a ${r2P}\\% cap rate the same \\$${NOI} income is worth $\\dfrac{${NOI}}{${rateStr(r2P)}} = \\$${disp(v2)}$: ${r2P < r1P ? "lower rates inflate" : "higher rates deflate"} property values, exactly as $C/i$ predicts.`,
   };
 };
 
-// d3: growing endowment — cost with growth vs level, and the premium.
+// d3: growing endowment: cost with growth vs level, and the premium.
 fill["fm3-app-3"] = (rng, idx) => {
   let gP, sP, iP, k, C, PVgrow, PVlevel;
   do {

@@ -2,7 +2,7 @@
 // Parametric generators for two wave-14 Differential Equations topics:
 //   differential-equations.exact-equations
 //   differential-equations.variation-of-parameters
-// One template per (concept, difficulty) tier — 12 per topic, 24 total.
+// One template per (concept, difficulty) tier: 12 per topic, 24 total.
 // Self-contained: no imports from generator.js. Exports a `fill` map of
 // template-name -> generator fn (template prefix `def4-`), matching the pack
 // pattern of gen-nt2-fill.js. Every answer is computed in-pack from the SAME
@@ -49,7 +49,7 @@ export const fill = {};
 
 // --- exactness-test ---
 
-// d1: M = a y + b x, N = c x + d y — partials are constants.
+// d1: M = a y + b x, N = c x + d y: partials are constants.
 fill["def4-exactness-test-d1"] = (rng, idx) => {
   const a = rng.int(2, 6), b = rng.int(1, 5), d = rng.int(1, 5);
   const exact = rng.int(0, 1) === 1;
@@ -66,11 +66,11 @@ fill["def4-exactness-test-d1"] = (rng, idx) => {
       { instruction: `Compare the two partials. Type exactly 'exact' or 'not exact'.`, answer: verdict, accept: [], hint: exact ? `Both equal $${a}$.` : `$${a} \\neq ${c}$.` },
     ],
     finalAnswer: { value: verdict, unit: "" },
-    solutionNarrative: `$M_y = ${a}$ and $N_x = ${c}$ — ${exact ? "equal, so the equation is exact" : "unequal, so the equation is not exact"}.`,
+    solutionNarrative: `$M_y = ${a}$ and $N_x = ${c}$: ${exact ? "equal, so the equation is exact" : "unequal, so the equation is not exact"}.`,
   };
 };
 
-// d2: M = 2a x y + b, N = c x^2 + d y — partials are linear in x.
+// d2: M = 2a x y + b, N = c x^2 + d y: partials are linear in x.
 fill["def4-exactness-test-d2"] = (rng, idx) => {
   const a = rng.int(1, 4), b = rng.int(1, 6), d = rng.int(1, 5);
   const exact = rng.int(0, 1) === 1;
@@ -87,11 +87,11 @@ fill["def4-exactness-test-d2"] = (rng, idx) => {
       { instruction: `Compare. Type exactly 'exact' or 'not exact'.`, answer: verdict, accept: [], hint: exact ? `Both partials equal $${mono(2 * a, 1)}$.` : `$${mono(2 * a, 1)} \\neq ${mono(2 * c, 1)}$.` },
     ],
     finalAnswer: { value: verdict, unit: "" },
-    solutionNarrative: `$M_y = ${mono(2 * a, 1)}$ and $N_x = ${mono(2 * c, 1)}$ — ${exact ? "equal, so exact" : "unequal, so not exact"}.`,
+    solutionNarrative: `$M_y = ${mono(2 * a, 1)}$ and $N_x = ${mono(2 * c, 1)}$: ${exact ? "equal, so exact" : "unequal, so not exact"}.`,
   };
 };
 
-// d3: M = 3a x^2 y + b y, N = c x^3 + e x — subtle single-spot mismatch.
+// d3: M = 3a x^2 y + b y, N = c x^3 + e x: subtle single-spot mismatch.
 fill["def4-exactness-test-d3"] = (rng, idx) => {
   const a = rng.int(1, 3), b = rng.int(1, 5);
   const exact = rng.int(0, 1) === 1;
@@ -102,14 +102,14 @@ fill["def4-exactness-test-d3"] = (rng, idx) => {
   const verdict = exact ? "exact" : "not exact";
   return {
     id: `gen.def4-exactness-test-d3.${idx}`, generated: true, concepts: ["exactness-test"], difficulty: 3, context: "abstract",
-    prompt: `Test whether $(${co(3 * a)}x^2y + ${b}y)\\,dx + (${co(c)}x^3 + ${e}x)\\,dy = 0$ is exact. (Look closely — the mismatch, if any, is subtle.)`,
+    prompt: `Test whether $(${co(3 * a)}x^2y + ${b}y)\\,dx + (${co(c)}x^3 + ${e}x)\\,dy = 0$ is exact. (Look closely: the mismatch, if any, is subtle.)`,
     steps: [
       { instruction: `Compute $\\partial M/\\partial y$ for $M = ${co(3 * a)}x^2y + ${b}y$.`, answer: joinTerms([mono(3 * a, 2), `${b}`]), accept: [], hint: `Every term of $M$ contains $y$ to the first power.` },
       { instruction: `Compute $\\partial N/\\partial x$ for $N = ${co(c)}x^3 + ${e}x$.`, answer: joinTerms([mono(3 * c, 2), `${e}`]), accept: [], hint: `Power rule on each term.` },
       { instruction: `Compare term by term. Type exactly 'exact' or 'not exact'.`, answer: verdict, accept: [], hint: exact ? `Both partials are $${joinTerms([mono(3 * a, 2), `${b}`])}$.` : `The $x^2$ parts match but the constants differ: $${b} \\neq ${e}$.` },
     ],
     finalAnswer: { value: verdict, unit: "" },
-    solutionNarrative: `$M_y = ${joinTerms([mono(3 * a, 2), `${b}`])}$ and $N_x = ${joinTerms([mono(3 * c, 2), `${e}`])}$ — ${exact ? "identical, so exact" : "they differ in the constant term, so not exact"}.`,
+    solutionNarrative: `$M_y = ${joinTerms([mono(3 * a, 2), `${b}`])}$ and $N_x = ${joinTerms([mono(3 * c, 2), `${e}`])}$: ${exact ? "identical, so exact" : "they differ in the constant term, so not exact"}.`,
   };
 };
 
@@ -254,7 +254,7 @@ fill["def4-integrating-factor-d2"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $M_y - N_x$.`, answer: `1`, accept: [], hint: `$M_y = 2$, $N_x = 1$.` },
       { instruction: `So $\\dfrac{M_y - N_x}{N} = \\dfrac{1}{x}$ and $\\mu = x^k$ with $k = 1$. Write $\\mu$.`, answer: `x`, accept: [`mu = x`, `x^1`], hint: `$e^{\\int 1/x\\,dx} = e^{\\ln x} = x$.` },
-      { instruction: `After multiplying, $M = 2xy + ${co(3 * b)}x^2$ and $N = x^2$. Verify the test: compute $\\partial M/\\partial y$ (it should equal $N_x$).`, answer: `2x`, accept: [`2 x`], hint: `Both partials are $2x$ — the repair worked.` },
+      { instruction: `After multiplying, $M = 2xy + ${co(3 * b)}x^2$ and $N = x^2$. Verify the test: compute $\\partial M/\\partial y$ (it should equal $N_x$).`, answer: `2x`, accept: [`2 x`], hint: `Both partials are $2x$: the repair worked.` },
       { instruction: `Reconstruct the potential $F(x, y)$.`, answer: `x^2y + ${co(b)}x^3`, accept: [], hint: `$\\int (2xy + ${co(3 * b)}x^2)\\,dx = x^2y + ${co(b)}x^3$.` },
     ],
     finalAnswer: { value: `x^2y + ${co(b)}x^3 = C`, unit: "" },
@@ -301,7 +301,7 @@ const FORCINGS = [
   { tex: "t^3 + 2t", uc: true },
 ];
 
-// d1: single forcing — catalog yes/no, then method menu.
+// d1: single forcing: catalog yes/no, then method menu.
 fill["def4-when-uc-fails-d1"] = (rng, idx) => {
   const f = rng.pick(FORCINGS);
   const inCat = f.uc ? "yes" : "no";
@@ -316,7 +316,7 @@ fill["def4-when-uc-fails-d1"] = (rng, idx) => {
     finalAnswer: { value: method, unit: "" },
     solutionNarrative: f.uc
       ? `$${f.tex}$ is closed under differentiation, so undetermined coefficients applies (and is faster than variation of parameters).`
-      : `$${f.tex}$ is not closed under differentiation — no finite guess exists, so variation of parameters is required.`,
+      : `$${f.tex}$ is not closed under differentiation: no finite guess exists, so variation of parameters is required.`,
   };
 };
 
@@ -330,7 +330,7 @@ fill["def4-when-uc-fails-d2"] = (rng, idx) => {
     id: `gen.def4-when-uc-fails-d2.${idx}`, generated: true, concepts: ["when-uc-fails"], difficulty: 2, context: "abstract",
     prompt: `For each forcing, decide whether undetermined coefficients can handle it: (a) $g = ${fa.tex}$, (b) $g = ${fb.tex}$.`,
     steps: [
-      { instruction: `(a) Can undetermined coefficients handle $g = ${fa.tex}$? Type 'yes' or 'no'.`, answer: "no", accept: ["n"], hint: `Differentiate $${fa.tex}$ repeatedly — the family of derivatives never closes.` },
+      { instruction: `(a) Can undetermined coefficients handle $g = ${fa.tex}$? Type 'yes' or 'no'.`, answer: "no", accept: ["n"], hint: `Differentiate $${fa.tex}$ repeatedly: the family of derivatives never closes.` },
       { instruction: `(b) Can undetermined coefficients handle $g = ${fb.tex}$? Type 'yes' or 'no'.`, answer: "yes", accept: ["y"], hint: `$${fb.tex}$ is built from catalog pieces (polynomials, exponentials, sines/cosines).` },
     ],
     finalAnswer: { value: "no; yes", unit: "" },
@@ -355,7 +355,7 @@ fill["def4-when-uc-fails-d3"] = (rng, idx) => {
   const ucNames = chosen.filter((f) => f.uc).map((f) => `$${f.tex}$`).join(" and ");
   return {
     id: `gen.def4-when-uc-fails-d3.${idx}`, generated: true, concepts: ["when-uc-fails"], difficulty: 3, context: "abstract",
-    prompt: `Of the four forcings ${list} — how many can undetermined coefficients handle?`,
+    prompt: `Of the four forcings ${list}: how many can undetermined coefficients handle?`,
     steps: [
       { instruction: `Catalog members are polynomials, exponentials, sines/cosines, and products of those. Count the ones undetermined coefficients handles.`, answer: `${count}`, accept: [], hint: `The catalog members here: ${ucNames}.` },
       { instruction: `How many of the four therefore require variation of parameters?`, answer: `${4 - count}`, accept: [], hint: `$4 - ${count}$.` },
@@ -378,7 +378,7 @@ fill["def4-wronskian-d1"] = (rng, idx) => {
       { instruction: `Now $W(0) = y_1(0)\\,y_2'(0) - y_2(0)\\,y_1'(0)$ with $y_1(0) = 1$, $y_2(0) = 0$, $y_1'(0) = 0$. Compute $W(0)$.`, answer: `${k}`, accept: [`W = ${k}`, `W=${k}`], hint: `$1 \\cdot ${k} - 0 \\cdot 0$.` },
     ],
     finalAnswer: { value: `${k}`, unit: "" },
-    solutionNarrative: `$W = ${k}\\cos^2 ${k}t + ${k}\\sin^2 ${k}t = ${k}$ everywhere — the $\\{\\cos kt, \\sin kt\\}$ pair always has constant Wronskian $k$.`,
+    solutionNarrative: `$W = ${k}\\cos^2 ${k}t + ${k}\\sin^2 ${k}t = ${k}$ everywhere: the $\\{\\cos kt, \\sin kt\\}$ pair always has constant Wronskian $k$.`,
   };
 };
 
@@ -448,7 +448,7 @@ fill["def4-vop-formulas-d2"] = (rng, idx) => {
       { instruction: `Apply $u_2' = \\dfrac{y_1\\,g}{W} = \\dfrac{x \\cdot ${co(a)}x}{x^2}$. Simplify.`, answer: `${a}`, accept: [`u2' = ${a}`], hint: `$${co(a)}x^2 / x^2$.` },
     ],
     finalAnswer: { value: `u1' = ${mono(-a, 1)}, u2' = ${a}`, unit: "" },
-    solutionNarrative: `$W = x^2$; the formulas give $u_1' = -${a}x^3/x^2 = ${mono(-a, 1)}$ and $u_2' = ${a}x^2/x^2 = ${a}$ — pure polynomial arithmetic.`,
+    solutionNarrative: `$W = x^2$; the formulas give $u_1' = -${a}x^3/x^2 = ${mono(-a, 1)}$ and $u_2' = ${a}x^2/x^2 = ${a}$: pure polynomial arithmetic.`,
   };
 };
 
@@ -459,7 +459,7 @@ fill["def4-vop-formulas-d3"] = (rng, idx) => {
     id: `gen.def4-vop-formulas-d3.${idx}`, generated: true, concepts: ["vop-formulas"], difficulty: 3, context: "abstract",
     prompt: `For $x^2y'' - 2xy' + 2y = ${co(a)}x^{${n + 2}}$ with $y_1 = x$, $y_2 = x^2$, $W = x^2$: read off $g$ correctly, then compute $u_1'$ and $u_2'$.`,
     steps: [
-      { instruction: `Put the equation in standard form (divide by $x^2$). What is $g(x)$?`, answer: mono(a, n), accept: [`g = ${mono(a, n)}`], hint: `$${co(a)}x^{${n + 2}} / x^2$ — using the raw right side is the classic standard-form error.` },
+      { instruction: `Put the equation in standard form (divide by $x^2$). What is $g(x)$?`, answer: mono(a, n), accept: [`g = ${mono(a, n)}`], hint: `$${co(a)}x^{${n + 2}} / x^2$: using the raw right side is the classic standard-form error.` },
       { instruction: `Compute $u_1' = \\dfrac{-y_2\\,g}{W} = \\dfrac{-x^2 \\cdot ${mono(a, n)}}{x^2}$.`, answer: mono(-a, n), accept: [`u1' = ${mono(-a, n)}`], hint: `Cancel $x^2$.` },
       { instruction: `Compute $u_2' = \\dfrac{y_1\\,g}{W} = \\dfrac{x \\cdot ${mono(a, n)}}{x^2}$.`, answer: mono(a, n - 1), accept: [`u2' = ${mono(a, n - 1)}`], hint: `One power of $x$ cancels.` },
     ],

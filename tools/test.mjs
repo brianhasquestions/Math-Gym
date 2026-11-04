@@ -1,4 +1,4 @@
-// Unit tests for the MathGym engine — grader, mastery model, progress store,
+// Unit tests for the MathGym engine: grader, mastery model, progress store,
 // and plot renderer. Dependency-free; run with `node tools/test.mjs`. Exits
 // non-zero on any failure so CI can gate on it. This complements validate.mjs
 // (which checks CONTENT); this file checks the ENGINE the content runs on.
@@ -35,7 +35,7 @@ const ok = (desc, cond) => eq(desc, !!cond, true);
 const group = (name) => console.log(`\n# ${name}`);
 
 // ---------------------------------------------------------------- grader
-group("grader — accepts equivalent forms");
+group("grader: accepts equivalent forms");
 eq("fraction == decimal", checkStep({ answer: "1/2" }, "0.5"), true);
 eq("factored == expanded", checkStep({ answer: "(x-2)(x-3)" }, "x^2-5x+6"), true);
 eq("term reorder", checkStep({ answer: "19 + 4x" }, "4x + 19"), true);
@@ -48,7 +48,7 @@ eq("x^(2) == x^2", checkStep({ answer: "x^2+1" }, "x^(2)+1"), true);
 eq("rounded decimal for pi form", checkStep({ answer: "16pi" }, "50.27"), true);
 eq("paren solution set", checkStep({ form: "solutions", answer: "x=2 or x=-3" }, "(2, -3)"), true);
 
-group("grader — rejects wrong / gamed answers");
+group("grader: rejects wrong / gamed answers");
 eq("empty", checkStep({ answer: "5" }, ""), false);
 eq("garbage", checkStep({ answer: "5" }, "=,()"), false);
 eq("wrong number", checkStep({ answer: "7" }, "8"), false);
@@ -60,14 +60,14 @@ eq("wrong variable rejected", checkStep({ answer: "x = 7" }, "y=7"), false);
 eq("integer not loosened to radical", checkStep({ answer: "16pi" }, "7"), false);
 eq("wrong roots", checkStep({ form: "solutions", answer: "x=2 or x=-3" }, "(2, 3)"), false);
 
-group("grader — factored gate still accepts real factorings");
+group("grader: factored gate still accepts real factorings");
 eq("factored accepted", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "(x-3)(x-2)"), true);
 eq("gcf factored accepted", checkStep({ form: "factored", answer: "2x(3x+4)" }, "2x(3x+4)"), true);
 eq("constant-times-paren accepted", checkStep({ form: "factored", answer: "2(x+3)" }, "2(x + 3)"), true);
 eq("squared factor accepted", checkStep({ form: "factored", answer: "(x+3)^2" }, "(x+3)^2"), true);
 eq("factored equation accepted", checkStep({ form: "factored", answer: "(2u - 1)(u - 1) = 0" }, "(2u-1)(u-1)=0"), true);
 
-group("grader — factored gate rejects trivial ±1 wrappers");
+group("grader: factored gate rejects trivial ±1 wrappers");
 eq("1(...) rejected", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "1(x^2-5x+6)"), false);
 eq("(1)(...) rejected", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "(1)(x^2-5x+6)"), false);
 eq("(...)*1 rejected", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "(x^2-5x+6)*1"), false);
@@ -75,7 +75,7 @@ eq("-1(...) rejected", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "-1
 eq("1(...)=0 equation rejected", checkStep({ form: "factored", answer: "(2u-1)(u-1)=0" }, "1(2u^2-3u+1)=0"), false);
 eq("1 times a REAL factoring still ok", checkStep({ form: "factored", answer: "(x-2)(x-3)" }, "1(x-2)(x-3)"), true);
 
-group("grader — numeric formats and tolerance");
+group("grader: numeric formats and tolerance");
 eq("thousands separator accepted", checkStep({ answer: "1000" }, "1,000"), true);
 eq("grouped decimal accepted", checkStep({ answer: "431676.38" }, "431,676.38"), true);
 eq("tuple still a tuple", checkStep({ answer: "(1, 0)" }, "1,0"), true);
@@ -84,7 +84,7 @@ eq("user cannot under-round a decimal answer", checkStep({ answer: "7.25" }, "7.
 eq("rounding an exact fraction still ok", checkStep({ answer: "1/3" }, "0.33"), true);
 eq("more precision than the answer still ok", checkStep({ answer: "0.67" }, "0.667"), true);
 
-group("grader — polynomial blowup guard (pMul like-term merging + caps)");
+group("grader: polynomial blowup guard (pMul like-term merging + caps)");
 {
   const t0 = Date.now();
   const r = checkStep({ answer: "x+1" }, "(x+1)^8(x+1)^8(x+1)^8(x+1)^8");
@@ -95,10 +95,10 @@ group("grader — polynomial blowup guard (pMul like-term merging + caps)");
 }
 
 // ---------------------------------------------------------------- mastery model
-group("mastery model — config is self-consistent");
+group("mastery model: config is self-consistent");
 eq("validateConfig empty", mastery.validateConfig().length, 0);
 
-group("mastery model — initState prunes orphans + stale focus");
+group("mastery model: initState prunes orphans + stale focus");
 {
   const stale = mastery.initState("t1", ["a", "b"], null);
   stale.focusConceptId = "a";
@@ -111,7 +111,7 @@ group("mastery model — initState prunes orphans + stale focus");
   ok("kept concept 'b' survives", !!fresh.concepts.b);
 }
 
-group("mastery model — grade transitions");
+group("mastery model: grade transitions");
 {
   const st = mastery.initState("t2", ["k"], null);
   const clean = mastery.grade(st, { correct: true, hintsUsed: 0, conceptId: "k", wrongs: 0 });
@@ -140,7 +140,7 @@ group("mastery model — grade transitions");
   ok("topicMastered true when all concepts mastered", st.topicMastered);
 }
 
-group("mastery model — credit capped at served difficulty");
+group("mastery model: credit capped at served difficulty");
 {
   const st = mastery.initState("t6", ["k"], null);
   st.concepts.k.currentDifficulty = 3;
@@ -153,7 +153,7 @@ group("mastery model — credit capped at served difficulty");
   eq("full-tier problem does count", st.concepts.k.consecutiveTopClean, 1);
 }
 
-group("mastery model — spaced-repetition review lifecycle");
+group("mastery model: spaced-repetition review lifecycle");
 {
   const DAY = 24 * 60 * 60 * 1000;
   const t0 = 1000000;
@@ -188,7 +188,7 @@ group("mastery model — spaced-repetition review lifecycle");
 }
 
 // ---------------------------------------------------------------- generator display + rounding
-group("generator — unit coefficients stripped, prose and currency intact");
+group("generator: unit coefficients stripped, prose and currency intact");
 {
   const { generate, makeRng } = await imp("js/generator.js");
   // eval-rational-v1 draws a=1 often; its prompt must never show "1x".
@@ -220,7 +220,7 @@ group("generator — unit coefficients stripped, prose and currency intact");
 }
 
 // ---------------------------------------------------------------- progress store
-group("progress store — sanitizes bad data");
+group("progress store: sanitizes bad data");
 {
   localStorage.clear();
   localStorage.setItem("mathgym.progress", "{ not json");
@@ -257,7 +257,7 @@ group("progress store — sanitizes bad data");
 }
 
 // ---------------------------------------------------------------- ProblemSource
-group("ProblemSource — serves and varies");
+group("ProblemSource: serves and varies");
 {
   const topic = { id: "seedtopic", problems: [
     { id: "p1", concepts: ["k"], difficulty: 1, steps: [{ instruction: "x", answer: "1" }], finalAnswer: { value: "1" } },
@@ -269,7 +269,7 @@ group("ProblemSource — serves and varies");
 }
 
 // ---------------------------------------------------------------- plot renderer
-group("plot renderer — robust");
+group("plot renderer: robust");
 ok("cartesian renders a figure", plotToSvg({ curves: [{ fn: "x^2" }] }).startsWith("<figure"));
 ok("graph renders a figure", plotToSvg({ type: "graph", nodes: [{ id: "A", x: 0, y: 0 }, { id: "B", x: 1, y: 1 }], edges: [["A", "B"]] }).startsWith("<figure"));
 ok("zero-span range does not emit NaN", !plotToSvg({ xRange: [2, 2], yRange: [0, 0], curves: [{ fn: "x" }] }).includes("NaN"));
@@ -281,7 +281,7 @@ ok("caption quotes escaped (no attribute injection)",
 ok("string width cannot inject attributes",
   !plotToSvg({ width: '440" onload="alert(1)', curves: [{ fn: "x" }] }).includes("onload"));
 
-group("plot renderer — binary operators in fn (compileFn self-capture regression)");
+group("plot renderer: binary operators in fn (compileFn self-capture regression)");
 {
   // The parser builds each binary node as a closure over its left operand. It
   // once captured the reassigned variable instead of a snapshot, so ANY fn
@@ -297,7 +297,7 @@ group("plot renderer — binary operators in fn (compileFn self-capture regressi
 }
 
 // ---------------------------------------------------------------- markdown tables
-group("markdown renderer — tables (payoff matrices, data tables)");
+group("markdown renderer: tables (payoff matrices, data tables)");
 {
   const md = [
     "| Row \\ Col | Left | Right |",
@@ -316,13 +316,13 @@ group("markdown renderer — tables (payoff matrices, data tables)");
 }
 
 // ---------------------------------------------------------------- 2026-11 math review regressions
-group("grader — solution sets treat a double root as one solution");
+group("grader: solution sets treat a double root as one solution");
 eq("double root: bare value", checkStep({ form: "solutions", answer: "x = -4 or x = -4" }, "-4"), true);
 eq("double root: x = value", checkStep({ form: "solutions", answer: "x = -4 or x = -4" }, "x = -4"), true);
 eq("double root: wrong sign still rejected", checkStep({ form: "solutions", answer: "x = -4 or x = -4" }, "4"), false);
 eq("two roots: one root alone still rejected", checkStep({ form: "solutions", answer: "x = 2 or x = -3" }, "x = 2"), false);
 
-group("grader holes from the 2026-11 review — wrong answers must be REJECTED");
+group("grader holes from the 2026-11 review: wrong answers must be REJECTED");
 // G1: precedence. "1/4 * 2" was split at the first "/" and read as 1/(4*2).
 eq("G1 1/4*2 accept does not admit 1/8", checkStep({ answer: "2 * 1/4", accept: ["1/4 * 2"] }, "1/8"), false);
 eq("G1 (x+1)/2 is not x+1/2", checkStep({ answer: "(x+1)/2" }, "x+1/2"), false);
@@ -377,7 +377,7 @@ eq("G9 '2 3' is not 23", checkStep({ answer: "23" }, "2 3"), false);
 // Precedence: unary minus binds looser than ^.
 eq("-2^2 after * is -(2^2)", checkStep({ answer: "12" }, "3*-2^2"), false);
 
-group("grader — natural notation now ACCEPTED");
+group("grader: natural notation now ACCEPTED");
 eq("degree sign", checkStep({ answer: "55" }, "55°"), true);
 eq("^\\circ", checkStep({ answer: "55" }, "55^\\circ"), true);
 eq("'degrees' word", checkStep({ answer: "55" }, "55 degrees"), true);
@@ -400,7 +400,7 @@ eq("bare RHS for a y = answer", checkStep({ answer: "y = 2x + 1" }, "2x + 1"), t
 eq("y = for a bare-expression answer", checkStep({ answer: "x - 6" }, "y = x - 6"), true);
 eq("bare RHS still has to be right", checkStep({ answer: "y = 2x + 1" }, "2x - 1"), false);
 
-group("generator — display cleanup keeps meaningful 1s (81f77a6 regression)");
+group("generator: display cleanup keeps meaningful 1s (81f77a6 regression)");
 {
   const { generate, makeRng } = await imp("js/generator.js");
   // The unit-coefficient strip once ate any "1" before a backslash, so the
@@ -438,7 +438,7 @@ group("generator — display cleanup keeps meaningful 1s (81f77a6 regression)");
   eq("no float noise in fm2-bond-pricing-2 (200 seeds)", noise, null);
 }
 
-group("generator — answers recomputed independently (review P0s)");
+group("generator: answers recomputed independently (review P0s)");
 {
   const { generate, makeRng } = await imp("js/generator.js");
   // avg-value-v1: f = (3k)x^2 on [0,b] has average k*b^2 (was off by 3x).
@@ -474,7 +474,7 @@ group("generator — answers recomputed independently (review P0s)");
   eq("de-classify-roots-v1 label matches discriminant (300 seeds)", rootsBad, null);
 }
 
-group("markdown renderer — review regressions");
+group("markdown renderer: review regressions");
 {
   const mod = { exports: {} };
   const { readFileSync } = await import("node:fs");

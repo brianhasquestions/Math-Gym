@@ -1,4 +1,4 @@
-// shell.js — shared app chrome: a header (brand + theme picker) and an optional
+// shell.js: shared app chrome: a header (brand + theme picker) and an optional
 // collapsible sidebar nav built from the content manifest. Used by index/topic.
 
 import { loadManifest } from "./content-loader.js";
@@ -44,7 +44,7 @@ export async function buildShell({ activeTopicId = null, crumbs = "" } = {}) {
       const head = el("button", { class: "nav-head", type: "button" }, [
         el("span", { class: "chev", html: "&#9656;" }),
         el("span", { class: "nav-label" }, subject.title),
-        el("span", { class: "nav-count" }, topics.length ? String(topics.length) : "—"),
+        el("span", { class: "nav-count" }, String(topics.length)),
       ]);
       const list = el("ul", { class: "nav-topics" });
       const rows = [];

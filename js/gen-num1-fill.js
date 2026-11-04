@@ -4,7 +4,7 @@
 //   - numerical-methods.root-finding-bracketing         (nm1-signchange-*, nm1-bisection-*, nm1-falsepos-*, nm1-bisect-count-*)
 //   - numerical-methods.root-finding-open               (nm1-newton-*, nm1-secant-*, nm1-fixedpoint-*, nm1-order-*)
 //   - numerical-methods.interpolation                   (nm1-linterp-*, nm1-lagrange-*, nm1-divdiff-*, nm1-interp-error-*)
-// One generator per (concept, difficulty) — 48 total. Exports a `fill` map of
+// One generator per (concept, difficulty): 48 total. Exports a `fill` map of
 // template-name -> generator fn matching the shape used by js/generator.js.
 // Deterministic from the passed rng only; no imports from generator.js.
 //
@@ -107,7 +107,7 @@ fill["nm1-abs-rel-error-3"] = (rng, idx) => {
       { instruction: `Relative error $= \\dfrac{${abs}}{${exact}}$; multiply by 100 for a percent. Round to 2 decimals.`, answer: rnd(relPct, 2), accept: nbrs(relPct, 2), hint: `$\\frac{${abs}}{${exact}} \\times 100$.` },
     ],
     finalAnswer: { value: rnd(relPct, 2), unit: "%" },
-    solutionNarrative: `Relative error $= \\frac{${abs}}{${exact}} \\times 100 \\approx ${rnd(relPct, 2)}\\%$ — small parts tolerate larger absolute slips than small ones.`,
+    solutionNarrative: `Relative error $= \\frac{${abs}}{${exact}} \\times 100 \\approx ${rnd(relPct, 2)}\\%$: small parts tolerate larger absolute slips than small ones.`,
   };
 };
 
@@ -156,7 +156,7 @@ fill["nm1-sigfig-round-3"] = (rng, idx) => {
     id: `gen.nm1-sigfig-round-3.${idx}`, generated: true, concepts: ["significant-figures-and-rounding"], difficulty: 3, context: "abstract",
     prompt: `Round $${v.toFixed(2)}$ to 3 significant figures.`,
     steps: [
-      { instruction: `The first 3 significant figures live in the hundreds, tens, and units place, so round $${v.toFixed(2)}$ to the nearest whole number.`, answer: `${rounded}`, accept: [`${rounded}.0`, `${rounded}.00`], hint: "The 4th significant figure is the first decimal — round on it." },
+      { instruction: `The first 3 significant figures live in the hundreds, tens, and units place, so round $${v.toFixed(2)}$ to the nearest whole number.`, answer: `${rounded}`, accept: [`${rounded}.0`, `${rounded}.00`], hint: "The 4th significant figure is the first decimal: round on it." },
     ],
     finalAnswer: { value: `${rounded}`, unit: "" },
     solutionNarrative: `Three significant figures of $${v.toFixed(2)}$ is $${rounded}$.`,
@@ -193,7 +193,7 @@ fill["nm1-error-prop-2"] = (rng, idx) => {
       { instruction: `Add the two relative errors: $${ra} + ${rb}$. Round to 3 decimals.`, answer: rnd(tot, 3), accept: nbrs(tot, 3), hint: "For products and quotients, add the RELATIVE errors (not the absolute ones)." },
     ],
     finalAnswer: { value: rnd(tot, 3), unit: "" },
-    solutionNarrative: `Multiplication adds relative errors: $${ra} + ${rb} = ${rnd(tot, 3)}$ — about $${rnd(tot * 100, 1)}\\%$.`,
+    solutionNarrative: `Multiplication adds relative errors: $${ra} + ${rb} = ${rnd(tot, 3)}$: about $${rnd(tot * 100, 1)}\\%$.`,
   };
 };
 
@@ -220,7 +220,7 @@ fill["nm1-error-prop-3"] = (rng, idx) => {
 
 // --- floating-point-and-machine-epsilon ------------------------------------
 
-// d1: menu — what causes precision loss? (representation / cancellation).
+// d1: menu: what causes precision loss? (representation / cancellation).
 fill["nm1-float-1"] = (rng, idx) => {
   const pick = rng.pick([
     {
@@ -245,7 +245,7 @@ fill["nm1-float-1"] = (rng, idx) => {
   };
 };
 
-// d2: numeric — machine epsilon size / representable gap via 2^-p.
+// d2: numeric: machine epsilon size / representable gap via 2^-p.
 fill["nm1-float-2"] = (rng, idx) => {
   const p = rng.pick([10, 12, 16, 20]);
   const eps = Math.pow(2, -p);
@@ -260,7 +260,7 @@ fill["nm1-float-2"] = (rng, idx) => {
   };
 };
 
-// d3: catastrophic cancellation — significant digits lost when subtracting.
+// d3: catastrophic cancellation: significant digits lost when subtracting.
 fill["nm1-float-3"] = (rng, idx) => {
   // two 6-sig-fig numbers agreeing in the first k digits; result keeps (6-k) sig figs.
   const k = rng.pick([3, 4]);
@@ -280,7 +280,7 @@ fill["nm1-float-3"] = (rng, idx) => {
       { instruction: `The two inputs shared their first ${sigLost} significant digits, which cancelled. Roughly how many significant digits does the difference retain? (6 minus the ${sigLost} that cancelled.)`, answer: `${6 - sigLost}`, accept: [], hint: `$6 - ${sigLost}$.` },
     ],
     finalAnswer: { value: rnd(diff, 5), unit: "" },
-    solutionNarrative: `$a - b = ${rnd(diff, 5)}$. The shared leading digits cancel, so only about $${6 - sigLost}$ significant digits of accuracy survive — the hallmark of catastrophic cancellation.`,
+    solutionNarrative: `$a - b = ${rnd(diff, 5)}$. The shared leading digits cancel, so only about $${6 - sigLost}$ significant digits of accuracy survive: the hallmark of catastrophic cancellation.`,
   };
 };
 
@@ -293,7 +293,7 @@ fill["nm1-float-3"] = (rng, idx) => {
 
 // --- sign-change-and-ivt ---------------------------------------------------
 
-// d1: menu — which of two intervals brackets a root of x^2 - N.
+// d1: menu, which of two intervals brackets a root of x^2 - N.
 fill["nm1-signchange-1"] = (rng, idx) => {
   const N = rng.pick([2, 3, 5, 6, 7, 8, 10, 15]);
   const r = Math.sqrt(N);
@@ -305,14 +305,14 @@ fill["nm1-signchange-1"] = (rng, idx) => {
     id: `gen.nm1-signchange-1.${idx}`, generated: true, concepts: ["sign-change-and-ivt"], difficulty: 1, context: "abstract",
     prompt: `For $f(x) = x^2 - ${N}$, which interval brackets a root? A root is bracketed when $f$ changes sign across the interval. Options: $A = ${optA}$ or $B = ${optB}$. Answer A or B.`,
     steps: [
-      { instruction: `Check the signs of $f$ at the endpoints of each interval. Which interval shows a sign change? Answer A or B.`, answer: "A", accept: ["a", optA], hint: `$f(${lo}) = ${lo * lo - N}$ (negative) and $f(${hi}) = ${hi * hi - N}$ (positive) — opposite signs.` },
+      { instruction: `Check the signs of $f$ at the endpoints of each interval. Which interval shows a sign change? Answer A or B.`, answer: "A", accept: ["a", optA], hint: `$f(${lo}) = ${lo * lo - N}$ (negative) and $f(${hi}) = ${hi * hi - N}$ (positive): opposite signs.` },
     ],
     finalAnswer: { value: "A", unit: "" },
     solutionNarrative: `$f(${lo}) = ${lo * lo - N} < 0$ and $f(${hi}) = ${hi * hi - N} > 0$: interval $A$ brackets the root by the Intermediate Value Theorem.`,
   };
 };
 
-// d2: numeric — evaluate f at both endpoints and report the product's sign.
+// d2: numeric: evaluate f at both endpoints and report the product's sign.
 fill["nm1-signchange-2"] = (rng, idx) => {
   const a = rng.int(-3, 0);
   const c = rng.int(1, 3);
@@ -340,7 +340,7 @@ fill["nm1-signchange-2"] = (rng, idx) => {
   };
 };
 
-// d3: IVT applied — a cooling/force model crosses a target; identify bracket.
+// d3: IVT applied: a cooling/force model crosses a target; identify bracket.
 fill["nm1-signchange-3"] = (rng, idx) => {
   const target = rng.pick([50, 60, 75, 100]);
   // g(t) = a t^2 with a chosen so g crosses target between t=lo and t=hi
@@ -351,7 +351,7 @@ fill["nm1-signchange-3"] = (rng, idx) => {
   const glo = a * lo * lo, ghi = a * hi * hi;
   return {
     id: `gen.nm1-signchange-3.${idx}`, generated: true, concepts: ["sign-change-and-ivt"], difficulty: 3, context: "applied",
-    prompt: `A load builds up as $g(t) = ${a}t^2$ (kN) after $t$ seconds and we want the instant it first reaches $${target}$ kN — i.e. a root of $f(t) = ${a}t^2 - ${target}$. Confirm this root lies in $[${lo}, ${hi}]$ using the sign change.`,
+    prompt: `A load builds up as $g(t) = ${a}t^2$ (kN) after $t$ seconds and we want the instant it first reaches $${target}$ kN: i.e. a root of $f(t) = ${a}t^2 - ${target}$. Confirm this root lies in $[${lo}, ${hi}]$ using the sign change.`,
     steps: [
       { instruction: `Compute $f(${lo}) = ${a}\\cdot${lo}^2 - ${target}$.`, answer: `${glo - target}`, accept: [], hint: `$${a} \\times ${lo * lo} - ${target}$.` },
       { instruction: `Compute $f(${hi}) = ${a}\\cdot${hi}^2 - ${target}$.`, answer: `${ghi - target}`, accept: [], hint: `$${a} \\times ${hi * hi} - ${target}$.` },
@@ -376,11 +376,11 @@ fill["nm1-bisection-1"] = (rng, idx) => {
       { instruction: `Compute $\\dfrac{${a} + ${b}}{2}$.`, answer: `${mid}`, accept: [], hint: `$(${a} + ${b}) \\div 2$.` },
     ],
     finalAnswer: { value: `${mid}`, unit: "" },
-    solutionNarrative: `Midpoint $= \\frac{${a} + ${b}}{2} = ${mid}$ — the next point bisection tests.`,
+    solutionNarrative: `Midpoint $= \\frac{${a} + ${b}}{2} = ${mid}$: the next point bisection tests.`,
   };
 };
 
-// d2: one bisection step — compute midpoint, its f-value, and which half to keep.
+// d2: one bisection step: compute midpoint, its f-value, and which half to keep.
 fill["nm1-bisection-2"] = (rng, idx) => {
   const N = rng.pick([5, 7, 10, 15, 17]);
   const lo = Math.floor(Math.sqrt(N));
@@ -398,14 +398,14 @@ fill["nm1-bisection-2"] = (rng, idx) => {
     steps: [
       { instruction: `Compute the midpoint $m = \\dfrac{${a} + ${b}}{2}$.`, answer: `${mid}`, accept: [], hint: `$(${a}+${b})/2$.` },
       { instruction: `Compute $f(${mid}) = ${mid}^2 - ${N}$.`, answer: `${fmid}`, accept: [], hint: `$${mid * mid} - ${N}$.` },
-      { instruction: `$f(${a}) = ${fa}$. Since $f(${a})$ and $f(m)$ have ${keepLeft ? "opposite" : "the same"} signs, which half holds the root — the left half $[${a}, ${mid}]$ or the right half $[${mid}, ${b}]$? Answer left or right.`, answer: keepLeft ? "left" : "right", accept: keepLeft ? ["l", `[${a}, ${mid}]`] : ["r", `[${mid}, ${b}]`], hint: keepLeft ? "Opposite signs bracket the root: keep that side." : "Same sign means no root there: keep the other side." },
+      { instruction: `$f(${a}) = ${fa}$. Since $f(${a})$ and $f(m)$ have ${keepLeft ? "opposite" : "the same"} signs, which half holds the root: the left half $[${a}, ${mid}]$ or the right half $[${mid}, ${b}]$? Answer left or right.`, answer: keepLeft ? "left" : "right", accept: keepLeft ? ["l", `[${a}, ${mid}]`] : ["r", `[${mid}, ${b}]`], hint: keepLeft ? "Opposite signs bracket the root: keep that side." : "Same sign means no root there: keep the other side." },
     ],
     finalAnswer: { value: keep, unit: "" },
     solutionNarrative: `Midpoint $${mid}$, $f(${mid}) = ${fmid}$. Comparing signs with $f(${a}) = ${fa}$, the root lies in ${keep}.`,
   };
 };
 
-// d3: two bisection steps — track the shrinking bracket, report the new midpoint.
+// d3: two bisection steps: track the shrinking bracket, report the new midpoint.
 fill["nm1-bisection-3"] = (rng, idx) => {
   const N = rng.pick([5, 7, 10, 11]);
   let a = 1, b = 4; // width 3? choose width 4 for clean halves: [1,5]? use [1,4]-> mid 2.5
@@ -465,7 +465,7 @@ fill["nm1-falsepos-2"] = (rng, idx) => {
       { instruction: `Compute $c = ${b} - \\dfrac{${fb}(${b} - ${a})}{${fb} - (${fa})}$. Round to 4 decimals.`, answer: rnd(c, 4), accept: nbrs(c, 4), hint: `Denominator $= ${fb - fa}$.` },
     ],
     finalAnswer: { value: rnd(c, 4), unit: "" },
-    solutionNarrative: `$f(${a}) = ${fa}$, $f(${b}) = ${fb}$, so $c = ${b} - \\frac{${fb}(${b - a})}{${fb - fa}} \\approx ${rnd(c, 4)}$ — closer to $\\sqrt{${N}} \\approx ${rnd(Math.sqrt(N), 4)}$ than the midpoint would be.`,
+    solutionNarrative: `$f(${a}) = ${fa}$, $f(${b}) = ${fb}$, so $c = ${b} - \\frac{${fb}(${b - a})}{${fb - fa}} \\approx ${rnd(c, 4)}$: closer to $\\sqrt{${N}} \\approx ${rnd(Math.sqrt(N), 4)}$ than the midpoint would be.`,
   };
 };
 
@@ -533,7 +533,7 @@ fill["nm1-bisect-count-2"] = (rng, idx) => {
   };
 };
 
-// d3: applied — steps to a physical tolerance, plus the resulting error bound.
+// d3: applied: steps to a physical tolerance, plus the resulting error bound.
 fill["nm1-bisect-count-3"] = (rng, idx) => {
   const width = rng.pick([2, 4, 5, 10]);
   const tol = rng.pick([0.001, 0.0005, 0.002]);
@@ -612,7 +612,7 @@ fill["nm1-newton-3"] = (rng, idx) => {
       { instruction: `Step 2: with $x_1 = ${rnd(x1v, 4)}$, compute $x_2 = x_1 - \\dfrac{x_1^2 - ${N}}{2 x_1}$. Round to 4 decimals.`, answer: rnd(x2v, 4), accept: nbrs(x2v, 4), hint: `Use the rounded $x_1$; $x_1^2 \\approx ${rnd(x1v * x1v, 4)}$.` },
     ],
     finalAnswer: { value: rnd(x2v, 4), unit: "" },
-    solutionNarrative: `$x_1 \\approx ${rnd(x1v, 4)}$, then $x_2 \\approx ${rnd(x2v, 4)}$ — Newton roughly doubles the correct digits each step, closing on $\\sqrt{${N}} \\approx ${rnd(Math.sqrt(N), 6)}$.`,
+    solutionNarrative: `$x_1 \\approx ${rnd(x1v, 4)}$, then $x_2 \\approx ${rnd(x2v, 4)}$: Newton roughly doubles the correct digits each step, closing on $\\sqrt{${N}} \\approx ${rnd(Math.sqrt(N), 6)}$.`,
   };
 };
 
@@ -714,7 +714,7 @@ fill["nm1-fixedpoint-2"] = (rng, idx) => {
   };
 };
 
-// d3: a diverging g (|g'| > 1) — menu, plus recognizing the failure.
+// d3: a diverging g (|g'| > 1): menu, plus recognizing the failure.
 fill["nm1-fixedpoint-3"] = (rng, idx) => {
   // g(x) = k x - c with |k| > 1 diverges.
   const k = rng.pick([2, 3]);
@@ -737,7 +737,7 @@ fill["nm1-fixedpoint-3"] = (rng, idx) => {
 
 // --- convergence-order -----------------------------------------------------
 
-// d1: menu — Newton is quadratic, bisection/secant/fixed-point linear.
+// d1: menu: Newton is quadratic, bisection/secant/fixed-point linear.
 fill["nm1-order-1"] = (rng, idx) => {
   const pick = rng.pick([
     { m: "Newton's method (with a simple root)", ans: "quadratic", other: "linear" },
@@ -755,7 +755,7 @@ fill["nm1-order-1"] = (rng, idx) => {
   };
 };
 
-// d2: error-ratio numeric — quadratic: e_{n+1} ~ C e_n^2.
+// d2: error-ratio numeric: quadratic: e_{n+1} ~ C e_n^2.
 fill["nm1-order-2"] = (rng, idx) => {
   const C = rng.pick([1, 2, 0.5]);
   const en = rng.pick([0.1, 0.05, 0.2, 0.01]);
@@ -767,7 +767,7 @@ fill["nm1-order-2"] = (rng, idx) => {
       { instruction: `Compute $e_{n+1} = ${C} \\cdot (${en})^2$. Round to 6 decimals.`, answer: rnd(enext, 6), accept: nbrs(enext, 6), hint: `Square $${en}$ first, then multiply by $${C}$.` },
     ],
     finalAnswer: { value: rnd(enext, 6), unit: "" },
-    solutionNarrative: `$e_{n+1} \\approx ${C}\\,(${en})^2 = ${rnd(enext, 6)}$ — the error is roughly squared, the signature of quadratic convergence.`,
+    solutionNarrative: `$e_{n+1} \\approx ${C}\\,(${en})^2 = ${rnd(enext, 6)}$: the error is roughly squared, the signature of quadratic convergence.`,
   };
 };
 
@@ -783,7 +783,7 @@ fill["nm1-order-3"] = (rng, idx) => {
     prompt: `A method produces errors $e_0 = ${e0}$, $e_1 = ${rnd(e1, 4)}$, $e_2 = ${rnd(e2, 4)}$. Each error is the SAME constant times the previous. Find that ratio $\\dfrac{e_1}{e_0}$, then name the convergence order.`,
     steps: [
       { instruction: `Compute the ratio $\\dfrac{e_1}{e_0} = \\dfrac{${rnd(e1, 4)}}{${e0}}$. Round to 4 decimals.`, answer: rnd(r, 4), accept: nbrs(r, 4), hint: `A constant error ratio each step.` },
-      { instruction: `A constant nonzero error ratio between steps means which order — linear or quadratic?`, answer: "linear", accept: [], hint: "Quadratic would shrink the ratio itself each step; a fixed ratio is linear." },
+      { instruction: `A constant nonzero error ratio between steps means which order: linear or quadratic?`, answer: "linear", accept: [], hint: "Quadratic would shrink the ratio itself each step; a fixed ratio is linear." },
     ],
     finalAnswer: { value: "linear", unit: "" },
     solutionNarrative: `The ratio is a constant $${rnd(r, 4)}$ every step, so convergence is linear (quadratic convergence would drive the ratio toward 0).`,
@@ -831,7 +831,7 @@ fill["nm1-linterp-2"] = (rng, idx) => {
   };
 };
 
-// d3: inverse linear interpolation — find x for a target y.
+// d3: inverse linear interpolation: find x for a target y.
 fill["nm1-linterp-3"] = (rng, idx) => {
   const x0 = rng.int(0, 3), x1 = x0 + rng.pick([4, 5]);
   const y0 = rng.int(1, 6), y1 = y0 + rng.pick([4, 6, 8]);
@@ -872,7 +872,7 @@ fill["nm1-lagrange-1"] = (rng, idx) => {
   };
 };
 
-// d2: parabola through 3 points — supply the expanded quadratic.
+// d2: parabola through 3 points: supply the expanded quadratic.
 fill["nm1-lagrange-2"] = (rng, idx) => {
   // choose a quadratic a x^2 + b x + c, sample at 3 integer nodes.
   const a = rng.pick([1, 2, -1]);
@@ -950,7 +950,7 @@ fill["nm1-divdiff-2"] = (rng, idx) => {
       { instruction: `Second difference $f[x_0,x_1,x_2] = \\dfrac{f[x_1,x_2] - f[x_0,x_1]}{4 - 0}$. Round to 4 decimals.`, answer: rnd(dd012, 4), accept: nbrs(dd012, 4), hint: `$\\frac{${rnd(dd12, 4)} - ${rnd(dd01, 4)}}{4}$.` },
     ],
     finalAnswer: { value: rnd(dd012, 4), unit: "" },
-    solutionNarrative: `$f[x_0,x_1] = ${rnd(dd01, 4)}$, $f[x_1,x_2] = ${rnd(dd12, 4)}$, and $f[x_0,x_1,x_2] = ${rnd(dd012, 4)}$ — the leading coefficient of the Newton form.`,
+    solutionNarrative: `$f[x_0,x_1] = ${rnd(dd01, 4)}$, $f[x_1,x_2] = ${rnd(dd12, 4)}$, and $f[x_0,x_1,x_2] = ${rnd(dd012, 4)}$: the leading coefficient of the Newton form.`,
   };
 };
 
@@ -976,7 +976,7 @@ fill["nm1-divdiff-3"] = (rng, idx) => {
       { instruction: `Expand $${ys[0]} + ${dd01}x + ${dd012}x(x - 1)$ into $a x^2 + b x + c$.`, answer: poly, accept: [poly.replace(/\s+/g, ""), newton], hint: `$${dd012}x(x-1) = ${dd012}x^2 - ${dd012}x$; combine with $${dd01}x$.` },
     ],
     finalAnswer: { value: poly, unit: "" },
-    solutionNarrative: `Expanding the Newton form gives $p(x) = ${poly}$ — the same polynomial the Lagrange form would produce.`,
+    solutionNarrative: `Expanding the Newton form gives $p(x) = ${poly}$: the same polynomial the Lagrange form would produce.`,
   };
 };
 

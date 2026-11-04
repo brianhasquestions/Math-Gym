@@ -8,7 +8,7 @@
 //                                          composition-of-transformations, applications)
 // One template per (concept, difficulty) tier that the existing inline generators
 // (solve-system-2x2-v1, mat-mult-v1, mat-defined-v1, transform-apply-v1, rotation-v1)
-// do NOT already serve — 11 + 10 + 10 = 31 templates, prefix `mxa-`. Self-contained:
+// do NOT already serve: 11 + 10 + 10 = 31 templates, prefix `mxa-`. Self-contained:
 // no imports; helper copies live here. Every answer is computed in-pack from the
 // same randomized numbers shown in the prompt.
 
@@ -191,14 +191,14 @@ fill["mxa-soltype-2"] = (rng, idx) => {
     id: `gen.mxa-soltype-2.${idx}`, generated: true, concepts: ["solution-types"], difficulty: 2, context: "abstract",
     prompt: `Classify the system $${lin2(a, b)} = ${e},\\; ${lin2(c, d)} = ${f}$. How many solutions does it have? Answer with a word.`,
     steps: [
-      { instruction: `Check whether the second equation is a multiple of the first — coefficients AND right-hand side. State the number of solutions ${SOL_MENU}.`, answer: kind, accept: SOL_ACCEPT[kind], hint: kind === "one" ? "The coefficient rows are not proportional." : `The left sides are proportional (factor ${c / a}); compare the right-hand sides with the same factor.` },
+      { instruction: `Check whether the second equation is a multiple of the first: coefficients AND right-hand side. State the number of solutions ${SOL_MENU}.`, answer: kind, accept: SOL_ACCEPT[kind], hint: kind === "one" ? "The coefficient rows are not proportional." : `The left sides are proportional (factor ${c / a}); compare the right-hand sides with the same factor.` },
     ],
     finalAnswer: { value: kind, unit: "" },
     solutionNarrative: kind === "one"
       ? `The coefficient rows $(${a}, ${b})$ and $(${c}, ${d})$ are not proportional, so the lines cross once: one solution.`
       : kind === "infinite"
-        ? `The second equation is exactly ${c / a} times the first — the same line twice, so infinitely many solutions.`
-        : `The left side of equation 2 is ${c / a} times equation 1's, but $${f} \\neq ${(c / a) * e}$ — parallel lines, no solution.`,
+        ? `The second equation is exactly ${c / a} times the first: the same line twice, so infinitely many solutions.`
+        : `The left side of equation 2 is ${c / a} times equation 1's, but $${f} \\neq ${(c / a) * e}$: parallel lines, no solution.`,
   };
 };
 
@@ -218,7 +218,7 @@ fill["mxa-soltype-3"] = (rng, idx) => {
     ],
     finalAnswer: { value: kind, unit: "" },
     solutionNarrative: kind === "one"
-      ? `The bottom row gives $${r3[2]}z = ${r3[3]}$ — a pivot in every column, so exactly one solution.`
+      ? `The bottom row gives $${r3[2]}z = ${r3[3]}$: a pivot in every column, so exactly one solution.`
       : kind === "none"
         ? `The bottom row $0 = ${r3[3]}$ is impossible: no solution.`
         : "The zero bottom row leaves $z$ free: infinitely many solutions.",
@@ -356,7 +356,7 @@ fill["mxa-prod-rect-3"] = (rng, idx) => {
     id: `gen.mxa-prod-rect-3.${idx}`, generated: true, concepts: ["compute-product"], difficulty: 3, context: "abstract",
     prompt: `Multiply the ${"$2 \\times 3$"} and ${"$3 \\times 2$"} matrices $${ltx(A)}${ltx(B)}$. The result is $2 \\times 2$.`,
     steps: [
-      { instruction: `Entry (1,1): row 1 of the first dot column 1 of the second, $(${A[0][0]})(${B[0][0]}) + (${A[0][1]})(${B[1][0]}) + (${A[0][2]})(${B[2][0]})$.`, answer: `${P[0][0]}`, accept: [], hint: "Three products summed — the inner dimension is 3." },
+      { instruction: `Entry (1,1): row 1 of the first dot column 1 of the second, $(${A[0][0]})(${B[0][0]}) + (${A[0][1]})(${B[1][0]}) + (${A[0][2]})(${B[2][0]})$.`, answer: `${P[0][0]}`, accept: [], hint: "Three products summed: the inner dimension is 3." },
       { instruction: "Compute the remaining three entries the same way and write the full product as [[a, b], [c, d]].", answer: matStr(P), accept: [], hint: "Row $i$ of the first matrix dots column $j$ of the second for entry $(i, j)$." },
     ],
     finalAnswer: { value: matStr(P), unit: "" },
@@ -371,9 +371,9 @@ fill["mxa-identity-1"] = (rng, idx) => {
   const disp = side === "AI" ? `${ltx(A)}${ltx([[1, 0], [0, 1]])}` : `${ltx([[1, 0], [0, 1]])}${ltx(A)}`;
   return {
     id: `gen.mxa-identity-1.${idx}`, generated: true, concepts: ["multiplication-properties"], difficulty: 1, context: "abstract",
-    prompt: `Compute $${disp}$ — a matrix times the identity ${side === "AI" ? "on the right" : "on the left"}.`,
+    prompt: `Compute $${disp}$: a matrix times the identity ${side === "AI" ? "on the right" : "on the left"}.`,
     steps: [
-      { instruction: "The identity acts like the number 1. Write the result as [[a, b], [c, d]].", answer: matStr(A), accept: [], hint: `$${side}$ = $A$ — nothing changes.` },
+      { instruction: "The identity acts like the number 1. Write the result as [[a, b], [c, d]].", answer: matStr(A), accept: [], hint: `$${side}$ = $A$: nothing changes.` },
     ],
     finalAnswer: { value: matStr(A), unit: "" },
     solutionNarrative: `Multiplying by $I$ on either side returns $A$ unchanged: $${matStr(A)}$.`,
@@ -403,12 +403,12 @@ fill["mxa-commute-2"] = (rng, idx) => {
     steps: [
       { instruction: "Compute entry (1,1) of $AB$: row 1 of $A$ dot column 1 of $B$.", answer: `${AB[0][0]}`, accept: [], hint: `$(${A[0][0]})(${B[0][0]}) + (${A[0][1]})(${B[1][0]})$.` },
       { instruction: "Compute entry (1,1) of $BA$: row 1 of $B$ dot column 1 of $A$.", answer: `${BA[0][0]}`, accept: [], hint: `$(${B[0][0]})(${A[0][0]}) + (${B[0][1]})(${A[1][0]})$.` },
-      { instruction: "Comparing ALL entries of $AB$ and $BA$, does $AB = BA$ for this pair? Answer 'yes' or 'no'.", answer: equal ? "yes" : "no", accept: [], hint: equal ? "$B$ is a scalar multiple of the identity — those commute with everything." : "The (1,1) entries already disagree." },
+      { instruction: "Comparing ALL entries of $AB$ and $BA$, does $AB = BA$ for this pair? Answer 'yes' or 'no'.", answer: equal ? "yes" : "no", accept: [], hint: equal ? "$B$ is a scalar multiple of the identity: those commute with everything." : "The (1,1) entries already disagree." },
     ],
     finalAnswer: { value: equal ? "yes" : "no", unit: "" },
     solutionNarrative: equal
       ? `$B = ${B[0][0]}I$, and scalar multiples of the identity commute with every matrix: $AB = BA = ${B[0][0]}A$.`
-      : `$(AB)_{11} = ${AB[0][0]}$ but $(BA)_{11} = ${BA[0][0]}$ — one mismatched entry is enough: $AB \\neq BA$.`,
+      : `$(AB)_{11} = ${AB[0][0]}$ but $(BA)_{11} = ${BA[0][0]}$: one mismatched entry is enough: $AB \\neq BA$.`,
   };
 };
 
@@ -425,7 +425,7 @@ fill["mxa-power-3"] = (rng, idx) => {
       { instruction: "Compute the remaining entries and write the full $A^2$ as [[a, b], [c, d]].", answer: matStr(A2), accept: [], hint: "Note $A^2$ squares the MATRIX, not each entry." },
     ],
     finalAnswer: { value: matStr(A2), unit: "" },
-    solutionNarrative: `$A^2 = ${matStr(A2)}$ — each entry is a row-dot-column of $A$ with itself, not an entrywise square.`,
+    solutionNarrative: `$A^2 = ${matStr(A2)}$: each entry is a row-dot-column of $A$ with itself, not an entrywise square.`,
   };
 };
 
@@ -446,7 +446,7 @@ fill["mxa-cost-1"] = (rng, idx) => {
       { instruction: `Multiply quantities by prices and add: $${q1}\\cdot${p1} + ${q2}\\cdot${p2}$.`, answer: `${total}`, accept: [], hint: "This dot product IS a 1×2 times 2×1 matrix product." },
     ],
     finalAnswer: { value: `${total}`, unit: ctx.unit },
-    solutionNarrative: `$${q1}\\cdot${p1} + ${q2}\\cdot${p2} = ${total}$ ${ctx.unit} — a matrix product bundling the weighted sum.`,
+    solutionNarrative: `$${q1}\\cdot${p1} + ${q2}\\cdot${p2} = ${total}$ ${ctx.unit}: a matrix product bundling the weighted sum.`,
   };
 };
 
@@ -472,7 +472,7 @@ fill["mxa-markov-2"] = (rng, idx) => {
       { instruction: `Write next ${ctx.step}'s state vector as <a, b> (${ctx.s1} first).`, answer: vec([n1, n2]), accept: [pt([n1, n2])], hint: "Stack the two counts you just computed." },
     ],
     finalAnswer: { value: vec([n1, n2]), unit: ctx.thing },
-    solutionNarrative: `Matrix-times-vector gives $(${n1}, ${n2})$ — note the total ${n1 + n2} matches ${p1} + ${p2}: nobody vanishes.`,
+    solutionNarrative: `Matrix-times-vector gives $(${n1}, ${n2})$: note the total ${n1 + n2} matches ${p1} + ${p2}: nobody vanishes.`,
   };
 };
 
@@ -494,8 +494,8 @@ fill["mxa-paths-3"] = (rng, idx) => {
     id: `gen.mxa-paths-3.${idx}`, generated: true, concepts: ["multiplication-applied"], difficulty: 3, context: "applied",
     prompt: `Three servers are wired together; entry $(i, j)$ of the adjacency matrix $A = ${ltx(A)}$ is 1 when servers $i$ and $j$ share a direct link. Entry $(i, j)$ of $A^2$ counts the two-hop routes from $i$ to $j$.`,
     steps: [
-      { instruction: `Compute $(A^2)_{${i}${j}}$ — the number of two-hop routes from server ${i} to server ${j}: dot row ${i} of $A$ with column ${j} of $A$.`, answer: `${A2[i - 1][j - 1]}`, accept: [], hint: `$(${A[i - 1][0]})(${A[0][j - 1]}) + (${A[i - 1][1]})(${A[1][j - 1]}) + (${A[i - 1][2]})(${A[2][j - 1]})$.` },
-      { instruction: `Compute $(A^2)_{${i}${i}}$ — two-hop routes from server ${i} back to itself.`, answer: `${A2[i - 1][i - 1]}`, accept: [], hint: `Out and back along each link at server ${i} — this equals the number of direct links it has.` },
+      { instruction: `Compute $(A^2)_{${i}${j}}$: the number of two-hop routes from server ${i} to server ${j}: dot row ${i} of $A$ with column ${j} of $A$.`, answer: `${A2[i - 1][j - 1]}`, accept: [], hint: `$(${A[i - 1][0]})(${A[0][j - 1]}) + (${A[i - 1][1]})(${A[1][j - 1]}) + (${A[i - 1][2]})(${A[2][j - 1]})$.` },
+      { instruction: `Compute $(A^2)_{${i}${i}}$: two-hop routes from server ${i} back to itself.`, answer: `${A2[i - 1][i - 1]}`, accept: [], hint: `Out and back along each link at server ${i}: this equals the number of direct links it has.` },
     ],
     finalAnswer: { value: `${A2[i - 1][j - 1]}`, unit: "routes" },
     solutionNarrative: `$(A^2)_{${i}${j}} = ${A2[i - 1][j - 1]}$ two-hop routes; $(A^2)_{${i}${i}} = ${A2[i - 1][i - 1]}$ equals server ${i}'s link count (out and straight back).`,
@@ -546,7 +546,7 @@ fill["mxa-apply-3"] = (rng, idx) => {
     prompt: `A graphics engine transforms ${ctx.obj} by the matrix $${ltx(A)}$. Find the images of ${ctx.pts}, $P(${P.join(", ")})$ and $Q(${Q.join(", ")})$.`,
     steps: [
       { instruction: `Apply the matrix to $P(${P.join(", ")})$ and give the image as a point.`, answer: pt(rP), accept: [vec(rP), `${rP[0]}, ${rP[1]}`], hint: `New $x$: $(${A[0][0]})(${P[0]}) + (${A[0][1]})(${P[1]})$.` },
-      { instruction: `Apply the matrix to $Q(${Q.join(", ")})$ and give the image as a point.`, answer: pt(rQ), accept: [vec(rQ), `${rQ[0]}, ${rQ[1]}`], hint: "Same matrix, same recipe — rows dot the point." },
+      { instruction: `Apply the matrix to $Q(${Q.join(", ")})$ and give the image as a point.`, answer: pt(rQ), accept: [vec(rQ), `${rQ[0]}, ${rQ[1]}`], hint: "Same matrix, same recipe: rows dot the point." },
     ],
     finalAnswer: { value: `${pt(rP)} and ${pt(rQ)}`, unit: "" },
     solutionNarrative: `The same matrix moves every point by the same rule: $P \\to (${rP.join(", ")})$ and $Q \\to (${rQ.join(", ")})$.`,
@@ -558,9 +558,9 @@ fill["mxa-stdmat-1"] = (rng, idx) => {
   const kind = rng.pick(["rot90", "rot180", "rot270", "reflx", "refly", "scale"]);
   const k = rng.int(2, 5);
   const table = {
-    rot90: { M: ROT[90], desc: "rotation by $90°$ counterclockwise about the origin", why: "It sends $(1, 0) \\to (0, 1)$ and $(0, 1) \\to (-1, 0)$ — those images are the columns." },
+    rot90: { M: ROT[90], desc: "rotation by $90°$ counterclockwise about the origin", why: "It sends $(1, 0) \\to (0, 1)$ and $(0, 1) \\to (-1, 0)$: those images are the columns." },
     rot180: { M: ROT[180], desc: "rotation by $180°$ about the origin", why: "Both basis vectors flip sign, so the columns are $(-1, 0)$ and $(0, -1)$." },
-    rot270: { M: ROT[270], desc: "rotation by $270°$ counterclockwise about the origin", why: "It sends $(1, 0) \\to (0, -1)$ and $(0, 1) \\to (1, 0)$ — those images are the columns." },
+    rot270: { M: ROT[270], desc: "rotation by $270°$ counterclockwise about the origin", why: "It sends $(1, 0) \\to (0, -1)$ and $(0, 1) \\to (1, 0)$: those images are the columns." },
     reflx: { M: REFL_X, desc: "reflection across the $x$-axis", why: "$x$ stays, $y$ flips: columns $(1, 0)$ and $(0, -1)$." },
     refly: { M: REFL_Y, desc: "reflection across the $y$-axis", why: "$x$ flips, $y$ stays: columns $(-1, 0)$ and $(0, 1)$." },
     scale: { M: [[k, 0], [0, k]], desc: `scaling by a factor of ${k} about the origin`, why: `Both basis vectors stretch by ${k}: the matrix is ${k} times the identity.` },
@@ -610,12 +610,12 @@ fill["mxa-compose-1"] = (rng, idx) => {
   const C = matMul(R, S); // scale first, then rotate
   return {
     id: `gen.mxa-compose-1.${idx}`, generated: true, concepts: ["composition-of-transformations"], difficulty: 1, context: "abstract",
-    prompt: `A figure is first scaled by ${k} (matrix $S = ${ltx(S)}$), then rotated $${deg}°$ counterclockwise (matrix $R = ${ltx(R)}$). The combined transformation is the product $RS$ — the FIRST transformation sits on the right.`,
+    prompt: `A figure is first scaled by ${k} (matrix $S = ${ltx(S)}$), then rotated $${deg}°$ counterclockwise (matrix $R = ${ltx(R)}$). The combined transformation is the product $RS$: the FIRST transformation sits on the right.`,
     steps: [
       { instruction: "Compute $RS$ and write it as [[a, b], [c, d]].", answer: matStr(C), accept: [], hint: "Rows of $R$ dot columns of $S$." },
     ],
     finalAnswer: { value: matStr(C), unit: "" },
-    solutionNarrative: `$RS = ${matStr(C)}$ — a rotation combined with a scaling, applied right-to-left.`,
+    solutionNarrative: `$RS = ${matStr(C)}$: a rotation combined with a scaling, applied right-to-left.`,
   };
 };
 
@@ -632,7 +632,7 @@ fill["mxa-compose-2"] = (rng, idx) => {
       { instruction: `Write the matrix of the combined ${total === 0 ? "transformation (the identity)" : `$${total}°$ rotation`} as [[a, b], [c, d]].`, answer: matStr(M), accept: [], hint: "The columns are the images of $(1, 0)$ and $(0, 1)$." },
     ],
     finalAnswer: { value: `${total}°`, unit: "" },
-    solutionNarrative: `$${a1}° + ${a2}° \\equiv ${total}°$ (mod $360°$)${total === 0 ? " — the shape returns to its start, so the matrix is the identity" : ""}: $${matStr(M)}$.`,
+    solutionNarrative: `$${a1}° + ${a2}° \\equiv ${total}°$ (mod $360°$)${total === 0 ? ", the shape returns to its start, so the matrix is the identity" : ""}: $${matStr(M)}$.`,
   };
 };
 
@@ -649,12 +649,12 @@ fill["mxa-compose-3"] = (rng, idx) => {
     steps: [
       { instruction: "Scaling FIRST, then rotating, is the product $RS$. Compute it as [[a, b], [c, d]].", answer: matStr(RS), accept: [], hint: "The first transformation applied sits on the right of the product." },
       { instruction: "Rotating FIRST, then scaling, is the product $SR$. Compute it as [[a, b], [c, d]].", answer: matStr(SR), accept: [], hint: "Now $R$ sits on the right." },
-      { instruction: "Do the two orders give the same transformation here? Answer 'yes' or 'no'.", answer: same ? "yes" : "no", accept: [], hint: same ? "With equal scale factors the scaling is uniform — it commutes with rotations." : "Compare the matrices entry by entry." },
+      { instruction: "Do the two orders give the same transformation here? Answer 'yes' or 'no'.", answer: same ? "yes" : "no", accept: [], hint: same ? "With equal scale factors the scaling is uniform: it commutes with rotations." : "Compare the matrices entry by entry." },
     ],
     finalAnswer: { value: same ? "yes" : "no", unit: "" },
     solutionNarrative: same
       ? `Because $${k1} = ${k2}$, $S$ is a uniform scaling ($${k1}I$), which commutes with every rotation: both orders give $${matStr(RS)}$.`
-      : `$RS = ${matStr(RS)}$ but $SR = ${matStr(SR)}$ — with unequal scale factors (${k1} vs ${k2}), the order of transformations changes the result.`,
+      : `$RS = ${matStr(RS)}$ but $SR = ${matStr(SR)}$: with unequal scale factors (${k1} vs ${k2}), the order of transformations changes the result.`,
   };
 };
 
@@ -703,7 +703,7 @@ fill["mxa-area-3"] = (rng, idx) => {
     prompt: `A physics simulation deforms a triangular mesh cell of area ${a0} units² by the matrix $${ltx(A)}$. The determinant tells you both the area change and whether the cell got flipped.`,
     steps: [
       { instruction: "Compute the determinant $ad - bc$.", answer: `${d}`, accept: [], hint: `$(${A[0][0]})(${A[1][1]}) - (${A[0][1]})(${A[1][0]})$.` },
-      { instruction: "Compute the area of the deformed cell ($|\\det|$ times the original area).", answer: `${Math.abs(d) * a0}`, accept: [], hint: `$|${d}| \\times ${a0}$ — area uses the absolute value.` },
+      { instruction: "Compute the area of the deformed cell ($|\\det|$ times the original area).", answer: `${Math.abs(d) * a0}`, accept: [], hint: `$|${d}| \\times ${a0}$: area uses the absolute value.` },
       { instruction: "Is the cell's orientation preserved (no mirror flip)? Answer 'yes' or 'no'.", answer: preserved ? "yes" : "no", accept: [], hint: "Positive determinant preserves orientation; negative flips it." },
     ],
     finalAnswer: { value: `${Math.abs(d) * a0}`, unit: "units²" },

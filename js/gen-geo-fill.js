@@ -82,7 +82,7 @@ fill["gsm-scale-factor-d3"] = (rng, idx) => {
       { instruction: "Find the enlarged area in square feet.", answer: `${A * k * k}`, accept: [`${A * k * k} ft^2`], hint: `${A} × ${k * k}.` },
     ],
     finalAnswer: { value: `${A * k * k}`, unit: "square feet" },
-    solutionNarrative: `Area scales by $k^2 = ${k * k}$, so the enlarged area is ${A} × ${k * k} = ${A * k * k} ft² — not ${A * k}.`,
+    solutionNarrative: `Area scales by $k^2 = ${k * k}$, so the enlarged area is ${A} × ${k * k} = ${A * k * k} ft², not ${A * k}.`,
   };
 };
 
@@ -468,6 +468,6 @@ fill["gci-chords-d3"] = (rng, idx) => {
       { instruction: "At 60 mph (1 mile per minute), how many minutes is the vehicle in coverage?", answer: `${2 * b}`, accept: [`${2 * b} min`, `${2 * b} minutes`], hint: "At 60 mph, each mile takes one minute." },
     ],
     finalAnswer: { value: `${2 * b}`, unit: "minutes" },
-    solutionNarrative: `Half the chord is $\\sqrt{${c}^2 - ${a}^2} = ${b}$ mi, so the covered stretch is ${2 * b} mi — ${2 * b} minutes at a mile a minute.`,
+    solutionNarrative: `Half the chord is $\\sqrt{${c}^2 - ${a}^2} = ${b}$ mi, so the covered stretch is ${2 * b} mi: ${2 * b} minutes at a mile a minute.`,
   };
 };

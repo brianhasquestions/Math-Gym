@@ -104,14 +104,14 @@ fill["a2f-imaginary-unit-3"] = (rng, idx) => {
   const prod = -a * b;
   return {
     id: `gen.a2f-imaginary-unit-3.${idx}`, generated: true, concepts: ["imaginary-unit-and-powers"], difficulty: 3, context: "abstract",
-    prompt: `Simplify $\\sqrt{-${a * a}} \\cdot \\sqrt{-${b * b}}$. Careful: the rule $\\sqrt{x}\\sqrt{y} = \\sqrt{xy}$ does NOT hold for two negatives — convert each radical to $i$ form FIRST.`,
+    prompt: `Simplify $\\sqrt{-${a * a}} \\cdot \\sqrt{-${b * b}}$. Careful: the rule $\\sqrt{x}\\sqrt{y} = \\sqrt{xy}$ does NOT hold for two negatives: convert each radical to $i$ form FIRST.`,
     steps: [
       { instruction: `Rewrite $\\sqrt{-${a * a}}$ using $i$.`, answer: `${a}i`, accept: [`${a}*i`], hint: `$\\sqrt{-${a * a}} = \\sqrt{${a * a}}\\,i$.` },
       { instruction: `Rewrite $\\sqrt{-${b * b}}$ using $i$.`, answer: `${b}i`, accept: [`${b}*i`], hint: `$\\sqrt{-${b * b}} = \\sqrt{${b * b}}\\,i$.` },
       { instruction: `Multiply: $(${a}i)(${b}i) = ${a * b}i^2$. Using $i^2 = -1$, what real number is this? (Give a number.)`, answer: `${prod}`, accept: [], hint: `$${a * b} \\cdot (-1)$.` },
     ],
     finalAnswer: { value: `${prod}`, unit: "" },
-    solutionNarrative: `Convert first: $(${a}i)(${b}i) = ${a * b}i^2 = ${prod}$. Multiplying the radicands directly would give $\\sqrt{${a * a * b * b}} = ${a * b}$ — the wrong sign.`,
+    solutionNarrative: `Convert first: $(${a}i)(${b}i) = ${a * b}i^2 = ${prod}$. Multiplying the radicands directly would give $\\sqrt{${a * a * b * b}} = ${a * b}$, the wrong sign.`,
   };
 };
 
@@ -140,7 +140,7 @@ fill["a2f-complex-arith-2"] = (rng, idx) => {
   const re = a - c, im = b - d;
   return {
     id: `gen.a2f-complex-arith-2.${idx}`, generated: true, concepts: ["complex-arithmetic"], difficulty: 2, context: "abstract",
-    prompt: `Subtract: $(${fmtC(a, b)}) - (${fmtC(c, d)})$. Give the result in $a + bi$ form. Watch the signs — the minus distributes to BOTH parts of the second number.`,
+    prompt: `Subtract: $(${fmtC(a, b)}) - (${fmtC(c, d)})$. Give the result in $a + bi$ form. Watch the signs: the minus distributes to BOTH parts of the second number.`,
     steps: [
       { instruction: `Subtract the real parts: $${a} - (${c})$. (Give a number.)`, answer: `${re}`, accept: [], hint: c < 0 ? `Subtracting a negative adds: $${a} + ${-c}$.` : `$${a} - ${c}$.` },
       { instruction: `Subtract the imaginary coefficients: $${b} - (${d})$. (Give a number.)`, answer: `${im}`, accept: [], hint: d < 0 ? `Subtracting a negative adds: $${b} + ${-d}$.` : `$${b} - ${d}$.` },
@@ -161,7 +161,7 @@ fill["a2f-complex-arith-3"] = (rng, idx) => {
     prompt: `Multiply: $(${fmtC(a, b)})(${fmtC(c, d)})$. FOIL, then use $i^2 = -1$. Give the result in $a + bi$ form.`,
     steps: [
       { instruction: `The Outer and Inner products give the $i$ terms. Compute the imaginary coefficient $ad + bc = (${a})(${d}) + (${b})(${c})$. (Give a number.)`, answer: `${im}`, accept: [], hint: `$${a * d} + ${par(b * c)}$.` },
-      { instruction: `The First product is $${a * c}$ and the Last product is $${coefI2(b * d)}i^2 = ${-b * d}$. Add them for the real part. (Give a number.)`, answer: `${re}`, accept: [], hint: `$${a * c} + ${par(-b * d)}$ — the $i^2$ flips the sign of $bd$.` },
+      { instruction: `The First product is $${a * c}$ and the Last product is $${coefI2(b * d)}i^2 = ${-b * d}$. Add them for the real part. (Give a number.)`, answer: `${re}`, accept: [], hint: `$${a * c} + ${par(-b * d)}$: the $i^2$ flips the sign of $bd$.` },
       { instruction: `Combine into $a + bi$ form.`, answer: fmtC(re, im), accept: [], hint: `Real part ${re}, imaginary coefficient ${im}.` },
     ],
     finalAnswer: { value: fmtC(re, im), unit: "" },
@@ -179,10 +179,10 @@ fill["a2f-conjugate-div-1"] = (rng, idx) => {
     prompt: `Let $z = ${fmtC(a, b)}$. Find its complex conjugate $\\bar{z}$, then compute the product $z\\bar{z}$.`,
     steps: [
       { instruction: `Write the conjugate $\\bar{z}$ (flip the sign of the imaginary part only).`, answer: conj, accept: [], hint: `Real part stays ${a}; the imaginary coefficient becomes ${-b}.` },
-      { instruction: `Compute $z\\bar{z} = (${fmtC(a, b)})(${conj})$. It always equals $a^2 + b^2$ — a real number. (Give a number.)`, answer: `${prod}`, accept: [], hint: `$(${a})^2 + (${b})^2 = ${a * a} + ${b * b}$.` },
+      { instruction: `Compute $z\\bar{z} = (${fmtC(a, b)})(${conj})$. It always equals $a^2 + b^2$: a real number. (Give a number.)`, answer: `${prod}`, accept: [], hint: `$(${a})^2 + (${b})^2 = ${a * a} + ${b * b}$.` },
     ],
     finalAnswer: { value: `${prod}`, unit: "" },
-    solutionNarrative: `$\\bar{z} = ${conj}$, and $z\\bar{z} = a^2 + b^2 = ${a * a} + ${b * b} = ${prod}$. A number times its conjugate is always real — that is exactly why conjugates clear $i$ from denominators.`,
+    solutionNarrative: `$\\bar{z} = ${conj}$, and $z\\bar{z} = a^2 + b^2 = ${a * a} + ${b * b} = ${prod}$. A number times its conjugate is always real: that is exactly why conjugates clear $i$ from denominators.`,
   };
 };
 fill["a2f-conjugate-div-2"] = (rng, idx) => {
@@ -225,7 +225,7 @@ fill["a2f-conjugate-div-3"] = (rng, idx) => {
       { instruction: `Multiply the denominator $${fmtC(c, d)}$ by its conjugate $${fmtC(c, -d)}$. (Give a number.)`, answer: `${den}`, accept: [], hint: `$c^2 + d^2 = (${c})^2 + (${d})^2$.` },
       { instruction: `Multiply the numerator $${fmtC(A, B)}$ by the conjugate $${fmtC(c, -d)}$, in $a + bi$ form.`, answer: fmtC(numRe, numIm), accept: [], hint: `Real part $${par(A)}(${c}) + ${par(B)}(${d})$; imaginary coefficient $${par(B)}(${c}) - ${par(A)}(${d})$.` },
       { instruction: `Divide both parts by ${den}. Give the simplified quotient in $a + bi$ form.`, answer: fmtC(p, q), accept: [], hint: `$${numRe}/${den}$ and $${numIm}/${den}$ are both whole numbers.` },
-      { instruction: `Check: compute $(${fmtC(p, q)})(${fmtC(c, d)})$ in $a + bi$ form — it should reproduce the original numerator.`, answer: fmtC(A, B), accept: [], hint: `Real part $${par(p)}(${c}) - ${par(q)}(${d})$; imaginary coefficient $${par(p)}(${d}) + ${par(q)}(${c})$.` },
+      { instruction: `Check: compute $(${fmtC(p, q)})(${fmtC(c, d)})$ in $a + bi$ form: it should reproduce the original numerator.`, answer: fmtC(A, B), accept: [], hint: `Real part $${par(p)}(${c}) - ${par(q)}(${d})$; imaginary coefficient $${par(p)}(${d}) + ${par(q)}(${c})$.` },
     ],
     finalAnswer: { value: fmtC(p, q), unit: "" },
     solutionNarrative: `The conjugate trick gives $\\dfrac{${fmtC(numRe, numIm)}}{${den}} = ${fmtC(p, q)}$, and the check $(${fmtC(p, q)})(${fmtC(c, d)}) = ${fmtC(A, B)}$ recovers the numerator, confirming the quotient.`,
@@ -244,7 +244,7 @@ fill["a2f-complex-plane-1"] = (rng, idx) => {
       { instruction: `Which quadrant is the point in? (Answer: first, second, third, or fourth.)`, answer: qWord, accept: [qNum, `quadrant ${qNum}`, `q${qNum}`], hint: `The signs are (${a > 0 ? "+" : "-"}, ${b > 0 ? "+" : "-"}).` },
     ],
     finalAnswer: { value: qWord, unit: "quadrant" },
-    solutionNarrative: `$${fmtC(a, b)}$ sits at $(${a}, ${b})$: ${a} along the real axis, ${b} along the imaginary axis — the ${qWord} quadrant.`,
+    solutionNarrative: `$${fmtC(a, b)}$ sits at $(${a}, ${b})$: ${a} along the real axis, ${b} along the imaginary axis, the ${qWord} quadrant.`,
   };
 };
 fill["a2f-complex-plane-2"] = (rng, idx) => {
@@ -263,13 +263,13 @@ fill["a2f-complex-plane-2"] = (rng, idx) => {
   const accepts = isPerfect ? [] : [rnd(r, 4), rnd(r, 2)];
   return {
     id: `gen.a2f-complex-plane-2.${idx}`, generated: true, concepts: ["complex-plane-and-quadratics"], difficulty: 2, context: "abstract",
-    prompt: `Find the modulus $|z|$ of $z = ${fmtC(a, b)}$ — its distance from the origin in the complex plane.`,
+    prompt: `Find the modulus $|z|$ of $z = ${fmtC(a, b)}$: its distance from the origin in the complex plane.`,
     steps: [
       { instruction: `Compute $a^2 + b^2 = (${a})^2 + (${b})^2$. (Give a whole number.)`, answer: `${s}`, accept: [], hint: `$${a * a} + ${b * b}$.` },
-      { instruction: `Take the square root: $|z| = \\sqrt{${s}}$.${isPerfect ? " (Give a whole number.)" : " (Give the exact value, e.g. sqrt(13), or a decimal.)"}`, answer: ans, accept: accepts, hint: isPerfect ? `$${r} \\cdot ${r} = ${s}$.` : `${s} is not a perfect square — leave it under the radical.` },
+      { instruction: `Take the square root: $|z| = \\sqrt{${s}}$.${isPerfect ? " (Give a whole number.)" : " (Give the exact value, e.g. sqrt(13), or a decimal.)"}`, answer: ans, accept: accepts, hint: isPerfect ? `$${r} \\cdot ${r} = ${s}$.` : `${s} is not a perfect square: leave it under the radical.` },
     ],
     finalAnswer: { value: ans, unit: "" },
-    solutionNarrative: `$|${fmtC(a, b)}| = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${s}}${isPerfect ? ` = ${r}` : ` \\approx ${rnd(r, 3)}`}$ — the Pythagorean distance from 0.`,
+    solutionNarrative: `$|${fmtC(a, b)}| = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${s}}${isPerfect ? ` = ${r}` : ` \\approx ${rnd(r, 3)}`}$, the Pythagorean distance from 0.`,
   };
 };
 fill["a2f-complex-plane-3"] = (rng, idx) => {
@@ -290,7 +290,7 @@ fill["a2f-complex-plane-3"] = (rng, idx) => {
       { instruction: `The other root is its complex conjugate. Write it in $a + bi$ form.`, answer: fmtC(s, -t), accept: [], hint: `Flip the sign of the imaginary part of $${fmtC(s, t)}$.` },
     ],
     finalAnswer: { value: `${fmtC(s, t)} and ${fmtC(s, -t)}`, unit: "" },
-    solutionNarrative: `The discriminant is $${disc} < 0$, so the roots are complex: $x = \\dfrac{${-B} \\pm ${2 * t}i}{2} = ${fmtC(s, t)}$ and $${fmtC(s, -t)}$ — a conjugate pair, as always for real coefficients.`,
+    solutionNarrative: `The discriminant is $${disc} < 0$, so the roots are complex: $x = \\dfrac{${-B} \\pm ${2 * t}i}{2} = ${fmtC(s, t)}$ and $${fmtC(s, -t)}$: a conjugate pair, as always for real coefficients.`,
   };
 };
 
@@ -428,11 +428,11 @@ fill["a2f-poly-forms-1"] = (rng, idx) => {
     id: `gen.a2f-poly-forms-1.${idx}`, generated: true, concepts: ["factored-and-expanded-forms"], difficulty: 1, context: "abstract",
     prompt: `A quadratic with leading coefficient 1 has zeros $x = ${p}$ and $x = ${q}$. Write it in factored form, then expand.`,
     steps: [
-      { instruction: `Write the factored form (a product of two linear factors).`, answer: factored, accept: [], form: "factored", hint: `A zero at $x = r$ gives the factor $(x - r)$ — flip the sign of the zero.` },
+      { instruction: `Write the factored form (a product of two linear factors).`, answer: factored, accept: [], form: "factored", hint: `A zero at $x = r$ gives the factor $(x - r)$: flip the sign of the zero.` },
       { instruction: `Expand the product into $x^2 + bx + c$ form.`, answer: expanded, accept: [], hint: `FOIL: the middle coefficient is $-(${p} + ${q > 0 ? q : `(${q})`})$, the constant is $(${-p})(${-q})$.` },
     ],
     finalAnswer: { value: expanded, unit: "" },
-    solutionNarrative: `Zeros ${p} and ${q} give factors $${fmtFactor(p)}$ and $${fmtFactor(q)}$. Expanding: $${expanded}$ — sum of zeros with a minus in the middle, product of zeros at the end.`,
+    solutionNarrative: `Zeros ${p} and ${q} give factors $${fmtFactor(p)}$ and $${fmtFactor(q)}$. Expanding: $${expanded}$: sum of zeros with a minus in the middle, product of zeros at the end.`,
   };
 };
 fill["a2f-poly-forms-2"] = (rng, idx) => {
@@ -449,7 +449,7 @@ fill["a2f-poly-forms-2"] = (rng, idx) => {
       { instruction: `Now multiply every term by ${a}. Give the expanded standard form.`, answer: full, accept: [], hint: `Distribute ${a} across all three terms.` },
     ],
     finalAnswer: { value: full, unit: "" },
-    solutionNarrative: `$${fmtFactor(p)}${fmtFactor(q)} = ${inner}$, and scaling by ${a} gives $${full}$. The zeros don't move when you scale — only the vertical stretch changes.`,
+    solutionNarrative: `$${fmtFactor(p)}${fmtFactor(q)} = ${inner}$, and scaling by ${a} gives $${full}$. The zeros don't move when you scale: only the vertical stretch changes.`,
   };
 };
 fill["a2f-poly-forms-3"] = (rng, idx) => {
@@ -481,7 +481,7 @@ fill["a2f-remainder-thm-1"] = (rng, idx) => {
     id: `gen.a2f-remainder-thm-1.${idx}`, generated: true, concepts: ["evaluating-and-remainder-theorem"], difficulty: 1, context: "abstract",
     prompt: `Evaluate $f(x) = ${fStr}$ at $x = ${k}$.`,
     steps: [
-      { instruction: `First compute $x^2$ at $x = ${k}$. (Give a number.)`, answer: `${k * k}`, accept: [], hint: `$(${k})^2$ — a square is never negative.` },
+      { instruction: `First compute $x^2$ at $x = ${k}$. (Give a number.)`, answer: `${k * k}`, accept: [], hint: `$(${k})^2$: a square is never negative.` },
       { instruction: `Now compute $f(${k}) = ${a}(${k * k}) + (${b})(${k}) + (${c})$. (Give a number.)`, answer: `${fk}`, accept: [], hint: `$${a * k * k} + ${b * k > 0 ? b * k : `(${b * k})`} + ${c > 0 ? c : `(${c})`}$.` },
     ],
     finalAnswer: { value: `${fk}`, unit: "" },
@@ -495,13 +495,13 @@ fill["a2f-remainder-thm-2"] = (rng, idx) => {
   const rem = a * k * k + b * k + c;
   return {
     id: `gen.a2f-remainder-thm-2.${idx}`, generated: true, concepts: ["evaluating-and-remainder-theorem"], difficulty: 2, context: "abstract",
-    prompt: `Use the remainder theorem to find the remainder when $f(x) = ${fStr}$ is divided by $${divisor}$ — no long division needed.`,
+    prompt: `Use the remainder theorem to find the remainder when $f(x) = ${fStr}$ is divided by $${divisor}$: no long division needed.`,
     steps: [
-      { instruction: `The remainder theorem says the remainder on division by $(x - k)$ is $f(k)$. For the divisor $${divisor}$, what is $k$? (Give a number — watch the sign.)`, answer: `${k}`, accept: [], hint: k < 0 ? `$(x + ${-k})$ is $(x - (${k}))$, so $k = ${k}$.` : `Match $${divisor}$ to $(x - k)$.` },
+      { instruction: `The remainder theorem says the remainder on division by $(x - k)$ is $f(k)$. For the divisor $${divisor}$, what is $k$? (Give a number: watch the sign.)`, answer: `${k}`, accept: [], hint: k < 0 ? `$(x + ${-k})$ is $(x - (${k}))$, so $k = ${k}$.` : `Match $${divisor}$ to $(x - k)$.` },
       { instruction: `Evaluate $f(${k}) = ${a}(${k})^2 + (${b})(${k}) + (${c})$. (Give a number.)`, answer: `${rem}`, accept: [], hint: `$${a * k * k} + ${b * k > 0 ? b * k : `(${b * k})`} + ${c > 0 ? c : `(${c})`}$.` },
     ],
     finalAnswer: { value: `${rem}`, unit: "" },
-    solutionNarrative: `By the remainder theorem the remainder equals $f(${k}) = ${rem}$${rem === 0 ? ` — a zero remainder, so $${divisor}$ is a factor of $f$` : ""}. One substitution replaces the whole division.`,
+    solutionNarrative: `By the remainder theorem the remainder equals $f(${k}) = ${rem}$${rem === 0 ? `: a zero remainder, so $${divisor}$ is a factor of $f$` : ""}. One substitution replaces the whole division.`,
   };
 };
 fill["a2f-remainder-thm-3"] = (rng, idx) => {

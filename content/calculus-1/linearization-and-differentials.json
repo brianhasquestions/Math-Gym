@@ -8,7 +8,7 @@
     {
       "id": "tangent-line-approximation",
       "label": "Building the linearization L(x)",
-      "microLesson": "Zoom in far enough on a smooth curve and it looks like a straight line — its tangent. The **linearization of $f$ at $a$** is that tangent line written as a function: $$L(x) = f(a) + f'(a)(x - a).$$ It needs exactly two numbers: the height $f(a)$ and the slope $f'(a)$. Example: for $f(x) = \\sqrt{x}$ at $a = 4$, $f(4) = 2$ and $f'(4) = \\frac{1}{4}$, so $L(x) = 2 + \\frac{x - 4}{4}$."
+      "microLesson": "Zoom in far enough on a smooth curve and it looks like a straight line: its tangent. The **linearization of $f$ at $a$** is that tangent line written as a function: $$L(x) = f(a) + f'(a)(x - a).$$ It needs exactly two numbers: the height $f(a)$ and the slope $f'(a)$. Example: for $f(x) = \\sqrt{x}$ at $a = 4$, $f(4) = 2$ and $f'(4) = \\frac{1}{4}$, so $L(x) = 2 + \\frac{x - 4}{4}$."
     },
     {
       "id": "approximate-values",
@@ -18,27 +18,27 @@
     {
       "id": "differentials",
       "label": "Differentials and error propagation",
-      "microLesson": "Rearrange the tangent-line idea into change language: if $x$ moves by a small $dx$, then $y = f(x)$ moves by approximately $$dy = f'(x)\\,dx.$$ The differential $dy$ is the tangent line's prediction of the change $\\Delta y$. Its killer application is **error propagation**: a cube measured as $s = 10$ cm with a possible error $ds = 0.05$ cm has volume error about $dV = 3s^2\\,ds = 3(100)(0.05) = 15$ cm³ — the derivative converts input error into output error."
+      "microLesson": "Rearrange the tangent-line idea into change language: if $x$ moves by a small $dx$, then $y = f(x)$ moves by approximately $$dy = f'(x)\\,dx.$$ The differential $dy$ is the tangent line's prediction of the change $\\Delta y$. Its killer application is **error propagation**: a cube measured as $s = 10$ cm with a possible error $ds = 0.05$ cm has volume error about $dV = 3s^2\\,ds = 3(100)(0.05) = 15$ cm³: the derivative converts input error into output error."
     },
     {
       "id": "approximation-error-and-concavity",
       "label": "Over- or underestimate? Ask concavity",
-      "microLesson": "The tangent line touches the curve at $a$ and then the curve bends away from it — and $f''$ says which way. If $f''> 0$ near $a$ (**concave up**), the curve bends *above* its tangent, so $L(x)$ is an **underestimate**. If $f'' < 0$ (**concave down**), the curve falls *below* the tangent, so $L(x)$ is an **overestimate**. $\\sqrt{x}$ is concave down, so the estimate $\\sqrt{4.1} \\approx 2.025$ is slightly too big — and indeed $2.02485 < 2.025$."
+      "microLesson": "The tangent line touches the curve at $a$ and then the curve bends away from it, and $f''$ says which way. If $f''> 0$ near $a$ (**concave up**), the curve bends *above* its tangent, so $L(x)$ is an **underestimate**. If $f'' < 0$ (**concave down**), the curve falls *below* the tangent, so $L(x)$ is an **overestimate**. $\\sqrt{x}$ is concave down, so the estimate $\\sqrt{4.1} \\approx 2.025$ is slightly too big, and indeed $2.02485 < 2.025$."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## Curves are secretly straight (up close)\n\nZoom in on any smooth curve — keep doubling the magnification at one point — and it flattens out into a straight line. That line is the tangent, and this observation is one of the most useful facts in applied mathematics: **near the point of tangency, the curve and its tangent line are nearly interchangeable.** The tangent is a *linear* function, so it can be evaluated with nothing but multiplication and addition. Trading a hard function for its tangent line is called **linearization**, and it is how calculators, physicists, and engineers replace hard formulas with easy ones whenever inputs stay near a known point.\n\n## Building L(x)\n\nThe tangent line to $f$ at $x = a$ passes through $(a, f(a))$ with slope $f'(a)$. Written in point–slope form and read as a function, it is the **linearization of $f$ at $a$**:\n\n$$L(x) = f(a) + f'(a)\\,(x - a).$$\n\nTwo numbers — a height and a slope — and you have it. Note what $L$ is: a *polynomial of degree one*. Everything hard about $f$ (roots, exponentials, reciprocals) is gone.\n\n### Worked example\n\nLinearize $f(x) = \\sqrt{x}$ at $a = 4$. We need $f(4) = 2$ and, since $f'(x) = \\frac{1}{2\\sqrt{x}}$, the slope $f'(4) = \\frac{1}{4}$. So\n\n$$L(x) = 2 + \\tfrac{1}{4}(x - 4).$$\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 9], \"yRange\": [0, 3.6], \"grid\": true, \"curves\": [ { \"fn\": \"sqrt(x)\", \"label\": \"y = sqrt(x)\", \"color\": \"accent\", \"labelAt\": 7.5 }, { \"fn\": \"x/4 + 1\", \"label\": \"L(x) = 1 + x/4\", \"color\": \"warn\", \"labelAt\": 5.5 } ], \"points\": [ { \"x\": 4, \"y\": 2, \"label\": \"touch at (4, 2)\", \"color\": \"text\" } ], \"caption\": \"The linearization of sqrt(x) at a = 4. Near the touch point the two graphs are indistinguishable; farther away the concave-down curve drops below its tangent, so L(x) overestimates.\" }\n```\n\nNear $x = 4$ the two graphs hug; far from $4$ they part ways. **$L(x)$ is only a good stand-in near its base point** — that is the deal.\n\n## Using L(x) to approximate values\n\nSuppose you need $\\sqrt{4.1}$ with no calculator. The recipe:\n\n1. **Pick a nice base point $a$ near the input** — one where $f(a)$ and $f'(a)$ are easy. Here $a = 4$.\n2. **Build $L(x) = f(a) + f'(a)(x - a)$.** Here $L(x) = 2 + \\frac{x - 4}{4}$.\n3. **Plug in the awkward input.** $\\sqrt{4.1} \\approx L(4.1) = 2 + \\frac{0.1}{4} = 2.025$.\n\nThe true value is $2.02485\\ldots$ — the tangent line earned three correct decimal places for the price of one division. The same three moves estimate $\\frac{1}{4.1}$ (base $a = 4$, $f(x) = \\frac{1}{x}$), $(3.1)^2$ (base $a = 3$), or a hard-to-measure physical quantity from a nearby calibrated one.\n\n**Pitfall — $L(x)$ is not $f(x)$.** The linearization at $a = 4$ knows nothing about $\\sqrt{25}$; feeding it $x = 25$ gives $L(25) = 7.25$, wildly off from $5$. An approximation carries a *radius of trust*: small $|x - a|$, small error.\n\n## Differentials: the change-language version\n\nThe same idea, rearranged to talk about *changes* instead of *values*. If $x$ changes by a small amount $dx$, the tangent line predicts $y = f(x)$ changes by\n\n$$dy = f'(x)\\,dx.$$\n\n$dy$ is called the **differential** of $y$. It is the linear estimate of the true change $\\Delta y = f(x + dx) - f(x)$; for small $dx$ the two are nearly equal, and $dy$ is far easier to compute.\n\n### Error propagation — the differential's day job\n\nMeasurements come with uncertainty, and differentials tell you how that uncertainty **propagates** through a formula. Measure a cube's side as $s = 10$ cm, honest to within $ds = 0.05$ cm. The volume is $V = s^3$; how uncertain is it?\n\n$$dV = 3s^2\\,ds = 3(10)^2(0.05) = 15 \\text{ cm}^3.$$\n\nA half-millimeter of side error becomes fifteen cubic centimeters of volume error — the derivative $3s^2 = 300$ is precisely the *amplification factor* converting input error to output error. Every lab's uncertainty analysis runs on this line.\n\n**Pitfall — $dy$ predicts the change, not the new value.** The estimated new volume is $V(10) + dV = 1000 + 15$; don't report $dV = 15$ as a volume.\n\n## Which way is the estimate wrong? Concavity knows\n\nA tangent line touches the curve and the curve immediately bends away from it. The second derivative says which side:\n\n- $f'' > 0$ near $a$ (**concave up**): the curve bends *above* the tangent, so $L(x)$ is an **underestimate** of $f(x)$. Example: $f(x) = x^2$ has $f'' = 2 > 0$; every tangent line sits below the parabola.\n- $f'' < 0$ near $a$ (**concave down**): the curve sinks *below* the tangent, so $L(x)$ is an **overestimate**. Example: $f(x) = \\sqrt{x}$ has $f''(x) = -\\frac{1}{4}x^{-3/2} < 0$ — which is why our estimate $2.025$ for $\\sqrt{4.1}$ came out a hair high.\n\nThis turns a bare estimate into a **bound**: 'about $2.025$, and certainly no more' is far more useful to an engineer than 'about $2.025$'. Look back at the plot: the tangent line riding above the concave-down $\\sqrt{x}$ *is* this fact, drawn.\n\n## Common pitfalls, collected\n\n- **Confusing $L(x)$ with $f(x)$** far from the base point — the tangent is a local stand-in, not a replacement.\n- **Building $L$ with the wrong slope:** the slope is the *number* $f'(a)$, not the formula $f'(x)$. Evaluate before you build.\n- **Forgetting units in error propagation:** if $s$ is in cm, $dV = 3s^2\\,ds$ is in cm³.\n- **Ignoring concavity** when the direction of the error matters — a bridge-load underestimate and overestimate are not equally forgivable."
+    "body": "## Curves are secretly straight (up close)\n\nZoom in on any smooth curve, keep doubling the magnification at one point, and it flattens out into a straight line. That line is the tangent, and this observation is one of the most useful facts in applied mathematics: **near the point of tangency, the curve and its tangent line are nearly interchangeable.** The tangent is a *linear* function, so it can be evaluated with nothing but multiplication and addition. Trading a hard function for its tangent line is called **linearization**, and it is how calculators, physicists, and engineers replace hard formulas with easy ones whenever inputs stay near a known point.\n\n## Building L(x)\n\nThe tangent line to $f$ at $x = a$ passes through $(a, f(a))$ with slope $f'(a)$. Written in point–slope form and read as a function, it is the **linearization of $f$ at $a$**:\n\n$$L(x) = f(a) + f'(a)\\,(x - a).$$\n\nTwo numbers, a height and a slope, and you have it. Note what $L$ is: a *polynomial of degree one*. Everything hard about $f$ (roots, exponentials, reciprocals) is gone.\n\n### Worked example\n\nLinearize $f(x) = \\sqrt{x}$ at $a = 4$. We need $f(4) = 2$ and, since $f'(x) = \\frac{1}{2\\sqrt{x}}$, the slope $f'(4) = \\frac{1}{4}$. So\n\n$$L(x) = 2 + \\tfrac{1}{4}(x - 4).$$\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 9], \"yRange\": [0, 3.6], \"grid\": true, \"curves\": [ { \"fn\": \"sqrt(x)\", \"label\": \"y = sqrt(x)\", \"color\": \"accent\", \"labelAt\": 7.5 }, { \"fn\": \"x/4 + 1\", \"label\": \"L(x) = 1 + x/4\", \"color\": \"warn\", \"labelAt\": 5.5 } ], \"points\": [ { \"x\": 4, \"y\": 2, \"label\": \"touch at (4, 2)\", \"color\": \"text\" } ], \"caption\": \"The linearization of sqrt(x) at a = 4. Near the touch point the two graphs are indistinguishable; farther away the concave-down curve drops below its tangent, so L(x) overestimates.\" }\n```\n\nNear $x = 4$ the two graphs hug; far from $4$ they part ways. **$L(x)$ is only a good stand-in near its base point**: that is the deal.\n\n## Using L(x) to approximate values\n\nSuppose you need $\\sqrt{4.1}$ with no calculator. The recipe:\n\n1. **Pick a nice base point $a$ near the input**: one where $f(a)$ and $f'(a)$ are easy. Here $a = 4$.\n2. **Build $L(x) = f(a) + f'(a)(x - a)$.** Here $L(x) = 2 + \\frac{x - 4}{4}$.\n3. **Plug in the awkward input.** $\\sqrt{4.1} \\approx L(4.1) = 2 + \\frac{0.1}{4} = 2.025$.\n\nThe true value is $2.02485\\ldots$: the tangent line earned three correct decimal places for the price of one division. The same three moves estimate $\\frac{1}{4.1}$ (base $a = 4$, $f(x) = \\frac{1}{x}$), $(3.1)^2$ (base $a = 3$), or a hard-to-measure physical quantity from a nearby calibrated one.\n\n**Pitfall: $L(x)$ is not $f(x)$.** The linearization at $a = 4$ knows nothing about $\\sqrt{25}$; feeding it $x = 25$ gives $L(25) = 7.25$, wildly off from $5$. An approximation carries a *radius of trust*: small $|x - a|$, small error.\n\n## Differentials: the change-language version\n\nThe same idea, rearranged to talk about *changes* instead of *values*. If $x$ changes by a small amount $dx$, the tangent line predicts $y = f(x)$ changes by\n\n$$dy = f'(x)\\,dx.$$\n\n$dy$ is called the **differential** of $y$. It is the linear estimate of the true change $\\Delta y = f(x + dx) - f(x)$; for small $dx$ the two are nearly equal, and $dy$ is far easier to compute.\n\n### Error propagation: the differential's day job\n\nMeasurements come with uncertainty, and differentials tell you how that uncertainty **propagates** through a formula. Measure a cube's side as $s = 10$ cm, honest to within $ds = 0.05$ cm. The volume is $V = s^3$; how uncertain is it?\n\n$$dV = 3s^2\\,ds = 3(10)^2(0.05) = 15 \\text{ cm}^3.$$\n\nA half-millimeter of side error becomes fifteen cubic centimeters of volume error: the derivative $3s^2 = 300$ is precisely the *amplification factor* converting input error to output error. Every lab's uncertainty analysis runs on this line.\n\n**Pitfall: $dy$ predicts the change, not the new value.** The estimated new volume is $V(10) + dV = 1000 + 15$; don't report $dV = 15$ as a volume.\n\n## Which way is the estimate wrong? Concavity knows\n\nA tangent line touches the curve and the curve immediately bends away from it. The second derivative says which side:\n\n- $f'' > 0$ near $a$ (**concave up**): the curve bends *above* the tangent, so $L(x)$ is an **underestimate** of $f(x)$. Example: $f(x) = x^2$ has $f'' = 2 > 0$; every tangent line sits below the parabola.\n- $f'' < 0$ near $a$ (**concave down**): the curve sinks *below* the tangent, so $L(x)$ is an **overestimate**. Example: $f(x) = \\sqrt{x}$ has $f''(x) = -\\frac{1}{4}x^{-3/2} < 0$, which is why our estimate $2.025$ for $\\sqrt{4.1}$ came out a hair high.\n\nThis turns a bare estimate into a **bound**: 'about $2.025$, and certainly no more' is far more useful to an engineer than 'about $2.025$'. Look back at the plot: the tangent line riding above the concave-down $\\sqrt{x}$ *is* this fact, drawn.\n\n## Common pitfalls, collected\n\n- **Confusing $L(x)$ with $f(x)$** far from the base point: the tangent is a local stand-in, not a replacement.\n- **Building $L$ with the wrong slope:** the slope is the *number* $f'(a)$, not the formula $f'(x)$. Evaluate before you build.\n- **Forgetting units in error propagation:** if $s$ is in cm, $dV = 3s^2\\,ds$ is in cm³.\n- **Ignoring concavity** when the direction of the error matters: a bridge-load underestimate and overestimate are not equally forgivable."
   },
   "application": {
-    "summary": "Linearization replaces a hard function by its tangent line to make estimates with plain arithmetic — square roots by hand, sensor readings between calibration points — while differentials dy = f'(x)dx convert measurement uncertainty into output uncertainty (error propagation), and concavity tells you whether the estimate errs high or low.",
+    "summary": "Linearization replaces a hard function by its tangent line to make estimates with plain arithmetic (square roots by hand, sensor readings between calibration points) while differentials dy = f'(x)dx convert measurement uncertainty into output uncertainty (error propagation), and concavity tells you whether the estimate errs high or low.",
     "domains": ["engineering", "physics", "chemistry", "everyday estimation"],
-    "workedExample": "**How wrong can the tank volume be?**\n\nA spherical storage tank's radius is measured as $r = 3$ m, but the tape measure is only trusted to $dr = 0.02$ m. The volume formula is $V = \\frac{4}{3}\\pi r^3$. How much volume uncertainty does that 2 cm of radius uncertainty create?\n\nDifferentiate and propagate:\n\n$$dV = V'(r)\\,dr = 4\\pi r^2\\,dr = 4\\pi (3)^2 (0.02) = 0.72\\pi \\approx 2.26 \\text{ m}^3.$$\n\n**A 2-centimeter measuring error becomes about 2.3 cubic meters — 2,300 liters — of volume uncertainty.** The amplification factor is the derivative $4\\pi r^2 \\approx 113$ m² (the sphere's surface area — every bit of radius error gets spread over the whole surface). An engineer quoting this tank's capacity writes $V \\approx 113.1 \\pm 2.3$ m³, and the $\\pm$ came straight from a differential. The same one-line computation prices out tolerance stack-ups in machined parts, dosing errors from concentration measurements, and GPS position error from timing error.",
+    "workedExample": "**How wrong can the tank volume be?**\n\nA spherical storage tank's radius is measured as $r = 3$ m, but the tape measure is only trusted to $dr = 0.02$ m. The volume formula is $V = \\frac{4}{3}\\pi r^3$. How much volume uncertainty does that 2 cm of radius uncertainty create?\n\nDifferentiate and propagate:\n\n$$dV = V'(r)\\,dr = 4\\pi r^2\\,dr = 4\\pi (3)^2 (0.02) = 0.72\\pi \\approx 2.26 \\text{ m}^3.$$\n\n**A 2-centimeter measuring error becomes about 2.3 cubic meters (2,300 liters) of volume uncertainty.** The amplification factor is the derivative $4\\pi r^2 \\approx 113$ m² (the sphere's surface area, every bit of radius error gets spread over the whole surface). An engineer quoting this tank's capacity writes $V \\approx 113.1 \\pm 2.3$ m³, and the $\\pm$ came straight from a differential. The same one-line computation prices out tolerance stack-ups in machined parts, dosing errors from concentration measurements, and GPS position error from timing error.",
     "domainNotes": [
-      "**Engineering:** tolerance analysis — how a machining error in one dimension propagates into stress, volume, or fit; linear interpolation between calibration points of a sensor.",
+      "**Engineering:** tolerance analysis: how a machining error in one dimension propagates into stress, volume, or fit; linear interpolation between calibration points of a sensor.",
       "**Physics:** small-signal approximations ($\\sin\\theta \\approx \\theta$ for pendulums) are linearizations at 0; first-order Taylor estimates of measured quantities.",
       "**Chemistry:** error propagation from measured concentration or temperature into computed reaction rates and pH.",
-      "**Everyday estimation:** mental square roots and percent changes — a 1% change in radius means about 2% in area and 3% in volume, straight from differentials."
+      "**Everyday estimation:** mental square roots and percent changes: a 1% change in radius means about 2% in area and 3% in volume, straight from differentials."
     ]
   },
   "generators": [
@@ -66,7 +66,7 @@
         { "instruction": "Compute the height $f(3)$.", "answer": "9", "accept": [], "hint": "$3^2 = 9$." },
         { "instruction": "Differentiate: what is $f'(x)$?", "answer": "2x", "accept": [], "hint": "Power rule on $x^2$." },
         { "instruction": "Compute the slope $f'(3)$.", "answer": "6", "accept": [], "hint": "$2 \\cdot 3$." },
-        { "instruction": "Assemble $L(x) = f(a) + f'(a)(x - a)$. Write it as an expression in $x$.", "answer": "9 + 6(x - 3)", "accept": ["6x - 9", "6x-9", "9+6(x-3)"], "hint": "$9 + 6(x - 3)$ — simplifying to $6x - 9$ is fine too." }
+        { "instruction": "Assemble $L(x) = f(a) + f'(a)(x - a)$. Write it as an expression in $x$.", "answer": "9 + 6(x - 3)", "accept": ["6x - 9", "6x-9", "9+6(x-3)"], "hint": "$9 + 6(x - 3)$: simplifying to $6x - 9$ is fine too." }
       ],
       "finalAnswer": { "value": "L(x) = 6x - 9", "unit": "" },
       "solutionNarrative": "Height $f(3) = 9$, slope $f'(3) = 6$, so $L(x) = 9 + 6(x - 3) = 6x - 9$: the tangent line at $(3, 9)$ written as a function."
@@ -93,7 +93,7 @@
       "prompt": "Build the linearization $L(x)$ of $f(x) = \\frac{1}{x}$ at $a = 2$. (Recall $f'(x) = -\\frac{1}{x^2}$.)",
       "steps": [
         { "instruction": "Compute the height $f(2)$. Give a fraction.", "answer": "1/2", "accept": ["0.5"], "hint": "$\\frac{1}{2}$." },
-        { "instruction": "Evaluate the slope $f'(2) = -\\frac{1}{2^2}$. Give a fraction — mind the sign.", "answer": "-1/4", "accept": ["-0.25"], "hint": "$-\\frac{1}{4}$." },
+        { "instruction": "Evaluate the slope $f'(2) = -\\frac{1}{2^2}$. Give a fraction: mind the sign.", "answer": "-1/4", "accept": ["-0.25"], "hint": "$-\\frac{1}{4}$." },
         { "instruction": "Assemble $L(x) = f(a) + f'(a)(x - a)$. Write it as an expression in $x$.", "answer": "1/2 - (x - 2)/4", "accept": ["1 - x/4", "-x/4 + 1", "(4 - x)/4", "1/2 - (1/4)(x - 2)"], "hint": "$\\frac{1}{2} - \\frac{1}{4}(x - 2)$, which simplifies to $1 - \\frac{x}{4}$." }
       ],
       "finalAnswer": { "value": "L(x) = 1 - x/4", "unit": "" },
@@ -111,7 +111,7 @@
         { "instruction": "Assemble $L(t) = h(1) + h'(1)(t - 1)$. Write it as an expression in $t$.", "answer": "1 + 3(t - 1)", "accept": ["3t - 2", "3t-2"], "hint": "$1 + 3(t - 1)$ simplifies to $3t - 2$." }
       ],
       "finalAnswer": { "value": "L(t) = 3t - 2", "unit": "meters" },
-      "solutionNarrative": "At $t = 1$: height 1 m, rate 3 m/min, so $L(t) = 1 + 3(t - 1) = 3t - 2$ — a good stand-in for the cubic while $t$ stays near 1."
+      "solutionNarrative": "At $t = 1$: height 1 m, rate 3 m/min, so $L(t) = 1 + 3(t - 1) = 3t - 2$: a good stand-in for the cubic while $t$ stays near 1."
     },
     {
       "id": "calculus-1.linearization-and-differentials.s05",
@@ -124,7 +124,7 @@
         { "instruction": "The true value is $9.61$. What is the size of the error (true minus estimate)?", "answer": "0.01", "accept": [], "hint": "$9.61 - 9.6$." }
       ],
       "finalAnswer": { "value": "9.6", "unit": "" },
-      "solutionNarrative": "$L(3.1) = 6(3.1) - 9 = 9.6$, only $0.01$ below the true $9.61$ — the tangent line nails the first three digits for inputs this close to the base point."
+      "solutionNarrative": "$L(3.1) = 6(3.1) - 9 = 9.6$, only $0.01$ below the true $9.61$: the tangent line nails the first three digits for inputs this close to the base point."
     },
     {
       "id": "calculus-1.linearization-and-differentials.s06",
@@ -138,7 +138,7 @@
         { "instruction": "Use $L(x) = 2 + \\frac{x - 4}{4}$ to estimate $\\sqrt{4.1}$. Give the exact decimal.", "answer": "2.025", "accept": ["81/40"], "hint": "$2 + \\frac{0.1}{4} = 2 + 0.025$." }
       ],
       "finalAnswer": { "value": "2.025", "unit": "" },
-      "solutionNarrative": "Base $a = 4$: height 2, slope $\\frac{1}{4}$, so $\\sqrt{4.1} \\approx 2 + \\frac{0.1}{4} = 2.025$. The calculator says $2.02485$ — three digits for one division."
+      "solutionNarrative": "Base $a = 4$: height 2, slope $\\frac{1}{4}$, so $\\sqrt{4.1} \\approx 2 + \\frac{0.1}{4} = 2.025$. The calculator says $2.02485$: three digits for one division."
     },
     {
       "id": "calculus-1.linearization-and-differentials.s07",
@@ -161,7 +161,7 @@
       "prompt": "Estimate $\\frac{1}{4.1}$ by linearizing $f(x) = \\frac{1}{x}$ at $a = 4$. (Recall $f'(x) = -\\frac{1}{x^2}$.)",
       "steps": [
         { "instruction": "Compute the height $f(4)$. Give a decimal or fraction.", "answer": "0.25", "accept": ["1/4"], "hint": "$\\frac{1}{4}$." },
-        { "instruction": "Evaluate the slope $f'(4)$. Give a fraction — mind the sign.", "answer": "-1/16", "accept": ["-0.0625"], "hint": "$-\\frac{1}{4^2}$." },
+        { "instruction": "Evaluate the slope $f'(4)$. Give a fraction: mind the sign.", "answer": "-1/16", "accept": ["-0.0625"], "hint": "$-\\frac{1}{4^2}$." },
         { "instruction": "Evaluate $L(4.1) = 0.25 - \\frac{0.1}{16}$. Give the exact decimal.", "answer": "0.24375", "accept": ["39/160", "0.2438", "0.244"], "hint": "$\\frac{0.1}{16} = 0.00625$; subtract it from $0.25$." }
       ],
       "finalAnswer": { "value": "0.24375", "unit": "" },
@@ -178,7 +178,7 @@
         { "instruction": "The step is $dx = 0.1$. Compute $dy = f'(5)\\,dx$.", "answer": "1", "accept": ["1.0"], "hint": "$10 \\times 0.1$." }
       ],
       "finalAnswer": { "value": "1", "unit": "" },
-      "solutionNarrative": "$dy = 2x\\,dx = 10 \\times 0.1 = 1$. (The true change is $5.1^2 - 5^2 = 1.01$ — the differential misses only the tiny curvature term.)"
+      "solutionNarrative": "$dy = 2x\\,dx = 10 \\times 0.1 = 1$. (The true change is $5.1^2 - 5^2 = 1.01$: the differential misses only the tiny curvature term.)"
     },
     {
       "id": "calculus-1.linearization-and-differentials.s10",
@@ -204,7 +204,7 @@
         { "instruction": "So $dA = 0.2\\pi$ cm². Give the area error in terms of $\\pi$ or as a decimal (3 decimal places).", "answer": "0.2pi", "accept": ["0.628", "pi/5", "0.63"], "hint": "$0.2\\pi \\approx 0.628$." }
       ],
       "finalAnswer": { "value": "0.2π ≈ 0.628", "unit": "cm^2" },
-      "solutionNarrative": "$dA = 2\\pi r\\,dr = 2\\pi(5)(0.02) = 0.2\\pi \\approx 0.628$ cm². The circumference $2\\pi r$ is the amplification factor — radius error is smeared around the whole rim."
+      "solutionNarrative": "$dA = 2\\pi r\\,dr = 2\\pi(5)(0.02) = 0.2\\pi \\approx 0.628$ cm². The circumference $2\\pi r$ is the amplification factor: radius error is smeared around the whole rim."
     },
     {
       "id": "calculus-1.linearization-and-differentials.s12",
@@ -232,7 +232,7 @@
         { "instruction": "A concave-up curve bends above its tangent line. Is $9.6$ an 'overestimate' or 'underestimate'?", "answer": "underestimate", "accept": ["under", "under-estimate", "underestimates", "too small"], "hint": "Curve above line means the line's value is too small." }
       ],
       "finalAnswer": { "value": "underestimate", "unit": "" },
-      "solutionNarrative": "$f'' = 2 > 0$: concave up, so the parabola sits above every tangent line and $9.6$ is an underestimate — the true value $9.61$ confirms it."
+      "solutionNarrative": "$f'' = 2 > 0$: concave up, so the parabola sits above every tangent line and $9.6$ is an underestimate: the true value $9.61$ confirms it."
     },
     {
       "id": "calculus-1.linearization-and-differentials.s14",
@@ -260,7 +260,7 @@
         { "instruction": "Add the change to the current temperature: estimate $T(2.5)$ in °C.", "answer": "38.5", "accept": ["77/2"], "hint": "$40 + (-1.5)$." }
       ],
       "finalAnswer": { "value": "38.5", "unit": "°C" },
-      "solutionNarrative": "$L(t) = 40 - 3(t - 2)$, so $T(2.5) \\approx 40 - 3(0.5) = 38.5$ °C. Value plus rate-times-time — linearization is exactly the forecast you'd make instinctively."
+      "solutionNarrative": "$L(t) = 40 - 3(t - 2)$, so $T(2.5)\\approx 40 - 3(0.5) = 38.5$ °C. Value plus rate-times-time: linearization is exactly the forecast you'd make instinctively."
     },
     {
       "id": "calculus-1.linearization-and-differentials.s16",

@@ -2,7 +2,7 @@
 // Parametric generators for two wave-14 curriculum-gap topics:
 //   calculus-3.polar-cylindrical-spherical   (prefix c3q-)
 //   calculus-1.mean-value-theorem            (prefix c1m-)
-// One template per (concept, difficulty) tier — 12 per topic, 24 total.
+// One template per (concept, difficulty) tier: 12 per topic, 24 total.
 // Self-contained: no imports. Every answer is computed in-pack from the SAME
 // randomized numbers shown in the prompt. All final integral values are numbers
 // or pi/sqrt numeric expressions the grader's evalNumeric can verify.
@@ -55,7 +55,7 @@ fill["c3q-polar-1"] = (rng, idx) => {
       { instruction: `Multiply by the $\\theta$-integral $\\int_0^{2\\pi} d\\theta = 2\\pi$. (Type it like ${R * R}pi.)`, answer: total.ans, accept: total.accepts, hint: `$\\tfrac{${R * R}}{2} \\cdot 2\\pi$.` },
     ],
     finalAnswer: { value: total.ans, unit: "" },
-    solutionNarrative: `Inner: $\\int_0^{${R}} r\\,dr = ${inner}$; times $2\\pi$ gives $${total.tex}$ — the familiar $\\pi R^2$.`,
+    solutionNarrative: `Inner: $\\int_0^{${R}} r\\,dr = ${inner}$; times $2\\pi$ gives $${total.tex}$: the familiar $\\pi R^2$.`,
   };
 };
 
@@ -174,7 +174,7 @@ fill["c3q-cyl-1"] = (rng, idx) => {
       { instruction: `Multiply by $2\\pi$. (Type it like ${R * R * h}pi.)`, answer: total.ans, accept: total.accepts, hint: `$${rInt} \\cdot 2\\pi$.` },
     ],
     finalAnswer: { value: total.ans, unit: "" },
-    solutionNarrative: `Layer by layer: $${h}r$, then $${rInt}$, then $${total.tex}$ — matching $\\pi R^2 h = \\pi \\cdot ${R * R} \\cdot ${h}$.`,
+    solutionNarrative: `Layer by layer: $${h}r$, then $${rInt}$, then $${total.tex}$: matching $\\pi R^2 h = \\pi \\cdot ${R * R} \\cdot ${h}$.`,
   };
 };
 
@@ -229,7 +229,7 @@ fill["c3q-sph-1"] = (rng, idx) => {
     steps: [
       { instruction: `Compute the $\\rho$-factor $\\int_0^{${a}} \\rho^2\\,d\\rho$.`, answer: rhoFac, accept: [(a ** 3 / 3).toFixed(4)], hint: `$\\tfrac{\\rho^3}{3}\\big|_0^{${a}}$.` },
       { instruction: `Compute the $\\varphi$-factor $\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi$.`, answer: "2", accept: [], hint: `$-\\cos\\varphi\\big|_0^{\\pi} = 1 - (-1)$.` },
-      { instruction: `Multiply the three factors: $${rhoFac} \\cdot 2 \\cdot 2\\pi$. (Type it like 36pi.)`, answer: total.ans, accept: total.accepts, hint: `Constant bounds — the triple integral is a product.` },
+      { instruction: `Multiply the three factors: $${rhoFac} \\cdot 2 \\cdot 2\\pi$. (Type it like 36pi.)`, answer: total.ans, accept: total.accepts, hint: `Constant bounds: the triple integral is a product.` },
     ],
     finalAnswer: { value: total.ans, unit: "" },
     solutionNarrative: `$${rhoFac} \\cdot 2 \\cdot 2\\pi = ${total.tex}$, which is exactly $\\tfrac{4}{3}\\pi \\cdot ${a}^3$.`,
@@ -251,7 +251,7 @@ fill["c3q-sph-2"] = (rng, idx) => {
       { instruction: `Multiply by the $\\varphi$-factor 2 and the $\\theta$-factor $2\\pi$. (Type it like 28pi/3.)`, answer: total.ans, accept: total.accepts, hint: `$${rhoFac} \\cdot 2 \\cdot 2\\pi$.` },
     ],
     finalAnswer: { value: total.ans, unit: "" },
-    solutionNarrative: `$${rhoFac} \\cdot 2 \\cdot 2\\pi = ${total.tex}$ — the difference of ball volumes $\\tfrac{4}{3}\\pi(${b}^3 - ${a}^3)$.`,
+    solutionNarrative: `$${rhoFac} \\cdot 2 \\cdot 2\\pi = ${total.tex}$: the difference of ball volumes $\\tfrac{4}{3}\\pi(${b}^3 - ${a}^3)$.`,
   };
 };
 
@@ -271,7 +271,7 @@ fill["c3q-sph-3"] = (rng, idx) => {
     steps: [
       { instruction: `Compute the $\\rho$-factor $\\int_0^{${a}} \\rho^2\\,d\\rho$.`, answer: rhoFac, accept: [(a ** 3 / 3).toFixed(4)], hint: `$\\tfrac{\\rho^3}{3}\\big|_0^{${a}}$.` },
       { instruction: `Compute the $\\varphi$-factor $\\int_0^{${cap.tex}} \\sin\\varphi\\,d\\varphi = 1 - \\cos(${cap.tex})$.`, answer: phiFac, accept: [(cap.num / cap.den).toString()], hint: `$${cap.cosTex}$.` },
-      { instruction: `Multiply the three factors: $${rhoFac} \\cdot ${phiFac} \\cdot 2\\pi$. (Type it like 8pi/3.)`, answer: total.ans, accept: total.accepts, hint: `Constant bounds — the integral is a product.` },
+      { instruction: `Multiply the three factors: $${rhoFac} \\cdot ${phiFac} \\cdot 2\\pi$. (Type it like 8pi/3.)`, answer: total.ans, accept: total.accepts, hint: `Constant bounds: the integral is a product.` },
     ],
     finalAnswer: { value: total.ans, unit: "" },
     solutionNarrative: `The factors are $${rhoFac}$, $${phiFac}$, and $2\\pi$; their product is $${total.tex}$.`,
@@ -315,7 +315,7 @@ fill["c1m-rolles-2"] = (rng, idx) => {
     prompt: `For $f(x) = x^2 - ${2 * v}x + ${q}$ on $[${lo}, ${hi}]$, confirm the endpoint values match and find the $c$ from Rolle's theorem.`,
     steps: [
       { instruction: `Compute $f(${lo})$.`, answer: `${E}`, accept: [], hint: `$${lo}^2 - ${2 * v} \\cdot ${lo < 0 ? `(${lo})` : lo} + ${q}$.` },
-      { instruction: `Compute $f(${hi})$.`, answer: `${E}`, accept: [], hint: `$${hi}^2 - ${2 * v} \\cdot ${hi} + ${q}$ — it matches $f(${lo})$.` },
+      { instruction: `Compute $f(${hi})$.`, answer: `${E}`, accept: [], hint: `$${hi}^2 - ${2 * v} \\cdot ${hi} + ${q}$: it matches $f(${lo})$.` },
       { instruction: `Solve $f'(c) = 2c - ${2 * v} = 0$.`, answer: `${v}`, accept: [`c=${v}`, `c = ${v}`], hint: `The vertex of the parabola.` },
     ],
     finalAnswer: { value: `c = ${v}`, unit: "" },
@@ -398,7 +398,7 @@ fill["c1m-secant-3"] = (rng, idx) => {
       { instruction: `Velocity is $s'(t) = 2t + ${b}$. Solve $2t + ${b} = ${avg}$ for the guaranteed instant $t$.`, answer: `${tStar}`, accept: [`t=${tStar}`, `t = ${tStar}`], hint: `Subtract ${b}, divide by 2.` },
     ],
     finalAnswer: { value: `t = ${tStar}`, unit: "s" },
-    solutionNarrative: `Average velocity $= \\tfrac{${sT}}{${T}} = ${avg}$ m/s; setting $2t + ${b} = ${avg}$ gives $t = ${tStar}$ s — the midpoint of the interval, as always for quadratic position.`,
+    solutionNarrative: `Average velocity $= \\tfrac{${sT}}{${T}} = ${avg}$ m/s; setting $2t + ${b} = ${avg}$ gives $t = ${tStar}$ s: the midpoint of the interval, as always for quadratic position.`,
   };
 };
 
@@ -439,7 +439,7 @@ fill["c1m-findc-2"] = (rng, idx) => {
       { instruction: `Solve $2c - ${bb} = ${slope}$.`, answer: `${c}`, accept: [`c=${c}`, `c = ${c}`], hint: `Add ${bb}, divide by 2.` },
     ],
     finalAnswer: { value: `c = ${c}`, unit: "" },
-    solutionNarrative: `Secant slope $\\tfrac{${fhi} - ${fp}}{${hi - p}} = ${slope}$; setting $2c - ${bb} = ${slope}$ gives $c = ${c}$ — the midpoint, as for every quadratic.`,
+    solutionNarrative: `Secant slope $\\tfrac{${fhi} - ${fp}}{${hi - p}} = ${slope}$; setting $2c - ${bb} = ${slope}$ gives $c = ${c}$: the midpoint, as for every quadratic.`,
   };
 };
 
@@ -498,7 +498,7 @@ fill["c1m-conseq-2"] = (rng, idx) => {
     ],
     finalAnswer: { value: ans, unit: "" },
     solutionNarrative: over
-      ? `Average speed $= ${v}$ mph; the MVT guarantees an instant at exactly ${v} mph, which exceeds ${L} — provable speeding without a radar gun.`
+      ? `Average speed $= ${v}$ mph; the MVT guarantees an instant at exactly ${v} mph, which exceeds ${L}: provable speeding without a radar gun.`
       : `Average speed $= ${v}$ mph, which is under the ${L} mph limit; the MVT only guarantees an instant at ${v} mph, so the ticket alone proves nothing.`,
   };
 };

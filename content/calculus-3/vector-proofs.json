@@ -8,32 +8,32 @@
     {
       "id": "component-expansion-proofs",
       "label": "Proofs by component expansion",
-      "microLesson": "Most vector algebra facts are proven the same honest way: **write out the components and watch ordinary algebra finish the job**. To prove the dot product is commutative, expand both sides: $\\vec{u} \\cdot \\vec{v} = u_1v_1 + u_2v_2 + u_3v_3$ and $\\vec{v} \\cdot \\vec{u} = v_1u_1 + v_2u_2 + v_3u_3$. Since ordinary multiplication commutes ($v_1u_1 = u_1v_1$), the two expansions are the same polynomial — proof done. The same three-step pattern (expand LHS, expand RHS, compare) proves distributivity $\\vec{u} \\cdot (\\vec{v}+\\vec{w}) = \\vec{u}\\cdot\\vec{v} + \\vec{u}\\cdot\\vec{w}$ and the scalar pull-out $(k\\vec{v}) \\cdot \\vec{w} = k(\\vec{v} \\cdot \\vec{w})$. Type subscripts inline: $u_1 v_1$ is typed as u1v1."
+      "microLesson": "Most vector algebra facts are proven the same honest way: **write out the components and watch ordinary algebra finish the job**. To prove the dot product is commutative, expand both sides: $\\vec{u} \\cdot \\vec{v} = u_1v_1 + u_2v_2 + u_3v_3$ and $\\vec{v} \\cdot \\vec{u} = v_1u_1 + v_2u_2 + v_3u_3$. Since ordinary multiplication commutes ($v_1u_1 = u_1v_1$), the two expansions are the same polynomial: proof done. The same three-step pattern (expand LHS, expand RHS, compare) proves distributivity $\\vec{u} \\cdot (\\vec{v}+\\vec{w}) = \\vec{u}\\cdot\\vec{v} + \\vec{u}\\cdot\\vec{w}$ and the scalar pull-out $(k\\vec{v}) \\cdot \\vec{w} = k(\\vec{v} \\cdot \\vec{w})$. Type subscripts inline: $u_1 v_1$ is typed as u1v1."
     },
     {
       "id": "orthogonality-proofs",
       "label": "Orthogonality of the cross product",
-      "microLesson": "The claim that $\\vec{v} \\times \\vec{w}$ is **perpendicular to both** $\\vec{v}$ and $\\vec{w}$ is a theorem, not a decree — and you can prove it. Compute the cross product $\\langle v_2w_3 - v_3w_2,\\; v_3w_1 - v_1w_3,\\; v_1w_2 - v_2w_1 \\rangle$, then dot it with $\\vec{v}$: $v_1(v_2w_3 - v_3w_2) + v_2(v_3w_1 - v_1w_3) + v_3(v_1w_2 - v_2w_1)$. Expand and every term appears twice with opposite signs — the whole thing **collapses to 0**, and a zero dot product means perpendicular. It works for concrete integer vectors and for fully symbolic ones, which is why it works for *all* vectors."
+      "microLesson": "The claim that $\\vec{v} \\times \\vec{w}$ is **perpendicular to both** $\\vec{v}$ and $\\vec{w}$ is a theorem, not a decree, and you can prove it. Compute the cross product $\\langle v_2w_3 - v_3w_2,\\; v_3w_1 - v_1w_3,\\; v_1w_2 - v_2w_1 \\rangle$, then dot it with $\\vec{v}$: $v_1(v_2w_3 - v_3w_2) + v_2(v_3w_1 - v_1w_3) + v_3(v_1w_2 - v_2w_1)$. Expand and every term appears twice with opposite signs: the whole thing **collapses to 0**, and a zero dot product means perpendicular. It works for concrete integer vectors and for fully symbolic ones, which is why it works for *all* vectors."
     },
     {
       "id": "identity-verification",
       "label": "Verifying vector identities",
-      "microLesson": "**Lagrange's identity** says $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$ — it links the two products and is why $|\\vec{v} \\times \\vec{w}| = |\\vec{v}||\\vec{w}|\\sin\\theta$. The **scalar triple product** $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w})$ has *cyclic symmetry*: rotating the three vectors ($\\vec{u} \\to \\vec{v} \\to \\vec{w} \\to \\vec{u}$) leaves the number unchanged, so $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = \\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$. Verifying an identity on concrete integer vectors means computing both sides independently and checking they agree — a numeric spot-check of the general proof."
+      "microLesson": "**Lagrange's identity** says $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$: it links the two products and is why $|\\vec{v} \\times \\vec{w}| = |\\vec{v}||\\vec{w}|\\sin\\theta$. The **scalar triple product** $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w})$ has *cyclic symmetry*: rotating the three vectors ($\\vec{u} \\to \\vec{v} \\to \\vec{w} \\to \\vec{u}$) leaves the number unchanged, so $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = \\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$. Verifying an identity on concrete integer vectors means computing both sides independently and checking they agree: a numeric spot-check of the general proof."
     },
     {
       "id": "geometric-vector-proofs",
       "label": "Geometric proofs with vectors",
-      "microLesson": "Classical geometry facts become short algebra once you set up **position vectors**. Parallelogram $OACB$ with $\\vec{C} = \\vec{A} + \\vec{B}$: the midpoint of diagonal $OC$ is $\\tfrac{1}{2}(\\vec{A}+\\vec{B})$ and the midpoint of diagonal $AB$ is also $\\tfrac{1}{2}(\\vec{A}+\\vec{B})$ — same point, so the **diagonals bisect each other**. The **midsegment** joining midpoints of two triangle sides equals half the third side: $\\tfrac{1}{2}\\vec{R} - \\tfrac{1}{2}\\vec{P} = \\tfrac{1}{2}(\\vec{R}-\\vec{P})$. And the **gradient is perpendicular to the level curve**: at a point on the circle $x^2+y^2 = r^2$, dot $\\nabla f = \\langle 2x_0, 2y_0 \\rangle$ with the tangent direction $\\langle -y_0, x_0 \\rangle$ and get 0."
+      "microLesson": "Classical geometry facts become short algebra once you set up **position vectors**. Parallelogram $OACB$ with $\\vec{C} = \\vec{A} + \\vec{B}$: the midpoint of diagonal $OC$ is $\\tfrac{1}{2}(\\vec{A}+\\vec{B})$ and the midpoint of diagonal $AB$ is also $\\tfrac{1}{2}(\\vec{A}+\\vec{B})$: same point, so the **diagonals bisect each other**. The **midsegment** joining midpoints of two triangle sides equals half the third side: $\\tfrac{1}{2}\\vec{R} - \\tfrac{1}{2}\\vec{P} = \\tfrac{1}{2}(\\vec{R}-\\vec{P})$. And the **gradient is perpendicular to the level curve**: at a point on the circle $x^2+y^2 = r^2$, dot $\\nabla f = \\langle 2x_0, 2y_0 \\rangle$ with the tangent direction $\\langle -y_0, x_0 \\rangle$ and get 0."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## Why prove what a formula already does?\n\nEvery frame, a game engine computes a cross product of two triangle edges and *trusts* that the result points straight out of the surface — that trust is what makes the lighting look right. A physics simulator trusts that torque $\\vec{r} \\times \\vec{F}$ is perpendicular to both the lever arm and the force. A robot controller trusts that a zero dot product really means a right angle. None of that trust comes from checking a million examples. It comes from **proofs**: short algebraic arguments showing the formulas *must* behave, for every vector, forever. This topic teaches you to build and verify those arguments yourself.\n\nThere is a second, very practical payoff: **identities are speed**. If $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$ (Lagrange's identity), an engine can get a parallelogram's area from three cheap dot products instead of assembling a whole cross product. Graphics pipelines, CAD kernels, and physics engines are full of such swaps — each one justified by an identity somebody proved.\n\n## The master move: expand into components\n\nAlmost every proof in this topic is the same three steps:\n\n1. **Expand the left side** into components.\n2. **Expand the right side** into components.\n3. **Compare** — ordinary algebra (commuting, distributing) shows they are the same polynomial.\n\n### Worked proof: the dot product commutes\n\nClaim: $\\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u}$ for all vectors. Let $\\vec{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\vec{v} = \\langle v_1, v_2, v_3 \\rangle$.\n\n$$\\vec{u} \\cdot \\vec{v} = u_1v_1 + u_2v_2 + u_3v_3$$\n$$\\vec{v} \\cdot \\vec{u} = v_1u_1 + v_2u_2 + v_3u_3$$\n\nEach term $v_iu_i$ equals $u_iv_i$ because multiplying *numbers* commutes. The two sides are literally the same sum, so the identity holds — not for one example, but for **every** pair of vectors, because $u_1, \\dots, v_3$ were never given values. That's the whole trick: a symbol you never pin down stands for *all* numbers at once.\n\n## The showpiece: why the cross product is perpendicular\n\nDot $\\vec{v} \\times \\vec{w} = \\langle v_2w_3 - v_3w_2,\\; v_3w_1 - v_1w_3,\\; v_1w_2 - v_2w_1 \\rangle$ with $\\vec{v}$ itself:\n\n$$v_1(v_2w_3 - v_3w_2) + v_2(v_3w_1 - v_1w_3) + v_3(v_1w_2 - v_2w_1)$$\n\nExpand: $v_1v_2w_3 - v_1v_3w_2 + v_2v_3w_1 - v_1v_2w_3 + v_1v_3w_2 - v_2v_3w_1$. Every term appears twice with opposite signs. Total: $0$. A zero dot product means perpendicular — so the normal vector your renderer computes is *guaranteed* perpendicular, no matter which triangle it came from.\n\n## Verifying identities, and proving geometry\n\nFor heavier identities — Lagrange's, or the cyclic symmetry $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = \\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$ — you'll **verify on concrete integer vectors**: compute both sides independently and watch them agree. A verification isn't a full proof, but it's how working engineers sanity-check formulas and how you'll catch a sign error instantly.\n\nFinally, vectors turn classical geometry into short algebra. Put one vertex at the origin, name the others with position vectors, and midpoints become averages: the two diagonals of a parallelogram have the *same* midpoint $\\tfrac{1}{2}(\\vec{A} + \\vec{B})$, so they bisect each other — a one-line proof of a fact Euclid needed a whole construction for."
+    "body": "## Why prove what a formula already does?\n\nEvery frame, a game engine computes a cross product of two triangle edges and *trusts* that the result points straight out of the surface: that trust is what makes the lighting look right. A physics simulator trusts that torque $\\vec{r} \\times \\vec{F}$ is perpendicular to both the lever arm and the force. A robot controller trusts that a zero dot product really means a right angle. None of that trust comes from checking a million examples. It comes from **proofs**: short algebraic arguments showing the formulas *must* behave, for every vector, forever. This topic teaches you to build and verify those arguments yourself.\n\nThere is a second, very practical payoff: **identities are speed**. If $|\\vec{v} \\times \\vec{w}|^2 = |\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$ (Lagrange's identity), an engine can get a parallelogram's area from three cheap dot products instead of assembling a whole cross product. Graphics pipelines, CAD kernels, and physics engines are full of such swaps: each one justified by an identity somebody proved.\n\n## The master move: expand into components\n\nAlmost every proof in this topic is the same three steps:\n\n1. **Expand the left side** into components.\n2. **Expand the right side** into components.\n3. **Compare**: ordinary algebra (commuting, distributing) shows they are the same polynomial.\n\n### Worked proof: the dot product commutes\n\nClaim: $\\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u}$ for all vectors. Let $\\vec{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\vec{v} = \\langle v_1, v_2, v_3 \\rangle$.\n\n$$\\vec{u} \\cdot \\vec{v} = u_1v_1 + u_2v_2 + u_3v_3$$\n$$\\vec{v} \\cdot \\vec{u} = v_1u_1 + v_2u_2 + v_3u_3$$\n\nEach term $v_iu_i$ equals $u_iv_i$ because multiplying *numbers* commutes. The two sides are literally the same sum, so the identity holds, not for one example, but for **every** pair of vectors, because $u_1, \\dots, v_3$ were never given values. That's the whole trick: a symbol you never pin down stands for *all* numbers at once.\n\n## The showpiece: why the cross product is perpendicular\n\nDot $\\vec{v} \\times \\vec{w} = \\langle v_2w_3 - v_3w_2,\\; v_3w_1 - v_1w_3,\\; v_1w_2 - v_2w_1 \\rangle$ with $\\vec{v}$ itself:\n\n$$v_1(v_2w_3 - v_3w_2) + v_2(v_3w_1 - v_1w_3) + v_3(v_1w_2 - v_2w_1)$$\n\nExpand: $v_1v_2w_3 - v_1v_3w_2 + v_2v_3w_1 - v_1v_2w_3 + v_1v_3w_2 - v_2v_3w_1$. Every term appears twice with opposite signs. Total: $0$. A zero dot product means perpendicular, so the normal vector your renderer computes is *guaranteed* perpendicular, no matter which triangle it came from.\n\n## Verifying identities, and proving geometry\n\nFor heavier identities (Lagrange's, or the cyclic symmetry $\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = \\vec{v} \\cdot (\\vec{w} \\times \\vec{u})$) you'll **verify on concrete integer vectors**: compute both sides independently and watch them agree. A verification isn't a full proof, but it's how working engineers sanity-check formulas and how you'll catch a sign error instantly.\n\nFinally, vectors turn classical geometry into short algebra. Put one vertex at the origin, name the others with position vectors, and midpoints become averages: the two diagonals of a parallelogram have the *same* midpoint $\\tfrac{1}{2}(\\vec{A} + \\vec{B})$, so they bisect each other: a one-line proof of a fact Euclid needed a whole construction for."
   },
   "application": {
     "summary": "Proofs are what let software trust vector formulas: a renderer's normal vectors are guaranteed perpendicular because the cross product is proven orthogonal, and identities like Lagrange's let engines swap expensive computations for cheap algebraically-equal ones.",
     "domains": ["computer graphics", "game engines", "robotics", "physics simulation", "CAD"],
-    "workedExample": "**Is the renderer's normal vector actually correct?**\n\nA graphics engine shades a triangle using the normal $\\vec{n} = \\vec{a} \\times \\vec{b}$, where $\\vec{a} = \\langle 2, 1, 3 \\rangle$ and $\\vec{b} = \\langle 1, 0, 2 \\rangle$ are two edge vectors. If $\\vec{n}$ is not truly perpendicular to the face, every lighting calculation on it is wrong. Prove it is.\n\nCompute the normal: $\\vec{n} = \\langle 1(2) - 3(0),\\; 3(1) - 2(2),\\; 2(0) - 1(1) \\rangle = \\langle 2, -1, -1 \\rangle$.\n\nCheck it against **both** edges with dot products:\n\n$$\\vec{n} \\cdot \\vec{a} = 2(2) + (-1)(1) + (-1)(3) = 4 - 1 - 3 = 0$$\n$$\\vec{n} \\cdot \\vec{b} = 2(1) + (-1)(0) + (-1)(2) = 2 - 0 - 2 = 0$$\n\nBoth are zero, so $\\vec{n}$ is perpendicular to both edges — a valid normal. And because the symbolic proof (expand, cancel in pairs, get 0) never used these particular numbers, the engine gets this guarantee for **every triangle in every scene**, millions of times per second, with no runtime checking needed.",
+    "workedExample": "**Is the renderer's normal vector actually correct?**\n\nA graphics engine shades a triangle using the normal $\\vec{n} = \\vec{a} \\times \\vec{b}$, where $\\vec{a} = \\langle 2, 1, 3 \\rangle$ and $\\vec{b} = \\langle 1, 0, 2 \\rangle$ are two edge vectors. If $\\vec{n}$ is not truly perpendicular to the face, every lighting calculation on it is wrong. Prove it is.\n\nCompute the normal: $\\vec{n} = \\langle 1(2) - 3(0),\\; 3(1) - 2(2),\\; 2(0) - 1(1) \\rangle = \\langle 2, -1, -1 \\rangle$.\n\nCheck it against **both** edges with dot products:\n\n$$\\vec{n} \\cdot \\vec{a} = 2(2) + (-1)(1) + (-1)(3) = 4 - 1 - 3 = 0$$\n$$\\vec{n} \\cdot \\vec{b} = 2(1) + (-1)(0) + (-1)(2) = 2 - 0 - 2 = 0$$\n\nBoth are zero, so $\\vec{n}$ is perpendicular to both edges: a valid normal. And because the symbolic proof (expand, cancel in pairs, get 0) never used these particular numbers, the engine gets this guarantee for **every triangle in every scene**, millions of times per second, with no runtime checking needed.",
     "domainNotes": [
       "**Graphics/game engines:** surface normals from cross products are trusted perpendicular *by proof*; Lagrange's identity computes areas and $\\sin\\theta$ from cheap dot products.",
       "**Robotics:** controllers verify perpendicularity of joint axes with dot products; cyclic triple-product symmetry simplifies volume and torque bookkeeping.",
@@ -82,7 +82,7 @@
         { "instruction": "Do the two codes always compute the same work? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$pa = ap$ because multiplying numbers commutes." }
       ],
       "finalAnswer": { "value": "yes", "unit": "" },
-      "solutionNarrative": "$\\vec{F} \\cdot \\vec{d} = ap + bq + cr$ and $\\vec{d} \\cdot \\vec{F} = pa + qb + rc$ — the same sum, so both codes agree for every force and displacement."
+      "solutionNarrative": "$\\vec{F} \\cdot \\vec{d} = ap + bq + cr$ and $\\vec{d} \\cdot \\vec{F} = pa + qb + rc$: the same sum, so both codes agree for every force and displacement."
     },
     {
       "id": "calculus-3.vector-proofs.s03",
@@ -96,7 +96,7 @@
         { "instruction": "Distributing $k$ over the sum makes the sides identical. Are they equal for every $k$, $\\vec{v}$, $\\vec{w}$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "$k(v_1w_1 + v_2w_2 + v_3w_3) = kv_1w_1 + kv_2w_2 + kv_3w_3$ by the distributive law." }
       ],
       "finalAnswer": { "value": "yes", "unit": "" },
-      "solutionNarrative": "The left side expands to $kv_1w_1 + kv_2w_2 + kv_3w_3$, which is exactly $k$ distributed over $v_1w_1 + v_2w_2 + v_3w_3$ — the right side. The scalar pulls out."
+      "solutionNarrative": "The left side expands to $kv_1w_1 + kv_2w_2 + kv_3w_3$, which is exactly $k$ distributed over $v_1w_1 + v_2w_2 + v_3w_3$: the right side. The scalar pulls out."
     },
     {
       "id": "calculus-3.vector-proofs.s04",
@@ -140,7 +140,7 @@
         { "instruction": "Is $\\vec{n}$ a valid normal (perpendicular to both edges)? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Both dot products came out zero." }
       ],
       "finalAnswer": { "value": "yes", "unit": "" },
-      "solutionNarrative": "$\\vec{n} = \\langle 2, -1, -1 \\rangle$; dotting with each edge gives $4-1-3 = 0$ and $2-0-2 = 0$, so the normal is perpendicular to both edges — the lighting math can trust it."
+      "solutionNarrative": "$\\vec{n} = \\langle 2, -1, -1 \\rangle$; dotting with each edge gives $4-1-3 = 0$ and $2-0-2 = 0$, so the normal is perpendicular to both edges: the lighting math can trust it."
     },
     {
       "id": "calculus-3.vector-proofs.s07",
@@ -152,11 +152,11 @@
         { "instruction": "Write the first component of $\\vec{v} \\times \\vec{w}$.", "answer": "v2w3 - v3w2", "accept": ["v2*w3 - v3*w2"], "hint": "$v_2w_3 - v_3w_2$." },
         { "instruction": "Write the second component of $\\vec{v} \\times \\vec{w}$.", "answer": "v3w1 - v1w3", "accept": ["v3*w1 - v1*w3"], "hint": "The middle component uses the 'backwards' pairing: $v_3w_1 - v_1w_3$." },
         { "instruction": "Write the third component of $\\vec{v} \\times \\vec{w}$.", "answer": "v1w2 - v2w1", "accept": ["v1*w2 - v2*w1"], "hint": "$v_1w_2 - v_2w_1$." },
-        { "instruction": "Now expand $(\\vec{v} \\times \\vec{w}) \\cdot \\vec{v}$ fully and simplify. What does it equal?", "answer": "0", "accept": ["v1(v2w3-v3w2) + v2(v3w1-v1w3) + v3(v1w2-v2w1)"], "hint": "$v_1(v_2w_3-v_3w_2) + v_2(v_3w_1-v_1w_3) + v_3(v_1w_2-v_2w_1)$ — every term cancels in pairs." },
+        { "instruction": "Now expand $(\\vec{v} \\times \\vec{w}) \\cdot \\vec{v}$ fully and simplify. What does it equal?", "answer": "0", "accept": ["v1(v2w3-v3w2) + v2(v3w1-v1w3) + v3(v1w2-v2w1)"], "hint": "$v_1(v_2w_3-v_3w_2) + v_2(v_3w_1-v_1w_3) + v_3(v_1w_2-v_2w_1)$: every term cancels in pairs." },
         { "instruction": "Since no values were ever assigned to the components, this holds for every $\\vec{v}$ and $\\vec{w}$. Is $\\vec{v} \\times \\vec{w}$ always perpendicular to $\\vec{v}$? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The dot product is identically 0, and 0 means perpendicular." }
       ],
       "finalAnswer": { "value": "yes", "unit": "" },
-      "solutionNarrative": "Dotting $\\langle v_2w_3-v_3w_2, v_3w_1-v_1w_3, v_1w_2-v_2w_1 \\rangle$ with $\\vec{v}$ gives six terms that cancel in opposite-sign pairs, leaving 0 — so the cross product is perpendicular to $\\vec{v}$ for all vectors."
+      "solutionNarrative": "Dotting $\\langle v_2w_3-v_3w_2, v_3w_1-v_1w_3, v_1w_2-v_2w_1 \\rangle$ with $\\vec{v}$ gives six terms that cancel in opposite-sign pairs, leaving 0, so the cross product is perpendicular to $\\vec{v}$ for all vectors."
     },
     {
       "id": "calculus-3.vector-proofs.s08",
@@ -168,7 +168,7 @@
         { "instruction": "Compute the dot product $\\vec{v} \\cdot \\vec{w}$.", "answer": "0", "accept": [], "hint": "$3(0) + 0(2) + 0(0) = 0$." },
         { "instruction": "Compute $|\\vec{v}|^2 |\\vec{w}|^2$.", "answer": "36", "accept": [], "hint": "$|\\vec{v}|^2 = 9$ and $|\\vec{w}|^2 = 4$." },
         { "instruction": "Compute the cross product $\\vec{v} \\times \\vec{w}$.", "answer": "<0, 0, 6>", "accept": ["(0, 0, 6)", "<0,0,6>"], "hint": "Only the third component survives: $3(2) - 0(0) = 6$." },
-        { "instruction": "Compute $|\\vec{v} \\times \\vec{w}|^2$ and compare with $|\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2 = 36 - 0$. What is $|\\vec{v} \\times \\vec{w}|^2$?", "answer": "36", "accept": [], "hint": "$0^2 + 0^2 + 6^2 = 36$ — both sides agree." }
+        { "instruction": "Compute $|\\vec{v} \\times \\vec{w}|^2$ and compare with $|\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2 = 36 - 0$. What is $|\\vec{v} \\times \\vec{w}|^2$?", "answer": "36", "accept": [], "hint": "$0^2 + 0^2 + 6^2 = 36$: both sides agree." }
       ],
       "finalAnswer": { "value": "36", "unit": "" },
       "solutionNarrative": "$\\vec{v} \\cdot \\vec{w} = 0$, $|\\vec{v}|^2|\\vec{w}|^2 = 36$, and $|\\vec{v} \\times \\vec{w}|^2 = |\\langle 0,0,6 \\rangle|^2 = 36 = 36 - 0$. Lagrange's identity checks out."
@@ -185,7 +185,7 @@
         { "instruction": "Compute $|\\vec{w}|^2$.", "answer": "5", "accept": [], "hint": "$2^2 + 0^2 + 1^2 = 5$." },
         { "instruction": "Compute the right side $|\\vec{v}|^2|\\vec{w}|^2 - (\\vec{v} \\cdot \\vec{w})^2$.", "answer": "29", "accept": [], "hint": "$9 \\cdot 5 - 4^2 = 45 - 16$." },
         { "instruction": "Compute the cross product $\\vec{v} \\times \\vec{w}$.", "answer": "<2, 3, -4>", "accept": ["(2, 3, -4)", "<2,3,-4>"], "hint": "First: $2(1)-2(0)=2$; second: $2(2)-1(1)=3$; third: $1(0)-2(2)=-4$." },
-        { "instruction": "Compute the left side $|\\vec{v} \\times \\vec{w}|^2$. Does it match the right side?", "answer": "29", "accept": [], "hint": "$2^2 + 3^2 + (-4)^2 = 4 + 9 + 16 = 29$ — the identity holds." }
+        { "instruction": "Compute the left side $|\\vec{v} \\times \\vec{w}|^2$. Does it match the right side?", "answer": "29", "accept": [], "hint": "$2^2 + 3^2 + (-4)^2 = 4 + 9 + 16 = 29$: the identity holds." }
       ],
       "finalAnswer": { "value": "29", "unit": "" },
       "solutionNarrative": "Right side: $9(5) - 16 = 29$. Left side: $\\vec{v} \\times \\vec{w} = \\langle 2, 3, -4 \\rangle$ with $|\\cdot|^2 = 29$. Both sides equal 29, verifying Lagrange's identity."
@@ -203,7 +203,7 @@
         { "instruction": "The area is $|\\vec{v} \\times \\vec{w}| = \\sqrt{9}$. What is it?", "answer": "3", "accept": [], "hint": "Take the square root of 9." }
       ],
       "finalAnswer": { "value": "3", "unit": "square meters" },
-      "solutionNarrative": "Three cheap products give $45 - 36 = 9$, so the area is $\\sqrt{9} = 3$ m² — no cross product assembled. (Check: $\\vec{v} \\times \\vec{w} = \\langle -1, 2, -2 \\rangle$, magnitude 3.)"
+      "solutionNarrative": "Three cheap products give $45 - 36 = 9$, so the area is $\\sqrt{9} = 3$ m²: no cross product assembled. (Check: $\\vec{v} \\times \\vec{w} = \\langle -1, 2, -2 \\rangle$, magnitude 3.)"
     },
     {
       "id": "calculus-3.vector-proofs.s11",
@@ -219,7 +219,7 @@
         { "instruction": "Do the two triple products agree, confirming the cyclic symmetry? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "Both computations gave 13." }
       ],
       "finalAnswer": { "value": "13", "unit": "" },
-      "solutionNarrative": "$\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = 13$ and $\\vec{v} \\cdot (\\vec{w} \\times \\vec{u}) = 13$ — rotating the three vectors cyclically leaves the scalar triple product (a signed volume) unchanged."
+      "solutionNarrative": "$\\vec{u} \\cdot (\\vec{v} \\times \\vec{w}) = 13$ and $\\vec{v} \\cdot (\\vec{w} \\times \\vec{u}) = 13$: rotating the three vectors cyclically leaves the scalar triple product (a signed volume) unchanged."
     },
     {
       "id": "calculus-3.vector-proofs.s12",
@@ -247,7 +247,7 @@
         { "instruction": "Find $M_2$, the midpoint of $AC$.", "answer": "<1, 4>", "accept": ["(1, 4)", "<1,4>"], "hint": "Halve $C$'s coordinates." },
         { "instruction": "Compute the midsegment vector $M_2 - M_1$.", "answer": "<-2, 3>", "accept": ["(-2, 3)", "<-2,3>"], "hint": "$(1-3, 4-1)$." },
         { "instruction": "Compute the side vector $\\vec{BC} = C - B$.", "answer": "<-4, 6>", "accept": ["(-4, 6)", "<-4,6>"], "hint": "$(2-6, 8-2)$." },
-        { "instruction": "$\\vec{BC}$ is how many times the midsegment vector? (Give a number.)", "answer": "2", "accept": [], "hint": "$\\langle -4, 6 \\rangle = 2\\langle -2, 3 \\rangle$ — parallel, and the midsegment is half as long." }
+        { "instruction": "$\\vec{BC}$ is how many times the midsegment vector? (Give a number.)", "answer": "2", "accept": [], "hint": "$\\langle -4, 6 \\rangle = 2\\langle -2, 3 \\rangle$: parallel, and the midsegment is half as long." }
       ],
       "finalAnswer": { "value": "2", "unit": "" },
       "solutionNarrative": "$M_1 = (3,1)$, $M_2 = (1,4)$, midsegment $= \\langle -2,3 \\rangle$, and $\\vec{BC} = \\langle -4,6 \\rangle = 2\\langle -2,3 \\rangle$: parallel and exactly twice the midsegment, verifying the theorem."
@@ -264,7 +264,7 @@
         { "instruction": "Is the gradient perpendicular to the level curve at this point? Type 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The dot product with the tangent direction is zero." }
       ],
       "finalAnswer": { "value": "yes", "unit": "" },
-      "solutionNarrative": "$\\nabla f(3,4) = \\langle 6, 8 \\rangle$ and $\\langle 6,8 \\rangle \\cdot \\langle -4,3 \\rangle = -24 + 24 = 0$ — the gradient points straight out of the circle, perpendicular to the drone's tangent motion."
+      "solutionNarrative": "$\\nabla f(3,4) = \\langle 6, 8 \\rangle$ and $\\langle 6,8 \\rangle \\cdot \\langle -4,3 \\rangle = -24 + 24 = 0$: the gradient points straight out of the circle, perpendicular to the drone's tangent motion."
     },
     {
       "id": "calculus-3.vector-proofs.s15",

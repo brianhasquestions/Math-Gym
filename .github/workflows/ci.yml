@@ -29,4 +29,4 @@ jobs:
       - name: Regenerate sitemap and check it is committed
         run: |
           node tools/gen-sitemap.mjs
-          git diff --exit-code sitemap.xml || (echo "sitemap.xml is stale — run 'node tools/gen-sitemap.mjs' and commit" && exit 1)
+          git diff --exit-code sitemap.xml || (echo "sitemap.xml is stale; run 'node tools/gen-sitemap.mjs' and commit" && exit 1)

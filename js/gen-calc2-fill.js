@@ -3,7 +3,7 @@
 //   - calculus-2.partial-fractions    (templates prefixed c2f-decompose-*, c2f-pf-*)
 //   - calculus-2.improper-integrals   (templates prefixed c2f-improper-*)
 //   - calculus-2.taylor-series        (templates prefixed c2f-taylor-*, c2f-maclaurin-*)
-// One generator per (concept, difficulty) — 36 total. Exports a `fill` map of
+// One generator per (concept, difficulty): 36 total. Exports a `fill` map of
 // template-name -> generator fn matching the shape used by js/generator.js
 // (same pattern as gen-calc1-fill.js). Deterministic from the passed rng only;
 // no imports from generator.js.
@@ -89,7 +89,7 @@ fill["c2f-decompose-linear-1"] = (rng, idx) => {
   };
 };
 
-// d2: denominator arrives expanded — factor first, then cover-up.
+// d2: denominator arrives expanded: factor first, then cover-up.
 fill["c2f-decompose-linear-2"] = (rng, idx) => {
   let r1, r2, A, B;
   do {
@@ -159,7 +159,7 @@ fill["c2f-decompose-repeated-1"] = (rng, idx) => {
   };
 };
 
-// d2: improper fraction — divide first: (x^2 + bx + c)/(x - r).
+// d2: improper fraction: divide first: (x^2 + bx + c)/(x - r).
 fill["c2f-decompose-repeated-2"] = (rng, idx) => {
   let b, c, r, rem;
   do {
@@ -182,7 +182,7 @@ fill["c2f-decompose-repeated-2"] = (rng, idx) => {
   };
 };
 
-// d3: improper over a factored quadratic — divide (quotient 1), then decompose.
+// d3: improper over a factored quadratic: divide (quotient 1), then decompose.
 fill["c2f-decompose-repeated-3"] = (rng, idx) => {
   let r1, r2, A, B;
   do {
@@ -208,7 +208,7 @@ fill["c2f-decompose-repeated-3"] = (rng, idx) => {
 
 // --- integrate-with-partial-fractions ---------------------------------------
 
-// d1: decomposition given — just integrate each log term.
+// d1: decomposition given, just integrate each log term.
 fill["c2f-pf-integrate-1"] = (rng, idx) => {
   let r1, r2, A, B;
   do {
@@ -228,7 +228,7 @@ fill["c2f-pf-integrate-1"] = (rng, idx) => {
   };
 };
 
-// d2: full pipeline — decompose, then integrate.
+// d2: full pipeline: decompose, then integrate.
 fill["c2f-pf-integrate-2"] = (rng, idx) => {
   let r1, r2, A, B;
   do {
@@ -251,7 +251,7 @@ fill["c2f-pf-integrate-2"] = (rng, idx) => {
   };
 };
 
-// d3: repeated factor — a log term plus a negative-power term.
+// d3: repeated factor: a log term plus a negative-power term.
 fill["c2f-pf-integrate-3"] = (rng, idx) => {
   let p, q, r, B;
   do {
@@ -276,7 +276,7 @@ fill["c2f-pf-integrate-3"] = (rng, idx) => {
 
 // --- definite-integrals-and-applications ------------------------------------
 
-// d1: single log term over a doubling interval — value is A ln 2.
+// d1: single log term over a doubling interval: value is A ln 2.
 fill["c2f-pf-definite-1"] = (rng, idx) => {
   const A = rng.int(2, 6);
   const k = rng.int(1, 4);
@@ -294,7 +294,7 @@ fill["c2f-pf-definite-1"] = (rng, idx) => {
   };
 };
 
-// d2: two-term decomposition over [1, 2] — A ln 2 + B ln(3/2).
+// d2: two-term decomposition over [1, 2]: A ln 2 + B ln(3/2).
 fill["c2f-pf-definite-2"] = (rng, idx) => {
   let A, B, val;
   do {
@@ -315,7 +315,7 @@ fill["c2f-pf-definite-2"] = (rng, idx) => {
   };
 };
 
-// d3: applied — accumulate a rate c/((t+1)(t+2)) over [0, 2].
+// d3: applied: accumulate a rate c/((t+1)(t+2)) over [0, 2].
 fill["c2f-pf-definite-3"] = (rng, idx) => {
   const c = rng.int(2, 8);
   const val = c * (Math.log(3) - Math.log(2));
@@ -400,19 +400,19 @@ fill["c2f-improper-infinite-3"] = (rng, idx) => {
 
 // --- discontinuous-integrands -------------------------------------------------
 
-// d1: ∫_0^{s^2} 1/sqrt(x) dx — blow-up at the lower endpoint.
+// d1: ∫_0^{s^2} 1/sqrt(x) dx: blow-up at the lower endpoint.
 fill["c2f-improper-discont-1"] = (rng, idx) => {
   const s = rng.int(2, 5);
   const b = s * s;
   return {
     id: `gen.c2f-improper-discont-1.${idx}`, generated: true, concepts: ["discontinuous-integrands"], difficulty: 1, context: "abstract",
-    prompt: `Evaluate $\\displaystyle\\int_{0}^{${b}} \\frac{1}{\\sqrt{x}}\\,dx$. The integrand blows up somewhere in the interval — handle it with a limit.`,
+    prompt: `Evaluate $\\displaystyle\\int_{0}^{${b}} \\frac{1}{\\sqrt{x}}\\,dx$. The integrand blows up somewhere in the interval: handle it with a limit.`,
     steps: [
       { instruction: "At what $x$-value is the integrand discontinuous (infinite)?", answer: "0", accept: ["x=0", "x = 0"], hint: "$\\frac{1}{\\sqrt{x}}$ blows up where the denominator is 0." },
       { instruction: `The antiderivative is $2\\sqrt{x}$. Evaluate $\\displaystyle\\lim_{t\\to 0^+}\\big[2\\sqrt{x}\\big]_t^{${b}}$.`, answer: `${2 * s}`, accept: [`2sqrt(${b})`, `2sqrt${b}`], hint: `$2\\sqrt{${b}} - 2\\sqrt{t} \\to 2 \\cdot ${s} - 0$.` },
     ],
     finalAnswer: { value: `${2 * s}`, unit: "" },
-    solutionNarrative: `The blow-up is at $x = 0$; with antiderivative $2\\sqrt{x}$, the limit gives $2\\sqrt{${b}} = ${2 * s}$ — finite, so the integral converges.`,
+    solutionNarrative: `The blow-up is at $x = 0$; with antiderivative $2\\sqrt{x}$, the limit gives $2\\sqrt{${b}} = ${2 * s}$: finite, so the integral converges.`,
   };
 };
 
@@ -424,7 +424,7 @@ fill["c2f-improper-discont-2"] = (rng, idx) => {
     id: `gen.c2f-improper-discont-2.${idx}`, generated: true, concepts: ["discontinuous-integrands"], difficulty: 2, context: "abstract",
     prompt: `Evaluate $\\displaystyle\\int_{0}^{${b}} \\frac{1}{\\sqrt{${b} - x}}\\,dx$.`,
     steps: [
-      { instruction: "At what $x$-value is the integrand discontinuous?", answer: `${b}`, accept: [`x=${b}`, `x = ${b}`], hint: `The denominator $\\sqrt{${b} - x}$ hits 0 when $x = ${b}$ — the UPPER endpoint this time.` },
+      { instruction: "At what $x$-value is the integrand discontinuous?", answer: `${b}`, accept: [`x=${b}`, `x = ${b}`], hint: `The denominator $\\sqrt{${b} - x}$ hits 0 when $x = ${b}$: the UPPER endpoint this time.` },
       { instruction: "Does the integral converge or diverge? (The antiderivative $-2\\sqrt{" + b + " - x}$ stays finite as $x \\to " + b + "^-$.)", answer: "converges", accept: ["convergent"], hint: "The limit of the antiderivative exists and is finite." },
       { instruction: `Evaluate $\\displaystyle\\lim_{t\\to ${b}^-}\\big[-2\\sqrt{${b} - x}\\big]_0^{t}$.`, answer: `${2 * s}`, accept: [`2sqrt(${b})`], hint: `$0 - (-2\\sqrt{${b}}) = 2 \\cdot ${s}$.` },
     ],
@@ -447,7 +447,7 @@ fill["c2f-improper-discont-3"] = (rng, idx) => {
       { instruction: "Near 0, $\\int_0^1 x^{-p}dx$ converges exactly when the exponent satisfies which inequality? (Type it like p < 1.)", answer: "p < 1", accept: ["p<1", "1 > p", "1>p"], hint: "Near 0 the rule FLIPS relative to the at-infinity rule: small exponents are safe." },
     ],
     finalAnswer: { value: "diverges", unit: "" },
-    solutionNarrative: `With $p = ${p} \\geq 1$, the area near $x = 0$ is unbounded — the integral diverges. Endpoint blow-ups converge only for $p < 1$.`,
+    solutionNarrative: `With $p = ${p} \\geq 1$, the area near $x = 0$ is unbounded: the integral diverges. Endpoint blow-ups converge only for $p < 1$.`,
   };
 };
 
@@ -500,7 +500,7 @@ fill["c2f-improper-ptest-3"] = (rng, idx) => {
     prompt: `Classify and evaluate $\\displaystyle\\int_{0}^{1} \\frac{1}{x^{${pick.pS}}}\\,dx$. Careful: the blow-up is at $x = 0$, where the p-rule flips.`,
     steps: [
       { instruction: `Near 0, $\\int_0^1 x^{-p}dx$ converges exactly when $p < 1$. Here $p = ${pick.pS}$. Converge or diverge?`, answer: "converges", accept: ["convergent"], hint: `$${pick.pS} < 1$, and near 0 SMALL exponents are the safe ones.` },
-      { instruction: `The value is $\\dfrac{1}{1 - p}$. Compute it for $p = ${pick.pS}$. Give a fraction.`, answer: val, accept: [rnd(pick.den / (pick.den - pick.num), 3)], hint: `$\\dfrac{1}{1 - ${pick.pS}}$ — invert the leftover fraction.` },
+      { instruction: `The value is $\\dfrac{1}{1 - p}$. Compute it for $p = ${pick.pS}$. Give a fraction.`, answer: val, accept: [rnd(pick.den / (pick.den - pick.num), 3)], hint: `$\\dfrac{1}{1 - ${pick.pS}}$: invert the leftover fraction.` },
     ],
     finalAnswer: { value: val, unit: "" },
     solutionNarrative: `At an endpoint blow-up the test flips: $p = ${pick.pS} < 1$ converges, with value $\\frac{1}{1 - ${pick.pS}} = ${val}$.`,
@@ -537,11 +537,11 @@ fill["c2f-improper-compare-2"] = (rng, idx) => {
       { instruction: "The integrand is nonnegative and bounded by a convergent integral. Conclusion?", answer: "converges", accept: ["convergent"], hint: "Comparison: below finite means finite." },
     ],
     finalAnswer: { value: "converges", unit: "" },
-    solutionNarrative: `$0 \\leq \\frac{${c}+\\sin x}{x^2} \\leq \\frac{${c + 1}}{x^2}$, and the bound integrates to $${c + 1}$ — finite. The original converges by comparison.`,
+    solutionNarrative: `$0 \\leq \\frac{${c}+\\sin x}{x^2} \\leq \\frac{${c + 1}}{x^2}$, and the bound integrates to $${c + 1}$: finite. The original converges by comparison.`,
   };
 };
 
-// d3: applied — total accumulated quantity ∫_0^∞ C e^{-kt} dt = C/k.
+// d3: applied: total accumulated quantity ∫_0^∞ C e^{-kt} dt = C/k.
 fill["c2f-improper-compare-3"] = (rng, idx) => {
   const k = rng.int(2, 5);
   const C = rng.int(2, 9);
@@ -559,7 +559,7 @@ fill["c2f-improper-compare-3"] = (rng, idx) => {
       { instruction: `Evaluate the improper integral. Give a fraction or decimal.`, answer: val, accept: [`${C}/${k}`, rnd(C / k, 3)], hint: `$0 - \\left(-\\tfrac{${C}}{${k}}\\right) = \\tfrac{${C}}{${k}}$.` },
     ],
     finalAnswer: { value: val, unit: ctx.unit },
-    solutionNarrative: `$\\int_0^\\infty ${C}e^{-${k}t}dt = \\left[-\\tfrac{${C}}{${k}}e^{-${k}t}\\right]_0^\\infty = \\tfrac{${C}}{${k}} = ${val}$ ${ctx.unit} — an infinite process with a finite total.`,
+    solutionNarrative: `$\\int_0^\\infty ${C}e^{-${k}t}dt = \\left[-\\tfrac{${C}}{${k}}e^{-${k}t}\\right]_0^\\infty = \\tfrac{${C}}{${k}} = ${val}$ ${ctx.unit}: an infinite process with a finite total.`,
   };
 };
 
@@ -569,7 +569,7 @@ fill["c2f-improper-compare-3"] = (rng, idx) => {
 
 // --- taylor-polynomials --------------------------------------------------------
 
-// d1: T_2 for c e^x at 0 — all derivatives equal c.
+// d1: T_2 for c e^x at 0, all derivatives equal c.
 fill["c2f-taylor-poly-1"] = (rng, idx) => {
   const c = rng.int(2, 5);
   const t2 = `${c} + ${c}x + ${frac(c, 2)}x^2`;
@@ -586,7 +586,7 @@ fill["c2f-taylor-poly-1"] = (rng, idx) => {
   };
 };
 
-// d2: T_3 for e^{kx} at 0 — chain rule powers of k.
+// d2: T_3 for e^{kx} at 0: chain rule powers of k.
 fill["c2f-taylor-poly-2"] = (rng, idx) => {
   const k = rng.int(2, 3);
   const t3 = `1 + ${k}x + ${frac(k * k, 2)}x^2 + ${frac(k ** 3, 6)}x^3`;
@@ -693,7 +693,7 @@ fill["c2f-taylor-approx-1"] = (rng, idx) => {
       { instruction: `Add up $1 + ${t} + ${rnd(sq, 3)}$.`, answer: rnd(approx, 3), accept: [`${approx}`, rnd(approx, 2), rnd(approx, 4)], hint: "Just add the three terms." },
     ],
     finalAnswer: { value: rnd(approx, 3), unit: "" },
-    solutionNarrative: `$T_2(${t}) = 1 + ${t} + ${rnd(sq, 3)} = ${rnd(approx, 3)}$ — already within about $\\tfrac{${t}^3}{6}$ of the true $e^{${t}}$.`,
+    solutionNarrative: `$T_2(${t}) = 1 + ${t} + ${rnd(sq, 3)} = ${rnd(approx, 3)}$: already within about $\\tfrac{${t}^3}{6}$ of the true $e^{${t}}$.`,
   };
 };
 
@@ -738,7 +738,7 @@ fill["c2f-taylor-approx-3"] = (rng, idx) => {
 
 // --- radius-and-interval ---------------------------------------------------------
 
-// d1: sum (x/k)^n — ratio test gives R = k.
+// d1: sum (x/k)^n: ratio test gives R = k.
 fill["c2f-taylor-radius-1"] = (rng, idx) => {
   const k = rng.int(2, 6);
   return {
@@ -753,7 +753,7 @@ fill["c2f-taylor-radius-1"] = (rng, idx) => {
   };
 };
 
-// d2: centered series sum (x-a)^n / k^n — radius k, interval (a-k, a+k).
+// d2: centered series sum (x-a)^n / k^n: radius k, interval (a-k, a+k).
 fill["c2f-taylor-radius-2"] = (rng, idx) => {
   let a, k;
   do { a = rng.int(-3, 3); k = rng.int(2, 5); } while (a === 0);
@@ -770,7 +770,7 @@ fill["c2f-taylor-radius-2"] = (rng, idx) => {
   };
 };
 
-// d3: factorial denominator sum (kx)^n / n! — ratio limit 0, infinite radius.
+// d3: factorial denominator sum (kx)^n / n!: ratio limit 0, infinite radius.
 fill["c2f-taylor-radius-3"] = (rng, idx) => {
   const k = rng.int(2, 5);
   return {
@@ -781,6 +781,6 @@ fill["c2f-taylor-radius-3"] = (rng, idx) => {
       { instruction: `Since $L = 0 < 1$ for every $x$, the radius of convergence is: (type infinite)`, answer: "infinite", accept: ["infinity", "inf", "r=infinity", "r = infinity"], hint: "Convergence for all $x$ means an infinite radius." },
     ],
     finalAnswer: { value: "infinite", unit: "" },
-    solutionNarrative: `The factorial beats the geometric factor: $L = 0$ for every $x$, so the series converges everywhere — infinite radius.`,
+    solutionNarrative: `The factorial beats the geometric factor: $L = 0$ for every $x$, so the series converges everywhere: infinite radius.`,
   };
 };

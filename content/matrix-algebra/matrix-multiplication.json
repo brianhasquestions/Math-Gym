@@ -8,32 +8,32 @@
     {
       "id": "when-defined",
       "label": "When a product is defined",
-      "microLesson": "To multiply $A$ (size $m \\times n$) by $B$ (size $p \\times q$), the **inner dimensions must match**: $n = p$. Line the sizes up as $(m \\times n)(p \\times q)$ — the two middle numbers must agree, and the **outer** numbers give the result size $m \\times q$. A $2 \\times 3$ times a $3 \\times 4$ is defined and produces a $2 \\times 4$. A $2 \\times 3$ times a $2 \\times 3$ is **not** defined, because $3 \\neq 2$."
+      "microLesson": "To multiply $A$ (size $m \\times n$) by $B$ (size $p \\times q$), the **inner dimensions must match**: $n = p$. Line the sizes up as $(m \\times n)(p \\times q)$: the two middle numbers must agree, and the **outer** numbers give the result size $m \\times q$. A $2 \\times 3$ times a $3 \\times 4$ is defined and produces a $2 \\times 4$. A $2 \\times 3$ times a $2 \\times 3$ is **not** defined, because $3 \\neq 2$."
     },
     {
       "id": "compute-product",
       "label": "Computing the product",
-      "microLesson": "Each entry of $AB$ is a **dot product**: entry in row $i$, column $j$ is row $i$ of $A$ dotted with column $j$ of $B$ — multiply matching elements and add. For $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ 6 \\end{bmatrix}$, the top entry is $1\\cdot5 + 2\\cdot6 = 17$ and the bottom is $3\\cdot5 + 4\\cdot6 = 39$. Matrix-times-vector works the same way and returns a vector."
+      "microLesson": "Each entry of $AB$ is a **dot product**: entry in row $i$, column $j$ is row $i$ of $A$ dotted with column $j$ of $B$: multiply matching elements and add. For $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ 6 \\end{bmatrix}$, the top entry is $1\\cdot5 + 2\\cdot6 = 17$ and the bottom is $3\\cdot5 + 4\\cdot6 = 39$. Matrix-times-vector works the same way and returns a vector."
     },
     {
       "id": "multiplication-properties",
       "label": "Properties of multiplication",
-      "microLesson": "Matrix multiplication is **not commutative**: $AB \\neq BA$ in general, and one may be defined while the other isn't. The **identity matrix** $I$ (ones on the diagonal, zeros elsewhere) acts like the number 1: $AI = IA = A$. **Powers** repeat a square matrix: $A^2 = AA$, $A^3 = AAA$ — useful for applying the same transformation again and again."
+      "microLesson": "Matrix multiplication is **not commutative**: $AB \\neq BA$ in general, and one may be defined while the other isn't. The **identity matrix** $I$ (ones on the diagonal, zeros elsewhere) acts like the number 1: $AI = IA = A$. **Powers** repeat a square matrix: $A^2 = AA$, $A^3 = AAA$: useful for applying the same transformation again and again."
     },
     {
       "id": "multiplication-applied",
       "label": "Multiplication in applications",
-      "microLesson": "A matrix product **combines two tables along a shared index**. Quantities (per item) times unit prices gives total cost. A transition table times a current-state vector gives the next state. Routing or connection counts multiply to count two-step paths. Whenever you 'multiply across a category and sum', that's a matrix product — it bundles many weighted sums into one clean operation."
+      "microLesson": "A matrix product **combines two tables along a shared index**. Quantities (per item) times unit prices gives total cost. A transition table times a current-state vector gives the next state. Routing or connection counts multiply to count two-step paths. Whenever you 'multiply across a category and sum', that's a matrix product: it bundles many weighted sums into one clean operation."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## The operation that combines two tables\n\nMost real data lives in tables: products against prices, cities against routes, states against probabilities. **Matrix multiplication** is the single operation that fuses two such tables along a shared category and totals the result. When you find yourself saying *\"multiply each item by its rate and add them up\"* — across many rows at once — you are doing matrix multiplication, whether you call it that or not.\n\n## Step 1: does the product even exist?\n\nUnlike adding numbers, you cannot multiply just any two matrices. Write the sizes side by side:\n\n$$(m \\times n)(p \\times q).$$\n\nThe **inner** dimensions $n$ and $p$ must be equal — that shared number is the category you are summing over. If they match, the product is defined and its size is the **outer** dimensions, $m \\times q$:\n\n$$(2 \\times 3)(3 \\times 4) \\;\\Rightarrow\\; \\text{defined},\\; \\text{result } 2 \\times 4.$$\n\nIf the inner numbers disagree, the product simply does not exist. Checking this first saves you from computing nonsense.\n\n## Step 2: every entry is a dot product\n\nThe entry in **row $i$, column $j$** of the product $AB$ is row $i$ of $A$ dotted with column $j$ of $B$: pair up matching elements, multiply, and add.\n\n$$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\end{bmatrix} = \\begin{bmatrix} 1\\cdot5 + 2\\cdot7 & 1\\cdot6 + 2\\cdot8 \\\\ 3\\cdot5 + 4\\cdot7 & 3\\cdot6 + 4\\cdot8 \\end{bmatrix} = \\begin{bmatrix} 19 & 22 \\\\ 43 & 50 \\end{bmatrix}.$$\n\nA **matrix times a vector** is the same recipe with a one-column second matrix, and it returns a vector:\n\n$$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ 6 \\end{bmatrix} = \\begin{bmatrix} 17 \\\\ 39 \\end{bmatrix}.$$\n\nGeometrically, that product moves the input vector to a new place — the matrix *is* the transformation:\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-1, 18], \"yRange\": [-2, 42], \"width\": 320, \"height\": 320, \"grid\": true, \"segments\": [ { \"from\": [0, 0], \"to\": [5, 6], \"arrow\": true, \"color\": \"dim\", \"label\": \"x=(5,6)\" }, { \"from\": [0, 0], \"to\": [17, 39], \"arrow\": true, \"color\": \"accent\", \"label\": \"Ax=(17,39)\" } ], \"caption\": \"Applying A = [[1,2],[3,4]] to the vector (5,6): each entry is a row dotted with the vector, giving (17,39).\" }\n```\n\n## Step 3: the rules are not the rules of numbers\n\nThree facts surprise people:\n\n- **Order matters.** $AB$ and $BA$ are usually different matrices, and sometimes only one is even defined. Always keep the factors in order.\n- **The identity does nothing.** The identity matrix $I$ has 1's down the diagonal and 0's elsewhere; multiplying by it leaves a matrix unchanged: $AI = IA = A$. It plays the role of the number 1.\n- **Powers repeat the map.** $A^2 = AA$ applies the same transformation twice. This is how you fast-forward a process: two steps of a routing or transition table is its square.\n\n## Why this is worth the bookkeeping\n\nA matrix product packs dozens of weighted sums into one statement. *Quantities $\\times$ prices* gives every customer's bill at once. A *transition matrix $\\times$ state vector* advances a whole system one step. *Connection counts squared* counts two-step paths through a network. The mechanics are just \"row dot column\", but the payoff is combining entire tables in a single, checkable operation."
+    "body": "## The operation that combines two tables\n\nMost real data lives in tables: products against prices, cities against routes, states against probabilities. **Matrix multiplication** is the single operation that fuses two such tables along a shared category and totals the result. When you find yourself saying *\"multiply each item by its rate and add them up\"*, across many rows at once, you are doing matrix multiplication, whether you call it that or not.\n\n## Step 1: does the product even exist?\n\nUnlike adding numbers, you cannot multiply just any two matrices. Write the sizes side by side:\n\n$$(m \\times n)(p \\times q).$$\n\nThe **inner** dimensions $n$ and $p$ must be equal: that shared number is the category you are summing over. If they match, the product is defined and its size is the **outer** dimensions, $m \\times q$:\n\n$$(2 \\times 3)(3 \\times 4) \\;\\Rightarrow\\; \\text{defined},\\; \\text{result } 2 \\times 4.$$\n\nIf the inner numbers disagree, the product simply does not exist. Checking this first saves you from computing nonsense.\n\n## Step 2: every entry is a dot product\n\nThe entry in **row $i$, column $j$** of the product $AB$ is row $i$ of $A$ dotted with column $j$ of $B$: pair up matching elements, multiply, and add.\n\n$$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\end{bmatrix} = \\begin{bmatrix} 1\\cdot5 + 2\\cdot7 & 1\\cdot6 + 2\\cdot8 \\\\ 3\\cdot5 + 4\\cdot7 & 3\\cdot6 + 4\\cdot8 \\end{bmatrix} = \\begin{bmatrix} 19 & 22 \\\\ 43 & 50 \\end{bmatrix}.$$\n\nA **matrix times a vector** is the same recipe with a one-column second matrix, and it returns a vector:\n\n$$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 5 \\\\ 6 \\end{bmatrix} = \\begin{bmatrix} 17 \\\\ 39 \\end{bmatrix}.$$\n\nGeometrically, that product moves the input vector to a new place: the matrix *is* the transformation:\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [-1, 18], \"yRange\": [-2, 42], \"width\": 320, \"height\": 320, \"grid\": true, \"segments\": [ { \"from\": [0, 0], \"to\": [5, 6], \"arrow\": true, \"color\": \"dim\", \"label\": \"x=(5,6)\" }, { \"from\": [0, 0], \"to\": [17, 39], \"arrow\": true, \"color\": \"accent\", \"label\": \"Ax=(17,39)\" } ], \"caption\": \"Applying A = [[1,2],[3,4]] to the vector (5,6): each entry is a row dotted with the vector, giving (17,39).\" }\n```\n\n## Step 3: the rules are not the rules of numbers\n\nThree facts surprise people:\n\n- **Order matters.** $AB$ and $BA$ are usually different matrices, and sometimes only one is even defined. Always keep the factors in order.\n- **The identity does nothing.** The identity matrix $I$ has 1's down the diagonal and 0's elsewhere; multiplying by it leaves a matrix unchanged: $AI = IA = A$. It plays the role of the number 1.\n- **Powers repeat the map.** $A^2 = AA$ applies the same transformation twice. This is how you fast-forward a process: two steps of a routing or transition table is its square.\n\n## Why this is worth the bookkeeping\n\nA matrix product packs dozens of weighted sums into one statement. *Quantities $\\times$ prices* gives every customer's bill at once. A *transition matrix $\\times$ state vector* advances a whole system one step. *Connection counts squared* counts two-step paths through a network. The mechanics are just \"row dot column\", but the payoff is combining entire tables in a single, checkable operation."
   },
   "application": {
     "summary": "Matrix multiplication combines two tables along a shared index in one shot: quantities times unit prices give totals, transition tables advance a state, routing counts multiply to count multi-step paths, and weight vectors turn raw scores into rankings. It is the workhorse behind billing, logistics, graphics, and scoring.",
     "domains": ["business", "logistics", "computer graphics", "data analysis"],
-    "workedExample": "**One order, many suppliers — total the bill in one product.**\n\nA bakery's order is 3 loaves, 5 bagels, and 2 cakes. Two suppliers quote unit prices (dollars): Supplier 1 charges 4 / 1 / 9, Supplier 2 charges 5 / 1 / 8 (loaf / bagel / cake). Stack quantities as a row and prices as columns:\n\n$$\\begin{bmatrix} 3 & 5 & 2 \\end{bmatrix}\\begin{bmatrix} 4 & 5 \\\\ 1 & 5 \\\\ 9 & 8 \\end{bmatrix} = \\begin{bmatrix} 3\\cdot4 + 5\\cdot1 + 2\\cdot9 & 3\\cdot5 + 5\\cdot5 + 2\\cdot8 \\end{bmatrix} = \\begin{bmatrix} 35 & 56 \\end{bmatrix}.$$\n\nIn one multiplication you learn Supplier 1 costs \\$35 and Supplier 2 costs \\$56 for the **same** basket. Add more orders as extra rows and you price every order against every supplier at once — exactly what a billing system does behind the scenes.",
+    "workedExample": "**One order, many suppliers: total the bill in one product.**\n\nA bakery's order is 3 loaves, 5 bagels, and 2 cakes. Two suppliers quote unit prices (dollars): Supplier 1 charges 4 / 1 / 9, Supplier 2 charges 5 / 1 / 8 (loaf / bagel / cake). Stack quantities as a row and prices as columns:\n\n$$\\begin{bmatrix} 3 & 5 & 2 \\end{bmatrix}\\begin{bmatrix} 4 & 5 \\\\ 1 & 5 \\\\ 9 & 8 \\end{bmatrix} = \\begin{bmatrix} 3\\cdot4 + 5\\cdot1 + 2\\cdot9 & 3\\cdot5 + 5\\cdot5 + 2\\cdot8 \\end{bmatrix} = \\begin{bmatrix} 35 & 56 \\end{bmatrix}.$$\n\nIn one multiplication you learn Supplier 1 costs \\$35 and Supplier 2 costs \\$56 for the **same** basket. Add more orders as extra rows and you price every order against every supplier at once: exactly what a billing system does behind the scenes.",
     "domainNotes": [
       "**Business:** quantities $\\times$ unit prices produce per-supplier or per-customer totals; a single product bills many orders at once.",
       "**Logistics / networks:** squaring a connection-count matrix counts two-step routes between locations.",
@@ -50,7 +50,7 @@
       "context": "abstract",
       "prompt": "Matrix $A$ is $2 \\times 3$ and matrix $B$ is $3 \\times 4$. Is the product $AB$ defined? If so, what size is it?",
       "steps": [
-        { "instruction": "Compare the inner dimensions of $(2 \\times 3)(3 \\times 4)$. Is $AB$ defined? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The inner numbers are 3 and 3 — do they match?" },
+        { "instruction": "Compare the inner dimensions of $(2 \\times 3)(3 \\times 4)$. Is $AB$ defined? Answer 'yes' or 'no'.", "answer": "yes", "accept": [], "hint": "The inner numbers are 3 and 3: do they match?" },
         { "instruction": "How many rows does the result have?", "answer": "2", "accept": [], "hint": "The result takes the outer dimensions; rows come from $A$." },
         { "instruction": "How many columns does the result have?", "answer": "4", "accept": [], "hint": "Columns come from $B$." }
       ],
@@ -64,7 +64,7 @@
       "context": "abstract",
       "prompt": "Matrix $A$ is $2 \\times 3$ and matrix $B$ is $2 \\times 3$. Is the product $AB$ defined? Answer 'yes' or 'no'.",
       "steps": [
-        { "instruction": "Compare the inner dimensions of $(2 \\times 3)(2 \\times 3)$.", "answer": "no", "accept": [], "hint": "The inner numbers are 3 and 2 — they must be equal." }
+        { "instruction": "Compare the inner dimensions of $(2 \\times 3)(2 \\times 3)$.", "answer": "no", "accept": [], "hint": "The inner numbers are 3 and 2: they must be equal." }
       ],
       "finalAnswer": { "value": "no", "unit": "" },
       "solutionNarrative": "The inner dimensions are 3 and 2, which do not match, so $AB$ is not defined."
@@ -74,7 +74,7 @@
       "concepts": ["when-defined"],
       "difficulty": 2,
       "context": "abstract",
-      "prompt": "Matrix $A$ is $4 \\times 2$ and matrix $B$ is $2 \\times 5$. The product $AB$ is defined — give its size as 'rows x cols'.",
+      "prompt": "Matrix $A$ is $4 \\times 2$ and matrix $B$ is $2 \\times 5$. The product $AB$ is defined: give its size as 'rows x cols'.",
       "steps": [
         { "instruction": "How many rows does $AB$ have?", "answer": "4", "accept": [], "hint": "Rows of the result match rows of $A$." },
         { "instruction": "How many columns does $AB$ have?", "answer": "5", "accept": [], "hint": "Columns of the result match columns of $B$." }
@@ -174,7 +174,7 @@
         { "instruction": "Compute $BA$ and write it as [[a, b], [c, d]].", "answer": "[[1, 2], [3, 7]]", "accept": [], "hint": "Row 1: $1\\cdot1+0\\cdot0 = 1$, $1\\cdot2+0\\cdot1 = 2$. Row 2: $3\\cdot1+1\\cdot0 = 3$, $3\\cdot2+1\\cdot1 = 7$." }
       ],
       "finalAnswer": { "value": "[[7, 2], [3, 1]]", "unit": "" },
-      "solutionNarrative": "$AB = \\begin{bmatrix} 7 & 2 \\\\ 3 & 1 \\end{bmatrix}$ but $BA = \\begin{bmatrix} 1 & 2 \\\\ 3 & 7 \\end{bmatrix}$ — different matrices, confirming multiplication is not commutative."
+      "solutionNarrative": "$AB = \\begin{bmatrix} 7 & 2 \\\\ 3 & 1 \\end{bmatrix}$ but $BA = \\begin{bmatrix} 1 & 2 \\\\ 3 & 7 \\end{bmatrix}$: different matrices, confirming multiplication is not commutative."
     },
     {
       "id": "matrix-algebra.matrix-multiplication.s11",
@@ -228,7 +228,7 @@
         { "instruction": "Write tomorrow's state vector as <a, b>.", "answer": "<80, 20>", "accept": [], "hint": "Stack the two entries." }
       ],
       "finalAnswer": { "value": "<80, 20>", "unit": "" },
-      "solutionNarrative": "$T \\cdot \\langle 10, 0 \\rangle = \\langle 8\\cdot10, 2\\cdot10 \\rangle = \\langle 80, 20 \\rangle$ — a strong lean toward sunny tomorrow."
+      "solutionNarrative": "$T \\cdot \\langle 10, 0 \\rangle = \\langle 8\\cdot10, 2\\cdot10 \\rangle = \\langle 80, 20 \\rangle$: a strong lean toward sunny tomorrow."
     },
     {
       "id": "matrix-algebra.matrix-multiplication.s15",
@@ -256,7 +256,7 @@
         { "instruction": "Write all three weighted scores as the vector <a, b, c>.", "answer": "<36, 33, 35>", "accept": [], "hint": "Candidate 3: $7\\cdot3 + 7\\cdot2 = 35$." }
       ],
       "finalAnswer": { "value": "<36, 33, 35>", "unit": "" },
-      "solutionNarrative": "Weighted scores are $\\langle 36, 33, 35 \\rangle$, so Candidate 1 ranks highest — the score matrix times the weight vector ranks everyone at once."
+      "solutionNarrative": "Weighted scores are $\\langle 36, 33, 35 \\rangle$, so Candidate 1 ranks highest: the score matrix times the weight vector ranks everyone at once."
     },
     {
       "id": "matrix-algebra.matrix-multiplication.s17",

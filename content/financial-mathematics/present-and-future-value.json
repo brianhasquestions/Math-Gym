@@ -13,27 +13,27 @@
     {
       "id": "present-value",
       "label": "Present value of a single sum",
-      "microLesson": "**Present value** runs the clock backward: what is a future amount worth *today*? Divide instead of multiply — $PV = \\dfrac{FV}{(1 + i)^n}$. This is **discounting**. \\$5,000 due in 4 years, with money worth 5%, is worth $PV = \\dfrac{5000}{(1.05)^4} = \\$4{,}113.51$ today. A dollar tomorrow is worth less than a dollar now, and the discount factor $(1+i)^n$ measures exactly how much less."
+      "microLesson": "**Present value** runs the clock backward: what is a future amount worth *today*? Divide instead of multiply: $PV = \\dfrac{FV}{(1 + i)^n}$. This is **discounting**. \\$5,000 due in 4 years, with money worth 5%, is worth $PV = \\dfrac{5000}{(1.05)^4} = \\$4{,}113.51$ today. A dollar tomorrow is worth less than a dollar now, and the discount factor $(1+i)^n$ measures exactly how much less."
     },
     {
       "id": "solving-for-rate-or-time",
       "label": "Solving for rate or time",
-      "microLesson": "When the unknown is the **rate**, take a root: $i = (FV/PV)^{1/n} - 1$. When the unknown is the **time**, the variable is stuck in the exponent, so use **logarithms**: $n = \\dfrac{\\ln(FV/PV)}{\\ln(1 + i)}$. To double money at 6%, $n = \\dfrac{\\ln 2}{\\ln 1.06} \\approx 11.90$ years. The Rule of 72 estimates the same doubling time as $72/6 = 12$ — a fast mental check."
+      "microLesson": "When the unknown is the **rate**, take a root: $i = (FV/PV)^{1/n} - 1$. When the unknown is the **time**, the variable is stuck in the exponent, so use **logarithms**: $n = \\dfrac{\\ln(FV/PV)}{\\ln(1 + i)}$. To double money at 6%, $n = \\dfrac{\\ln 2}{\\ln 1.06} \\approx 11.90$ years. The Rule of 72 estimates the same doubling time as $72/6 = 12$: a fast mental check."
     },
     {
       "id": "comparing-cash-flows",
       "label": "Comparing cash flows",
-      "microLesson": "You can only compare money at the **same point in time**. To choose between offers paid at different dates, discount each to **today** and compare present values — the larger present value is the better deal. \\$3,000 now versus \\$3,600 in 3 years at 6%: the future \\$3,600 is worth $3600/(1.06)^3 = \\$3{,}022.63$ today, which just beats \\$3,000. For a stream of several payments, sum the present value of each piece."
+      "microLesson": "You can only compare money at the **same point in time**. To choose between offers paid at different dates, discount each to **today** and compare present values: the larger present value is the better deal. \\$3,000 now versus \\$3,600 in 3 years at 6%: the future \\$3,600 is worth $3600/(1.06)^3 = \\$3{,}022.63$ today, which just beats \\$3,000. For a stream of several payments, sum the present value of each piece."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## A dollar today beats a dollar tomorrow\n\nThe single most important idea in finance is the **time value of money**: a dollar in hand now is worth more than a dollar promised later, because the dollar now can be invested and grow. Every comparison of amounts at different dates has to account for this — you cannot simply line up the numbers.\n\nTwo mirror-image operations move money through time. Let $i$ be the **interest rate per period** (as a decimal) and $n$ the **number of periods**.\n\n## Future value: pushing money forward\n\nThe **future value** of a single present amount is the compound-interest result written as growth:\n\n$$\\boxed{\\,FV = PV\\,(1 + i)^n\\,}$$\n\n**Worked example.** \\$1,000 at 6% per year for 5 years:\n$$FV = 1000\\,(1.06)^5 = 1000 \\times 1.338226 = \\$1{,}338.23.$$\n\nWhen growth is more frequent than yearly, convert to a **per-period** rate first. \\$1,000 at 6% compounded monthly for 3 years uses $i = 0.06/12 = 0.005$ and $n = 12 \\times 3 = 36$:\n$$FV = 1000\\,(1.005)^{36} = \\$1{,}196.68.$$\n\n> **Pitfall.** The rate and the period count must match. Monthly growth means a monthly rate ($r/12$) **and** a month count ($12t$) — never mix an annual rate with a monthly count.\n\n## Present value: pulling money back\n\n**Present value** reverses the arrow: given a future amount, what deposit **today** would grow into it? Divide by the same growth factor — this is **discounting**:\n\n$$\\boxed{\\,PV = \\frac{FV}{(1 + i)^n}\\,}$$\n\n**Worked example.** \\$5,000 due in 4 years, with money worth 5%:\n$$PV = \\frac{5000}{(1.05)^4} = \\frac{5000}{1.215506} = \\$4{,}113.51.$$\n\nThe promise of \\$5,000 in four years is worth only \\$4,113.51 today. The quantity $(1+i)^n$ is the **discount factor**, and the rate $i$ used to discount is often called the **discount rate**. A higher discount rate, or a longer wait, shrinks the present value.\n\nThe picture below shows a single \\$1,000 growing forward (future value) against a fixed future \\$1,000 discounted back (present value):\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 10], \"yRange\": [500, 1900], \"grid\": true, \"curves\": [ { \"fn\": \"1000*(1.06)^x\", \"label\": \"FV of $1000 now\", \"color\": \"accent\", \"labelAt\": 7 }, { \"fn\": \"1000/(1.06)^x\", \"label\": \"PV of $1000 in year x\", \"color\": \"warn\", \"labelAt\": 7 } ], \"points\": [ { \"x\": 0, \"y\": 1000, \"label\": \"$1000\", \"color\": \"dim\" } ], \"caption\": \"Growing forward vs. discounting back, both from $1000 at 6%\" }\n```\n\n## Solving for the rate or the time\n\nOften you know the start, the end, and one of $\\{i, n\\}$, and must find the other.\n\n**Unknown rate.** Solve $FV = PV(1+i)^n$ for $i$ by taking the $n$th root:\n$$i = \\left(\\frac{FV}{PV}\\right)^{1/n} - 1.$$\nIf \\$1,000 grew to \\$1,500 in 5 years, $i = (1.5)^{1/5} - 1 \\approx 0.0845 = 8.45\\%$.\n\n**Unknown time.** Now the unknown sits in the *exponent*, so ordinary algebra can't isolate it — **logarithms** can. Taking $\\ln$ of both sides of $FV/PV = (1+i)^n$ brings the exponent down:\n$$n = \\frac{\\ln(FV/PV)}{\\ln(1 + i)}.$$\nAt 6%, doubling takes $n = \\dfrac{\\ln 2}{\\ln 1.06} = \\dfrac{0.6931}{0.0583} \\approx 11.90$ years. The **Rule of 72** gives a quick estimate — $72 \\div (\\text{rate as a percent})$ — here $72/6 = 12$, close to the exact 11.90.\n\n> **Note.** You compute the logarithm to a *number* on a calculator; the answer is numeric (11.90 years), not a symbolic expression.\n\n## Comparing cash flows: discount to a common date\n\nOffers arriving at different times are not comparable as stated — first move them all to the **same date**, usually today. Discount each amount to its present value and compare.\n\n**Worked example.** Take \\$3,000 now, or \\$3,600 in 3 years, with money worth 6%?\n$$PV(\\$3{,}600) = \\frac{3600}{(1.06)^3} = \\$3{,}022.63.$$\nThe delayed \\$3,600 is worth \\$3,022.63 today — just above \\$3,000 — so waiting wins, but only barely. Raise the discount rate enough and the ranking flips.\n\nFor a **stream** of payments, discount each one to today and add the present values. That single principle — sum of discounted cash flows — is the backbone of annuities, bond pricing, and net present value in the topics ahead."
+    "body": "## A dollar today beats a dollar tomorrow\n\nThe single most important idea in finance is the **time value of money**: a dollar in hand now is worth more than a dollar promised later, because the dollar now can be invested and grow. Every comparison of amounts at different dates has to account for this: you cannot simply line up the numbers.\n\nTwo mirror-image operations move money through time. Let $i$ be the **interest rate per period** (as a decimal) and $n$ the **number of periods**.\n\n## Future value: pushing money forward\n\nThe **future value** of a single present amount is the compound-interest result written as growth:\n\n$$\\boxed{\\,FV = PV\\,(1 + i)^n\\,}$$\n\n**Worked example.** \\$1,000 at 6% per year for 5 years:\n$$FV = 1000\\,(1.06)^5 = 1000 \\times 1.338226 = \\$1{,}338.23.$$\n\nWhen growth is more frequent than yearly, convert to a **per-period** rate first. \\$1,000 at 6% compounded monthly for 3 years uses $i = 0.06/12 = 0.005$ and $n = 12 \\times 3 = 36$:\n$$FV = 1000\\,(1.005)^{36} = \\$1{,}196.68.$$\n\n> **Pitfall.** The rate and the period count must match. Monthly growth means a monthly rate ($r/12$) **and** a month count ($12t$): never mix an annual rate with a monthly count.\n\n## Present value: pulling money back\n\n**Present value** reverses the arrow: given a future amount, what deposit **today** would grow into it? Divide by the same growth factor: this is **discounting**:\n\n$$\\boxed{\\,PV = \\frac{FV}{(1 + i)^n}\\,}$$\n\n**Worked example.** \\$5,000 due in 4 years, with money worth 5%:\n$$PV = \\frac{5000}{(1.05)^4} = \\frac{5000}{1.215506} = \\$4{,}113.51.$$\n\nThe promise of \\$5,000 in four years is worth only \\$4,113.51 today. The quantity $(1+i)^n$ is the **discount factor**, and the rate $i$ used to discount is often called the **discount rate**. A higher discount rate, or a longer wait, shrinks the present value.\n\nThe picture below shows a single \\$1,000 growing forward (future value) against a fixed future \\$1,000 discounted back (present value):\n\n```plot\n{ \"type\": \"cartesian\", \"xRange\": [0, 10], \"yRange\": [500, 1900], \"grid\": true, \"curves\": [ { \"fn\": \"1000*(1.06)^x\", \"label\": \"FV of $1000 now\", \"color\": \"accent\", \"labelAt\": 7 }, { \"fn\": \"1000/(1.06)^x\", \"label\": \"PV of $1000 in year x\", \"color\": \"warn\", \"labelAt\": 7 } ], \"points\": [ { \"x\": 0, \"y\": 1000, \"label\": \"$1000\", \"color\": \"dim\" } ], \"caption\": \"Growing forward vs. discounting back, both from $1000 at 6%\" }\n```\n\n## Solving for the rate or the time\n\nOften you know the start, the end, and one of $\\{i, n\\}$, and must find the other.\n\n**Unknown rate.** Solve $FV = PV(1+i)^n$ for $i$ by taking the $n$th root:\n$$i = \\left(\\frac{FV}{PV}\\right)^{1/n} - 1.$$\nIf \\$1,000 grew to \\$1,500 in 5 years, $i = (1.5)^{1/5} - 1 \\approx 0.0845 = 8.45\\%$.\n\n**Unknown time.** Now the unknown sits in the *exponent*, so ordinary algebra can't isolate it: **logarithms** can. Taking $\\ln$ of both sides of $FV/PV = (1+i)^n$ brings the exponent down:\n$$n = \\frac{\\ln(FV/PV)}{\\ln(1 + i)}.$$\nAt 6%, doubling takes $n = \\dfrac{\\ln 2}{\\ln 1.06} = \\dfrac{0.6931}{0.0583} \\approx 11.90$ years. The **Rule of 72** gives a quick estimate: $72 \\div (\\text{rate as a percent})$; here $72/6 = 12$, close to the exact 11.90.\n\n> **Note.** You compute the logarithm to a *number* on a calculator; the answer is numeric (11.90 years), not a symbolic expression.\n\n## Comparing cash flows: discount to a common date\n\nOffers arriving at different times are not comparable as stated: first move them all to the **same date**, usually today. Discount each amount to its present value and compare.\n\n**Worked example.** Take \\$3,000 now, or \\$3,600 in 3 years, with money worth 6%?\n$$PV(\\$3{,}600) = \\frac{3600}{(1.06)^3} = \\$3{,}022.63.$$\nThe delayed \\$3,600 is worth \\$3,022.63 today, just above \\$3,000), so waiting wins, but only barely. Raise the discount rate enough and the ranking flips.\n\nFor a **stream** of payments, discount each one to today and add the present values. That single principle, sum of discounted cash flows, is the backbone of annuities, bond pricing, and net present value in the topics ahead."
   },
   "application": {
     "summary": "Time value of money is the engine under every financial decision: retirement projections (future value), the cash value of a lottery or lawsuit settlement and bond pricing (present value), figuring how long until a goal or what rate an investment earned (solving for time or rate), and choosing between a lump sum and installments (comparing cash flows).",
     "domains": ["personal finance", "investing", "retirement planning", "insurance"],
-    "workedExample": "**Lump sum or annual payments?**\n\nA lottery winner may take \\$1,000,000 today, or \\$120,000 a year for 10 years (\\$1,200,000 nominal). The nominal total looks bigger — but is it worth more *today*? Assume money is worth 5%.\n\nEach future payment must be discounted to the present. The first \\$120,000 (a year out) is worth $120000/1.05 = \\$114{,}286$; the tenth is worth $120000/1.05^{10} = \\$73{,}670$; and so on. Summing all ten discounted payments gives a present value of about **\\$926,800** — *less* than the \\$1,000,000 lump sum.\n\nSo despite the larger sticker total, the lump sum is worth more today (at 5%). Change the discount rate and the answer can change: at a low enough rate the payments win. This is exactly the calculation lottery offices, courts valuing structured settlements, and pension administrators run — and it is the reason 'time value of money' is the first thing every finance course teaches.",
+    "workedExample": "**Lump sum or annual payments?**\n\nA lottery winner may take \\$1,000,000 today, or \\$120,000 a year for 10 years (\\$1,200,000 nominal). The nominal total looks bigger, but is it worth more *today*? Assume money is worth 5%.\n\nEach future payment must be discounted to the present. The first \\$120,000 (a year out) is worth $120000/1.05 = \\$114{,}286$; the tenth is worth $120000/1.05^{10} = \\$73{,}670$; and so on. Summing all ten discounted payments gives a present value of about **\\$926,800**: *less* than the \\$1,000,000 lump sum.\n\nSo despite the larger sticker total, the lump sum is worth more today (at 5%). Change the discount rate and the answer can change: at a low enough rate the payments win. This is exactly the calculation lottery offices, courts valuing structured settlements, and pension administrators run, and it is the reason 'time value of money' is the first thing every finance course teaches.",
     "domainNotes": [
       "**Retirement:** future value projects what today's savings become; present value tells you how big a nest egg a target income requires.",
       "**Lawsuits/lotteries:** structured settlements are valued by discounting each future payment to a present lump sum.",
@@ -54,7 +54,7 @@
         { "instruction": "Compute $FV = 1000 \\cdot 1.06^{5}$. Enter a number rounded to the nearest cent.", "answer": "1338.23", "accept": ["1338.230", "$1338.23"], "hint": "Raise 1.06 to the 5th power, then multiply by 1000." }
       ],
       "finalAnswer": { "value": "1338.23", "unit": "dollars" },
-      "solutionNarrative": "$FV = 1000(1.06)^{5} = \\$1{,}338.23$ — the same sum carried forward 5 years at 6%."
+      "solutionNarrative": "$FV = 1000(1.06)^{5} = \\$1{,}338.23$: the same sum carried forward 5 years at 6%."
     },
     {
       "id": "financial-mathematics.present-and-future-value.s02",
@@ -82,7 +82,7 @@
         { "instruction": "Find the extra earned by waiting (10-year minus 5-year). Enter a number rounded to the nearest cent.", "answer": "846.90", "accept": ["846.9", "$846.90"], "hint": "$2950.73 - 2103.83$." }
       ],
       "finalAnswer": { "value": "846.90", "unit": "dollars" },
-      "solutionNarrative": "After 5 years: \\$2,103.83; after 10 years: \\$2,950.73. The extra 5 years add \\$846.90 — time is the biggest lever in compounding."
+      "solutionNarrative": "After 5 years: \\$2,103.83; after 10 years: \\$2,950.73. The extra 5 years add \\$846.90: time is the biggest lever in compounding."
     },
     {
       "id": "financial-mathematics.present-and-future-value.s04",
@@ -95,7 +95,7 @@
         { "instruction": "Divide the future value by that factor: $PV = 5000 / 1.05^{4}$. Enter a number rounded to the nearest cent.", "answer": "4113.51", "accept": ["4113.510", "$4113.51"], "hint": "Discounting divides; it undoes the growth." }
       ],
       "finalAnswer": { "value": "4113.51", "unit": "dollars" },
-      "solutionNarrative": "$PV = \\dfrac{5000}{(1.05)^4} = \\$4{,}113.51$ — the amount that, invested today at 5%, grows to \\$5,000 in 4 years."
+      "solutionNarrative": "$PV = \\dfrac{5000}{(1.05)^4} = \\$4{,}113.51$: the amount that, invested today at 5%, grows to \\$5,000 in 4 years."
     },
     {
       "id": "financial-mathematics.present-and-future-value.s05",
@@ -135,7 +135,7 @@
         { "instruction": "Take the 5th root and subtract 1: $i = 1.5^{1/5} - 1$, then convert to a percent. Enter as a percent rounded to 2 decimals.", "answer": "8.45", "accept": ["1.5^(1/5) - 1"], "hint": "A $1/5$ power is the 5th root; subtract 1 and multiply by 100." }
       ],
       "finalAnswer": { "value": "8.45", "unit": "percent" },
-      "solutionNarrative": "$i = (1500/1000)^{1/5} - 1 = 1.5^{0.2} - 1 \\approx 0.0845 = 8.45\\%$ per year — the rate recovered from the growth multiple."
+      "solutionNarrative": "$i = (1500/1000)^{1/5} - 1 = 1.5^{0.2} - 1 \\approx 0.0845 = 8.45\\%$ per year: the rate recovered from the growth multiple."
     },
     {
       "id": "financial-mathematics.present-and-future-value.s08",
@@ -161,7 +161,7 @@
         { "instruction": "Compute the Rule of 72 estimate $72 / 6$. Enter a number rounded to 2 decimals.", "answer": "12", "accept": ["12.0", "12.00", "72/6"], "hint": "Divide 72 by the percent rate." }
       ],
       "finalAnswer": { "value": "11.90", "unit": "years" },
-      "solutionNarrative": "Exactly, $n = \\dfrac{\\ln 2}{\\ln 1.06} \\approx 11.90$ years; the Rule of 72 estimates $72/6 = 12$ — a quick mental check that stays close for ordinary rates."
+      "solutionNarrative": "Exactly, $n = \\dfrac{\\ln 2}{\\ln 1.06} \\approx 11.90$ years; the Rule of 72 estimates $72/6 = 12$: a quick mental check that stays close for ordinary rates."
     },
     {
       "id": "financial-mathematics.present-and-future-value.s10",
@@ -174,7 +174,7 @@
         { "instruction": "Compare Offer A's \\$3,000 today with Offer B's present value. Which offer is worth more today? Answer 'Offer A' or 'Offer B'.", "answer": "Offer B", "accept": ["B", "offer b", "the second offer"], "hint": "The larger present value wins." }
       ],
       "finalAnswer": { "value": "Offer B", "unit": "" },
-      "solutionNarrative": "Offer B's present value is \\$3,022.63 versus Offer A's flat \\$3,000, so Offer B is the better deal today — but only just. Never compare cash at different times without discounting first."
+      "solutionNarrative": "Offer B's present value is \\$3,022.63 versus Offer A's flat \\$3,000, so Offer B is the better deal today, but only just. Never compare cash at different times without discounting first."
     },
     {
       "id": "financial-mathematics.present-and-future-value.s11",
@@ -188,7 +188,7 @@
         { "instruction": "Which present value is larger? Answer 'Offer A' or 'Offer B'.", "answer": "Offer B", "accept": ["B", "offer b"], "hint": "Bigger present value wins." }
       ],
       "finalAnswer": { "value": "Offer B", "unit": "" },
-      "solutionNarrative": "Offer A is worth \\$3,559.99 today and Offer B \\$3,736.29, so Offer B wins — the larger, later payment still comes out ahead here."
+      "solutionNarrative": "Offer A is worth \\$3,559.99 today and Offer B \\$3,736.29, so Offer B wins: the larger, later payment still comes out ahead here."
     },
     {
       "id": "financial-mathematics.present-and-future-value.s12",
@@ -255,7 +255,7 @@
         { "instruction": "Which is worth more today? Answer 'the bonus now' or 'the delayed bonus'.", "answer": "the delayed bonus", "accept": ["delayed bonus", "the delayed one", "delayed"], "hint": "Compare the present value with \\$2,000." }
       ],
       "finalAnswer": { "value": "the delayed bonus", "unit": "" },
-      "solutionNarrative": "The delayed bonus is worth $2300/1.07^2 = \\$2{,}008.91$ today, just above \\$2,000, so the delayed bonus wins — a close call that a higher discount rate would reverse."
+      "solutionNarrative": "The delayed bonus is worth $2300/1.07^2 = \\$2{,}008.91$ today, just above \\$2,000, so the delayed bonus wins: a close call that a higher discount rate would reverse."
     }
   ]
 }

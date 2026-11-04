@@ -1,6 +1,6 @@
-// Render lint: push every learner-visible string — lectures, microLessons,
+// Render lint: push every learner-visible string: lectures, microLessons,
 // worked examples, seed prompts/instructions/hints/narratives, and a sample of
-// every generator's output — through the REAL renderer + vendored KaTeX and
+// every generator's output: through the REAL renderer + vendored KaTeX and
 // fail on anything a student would see broken. validate.mjs can't catch these
 // (it only checks that answers self-grade).
 //
@@ -41,7 +41,7 @@ function unescapedDollars(s) {
 
 const CHECKS = [
   ["katex-error", (s, html) => html.includes("katex-error")],
-  // ```plot fences are JSON for the SVG plotter, not prose — skip them.
+  // ```plot fences are JSON for the SVG plotter, not prose: skip them.
   ["unpaired $", (s) => unescapedDollars(s.replace(/^```[\s\S]*?^```\s*$/gm, "")) % 2 === 1],
   // A decoded "\\frac" is a JSON double-escape: KaTeX reads "\\" as a line
   // break and prints the command name as letters.

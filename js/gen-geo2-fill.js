@@ -79,7 +79,7 @@ fill["geo2-angle-sums-2"] = (rng, idx) => {
   const obj = rng.pick(["gazebo floor", "stop-sign-style plaque", "patio table top", "decorative clock face"]);
   return {
     id: `gen.geo2-angle-sums-2.${idx}`, generated: true, concepts: ["polygon-angle-sums"], difficulty: 2, context: "applied",
-    prompt: `A ${obj} is a regular ${name} — all ${n} sides and all ${n} angles are equal. Find the interior angle sum, then the measure of each interior angle.`,
+    prompt: `A ${obj} is a regular ${name}: all ${n} sides and all ${n} angles are equal. Find the interior angle sum, then the measure of each interior angle.`,
     steps: [
       { instruction: "Find the interior angle sum, in degrees.", answer: `${sum}`, accept: [`${sum} degrees`], hint: `$(n - 2) \\times 180 = ${n - 2} \\times 180$.` },
       { instruction: `The ${n} equal angles share that sum. Find each interior angle, in degrees.`, answer: `${each}`, accept: [`${each} degrees`], hint: `${sum} ÷ ${n}.` },
@@ -133,7 +133,7 @@ fill["geo2-parallelogram-2"] = (rng, idx) => {
     steps: [
       { instruction: `Set $AB = CD$ and subtract ${b} from both sides. Write the resulting equation.`, answer: `${a}x = ${c - b}`, accept: [`${a}x=${c - b}`, `${c - b}=${a}x`], hint: `From $${a}x + ${b} = ${c}$, subtract ${b}.` },
       { instruction: "Solve for $x$.", answer: `${x0}`, accept: [`x=${x0}`], hint: `${c - b} ÷ ${a}.` },
-      { instruction: "Find the length of $AB$.", answer: `${c}`, accept: [`ab=${c}`], hint: `$${a}(${x0}) + ${b}$ — it must match $CD$.` },
+      { instruction: "Find the length of $AB$.", answer: `${c}`, accept: [`ab=${c}`], hint: `$${a}(${x0}) + ${b}$: it must match $CD$.` },
     ],
     finalAnswer: { value: `${c}`, unit: "" },
     solutionNarrative: `$${a}x + ${b} = ${c}$ gives $${a}x = ${c - b}$, so $x = ${x0}$ and $AB = ${a}(${x0}) + ${b} = ${c}$, equal to $CD$ as it must be.`,
@@ -202,7 +202,7 @@ fill["geo2-special-quads-3"] = (rng, idx) => {
   const x = (360 - A - B) / 2;    // whole number: A and B are multiples of 10
   return {
     id: `gen.geo2-special-quads-3.${idx}`, generated: true, concepts: ["special-quadrilaterals"], difficulty: 3, context: "applied",
-    prompt: `A kite-shaped stunt kite has vertex angles of $${A}^\\circ$ (at the nose) and $${B}^\\circ$ (at the tail) along its axis of symmetry. The other two angles — the pair the symmetry axis does NOT pass through — are equal. Find each of those two angles.`,
+    prompt: `A kite-shaped stunt kite has vertex angles of $${A}^\\circ$ (at the nose) and $${B}^\\circ$ (at the tail) along its axis of symmetry. The other two angles, the pair the symmetry axis does NOT pass through, are equal. Find each of those two angles.`,
     steps: [
       { instruction: "What do the four interior angles of any quadrilateral sum to, in degrees?", answer: "360", accept: ["360 degrees"], hint: "A quadrilateral splits into two triangles: $2 \\times 180$." },
       { instruction: "Add the two known vertex angles, in degrees.", answer: `${A + B}`, accept: [`${A + B} degrees`], hint: `${A} + ${B}.` },
@@ -210,7 +210,7 @@ fill["geo2-special-quads-3"] = (rng, idx) => {
       { instruction: "Find each of the two equal angles, in degrees.", answer: `${x}`, accept: [`${x} degrees`], hint: `${360 - A - B} ÷ 2.` },
     ],
     finalAnswer: { value: `${x}`, unit: "degrees" },
-    solutionNarrative: `The angles sum to $360^\\circ$. The vertex angles take $${A} + ${B} = ${A + B}^\\circ$, leaving $${360 - A - B}^\\circ$ for the congruent pair — $${x}^\\circ$ each.`,
+    solutionNarrative: `The angles sum to $360^\\circ$. The vertex angles take $${A} + ${B} = ${A + B}^\\circ$, leaving $${360 - A - B}^\\circ$ for the congruent pair: $${x}^\\circ$ each.`,
   };
 };
 
@@ -223,7 +223,7 @@ fill["geo2-trapezoids-1"] = (rng, idx) => {
   const obj = rng.pick(["deck", "garden bed", "stage platform", "roof cross-section"]);
   return {
     id: `gen.geo2-trapezoids-1.${idx}`, generated: true, concepts: ["trapezoids-and-midsegments"], difficulty: 1, context: "applied",
-    prompt: `A trapezoid-shaped ${obj} has parallel sides (bases) of ${b1} ft and ${b2} ft. A support beam runs along the midsegment — the segment joining the midpoints of the two legs. How long is the beam?`,
+    prompt: `A trapezoid-shaped ${obj} has parallel sides (bases) of ${b1} ft and ${b2} ft. A support beam runs along the midsegment: the segment joining the midpoints of the two legs. How long is the beam?`,
     steps: [
       { instruction: "Add the two bases, in feet.", answer: `${b1 + b2}`, accept: [`${b1 + b2} ft`], hint: `${b1} + ${b2}.` },
       { instruction: "The midsegment is the AVERAGE of the bases. Find its length, in feet.", answer: `${m}`, accept: [`${m} ft`], hint: `${b1 + b2} ÷ 2.` },
@@ -314,7 +314,7 @@ fill["geo2-translate-reflect-2"] = (rng, idx) => {
       `P and its mirror image P' across the ${axis}-axis.`
     ),
     steps: [
-      { instruction: `Reflecting over the ${axis}-axis changes the sign of which coordinate — x or y?`, answer: flipped, accept: [`${flipped}-coordinate`, `the ${flipped}-coordinate`], hint: `The coordinate measured ACROSS the mirror flips; the one along the mirror stays.` },
+      { instruction: `Reflecting over the ${axis}-axis changes the sign of which coordinate: x or y?`, answer: flipped, accept: [`${flipped}-coordinate`, `the ${flipped}-coordinate`], hint: `The coordinate measured ACROSS the mirror flips; the one along the mirror stays.` },
       { instruction: VEC_HOWTO, answer: vec(qx, qy), accept: vecAccept(qx, qy), hint: `Flip the sign of the ${flipped}-coordinate and keep the other.` },
     ],
     finalAnswer: { value: `(${qx}, ${qy})`, unit: "" },
@@ -339,7 +339,7 @@ fill["geo2-translate-reflect-3"] = (rng, idx) => {
     ),
     steps: [
       { instruction: `Reflecting over $y = x$ swaps the coordinates. ${VEC_HOWTO}`, answer: vec(py, px), accept: vecAccept(py, px), hint: `$(x, y) \\to (y, x)$.` },
-      { instruction: "Does a reflection change a point's distance from the origin? (yes or no)", answer: "no", accept: ["n"], hint: "Reflections are rigid motions — they preserve all distances." },
+      { instruction: "Does a reflection change a point's distance from the origin? (yes or no)", answer: "no", accept: ["n"], hint: "Reflections are rigid motions: they preserve all distances." },
     ],
     finalAnswer: { value: `(${py}, ${px})`, unit: "" },
     solutionNarrative: `Over $y = x$, coordinates swap: $P(${px}, ${py}) \\to P'(${py}, ${px})$. Reflections are rigid, so the distance from the origin is unchanged.`,
@@ -398,7 +398,7 @@ fill["geo2-rotations-3"] = (rng, idx) => {
     plot: planePlot(
       [{ x: 0, y: 0, label: "O", color: "text" }, { x: px, y: py, label: "P", color: "accent" }, { x: qx, y: qy, label: "P'", color: "good" }],
       [{ from: [0, 0], to: [px, py], color: "dim", dashed: true }, { from: [0, 0], to: [qx, qy], color: "dim", dashed: true }],
-      `A 270° counterclockwise turn about O lands P at P' — the same as 90° clockwise.`
+      `A 270° counterclockwise turn about O lands P at P': the same as 90° clockwise.`
     ),
     steps: [
       { instruction: "A $270^\\circ$ counterclockwise rotation equals how many degrees CLOCKWISE?", answer: "90", accept: ["90 degrees"], hint: "The two must total a full turn: $360 - 270$." },
@@ -464,7 +464,7 @@ fill["geo2-dilations-3"] = (rng, idx) => {
       { instruction: "Find the image's area, in square meters.", answer: `${A0 * k * k}`, accept: [`${A0 * k * k} m^2`], hint: `${A0} × ${k * k}.` },
     ],
     finalAnswer: { value: `${A0 * k * k}`, unit: "square meters" },
-    solutionNarrative: `Lengths scale by ${k}, so the perimeter becomes ${k * P0} m; area scales by $k^2 = ${k * k}$, so it becomes $${A0} \\times ${k * k} = ${A0 * k * k}$ m² — not ${A0 * k}.`,
+    solutionNarrative: `Lengths scale by ${k}, so the perimeter becomes ${k * P0} m; area scales by $k^2 = ${k * k}$, so it becomes $${A0} \\times ${k * k} = ${A0 * k * k}$ m², not ${A0 * k}.`,
   };
 };
 
@@ -503,7 +503,7 @@ fill["geo2-compositions-1"] = (rng, idx) => {
     prompt: `A transformation of the plane follows the rule $${rule}$. Apply it to the point $P(${px}, ${py})$, then identify the type of transformation.`,
     steps: [
       { instruction: `Apply the rule to $P(${px}, ${py})$. ${VEC_HOWTO}`, answer: vec(qx, qy), accept: vecAccept(qx, qy), hint: `Substitute $x = ${px}$ and $y = ${py}$ into the rule.` },
-      { instruction: `Which single transformation is this? ${MENU}`, answer: type, accept: MENU_ACCEPT[type], hint: type === "translation" ? "Every point slides by the same amounts." : type === "reflection" ? "Exactly one coordinate flips sign — a mirror flip over an axis." : type === "rotation" ? "Both signs flip: a half-turn about the origin." : "Both coordinates are MULTIPLIED by the same factor." },
+      { instruction: `Which single transformation is this? ${MENU}`, answer: type, accept: MENU_ACCEPT[type], hint: type === "translation" ? "Every point slides by the same amounts." : type === "reflection" ? "Exactly one coordinate flips sign: a mirror flip over an axis." : type === "rotation" ? "Both signs flip: a half-turn about the origin." : "Both coordinates are MULTIPLIED by the same factor." },
     ],
     finalAnswer: { value: type, unit: "" },
     solutionNarrative: `The rule sends $P(${px}, ${py})$ to $(${qx}, ${qy})$; the mapping is a ${type}.`,
@@ -534,7 +534,7 @@ fill["geo2-compositions-2"] = (rng, idx) => {
       { instruction: `Now reflect $P'$ over the x-axis. ${VEC_HOWTO}`, answer: vec(mx, -ty), accept: vecAccept(mx, -ty), hint: "Keep x; flip the sign of y." },
     ],
     finalAnswer: { value: `(${mx}, ${-ty})`, unit: "" },
-    solutionNarrative: `Translation: $P' = (${px} + (${a}), ${py} + (${b})) = (${mx}, ${ty})$. Reflection over the x-axis flips y: $P'' = (${mx}, ${-ty})$. Order matters — reflecting first would end elsewhere.`,
+    solutionNarrative: `Translation: $P' = (${px} + (${a}), ${py} + (${b})) = (${mx}, ${ty})$. Reflection over the x-axis flips y: $P'' = (${mx}, ${-ty})$. Order matters: reflecting first would end elsewhere.`,
   };
 };
 
@@ -559,10 +559,10 @@ fill["geo2-compositions-3"] = (rng, idx) => {
   } else {
     const axis = type === "reflection-x" ? "x" : "y";
     const flipped = type === "reflection-x" ? "y" : "x";
-    steps.push({ instruction: "In both pairs, exactly one coordinate changes sign. Which one — x or y?", answer: flipped, accept: [`${flipped}-coordinate`, `the ${flipped}-coordinate`], hint: `Compare $(${p}, ${q})$ with $(${i1x}, ${i1y})$ coordinate by coordinate.` });
-    steps.push({ instruction: "Which axis is the mirror line — x or y?", answer: axis, accept: [`${axis}-axis`, `the ${axis}-axis`], hint: `Flipping the ${flipped}-coordinate means the mirror is the ${axis}-axis.` });
+    steps.push({ instruction: "In both pairs, exactly one coordinate changes sign. Which one: x or y?", answer: flipped, accept: [`${flipped}-coordinate`, `the ${flipped}-coordinate`], hint: `Compare $(${p}, ${q})$ with $(${i1x}, ${i1y})$ coordinate by coordinate.` });
+    steps.push({ instruction: "Which axis is the mirror line: x or y?", answer: axis, accept: [`${axis}-axis`, `the ${axis}-axis`], hint: `Flipping the ${flipped}-coordinate means the mirror is the ${axis}-axis.` });
   }
-  steps.push({ instruction: `Which single transformation maps the pre-image to the image? ${MENU}`, answer: word, accept: MENU_ACCEPT[word], hint: type === "dilation" ? "Distances from the origin were multiplied — the shape changed size." : "The shape kept its size, so it is a rigid motion." });
+  steps.push({ instruction: `Which single transformation maps the pre-image to the image? ${MENU}`, answer: word, accept: MENU_ACCEPT[word], hint: type === "dilation" ? "Distances from the origin were multiplied: the shape changed size." : "The shape kept its size, so it is a rigid motion." });
   return {
     id: `gen.geo2-compositions-3.${idx}`, generated: true, concepts: ["compositions-and-identify"], difficulty: 3, context: "abstract",
     prompt: `A single transformation maps $A(${p}, ${q}) \\to A'(${i1x}, ${i1y})$ and $B(${r}, ${s}) \\to B'(${i2x}, ${i2y})$. Identify it.`,
@@ -580,9 +580,9 @@ fill["geo2-compositions-3"] = (rng, idx) => {
     steps,
     finalAnswer: { value: word, unit: "" },
     solutionNarrative: type === "rotation"
-      ? `Both coordinates flip sign in both pairs — the rule $(x, y) \\to (-x, -y)$ — so this is a $180^\\circ$ rotation about the origin.`
+      ? `Both coordinates flip sign in both pairs (the rule $(x, y) \\to (-x, -y)$) so this is a $180^\\circ$ rotation about the origin.`
       : type === "dilation"
-        ? `Each coordinate is multiplied by ${k} — the rule $(x, y) \\to (${k}x, ${k}y)$ — so this is a dilation with scale factor ${k}.`
+        ? `Each coordinate is multiplied by ${k} (the rule $(x, y) \\to (${k}x, ${k}y)$) so this is a dilation with scale factor ${k}.`
         : `Exactly one coordinate flips sign in both pairs, so this is a reflection over the ${type === "reflection-x" ? "x" : "y"}-axis.`,
   };
 };

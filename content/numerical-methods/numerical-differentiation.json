@@ -8,35 +8,35 @@
     {
       "id": "forward-backward-difference",
       "label": "Forward and backward differences",
-      "microLesson": "When a function is known only at sample points — or is too messy to differentiate by hand — replace the derivative's limit with a small finite step: the **forward difference** $D_+ = \\dfrac{f(x+h) - f(x)}{h}$ or the **backward difference** $D_- = \\dfrac{f(x) - f(x-h)}{h}$. Each is the slope of a secant line through two nearby samples. For $f(x) = x^2$ at $x = 2$ with $h = 0.5$: $D_+ = \\frac{6.25 - 4}{0.5} = 4.5$ against the true $f'(2) = 4$. The miss of $0.5$ equals $h$ exactly — one-sided differences carry an error proportional to $h$, i.e. they are **first-order** accurate."
+      "microLesson": "When a function is known only at sample points, or is too messy to differentiate by hand, replace the derivative's limit with a small finite step: the **forward difference** $D_+ = \\dfrac{f(x+h) - f(x)}{h}$ or the **backward difference** $D_- = \\dfrac{f(x) - f(x-h)}{h}$. Each is the slope of a secant line through two nearby samples. For $f(x) = x^2$ at $x = 2$ with $h = 0.5$: $D_+ = \\frac{6.25 - 4}{0.5} = 4.5$ against the true $f'(2) = 4$. The miss of $0.5$ equals $h$ exactly: one-sided differences carry an error proportional to $h$, i.e. they are **first-order** accurate."
     },
     {
       "id": "central-difference",
       "label": "The central difference",
-      "microLesson": "Straddle the target point symmetrically and the error collapses: the **central difference** $D_c = \\dfrac{f(x+h) - f(x-h)}{2h}$ has error proportional to $h^2$, not $h$ — **second-order** accuracy, because the symmetric secant cancels the leading Taylor error term. For $f(x) = x^3$ at $x = 1$ with $h = 0.5$: $D_c = \\frac{3.375 - 0.125}{1} = 3.25$ versus the true $3$, an error of exactly $h^2 = 0.25$. Halve $h$ and a one-sided error halves, but a central error drops by a factor of four. On quadratics the central difference is exactly right."
+      "microLesson": "Straddle the target point symmetrically and the error collapses: the **central difference** $D_c = \\dfrac{f(x+h) - f(x-h)}{2h}$ has error proportional to $h^2$, not $h$: **second-order** accuracy, because the symmetric secant cancels the leading Taylor error term. For $f(x) = x^3$ at $x = 1$ with $h = 0.5$: $D_c = \\frac{3.375 - 0.125}{1} = 3.25$ versus the true $3$, an error of exactly $h^2 = 0.25$. Halve $h$ and a one-sided error halves, but a central error drops by a factor of four. On quadratics the central difference is exactly right."
     },
     {
       "id": "second-derivative",
       "label": "The second-derivative formula",
-      "microLesson": "Three equally spaced samples estimate curvature: $f''(x) \\approx \\dfrac{f(x+h) - 2f(x) + f(x-h)}{h^2}$, again accurate to $O(h^2)$. The numerator is a 'difference of differences' — how much the slope changes across the point — and its sign reads concavity straight off tabulated data: positive means concave up. For $f(x) = x^2$ any spacing gives exactly $2$, matching $f'' = 2$. This stencil is the seed of finite-difference methods: entire differential equations are solved by replacing every derivative in them with formulas like this one."
+      "microLesson": "Three equally spaced samples estimate curvature: $f''(x) \\approx \\dfrac{f(x+h) - 2f(x) + f(x-h)}{h^2}$, again accurate to $O(h^2)$. The numerator is a 'difference of differences', how much the slope changes across the point, and its sign reads concavity straight off tabulated data: positive means concave up. For $f(x) = x^2$ any spacing gives exactly $2$, matching $f'' = 2$. This stencil is the seed of finite-difference methods: entire differential equations are solved by replacing every derivative in them with formulas like this one."
     },
     {
       "id": "richardson-and-error",
       "label": "Error orders, Richardson, and the h trade-off",
-      "microLesson": "Every difference formula has a truncation error $O(h^p)$: $p = 1$ for one-sided, $p = 2$ for central formulas. Knowing $p$ buys you two things. First, **Richardson extrapolation**: combine two step sizes as $R = \\dfrac{4D(h/2) - D(h)}{3}$ and the $h^2$ error terms cancel, jumping to $O(h^4)$ accuracy for free. Second, a warning: in floating point, shrinking $h$ eventually backfires, because subtracting nearly equal numbers amplifies rounding error like $\\varepsilon/h$. Total error $\\approx h^2 + \\varepsilon/h$ is U-shaped — there is an optimal $h$, and refining beyond it makes answers WORSE."
+      "microLesson": "Every difference formula has a truncation error $O(h^p)$: $p = 1$ for one-sided, $p = 2$ for central formulas. Knowing $p$ buys you two things. First, **Richardson extrapolation**: combine two step sizes as $R = \\dfrac{4D(h/2) - D(h)}{3}$ and the $h^2$ error terms cancel, jumping to $O(h^4)$ accuracy for free. Second, a warning: in floating point, shrinking $h$ eventually backfires, because subtracting nearly equal numbers amplifies rounding error like $\\varepsilon/h$. Total error $\\approx h^2 + \\varepsilon/h$ is U-shaped: there is an optimal $h$, and refining beyond it makes answers WORSE."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## The problem: a derivative with no formula\n\nCalculus gives $f'(x)$ as a limit of difference quotients as $h \\to 0$. But a computer cannot take limits, and often you do not even have a formula — just sensor logs, table entries, or an expensive simulation you can only sample. **Numerical differentiation** freezes the limit at a small finite $h$ and asks: how wrong is that, and how do we make it less wrong?\n\n## One-sided differences: first-order accuracy\n\nThe two obvious estimates use a neighbor on one side:\n\n$$D_+ = \\frac{f(x+h) - f(x)}{h} \\qquad\\text{(forward)}, \\qquad D_- = \\frac{f(x) - f(x-h)}{h} \\qquad\\text{(backward)}.$$\n\nEach is a secant slope. Taylor expansion shows the miss: $D_+ = f'(x) + \\frac{h}{2}f''(x) + \\cdots$, so the error shrinks **proportionally to $h$** — these formulas are $O(h)$, or **first-order** accurate. Halve the step, halve the error.\n\n### Worked example\n\n$f(x) = x^2$ at $x = 3$, $h = 0.2$: $D_+ = \\frac{10.24 - 9}{0.2} = 6.2$ and $D_- = \\frac{9 - 7.84}{0.2} = 5.8$, straddling the true $f'(3) = 6$ by $\\pm 0.2$ — exactly $h$, as the Taylor term $\\frac{h}{2}f'' = \\frac{0.2}{2}\\cdot 2$ predicts.\n\n## The central difference: symmetry buys an order\n\nAverage the two one-sided estimates — equivalently, take the secant through the two flanking points:\n\n$$\\boxed{\\,D_c = \\frac{f(x+h) - f(x-h)}{2h} = f'(x) + \\frac{h^2}{6}f'''(x) + \\cdots\\,}$$\n\nThe even-symmetric stencil cancels the $\\frac{h}{2}f''$ term entirely, leaving an $O(h^2)$ — **second-order** — error. Halving $h$ now cuts the error by a factor of **4**. And since the leading error involves $f'''$, the central difference is *exact* on any quadratic.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,4],\"yRange\":[-4,16],\"grid\":true,\"curves\":[{\"fn\":\"x^2\",\"label\":\"f(x) = x²\",\"color\":\"muted\",\"labelAt\":3.6},{\"fn\":\"5*x - 6\",\"label\":\"forward secant, slope 5\",\"color\":\"warn\",\"labelAt\":2.9},{\"fn\":\"4*x - 3\",\"label\":\"central secant, slope 4\",\"color\":\"accent\",\"labelAt\":1.2}],\"points\":[{\"x\":1,\"y\":1,\"label\":\"(1, 1)\",\"color\":\"good\"},{\"x\":2,\"y\":4,\"label\":\"(2, 4)\",\"color\":\"good\"},{\"x\":3,\"y\":9,\"label\":\"(3, 9)\",\"color\":\"good\"}],\"caption\":\"Estimating f'(2) = 4 for f = x² with h = 1: the forward secant (slope 5) misses; the symmetric central secant (slope 4) is exact for a quadratic.\"}\n```\n\n### Worked example\n\n$f(x) = x^3$ at $x = 2$, $h = 0.1$: $D_c = \\frac{9.261 - 6.859}{0.2} = 12.01$ versus the true $12$ — error $0.01 = h^2$. The forward difference at the same $h$ gives $12.61$, an error 61 times larger.\n\n## Curvature from three points: the second derivative\n\nDifference the differences and you get curvature:\n\n$$f''(x) \\approx \\frac{f(x+h) - 2f(x) + f(x-h)}{h^2}, \\qquad \\text{error } O(h^2).$$\n\nThe $1, -2, 1$ stencil measures how the slope changes across $x$: positive output means concave up. It is exact for quadratics and even for cubics (the odd error term cancels); on $f(x) = x^4$ at $x = 1$ with $h = 0.5$ it gives $\\frac{5.0625 - 2 + 0.0625}{0.25} = 12.5$ versus the true $12$ — error $2h^2 = 0.5$. This little stencil, tiled across a grid, is how computers solve heat, wave, and Poisson equations.\n\n## Richardson extrapolation: two estimates, one better answer\n\nBecause the central difference's error is (almost exactly) $Ch^2$, computing it at two step sizes lets you cancel that error algebraically. If $D(h) \\approx f' + Ch^2$ and $D(h/2) \\approx f' + \\frac{C h^2}{4}$, then\n\n$$\\boxed{\\,R = \\frac{4D(h/2) - D(h)}{3} = f' + O(h^4).\\,}$$\n\n### Worked example\n\nFor $f(x) = x^3$ at $x = 1$: $D(0.5) = 3.25$ and $D(0.25) = 3.0625$. Then $R = \\frac{4(3.0625) - 3.25}{3} = \\frac{9}{3} = 3$ — the exact derivative, because for $x^3$ the $h^2$ term was the entire error. The same trick applied to integration rules is called Romberg integration.\n\n## The pitfall: smaller h is not always better\n\nTruncation error shrinks as $h$ shrinks — but the numerator $f(x+h) - f(x-h)$ subtracts two nearly equal numbers, and floating-point **cancellation** amplifies rounding noise like $\\varepsilon/h$. The total error behaves like\n\n$$E(h) \\approx h^2 + \\frac{\\varepsilon}{h},$$\n\na U-shaped curve: refining $h$ helps until the rounding term takes over, after which every further refinement makes the answer WORSE. With $E(h) = h^2 + 0.002/h$: $E(0.1) = 0.03$ but $E(0.01) = 0.2001$ — a hundred-fold smaller step, a seven-fold larger error. In practice: use central differences at a moderate $h$, and buy extra accuracy with Richardson extrapolation rather than with ever-smaller steps. This truncation-versus-rounding tension is floating-point error analysis showing up exactly where the theory said it would."
+    "body": "## The problem: a derivative with no formula\n\nCalculus gives $f'(x)$ as a limit of difference quotients as $h \\to 0$. But a computer cannot take limits, and often you do not even have a formula: just sensor logs, table entries, or an expensive simulation you can only sample. **Numerical differentiation** freezes the limit at a small finite $h$ and asks: how wrong is that, and how do we make it less wrong?\n\n## One-sided differences: first-order accuracy\n\nThe two obvious estimates use a neighbor on one side:\n\n$$D_+ = \\frac{f(x+h) - f(x)}{h} \\qquad\\text{(forward)}, \\qquad D_- = \\frac{f(x) - f(x-h)}{h} \\qquad\\text{(backward)}.$$\n\nEach is a secant slope. Taylor expansion shows the miss: $D_+ = f'(x) + \\frac{h}{2}f''(x) + \\cdots$, so the error shrinks **proportionally to $h$**: these formulas are $O(h)$, or **first-order** accurate. Halve the step, halve the error.\n\n### Worked example\n\n$f(x) = x^2$ at $x = 3$, $h = 0.2$: $D_+ = \\frac{10.24 - 9}{0.2} = 6.2$ and $D_- = \\frac{9 - 7.84}{0.2} = 5.8$, straddling the true $f'(3) = 6$ by $\\pm 0.2$: exactly $h$, as the Taylor term $\\frac{h}{2}f'' = \\frac{0.2}{2}\\cdot 2$ predicts.\n\n## The central difference: symmetry buys an order\n\nAverage the two one-sided estimates: equivalently, take the secant through the two flanking points:\n\n$$\\boxed{\\,D_c = \\frac{f(x+h) - f(x-h)}{2h} = f'(x) + \\frac{h^2}{6}f'''(x) + \\cdots\\,}$$\n\nThe even-symmetric stencil cancels the $\\frac{h}{2}f''$ term entirely, leaving an $O(h^2)$, **second-order**, error. Halving $h$ now cuts the error by a factor of **4**. And since the leading error involves $f'''$, the central difference is *exact* on any quadratic.\n\n```plot\n{\"type\":\"cartesian\",\"xRange\":[0,4],\"yRange\":[-4,16],\"grid\":true,\"curves\":[{\"fn\":\"x^2\",\"label\":\"f(x) = x²\",\"color\":\"muted\",\"labelAt\":3.6},{\"fn\":\"5*x - 6\",\"label\":\"forward secant, slope 5\",\"color\":\"warn\",\"labelAt\":2.9},{\"fn\":\"4*x - 3\",\"label\":\"central secant, slope 4\",\"color\":\"accent\",\"labelAt\":1.2}],\"points\":[{\"x\":1,\"y\":1,\"label\":\"(1, 1)\",\"color\":\"good\"},{\"x\":2,\"y\":4,\"label\":\"(2, 4)\",\"color\":\"good\"},{\"x\":3,\"y\":9,\"label\":\"(3, 9)\",\"color\":\"good\"}],\"caption\":\"Estimating f'(2) = 4 for f = x² with h = 1: the forward secant (slope 5) misses; the symmetric central secant (slope 4) is exact for a quadratic.\"}\n```\n\n### Worked example\n\n$f(x) = x^3$ at $x = 2$, $h = 0.1$: $D_c = \\frac{9.261 - 6.859}{0.2} = 12.01$ versus the true $12$: error $0.01 = h^2$. The forward difference at the same $h$ gives $12.61$, an error 61 times larger.\n\n## Curvature from three points: the second derivative\n\nDifference the differences and you get curvature:\n\n$$f''(x) \\approx \\frac{f(x+h) - 2f(x) + f(x-h)}{h^2}, \\qquad \\text{error } O(h^2).$$\n\nThe $1, -2, 1$ stencil measures how the slope changes across $x$: positive output means concave up. It is exact for quadratics and even for cubics (the odd error term cancels); on $f(x) = x^4$ at $x = 1$ with $h = 0.5$ it gives $\\frac{5.0625 - 2 + 0.0625}{0.25} = 12.5$ versus the true $12$: error $2h^2 = 0.5$. This little stencil, tiled across a grid, is how computers solve heat, wave, and Poisson equations.\n\n## Richardson extrapolation: two estimates, one better answer\n\nBecause the central difference's error is (almost exactly) $Ch^2$, computing it at two step sizes lets you cancel that error algebraically. If $D(h) \\approx f' + Ch^2$ and $D(h/2) \\approx f' + \\frac{C h^2}{4}$, then\n\n$$\\boxed{\\,R = \\frac{4D(h/2) - D(h)}{3} = f' + O(h^4).\\,}$$\n\n### Worked example\n\nFor $f(x) = x^3$ at $x = 1$: $D(0.5) = 3.25$ and $D(0.25) = 3.0625$. Then $R = \\frac{4(3.0625) - 3.25}{3} = \\frac{9}{3} = 3$: the exact derivative, because for $x^3$ the $h^2$ term was the entire error. The same trick applied to integration rules is called Romberg integration.\n\n## The pitfall: smaller h is not always better\n\nTruncation error shrinks as $h$ shrinks, but the numerator $f(x+h) - f(x-h)$ subtracts two nearly equal numbers, and floating-point **cancellation** amplifies rounding noise like $\\varepsilon/h$. The total error behaves like\n\n$$E(h) \\approx h^2 + \\frac{\\varepsilon}{h},$$\n\na U-shaped curve: refining $h$ helps until the rounding term takes over, after which every further refinement makes the answer WORSE. With $E(h) = h^2 + 0.002/h$: $E(0.1) = 0.03$ but $E(0.01) = 0.2001$: a hundred-fold smaller step, a seven-fold larger error. In practice: use central differences at a moderate $h$, and buy extra accuracy with Richardson extrapolation rather than with ever-smaller steps. This truncation-versus-rounding tension is floating-point error analysis showing up exactly where the theory said it would."
   },
   "application": {
     "summary": "Numerical differentiation turns sampled data into rates: velocity and acceleration from position logs, gradients for optimization and machine learning when formulas are unavailable, sensitivity estimates in engineering models, and the finite-difference stencils that discretize the differential equations of physics.",
     "domains": ["motion tracking", "scientific computing", "optimization", "engineering"],
-    "workedExample": "**Velocity and acceleration from a drop test**\n\nA motion-capture rig logs the distance fallen by a dropped instrument package: $s(0) = 0$, $s(1) = 4.9$, $s(2) = 19.6$ meters. The analyst wants the velocity at $t = 1$ s.\n\nThe forward difference gives $\\frac{19.6 - 4.9}{1} = 14.7$ m/s and the backward difference $\\frac{4.9 - 0}{1} = 4.9$ m/s — wildly different, each polluted by an $O(h)$ error with $h = 1$ s. The central difference uses both neighbors: $$v(1) \\approx \\frac{s(2) - s(0)}{2} = \\frac{19.6}{2} = 9.8 \\text{ m/s},$$ which is *exactly* right, because free-fall distance $s = 4.9t^2$ is quadratic and the central difference is exact on quadratics. The second-derivative stencil confirms the physics: $$a \\approx \\frac{19.6 - 2(4.9) + 0}{1^2} = 9.8 \\text{ m/s}^2,$$ recovering the gravitational acceleration from three data points. Real rigs sample far faster, but then face the trade-off: at millisecond steps the position differences shrink toward the sensor's noise floor, and rounding/noise error $\\sim \\varepsilon/h$ takes over. Practical pipelines therefore use central differences at a moderate step, or smooth first and differentiate the fit — precisely the truncation-versus-noise balance this topic quantifies.",
+    "workedExample": "**Velocity and acceleration from a drop test**\n\nA motion-capture rig logs the distance fallen by a dropped instrument package: $s(0) = 0$, $s(1) = 4.9$, $s(2) = 19.6$ meters. The analyst wants the velocity at $t = 1$ s.\n\nThe forward difference gives $\\frac{19.6 - 4.9}{1} = 14.7$ m/s and the backward difference $\\frac{4.9 - 0}{1} = 4.9$ m/s: wildly different, each polluted by an $O(h)$ error with $h = 1$ s. The central difference uses both neighbors: $$v(1) \\approx \\frac{s(2) - s(0)}{2} = \\frac{19.6}{2} = 9.8 \\text{ m/s},$$ which is *exactly* right, because free-fall distance $s = 4.9t^2$ is quadratic and the central difference is exact on quadratics. The second-derivative stencil confirms the physics: $$a \\approx \\frac{19.6 - 2(4.9) + 0}{1^2} = 9.8 \\text{ m/s}^2,$$ recovering the gravitational acceleration from three data points. Real rigs sample far faster, but then face the trade-off: at millisecond steps the position differences shrink toward the sensor's noise floor, and rounding/noise error $\\sim \\varepsilon/h$ takes over. Practical pipelines therefore use central differences at a moderate step, or smooth first and differentiate the fit: precisely the truncation-versus-noise balance this topic quantifies.",
     "domainNotes": [
       "**Motion tracking:** velocity and acceleration are computed from sampled positions with central differences; too-fine sampling amplifies sensor noise.",
-      "**Scientific computing:** finite-difference stencils replace derivatives in heat, wave, and fluid equations — the second-derivative formula is the 1-D Laplacian.",
+      "**Scientific computing:** finite-difference stencils replace derivatives in heat, wave, and fluid equations: the second-derivative formula is the 1-D Laplacian.",
       "**Optimization:** when gradients have no formula, solvers estimate them by finite differences, choosing h to balance truncation against rounding.",
       "**Engineering:** sensitivity analysis perturbs a design parameter by h and differences the simulation outputs to estimate d(output)/d(parameter)."
     ]
@@ -54,7 +54,7 @@
         { "instruction": "Form the quotient $D_+ = \\dfrac{6.25 - 4}{0.5}$.", "answer": "4.5", "accept": ["9/2"], "hint": "$2.25 / 0.5$." }
       ],
       "finalAnswer": { "value": "4.5", "unit": "" },
-      "solutionNarrative": "$D_+ = \\frac{6.25 - 4}{0.5} = 4.5$, overshooting the true $f'(2) = 4$ by exactly $h = 0.5$ — the signature first-order error."
+      "solutionNarrative": "$D_+ = \\frac{6.25 - 4}{0.5} = 4.5$, overshooting the true $f'(2) = 4$ by exactly $h = 0.5$: the signature first-order error."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s02",
@@ -68,7 +68,7 @@
         { "instruction": "Error of $D_+$: $|6.2 - 6| = $ ?", "answer": "0.2", "accept": ["1/5"], "hint": "The estimates straddle the true value by $\\pm h$." }
       ],
       "finalAnswer": { "value": "0.2", "unit": "" },
-      "solutionNarrative": "$D_+ = 6.2$ and $D_- = 5.8$ straddle the true 6 symmetrically; each errs by $h = 0.2$. Averaging them would give the central estimate 6 — exact here."
+      "solutionNarrative": "$D_+ = 6.2$ and $D_- = 5.8$ straddle the true 6 symmetrically; each errs by $h = 0.2$. Averaging them would give the central estimate 6: exact here."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s03",
@@ -82,7 +82,7 @@
         { "instruction": "One-sided differences have truncation error $O(h^p)$ with $p = $ ? (Enter the number.)", "answer": "1", "accept": [], "hint": "Halving h halves the error." }
       ],
       "finalAnswer": { "value": "1", "unit": "" },
-      "solutionNarrative": "$D_+ = 3.5$, $D_- = 2.5$, both first-order ($p = 1$). Their average, 3, is the second-order central estimate — usually the better bet."
+      "solutionNarrative": "$D_+ = 3.5$, $D_- = 2.5$, both first-order ($p = 1$). Their average, 3, is the second-order central estimate: usually the better bet."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s04",
@@ -95,7 +95,7 @@
         { "instruction": "Divide by $2h = 0.5$: $D_c = $ ?", "answer": "4", "accept": ["4.0"], "hint": "$2 / 0.5$." }
       ],
       "finalAnswer": { "value": "4", "unit": "" },
-      "solutionNarrative": "$D_c = \\frac{2}{0.5} = 4$ — exactly $f'(2)$, because the central difference is exact on quadratics."
+      "solutionNarrative": "$D_c = \\frac{2}{0.5} = 4$: exactly $f'(2)$, because the central difference is exact on quadratics."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s05",
@@ -108,7 +108,7 @@
         { "instruction": "Error $= |3.25 - 3| = $ ?", "answer": "0.25", "accept": ["1/4"], "hint": "For $x^3$ the central error is exactly $h^2$." }
       ],
       "finalAnswer": { "value": "0.25", "unit": "" },
-      "solutionNarrative": "$D_c = 3.25$ versus the true 3: error $0.25 = h^2$ exactly — second-order accuracy on display."
+      "solutionNarrative": "$D_c = 3.25$ versus the true 3: error $0.25 = h^2$ exactly: second-order accuracy on display."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s06",
@@ -122,7 +122,7 @@
         { "instruction": "Which estimate is more accurate? Answer with one of: forward, central.", "answer": "central", "accept": [], "hint": "Errors: 0.61 versus 0.01." }
       ],
       "finalAnswer": { "value": "central", "unit": "" },
-      "solutionNarrative": "Forward errs by 0.61, central by 0.01 — a 61-fold win for symmetry at the same cost of two function evaluations."
+      "solutionNarrative": "Forward errs by 0.61, central by 0.01: a 61-fold win for symmetry at the same cost of two function evaluations."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s07",
@@ -135,7 +135,7 @@
         { "instruction": "Divide by $h^2 = 0.25$: $f''(2) \\approx $ ?", "answer": "2", "accept": ["2.0"], "hint": "$0.5 / 0.25$." }
       ],
       "finalAnswer": { "value": "2", "unit": "" },
-      "solutionNarrative": "$\\frac{0.5}{0.25} = 2$, matching $f''(x) = 2$ exactly — the stencil has zero error on quadratics."
+      "solutionNarrative": "$\\frac{0.5}{0.25} = 2$, matching $f''(x) = 2$ exactly: the stencil has zero error on quadratics."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s08",
@@ -148,7 +148,7 @@
         { "instruction": "Divide by $h^2 = 0.25$: $f''(1.5) \\approx $ ?", "answer": "4", "accept": ["4.0"], "hint": "$1/0.25$." }
       ],
       "finalAnswer": { "value": "4", "unit": "" },
-      "solutionNarrative": "The $1, -2, 1$ combination gives 1; dividing by $h^2 = 0.25$ estimates $f'' \\approx 4$ — positive, so the tabulated curve is concave up there."
+      "solutionNarrative": "The $1, -2, 1$ combination gives 1; dividing by $h^2 = 0.25$ estimates $f'' \\approx 4$: positive, so the tabulated curve is concave up there."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s09",
@@ -162,7 +162,7 @@
         { "instruction": "Error $= |12.5 - 12| = $ ?", "answer": "0.5", "accept": ["1/2"], "hint": "For $x^4$ the error is exactly $2h^2$." }
       ],
       "finalAnswer": { "value": "0.5", "unit": "" },
-      "solutionNarrative": "The stencil gives 12.5 against the true 12: error $0.5 = 2h^2$, which would drop to $0.125$ if $h$ were halved — second-order convergence."
+      "solutionNarrative": "The stencil gives 12.5 against the true 12: error $0.5 = 2h^2$, which would drop to $0.125$ if $h$ were halved: second-order convergence."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s10",
@@ -187,7 +187,7 @@
         { "instruction": "$R = \\dfrac{12.25 - 3.25}{3} = $ ?", "answer": "3", "accept": ["3.0"], "hint": "$9/3$." }
       ],
       "finalAnswer": { "value": "3", "unit": "" },
-      "solutionNarrative": "$R = \\frac{12.25 - 3.25}{3} = 3$ — the exact derivative, since Richardson cancels the entire $h^2$ error that both estimates carried."
+      "solutionNarrative": "$R = \\frac{12.25 - 3.25}{3} = 3$: the exact derivative, since Richardson cancels the entire $h^2$ error that both estimates carried."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s12",
@@ -198,10 +198,10 @@
       "steps": [
         { "instruction": "$E(0.1) = 0.01 + 0.02 = $ ?", "answer": "0.03", "accept": [], "hint": "$0.1^2 = 0.01$ and $0.002/0.1 = 0.02$." },
         { "instruction": "$E(0.01) = 0.0001 + 0.2 = $ ?", "answer": "0.2001", "accept": [], "hint": "The rounding term explodes as h shrinks." },
-        { "instruction": "Which step size gives the smaller total error — the larger or the smaller one? Answer with one of: larger, smaller.", "answer": "larger", "accept": [], "hint": "Past the optimum, refining h makes things worse." }
+        { "instruction": "Which step size gives the smaller total error: the larger or the smaller one? Answer with one of: larger, smaller.", "answer": "larger", "accept": [], "hint": "Past the optimum, refining h makes things worse." }
       ],
       "finalAnswer": { "value": "larger", "unit": "" },
-      "solutionNarrative": "$E(0.1) = 0.03$ but $E(0.01) = 0.2001$: the LARGER step wins. Total error is U-shaped in h — beyond the sweet spot, cancellation noise dominates."
+      "solutionNarrative": "$E(0.1) = 0.03$ but $E(0.01) = 0.2001$: the LARGER step wins. Total error is U-shaped in h: beyond the sweet spot, cancellation noise dominates."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s13",
@@ -213,7 +213,7 @@
         { "instruction": "$D_c = \\dfrac{f(3) - f(1)}{2} = \\dfrac{13 - 3}{2} = $ ?", "answer": "5", "accept": ["5.0"], "hint": "Skip the middle value; use the flanking ones." }
       ],
       "finalAnswer": { "value": "5", "unit": "" },
-      "solutionNarrative": "$D_c = \\frac{13 - 3}{2} = 5$ — the slope of the secant through the two neighbors of $x = 2$."
+      "solutionNarrative": "$D_c = \\frac{13 - 3}{2} = 5$: the slope of the secant through the two neighbors of $x = 2$."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s14",
@@ -226,7 +226,7 @@
         { "instruction": "Divide by $h^2 = 4$: $f''(2) \\approx $ ?", "answer": "0.5", "accept": ["1/2"], "hint": "$2/4$." }
       ],
       "finalAnswer": { "value": "0.5", "unit": "" },
-      "solutionNarrative": "$f'' \\approx \\frac{2}{4} = 0.5 > 0$: the cooling curve is concave up — it drops fast at first and levels off, exactly what the positive second difference detects."
+      "solutionNarrative": "$f'' \\approx \\frac{2}{4} = 0.5 > 0$: the cooling curve is concave up: it drops fast at first and levels off, exactly what the positive second difference detects."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s15",
@@ -239,7 +239,7 @@
         { "instruction": "Central is second-order: halving h quarters the error. New error $= 0.08/4 = $ ?", "answer": "0.02", "accept": [], "hint": "Divide by $2^2 = 4$." }
       ],
       "finalAnswer": { "value": "0.02", "unit": "" },
-      "solutionNarrative": "Order p means halving h divides the error by $2^p$: the forward error drops to 0.2, the central to 0.02 — the gap between the methods widens with every refinement."
+      "solutionNarrative": "Order p means halving h divides the error by $2^p$: the forward error drops to 0.2, the central to 0.02: the gap between the methods widens with every refinement."
     },
     {
       "id": "numerical-methods.numerical-differentiation.s16",
@@ -252,7 +252,7 @@
         { "instruction": "Central: $\\dfrac{s(2) - s(0)}{2} = \\dfrac{19.6 - 0}{2} = $ ?", "answer": "9.8", "accept": [], "hint": "Use the flanking samples." }
       ],
       "finalAnswer": { "value": "9.8", "unit": "m/s" },
-      "solutionNarrative": "Forward gives 14.7 m/s but central gives 9.8 m/s — exactly right, since $s = 4.9t^2$ is quadratic and the central difference is exact on quadratics."
+      "solutionNarrative": "Forward gives 14.7 m/s but central gives 9.8 m/s: exactly right, since $s = 4.9t^2$ is quadratic and the central difference is exact on quadratics."
     }
   ]
 }

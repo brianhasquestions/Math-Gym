@@ -2,7 +2,7 @@
 // Parametric generators for two wave-14 Numerical Methods topics:
 //   numerical-methods.least-squares-fitting
 //   numerical-methods.numerical-differentiation
-// One template per (concept, difficulty) tier — 12 per topic, 24 total.
+// One template per (concept, difficulty) tier: 12 per topic, 24 total.
 // Self-contained: no imports from generator.js. Exports a `fill` map of
 // template-name -> generator fn, matching the pack pattern of gen-nt2-fill.js.
 // Every answer is COMPUTED in-pack from the SAME numbers shown in the prompt.
@@ -134,7 +134,7 @@ fill["nm3-resid-3"] = (rng, idx) => {
       { instruction: `Which line has the smaller SSE? Answer with one of: A, B.`, answer: winner, accept: [winner.toLowerCase()], hint: `Smaller SSE = better least-squares fit.` },
     ],
     finalAnswer: { value: winner, unit: "" },
-    solutionNarrative: `Line A has $SSE = ${lineA.sse}$ and line B has $SSE = ${lineB.sse}$, so line ${winner} is the better least-squares fit — in fact it is the least-squares line itself.`,
+    solutionNarrative: `Line A has $SSE = ${lineA.sse}$ and line B has $SSE = ${lineB.sse}$, so line ${winner} is the better least-squares fit: in fact it is the least-squares line itself.`,
   };
 };
 
@@ -151,7 +151,7 @@ fill["nm3-normal-1"] = (rng, idx) => {
       { instruction: `$\\Sigma y = ${D.ys.join(" + ")} = $ ?`, answer: `${D.sy}`, accept: [], hint: `Add the y-values.` },
     ],
     finalAnswer: { value: `${D.sy}`, unit: "" },
-    solutionNarrative: `$\\Sigma x = ${D.sx}$ and $\\Sigma y = ${D.sy}$ — two of the four sums that feed the normal equations.`,
+    solutionNarrative: `$\\Sigma x = ${D.sx}$ and $\\Sigma y = ${D.sy}$: two of the four sums that feed the normal equations.`,
   };
 };
 
@@ -242,17 +242,17 @@ fill["nm3-fitline-3"] = (rng, idx) => {
       { instruction: `Predict at $x = ${xq}$: $\\hat{y} = ${D.a} + ${D.b}\\cdot${xq} = $ ?`, answer: `${yq}`, accept: [], hint: `Evaluate the fitted line.` },
     ],
     finalAnswer: { value: `${yq}`, unit: "" },
-    solutionNarrative: `The least-squares line is $\\hat{y} = ${D.b}x + ${D.a}$ (the noise pattern averages out), giving $\\hat{y}(${xq}) = ${yq}$. Its SSE is $${D.sse}$ — no line does better.`,
+    solutionNarrative: `The least-squares line is $\\hat{y} = ${D.b}x + ${D.a}$ (the noise pattern averages out), giving $\\hat{y}(${xq}) = ${yq}$. Its SSE is $${D.sse}$, no line does better.`,
   };
 };
 
 // --- linearization ---
 
-// d1: which model becomes linear under the named transform — menu.
+// d1: which model becomes linear under the named transform: menu.
 fill["nm3-linearize-1"] = (rng, idx) => {
   const variants = [
-    { plot: "\\log y$ against $x", ans: "exponential", why: `$y = C\\,10^{kx}$ gives $\\log y = \\log C + kx$ — linear in $x$.` },
-    { plot: "\\log y$ against $\\log x", ans: "power", why: `$y = C x^m$ gives $\\log y = \\log C + m \\log x$ — linear in $\\log x$.` },
+    { plot: "\\log y$ against $x", ans: "exponential", why: `$y = C\\,10^{kx}$ gives $\\log y = \\log C + kx$: linear in $x$.` },
+    { plot: "\\log y$ against $\\log x", ans: "power", why: `$y = C x^m$ gives $\\log y = \\log C + m \\log x$: linear in $\\log x$.` },
   ];
   const v = rng.pick(variants);
   return {
@@ -266,7 +266,7 @@ fill["nm3-linearize-1"] = (rng, idx) => {
   };
 };
 
-// d2: exponential data with power-of-10 values — fit the log line.
+// d2: exponential data with power-of-10 values: fit the log line.
 fill["nm3-linearize-2"] = (rng, idx) => {
   const a0 = rng.int(0, 1);   // log C
   const b0 = rng.int(1, 2);   // k
@@ -277,7 +277,7 @@ fill["nm3-linearize-2"] = (rng, idx) => {
     prompt: `The data $(0, ${ys[0]}), (1, ${ys[1]}), (2, ${ys[2]})$ follow $y = C\\cdot 10^{kx}$. Linearize by taking $\\log_{10}$ of the y-values, then read off $k$ and $C$.`,
     steps: [
       { instruction: `Compute $\\log_{10}(${ys[1]})$ (the transformed value at $x = 1$).`, answer: `${a0 + b0}`, accept: [], hint: `${ys[1]} is a power of 10.` },
-      { instruction: `The transformed points are $(0, ${a0}), (1, ${a0 + b0}), (2, ${a0 + 2 * b0})$ — a straight line. Its slope is $k = $ ?`, answer: `${b0}`, accept: [], hint: `Rise over run between consecutive points.` },
+      { instruction: `The transformed points are $(0, ${a0}), (1, ${a0 + b0}), (2, ${a0 + 2 * b0})$: a straight line. Its slope is $k = $ ?`, answer: `${b0}`, accept: [], hint: `Rise over run between consecutive points.` },
       { instruction: `The intercept of the log-line is $\\log_{10} C = ${a0}$, so $C = $ ?`, answer: `${C}`, accept: [], hint: `$10^{${a0}}$.` },
     ],
     finalAnswer: { value: `${b0}`, unit: "" },
@@ -327,7 +327,7 @@ fill["nm3-fwd-1"] = (rng, idx) => {
       { instruction: `Form the quotient $D_+ = \\dfrac{${fPlus} - ${f0}}{${h}}$.`, answer: `${D}`, accept: [], hint: `Subtract, then divide by $${h}$.` },
     ],
     finalAnswer: { value: `${D}`, unit: "" },
-    solutionNarrative: `$D_+ = \\dfrac{${fPlus} - ${f0}}{${h}} = ${D}$ — it overshoots the true derivative $${2 * x0}$ by exactly $h = ${h}$, the signature $O(h)$ error.`,
+    solutionNarrative: `$D_+ = \\dfrac{${fPlus} - ${f0}}{${h}} = ${D}$: it overshoots the true derivative $${2 * x0}$ by exactly $h = ${h}$, the signature $O(h)$ error.`,
   };
 };
 
@@ -349,7 +349,7 @@ fill["nm3-fwd-2"] = (rng, idx) => {
       { instruction: `Error of $D_+$: $|${Dp} - ${truD}| = $ ?`, answer: `${err}`, accept: [], hint: `The two estimates straddle the true value symmetrically.` },
     ],
     finalAnswer: { value: `${err}`, unit: "" },
-    solutionNarrative: `$D_+ = ${Dp}$ and $D_- = ${Dm}$ straddle the true $${truD}$; each is off by $${err}$, an error proportional to $h$ — first-order accuracy.`,
+    solutionNarrative: `$D_+ = ${Dp}$ and $D_- = ${Dm}$ straddle the true $${truD}$; each is off by $${err}$, an error proportional to $h$: first-order accuracy.`,
   };
 };
 
@@ -367,7 +367,7 @@ fill["nm3-fwd-3"] = (rng, idx) => {
     steps: [
       { instruction: `Forward: $D_+ = \\dfrac{${f2} - ${f1}}{${h}} = $ ?`, answer: `${Dp}`, accept: [], hint: `Uses the point ahead.` },
       { instruction: `Backward: $D_- = \\dfrac{${f1} - ${f0}}{${h}} = $ ?`, answer: `${Dm}`, accept: [], hint: `Uses the point behind.` },
-      { instruction: `Both one-sided formulas have truncation error $O(h^p)$ with $p = $ ? (Enter the number.)`, answer: `1`, accept: [], hint: `Halving $h$ halves the error — first order.` },
+      { instruction: `Both one-sided formulas have truncation error $O(h^p)$ with $p = $ ? (Enter the number.)`, answer: `1`, accept: [], hint: `Halving $h$ halves the error: first order.` },
     ],
     finalAnswer: { value: `1`, unit: "" },
     solutionNarrative: `$D_+ = ${Dp}$, $D_- = ${Dm}$; both are first-order accurate ($p = 1$). Averaging them gives the second-order central estimate $${rd((Dp + Dm) / 2)}$.`,
@@ -391,7 +391,7 @@ fill["nm3-central-1"] = (rng, idx) => {
       { instruction: `Divide by $2h = ${fmt(2 * h)}$: $D_c = $ ?`, answer: `${D}`, accept: [], hint: `The result is the exact derivative $${D}$.` },
     ],
     finalAnswer: { value: `${D}`, unit: "" },
-    solutionNarrative: `$D_c = \\dfrac{${numTop}}{${fmt(2 * h)}} = ${D}$ — exactly $f'(${x0})$, because the central difference is exact for quadratics.`,
+    solutionNarrative: `$D_c = \\dfrac{${numTop}}{${fmt(2 * h)}} = ${D}$: exactly $f'(${x0})$, because the central difference is exact for quadratics.`,
   };
 };
 
@@ -411,11 +411,11 @@ fill["nm3-central-2"] = (rng, idx) => {
       { instruction: `Error $= |${D} - ${tru}| = $ ?`, answer: `${err}`, accept: [], hint: `For $x^3$ the central-difference error is exactly $h^2$.` },
     ],
     finalAnswer: { value: `${err}`, unit: "" },
-    solutionNarrative: `$D_c = ${D}$ versus the true $${tru}$: error $${err} = h^2$ on the nose — the central difference is second-order accurate.`,
+    solutionNarrative: `$D_c = ${D}$ versus the true $${tru}$: error $${err} = h^2$ on the nose: the central difference is second-order accurate.`,
   };
 };
 
-// d3: forward vs central on x^3 — compute both errors, pick the winner.
+// d3: forward vs central on x^3: compute both errors, pick the winner.
 fill["nm3-central-3"] = (rng, idx) => {
   const x0 = rng.int(1, 3);
   const h = rng.pick([0.5, 0.2, 0.1]);
@@ -453,7 +453,7 @@ fill["nm3-second-1"] = (rng, idx) => {
       { instruction: `Divide by $h^2 = ${h * h}$: $f''(${x0}) \\approx $ ?`, answer: `${res}`, accept: [], hint: `The exact second derivative of $${a === 1 ? "" : a}x^2$ is $${res}$ everywhere.` },
     ],
     finalAnswer: { value: `${res}`, unit: "" },
-    solutionNarrative: `$\\dfrac{${numTop}}{${h * h}} = ${res}$ — exact, since the second-difference formula has zero error on quadratics.`,
+    solutionNarrative: `$\\dfrac{${numTop}}{${h * h}} = ${res}$: exact, since the second-difference formula has zero error on quadratics.`,
   };
 };
 
@@ -474,11 +474,11 @@ fill["nm3-second-2"] = (rng, idx) => {
       { instruction: `Divide by $h^2 = ${rd(h * h)}$: $f''(${x0}) \\approx $ ?`, answer: `${s}`, accept: [], hint: `$${numTop} / ${rd(h * h)}$.` },
     ],
     finalAnswer: { value: `${s}`, unit: "" },
-    solutionNarrative: `The weighted sum $${f2} - ${2 * q} + ${p} = ${numTop}$ divided by $h^2 = ${rd(h * h)}$ gives $f'' \\approx ${s}$ — positive, so the data curve is concave up at $x = ${x0}$.`,
+    solutionNarrative: `The weighted sum $${f2} - ${2 * q} + ${p} = ${numTop}$ divided by $h^2 = ${rd(h * h)}$ gives $f'' \\approx ${s}$: positive, so the data curve is concave up at $x = ${x0}$.`,
   };
 };
 
-// d3: second difference on x^4 — approx, true, error 2h^2.
+// d3: second difference on x^4: approx, true, error 2h^2.
 fill["nm3-second-3"] = (rng, idx) => {
   const x0 = rng.int(1, 2);
   const h = 0.5;
@@ -501,7 +501,7 @@ fill["nm3-second-3"] = (rng, idx) => {
 
 // --- richardson-and-error ---
 
-// d1: identify the order of accuracy — numeric menu (1 or 2).
+// d1: identify the order of accuracy: numeric menu (1 or 2).
 fill["nm3-richardson-1"] = (rng, idx) => {
   const variants = [
     { name: "forward difference $\\frac{f(x+h) - f(x)}{h}$", p: 1 },
@@ -537,11 +537,11 @@ fill["nm3-richardson-2"] = (rng, idx) => {
       { instruction: `$R = \\dfrac{${four} - ${Dh}}{3} = $ ?`, answer: `${tru}`, accept: [], hint: `The $h^2$ error terms cancel exactly.` },
     ],
     finalAnswer: { value: `${tru}`, unit: "" },
-    solutionNarrative: `$R = \\frac{${four} - ${Dh}}{3} = ${tru}$ — the exact derivative. Richardson eliminates the $h^2$ term, jumping from second- to fourth-order accuracy.`,
+    solutionNarrative: `$R = \\frac{${four} - ${Dh}}{3} = ${tru}$: the exact derivative. Richardson eliminates the $h^2$ term, jumping from second- to fourth-order accuracy.`,
   };
 };
 
-// d3: truncation-vs-rounding trade-off — evaluate a total-error model.
+// d3: truncation-vs-rounding trade-off: evaluate a total-error model.
 fill["nm3-richardson-3"] = (rng, idx) => {
   const K = rng.pick([0.002, 0.004, 0.008]);
   const pair = rng.pick([[0.5, 0.1], [0.1, 0.01]]);
@@ -555,9 +555,9 @@ fill["nm3-richardson-3"] = (rng, idx) => {
     steps: [
       { instruction: `$E(${h1}) = ${rd(h1 * h1)} + ${fmt(rd(K / h1))} = $ ?`, answer: `${E1}`, accept: [], hint: `Add the two error contributions.` },
       { instruction: `$E(${h2}) = ${rd(h2 * h2)} + ${fmt(rd(K / h2))} = $ ?`, answer: `${E2}`, accept: [], hint: `Note how the rounding term behaves.` },
-      { instruction: `Which step size gives the smaller total error here — the larger or the smaller one? Answer with one of: larger, smaller.`, answer: winner, accept: [], hint: `Shrinking $h$ helps truncation but hurts rounding; the best $h$ sits in between.` },
+      { instruction: `Which step size gives the smaller total error here: the larger or the smaller one? Answer with one of: larger, smaller.`, answer: winner, accept: [], hint: `Shrinking $h$ helps truncation but hurts rounding; the best $h$ sits in between.` },
     ],
     finalAnswer: { value: winner, unit: "" },
-    solutionNarrative: `$E(${h1}) = ${E1}$ versus $E(${h2}) = ${E2}$: the ${winner} step wins. Total error is U-shaped in $h$ — beyond the optimum, further refinement makes things WORSE.`,
+    solutionNarrative: `$E(${h1}) = ${E1}$ versus $E(${h2}) = ${E2}$: the ${winner} step wins. Total error is U-shaped in $h$: beyond the optimum, further refinement makes things WORSE.`,
   };
 };

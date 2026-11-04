@@ -131,7 +131,7 @@ fill["c1l-quotient-d3"] = (rng, idx) => {
       { instruction: `So $A'(x) = \\frac{x^2 - ${c}}{x^2}$. Evaluate $A'(${x0})$. Give a number (a decimal is fine).`, answer: val, accept: [`${num}/${x0 * x0}`], hint: `$\\frac{${x0 * x0} - ${c}}{${x0 * x0}} = \\frac{${num}}{${x0 * x0}}$.` },
     ],
     finalAnswer: { value: val, unit: "dollars per " + ctx.item.replace(/s$/, "") },
-    solutionNarrative: `$A'(x) = \\frac{(2x)(x) - (x^2 + ${c})}{x^2} = \\frac{x^2 - ${c}}{x^2}$. At $x = ${x0}$: $\\frac{${num}}{${x0 * x0}} = ${val}$ — average cost is ${num >= 0 ? "rising" : "falling"} by that much per extra ${ctx.item.replace(/s$/, "")}.`,
+    solutionNarrative: `$A'(x) = \\frac{(2x)(x) - (x^2 + ${c})}{x^2} = \\frac{x^2 - ${c}}{x^2}$. At $x = ${x0}$: $\\frac{${num}}{${x0 * x0}} = ${val}$: average cost is ${num >= 0 ? "rising" : "falling"} by that much per extra ${ctx.item.replace(/s$/, "")}.`,
   };
 };
 
@@ -211,7 +211,7 @@ fill["c1l-cont-d1"] = (rng, idx) => {
     prompt: `Is $f(x) = ${b}x - ${c}$ continuous at $x = ${p}$? Answer 'yes' or 'no'.`,
     steps: [
       { instruction: `Compute $f(${p})$.`, answer: `${v}`, accept: [], hint: `$${b}(${p}) - ${c}$.` },
-      { instruction: `Since a polynomial's limit equals its value everywhere, is it continuous at $x = ${p}$? Answer 'yes' or 'no'.`, answer: "yes", accept: [], hint: "Polynomials are continuous at every point — no holes, no jumps." },
+      { instruction: `Since a polynomial's limit equals its value everywhere, is it continuous at $x = ${p}$? Answer 'yes' or 'no'.`, answer: "yes", accept: [], hint: "Polynomials are continuous at every point, no holes, no jumps." },
     ],
     finalAnswer: { value: "yes", unit: "" },
     solutionNarrative: `Polynomials are continuous everywhere; $f(${p}) = ${v}$ equals the limit as $x \\to ${p}$, so $f$ is continuous there.`,
@@ -267,7 +267,7 @@ fill["c1l-limapp-d1"] = (rng, idx) => {
       { instruction: `Evaluate the limit of $${c} + ${k}h$ as $h \\to 0$.`, answer: `${c}`, accept: [], hint: `Substitute $h = 0$: the $${k}h$ term vanishes.` },
     ],
     finalAnswer: { value: `${c}`, unit: ctx.unit },
-    solutionNarrative: `As the interval shrinks, $${c} + ${k}h \\to ${c}$ — the average over a vanishing window becomes the instantaneous rate, $${c}$ ${ctx.unit}.`,
+    solutionNarrative: `As the interval shrinks, $${c} + ${k}h \\to ${c}$: the average over a vanishing window becomes the instantaneous rate, $${c}$ ${ctx.unit}.`,
   };
 };
 
@@ -311,7 +311,7 @@ fill["c1l-avginst-d1"] = (rng, idx) => {
       { instruction: `Compute the average rate $\\dfrac{s(${b}) - s(${a})}{${b} - ${a}}$ (a number, in ${ctx.ru}).`, answer: `${avg}`, accept: [`${sb - sa}/${b - a}`], hint: `$s(${b}) = ${sb}$, $s(${a}) = ${sa}$; divide the change by ${b - a}.` },
     ],
     finalAnswer: { value: `${avg}`, unit: ctx.ru },
-    solutionNarrative: `Average velocity $= \\dfrac{${sb} - ${sa}}{${b} - ${a}} = \\dfrac{${sb - sa}}{${b - a}} = ${avg}$ ${ctx.ru} — total change over total time.`,
+    solutionNarrative: `Average velocity $= \\dfrac{${sb} - ${sa}}{${b} - ${a}} = \\dfrac{${sb - sa}}{${b - a}} = ${avg}$ ${ctx.ru}: total change over total time.`,
   };
 };
 
@@ -333,10 +333,10 @@ fill["c1l-avginst-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Compute the average velocity $\\dfrac{s(${b}) - s(${a})}{${b} - ${a}}$ (a number, ${ctx.ru}).`, answer: `${avg}`, accept: [`${b ** 3 - a ** 3}/2`], hint: `$s(${b}) = ${b ** 3}$, $s(${a}) = ${a ** 3}$; divide the change by 2.` },
       { instruction: `Compute the instantaneous velocity $s'(${m})$ (a number, ${ctx.ru}).`, answer: `${inst}`, accept: [], hint: `Substitute into $3t^2$: $3(${m * m})$.` },
-      { instruction: `Which is larger — the average over $[${a}, ${b}]$ or the instant at $t = ${m}$? Type 'average' or 'instantaneous'.`, answer: "average", accept: [], hint: `Compare ${avg} and ${inst}.` },
+      { instruction: `Which is larger: the average over $[${a}, ${b}]$ or the instant at $t = ${m}$? Type 'average' or 'instantaneous'.`, answer: "average", accept: [], hint: `Compare ${avg} and ${inst}.` },
     ],
     finalAnswer: { value: "average", unit: "" },
-    solutionNarrative: `Average velocity $= \\dfrac{${b ** 3} - ${a ** 3}}{2} = ${avg}$ ${ctx.ru}; instantaneous $s'(${m}) = 3(${m * m}) = ${inst}$ ${ctx.ru}. On a speeding-up cubic the interval average beats the midpoint instant — here by exactly 1.`,
+    solutionNarrative: `Average velocity $= \\dfrac{${b ** 3} - ${a ** 3}}{2} = ${avg}$ ${ctx.ru}; instantaneous $s'(${m}) = 3(${m * m}) = ${inst}$ ${ctx.ru}. On a speeding-up cubic the interval average beats the midpoint instant: here by exactly 1.`,
   };
 };
 
@@ -362,7 +362,7 @@ fill["c1l-interp-d3"] = (rng, idx) => {
       { instruction: `Is ${ctx.fn} rising or falling at $x = ${x0}$? Type 'rising' or 'falling'.`, answer: word, accept: [falling ? "decreasing" : "increasing"], hint: `The sign of the derivative tells the direction: ${rate} is ${falling ? "negative" : "positive"}.` },
     ],
     finalAnswer: { value: `${rate}`, unit: ctx.unit },
-    solutionNarrative: `$${ctx.model}'(x) = -2x + ${b}$, so $${ctx.model}'(${x0}) = ${rate}$ ${ctx.unit}. The ${falling ? "negative" : "positive"} sign means each additional ${ctx.xdesc.replace(/s$/, "")} ${falling ? "reduces" : "adds to"} ${ctx.fn} — it is ${word} there.`,
+    solutionNarrative: `$${ctx.model}'(x) = -2x + ${b}$, so $${ctx.model}'(${x0}) = ${rate}$ ${ctx.unit}. The ${falling ? "negative" : "positive"} sign means each additional ${ctx.xdesc.replace(/s$/, "")} ${falling ? "reduces" : "adds to"} ${ctx.fn}: it is ${word} there.`,
   };
 };
 
@@ -404,7 +404,7 @@ fill["c1l-incdec-d3"] = (rng, idx) => {
       steps: [
         { instruction: "Differentiate $f$.", answer: `3x^2 - ${6 * k}x`, accept: [`f'(x) = 3x^2 - ${6 * k}x`], hint: "Differentiate term by term." },
         { instruction: "Factor $f'(x)$.", answer: `3x(x - ${r})`, accept: [`3x(x-${r})`], hint: "Pull out $3x$." },
-        { instruction: "The function decreases where $f'(x) < 0$ — between the two roots. Give the interval as a compound inequality.", answer: `0 < x < ${r}`, accept: [`0<x<${r}`], hint: `Between $x = 0$ and $x = ${r}$ the product $3x(x - ${r})$ is negative.` },
+        { instruction: "The function decreases where $f'(x) < 0$: between the two roots. Give the interval as a compound inequality.", answer: `0 < x < ${r}`, accept: [`0<x<${r}`], hint: `Between $x = 0$ and $x = ${r}$ the product $3x(x - ${r})$ is negative.` },
       ],
       finalAnswer: { value: `0 < x < ${r}`, unit: "" },
       solutionNarrative: `$f'(x) = 3x(x - ${r})$ is negative exactly between its roots, so $f$ is decreasing on $0 < x < ${r}$.`,
@@ -476,7 +476,7 @@ fill["c1l-maxmin-d3"] = (rng, idx) => {
       { instruction: `Evaluate $E$ at the critical points $t=${p}$, $t=${q}$ and the endpoints $t=0$, $t=${bEnd}$. What is the largest value?`, answer: `${maxV}`, accept: [], hint: `Compute $E(0)=${E(0)}$, $E(${p})=${E(p)}$, $E(${q})=${E(q)}$, $E(${bEnd})=${E(bEnd)}$ and pick the biggest.` },
     ],
     finalAnswer: { value: `${maxV}`, unit: ctx.unit },
-    solutionNarrative: `$E'(t) = 3t^2 - ${2 * B}t + ${C} = 3(t-${p})(t-${q})$, so the critical points are $t=${p}, ${q}$. Comparing $E(0)=${E(0)}$, $E(${p})=${E(p)}$, $E(${q})=${E(q)}$, $E(${bEnd})=${E(bEnd)}$, the endpoint $t=${bEnd}$ gives the maximum of ${maxV} — a reminder that endpoints can beat interior critical points.`,
+    solutionNarrative: `$E'(t) = 3t^2 - ${2 * B}t + ${C} = 3(t-${p})(t-${q})$, so the critical points are $t=${p}, ${q}$. Comparing $E(0)=${E(0)}$, $E(${p})=${E(p)}$, $E(${q})=${E(q)}$, $E(${bEnd})=${E(bEnd)}$, the endpoint $t=${bEnd}$ gives the maximum of ${maxV}: a reminder that endpoints can beat interior critical points.`,
   };
 };
 
@@ -697,7 +697,7 @@ fill["c1l-ladder-d3"] = (rng, idx) => {
       { instruction: `Substitute $x=${x}$, $\\frac{dx}{dt}=${dx}$, $y=${y}$, $\\frac{dy}{dt}=${dy}$, $z=${z}$ and solve for $\\frac{dz}{dt}$ in ${ctx.u}/${ctx.tu}.`, answer: `${dz}`, accept: [`${dz}.0`, `dz/dt = ${dz}`], hint: `$\\frac{dz}{dt} = \\frac{x\\frac{dx}{dt} + y\\frac{dy}{dt}}{z} = \\frac{${x}(${dx}) + ${y}(${dy})}{${z}} = \\frac{${x * dx + y * dy}}{${z}}$.` },
     ],
     finalAnswer: { value: `${dz}`, unit: `${ctx.u}/${ctx.tu}` },
-    solutionNarrative: `With $z = ${z}$, $\\frac{dz}{dt} = \\frac{${x}(${dx}) + ${y}(${dy})}{${z}} = \\frac{${x * dx + y * dy}}{${z}} = ${dz}$ ${ctx.u}/${ctx.tu} — they separate at a steady combined rate.`,
+    solutionNarrative: `With $z = ${z}$, $\\frac{dz}{dt} = \\frac{${x}(${dx}) + ${y}(${dy})}{${z}} = \\frac{${x * dx + y * dy}}{${z}} = ${dz}$ ${ctx.u}/${ctx.tu}: they separate at a steady combined rate.`,
   };
 };
 
@@ -740,7 +740,7 @@ fill["c1l-filling-d3"] = (rng, idx) => {
       { instruction: `Substitute $h = ${h}$, $\\frac{dV}{dt} = ${dV}$, $\\pi \\approx 3.14$ and solve for $\\frac{dh}{dt}$ in ft/min (2 decimals).`, answer: val, accept: [], hint: `$\\frac{\\pi}{${n * n}}(${h * h}) = \\pi$, so $\\frac{dh}{dt} = \\frac{${dV}}{3.14}$.` },
     ],
     finalAnswer: { value: val, unit: "ft/min" },
-    solutionNarrative: `$V = \\frac{\\pi}{${den3}}h^3 \\Rightarrow \\frac{dV}{dt} = \\frac{\\pi}{${n * n}}h^2\\frac{dh}{dt}$. At $h = ${h}$ the coefficient is exactly $\\pi$, so $\\frac{dh}{dt} = \\frac{${dV}}{3.14} \\approx ${val}$ ft/min — and it keeps slowing as the water widens.`,
+    solutionNarrative: `$V = \\frac{\\pi}{${den3}}h^3 \\Rightarrow \\frac{dV}{dt} = \\frac{\\pi}{${n * n}}h^2\\frac{dh}{dt}$. At $h = ${h}$ the coefficient is exactly $\\pi$, so $\\frac{dh}{dt} = \\frac{${dV}}{3.14} \\approx ${val}$ ft/min, and it keeps slowing as the water widens.`,
   };
 };
 
@@ -763,7 +763,7 @@ fill["c1l-motion-d1"] = (rng, idx) => {
       { instruction: `Substitute $\\frac{dx}{dt} = ${v}$ into $\\frac{ds}{dt} = \\frac{1}{${m}}\\frac{dx}{dt}$ to find $\\frac{ds}{dt}$ in ft/s.`, answer: `${j}`, accept: [`${j}.0`, `ds/dt = ${j}`], hint: `One ${m === 2 ? "half" : m === 3 ? "third" : "quarter"} of ${v}.` },
     ],
     finalAnswer: { value: `${j}`, unit: "ft/s" },
-    solutionNarrative: `$\\frac{ds}{dt} = \\frac{1}{${m}}(${v}) = ${j}$ ft/s — the ${ctx.what} grows at a fixed fraction of the walking speed.`,
+    solutionNarrative: `$\\frac{ds}{dt} = \\frac{1}{${m}}(${v}) = ${j}$ ft/s: the ${ctx.what} grows at a fixed fraction of the walking speed.`,
   };
 };
 
@@ -790,7 +790,7 @@ fill["c1l-motion-d3"] = (rng, idx) => {
       { instruction: `Substitute $\\frac{dx}{dt} = ${speed}$ and compute $\\frac{dL}{dt}$ in ft/s.`, answer: `${ans}`, accept: [`${ans}.0`, `dL/dt = ${ans}`], hint: q === 1 ? `$${p} \\times ${speed}$.` : `$\\frac{${p}}{${q}}(${speed}) = ${p} \\times ${j}$.` },
     ],
     finalAnswer: { value: `${ans}`, unit: "ft/s" },
-    solutionNarrative: `$L = ${q === 1 ? p : `\\frac{${p}}{${q}}`}x$, so $\\frac{dL}{dt} = ${q === 1 ? p : `\\frac{${p}}{${q}}`}(${speed}) = ${ans}$ ft/s — the shadow tip always outruns the walker.`,
+    solutionNarrative: `$L = ${q === 1 ? p : `\\frac{${p}}{${q}}`}x$, so $\\frac{dL}{dt} = ${q === 1 ? p : `\\frac{${p}}{${q}}`}(${speed}) = ${ans}$ ft/s: the shadow tip always outruns the walker.`,
   };
 };
 
@@ -894,7 +894,7 @@ fill["c1l-limapp-d3"] = (rng, idx) => {
       { instruction: "Take the limit as $h \\to 0$.", answer: `${v}`, accept: [], hint: `Substitute $h = 0$ into $${quot}$.` },
     ],
     finalAnswer: { value: `${v}`, unit: ctx.ru },
-    solutionNarrative: `$\\dfrac{${co(k)}(${a}+h)^2 - ${k * a * a}}{h} = ${quot}$, whose limit as $h \\to 0$ is $${v}$ ${ctx.ru} — the instantaneous velocity at $t = ${a}$.`,
+    solutionNarrative: `$\\dfrac{${co(k)}(${a}+h)^2 - ${k * a * a}}{h} = ${quot}$, whose limit as $h \\to 0$ is $${v}$ ${ctx.ru}: the instantaneous velocity at $t = ${a}$.`,
   };
 };
 
@@ -1026,7 +1026,7 @@ fill["c1l-concav-d3"] = (rng, idx) => {
       { instruction: `Set $N''(t) = 0$ and solve for $t$ to find the inflection ${ctx.tname}.`, answer: `t = ${m}`, accept: [`${m}`], hint: `Solve $-6t + ${6 * m} = 0$.` },
     ],
     finalAnswer: { value: `${m}`, unit: ctx.tu },
-    solutionNarrative: `$N''(t) = -6t + ${6 * m} = 0$ at $t = ${m}$. Before ${ctx.tname} ${m} the curve is concave up (accelerating); after, concave down — so ${ctx.tname} ${m} is the inflection point where growth stops accelerating.`,
+    solutionNarrative: `$N''(t) = -6t + ${6 * m} = 0$ at $t = ${m}$. Before ${ctx.tname} ${m} the curve is concave up (accelerating); after, concave down, so ${ctx.tname} ${m} is the inflection point where growth stops accelerating.`,
   };
 };
 
@@ -1204,11 +1204,11 @@ fill["c1l-motion-d2"] = (rng, idx) => {
   return { ...base,
     prompt: `${ctx.obj} at $\\frac{dy}{dt} = ${dy}$ ft/s. ${ctx.watcher} ${d} ft from the launch point. When the balloon is ${yy} ft high, how fast is the line-of-sight distance $z$ increasing? ($z^2 = ${d}^2 + y^2$.)`,
     steps: [
-      { instruction: `Find the current sight-line distance $z$ when $y = ${yy}$.`, answer: `${z}`, accept: [`z = ${z}`, `z=${z}`], hint: `$\\sqrt{${d}^2 + ${yy}^2} = \\sqrt{${d * d + yy * yy}}$ — a ${3 * g}-${4 * g}-${5 * g} right triangle.` },
+      { instruction: `Find the current sight-line distance $z$ when $y = ${yy}$.`, answer: `${z}`, accept: [`z = ${z}`, `z=${z}`], hint: `$\\sqrt{${d}^2 + ${yy}^2} = \\sqrt{${d * d + yy * yy}}$: a ${3 * g}-${4 * g}-${5 * g} right triangle.` },
       { instruction: `Differentiate $z^2 = ${d * d} + y^2$ in time. Write the related-rate equation.`, answer: "2z*dz/dt = 2y*dy/dt", accept: ["z*dz/dt = y*dy/dt", "2z*dz/dt=2y*dy/dt"], hint: `The ${d} ft ground distance is constant: $2z\\frac{dz}{dt} = 2y\\frac{dy}{dt}$.` },
       { instruction: `Substitute $y = ${yy}$, $z = ${z}$, $\\frac{dy}{dt} = ${dy}$ and solve for $\\frac{dz}{dt}$ in ft/s.`, answer: `${ans}`, accept: [`${ans}.0`, `dz/dt = ${ans}`], hint: `$\\frac{dz}{dt} = \\frac{y}{z}\\frac{dy}{dt} = \\frac{${yy}}{${z}}(${dy}) = \\frac{4}{5}(${dy})$.` },
     ],
     finalAnswer: { value: `${ans}`, unit: "ft/s" },
-    solutionNarrative: `$\\frac{dz}{dt} = \\frac{y}{z}\\frac{dy}{dt} = \\frac{${yy}}{${z}}(${dy}) = ${ans}$ ft/s — the sight line lengthens at $\\frac{4}{5}$ of the climb rate.`,
+    solutionNarrative: `$\\frac{dz}{dt} = \\frac{y}{z}\\frac{dy}{dt} = \\frac{${yy}}{${z}}(${dy}) = ${ans}$ ft/s: the sight line lengthens at $\\frac{4}{5}$ of the climb rate.`,
   };
 };

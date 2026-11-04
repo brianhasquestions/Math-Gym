@@ -37,7 +37,7 @@ export async function loadTopic(topicId) {
   return topic;
 }
 
-// Minimal structural validation — catches authoring mistakes early.
+// Minimal structural validation: catches authoring mistakes early.
 function validateTopic(topic) {
   if (!topic.id) throw new Error("Topic missing id");
   if (!Array.isArray(topic.keyConcepts) || topic.keyConcepts.length === 0)

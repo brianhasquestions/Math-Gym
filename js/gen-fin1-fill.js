@@ -71,7 +71,7 @@ fill["fm1-simple-interest-1"] = (rng, idx) => {
       { instruction: `Compute the interest $I = Prt = ${P} \\cdot ${r} \\cdot ${t}$. Enter a number rounded to the nearest cent.`, answer: money(I), accept: moneyAccepts(money(I)), hint: `Multiply principal, rate, and time straight through.` },
     ],
     finalAnswer: { value: money(I), unit: "dollars" },
-    solutionNarrative: `Simple interest is a flat $I = Prt = ${P}(${r})(${t}) = \\$${money(I)}$ — the rate applies only to the original principal, never to prior interest.`,
+    solutionNarrative: `Simple interest is a flat $I = Prt = ${P}(${r})(${t}) = \\$${money(I)}$: the rate applies only to the original principal, never to prior interest.`,
   };
 };
 fill["fm1-simple-interest-2"] = (rng, idx) => {
@@ -148,7 +148,7 @@ fill["fm1-compound-interest-2"] = (rng, idx) => {
       { instruction: `Compute $A = ${P} \\cdot ${factor}^{${nt}}$. Enter a number rounded to the nearest cent.`, answer: money(A), accept: moneyAccepts(money(A)), hint: `Raise the monthly factor to the ${nt} power, then multiply by ${P}.` },
     ],
     finalAnswer: { value: money(A), unit: "dollars" },
-    solutionNarrative: `The monthly factor is $1 + ${r}/12 = ${factor}$ over $nt = ${nt}$ months: $A = ${P}(${factor})^{${nt}} = \\$${money(A)}$. Watch the rate-per-period vs. annual rate distinction — you divide by 12.`,
+    solutionNarrative: `The monthly factor is $1 + ${r}/12 = ${factor}$ over $nt = ${nt}$ months: $A = ${P}(${factor})^{${nt}} = \\$${money(A)}$. Watch the rate-per-period vs. annual rate distinction: you divide by 12.`,
   };
 };
 fill["fm1-compound-interest-3"] = (rng, idx) => {
@@ -190,7 +190,7 @@ fill["fm1-compounding-ear-1"] = (rng, idx) => {
       { instruction: `Compute $(1 + ${r}/12)^{12} - 1$, then convert to a percent. Enter as a percent rounded to 2 decimals.`, answer: earPct, accept: [`${(1 + r / n)}^12 - 1`], hint: `Raise the monthly factor to the 12th power, subtract 1, multiply by 100.` },
     ],
     finalAnswer: { value: earPct, unit: "percent" },
-    solutionNarrative: `$\\text{EAR} = (1 + ${r}/12)^{12} - 1 \\approx ${(ear).toFixed(6)}$, i.e. ${earPct}% — slightly above the ${rp}% nominal rate because interest compounds monthly.`,
+    solutionNarrative: `$\\text{EAR} = (1 + ${r}/12)^{12} - 1 \\approx ${(ear).toFixed(6)}$, i.e. ${earPct}%: slightly above the ${rp}% nominal rate because interest compounds monthly.`,
   };
 };
 fill["fm1-compounding-ear-2"] = (rng, idx) => {
@@ -224,10 +224,10 @@ fill["fm1-compounding-ear-3"] = (rng, idx) => {
     steps: [
       { instruction: `Bank M: compute $(1 + ${r}/12)^{12} - 1$ as a percent. Enter as a percent rounded to 2 decimals.`, answer: earMPct, accept: [], hint: `Monthly: 12th power of $1 + ${r}/12$.` },
       { instruction: `Bank D: compute $(1 + ${r}/365)^{365} - 1$ as a percent. Enter as a percent rounded to 2 decimals.`, answer: earDPct, accept: [], hint: `Daily: 365th power of $1 + ${r}/365$.` },
-      { instruction: `Which bank's effective rate is higher — the one compounding more often or less often? Answer 'more often' or 'less often'.`, answer: "more often", accept: ["more", "daily", "more frequently", "greater frequency"], hint: `More frequent compounding always gives a (slightly) higher effective rate.` },
+      { instruction: `Which bank's effective rate is higher: the one compounding more often or less often? Answer 'more often' or 'less often'.`, answer: "more often", accept: ["more", "daily", "more frequently", "greater frequency"], hint: `More frequent compounding always gives a (slightly) higher effective rate.` },
     ],
     finalAnswer: { value: earDPct, unit: "percent" },
-    solutionNarrative: `Monthly EAR is ${earMPct}% and daily EAR is ${earDPct}%. More frequent compounding wins — daily edges out monthly, though the gap shrinks as $n$ grows toward the continuous limit.`,
+    solutionNarrative: `Monthly EAR is ${earMPct}% and daily EAR is ${earDPct}%. More frequent compounding wins: daily edges out monthly, though the gap shrinks as $n$ grows toward the continuous limit.`,
   };
 };
 
@@ -247,7 +247,7 @@ fill["fm1-continuous-1"] = (rng, idx) => {
       { instruction: `Compute $A = ${P} \\cdot e^{${exponent}}$. Enter a number rounded to the nearest cent.`, answer: money(A), accept: moneyAccepts(money(A)).concat([`${P}*e^${exponent}`, `${P}*e^(${exponent})`]), hint: `Use $e \\approx 2.71828$: raise $e$ to the ${exponent} power, then multiply by ${P}.` },
     ],
     finalAnswer: { value: money(A), unit: "dollars" },
-    solutionNarrative: `$A = ${P}e^{${r}\\cdot ${t}} = ${P}e^{${exponent}} = \\$${money(A)}$ — the ceiling that ordinary compounding approaches as it compounds ever more often.`,
+    solutionNarrative: `$A = ${P}e^{${r}\\cdot ${t}} = ${P}e^{${exponent}} = \\$${money(A)}$: the ceiling that ordinary compounding approaches as it compounds ever more often.`,
   };
 };
 fill["fm1-continuous-2"] = (rng, idx) => {
@@ -289,7 +289,7 @@ fill["fm1-continuous-3"] = (rng, idx) => {
       { instruction: `Find how much MORE continuous compounding earns (continuous minus annual). Enter a number rounded to the nearest cent.`, answer: money(diff), accept: moneyAccepts(money(diff)), hint: `$${money(Acont)} - ${money(Aann)}$.` },
     ],
     finalAnswer: { value: money(diff), unit: "dollars" },
-    solutionNarrative: `Annual gives $${money(Aann)}$ and continuous gives $${money(Acont)}$, a difference of $\\$${money(diff)}$ — the extra squeezed out by compounding infinitely often.`,
+    solutionNarrative: `Annual gives $${money(Aann)}$ and continuous gives $${money(Acont)}$, a difference of $\\$${money(diff)}$: the extra squeezed out by compounding infinitely often.`,
   };
 };
 
@@ -315,7 +315,7 @@ fill["fm1-future-value-1"] = (rng, idx) => {
       { instruction: `Compute $FV = ${PV} \\cdot ${factor}^{${n}}$. Enter a number rounded to the nearest cent.`, answer: money(FV), accept: moneyAccepts(money(FV)), hint: `Raise ${factor} to the ${n} power, then multiply by ${PV}.` },
     ],
     finalAnswer: { value: money(FV), unit: "dollars" },
-    solutionNarrative: `$FV = ${PV}(${factor})^{${n}} = \\$${money(FV)}$ — the same single sum carried forward ${n} years at ${ip}%.`,
+    solutionNarrative: `$FV = ${PV}(${factor})^{${n}} = \\$${money(FV)}$: the same single sum carried forward ${n} years at ${ip}%.`,
   };
 };
 fill["fm1-future-value-2"] = (rng, idx) => {
@@ -357,7 +357,7 @@ fill["fm1-future-value-3"] = (rng, idx) => {
       { instruction: `Find the extra earned by waiting (longer minus shorter). Enter a number rounded to the nearest cent.`, answer: money(extra), accept: moneyAccepts(money(extra)), hint: `$${money(FV2)} - ${money(FV1)}$.` },
     ],
     finalAnswer: { value: money(extra), unit: "dollars" },
-    solutionNarrative: `After ${n1} years: $${money(FV1)}$; after ${n2} years: $${money(FV2)}$. The extra ${n2 - n1} years add $\\$${money(extra)}$ — time is the biggest lever in compounding.`,
+    solutionNarrative: `After ${n1} years: $${money(FV1)}$; after ${n2} years: $${money(FV2)}$. The extra ${n2 - n1} years add $\\$${money(extra)}$: time is the biggest lever in compounding.`,
   };
 };
 
@@ -378,7 +378,7 @@ fill["fm1-present-value-1"] = (rng, idx) => {
       { instruction: `Divide the future value by that factor: $PV = ${money(FV)} / ${factor}^{${n}}$. Enter a number rounded to the nearest cent.`, answer: money(PVcalc), accept: moneyAccepts(money(PVcalc)), hint: `Discounting divides; it undoes the growth.` },
     ],
     finalAnswer: { value: money(PVcalc), unit: "dollars" },
-    solutionNarrative: `$PV = \\dfrac{${money(FV)}}{(${factor})^{${n}}} = \\$${money(PVcalc)}$ — the amount that, invested today at ${ip}%, grows to $${money(FV)}$ in ${n} years.`,
+    solutionNarrative: `$PV = \\dfrac{${money(FV)}}{(${factor})^{${n}}} = \\$${money(PVcalc)}$: the amount that, invested today at ${ip}%, grows to $${money(FV)}$ in ${n} years.`,
   };
 };
 fill["fm1-present-value-2"] = (rng, idx) => {
@@ -439,7 +439,7 @@ fill["fm1-solve-rate-time-1"] = (rng, idx) => {
       { instruction: `Take the $n$th root and subtract 1: $i = (FV/PV)^{1/${n}} - 1$, then convert to a percent. Enter as a percent rounded to 2 decimals.`, answer: pct(ip), accept: [`${ip}`, `${ip}.0`, `${ip}.00`], hint: `A $1/${n}$ power is the ${n}th root; subtract 1 and multiply by 100.` },
     ],
     finalAnswer: { value: pct(ip), unit: "percent" },
-    solutionNarrative: `$i = (${money(FV)}/${PV})^{1/${n}} - 1 = ${i}$, i.e. ${pct(ip)}% per year — the rate is recovered from the growth multiple.`,
+    solutionNarrative: `$i = (${money(FV)}/${PV})^{1/${n}} - 1 = ${i}$, i.e. ${pct(ip)}% per year: the rate is recovered from the growth multiple.`,
   };
 };
 fill["fm1-solve-rate-time-2"] = (rng, idx) => {
@@ -478,7 +478,7 @@ fill["fm1-solve-rate-time-3"] = (rng, idx) => {
       { instruction: `Compute the Rule of 72 estimate $72 / ${ip}$. Enter a number rounded to 2 decimals.`, answer: `${rule72}`, accept: [`72/${ip}`], hint: `Just divide 72 by the percent rate.` },
     ],
     finalAnswer: { value: nStr, unit: "years" },
-    solutionNarrative: `Exactly, $n = \\dfrac{\\ln 2}{\\ln(${1 + i})} = ${nStr}$ years; the Rule of 72 estimates $72/${ip} = ${rule72}$ — a quick mental check that stays close for ordinary rates.`,
+    solutionNarrative: `Exactly, $n = \\dfrac{\\ln 2}{\\ln(${1 + i})} = ${nStr}$ years; the Rule of 72 estimates $72/${ip} = ${rule72}$: a quick mental check that stays close for ordinary rates.`,
   };
 };
 
@@ -576,7 +576,7 @@ fill["fm1-fv-ordinary-1"] = (rng, idx) => {
       { instruction: `Multiply by the payment: $FV = ${PMT} \\cdot (\\text{factor})$. Enter a number rounded to the nearest cent.`, answer: money(FV), accept: moneyAccepts(money(FV)), hint: `$${PMT}$ times the factor above.` },
     ],
     finalAnswer: { value: money(FV), unit: "dollars" },
-    solutionNarrative: `$FV = ${PMT}\\cdot \\dfrac{(1+${i})^{${n}} - 1}{${i}} = \\$${money(FV)}$ — a geometric series of ${n} deposits, each growing until the end.`,
+    solutionNarrative: `$FV = ${PMT}\\cdot \\dfrac{(1+${i})^{${n}} - 1}{${i}} = \\$${money(FV)}$: a geometric series of ${n} deposits, each growing until the end.`,
   };
 };
 fill["fm1-fv-ordinary-2"] = (rng, idx) => {
@@ -617,7 +617,7 @@ fill["fm1-fv-ordinary-3"] = (rng, idx) => {
       { instruction: `Subtract contributions from the future value to get the growth. Enter a number rounded to the nearest cent.`, answer: money(growth), accept: moneyAccepts(money(growth)), hint: `$${money(FV)} - ${money(contributed)}$.` },
     ],
     finalAnswer: { value: money(FV), unit: "dollars" },
-    solutionNarrative: `$FV = \\$${money(FV)}$ on total contributions of $\\$${money(contributed)}$, so $\\$${money(growth)}$ is pure investment growth — the payoff of decades of compounding.`,
+    solutionNarrative: `$FV = \\$${money(FV)}$ on total contributions of $\\$${money(contributed)}$, so $\\$${money(growth)}$ is pure investment growth: the payoff of decades of compounding.`,
   };
 };
 
@@ -638,7 +638,7 @@ fill["fm1-pv-ordinary-1"] = (rng, idx) => {
       { instruction: `Multiply by the payment: $PV = ${PMT} \\cdot (\\text{factor})$. Enter a number rounded to the nearest cent.`, answer: money(PV), accept: moneyAccepts(money(PV)), hint: `$${PMT}$ times the factor.` },
     ],
     finalAnswer: { value: money(PV), unit: "dollars" },
-    solutionNarrative: `$PV = ${PMT}\\cdot \\dfrac{1 - (1+${i})^{-${n}}}{${i}} = \\$${money(PV)}$ — the lump sum today equivalent to ${n} yearly payments of $${PMT}$.`,
+    solutionNarrative: `$PV = ${PMT}\\cdot \\dfrac{1 - (1+${i})^{-${n}}}{${i}} = \\$${money(PV)}$: the lump sum today equivalent to ${n} yearly payments of $${PMT}$.`,
   };
 };
 fill["fm1-pv-ordinary-2"] = (rng, idx) => {
@@ -656,7 +656,7 @@ fill["fm1-pv-ordinary-2"] = (rng, idx) => {
       { instruction: `Compute $PV = ${PMT} \\cdot \\dfrac{1 - (1+${i})^{-${n}}}{${i}}$. Enter a number rounded to the nearest cent.`, answer: money(PV), accept: moneyAccepts(money(PV)), hint: `Subtract from 1, divide by ${i}, times ${PMT}.` },
     ],
     finalAnswer: { value: money(PV), unit: "dollars" },
-    solutionNarrative: `The stream's present value is $PV = ${PMT}\\cdot \\dfrac{1 - (1+${i})^{-${n}}}{${i}} = \\$${money(PV)}$ — far below the $${PMT * n}$ nominal total, because later payments are discounted.`,
+    solutionNarrative: `The stream's present value is $PV = ${PMT}\\cdot \\dfrac{1 - (1+${i})^{-${n}}}{${i}} = \\$${money(PV)}$: far below the $${PMT * n}$ nominal total, because later payments are discounted.`,
   };
 };
 fill["fm1-pv-ordinary-3"] = (rng, idx) => {
@@ -678,7 +678,7 @@ fill["fm1-pv-ordinary-3"] = (rng, idx) => {
       { instruction: `Subtract the present value from the nominal total. Enter a number rounded to the nearest cent.`, answer: money(gap), accept: moneyAccepts(money(gap)), hint: `$${money(nominal)} - ${money(PV)}$.` },
     ],
     finalAnswer: { value: money(PV), unit: "dollars" },
-    solutionNarrative: `Present value $\\$${money(PV)}$ against a nominal $\\$${money(nominal)}$ leaves a $\\$${money(gap)}$ gap — that is the cost of waiting, exactly the time value of money.`,
+    solutionNarrative: `Present value $\\$${money(PV)}$ against a nominal $\\$${money(nominal)}$ leaves a $\\$${money(gap)}$ gap: that is the cost of waiting, exactly the time value of money.`,
   };
 };
 
@@ -740,7 +740,7 @@ fill["fm1-annuity-due-3"] = (rng, idx) => {
       { instruction: `Find the extra accumulated by paying early (due minus ordinary). Enter a number rounded to the nearest cent.`, answer: money(extra), accept: moneyAccepts(money(extra)), hint: `$${money(due)} - ${money(ordR)}$.` },
     ],
     finalAnswer: { value: money(extra), unit: "dollars" },
-    solutionNarrative: `Ordinary gives $\\$${money(ordR)}$ and the due gives $\\$${money(due)}$, so starting each year's deposit early adds $\\$${money(extra)}$ — one extra period of growth on every contribution.`,
+    solutionNarrative: `Ordinary gives $\\$${money(ordR)}$ and the due gives $\\$${money(due)}$, so starting each year's deposit early adds $\\$${money(extra)}$: one extra period of growth on every contribution.`,
   };
 };
 
@@ -761,7 +761,7 @@ fill["fm1-sinking-fund-1"] = (rng, idx) => {
       { instruction: `Divide the goal by the factor: $PMT = ${goal} / (\\text{factor})$. Enter a number rounded to the nearest cent.`, answer: money(PMT), accept: moneyAccepts(money(PMT)), hint: `Rearranged formula: the goal divided by the factor.` },
     ],
     finalAnswer: { value: money(PMT), unit: "dollars" },
-    solutionNarrative: `$PMT = \\dfrac{${goal}}{(1+${i})^{${n}} - 1)/${i}} = \\$${money(PMT)}$ per year — the sinking-fund deposit that reaches the goal.`,
+    solutionNarrative: `$PMT = \\dfrac{${goal}}{(1+${i})^{${n}} - 1)/${i}} = \\$${money(PMT)}$ per year: the sinking-fund deposit that reaches the goal.`,
   };
 };
 fill["fm1-sinking-fund-2"] = (rng, idx) => {
@@ -829,7 +829,7 @@ fill["fm1-loan-payment-1"] = (rng, idx) => {
       { instruction: `Compute $PMT = \\dfrac{${PV} \\cdot ${i}}{1 - (1+${i})^{-${n}}}$. Enter a number rounded to the nearest cent.`, answer: money(PMT), accept: moneyAccepts(money(PMT)), hint: `Numerator $${PV}\\cdot${i}$; denominator $1 - (1+${i})^{-${n}}$.` },
     ],
     finalAnswer: { value: money(PMT), unit: "dollars" },
-    solutionNarrative: `$PMT = \\dfrac{${PV}(${i})}{1 - (1+${i})^{-${n}}} = \\$${money(PMT)}$ per year — the level payment that exactly pays off the loan (present value of the annuity equals the amount borrowed).`,
+    solutionNarrative: `$PMT = \\dfrac{${PV}(${i})}{1 - (1+${i})^{-${n}}} = \\$${money(PMT)}$ per year: the level payment that exactly pays off the loan (present value of the annuity equals the amount borrowed).`,
   };
 };
 fill["fm1-loan-payment-2"] = (rng, idx) => {
@@ -848,7 +848,7 @@ fill["fm1-loan-payment-2"] = (rng, idx) => {
       { instruction: `Compute $PMT = \\dfrac{${PV} \\cdot i}{1 - (1+i)^{-${n}}}$. Enter a number rounded to the nearest cent.`, answer: money(PMT), accept: moneyAccepts(money(PMT)), hint: `Use the monthly rate in both the numerator and the exponent.` },
     ],
     finalAnswer: { value: money(PMT), unit: "dollars" },
-    solutionNarrative: `Monthly rate $${i.toFixed(6)}$ over $${n}$ months gives $PMT = \\$${money(PMT)}$ — the standard car-loan payment formula.`,
+    solutionNarrative: `Monthly rate $${i.toFixed(6)}$ over $${n}$ months gives $PMT = \\$${money(PMT)}$: the standard car-loan payment formula.`,
   };
 };
 fill["fm1-loan-payment-3"] = (rng, idx) => {
@@ -869,7 +869,7 @@ fill["fm1-loan-payment-3"] = (rng, idx) => {
       { instruction: `Find the total paid over the life of the loan: $PMT \\times ${n}$. Enter a number rounded to the nearest cent.`, answer: money(totalPaid), accept: moneyAccepts(money(totalPaid)), hint: `Monthly payment times the number of payments.` },
     ],
     finalAnswer: { value: money(PMT), unit: "dollars" },
-    solutionNarrative: `The payment is $\\$${money(PMT)}$/month; over $${n}$ months you repay $\\$${money(totalPaid)}$ — dramatically more than the $\\$${PV}$ borrowed, all of the excess being interest.`,
+    solutionNarrative: `The payment is $\\$${money(PMT)}$/month; over $${n}$ months you repay $\\$${money(totalPaid)}$: dramatically more than the $\\$${PV}$ borrowed, all of the excess being interest.`,
   };
 };
 
@@ -917,7 +917,7 @@ fill["fm1-amortization-2"] = (rng, idx) => {
       { instruction: `Principal in payment 2: $${money(PMT)} - ${money(int2)}$. Enter a number rounded to the nearest cent.`, answer: money(prin2), accept: moneyAccepts(money(prin2)), hint: `Payment minus its interest portion.` },
     ],
     finalAnswer: { value: money(prin2), unit: "dollars" },
-    solutionNarrative: `After payment 1 the balance is $\\$${money(bal1)}$. Payment 2's interest is $\\$${money(int2)}$ (less than payment 1's, because the balance shrank) and its principal $\\$${money(prin2)}$ (more) — the classic amortization shift from interest toward principal.`,
+    solutionNarrative: `After payment 1 the balance is $\\$${money(bal1)}$. Payment 2's interest is $\\$${money(int2)}$ (less than payment 1's, because the balance shrank) and its principal $\\$${money(prin2)}$ (more): the classic amortization shift from interest toward principal.`,
   };
 };
 fill["fm1-amortization-3"] = (rng, idx) => {
@@ -938,7 +938,7 @@ fill["fm1-amortization-3"] = (rng, idx) => {
       { instruction: `Subtract to get the balance $B_{${k}}$. Enter a number rounded to the nearest cent.`, answer: money(bal), accept: moneyAccepts(money(bal)), hint: `Grown principal minus accumulated payments.` },
     ],
     finalAnswer: { value: money(bal), unit: "dollars" },
-    solutionNarrative: `$B_{${k}} = ${PV}(1+${i})^{${k}} - ${money(PMT)}\\cdot \\dfrac{(1+${i})^{${k}} - 1}{${i}} = \\$${money(bal)}$ — the balance still owed after ${k} of ${n} payments.`,
+    solutionNarrative: `$B_{${k}} = ${PV}(1+${i})^{${k}} - ${money(PMT)}\\cdot \\dfrac{(1+${i})^{${k}} - 1}{${i}} = \\$${money(bal)}$: the balance still owed after ${k} of ${n} payments.`,
   };
 };
 
@@ -1003,7 +1003,7 @@ fill["fm1-total-cost-3"] = (rng, idx) => {
       { instruction: `Extra interest from choosing the longer term (longer minus shorter). Enter a number rounded to the nearest cent.`, answer: money(extra), accept: moneyAccepts(money(extra)), hint: `$${money(intL)} - ${money(intS)}$.` },
     ],
     finalAnswer: { value: money(extra), unit: "dollars" },
-    solutionNarrative: `The ${yShort}-year term costs $\\$${money(intS)}$ in interest and the ${yLong}-year term $\\$${money(intL)}$ — the lower payment comes at $\\$${money(extra)}$ more interest. A longer term trades monthly relief for total cost.`,
+    solutionNarrative: `The ${yShort}-year term costs $\\$${money(intS)}$ in interest and the ${yLong}-year term $\\$${money(intL)}$: the lower payment comes at $\\$${money(extra)}$ more interest. A longer term trades monthly relief for total cost.`,
   };
 };
 
@@ -1042,10 +1042,10 @@ fill["fm1-extra-payment-2"] = (rng, idx) => {
     prompt: `A \\$${PV} loan at **${ip}% per year (monthly)** can run ${yShort} years or ${yLong} years, with payments \\$${money(pmtS)}/mo and \\$${money(pmtL)}/mo. Find how much lower the longer-term monthly payment is, then decide which term a borrower who wants the smallest monthly payment should choose. Enter money as a number rounded to the nearest cent, no \\$ or commas.`,
     steps: [
       { instruction: `How much smaller is the ${yLong}-year monthly payment? $${money(pmtS)} - ${money(pmtL)}$. Enter a number rounded to the nearest cent.`, answer: money(diff), accept: moneyAccepts(money(diff)), hint: `Shorter-term payment minus longer-term payment.` },
-      { instruction: `For the smallest monthly payment, which term should the borrower pick — the shorter or the longer? Answer 'the shorter term' or 'the longer term'.`, answer: "the longer term", accept: ["longer term", "longer", "the longer one"], hint: `Spreading the loan over more payments lowers each one.` },
+      { instruction: `For the smallest monthly payment, which term should the borrower pick: the shorter or the longer? Answer 'the shorter term' or 'the longer term'.`, answer: "the longer term", accept: ["longer term", "longer", "the longer one"], hint: `Spreading the loan over more payments lowers each one.` },
     ],
     finalAnswer: { value: "the longer term", unit: "" },
-    solutionNarrative: `The longer term's payment is $\\$${money(diff)}$ lower each month, so a borrower minimizing the monthly payment picks the longer term — at the cost, as always, of more total interest.`,
+    solutionNarrative: `The longer term's payment is $\\$${money(diff)}$ lower each month, so a borrower minimizing the monthly payment picks the longer term: at the cost, as always, of more total interest.`,
   };
 };
 fill["fm1-extra-payment-3"] = (rng, idx) => {
@@ -1072,6 +1072,6 @@ fill["fm1-extra-payment-3"] = (rng, idx) => {
       { instruction: `Year-2 interest is saved on that smaller balance: $${extra} \\cdot ${i}$. Enter a number rounded to the nearest cent.`, answer: money(saved), accept: moneyAccepts(money(saved)), hint: `The extra principal avoids a year of interest: extra times the rate.` },
     ],
     finalAnswer: { value: money(saved), unit: "dollars" },
-    solutionNarrative: `Without the extra the balance is $\\$${money(balNoExtra)}$; the extra $\\$${extra}$ drops it to $\\$${money(balExtra)}$, saving $${extra}(${i}) = \\$${money(saved)}$ of interest the very next year — and more every year after.`,
+    solutionNarrative: `Without the extra the balance is $\\$${money(balNoExtra)}$; the extra $\\$${extra}$ drops it to $\\$${money(balExtra)}$, saving $${extra}(${i}) = \\$${money(saved)}$ of interest the very next year, and more every year after.`,
   };
 };

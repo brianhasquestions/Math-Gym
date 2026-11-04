@@ -40,4 +40,4 @@ const xml =
 
 const out = path.join(REPO, "sitemap.xml");
 writeFileSync(out, xml, "utf8");
-console.log(`Wrote ${out} — ${urls.length} URLs (2 base + ${manifest.subjects.length} subjects + ${urls.length - 2 - manifest.subjects.length} topics).`);
+console.log(`Wrote ${out}: ${urls.length} URLs (2 base + ${manifest.subjects.length} subjects + ${urls.length - 2 - manifest.subjects.length} topics).`);

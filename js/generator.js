@@ -5,7 +5,7 @@
 // applied contexts, so the adaptive engine can serve effectively unlimited
 // "similar" problems. Answers are always controlled to stay clean and checkable.
 
-// Full-tier coverage packs for Differential Equations and Linear Algebra — each
+// Full-tier coverage packs for Differential Equations and Linear Algebra: each
 // gives every key concept a generator at difficulty 1/2/3. Kept in separate,
 // self-contained files and merged into the registry below (see Object.assign
 // near the bottom). These modules do not import from here, so no import cycle.
@@ -836,7 +836,7 @@ generators["compound-ineq-v1"] = (rng, idx) => {
 
 // --- Ratios, Proportions & Percent -------------------------------------------
 // Round half AWAY FROM ZERO (the school convention). Plain Math.round rounds
-// half toward +Infinity, so it turned -0.375 into -0.37 — and a learner who
+// half toward +Infinity, so it turned -0.375 into -0.37: and a learner who
 // correctly rounded to -0.38 was marked wrong.
 const round2 = (x) => Math.sign(x) * Math.round(Math.abs(x) * 100) / 100;
 const RATE_ITEMS = [["apples", "apple"], ["bottles", "bottle"], ["pens", "pen"], ["notebooks", "notebook"], ["bags", "bag"]];
@@ -886,7 +886,7 @@ generators["tax-total-v1"] = (rng, idx) => {
   return {
     id: `gen.tax-total-v1.${idx}`, generated: true, concepts: ["percent-change"], difficulty: 2, context: "applied",
     prompt: `A \\$${price} purchase has ${rate}% sales tax. What is the total cost? (nearest cent)`,
-    steps: [{ instruction: `Add ${rate}% tax — multiply the price by ${round2(1 + rate / 100)}.`, answer: `${total}`, accept: [], hint: `Tax is ${rate}% of \\$${price}; add it on.` }],
+    steps: [{ instruction: `Add ${rate}% tax: multiply the price by ${round2(1 + rate / 100)}.`, answer: `${total}`, accept: [], hint: `Tax is ${rate}% of \\$${price}; add it on.` }],
     finalAnswer: { value: `${total}`, unit: "dollars" }, solutionNarrative: `\\$${price} × ${round2(1 + rate / 100)} = \\$${total}.`,
   };
 };
@@ -896,7 +896,7 @@ generators["discount-v1"] = (rng, idx) => {
   return {
     id: `gen.discount-v1.${idx}`, generated: true, concepts: ["percent-change"], difficulty: 2, context: "applied",
     prompt: `A \\$${price} item is ${off}% off. What is the sale price? (nearest cent)`,
-    steps: [{ instruction: `You pay ${100 - off}% — multiply by ${round2(1 - off / 100)}.`, answer: `${sale}`, accept: [], hint: `Discount is ${off}% of \\$${price}; subtract it.` }],
+    steps: [{ instruction: `You pay ${100 - off}%, so multiply by ${round2(1 - off / 100)}.`, answer: `${sale}`, accept: [], hint: `Discount is ${off}% of \\$${price}; subtract it.` }],
     finalAnswer: { value: `${sale}`, unit: "dollars" }, solutionNarrative: `\\$${price} × ${round2(1 - off / 100)} = \\$${sale}.`,
   };
 };
@@ -987,7 +987,7 @@ generators["complement-supplement-v1"] = (rng, idx) => {
   return {
     id: `gen.complement-supplement-v1.${idx}`, generated: true, concepts: ["angle-pairs"], difficulty: 1, context: "abstract",
     prompt: `Two angles are ${comp ? "complementary" : "supplementary"}. One measures $${x}°$. Find the other (degrees).`,
-    steps: [{ instruction: `${comp ? "Complementary angles sum to 90°" : "Supplementary angles sum to 180°"} — subtract.`, answer: `${base - x}`, accept: [], hint: `${base} − ${x}.` }],
+    steps: [{ instruction: `${comp ? "Complementary angles sum to 90°" : "Supplementary angles sum to 180°"}, so subtract.`, answer: `${base - x}`, accept: [], hint: `${base} − ${x}.` }],
     finalAnswer: { value: `${base - x}`, unit: "degrees" }, solutionNarrative: `${base} − ${x} = ${base - x}°.`,
   };
 };
@@ -1555,7 +1555,7 @@ generators["limit-infinity-v1"] = (rng, idx) => {
   return {
     id: `gen.limit-infinity-v1.${idx}`, generated: true, concepts: ["one-sided-and-infinite"], difficulty: 2, context: "abstract",
     prompt: `Evaluate: $\\displaystyle\\lim_{x \\to \\infty} \\frac{${a}x^2 ${signed(b2)}x}{${b}x^2 ${signed(c2)}}$`,
-    steps: [{ instruction: "Same degree top and bottom — take the ratio of leading coefficients.", answer: frac(a, b), accept: [`${a}/${b}`], hint: `$\\frac{${a}}{${b}}$.` }],
+    steps: [{ instruction: "Same degree top and bottom: take the ratio of leading coefficients.", answer: frac(a, b), accept: [`${a}/${b}`], hint: `$\\frac{${a}}{${b}}$.` }],
     finalAnswer: { value: frac(a, b), unit: "" }, solutionNarrative: `Ratio of leading coefficients: $\\frac{${a}}{${b}} = ${frac(a, b)}$.`,
   };
 };
@@ -1944,7 +1944,7 @@ generators["volume-rev-v1"] = (rng, idx) => {
 };
 generators["avg-value-v1"] = (rng, idx) => {
   // f = 3k x^2, so ∫_0^b f dx = k b^3 and the average is k b^3 / b = k b^2.
-  // (Was (k b^3/3)/b — off by a factor of 3 on every draw.)
+  // (Was (k b^3/3)/b: off by a factor of 3 on every draw.)
   const k = rng.int(1, 4), b = rng.int(2, 6), avg = k * b * b;
   return {
     id: `gen.avg-value-v1.${idx}`, generated: true, concepts: ["average-value"], difficulty: 2, context: "abstract",
@@ -2237,7 +2237,7 @@ generators["de-separable-v1"] = (rng, idx) => {
     id: `gen.de-separable-v1.${idx}`, generated: true, concepts: ["separable-recognition"], difficulty: 2, context: "abstract",
     prompt: `Is $\\frac{dy}{dx} = ${rhs}$ separable? (yes or no)`,
     steps: [{ instruction: "Separable means it factors as (function of $x$)(function of $y$).", answer: sep ? "yes" : "no", accept: [], hint: sep ? "Factor out the pieces." : "A sum of $x$ and $y$ terms doesn't factor that way." }],
-    finalAnswer: { value: sep ? "yes" : "no", unit: "" }, solutionNarrative: sep ? `Yes: $\\frac{dy}{dx} = ${a}x \\cdot y$.` : "No — it's a sum, not a product.",
+    finalAnswer: { value: sep ? "yes" : "no", unit: "" }, solutionNarrative: sep ? `Yes: $\\frac{dy}{dx} = ${a}x \\cdot y$.` : "No: it's a sum, not a product.",
   };
 };
 
@@ -2574,7 +2574,7 @@ generators["span-membership-v1"] = (rng, idx) => {
   return {
     id: `gen.span-membership-v1.${idx}`, generated: true, concepts: ["span-membership"], difficulty: 1, context: "abstract",
     prompt: `Is $\\langle ${uu.join(", ")} \\rangle$ in the span of $\\langle ${v.join(", ")} \\rangle$? (i.e. is it a scalar multiple?) (yes/no)`,
-    steps: [{ instruction: "Check whether one vector is a constant multiple of the other.", answer: inSpan ? "yes" : "no", accept: [], hint: "Divide matching components — are the ratios equal?" }],
+    steps: [{ instruction: "Check whether one vector is a constant multiple of the other.", answer: inSpan ? "yes" : "no", accept: [], hint: "Divide matching components. Are the ratios equal?" }],
     finalAnswer: { value: inSpan ? "yes" : "no", unit: "" }, solutionNarrative: inSpan ? `Yes, it's ${k}× the vector.` : "No, the component ratios differ.",
   };
 };
@@ -2692,7 +2692,7 @@ generators["simplify-rational-v1"] = (rng, idx) => {
 
 // Merge the coverage-fill packs into the registry. Placed after all inline
 // generator definitions so a name collision would favor an explicit definition
-// here (there are none — fill packs use the def-*/laf-* prefixes).
+// here (there are none: fill packs use the def-*/laf-* prefixes).
 Object.assign(generators, deFill, linAlgFill,
   algGraphFill, calc1Fill, geoFill, deFill2, linAlgFill2, trigFill, trig2Fill,
   geoProofFill, calc3ProofFill, crypto1Fill, crypto2Fill, crypto3Fill, crypto4Fill,
@@ -2712,7 +2712,7 @@ export function hasGenerator(template) {
 
 // Display cleanup applied to every generated problem: parametric templates
 // frequently draw a coefficient of 1 and render "$1x + 6$", "$-1e^{4t}$",
-// "$\sin(1x)$", "$-3 \pm 1i$" — mathematically fine, visually broken. Strip
+// "$\sin(1x)$", "$-3 \pm 1i$": mathematically fine, visually broken. Strip
 // the redundant 1 inside math spans ONLY (prose like "count the 1s" must
 // survive), at this single dispatch point so all templates benefit. The
 // lookbehind keeps "11x"/"2.1x" (real coefficients) and "C_1e" (subscript
@@ -2721,7 +2721,7 @@ export function hasGenerator(template) {
 // The 1 is only redundant when it multiplies a VARIABLE or a function /
 // symbol command. Before any other backslash it is a real digit: "\{1\}",
 // "\langle 0,1\rangle", "1\cdot 4", "1\times 5", "L\{1\}", "64 - 1\right)",
-// "1\,dx" — an earlier version stripped those too and corrupted data sets,
+// "1\,dx": an earlier version stripped those too and corrupted data sets,
 // basis vectors and coalitions. So commands are whitelisted, not blanket-matched.
 const UNIT_COEF_CMDS = "sin|cos|tan|sec|csc|cot|sinh|cosh|tanh|arcsin|arccos|arctan|ln|log|exp|sqrt|pi|theta|lambda|alpha|beta|gamma|mu|sigma|omega|phi|rho|tau|vec|mathbf|hat|dfrac|frac";
 const UNIT_COEF_RE = new RegExp(`(?<![0-9.a-zA-Z_])1(?=[a-zA-Z]|\\\\(?:${UNIT_COEF_CMDS})(?![a-zA-Z]))`, "g");
@@ -2731,7 +2731,7 @@ const stripUnitCoefIn = (inner) => inner.replace(UNIT_COEF_RE, "");
 const ANSWER_UNIT_COEF_RE = /(?<![0-9.a-zA-Z_])1(?=[a-df-z]|e(?![0-9+-]))/g;
 const stripUnitCoef = (s) => {
   if (typeof s !== "string" || !s.includes("1")) return s;
-  // Escaped currency dollars ("\$240") are NOT math delimiters — mask them so
+  // Escaped currency dollars ("\$240") are NOT math delimiters: mask them so
   // they can't mispair a span and expose prose ("the 1st term") to stripping.
   return s
     .replace(/\\\$/g, "\u0000")

@@ -46,7 +46,7 @@ function normalize(s) {
     .replace(/\s+/g, "")
     .replace(/\\cdot|\\times/g, "*") // latex multiplication -> *
     .replace(/[×·]/g, "*")          // unicode multiplication -> *
-    .replace(/[−–—]/g, "-")         // unicode minus variants -> hyphen
+    .replace(/[\u2212\u2013\u2014]/g, "-")         // unicode minus variants -> hyphen
     .replace(/\\leq|\\le|≤|⩽/g, "<=")    // unicode/latex inequalities
     .replace(/\\geq|\\ge|≥|⩾/g, ">=")
     .replace(/\\sqrt|√/g, "sqrt")   // radicals -> sqrt
@@ -61,7 +61,7 @@ function normalize(s) {
 function parseNum(s) {
   let t = String(s).trim().replace(/^\+(?=[\d.])/, ""); // "+3" is 3
   // Digit-grouping commas ("431,676.38") count as one number only when the
-  // WHOLE string is a grouped numeral — "1,2" stays a tuple, "12,34" is neither.
+  // WHOLE string is a grouped numeral: "1,2" stays a tuple, "12,34" is neither.
   if (/^-?\d{1,3}(?:,\d{3})+(?:\.\d+)?$/.test(t)) t = t.replace(/,/g, "");
   const frac = t.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);
   if (frac) {
@@ -85,7 +85,7 @@ function sigFigs(s) {
 }
 
 // Absolute tolerance floor for comparing a value against `c`. 1e-6 for
-// ordinary magnitudes, but RELATIVE for tiny ones — a flat 1e-6 accepted "0"
+// ordinary magnitudes, but RELATIVE for tiny ones: a flat 1e-6 accepted "0"
 // for machine epsilon 2^-20 (~9.5e-7).
 function absFloor(c) {
   const a = Math.abs(c);
@@ -102,7 +102,7 @@ const pNeg = (A) => A.map((t) => ({ c: -t.c, v: t.v }));
 const pScale = (A, k) => A.map((t) => ({ c: t.c * k, v: t.v }));
 
 // Like-term merging keeps products compact. Without it term counts multiply
-// RAW — (x+1)^8 is 256 terms, and each juxtaposed factor multiplies again, so
+// RAW: (x+1)^8 is 256 terms, and each juxtaposed factor multiplies again, so
 // a ~36-character input could freeze the tab for minutes (checkStep runs
 // synchronously on every "Check" click). The caps turn pathological inputs
 // into a thrown RangeError, which the parse entry points convert to null
@@ -138,7 +138,7 @@ function asConst(A) { // numeric value if A has no variables, else null
 }
 
 // Function names must NOT be read as products of single-letter variables, or
-// "sin(4x)" would canonicalize to s*i*n*4*x and compare equal to "4sin(x)" —
+// "sin(4x)" would canonicalize to s*i*n*4*x and compare equal to "4sin(x)":
 // two different functions. When a letter run spells a known function, we bail
 // out of polynomial parsing entirely so the answer falls back to exact/accept
 // matching (symbolic trig/log is unverifiable here by design; see checkStep).
@@ -159,12 +159,12 @@ function tokenizePoly(s) {
       let j = i + 1; while (j < s.length && /[a-z]/.test(s[j])) j++;
       const run = s.slice(i, j);
       // A function name ANYWHERE in the run ("rsin(4theta)", "2xcos") means this
-      // is not a polynomial — reading "rsin" as r*s*i*n let the angle multiplier
+      // is not a polynomial: reading "rsin" as r*s*i*n let the angle multiplier
       // fold into the coefficient ("4rsin(2theta)" == "8rsin(theta)").
       for (const f of POLY_FUNCS) if (run.includes(f)) return null;
       // Split the run into symbols: Greek names (lambda, theta, …) are one
       // symbol each, every other letter is its own variable (xy = x*y). Four or
-      // more loose letters in a row is a WORD ("angle", "side"), not a product —
+      // more loose letters in a row is a WORD ("angle", "side"), not a product:
       // "angle-angle" parsed as 0 and matched any other zero.
       const syms = [];
       let loose = 0;
@@ -338,7 +338,7 @@ function parseTuple(normalized) {
 //     ("7.25" -> ±0.005, so more precise learner input passes),
 //   - the learner's own rounding grain, but only when the expected value is an
 //     exact form (1/3, 16pi) AND the learner wrote at least 2 significant
-//     figures — "0.33" for 1/3 passes, "0.0" for 1/36 or "0.7" for 2/3 do not,
+//     figures: "0.33" for 1/3 passes, "0.0" for 1/36 or "0.7" for 2/3 do not,
 //   - a 1e-12 relative slack for float noise (NOT 1e-9: that accepted
 //     1080000001 for 1080000000).
 function valuesAgree(u, c, uRaw, cRaw) {
@@ -353,7 +353,7 @@ function valuesAgree(u, c, uRaw, cRaw) {
 // We move everything to one side (L - R), then pick a sign-canonical form so the
 // representation is unique regardless of which side the variable sat on.
 function canonInequality(normalized) {
-  // Each SIDE is canonicalized on its own — terms are never moved across the
+  // Each SIDE is canonicalized on its own: terms are never moved across the
   // inequality sign. (Canonicalizing L − R made "x + 1 >= 4" and even the
   // un-solved prompt "x + 4 >= 7" equal to the answer "x >= 3".) Only the
   // direction flip is normalized: "x > 3" == "3 < x", and a compound chain
@@ -407,7 +407,7 @@ const UNIT_SUFFIX_RE = /(?<=[\d.])(?:cm|mm|km|m|in|ft|yd|mi|kg|g|mg|lb|lbs|oz|ml
 // Pull a single number (and any leading variable name) out of answers like
 // "x = 7", "7", "x=-3.5", "1/2". Returns { n, v } where v is the variable letter
 // group if one was written (else null), so callers can require variables to
-// agree — "y=7" must not satisfy a step whose answer is "x=7".
+// agree: "y=7" must not satisfy a step whose answer is "x=7".
 function extractNumber(s, learnerInput = false) {
   let t = normalize(s);
   // "1x = 5" is "x = 5" (a unit coefficient generators used to print), and a
@@ -415,7 +415,7 @@ function extractNumber(s, learnerInput = false) {
   t = t.replace(/^1([a-z]+[0-9]*=)/, "$1").replace(/=1([a-z]+[0-9]*)$/, "=$1")
     .replace(/\((-?\d*\.?\d+)\)/g, "$1");
   // A unit after a number is a label, not part of the value: "12 cm", "0kg",
-  // "3.5 hours", "40 m^2". (Only a closed list — "5x" must stay an expression —
+  // "3.5 hours", "40 m^2". (Only a closed list, since "5x" must stay an expression,
   // and only for LEARNER input: an answer "5s" may be a Laplace-domain term.)
   if (learnerInput) t = t.replace(UNIT_SUFFIX_RE, "");
   // "7 = x" is the same statement as "x = 7".
@@ -582,7 +582,7 @@ function isFactoredForm(normalized) {
     else if (ch === ")") depth--;
     else if ((ch === "+" || ch === "-") && depth === 0 && i !== 0) return false;
   }
-  // Product shape confirmed — now reject "factorizations" that are really the
+  // Product shape confirmed: now reject "factorizations" that are really the
   // whole expression scaled by ±1, e.g. "1(x^2-5x+6)", "(1)(x^2-5x+6)", or
   // "(x^2-5x+6)*1": peeling off a unit coefficient is not factoring. Walk the
   // top-level factor units and demand either two non-constant factors or one
@@ -684,7 +684,7 @@ function multiTermFactors(side) {
 }
 
 // "Factor completely": the learner must have at least as many multi-term
-// factors as the answer, and — when the answer's factors are all primitive —
+// factors as the answer, and, when the answer's factors are all primitive, 
 // no learner factor may still hide a common factor. Catches "x(6x+8)" and
 // "2(3x^2+4x)" for 2x(3x+4), and "(6x-9)(2x+3)" for 3(2x-3)(2x+3).
 function factoredAsCompletely(u, answer) {
@@ -693,7 +693,7 @@ function factoredAsCompletely(u, answer) {
   const as = sideOf(a), us = sideOf(u);
   if (!as || !us) return true;
   const af = multiTermFactors(as), uf = multiTermFactors(us);
-  if (!af || !uf) return true; // can't judge — leave it to equivalence
+  if (!af || !uf) return true; // can't judge: leave it to equivalence
   if (uf.length < af.length) return false;
   if (af.every(Boolean) && !uf.every(Boolean)) return false;
   return true;
@@ -701,7 +701,7 @@ function factoredAsCompletely(u, answer) {
 
 // Half-a-unit-in-the-last-place tolerance for a plainly-written decimal (e.g.
 // "50.27" -> 0.005). Returns 0 for non-decimal inputs (integers, expressions),
-// which keeps exact answers exact — "7" must not match 7.07.
+// which keeps exact answers exact: "7" must not match 7.07.
 function decimalTol(s) {
   const m = String(s).match(/^-?\d+\.(\d+)$/);
   return m ? 0.5 * Math.pow(10, -m[1].length) : 0;
@@ -815,7 +815,7 @@ export function checkStep(step, userAnswer) {
       }
     }
   }
-  // "5.21%" may mean 5.21 (a percent-valued answer — handled by normalize,
+  // "5.21%" may mean 5.21 (a percent-valued answer, handled by normalize,
   // which drops the sign) OR the proportion 0.0521. Try the latter too.
   const pct = String(userAnswer).trim().match(/^(.*?)\s*\\?%$/);
   if (pct) {
@@ -828,7 +828,7 @@ export function checkStep(step, userAnswer) {
 function checkStepCore(step, userAnswer) {
   const u = normalize(userAnswer);
   if (u === "") return false;
-  // Factored-form steps must actually be factored — and as completely as the
+  // Factored-form steps must actually be factored, and as completely as the
   // answer (not "x(6x+8)" for 2x(3x+4)).
   if (step.form === "factored" && !isFactoredForm(u)) return false;
   if (step.form === "factored" && !factoredAsCompletely(u, step.answer)) return false;
@@ -864,12 +864,12 @@ function checkStepCore(step, userAnswer) {
 
   for (const cand of candidates) {
     const c = normalize(cand);
-    if (c === u) return true;                                 // exact (normalized) — always honored
+    if (c === u) return true;                                 // exact (normalized): always honored
     if (unreduced) continue;
     const dw = decisionWord(u);
     if (dw !== null && (c === "reject" || c === "failtoreject")) { if (dw === c) return true; continue; }
     const cNum = extractNumber(cand);
-    // Numeric answer, non-numeral input: "7*8", "4+1", "(8+12+16)/3" — the
+    // Numeric answer, non-numeral input: "7*8", "4+1", "(8+12+16)/3"; the
     // learner restated the arithmetic instead of doing it.
     if (cNum !== null && !uPlain && !uExactForm) continue;
     const unworked = cNum === null && looksUnworked(u, c, step.instruction);
@@ -903,7 +903,7 @@ export class ProblemSource {
     this.lastId = null;
     this.lastPrompt = null;
     // Randomize the per-session seed base so two sessions (or reloads) that walk
-    // the same difficulty path don't replay the identical "random" sequence —
+    // the same difficulty path don't replay the identical "random" sequence:
     // and a problem missed earlier isn't re-served as the fresh prove-it problem.
     // Falls back to a content-derived base if Math.random is somehow unavailable.
     this.seedBase = (Math.floor(Math.random() * 0x7fffffff) || (topic.id || "t").length * 7919 + 13);

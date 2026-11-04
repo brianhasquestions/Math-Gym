@@ -96,7 +96,7 @@ const signStr = (v) => (v < 0 ? `(${v})` : `${v}`);
 export const fill = {};
 
 // ===========================================================================
-// TOPIC 1 — number-theory.divisibility-and-primes
+// TOPIC 1: number-theory.divisibility-and-primes
 //   concepts: divisibility-rules, primes-and-sieve, prime-factorization,
 //             fundamental-theorem
 // ===========================================================================
@@ -163,7 +163,7 @@ fill["nt1-divisibility-3"] = (rng, idx) => {
       { instruction: `What is the quotient $q$ so that $-${n} = q \\cdot ${divisor} + ${negR}$?`, answer: `${negQ}`, accept: [], hint: `$${negQ} \\cdot ${divisor} + ${negR} = ${negQ * divisor + negR} = -${n}$.` },
     ],
     finalAnswer: { value: `q = ${negQ}, r = ${negR}`, unit: "" },
-    solutionNarrative: `$-${n} = ${negQ} \\cdot ${divisor} + ${negR}$ with $0 \\le ${negR} < ${divisor}$ — the remainder is always taken nonnegative, so quotient ${negQ} and remainder ${negR}.`,
+    solutionNarrative: `$-${n} = ${negQ} \\cdot ${divisor} + ${negR}$ with $0 \\le ${negR} < ${divisor}$: the remainder is always taken nonnegative, so quotient ${negQ} and remainder ${negR}.`,
   };
 };
 
@@ -209,7 +209,7 @@ fill["nt1-sieve-2"] = (rng, idx) => {
       { instruction: `How many primes are there in total up to ${N}?`, answer: `${count}`, accept: [], hint: `The survivors are ${primes.join(", ")}.` },
     ],
     finalAnswer: { value: `${count}`, unit: "" },
-    solutionNarrative: `Sieving up to ${N} leaves ${primes.join(", ")} — that is ${count} primes.`,
+    solutionNarrative: `Sieving up to ${N} leaves ${primes.join(", ")}: that is ${count} primes.`,
   };
 };
 
@@ -231,7 +231,7 @@ fill["nt1-sieve-3"] = (rng, idx) => {
       { instruction: `So is ${item.n} prime or composite? Type 'prime' or 'composite'.`, answer: "composite", accept: ["c"], hint: `It equals $${item.f} \\cdot ${item.c}$.` },
     ],
     finalAnswer: { value: "composite", unit: "" },
-    solutionNarrative: `$${item.n} = ${item.f} \\cdot ${item.c}$. Because both factors exceed 10, ${item.n} slips past a careless check — but trial division up to $\\sqrt{${item.n}} \\approx ${maxTest}$ catches ${item.f}.`,
+    solutionNarrative: `$${item.n} = ${item.f} \\cdot ${item.c}$. Because both factors exceed 10, ${item.n} slips past a careless check, but trial division up to $\\sqrt{${item.n}} \\approx ${maxTest}$ catches ${item.f}.`,
   };
 };
 
@@ -250,9 +250,9 @@ fill["nt1-primefact-1"] = (rng, idx) => {
     id: `gen.nt1-primefact-1.${idx}`, generated: true, concepts: ["prime-factorization"], difficulty: 1, context: "abstract",
     prompt: `Find the prime factorization of ${n} by peeling off small primes. (Report it as prime powers, e.g. $2^{3} \\cdot 3 \\cdot 5$.)`,
     steps: [
-      { instruction: `How many times does 2 divide ${n}? (Halve until odd.)`, answer: `${a}`, accept: [], hint: `$${n}${a >= 1 ? ` \\to ${n / 2}` : ""}${a >= 2 ? ` \\to ${n / 4}` : ""}${a >= 3 ? ` \\to ${n / 8}` : ""}$ — stop at the odd number ${odd}.` },
+      { instruction: `How many times does 2 divide ${n}? (Halve until odd.)`, answer: `${a}`, accept: [], hint: `$${n}${a >= 1 ? ` \\to ${n / 2}` : ""}${a >= 2 ? ` \\to ${n / 4}` : ""}${a >= 3 ? ` \\to ${n / 8}` : ""}$: stop at the odd number ${odd}.` },
       { instruction: `What odd number remains after removing all the 2s ($${n} \\div ${2 ** a}$)?`, answer: `${odd}`, accept: [], hint: `Divide out $2^{${a}} = ${2 ** a}$.` },
-      { instruction: `Counting with multiplicity, how many prime factors does ${n} have in total?`, answer: `${total}`, accept: [], hint: `$${n} = ${facLatex(facs)}$ — add up all the exponents.` },
+      { instruction: `Counting with multiplicity, how many prime factors does ${n} have in total?`, answer: `${total}`, accept: [], hint: `$${n} = ${facLatex(facs)}$: add up all the exponents.` },
     ],
     finalAnswer: { value: `${n} = ${facs.map((f) => (f.e === 1 ? `${f.p}` : `${f.p}^${f.e}`)).join(" * ")}`, unit: "" },
     solutionNarrative: `$${n} = ${facLatex(facs)}$, with ${total} prime factors counted with multiplicity. Unique factorization guarantees no other prime decomposition exists.`,
@@ -321,7 +321,7 @@ fill["nt1-fundthm-1"] = (rng, idx) => {
       { instruction: `Multiply: number of divisors $= ${ep + 1} \\cdot ${eq + 1} = $ ?`, answer: `${ndiv}`, accept: [], hint: `Each divisor picks a power of ${P} (0..${ep}) and a power of ${Q} (0..${eq}).` },
     ],
     finalAnswer: { value: `${ndiv}`, unit: "" },
-    solutionNarrative: `$(${ep}+1)(${eq}+1) = ${ndiv}$ divisors — one for each independent choice of prime-power exponents.`,
+    solutionNarrative: `$(${ep}+1)(${eq}+1) = ${ndiv}$ divisors: one for each independent choice of prime-power exponents.`,
   };
 };
 
@@ -360,7 +360,7 @@ fill["nt1-fundthm-3"] = (rng, idx) => {
   const ndiv = numDivisors(facs);
   return {
     id: `gen.nt1-fundthm-3.${idx}`, generated: true, concepts: ["fundamental-theorem"], difficulty: 3, context: "abstract",
-    prompt: `Given $${n} = ${facLatex(facs)}$, decide whether ${n} is a perfect square — a number is a perfect square exactly when every exponent in its prime factorization is even.`,
+    prompt: `Given $${n} = ${facLatex(facs)}$, decide whether ${n} is a perfect square: a number is a perfect square exactly when every exponent in its prime factorization is even.`,
     steps: [
       { instruction: `Number of positive divisors of ${n} (product of $(e_i+1)$)?`, answer: `${ndiv}`, accept: [], hint: `$(${ep}+1)(${eqUse}+1)$.` },
       { instruction: `Are all exponents (${ep} and ${eqUse}) even? Type 'yes' or 'no'.`, answer: isSquare ? "yes" : "no", accept: [isSquare ? "y" : "n"], hint: `Check each exponent for evenness.` },
@@ -374,7 +374,7 @@ fill["nt1-fundthm-3"] = (rng, idx) => {
 };
 
 // ===========================================================================
-// TOPIC 2 — number-theory.gcd-lcm-and-bezout
+// TOPIC 2: number-theory.gcd-lcm-and-bezout
 //   concepts: euclidean-algorithm, lcm-and-gcd-product, bezout-coefficients,
 //             coprime-and-applications
 // ===========================================================================
@@ -425,7 +425,7 @@ fill["nt1-euclid-3"] = (rng, idx) => {
   const q1 = rng.int(1, 3), a = q1 * b + r1;
   return {
     id: `gen.nt1-euclid-3.${idx}`, generated: true, concepts: ["euclidean-algorithm"], difficulty: 3, context: "abstract",
-    prompt: `Find $\\gcd(${a}, ${b})$ — a four-division Euclidean cascade. Write every remainder.`,
+    prompt: `Find $\\gcd(${a}, ${b})$: a four-division Euclidean cascade. Write every remainder.`,
     steps: [
       { instruction: `Divide ${a} by ${b}: remainder? ($${b} \\cdot ${q1} = ${q1 * b}$)`, answer: `${r1}`, accept: [], hint: `$${a} - ${q1 * b}$.` },
       { instruction: `Divide ${b} by ${r1}: remainder? ($${r1} \\cdot ${q2} = ${q2 * r1}$)`, answer: `${r2}`, accept: [], hint: `$${b} - ${q2 * r1}$.` },
@@ -498,7 +498,7 @@ fill["nt1-lcm-3"] = (rng, idx) => {
       { instruction: `How many ${b}-${CTX.unit} periods fit in ${l} ${CTX.unit}?`, answer: `${l / b}`, accept: [], hint: `$${l} \\div ${b}$.` },
     ],
     finalAnswer: { value: `${l}`, unit: CTX.unit },
-    solutionNarrative: `$\\gcd = ${g}$, so $\\mathrm{lcm} = ${l}$: they re-align after ${l} ${CTX.unit} — ${l / a} and ${l / b} periods respectively.`,
+    solutionNarrative: `$\\gcd = ${g}$, so $\\mathrm{lcm} = ${l}$: they re-align after ${l} ${CTX.unit}: ${l / a} and ${l / b} periods respectively.`,
   };
 };
 
@@ -587,7 +587,7 @@ fill["nt1-coprime-1"] = (rng, idx) => {
     prompt: `Are ${a} and ${b} coprime? (Coprime means $\\gcd = 1$.) Answer 'yes' or 'no'.`,
     steps: [
       { instruction: `Compute $\\gcd(${a}, ${b})$.`, answer: `${g}`, accept: [], hint: `The largest number dividing both ${a} and ${b}.` },
-      { instruction: `Is $\\gcd(${a}, ${b}) = 1$ — are they coprime? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: `The gcd is ${g}.` },
+      { instruction: `Is $\\gcd(${a}, ${b}) = 1$: are they coprime? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: `The gcd is ${g}.` },
     ],
     finalAnswer: { value: yn, unit: "" },
     solutionNarrative: `$\\gcd(${a}, ${b}) = ${g}$, so they are ${coprime ? "coprime" : "NOT coprime"}.`,
@@ -608,7 +608,7 @@ fill["nt1-coprime-2"] = (rng, idx) => {
       { instruction: `List the numbers $1 \\le k \\le ${n}$ sharing NO factor with ${n}, then count them. How many are there?`, answer: `${cnt}`, accept: [], hint: `The coprime residues are ${example.join(", ")}.` },
     ],
     finalAnswer: { value: `${cnt}`, unit: "" },
-    solutionNarrative: `The integers coprime to ${n} up to ${n} are ${example.join(", ")} — that is ${cnt} of them (this count is Euler's totient $\\varphi(${n}) = ${cnt}$).`,
+    solutionNarrative: `The integers coprime to ${n} up to ${n} are ${example.join(", ")}: that is ${cnt} of them (this count is Euler's totient $\\varphi(${n}) = ${cnt}$).`,
   };
 };
 
@@ -635,7 +635,7 @@ fill["nt1-coprime-3"] = (rng, idx) => {
 };
 
 // ===========================================================================
-// TOPIC 3 — number-theory.congruences-and-crt
+// TOPIC 3: number-theory.congruences-and-crt
 //   concepts: modular-basics, linear-congruences, inverse-mod, crt-systems
 // ===========================================================================
 
@@ -765,7 +765,7 @@ fill["nt1-inverse-1"] = (rng, idx) => {
   const inv = modInverse(a, n);
   return {
     id: `gen.nt1-inverse-1.${idx}`, generated: true, concepts: ["inverse-mod"], difficulty: 1, context: "abstract",
-    prompt: `Find $${a}^{-1} \\bmod ${n}$ — the residue $x$ in $0..${n - 1}$ with $${a}x \\equiv 1 \\pmod{${n}}$ — by testing candidates.`,
+    prompt: `Find $${a}^{-1} \\bmod ${n}$, the residue $x$ in $0..${n - 1}$ with $${a}x \\equiv 1 \\pmod{${n}}$, by testing candidates.`,
     steps: [
       { instruction: `The inverse $x$ must make $${a}x \\bmod ${n}$ equal to what?`, answer: "1", accept: [], hint: "That is the definition of a modular inverse." },
       { instruction: `Test $x = 1, 2, 3, \\dots$: which one works?`, answer: `${inv}`, accept: [`x=${inv}`], hint: `$${a} \\cdot ${inv} = ${a * inv} \\equiv 1 \\pmod{${n}}$.` },
@@ -855,7 +855,7 @@ fill["nt1-crt-2"] = (rng, idx) => {
       { instruction: `Now compute $x = ${a} + ${m} \\cdot ${tstep}$ and reduce mod ${M} to the smallest nonnegative value.`, answer: `${x}`, accept: [], hint: `$${a} + ${m * tstep} = ${a + m * tstep}$, then mod ${M}.` },
     ],
     finalAnswer: { value: `${x}`, unit: "" },
-    solutionNarrative: `$t = ${tstep}$ gives $x = ${a} + ${m} \\cdot ${tstep} = ${a + m * tstep} \\equiv ${x} \\pmod{${M}}$ — unique mod ${M}.`,
+    solutionNarrative: `$t = ${tstep}$ gives $x = ${a} + ${m} \\cdot ${tstep} = ${a + m * tstep} \\equiv ${x} \\pmod{${M}}$, unique mod ${M}.`,
   };
 };
 
@@ -871,14 +871,14 @@ fill["nt1-crt-3"] = (rng, idx) => {
     do { a = rng.int(0, m - 1); b = rng.int(0, n2 - 1); } while (mod(a, g) === mod(b, g));
     return {
       id: `gen.nt1-crt-3.${idx}`, generated: true, concepts: ["crt-systems"], difficulty: 3, context: "abstract",
-      prompt: `A CRT PITFALL. Solve $x \\equiv ${a} \\pmod{${m}}$, $x \\equiv ${b} \\pmod{${n2}}$ — but note the moduli are NOT coprime. Check for consistency first.`,
+      prompt: `A CRT PITFALL. Solve $x \\equiv ${a} \\pmod{${m}}$, $x \\equiv ${b} \\pmod{${n2}}$, but note the moduli are NOT coprime. Check for consistency first.`,
       steps: [
-        { instruction: `Compute $\\gcd(${m}, ${n2})$.`, answer: `${gcd(m, n2)}`, accept: [], hint: "The moduli share a factor — plain CRT does not apply directly." },
+        { instruction: `Compute $\\gcd(${m}, ${n2})$.`, answer: `${gcd(m, n2)}`, accept: [], hint: "The moduli share a factor: plain CRT does not apply directly." },
         { instruction: `A solution exists only if the two residues agree mod the gcd. Is $${a} \\equiv ${b} \\pmod{${gcd(m, n2)}}$? Type 'yes' or 'no'.`, answer: mod(a, gcd(m, n2)) === mod(b, gcd(m, n2)) ? "yes" : "no", accept: [mod(a, gcd(m, n2)) === mod(b, gcd(m, n2)) ? "y" : "n"], hint: `Compare $${a} \\bmod ${gcd(m, n2)}$ and $${b} \\bmod ${gcd(m, n2)}$.` },
         { instruction: `So does the system have a solution? Type 'yes' or 'no'.`, answer: "no", accept: ["n"], hint: "Disagreement mod the gcd means the two congruences contradict each other." },
       ],
       finalAnswer: { value: "no", unit: "" },
-      solutionNarrative: `$\\gcd(${m}, ${n2}) = ${gcd(m, n2)}$, but $${a} \\not\\equiv ${b} \\pmod{${gcd(m, n2)}}$, so the congruences are inconsistent — NO solution. Non-coprime CRT requires the residues to match mod the gcd.`,
+      solutionNarrative: `$\\gcd(${m}, ${n2}) = ${gcd(m, n2)}$, but $${a} \\not\\equiv ${b} \\pmod{${gcd(m, n2)}}$, so the congruences are inconsistent, NO solution. Non-coprime CRT requires the residues to match mod the gcd.`,
     };
   }
   const TRIP = [[3, 5, 7], [2, 3, 5], [3, 4, 5], [4, 5, 7]];
@@ -900,7 +900,7 @@ fill["nt1-crt-3"] = (rng, idx) => {
 };
 
 // ===========================================================================
-// TOPIC 4 — number-theory.diophantine-equations
+// TOPIC 4: number-theory.diophantine-equations
 //   concepts: linear-diophantine-solvability, particular-solution,
 //             general-solution, pythagorean-triples
 // ===========================================================================
@@ -964,7 +964,7 @@ fill["nt1-diophsolv-3"] = (rng, idx) => {
     id: `gen.nt1-diophsolv-3.${idx}`, generated: true, concepts: ["linear-diophantine-solvability"], difficulty: 3, context: "abstract",
     prompt: `A common trap: $${a}x + ${b}y = ${c}$ with non-coprime coefficients. Decide whether ANY integer solution exists.`,
     steps: [
-      { instruction: `Compute $\\gcd(${a}, ${b})$ (run Euclid).`, answer: `${g}`, accept: [], hint: `Both ${a} and ${b} are even/share factors — find the largest.` },
+      { instruction: `Compute $\\gcd(${a}, ${b})$ (run Euclid).`, answer: `${g}`, accept: [], hint: `Both ${a} and ${b} are even/share factors, find the largest.` },
       { instruction: `Compute $${c} \\bmod ${g}$ (the remainder when ${c} is divided by ${g}).`, answer: `${c % g}`, accept: [], hint: `A solution exists iff this remainder is 0.` },
       { instruction: `So does $${a}x + ${b}y = ${c}$ have an integer solution? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: `Zero remainder means solvable; nonzero means impossible.` },
     ],
@@ -1127,7 +1127,7 @@ fill["nt1-pythag-1"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $${a}^2 + ${b}^2$.`, answer: `${a * a + b * b}`, accept: [], hint: `$${a * a} + ${b * b}$.` },
       { instruction: `Compute $${c}^2$.`, answer: `${c * c}`, accept: [], hint: `$${c} \\cdot ${c}$.` },
-      { instruction: `Are they equal — is it a Pythagorean triple? Type 'yes' or 'no'.`, answer: "yes", accept: ["y"], hint: `Both should be ${c * c}.` },
+      { instruction: `Are they equal: is it a Pythagorean triple? Type 'yes' or 'no'.`, answer: "yes", accept: ["y"], hint: `Both should be ${c * c}.` },
     ],
     finalAnswer: { value: "yes", unit: "" },
     solutionNarrative: `$${a}^2 + ${b}^2 = ${a * a + b * b} = ${c * c} = ${c}^2$, so $(${a}, ${b}, ${c})$ is a Pythagorean triple.`,

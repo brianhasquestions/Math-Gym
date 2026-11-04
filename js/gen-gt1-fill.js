@@ -16,7 +16,7 @@
 //
 // GRADER NOTES (js/problem-engine.js):
 //   - Strategy answers are MENU/exact-string: we use word labels ("Top",
-//     "Bottom", "Left", "Right", "Cooperate", ...) — never bare digits, which
+//     "Bottom", "Left", "Right", "Cooperate", ...): never bare digits, which
 //     the polynomial engine would collapse to 0 and cross-collide.
 //   - Yes/no answers use "yes"/"no" with accepts.
 //   - Counts are plain integers; probabilities/payoffs are plain numbers or
@@ -29,7 +29,7 @@
 
 // A 2x2 game has Row strategies (R0,R1) and Column strategies (C0,C1). Payoffs
 // are stored as pay[r][c] = [rowPayoff, colPayoff]. We render a markdown table
-// with cells "a, b" (Row's payoff first, Column's second) — the universal
+// with cells "a, b" (Row's payoff first, Column's second): the universal
 // bimatrix convention.
 function bimatrixTable(rowLabels, colLabels, pay) {
   const head = `| Row \\ Col | ${colLabels[0]} | ${colLabels[1]} |`;
@@ -161,7 +161,7 @@ fill["gt1-payoff-2"] = (rng, idx) => {
     steps: [
       { instruction: `Row's payoff at (${rl[r]}, ${cl[c]}). (Give a number.)`, answer: `${rowP}`, accept: [], hint: `First entry of the cell.` },
       { instruction: `Column's payoff at (${rl[r]}, ${cl[c]}). (Give a number.)`, answer: `${colP}`, accept: [], hint: `Second entry of the cell.` },
-      { instruction: `Who does better at this outcome — type 'Row', 'Column', or 'tie'.`, answer: betterAns, accept: better === "tie" ? [] : [better], hint: `Compare ${rowP} and ${colP}.` },
+      { instruction: `Who does better at this outcome: type 'Row', 'Column', or 'tie'.`, answer: betterAns, accept: better === "tie" ? [] : [better], hint: `Compare ${rowP} and ${colP}.` },
     ],
     finalAnswer: { value: betterAns, unit: "" },
     solutionNarrative: `At (${rl[r]}, ${cl[c]}) Row gets ${rowP} and Column gets ${colP}, so ${better === "tie" ? "the two payoffs tie" : better + " does better"}.`,
@@ -263,14 +263,14 @@ fill["gt1-dominance-3"] = (rng, idx) => {
   if (!(rdom && !cdom)) { pay = [[[5, 3], [4, 1]], [[2, 0], [1, 2]]]; rdom = rowDominance(pay); cdom = colDominance(pay); }
   return {
     id: `gen.gt1-dominance-3.${idx}`, generated: true, concepts: ["strictly-dominant-and-dominated"], difficulty: 3, context: "abstract",
-    prompt: `Each cell is (Row's payoff, Column's payoff). Determine which players — if any — have a strictly dominant strategy.\n\n${bimatrixTable(rl, cl, pay)}`,
+    prompt: `Each cell is (Row's payoff, Column's payoff). Determine which players, if any, have a strictly dominant strategy.\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
       { instruction: `Does **Row** have a strictly dominant strategy? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `Check whether one of Row's rows beats the other in BOTH columns.` },
       { instruction: `Which one? Choose ${rl[0]} or ${rl[1]}.`, answer: rl[rdom.dom], accept: [], hint: `The row that wins in both columns.` },
       { instruction: `Does **Column** have a strictly dominant strategy? Type 'yes' or 'no'.`, answer: "no", accept: NO, hint: `Check the second entries; Column's best column changes between rows.` },
     ],
     finalAnswer: { value: rl[rdom.dom], unit: "" },
-    solutionNarrative: `Row's ${rl[rdom.dom]} beats ${rl[rdom.dominated]} in both columns, so Row has a dominant strategy. Column's best reply flips between rows, so Column has no strictly dominant strategy — a common asymmetric case.`,
+    solutionNarrative: `Row's ${rl[rdom.dom]} beats ${rl[rdom.dominated]} in both columns, so Row has a dominant strategy. Column's best reply flips between rows, so Column has no strictly dominant strategy: a common asymmetric case.`,
   };
 };
 
@@ -295,7 +295,7 @@ fill["gt1-iesds-1"] = (rng, idx) => {
     id: `gen.gt1-iesds-1.${idx}`, generated: true, concepts: ["iterated-elimination"], difficulty: 1, context: "abstract",
     prompt: `Each cell is (Row's payoff, Column's payoff). Solve by **iterated elimination of strictly dominated strategies (IESDS)**: delete a strictly dominated strategy, then re-examine the smaller game.\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
-      { instruction: `Row's ${rl[rdom.dominated]} is strictly dominated — eliminate it. Which Row strategy survives? Choose ${rl[0]} or ${rl[1]}.`, answer: rl[survRow], accept: [], hint: `Keep the row that dominates.` },
+      { instruction: `Row's ${rl[rdom.dominated]} is strictly dominated: eliminate it. Which Row strategy survives? Choose ${rl[0]} or ${rl[1]}.`, answer: rl[survRow], accept: [], hint: `Keep the row that dominates.` },
       { instruction: `With only ${rl[survRow]} left, Column now picks its best reply in that row. Choose ${cl[0]} or ${cl[1]}.`, answer: cl[colBest], accept: [], hint: `Compare Column's payoffs ${pay[survRow][0][1]} vs ${pay[survRow][1][1]} in row ${rl[survRow]}.` },
     ],
     finalAnswer: { value: profile, unit: "" },
@@ -321,7 +321,7 @@ fill["gt1-iesds-2"] = (rng, idx) => {
     id: `gen.gt1-iesds-2.${idx}`, generated: true, concepts: ["iterated-elimination"], difficulty: 2, context: "abstract",
     prompt: `Each cell is (Row's payoff, Column's payoff). Solve by IESDS.\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
-      { instruction: `Which player has a strictly dominated strategy to remove first? Type 'Row' or 'Column'.`, answer: "Column", accept: ["col"], hint: `Look at the second entries — Column's ${cl[cdom.dominated]} loses in both rows.` },
+      { instruction: `Which player has a strictly dominated strategy to remove first? Type 'Row' or 'Column'.`, answer: "Column", accept: ["col"], hint: `Look at the second entries: Column's ${cl[cdom.dominated]} loses in both rows.` },
       { instruction: `Eliminate Column's ${cl[cdom.dominated]}. Which Column strategy survives? Choose ${cl[0]} or ${cl[1]}.`, answer: cl[survCol], accept: [], hint: `Keep the dominant column.` },
       { instruction: `Now Row best-responds within column ${cl[survCol]}. Choose ${rl[0]} or ${rl[1]}.`, answer: rl[rowBest], accept: [], hint: `Compare Row's payoffs ${pay[0][survCol][0]} vs ${pay[1][survCol][0]}.` },
     ],
@@ -352,8 +352,8 @@ fill["gt1-iesds-3"] = (rng, idx) => {
     id: `gen.gt1-iesds-3.${idx}`, generated: true, concepts: ["iterated-elimination"], difficulty: 3, context: "abstract",
     prompt: `Each cell is (Row's payoff, Column's payoff). Fully solve by IESDS and read off the payoffs of the surviving outcome.\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
-      { instruction: `Round 1 — Row's dominated strategy is removed. Which Row strategy survives? Choose ${rl[0]} or ${rl[1]}.`, answer: rl[survRow], accept: [], hint: `Row's ${rl[survRow]} beats ${rl[rdom.dominated]} in both columns.` },
-      { instruction: `Round 2 — in the single surviving row, which Column strategy is best? Choose ${cl[0]} or ${cl[1]}.`, answer: cl[survCol], accept: [], hint: `Compare Column's payoffs in row ${rl[survRow]}.` },
+      { instruction: `Round 1: Row's dominated strategy is removed. Which Row strategy survives? Choose ${rl[0]} or ${rl[1]}.`, answer: rl[survRow], accept: [], hint: `Row's ${rl[survRow]} beats ${rl[rdom.dominated]} in both columns.` },
+      { instruction: `Round 2: in the single surviving row, which Column strategy is best? Choose ${cl[0]} or ${cl[1]}.`, answer: cl[survCol], accept: [], hint: `Compare Column's payoffs in row ${rl[survRow]}.` },
       { instruction: `At the surviving profile ${profile}, what is Row's payoff? (Give a number.)`, answer: `${rowPayoff}`, accept: [], hint: `Read the first number in that cell.` },
     ],
     finalAnswer: { value: profile, unit: "" },
@@ -529,11 +529,11 @@ fill["gt1-findnash-2"] = (rng, idx) => {
       { instruction: `Second equilibrium (Row playing ${rl[e2[0]]}): what does Column play? Choose ${cl[0]} or ${cl[1]}.`, answer: cl[e2[1]], accept: [], hint: `At (${rl[e2[0]]}, ?), find the mutual best response.` },
     ],
     finalAnswer: { value: `(${rl[e1[0]]}, ${cl[e1[1]]}) and (${rl[e2[0]]}, ${cl[e2[1]]})`, unit: "" },
-    solutionNarrative: `Both (${rl[e1[0]]}, ${cl[e1[1]]}) and (${rl[e2[0]]}, ${cl[e2[1]]}) are mutual best responses, so the game has two pure Nash equilibria — typical of coordination games.`,
+    solutionNarrative: `Both (${rl[e1[0]]}, ${cl[e1[1]]}) and (${rl[e2[0]]}, ${cl[e2[1]]}) are mutual best responses, so the game has two pure Nash equilibria: typical of coordination games.`,
   };
 };
 fill["gt1-findnash-3"] = (rng, idx) => {
-  // Unique Nash from a game that also has a dominant strategy — connect ideas.
+  // Unique Nash from a game that also has a dominant strategy: connect ideas.
   const rl = RC_LABELS.row, cl = RC_LABELS.col;
   let pay, eqs, rdom, guard = 0;
   do { pay = cleanGame(rng); eqs = pureNash(pay); rdom = rowDominance(pay); guard++; }
@@ -572,7 +572,7 @@ fill["gt1-coord-1"] = (rng, idx) => {
       { instruction: `How many pure Nash equilibria (matching outcomes) are there? (Give an integer.)`, answer: "2", accept: [], hint: `Both (A, A) and (B, B) are self-reinforcing.` },
     ],
     finalAnswer: { value: "2", unit: "" },
-    solutionNarrative: `Matching pays (${pay[0][0][0]},${pay[0][0][1]}) or (${pay[1][1][0]},${pay[1][1][1]}); mismatching pays ${lo}. Both (A, A) and (B, B) are Nash equilibria, so coordination has two equilibria — the puzzle is which one they land on.`,
+    solutionNarrative: `Matching pays (${pay[0][0][0]},${pay[0][0][1]}) or (${pay[1][1][0]},${pay[1][1][1]}); mismatching pays ${lo}. Both (A, A) and (B, B) are Nash equilibria, so coordination has two equilibria: the puzzle is which one they land on.`,
   };
 };
 fill["gt1-coord-2"] = (rng, idx) => {
@@ -593,7 +593,7 @@ fill["gt1-coord-2"] = (rng, idx) => {
       { instruction: `How many pure Nash equilibria in total? (Give an integer.)`, answer: "2", accept: [], hint: `Count the together-outcomes that survive.` },
     ],
     finalAnswer: { value: "2", unit: "" },
-    solutionNarrative: `Both (Opera, Opera) and (Boxing, Boxing) are Nash — neither wants to be alone (payoff 0). The two equilibria differ in who gets their favorite; this conflict over which equilibrium is the essence of coordination-with-conflict.`,
+    solutionNarrative: `Both (Opera, Opera) and (Boxing, Boxing) are Nash: neither wants to be alone (payoff 0). The two equilibria differ in who gets their favorite; this conflict over which equilibrium is the essence of coordination-with-conflict.`,
   };
 };
 fill["gt1-coord-3"] = (rng, idx) => {
@@ -610,7 +610,7 @@ fill["gt1-coord-3"] = (rng, idx) => {
     id: `gen.gt1-coord-3.${idx}`, generated: true, concepts: ["coordination-and-anticoordination"], difficulty: 3, context: "applied",
     prompt: `**Chicken.** Two drivers speed at each other. Each may **Swerve** or go **Straight**. Both straight = crash (worst); if exactly one goes straight, that driver "wins". Each cell is (Row's payoff, Column's payoff).\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
-      { instruction: `Is (Swerve, Straight) a Nash equilibrium? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `Row swerves, Column goes straight — would either change?` },
+      { instruction: `Is (Swerve, Straight) a Nash equilibrium? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `Row swerves, Column goes straight: would either change?` },
       { instruction: `Is (Straight, Straight) a Nash equilibrium? Type 'yes' or 'no'.`, answer: "no", accept: NO, hint: `From a crash, either driver would rather have swerved.` },
       { instruction: `How many pure Nash equilibria does Chicken have? (Give an integer.)`, answer: "2", accept: [], hint: `The two "one swerves, one doesn't" outcomes.` },
     ],
@@ -633,7 +633,7 @@ fill["gt1-nopure-1"] = (rng, idx) => {
     prompt: `**Matching Pennies.** Row wins by **matching**, Column wins by **mismatching** (zero-sum: one's +1 is the other's −1). Each cell is (Row's payoff, Column's payoff).\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
       { instruction: `Start at (Heads, Heads). Row is happy (matched), but would Column want to switch to Tails? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `Column prefers a mismatch.` },
-      { instruction: `Does this game have any pure-strategy Nash equilibrium? Type 'yes' or 'no'.`, answer: "no", accept: NO, hint: `Someone always wants to deviate — chase the cycle.` },
+      { instruction: `Does this game have any pure-strategy Nash equilibrium? Type 'yes' or 'no'.`, answer: "no", accept: NO, hint: `Someone always wants to deviate: chase the cycle.` },
     ],
     finalAnswer: { value: "no", unit: "" },
     solutionNarrative: `From any cell, one player wants to move: if they match, Column flips; if they mismatch, Row flips. The best responses chase each other in a cycle, so there is NO pure Nash equilibrium (only a mixed one).`,
@@ -686,10 +686,10 @@ fill["gt1-nopure-3"] = (rng, idx) => {
     steps: [
       { instruction: `Is (Attack Left, Defend Left) a Nash equilibrium? Type 'yes' or 'no'.`, answer: "no", accept: NO, hint: `The Attacker (payoff 0) would switch to exploit the gap.` },
       { instruction: `Does any pure-strategy Nash equilibrium exist? Type 'yes' or 'no'.`, answer: "no", accept: NO, hint: `Predictability is fatal for whoever is being predicted.` },
-      { instruction: `Nash proved every finite game has at least one equilibrium — in what kind of strategies must it be here? Type 'pure' or 'mixed'.`, answer: "mixed", accept: [], hint: `Randomize to stay unpredictable.` },
+      { instruction: `Nash proved every finite game has at least one equilibrium: in what kind of strategies must it be here? Type 'pure' or 'mixed'.`, answer: "mixed", accept: [], hint: `Randomize to stay unpredictable.` },
     ],
     finalAnswer: { value: "no", unit: "" },
-    solutionNarrative: `Any pure choice can be predicted and beaten, so no pure Nash equilibrium exists. The equilibrium is in MIXED strategies — each side randomizes 50/50 to remain unexploitable, exactly what real penalty takers do.`,
+    solutionNarrative: `Any pure choice can be predicted and beaten, so no pure Nash equilibrium exists. The equilibrium is in MIXED strategies: each side randomizes 50/50 to remain unexploitable, exactly what real penalty takers do.`,
   };
 };
 
@@ -895,7 +895,7 @@ fill["gt1-mixnash-1"] = (rng, idx) => {
       { instruction: `Find $q$ (makes Row indifferent). Fraction or decimal in (0,1).`, answer: qStr, accept: [rnd(q.n / q.d, 4), `${q.n}/${q.d}`], hint: `Equate Row's two expected payoffs in $q$.` },
     ],
     finalAnswer: { value: `p = ${pStr}, q = ${qStr}`, unit: "" },
-    solutionNarrative: `The mixed Nash equilibrium is $p = ${pStr}$ (Row's mix) and $q = ${qStr}$ (Column's mix). Each player randomizes to keep the OTHER indifferent — a hallmark of mixed equilibria.`,
+    solutionNarrative: `The mixed Nash equilibrium is $p = ${pStr}$ (Row's mix) and $q = ${qStr}$ (Column's mix). Each player randomizes to keep the OTHER indifferent: a hallmark of mixed equilibria.`,
   };
 };
 fill["gt1-mixnash-2"] = (rng, idx) => {
@@ -951,7 +951,7 @@ fill["gt1-value-1"] = (rng, idx) => {
       { instruction: `Compute Row's value using ${rl[0]}: $${qStr}(${A}) + ${probStr(q.d - q.n, q.d)}(${B})$. Fraction or decimal.`, answer: valStr, accept: valStr === valDec ? [] : [valDec, `${valNum}/${valDen}`], hint: `Weight ${rl[0]}'s two payoffs by $q$ and $1-q$.` },
     ],
     finalAnswer: { value: valStr, unit: "" },
-    solutionNarrative: `Row's equilibrium value is $${qStr}(${A}) + ${probStr(q.d - q.n, q.d)}(${B}) = ${valStr}$ — the guaranteed expected payoff of the mixed equilibrium.`,
+    solutionNarrative: `Row's equilibrium value is $${qStr}(${A}) + ${probStr(q.d - q.n, q.d)}(${B}) = ${valStr}$: the guaranteed expected payoff of the mixed equilibrium.`,
   };
 };
 fill["gt1-value-2"] = (rng, idx) => {
@@ -971,7 +971,7 @@ fill["gt1-value-2"] = (rng, idx) => {
       { instruction: `Expected payoff of ${rl[1]}: $${qStr}(${C}) + ${probStr(q.d - q.n, q.d)}(${D})$. It should EQUAL the previous value. Fraction or decimal.`, answer: probStr(vBotNum, q.d), accept: [rnd(vBotNum / q.d, 4), `${vBotNum}/${q.d}`], hint: `Indifference means these two match.` },
     ],
     finalAnswer: { value: valStr, unit: "" },
-    solutionNarrative: `Both rows return ${valStr} against Column's $q = ${qStr}$ — that equality IS Row's indifference, and the common number is Row's equilibrium value.`,
+    solutionNarrative: `Both rows return ${valStr} against Column's $q = ${qStr}$: that equality IS Row's indifference, and the common number is Row's equilibrium value.`,
   };
 };
 fill["gt1-value-3"] = (rng, idx) => {
@@ -990,7 +990,7 @@ fill["gt1-value-3"] = (rng, idx) => {
       { instruction: `Column's payoff if it plays ${cl[0]}, given Row's mix: $${pStr}(${A}) + ${probStr(p.d - p.n, p.d)}(${B})$. Fraction or decimal rounded to 4 places.`, answer: cValDec, accept: cValStr === cValDec ? [] : [cValStr, `${cValNum}/${p.d}`], hint: `Weight column ${cl[0]}'s two payoffs by Row's $p$ and $1-p$.` },
     ],
     finalAnswer: { value: cValDec, unit: "" },
-    solutionNarrative: `Facing Row's mix $p = ${pStr}$, Column's expected payoff (either column, by indifference) is $${pStr}(${A}) + ${probStr(p.d - p.n, p.d)}(${B}) = ${cValDec}$ — Column's value of the game.`,
+    solutionNarrative: `Facing Row's mix $p = ${pStr}$, Column's expected payoff (either column, by indifference) is $${pStr}(${A}) + ${probStr(p.d - p.n, p.d)}(${B}) = ${cValDec}$: Column's value of the game.`,
   };
 };
 
@@ -1021,7 +1021,7 @@ fill["gt1-pd-1"] = (rng, idx) => {
       { instruction: `Each player's strictly dominant strategy is? Choose Cooperate or Defect.`, answer: "Defect", accept: [], hint: `Defect beats Cooperate in BOTH columns.` },
     ],
     finalAnswer: { value: "Defect", unit: "" },
-    solutionNarrative: `Because $T > R$ and $P > S$, Defect strictly dominates for both players. The dominant-strategy equilibrium is (Defect, Defect) at (${P}, ${P}) — worse for both than mutual cooperation (${R}, ${R}).`,
+    solutionNarrative: `Because $T > R$ and $P > S$, Defect strictly dominates for both players. The dominant-strategy equilibrium is (Defect, Defect) at (${P}, ${P}): worse for both than mutual cooperation (${R}, ${R}).`,
   };
 };
 fill["gt1-pd-2"] = (rng, idx) => {
@@ -1044,7 +1044,7 @@ fill["gt1-pd-2"] = (rng, idx) => {
       { instruction: `How much MORE would each earn under mutual cooperation than under the equilibrium? (Give a number.)`, answer: `${Rr - Pp}`, accept: [], hint: `${Rr} − ${Pp}.` },
     ],
     finalAnswer: { value: "Defect", unit: "" },
-    solutionNarrative: `The equilibrium (Defect, Defect) pays ${Pp} each, yet (Cooperate, Cooperate) pays ${Rr} each — a Pareto improvement of ${Rr - Pp} per player that rational self-interest throws away. That gap is the dilemma.`,
+    solutionNarrative: `The equilibrium (Defect, Defect) pays ${Pp} each, yet (Cooperate, Cooperate) pays ${Rr} each: a Pareto improvement of ${Rr - Pp} per player that rational self-interest throws away. That gap is the dilemma.`,
   };
 };
 fill["gt1-pd-3"] = (rng, idx) => {
@@ -1063,11 +1063,11 @@ fill["gt1-pd-3"] = (rng, idx) => {
     prompt: `**Price war (a Prisoner's Dilemma).** Two firms choose **Price High** (collude) or **Price Low** (compete). Payoffs are profits (Row's, Column's).\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
       { instruction: `Is "Price Low" a strictly dominant strategy for each firm? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `Compare Price Low vs Price High in each column: ${Tt}>${Rr} and ${Pp}>${Ss}.` },
-      { instruction: `Nash-equilibrium outcome — enter Row's strategy: Price High or Price Low.`, answer: "Price Low", accept: ["low"], hint: `Both defect to the low price.` },
+      { instruction: `Nash-equilibrium outcome: enter Row's strategy: Price High or Price Low.`, answer: "Price Low", accept: ["low"], hint: `Both defect to the low price.` },
       { instruction: `Collusive profit per firm is ${Rr}; equilibrium profit is ${Pp}. How much profit does each firm LOSE by competing? (Give a number.)`, answer: `${Rr - Pp}`, accept: [], hint: `${Rr} − ${Pp}.` },
     ],
     finalAnswer: { value: "Price Low", unit: "" },
-    solutionNarrative: `Price Low dominates, so the equilibrium is (Price Low, Price Low) at ${Pp} each — below the ${Rr} of collusion. Competition destroys ${Rr - Pp} of profit per firm, which is exactly why cartels are unstable (and why antitrust relies on it).`,
+    solutionNarrative: `Price Low dominates, so the equilibrium is (Price Low, Price Low) at ${Pp} each: below the ${Rr} of collusion. Competition destroys ${Rr - Pp} of profit per firm, which is exactly why cartels are unstable (and why antitrust relies on it).`,
   };
 };
 
@@ -1084,12 +1084,12 @@ fill["gt1-coordg-1"] = (rng, idx) => {
     id: `gen.gt1-coordg-1.${idx}`, generated: true, concepts: ["coordination-games"], difficulty: 1, context: "applied",
     prompt: `**Stag Hunt.** Two hunters can jointly hunt a **Stag** (big shared reward, but only if BOTH commit) or individually catch a **Hare** (small but safe). Each cell is (Row's payoff, Column's payoff).\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
-      { instruction: `Is (Stag, Stag) a Nash equilibrium? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `${stag} vs deviating to Hare (${hare}) — nobody gains by switching.` },
+      { instruction: `Is (Stag, Stag) a Nash equilibrium? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `${stag} vs deviating to Hare (${hare}): nobody gains by switching.` },
       { instruction: `Is (Hare, Hare) a Nash equilibrium? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `If the other hunts Hare, Stag alone earns 0.` },
       { instruction: `How many pure Nash equilibria? (Give an integer.)`, answer: "2", accept: [], hint: `Both diagonal outcomes are self-enforcing.` },
     ],
     finalAnswer: { value: "2", unit: "" },
-    solutionNarrative: `Both (Stag, Stag) — the payoff-dominant equilibrium at ${stag} each — and (Hare, Hare) — the safe, risk-dominant one at ${hare} each — are Nash. Coordination games turn on trust: which equilibrium do players expect?`,
+    solutionNarrative: `Both (Stag, Stag), the payoff-dominant equilibrium at ${stag} each, and (Hare, Hare), the safe, risk-dominant one at ${hare} each, are Nash. Coordination games turn on trust: which equilibrium do players expect?`,
   };
 };
 fill["gt1-coordg-2"] = (rng, idx) => {
@@ -1109,7 +1109,7 @@ fill["gt1-coordg-2"] = (rng, idx) => {
       { instruction: `Total number of pure Nash equilibria? (Give an integer.)`, answer: "2", accept: [], hint: `Both "together" outcomes qualify.` },
     ],
     finalAnswer: { value: "2", unit: "" },
-    solutionNarrative: `(Ballet, Ballet) and (Football, Football) are both Nash — being together beats the (0,0) of being apart. The players agree they want to coordinate but disagree on which equilibrium, the signature of Battle of the Sexes.`,
+    solutionNarrative: `(Ballet, Ballet) and (Football, Football) are both Nash: being together beats the (0,0) of being apart. The players agree they want to coordinate but disagree on which equilibrium, the signature of Battle of the Sexes.`,
   };
 };
 fill["gt1-coordg-3"] = (rng, idx) => {
@@ -1129,7 +1129,7 @@ fill["gt1-coordg-3"] = (rng, idx) => {
       { instruction: `How many pure Nash equilibria are there? (Give an integer.)`, answer: "2", accept: [], hint: `Both diagonal cells.` },
     ],
     finalAnswer: { value: "Stag", unit: "" },
-    solutionNarrative: `(Stag, Stag) is payoff-dominant (${stag} each) but risky; Hare is risk-dominant, guaranteeing ${hare}. Whether players reach the better equilibrium depends on trust — the deep lesson of coordination.`,
+    solutionNarrative: `(Stag, Stag) is payoff-dominant (${stag} each) but risky; Hare is risk-dominant, guaranteeing ${hare}. Whether players reach the better equilibrium depends on trust: the deep lesson of coordination.`,
   };
 };
 
@@ -1147,7 +1147,7 @@ fill["gt1-anti-1"] = (rng, idx) => {
     id: `gen.gt1-anti-1.${idx}`, generated: true, concepts: ["anti-coordination"], difficulty: 1, context: "applied",
     prompt: `**Hawk-Dove.** Two animals contest a resource worth $V = ${V}$. Fighting (Hawk vs Hawk) costs $C = ${C}$, so each earns $(V-C)/2 = ${hh}$. A Hawk facing a Dove takes it all ($${V}$); two Doves share ($${V / 2}$ each). Each cell is (Row's payoff, Column's payoff).\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
-      { instruction: `If Column plays Hawk, is Row's best response Dove? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `Dove earns 0, but Hawk earns ${hh} (a loss) — 0 is better.` },
+      { instruction: `If Column plays Hawk, is Row's best response Dove? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `Dove earns 0, but Hawk earns ${hh} (a loss): 0 is better.` },
       { instruction: `If Column plays Dove, is Row's best response Hawk? Type 'yes' or 'no'.`, answer: "yes", accept: YES, hint: `Hawk takes ${V} vs sharing ${V / 2}.` },
     ],
     finalAnswer: { value: "yes", unit: "" },
@@ -1173,7 +1173,7 @@ fill["gt1-anti-2"] = (rng, idx) => {
       { instruction: `How many pure Nash equilibria does Chicken have? (Give an integer.)`, answer: "2", accept: [], hint: `The two off-diagonal outcomes.` },
     ],
     finalAnswer: { value: "2", unit: "" },
-    solutionNarrative: `The equilibria are the two off-diagonal cells: exactly one driver yields. Anti-coordination rewards being different — and the mutual-Straight crash shows why brinkmanship is dangerous.`,
+    solutionNarrative: `The equilibria are the two off-diagonal cells: exactly one driver yields. Anti-coordination rewards being different, and the mutual-Straight crash shows why brinkmanship is dangerous.`,
   };
 };
 fill["gt1-anti-3"] = (rng, idx) => {
@@ -1188,12 +1188,12 @@ fill["gt1-anti-3"] = (rng, idx) => {
     id: `gen.gt1-anti-3.${idx}`, generated: true, concepts: ["anti-coordination"], difficulty: 3, context: "applied",
     prompt: `**Hawk-Dove.** $V = ${V}$, $C = ${C}$; Hawk-Hawk yields $(V-C)/2 = ${hh}$ each. Each cell is (Row's payoff, Column's payoff).\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
-      { instruction: `List a pure Nash equilibrium — Row's strategy at the equilibrium where Row is aggressive. Type 'Hawk' or 'Dove'.`, answer: "Hawk", accept: [], hint: `(Hawk, Dove): Row Hawk takes ${V}.` },
+      { instruction: `List a pure Nash equilibrium: Row's strategy at the equilibrium where Row is aggressive. Type 'Hawk' or 'Dove'.`, answer: "Hawk", accept: [], hint: `(Hawk, Dove): Row Hawk takes ${V}.` },
       { instruction: `At that (Hawk, Dove) equilibrium, what is Row's payoff? (Give a number.)`, answer: `${V}`, accept: [], hint: `A Hawk facing a Dove takes the whole resource.` },
       { instruction: `How many pure Nash equilibria are there? (Give an integer.)`, answer: "2", accept: [], hint: `(Hawk, Dove) and (Dove, Hawk).` },
     ],
     finalAnswer: { value: `${V}`, unit: "" },
-    solutionNarrative: `The pure equilibria are (Hawk, Dove) and (Dove, Hawk); the Hawk takes $V = ${V}$ while the Dove gets 0. In biology the stable population mixes the two, matching the mixed equilibrium — a founding idea of evolutionary game theory.`,
+    solutionNarrative: `The pure equilibria are (Hawk, Dove) and (Dove, Hawk); the Hawk takes $V = ${V}$ while the Dove gets 0. In biology the stable population mixes the two, matching the mixed equilibrium: a founding idea of evolutionary game theory.`,
   };
 };
 
@@ -1231,7 +1231,7 @@ fill["gt1-mp-2"] = (rng, idx) => {
       { instruction: `Row's expected payoff at the equilibrium (a fair game). (Give a number.)`, answer: "0", accept: [], hint: `Wins and losses cancel by symmetry.` },
     ],
     finalAnswer: { value: "1/2", unit: "" },
-    solutionNarrative: `Every cell sums to 0 (zero-sum). The equilibrium mix is $1/2$–$1/2$ for both, giving each an expected payoff of 0 — the value of a symmetric zero-sum game.`,
+    solutionNarrative: `Every cell sums to 0 (zero-sum). The equilibrium mix is $1/2$–$1/2$ for both, giving each an expected payoff of 0: the value of a symmetric zero-sum game.`,
   };
 };
 fill["gt1-mp-3"] = (rng, idx) => {
@@ -1255,11 +1255,11 @@ fill["gt1-mp-3"] = (rng, idx) => {
     id: `gen.gt1-mp-3.${idx}`, generated: true, concepts: ["matching-pennies-and-zero-sum"], difficulty: 3, context: "abstract",
     prompt: `A zero-sum "matching" game with asymmetric stakes. Row scores $${a}$ on (Heads, Heads) and $1$ on (Tails, Tails), and $0$ otherwise; Column's payoff is the negative (zero-sum). Each cell is (Row's payoff, Column's payoff).\n\n${bimatrixTable(rl, cl, pay)}`,
     steps: [
-      { instruction: `Does a pure Nash equilibrium exist? Type 'yes' or 'no'.`, answer: "no", accept: NO, hint: `Row wants to match, Column to mismatch — a cycle.` },
+      { instruction: `Does a pure Nash equilibrium exist? Type 'yes' or 'no'.`, answer: "no", accept: NO, hint: `Row wants to match, Column to mismatch: a cycle.` },
       { instruction: `Let $q$ = prob Column plays Heads. Row is indifferent when $${a}q = 1-q$. Solve for $q$. Fraction or decimal in (0,1).`, answer: qStr, accept: [rnd(q.n / q.d, 4), `${q.n}/${q.d}`], hint: `$${a}q = 1 - q \\Rightarrow q(${a}+1) = 1$.` },
       { instruction: `Because the (Heads,Heads) win of ${a} is larger, does Column play Heads with probability MORE or LESS than 1/2? Type 'more' or 'less'.`, answer: q.n / q.d > 0.5 ? "more" : "less", accept: [], hint: `Compare $${qStr}$ with $1/2$.` },
     ],
     finalAnswer: { value: qStr, unit: "" },
-    solutionNarrative: `No pure equilibrium; solving $${a}q = 1-q$ gives $q = ${qStr}$. Asymmetric stakes tilt the equilibrium mix away from 50/50 — the bigger payoff is defended MORE rarely so the opponent stays indifferent.`,
+    solutionNarrative: `No pure equilibrium; solving $${a}q = 1-q$ gives $q = ${qStr}$. Asymmetric stakes tilt the equilibrium mix away from 50/50: the bigger payoff is defended MORE rarely so the opponent stays indifferent.`,
   };
 };

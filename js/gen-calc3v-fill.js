@@ -90,7 +90,7 @@ fill["c3v-param-eval-2"] = (rng, idx) => {
       { instruction: "Evaluate $\\vec{r}(\\pi)$ as a numeric vector.", answer: V(...rPi), accept: [Pn(...rPi)], hint: "$\\cos\\pi = -1$, $\\sin\\pi = 0$." },
     ],
     finalAnswer: { value: V(...rPi), unit: "" },
-    solutionNarrative: `Using the landmark values of sine and cosine: $\\vec{r}(0) = ${Vt(r0)}$, $\\vec{r}(\\pi/2) = ${Vt(rHalfPi)}$, $\\vec{r}(\\pi) = ${Vt(rPi)}$ — quarter turns around the circle.`,
+    solutionNarrative: `Using the landmark values of sine and cosine: $\\vec{r}(0) = ${Vt(r0)}$, $\\vec{r}(\\pi/2) = ${Vt(rHalfPi)}$, $\\vec{r}(\\pi) = ${Vt(rPi)}$: quarter turns around the circle.`,
   };
 };
 
@@ -170,7 +170,7 @@ fill["c3v-vel-accel-3"] = (rng, idx) => {
       { instruction: `Evaluate $\\vec{a}(${m})$ as a numeric vector.`, answer: V(...am), accept: [Pn(...am)], hint: `$\\vec{a}(t) = \\langle 6t,\\; ${2 * q} \\rangle$ at $t = ${m}$.` },
     ],
     finalAnswer: { value: V(...vm), unit: "" },
-    solutionNarrative: `$v_x = 3t^2 - ${p} = 0$ at $t = ${m}$. There $\\vec{v}(${m}) = ${Vt(vm)}$ — momentarily moving straight up — while $\\vec{a}(${m}) = ${Vt(am)}$.`,
+    solutionNarrative: `$v_x = 3t^2 - ${p} = 0$ at $t = ${m}$. There $\\vec{v}(${m}) = ${Vt(vm)}$, momentarily moving straight up, while $\\vec{a}(${m}) = ${Vt(am)}$.`,
   };
 };
 
@@ -235,7 +235,7 @@ fill["c3v-speed-arclen-3"] = (rng, idx) => {
       { instruction: `Compute $L = \\tfrac{2}{3}\\left[(1+t)^{3/2}\\right]_0^{${b}} = \\tfrac{2}{3}(${k * k * k} - 1)$.`, answer: ans, accept: dec ? [dec] : [], hint: `$\\tfrac{2}{3} \\times ${k * k * k - 1}$.` },
     ],
     finalAnswer: { value: ans, unit: "" },
-    solutionNarrative: `$|\\vec{r}'|^2 = 1 + t$ — a perfect setup — so $L = \\int_0^{${b}} \\sqrt{1+t}\\,dt = \\tfrac{2}{3}(${k}^3 - 1) = ${ans}$.`,
+    solutionNarrative: `$|\\vec{r}'|^2 = 1 + t$, a perfect setup, so $L = \\int_0^{${b}} \\sqrt{1+t}\\,dt = \\tfrac{2}{3}(${k}^3 - 1) = ${ans}$.`,
   };
 };
 
@@ -258,7 +258,7 @@ fill["c3v-tangent-motion-1"] = (rng, idx) => {
       { instruction: "Give the unit tangent $\\vec{T}$ as a numeric vector.", answer: V(...T), accept: [Pn(...T)], hint: `Divide $${Vt(v)}$ by ${s} and reduce the fractions.` },
     ],
     finalAnswer: { value: V(...T), unit: "" },
-    solutionNarrative: `$|\\vec{v}| = ${s}$, so $\\vec{T} = ${Vt(v)}/${s} = ${Vt(T)}$ — pure direction, length 1.`,
+    solutionNarrative: `$|\\vec{v}| = ${s}$, so $\\vec{T} = ${Vt(v)}/${s} = ${Vt(T)}$: pure direction, length 1.`,
   };
 };
 
@@ -281,7 +281,7 @@ fill["c3v-tangent-motion-2"] = (rng, idx) => {
   };
 };
 
-// d3: full projectile analysis — apex, landing, impact velocity.
+// d3: full projectile analysis: apex, landing, impact velocity.
 fill["c3v-tangent-motion-3"] = (rng, idx) => {
   const m = rng.int(1, 2);         // apex time (v1 = 32m)
   const r = rng.int(1, 2);
@@ -302,7 +302,7 @@ fill["c3v-tangent-motion-3"] = (rng, idx) => {
       { instruction: `Give the impact velocity $\\vec{v}(${n})$ as a numeric vector.`, answer: V(...impact), accept: [Pn(...impact)], hint: `$\\langle ${v0},\\; ${v1} - 32(${n}) \\rangle$.` },
     ],
     finalAnswer: { value: V(...impact), unit: "" },
-    solutionNarrative: `Apex at $t = ${v1}/32 = ${m}$ s (height ${apexY} ft). Landing at $t = ${n}$ s. Impact velocity $${Vt(impact)}$ — the horizontal ${v0} never changed; gravity only touched the vertical component.`,
+    solutionNarrative: `Apex at $t = ${v1}/32 = ${m}$ s (height ${apexY} ft). Landing at $t = ${n}$ s. Impact velocity $${Vt(impact)}$: the horizontal ${v0} never changed; gravity only touched the vertical component.`,
   };
 };
 
@@ -333,7 +333,7 @@ fill["c3v-field-potential-1"] = (rng, idx) => {
     finalAnswer: { value: conservative ? `${a}xy` : "not conservative", unit: "" },
     solutionNarrative: conservative
       ? `$P_y = ${a} = Q_x$, so the field is conservative with potential $f = ${a}xy$ (check: $\\nabla(${a}xy) = \\langle ${a}y, ${a}x \\rangle$).`
-      : `$P_y = ${a}$ but $Q_x = ${b}$. Since they differ, no potential exists — work done by this field depends on the path.`,
+      : `$P_y = ${a}$ but $Q_x = ${b}$. Since they differ, no potential exists: work done by this field depends on the path.`,
   };
 };
 
@@ -382,7 +382,7 @@ fill["c3v-field-potential-3"] = (rng, idx) => {
     finalAnswer: { value: conservative ? fStr : "not conservative", unit: "" },
     solutionNarrative: conservative
       ? `$P_y = ${2 * a}y = Q_x$ ✓, and integrating $P$ in $x$ gives $f = ${fStr}$ (the $y$-match adds nothing).`
-      : `$P_y = ${2 * a}y$ but $Q_x = ${2 * a}y + ${k}$ — off by ${k}, so no potential exists. (The field is a gradient plus the swirl $\\langle 0, ${k}x \\rangle$.)`,
+      : `$P_y = ${2 * a}y$ but $Q_x = ${2 * a}y + ${k}$: off by ${k}, so no potential exists. (The field is a gradient plus the swirl $\\langle 0, ${k}x \\rangle$.)`,
   };
 };
 
@@ -463,7 +463,7 @@ fill["c3v-scalar-line-3"] = (rng, idx) => {
 
 // --- concept: work-integrals ---------------------------------------------------
 
-// d1: constant force, straight displacement — work is a dot product.
+// d1: constant force, straight displacement: work is a dot product.
 fill["c3v-work-1"] = (rng, idx) => {
   let a = rng.int(-4, 6), b = rng.int(-4, 6);
   if (a === 0 && b === 0) a = 3; // no zero force
@@ -481,7 +481,7 @@ fill["c3v-work-1"] = (rng, idx) => {
   };
 };
 
-// d2: F = <a y, b x> along a segment from the origin — full parametrized workflow.
+// d2: F = <a y, b x> along a segment from the origin: full parametrized workflow.
 fill["c3v-work-2"] = (rng, idx) => {
   const a = rng.int(1, 4), b = rng.int(1, 4); // a + b >= 2: integrand never identically zero
   const p = rng.int(1, 4), q = rng.int(1, 4);
@@ -501,7 +501,7 @@ fill["c3v-work-2"] = (rng, idx) => {
   };
 };
 
-// d3: conservative shortcut — potential endpoints only.
+// d3: conservative shortcut: potential endpoints only.
 fill["c3v-work-3"] = (rng, idx) => {
   const a = rng.int(1, 3), b = rng.int(0, 4);
   // f = a x^2 y + b x  =>  F = <2a x y + b, a x^2>
@@ -515,7 +515,7 @@ fill["c3v-work-3"] = (rng, idx) => {
   const fStr = b === 0 ? `${cf(a)}x^2y` : `${cf(a)}x^2y + ${b}x`;
   return {
     id: `gen.c3v-work-3.${idx}`, generated: true, concepts: ["work-integrals"], difficulty: 3, context: "abstract",
-    prompt: `Compute $\\displaystyle\\int_C \\vec{F} \\cdot d\\vec{r}$ for $\\vec{F} = \\langle ${Ptxt},\\; ${cf(a)}x^2 \\rangle$, where $C$ is ANY path from $(${x1}, ${y1})$ to $(${x2}, ${y2})$ — use the conservative shortcut.`,
+    prompt: `Compute $\\displaystyle\\int_C \\vec{F} \\cdot d\\vec{r}$ for $\\vec{F} = \\langle ${Ptxt},\\; ${cf(a)}x^2 \\rangle$, where $C$ is ANY path from $(${x1}, ${y1})$ to $(${x2}, ${y2})$: use the conservative shortcut.`,
     steps: [
       { instruction: `Compute $\\partial P/\\partial y$ for $P = ${Ptxt}$.`, answer: `${2 * a}x`, accept: [`${2 * a}*x`], hint: "The constant term (if any) vanishes." },
       { instruction: `Compute $\\partial Q/\\partial x$ for $Q = ${cf(a)}x^2$.`, answer: `${2 * a}x`, accept: [`${2 * a}*x`], hint: `Differentiate $${cf(a)}x^2$.` },
@@ -546,7 +546,7 @@ fill["c3v-greens-1"] = (rng, idx) => {
       { instruction: `The integrand is constant, so circulation $= (${d - c}) \\times \\text{Area}$. Compute it.`, answer: `${circ}`, accept: [], hint: `Area of the rectangle is $${a} \\times ${b} = ${a * b}$.` },
     ],
     finalAnswer: { value: `${circ}`, unit: "" },
-    solutionNarrative: `$Q_x - P_y = ${d} - ${c} = ${d - c}$, a constant, so the circulation is $${d - c} \\times ${a * b} = ${circ}$ — one multiplication instead of four edge integrals.`,
+    solutionNarrative: `$Q_x - P_y = ${d} - ${c} = ${d - c}$, a constant, so the circulation is $${d - c} \\times ${a * b} = ${circ}$: one multiplication instead of four edge integrals.`,
   };
 };
 

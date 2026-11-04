@@ -2,7 +2,7 @@
 // Parametric generators for two Calculus 2 topics:
 //   calculus-2.trigonometric-integrals  (c2t-)
 //   calculus-2.trig-substitution        (c2u-)
-// One template per (concept, difficulty) tier — 12 per topic, 24 total.
+// One template per (concept, difficulty) tier: 12 per topic, 24 total.
 // Self-contained: no imports. Exports a `fill` map of template-name -> fn,
 // matching the pack pattern of gen-nt2-fill.js. Every answer is computed
 // in-pack from the SAME randomized numbers shown in the prompt.
@@ -10,7 +10,7 @@
 // Grader strategy (symbolic antiderivatives are NOT machine-checkable):
 // every graded step is a number, a fraction, a pi/sqrt numeric expression
 // (evalNumeric handles "3pi/8", "sqrt(3)/2"), or a tested menu word
-// (sine / tangent / secant — negative cross-accept verified in tools tests).
+// (sine / tangent / secant: negative cross-accept verified in tools tests).
 
 // ---------------------------------------------------------------------------
 // Helpers (all in-pack)
@@ -123,7 +123,7 @@ fill["c2t-odd-3"] = (rng, idx) => {
 
 // --- even-power-reduction ---
 
-// d1: half-angle rewrite — grade the new frequency and the cos coefficient.
+// d1: half-angle rewrite: grade the new frequency and the cos coefficient.
 fill["c2t-even-1"] = (rng, idx) => {
   const c = rng.int(1, 4);
   const isSin = rng.pick([true, false]);
@@ -135,7 +135,7 @@ fill["c2t-even-1"] = (rng, idx) => {
     prompt: `Rewrite $\\${t}^2(${arg})$ with the half-angle identity: $\\${t}^2(${arg}) = \\tfrac{1}{2} + b\\cos(a x)$ for some frequency $a$ and coefficient $b$.`,
     steps: [
       { instruction: `The identity doubles the frequency. What is $a$?`, answer: `${2 * c}`, accept: [], hint: `$2 \\cdot ${c}$.` },
-      { instruction: `What is the coefficient $b$ of $\\cos(${2 * c}x)$? (fraction, watch the sign)`, answer: b, accept: [isSin ? "-0.5" : "0.5"], hint: isSin ? `$\\sin^2\\theta = \\tfrac{1 - \\cos 2\\theta}{2}$ — minus for sine.` : `$\\cos^2\\theta = \\tfrac{1 + \\cos 2\\theta}{2}$ — plus for cosine.` },
+      { instruction: `What is the coefficient $b$ of $\\cos(${2 * c}x)$? (fraction, watch the sign)`, answer: b, accept: [isSin ? "-0.5" : "0.5"], hint: isSin ? `$\\sin^2\\theta = \\tfrac{1 - \\cos 2\\theta}{2}$, minus for sine.` : `$\\cos^2\\theta = \\tfrac{1 + \\cos 2\\theta}{2}$, plus for cosine.` },
     ],
     finalAnswer: { value: `a = ${2 * c}, b = ${b}`, unit: "" },
     solutionNarrative: `$\\${t}^2(${arg}) = \\tfrac{1}{2} ${isSin ? "-" : "+"} \\tfrac{1}{2}\\cos(${2 * c}x)$: the half-angle identity halves the power and doubles the frequency.`,
@@ -222,7 +222,7 @@ fill["c2t-sectan-2"] = (rng, idx) => {
   };
 };
 
-// d3: ∫_0^{pi/4} k tan^2 x dx = k(1 - pi/4) — pi expression, no ln anywhere.
+// d3: ∫_0^{pi/4} k tan^2 x dx = k(1 - pi/4): pi expression, no ln anywhere.
 fill["c2t-sectan-3"] = (rng, idx) => {
   const k = rng.int(2, 5);
   const piPart = piStr(k, 4);
@@ -242,7 +242,7 @@ fill["c2t-sectan-3"] = (rng, idx) => {
 
 // --- product-to-sum ---
 
-// d1: rewrite sin(mx)cos(nx) — grade the two new frequencies.
+// d1: rewrite sin(mx)cos(nx): grade the two new frequencies.
 fill["c2t-prodsum-1"] = (rng, idx) => {
   let m, n;
   do { m = rng.int(2, 6); n = rng.int(1, 5); } while (m <= n);
@@ -254,7 +254,7 @@ fill["c2t-prodsum-1"] = (rng, idx) => {
       { instruction: `The difference frequency: $b = ${m} - ${n} = $ ?`, answer: `${m - n}`, accept: [], hint: `$A - B$.` },
     ],
     finalAnswer: { value: `a = ${m + n}, b = ${m - n}`, unit: "" },
-    solutionNarrative: `$\\sin(${m}x)\\cos(${n}x) = \\tfrac{1}{2}[\\sin(${m + n}x) + \\sin(${m - n}x)]$ — one product becomes two easy sines.`,
+    solutionNarrative: `$\\sin(${m}x)\\cos(${n}x) = \\tfrac{1}{2}[\\sin(${m + n}x) + \\sin(${m - n}x)]$: one product becomes two easy sines.`,
   };
 };
 
@@ -283,7 +283,7 @@ fill["c2t-prodsum-3"] = (rng, idx) => {
   do { m = rng.int(2, 5); n = rng.int(1, 4); } while (m <= n);
   return {
     id: `gen.c2t-prodsum-3.${idx}`, generated: true, concepts: ["product-to-sum"], difficulty: 3, context: "applied",
-    prompt: `A signal analyzer projects $\\sin(${m}x)$ onto $\\sin(${n}x)$ by computing $\\displaystyle\\int_0^{2\\pi} \\sin(${m}x)\\sin(${n}x)\\,dx$ — the Fourier orthogonality integral.`,
+    prompt: `A signal analyzer projects $\\sin(${m}x)$ onto $\\sin(${n}x)$ by computing $\\displaystyle\\int_0^{2\\pi} \\sin(${m}x)\\sin(${n}x)\\,dx$: the Fourier orthogonality integral.`,
     steps: [
       { instruction: `Product-to-sum: $\\sin(${m}x)\\sin(${n}x) = \\tfrac{1}{2}[\\cos(bx) - \\cos(${m + n}x)]$ where the difference frequency $b = $ ?`, answer: `${m - n}`, accept: [], hint: `$${m} - ${n}$.` },
       { instruction: `Every $\\cos(jx)$ with $j \\neq 0$ integrates to $0$ over the full period $[0, 2\\pi]$. So the integral equals ?`, answer: "0", accept: [], hint: `Both cosine frequencies ($${m - n}$ and $${m + n}$) are nonzero.` },
@@ -345,11 +345,11 @@ fill["c2u-choose-2"] = (rng, idx) => {
       { instruction: `Sanity-check the geometry: at $x = ${x0}$, compute $\\sqrt{${P.radicand(a * a).replace("x^2", `${x0}^2`)}}$.`, answer: `${v}`, accept: [], hint: `A Pythagorean triple: $${l1}^2 + ${l2}^2 = ${hyp}^2$.` },
     ],
     finalAnswer: { value: `${P.word}, ${v}`, unit: "" },
-    solutionNarrative: `The radicand matches the ${P.word} pattern with $a = ${a}$; at $x = ${x0}$ the radical is $${v}$ — the third side of the $${l1}$-$${l2}$-$${hyp}$ reference triangle.`,
+    solutionNarrative: `The radicand matches the ${P.word} pattern with $a = ${a}$; at $x = ${x0}$ the radical is $${v}$: the third side of the $${l1}$-$${l2}$-$${hyp}$ reference triangle.`,
   };
 };
 
-// d3: coefficient on x^2 — substitution x = (a/b) trig(theta).
+// d3: coefficient on x^2: substitution x = (a/b) trig(theta).
 fill["c2u-choose-3"] = (rng, idx) => {
   const isTan = rng.pick([true, false]);
   let a, b;
@@ -366,7 +366,7 @@ fill["c2u-choose-3"] = (rng, idx) => {
       { instruction: `Setting $${b}x = ${a}${fn}\\theta$ makes the radical collapse. So $c = $ ? (fraction)`, answer: frac(a, b), accept: [dec(a / b)], hint: `$x = \\tfrac{${a}}{${b}}${fn}\\theta$.` },
     ],
     finalAnswer: { value: `${word}, c = ${frac(a, b)}`, unit: "" },
-    solutionNarrative: `With $u = ${b}x$ the radicand is $${isTan ? `u^2 + ${a * a}` : `${a * a} - u^2`}$ — the ${word} pattern — so $${b}x = ${a}${fn}\\theta$, i.e. $x = \\tfrac{${a}}{${b}}${fn}\\theta$.`,
+    solutionNarrative: `With $u = ${b}x$ the radicand is $${isTan ? `u^2 + ${a * a}` : `${a * a} - u^2`}$, the ${word} pattern, so $${b}x = ${a}${fn}\\theta$, i.e. $x = \\tfrac{${a}}{${b}}${fn}\\theta$.`,
   };
 };
 
@@ -397,12 +397,12 @@ fill["c2u-sine-2"] = (rng, idx) => {
     id: `gen.c2u-sine-2.${idx}`, generated: true, concepts: ["sine-substitution"], difficulty: 2, context: "abstract",
     prompt: `While evaluating $\\displaystyle\\int \\dfrac{dx}{\\sqrt{${hyp * hyp} - x^2}}$ you substitute $x = ${hyp}\\sin\\theta$. Back-substitution uses the reference triangle at the point $x = ${opp}$.`,
     steps: [
-      { instruction: `Compute $\\sqrt{${hyp * hyp} - ${opp}^2}$ — the adjacent side of the reference triangle.`, answer: `${adj}`, accept: [], hint: `$${opp}$-$${adj}$-$${hyp}$ is a Pythagorean triple.` },
+      { instruction: `Compute $\\sqrt{${hyp * hyp} - ${opp}^2}$: the adjacent side of the reference triangle.`, answer: `${adj}`, accept: [], hint: `$${opp}$-$${adj}$-$${hyp}$ is a Pythagorean triple.` },
       { instruction: `Read off $\\cos\\theta$ = adjacent / hypotenuse. (fraction)`, answer: frac(adj, hyp), accept: [dec(adj / hyp)], hint: `$\\tfrac{${adj}}{${hyp}}$, reduced.` },
       { instruction: `Read off $\\tan\\theta$ = opposite / adjacent. (fraction)`, answer: frac(opp, adj), accept: [dec(opp / adj)], hint: `$\\tfrac{${opp}}{${adj}}$, reduced.` },
     ],
     finalAnswer: { value: `cos = ${frac(adj, hyp)}, tan = ${frac(opp, adj)}`, unit: "" },
-    solutionNarrative: `With $\\sin\\theta = \\tfrac{${opp}}{${hyp}}$, the triangle has legs $${opp}$ and $${adj}$: $\\cos\\theta = ${texFrac(adj, hyp)}$ and $\\tan\\theta = ${texFrac(opp, adj)}$ — exactly what back-substitution needs.`,
+    solutionNarrative: `With $\\sin\\theta = \\tfrac{${opp}}{${hyp}}$, the triangle has legs $${opp}$ and $${adj}$: $\\cos\\theta = ${texFrac(adj, hyp)}$ and $\\tan\\theta = ${texFrac(opp, adj)}$, exactly what back-substitution needs.`,
   };
 };
 
@@ -425,7 +425,7 @@ fill["c2u-sine-3"] = (rng, idx) => {
       { instruction: `The integrand collapses to $${k}\\,d\\theta$, so the value is $${k} \\cdot \\theta$. Enter it (a pi expression).`, answer: val, accept: [dec(k * Math.PI / den)], hint: `$${k} \\cdot \\tfrac{\\pi}{${den}}$.` },
     ],
     finalAnswer: { value: val, unit: "" },
-    solutionNarrative: `$x = ${a}\\sin\\theta$ turns $\\sqrt{${a * a} - x^2}$ into $${a}\\cos\\theta$ and $dx$ into $${a}\\cos\\theta\\,d\\theta$ — they cancel, leaving $${k}\\theta$ evaluated at $\\arcsin(${useRoot3 ? "\\tfrac{\\sqrt{3}}{2}" : "\\tfrac{1}{2}"}) = \\tfrac{\\pi}{${den}}$: the value is $${val.replace("pi", "\\pi")}$.`,
+    solutionNarrative: `$x = ${a}\\sin\\theta$ turns $\\sqrt{${a * a} - x^2}$ into $${a}\\cos\\theta$ and $dx$ into $${a}\\cos\\theta\\,d\\theta$: they cancel, leaving $${k}\\theta$ evaluated at $\\arcsin(${useRoot3 ? "\\tfrac{\\sqrt{3}}{2}" : "\\tfrac{1}{2}"}) = \\tfrac{\\pi}{${den}}$: the value is $${val.replace("pi", "\\pi")}$.`,
   };
 };
 
@@ -479,7 +479,7 @@ fill["c2u-tansec-3"] = (rng, idx) => {
       { instruction: `Subtract. Enter the value (like 3 - 3pi/4).`, answer: val, accept: [dec(a - a * Math.PI / 4)], hint: `First piece minus second piece.` },
     ],
     finalAnswer: { value: val, unit: "" },
-    solutionNarrative: `The split gives $${a} - ${a}\\cdot\\tfrac{\\pi}{4} \\approx ${dec(a - a * Math.PI / 4)}$ — the "improper fraction" trick (divide first) paired with the tangent pattern.`,
+    solutionNarrative: `The split gives $${a} - ${a}\\cdot\\tfrac{\\pi}{4} \\approx ${dec(a - a * Math.PI / 4)}$: the "improper fraction" trick (divide first) paired with the tangent pattern.`,
   };
 };
 
@@ -499,7 +499,7 @@ fill["c2u-cts-1"] = (rng, idx) => {
       { instruction: `$k = ${c} - h^2 = $ ?`, answer: `${k}`, accept: [], hint: `$${c} - ${h * h}$.` },
     ],
     finalAnswer: { value: `h = ${h}, k = ${k}`, unit: "" },
-    solutionNarrative: `$x^2 ${lin} + ${c} = (x ${h >= 0 ? "+" : "-"} ${Math.abs(h)})^2 + ${k}$ — now $u = x ${h >= 0 ? "+" : "-"} ${Math.abs(h)}$ exposes the tangent pattern $u^2 + ${k}$.`,
+    solutionNarrative: `$x^2 ${lin} + ${c} = (x ${h >= 0 ? "+" : "-"} ${Math.abs(h)})^2 + ${k}$: now $u = x ${h >= 0 ? "+" : "-"} ${Math.abs(h)}$ exposes the tangent pattern $u^2 + ${k}$.`,
   };
 };
 
@@ -541,6 +541,6 @@ fill["c2u-cts-3"] = (rng, idx) => {
       { instruction: `The limits $${lo}$ to $${hi}$ span the full diameter, so the integral is the area of a semicircle of radius $${a}$. Enter it (a pi expression like 9pi/2).`, answer: val, accept: [dec(a * a * Math.PI / 2)], hint: `$\\tfrac{1}{2}\\pi a^2$.` },
     ],
     finalAnswer: { value: val, unit: "" },
-    solutionNarrative: `$-x^2${lin} ${con} = ${a * a} - (x - ${h})^2$: a circle of radius $${a}$ centered at $${h}$. Integrating the top half across its diameter gives $\\tfrac{\\pi \\cdot ${a * a}}{2}$ — no antiderivative needed once the geometry is exposed.`,
+    solutionNarrative: `$-x^2${lin} ${con} = ${a * a} - (x - ${h})^2$: a circle of radius $${a}$ centered at $${h}$. Integrating the top half across its diameter gives $\\tfrac{\\pi \\cdot ${a * a}}{2}$, no antiderivative needed once the geometry is exposed.`,
   };
 };

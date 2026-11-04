@@ -3,7 +3,7 @@
 // oblique-triangle and trig-equation topics (law-of-sines-and-cosines,
 // trig-equations). Exports a `fill` map of template-name -> generator fn,
 // matching the shape of js/generator.js's registry (same pattern as
-// js/gen-de-fill.js and js/gen-linalg-fill.js — no imports from generator.js).
+// js/gen-de-fill.js and js/gen-linalg-fill.js: no imports from generator.js).
 //
 // Conventions (must match the topic JSON + grader):
 // - All angles in DEGREES; solution sets are plain degree numbers so the
@@ -113,7 +113,7 @@ fill["trg2-los-angle-d1"] = (rng, idx) => {
     prompt: `In triangle $ABC$, $A = ${A}^\\circ$, $a = ${a}$, and $b = ${b}$. Find the acute angle $B$. Round to the nearest degree.`,
     steps: [
       { instruction: `Solve the Law of Sines for $\\sin B = \\frac{${b}\\sin ${A}^\\circ}{${a}}$ and round the value to 4 decimal places.`, answer: sB4, accept: [`sinB = ${sB4}`, `sin(B) = ${sB4}`], hint: `$\\sin ${A}^\\circ \\approx ${r4(sinD(A))}$; multiply by ${b}, divide by ${a}.` },
-      { instruction: "Apply $\\sin^{-1}$ to your rounded value and round to the nearest degree.", answer: `${B}`, accept: [`B = ${B}`, `${B} degrees`], hint: `$\\sin^{-1}(${sB4})$ is between 0 and 90 degrees — since $b < a$, angle $B$ must be smaller than $A$'s supplement pair and is acute.` },
+      { instruction: "Apply $\\sin^{-1}$ to your rounded value and round to the nearest degree.", answer: `${B}`, accept: [`B = ${B}`, `${B} degrees`], hint: `$\\sin^{-1}(${sB4})$ is between 0 and 90 degrees: since $b < a$, angle $B$ must be smaller than $A$'s supplement pair and is acute.` },
     ],
     finalAnswer: { value: `${B}`, unit: "degrees" },
     solutionNarrative: `$\\sin B = ${b}\\sin ${A}^\\circ/${a} \\approx ${sB4}$, so $B = \\sin^{-1}(${sB4}) \\approx ${B}^\\circ$.`,
@@ -156,10 +156,10 @@ fill["trg2-los-angle-d3"] = (rng, idx) => {
   const Bobtuse = 180 - Bacute;
   return {
     id: `gen.trg2-los-angle-d3.${idx}`, generated: true, concepts: ["law-of-sines-angles"], difficulty: 3, context: "abstract",
-    prompt: `In triangle $ABC$, $A = ${A}^\\circ$, $a = ${a}$, and $b = ${b}$ — an SSA setup. Determine how many triangles are possible, then find every possible angle $B$. Round angles to the nearest degree.`,
+    prompt: `In triangle $ABC$, $A = ${A}^\\circ$, $a = ${a}$, and $b = ${b}$: an SSA setup. Determine how many triangles are possible, then find every possible angle $B$. Round angles to the nearest degree.`,
     steps: [
       { instruction: `Compute the height $b\\sin A = ${b}\\sin ${A}^\\circ$ and round to 1 decimal place.`, answer: r1(h), accept: [], hint: `$\\sin ${A}^\\circ \\approx ${r4(sinD(A))}$.` },
-      { instruction: `Compare: $b\\sin A \\approx ${r1(h)} < a = ${a} < b = ${b}$. How many triangles are possible? (Type a number.)`, answer: "2", accept: ["two"], hint: "When $b\\sin A < a < b$, the swinging side crosses the base twice — one acute $B$, one obtuse." },
+      { instruction: `Compare: $b\\sin A \\approx ${r1(h)} < a = ${a} < b = ${b}$. How many triangles are possible? (Type a number.)`, answer: "2", accept: ["two"], hint: "When $b\\sin A < a < b$, the swinging side crosses the base twice: one acute $B$, one obtuse." },
       { instruction: `Find the ACUTE possibility: $B = \\sin^{-1}\\!\\left(\\frac{${b}\\sin ${A}^\\circ}{${a}}\\right)$, rounded to the nearest degree.`, answer: `${Bacute}`, accept: [`B = ${Bacute}`, `${Bacute} degrees`], hint: `$\\sin B \\approx ${r4(sB)}$.` },
       { instruction: "Find the OBTUSE possibility: subtract the rounded acute angle from $180^\\circ$.", answer: `${Bobtuse}`, accept: [`B = ${Bobtuse}`, `${Bobtuse} degrees`], hint: `$\\sin\\theta = \\sin(180^\\circ - \\theta)$, so $180 - ${Bacute}$ also works.` },
     ],
@@ -206,7 +206,7 @@ fill["trg2-loc-side-d2"] = (rng, idx) => {
     id: `gen.trg2-loc-side-d2.${idx}`, generated: true, concepts: ["law-of-cosines"], difficulty: 2, context: "applied",
     prompt: `${ctx.setup} with a $${theta}^\\circ$ angle between them. ${ctx.m1} ${a} ${ctx.unit} along one; ${ctx.m2} ${b} ${ctx.unit} along the other. ${ctx.q}? Round to 1 decimal place.`,
     steps: [
-      { instruction: `This is SAS — two sides and the included angle. Compute $c^2 = ${a}^2 + ${b}^2 - 2(${a})(${b})\\cos ${theta}^\\circ$ and round to 1 decimal place.`, answer: c2r, accept: [`c^2 = ${c2r}`], hint: `$${a * a} + ${b * b} - ${2 * a * b}(${r4(cosD(theta))})$.` },
+      { instruction: `This is SAS: two sides and the included angle. Compute $c^2 = ${a}^2 + ${b}^2 - 2(${a})(${b})\\cos ${theta}^\\circ$ and round to 1 decimal place.`, answer: c2r, accept: [`c^2 = ${c2r}`], hint: `$${a * a} + ${b * b} - ${2 * a * b}(${r4(cosD(theta))})$.` },
       { instruction: `Take the square root of your rounded value and round to 1 decimal place (${ctx.unit}).`, answer: c, accept: [`c = ${c}`], hint: `$\\sqrt{${c2r}}$.` },
     ],
     finalAnswer: { value: c, unit: "kilometers" },
@@ -232,7 +232,7 @@ fill["trg2-loc-angle-d3"] = (rng, idx) => {
     prompt: `${ctx.thing} has sides ${a} ${ctx.unit}, ${b} ${ctx.unit}, and ${c} ${ctx.unit}. ${ctx.who} Find the angle opposite the ${c} ${ctx.unit} side. Round to the nearest degree.`,
     steps: [
       { instruction: `Solve the Law of Cosines for the cosine of the angle opposite ${c}: $\\cos C = \\frac{${a}^2 + ${b}^2 - ${c}^2}{2(${a})(${b})}$. Give the value as a fraction.`, answer: `${num2}/${den}`, accept: [r4(cosC)], hint: `$\\frac{${a * a} + ${b * b} - ${c * c}}{${den}}$.` },
-      { instruction: "Apply $\\cos^{-1}$ and round to the nearest degree.", answer: `${C}`, accept: [`C = ${C}`, `${C} degrees`], hint: `$\\cos^{-1}(${r4(cosC)}) \\approx ${C}^\\circ$${cosC < 0 ? " — the negative cosine means the angle is obtuse" : ""}.` },
+      { instruction: "Apply $\\cos^{-1}$ and round to the nearest degree.", answer: `${C}`, accept: [`C = ${C}`, `${C} degrees`], hint: `$\\cos^{-1}(${r4(cosC)}) \\approx ${C}^\\circ$${cosC < 0 ? ": the negative cosine means the angle is obtuse" : ""}.` },
     ],
     finalAnswer: { value: `${C}`, unit: "degrees" },
     solutionNarrative: `For SSS, solve for the cosine: $\\cos C = (${a * a} + ${b * b} - ${c * c})/${den} \\approx ${r4(cosC)}$, so $C \\approx ${C}^\\circ$. The largest angle always faces the longest side.`,
@@ -254,7 +254,7 @@ fill["trg2-area-d1"] = (rng, idx) => {
       { instruction: `Compute the area $K = \\frac{1}{2}(${a})(${b})\\sin 30^\\circ$.`, answer: Ks, accept: [`K = ${Ks}`], hint: `$\\frac{1}{2}(${a})(${b})(\\frac{1}{2}) = ${(a * b) / 2} \\cdot \\frac{1}{2}$.` },
     ],
     finalAnswer: { value: Ks, unit: "" },
-    solutionNarrative: `$K = \\frac{1}{2}(${a})(${b})\\sin 30^\\circ = ${Ks}$ — exact, because $30^\\circ$ is a special angle.`,
+    solutionNarrative: `$K = \\frac{1}{2}(${a})(${b})\\sin 30^\\circ = ${Ks}$: exact, because $30^\\circ$ is a special angle.`,
   };
 };
 
@@ -294,7 +294,7 @@ fill["trg2-area-d3"] = (rng, idx) => {
       { instruction: `Using your rounded value, compute $K = \\frac{1}{2}(${a})(${b})\\sin ${theta}^\\circ$ and round to 1 decimal place (${ctx.area}).`, answer: K, accept: [], hint: `$\\frac{1}{2}(${a})(${b}) = ${(a * b) / 2}$; multiply by ${s4}.` },
     ],
     finalAnswer: { value: K, unit: ctx.area },
-    solutionNarrative: `$K = \\frac{1}{2}(${a})(${b})\\sin ${theta}^\\circ = ${(a * b) / 2}(${s4}) \\approx ${K}$ ${ctx.area} — no height measurement required.`,
+    solutionNarrative: `$K = \\frac{1}{2}(${a})(${b})\\sin ${theta}^\\circ = ${(a * b) / 2}(${s4}) \\approx ${K}$ ${ctx.area}: no height measurement required.`,
   };
 };
 
@@ -334,7 +334,7 @@ fill["trg2-eq-basic-d1"] = (rng, idx) => {
     id: `gen.trg2-eq-basic-d1.${idx}`, generated: true, concepts: ["basic-trig-equations"], difficulty: 1, context: "abstract",
     prompt: `Solve $${t.fl} x = ${t.vl}$ for all $x$ in $[0^\\circ, 360^\\circ)$.`,
     steps: [
-      { instruction: `What is the reference angle — the special angle whose ${t.fl === "\\sin" ? "sine" : "cosine"} is $${t.vl}$? (Degrees.)`, answer: `${t.ref}`, accept: [`${t.ref} degrees`], hint: `From the special-value table: $${t.fl} ${t.ref}^\\circ = ${t.vl}$.` },
+      { instruction: `What is the reference angle: the special angle whose ${t.fl === "\\sin" ? "sine" : "cosine"} is $${t.vl}$? (Degrees.)`, answer: `${t.ref}`, accept: [`${t.ref} degrees`], hint: `From the special-value table: $${t.fl} ${t.ref}^\\circ = ${t.vl}$.` },
       { instruction: `${t.fl === "\\sin" ? "Sine" : "Cosine"} is positive in quadrants ${t.quads}. List ALL solutions in $[0^\\circ, 360^\\circ)$.`, answer: solAns(t.sols), accept: solAccept(t.sols), form: "solutions", hint: t.place },
     ],
     finalAnswer: { value: t.sols.map((s) => `x = ${s}°`).join(" or "), unit: "" },
@@ -349,7 +349,7 @@ fill["trg2-eq-basic-d2"] = (rng, idx) => {
     id: `gen.trg2-eq-basic-d2.${idx}`, generated: true, concepts: ["basic-trig-equations"], difficulty: 2, context: "abstract",
     prompt: `Solve $${t.fl} x = ${t.vl}$ for all $x$ in $[0^\\circ, 360^\\circ)$.`,
     steps: [
-      { instruction: `What is the reference angle? (Ignore the sign; degrees.)`, answer: `${t.ref}`, accept: [`${t.ref} degrees`], hint: `$${t.fl} ${t.ref}^\\circ$ gives the same value without the minus sign — the sign only picks the quadrants.` },
+      { instruction: `What is the reference angle? (Ignore the sign; degrees.)`, answer: `${t.ref}`, accept: [`${t.ref} degrees`], hint: `$${t.fl} ${t.ref}^\\circ$ gives the same value without the minus sign: the sign only picks the quadrants.` },
       { instruction: `${name} is NEGATIVE in quadrants ${t.quads}. List ALL solutions in $[0^\\circ, 360^\\circ)$.`, answer: solAns(t.sols), accept: solAccept(t.sols), form: "solutions", hint: t.place },
     ],
     finalAnswer: { value: t.sols.map((s) => `x = ${s}°`).join(" or "), unit: "" },
@@ -385,8 +385,8 @@ fill["trg2-eq-isolate-d1"] = (rng, idx) => {
   const t = rng.pick([
     { eq: "2\\sin x - 1 = 0", fn: "sin", val: "1/2", how: "Add 1 to both sides, then divide by 2" },
     { eq: "2\\cos x - 1 = 0", fn: "cos", val: "1/2", how: "Add 1 to both sides, then divide by 2" },
-    { eq: "2\\sin x + 1 = 0", fn: "sin", val: "-1/2", how: "Subtract 1 from both sides, then divide by 2 — watch the sign" },
-    { eq: "2\\cos x + 1 = 0", fn: "cos", val: "-1/2", how: "Subtract 1 from both sides, then divide by 2 — watch the sign" },
+    { eq: "2\\sin x + 1 = 0", fn: "sin", val: "-1/2", how: "Subtract 1 from both sides, then divide by 2: watch the sign" },
+    { eq: "2\\cos x + 1 = 0", fn: "cos", val: "-1/2", how: "Subtract 1 from both sides, then divide by 2: watch the sign" },
   ]);
   const info = ISO_TABLE[`${t.fn}:${t.val}`];
   const dec = t.val === "1/2" ? "0.5" : "-0.5";
@@ -394,7 +394,7 @@ fill["trg2-eq-isolate-d1"] = (rng, idx) => {
     id: `gen.trg2-eq-isolate-d1.${idx}`, generated: true, concepts: ["multi-step-isolation"], difficulty: 1, context: "abstract",
     prompt: `Solve $${t.eq}$ for all $x$ in $[0^\\circ, 360^\\circ)$.`,
     steps: [
-      { instruction: `Isolate the trig function: what must $\\${t.fn} x$ equal?`, answer: t.val, accept: [dec, `${t.fn}(x) = ${t.val}`], hint: `${t.how} — treat $\\${t.fn} x$ like a single unknown.` },
+      { instruction: `Isolate the trig function: what must $\\${t.fn} x$ equal?`, answer: t.val, accept: [dec, `${t.fn}(x) = ${t.val}`], hint: `${t.how}: treat $\\${t.fn} x$ like a single unknown.` },
       { instruction: `${t.fn === "sin" ? "Sine" : "Cosine"} is ${info.sign} in quadrants ${info.quads}. List ALL solutions in $[0^\\circ, 360^\\circ)$.`, answer: solAns(info.sols), accept: solAccept(info.sols), form: "solutions", hint: `Reference angle $${info.ref}^\\circ$.` },
     ],
     finalAnswer: { value: info.sols.map((s) => `x = ${s}°`).join(" or "), unit: "" },
@@ -445,7 +445,7 @@ fill["trg2-eq-isolate-d3"] = (rng, idx) => {
       { instruction: `List ALL solutions in $[0^\\circ, 360^\\circ)$.`, answer: solAns(info.sols), accept: solAccept(info.sols), form: "solutions", hint: `${fn === "sin" ? "Sine" : "Cosine"} is ${info.sign.toLowerCase()} in quadrants ${info.quads}; reference angle $${info.ref}^\\circ$.` },
     ],
     finalAnswer: { value: info.sols.map((s) => `x = ${s}°`).join(" or "), unit: "" },
-    solutionNarrative: `Gathering like terms gives $2\\${fn} x = ${total}$, so $\\${fn} x = ${val}$ and $x = ${info.sols[0]}^\\circ$ or $x = ${info.sols[1]}^\\circ$ — the algebra is identical to a linear equation in $y$.`,
+    solutionNarrative: `Gathering like terms gives $2\\${fn} x = ${total}$, so $\\${fn} x = ${val}$ and $x = ${info.sols[0]}^\\circ$ or $x = ${info.sols[1]}^\\circ$: the algebra is identical to a linear equation in $y$.`,
   };
 };
 
@@ -467,12 +467,12 @@ fill["trg2-eq-factor-d1"] = (rng, idx) => {
     prompt: `Solve $2\\${fn}^2 x - \\${fn} x = 0$ for all $x$ in $[0^\\circ, 360^\\circ)$.`,
     steps: [
       { instruction: `Substitute $u = \\${fn} x$. What quadratic equation results?`, answer: "2u^2 - u = 0", accept: ["2u^2-u=0", "2u^2 = u"], hint: `Replace every $\\${fn} x$ with $u$.` },
-      { instruction: "Factor the left side (do NOT divide by $u$ — that loses solutions).", answer: "u(2u - 1) = 0", accept: ["u(2u-1)=0", "(2u-1)u=0"], form: "factored", hint: "Pull out the common factor $u$." },
+      { instruction: "Factor the left side (do NOT divide by $u$: that loses solutions).", answer: "u(2u - 1) = 0", accept: ["u(2u-1)=0", "(2u-1)u=0"], form: "factored", hint: "Pull out the common factor $u$." },
       { instruction: "Solve each factor: list the possible values of $u$.", answer: "u = 0 or u = 1/2", accept: ["0, 1/2", "0, 0.5"], form: "solutions", hint: "$u = 0$ or $2u - 1 = 0$." },
       { instruction: `Convert back to $x$. List ALL solutions in $[0^\\circ, 360^\\circ)$.`, answer: solAns(sols), accept: solAccept(sols), form: "solutions", hint: whereText(fn, us) + "." },
     ],
     finalAnswer: { value: `x = ${sols.join("°, ")}°`, unit: "" },
-    solutionNarrative: `With $u = \\${fn} x$: $u(2u - 1) = 0$, so ${whereText(fn, us)}. All solutions: $${sols.join("^\\circ, ")}^\\circ$ — dividing by $\\${fn} x$ would have deleted half of them.`,
+    solutionNarrative: `With $u = \\${fn} x$: $u(2u - 1) = 0$, so ${whereText(fn, us)}. All solutions: $${sols.join("^\\circ, ")}^\\circ$: dividing by $\\${fn} x$ would have deleted half of them.`,
   };
 };
 
@@ -489,7 +489,7 @@ fill["trg2-eq-factor-d2"] = (rng, idx) => {
       { instruction: `Convert back to $x$. List ALL solutions in $[0^\\circ, 360^\\circ)$.`, answer: solAns(sols), accept: solAccept(sols), form: "solutions", hint: whereText(fn, us) + "." },
     ],
     finalAnswer: { value: `x = ${sols.join("°, ")}°`, unit: "" },
-    solutionNarrative: `$u(2u + 1) = 0$ gives ${whereText(fn, us)} — ${sols.length} solutions in all.`,
+    solutionNarrative: `$u(2u + 1) = 0$ gives ${whereText(fn, us)}: ${sols.length} solutions in all.`,
   };
 };
 

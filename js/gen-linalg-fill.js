@@ -301,7 +301,7 @@ fill["laf-rank-and-independence-d2"] = (rng, idx) => {
     id: `gen.laf-rank-and-independence-d2.${idx}`, generated: true, concepts: ["rank-and-independence"], difficulty: 2, context: "abstract",
     prompt: `Find the rank of the set $\\{\\langle ${u.join(", ")} \\rangle, \\langle ${v.join(", ")} \\rangle, \\langle ${w.join(", ")} \\rangle\\}$ in $\\mathbb{R}^2$ (the maximum number of independent vectors among them).`,
     steps: [
-      { instruction: "Note that the second vector is a multiple of the first — how many independent directions remain from just those two?", answer: "1", accept: [], hint: `$\\langle ${v.join(", ")} \\rangle = ${c}\\langle ${u.join(", ")} \\rangle$.` },
+      { instruction: "Note that the second vector is a multiple of the first: how many independent directions remain from just those two?", answer: "1", accept: [], hint: `$\\langle ${v.join(", ")} \\rangle = ${c}\\langle ${u.join(", ")} \\rangle$.` },
       { instruction: "What is the rank of the full set of three vectors?", answer: `${rank}`, accept: [], hint: rank === 2 ? "The third vector adds a new, independent direction." : "The third vector is also dependent on the first." },
     ],
     finalAnswer: { value: `${rank}`, unit: "" }, solutionNarrative: `Rank $= ${rank}$ (at most 2 independent directions exist in $\\mathbb{R}^2$).`,
@@ -909,7 +909,7 @@ fill["laf-least-squares-applied-d3"] = (rng, idx) => {
     id: `gen.laf-least-squares-applied-d3.${idx}`, generated: true, concepts: ["least-squares-applied"], difficulty: 3, context: "applied",
     prompt: `Points $(${pts[0].join(",")}), (${pts[1].join(",")}), (${pts[2].join(",")})$ lie on a line. Find the best-fit slope $m$ and intercept $b$, then predict $y$ at $x = ${xNew}$.`,
     steps: [
-      { instruction: "Find the slope $m$.", answer: `${m}`, accept: [], hint: "Use consecutive points' rise over run — they're exactly collinear." },
+      { instruction: "Find the slope $m$.", answer: `${m}`, accept: [], hint: "Use consecutive points' rise over run: they're exactly collinear." },
       { instruction: "Find the intercept $b$ (value at $x=0$).", answer: `${c}`, accept: [], hint: "Read the y-value at $x=0$." },
       { instruction: `Predict $y$ at $x = ${xNew}$ using $y = mx + b$.`, answer: `${yPred}`, accept: [], hint: `${m}(${xNew}) + ${c}.` },
     ],

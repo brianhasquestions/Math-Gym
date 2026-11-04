@@ -1,4 +1,4 @@
-/* theme.css — design tokens for each theme + theme-specific decorations.
+/* theme.css: design tokens for each theme + theme-specific decorations.
    Components in base.css consume these tokens and stay theme-neutral; anything
    that's distinctly terminal (uppercase buttons, > prefixes, glow, brackets,
    blinking cursor) is scoped under [data-theme="terminal"] here. */
@@ -37,7 +37,7 @@
   --font-ui: var(--font-mono);
 }
 
-/* ================== Daylight Blue (white + blue — default) ================== */
+/* ================== Daylight Blue (white + blue, default) ================== */
 /* The bare :root fallback lives here so the site is light even if the
    theme attribute never gets set (JS blocked). Terminal/slate still win when
    data-theme is present because their selectors are more specific. */

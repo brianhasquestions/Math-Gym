@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>try { document.documentElement.setAttribute("data-theme", localStorage.getItem("mathgym.theme") || "light"); } catch (e) {}</script>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <title>MathGym — Training</title>
-  <meta name="description" content="Train this topic on MathGym — the adaptive engine serves step-by-step problems and keeps drilling your weak spots until every skill is mastered." />
+  <title>MathGym | Training</title>
+  <meta name="description" content="Train this topic on MathGym: the adaptive engine serves step-by-step problems and keeps drilling your weak spots until every skill is mastered." />
   <meta name="theme-color" content="#f5f8fc" />
   <link rel="canonical" href="https://mathgym.io/train.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="MathGym" />
-  <meta property="og:title" content="MathGym — Training" />
-  <meta property="og:description" content="Train this topic on MathGym — the adaptive engine serves step-by-step problems and keeps drilling your weak spots until every skill is mastered." />
+  <meta property="og:title" content="MathGym | Training" />
+  <meta property="og:description" content="Train this topic on MathGym: the adaptive engine serves step-by-step problems and keeps drilling your weak spots until every skill is mastered." />
   <meta property="og:url" content="https://mathgym.io/train.html" />
   <meta property="og:image" content="https://mathgym.io/assets/og.svg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="MathGym — Training" />
-  <meta name="twitter:description" content="Train this topic on MathGym — the adaptive engine serves step-by-step problems and keeps drilling your weak spots until every skill is mastered." />
+  <meta name="twitter:title" content="MathGym | Training" />
+  <meta name="twitter:description" content="Train this topic on MathGym: the adaptive engine serves step-by-step problems and keeps drilling your weak spots until every skill is mastered." />
   <meta name="twitter:image" content="https://mathgym.io/assets/og.svg" />
   <link rel="stylesheet" href="vendor/katex/katex.min.css" />
   <link rel="stylesheet" href="css/theme.css" />
@@ -83,8 +83,8 @@
 
     try {
       topic = await loadTopic(id);
-      document.title = `MathGym — Training: ${topic.title}`;
-      // Built with el()/text nodes, not innerHTML — the title comes from a
+      document.title = `MathGym | Training: ${topic.title}`;
+      // Built with el()/text nodes, not innerHTML: the title comes from a
       // content file and must not be able to inject markup.
       const crumbs = document.getElementById("crumbs");
       crumbs.textContent = "";
@@ -180,7 +180,7 @@
       };
 
       // Header meta
-      const tierName = ["", "Intro", "Standard", "Challenge"][cs.currentDifficulty] || "—";
+      const tierName = ["", "Intro", "Standard", "Challenge"][cs.currentDifficulty] || "-";
       nodes.meta.innerHTML = "";
       nodes.meta.append(
         el("span", {}, `Skill: ${conceptMeta.label}`),
@@ -265,9 +265,9 @@
         // Targeted nudge: if a factored-form step got the right expression but
         // not in product form, say so specifically instead of just "wrong".
         if (step.form === "factored" && checkStep({ ...step, form: undefined }, input.value)) {
-          feedback.textContent = "That's algebraically equal — but it isn't factored. Write it as a product, e.g. (x + a)(x + b).";
+          feedback.textContent = "That's algebraically equal, but it isn't factored. Write it as a product, e.g. (x + a)(x + b).";
         } else {
-          feedback.textContent = "Not quite — check your arithmetic and signs, then try again.";
+          feedback.textContent = "Not quite. Check your arithmetic and signs, then try again.";
         }
         pulse(stepEl, "error");
         current.stepWrongs += 1;
@@ -357,7 +357,7 @@
         el("span", {}, `Review: ${conceptMeta.label}`),
         el("span", {}, "Difficulty: Challenge"),
       );
-      nodes.chip.textContent = "Retention check — no hints";
+      nodes.chip.textContent = "Retention check: no hints";
       nodes.figure.innerHTML = problem.plot ? plotToSvg(problem.plot) : "";
       renderProseInto(nodes.prompt, problem.prompt);
       renderSteps();
@@ -368,12 +368,12 @@
       refreshMastery();
       if (res.held) {
         nodes.extra.appendChild(el("div", { class: "step-feedback ok", role: "status" },
-          `Still solid — "${current.conceptLabel}" held.`));
+          `Still solid: "${current.conceptLabel}" held.`));
       } else {
         reviewAllHeld = false;
         nodes.extra.appendChild(el("div", { class: "micro-lesson", role: "status" }, [
           el("strong", {}, "That one slipped. "),
-          `"${current.conceptLabel}" is back in training — you'll re-earn it starting near the top tier.`,
+          `"${current.conceptLabel}" is back in training; you'll re-earn it starting near the top tier.`,
         ]));
       }
       const cont = el("button", { class: "btn", style: "margin-top: var(--space-3)" },
@@ -441,16 +441,16 @@
       // §6.4 "prove it landed" guardrail messaging.
       if (summary.provedIt) {
         nodes.extra.appendChild(el("div", { class: "step-feedback ok", role: "status" },
-          "You solved one unaided — that lesson landed. Back to building mastery."));
+          "You solved one unaided. That lesson landed. Back to building mastery."));
       } else if (summary.mustProveClean) {
         nodes.extra.appendChild(el("div", { class: "micro-lesson", role: "status" },
           [el("strong", {}, "Prove it: "),
-           "solve the next problem with no hints. Until you clear one on your own, your progress on this skill is paused — that's how we make sure the explanation actually stuck."]));
+           "solve the next problem with no hints. Until you clear one on your own, your progress on this skill is paused. That's how we make sure the explanation actually stuck."]));
       }
 
       // Continue button (so the learner controls pacing; not auto-advanced).
       const nextLabel = summary.mustProveClean
-        ? "Prove it — fresh problem"
+        ? "Prove it: fresh problem"
         : correct ? "Next problem" : "Try a fresh problem";
       const cont = el("button", { class: "btn", style: "margin-top: var(--space-3)" }, nextLabel);
       cont.addEventListener("click", nextProblem);
@@ -479,10 +479,10 @@
       const rs = reviewStatus(state);
       const reviewBits = [];
       if (rs.due) {
-        const btn = el("button", { class: "btn" }, "Review session — prove it stuck");
+        const btn = el("button", { class: "btn" }, "Review session: prove it stuck");
         btn.addEventListener("click", startReview);
         reviewBits.push(
-          el("p", {}, "It's been a while since you practiced this. A quick retention check — one top-tier problem per skill, no hints — keeps the mastery honest."),
+          el("p", {}, "It's been a while since you practiced this. A quick retention check (one top-tier problem per skill, no hints) keeps the mastery honest."),
           btn,
         );
       } else if (rs.nextReviewAt) {
@@ -491,13 +491,13 @@
         early.addEventListener("click", startReview);
         reviewBits.push(
           el("p", { style: "color: var(--text-dim)" },
-            `Next retention check in ~${days} day${days === 1 ? "" : "s"} — skills fade without reinforcement, so we'll re-test this topic on a spaced schedule.`),
+            `Next retention check in ~${days} day${days === 1 ? "" : "s"}. Skills fade without reinforcement, so we'll re-test this topic on a spaced schedule.`),
           early,
         );
       }
       const card = el("div", {}, [
         el("h2", { style: "margin-top:0; color: var(--success)" }, "[ TOPIC MASTERED ]"),
-        el("p", {}, `You cleared every skill in "${topic.title}" — including the top-difficulty problems, cleanly. That's real mastery, not a lucky guess.`),
+        el("p", {}, `You cleared every skill in "${topic.title}", including the top-difficulty problems, cleanly. That's real mastery, not a lucky guess.`),
         ...reviewBits,
         el("div", { style: "display:flex; gap: var(--space-3); flex-wrap:wrap; margin-top: var(--space-3)" }, [
           el("a", { class: "btn", href: "index.html" }, "Back to subjects"),

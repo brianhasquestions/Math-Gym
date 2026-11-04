@@ -99,7 +99,7 @@ fill["st2-margin-2"] = (rng, idx) => {
       { instruction: `Margin of error: $m = 1.96 \\times ${k}$. Give the exact value.`, answer: m, accept: [], hint: `$1.96 \\times ${k}$.` },
     ],
     finalAnswer: { value: m, unit: "" },
-    solutionNarrative: `$\\mathrm{SE} = \\frac{${s}}{${sq}} = ${k}$, so the margin of error is $m = 1.96 \\times ${k} = ${m}$ — the radius of the 95% interval.`,
+    solutionNarrative: `$\\mathrm{SE} = \\frac{${s}}{${sq}} = ${k}$, so the margin of error is $m = 1.96 \\times ${k} = ${m}$: the radius of the 95% interval.`,
   };
 };
 fill["st2-margin-3"] = (rng, idx) => {
@@ -212,7 +212,7 @@ fill["st2-ciprop-2"] = (rng, idx) => {
       { instruction: `Convert to percentage points: multiply by 100. (Give a number.)`, answer: `${pctT}`, accept: [], hint: `Move the decimal two places.` },
     ],
     finalAnswer: { value: m, unit: "" },
-    solutionNarrative: `$m = 1.96 \\times ${d1000(c.seT)} = ${m}$, i.e. about $\\pm ${pctT}$ percentage points — the "margin of error" a news report would quote.`,
+    solutionNarrative: `$m = 1.96 \\times ${d1000(c.seT)} = ${m}$, i.e. about $\\pm ${pctT}$ percentage points: the "margin of error" a news report would quote.`,
   };
 };
 fill["st2-ciprop-3"] = (rng, idx) => {
@@ -249,7 +249,7 @@ fill["st2-interp-1"] = (rng, idx) => {
       { instruction: `Is it correct to say "$\\mu$ has a ${conf.level}% probability of being inside $(${lo}, ${lo + w})$"? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `$\\mu$ is a fixed number; it's the interval that varies from sample to sample.` },
     ],
     finalAnswer: { value: "no", unit: "" },
-    solutionNarrative: `Confidence describes the PROCEDURE: ${conf.level}% of intervals built this way capture $\\mu$. Any single interval either contains $\\mu$ or it doesn't — there is no ${conf.level}% probability about this specific one.`,
+    solutionNarrative: `Confidence describes the PROCEDURE: ${conf.level}% of intervals built this way capture $\\mu$. Any single interval either contains $\\mu$ or it doesn't: there is no ${conf.level}% probability about this specific one.`,
   };
 };
 fill["st2-interp-2"] = (rng, idx) => {
@@ -276,7 +276,7 @@ fill["st2-interp-2"] = (rng, idx) => {
       { instruction: `Sample sizes round UP. Give the required whole number $n$.`, answer: `${nReq}`, accept: [], hint: `Any fraction of a subject forces the next whole number.` },
     ],
     finalAnswer: { value: `${nReq}`, unit: "subjects" },
-    solutionNarrative: `$\\frac{z^*\\sigma}{m} = ${d1000(vT)}$, squared gives $${sq}$, so you need $n = ${nReq}$ (always round up — rounding down would miss the target margin).`,
+    solutionNarrative: `$\\frac{z^*\\sigma}{m} = ${d1000(vT)}$, squared gives $${sq}$, so you need $n = ${nReq}$ (always round up: rounding down would miss the target margin).`,
   };
 };
 fill["st2-interp-3"] = (rng, idx) => {
@@ -291,7 +291,7 @@ fill["st2-interp-3"] = (rng, idx) => {
       { instruction: `Quadrupling $n$ multiplies the margin of error by what factor? (Give a fraction or decimal.)`, answer: "1/2", accept: ["0.5", "half"], hint: `$\\sqrt{4n} = 2\\sqrt{n}$.` },
     ],
     finalAnswer: { value: "1/2", unit: "" },
-    solutionNarrative: `Confidence up $\\Rightarrow$ wider; $n$ up $\\Rightarrow$ margin down; and because of the square root, quadrupling $n$ only halves the margin — precision is expensive.`,
+    solutionNarrative: `Confidence up $\\Rightarrow$ wider; $n$ up $\\Rightarrow$ margin down; and because of the square root, quadrupling $n$ only halves the margin: precision is expensive.`,
   };
 };
 
@@ -337,7 +337,7 @@ fill["st2-hyp-2"] = (rng, idx) => {
       { instruction: `Is this test left-tailed, right-tailed, or two-tailed? Type one.`, answer: scen.tail, accept: scen.taccept, hint: `The tail follows the direction of $H_a$.` },
     ],
     finalAnswer: { value: scen.tail, unit: "" },
-    solutionNarrative: `$H_0: p = ${p0}$, $H_a: p ${scen.op} ${p0}$, a ${scen.tail} test — the rejection region sits on the side $H_a$ points to.`,
+    solutionNarrative: `$H_0: p = ${p0}$, $H_a: p ${scen.op} ${p0}$, a ${scen.tail} test: the rejection region sits on the side $H_a$ points to.`,
   };
 };
 fill["st2-hyp-3"] = (rng, idx) => {
@@ -357,7 +357,7 @@ fill["st2-hyp-3"] = (rng, idx) => {
       { instruction: `Write the significance level $\\alpha$ as a decimal.`, answer: alpha, accept: [`${alphaPct}%`], hint: `${alphaPct}% as a decimal.` },
     ],
     finalAnswer: { value: scen.tail, unit: "" },
-    solutionNarrative: `The claim "${scen.claim} ${mu0}" is violated when $\\mu ${scen.op} ${mu0}$, so $H_a: \\mu ${scen.op} ${mu0}$ — a ${scen.tail} test at $\\alpha = ${alpha}$.`,
+    solutionNarrative: `The claim "${scen.claim} ${mu0}" is violated when $\\mu ${scen.op} ${mu0}$, so $H_a: \\mu ${scen.op} ${mu0}$: a ${scen.tail} test at $\\alpha = ${alpha}$.`,
   };
 };
 
@@ -398,7 +398,7 @@ fill["st2-teststat-2"] = (rng, idx) => {
       { instruction: `Divide: $z = \\dfrac{${diff}}{${se}}$. (Give a decimal.)`, answer: d10(zT), accept: [], hint: `$${diff} / ${se}$.` },
     ],
     finalAnswer: { value: d10(zT), unit: "" },
-    solutionNarrative: `$\\mathrm{SE} = ${se}$ and $\\bar{x} - \\mu_0 = ${diff}$, so $z = ${d10(zT)}$. ${Math.abs(zT) >= 20 ? "That is far into the tail — strong evidence against the claim." : "Whether that is extreme enough depends on the critical value."}`,
+    solutionNarrative: `$\\mathrm{SE} = ${se}$ and $\\bar{x} - \\mu_0 = ${diff}$, so $z = ${d10(zT)}$. ${Math.abs(zT) >= 20 ? "That is far into the tail: strong evidence against the claim." : "Whether that is extreme enough depends on the critical value."}`,
   };
 };
 fill["st2-teststat-3"] = (rng, idx) => {
@@ -442,7 +442,7 @@ fill["st2-decide-1"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: reject ? "reject" : "fail to reject", accept: reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Beyond the critical value $\\to$ reject; otherwise $\\to$ fail to reject.` },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$z = ${z} ${reject ? ">" : "\\le"} 1.645$, so we ${reject ? "reject $H_0$ — the result is statistically significant at the 5% level" : "fail to reject $H_0$ — the data are compatible with the null"}.`,
+    solutionNarrative: `$z = ${z} ${reject ? ">" : "\\le"} 1.645$, so we ${reject ? "reject $H_0$: the result is statistically significant at the 5% level" : "fail to reject $H_0$: the data are compatible with the null"}.`,
   };
 };
 fill["st2-decide-2"] = (rng, idx) => {
@@ -480,7 +480,7 @@ fill["st2-decide-3"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: c.reject ? "reject" : "fail to reject", accept: c.reject ? ["reject the null"] : ["do not reject", "fail"], hint: `p-value below $\\alpha$ $\\to$ reject.` },
     ],
     finalAnswer: { value: c.reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `p-value $= ${c.pv}$ ${c.reject ? "<" : "\\ge"} $\\alpha = ${c.alpha}$, so we ${c.reject ? "reject $H_0$: the result is significant at this level" : "fail to reject $H_0$: the evidence isn't strong enough at this level"}. Note the same p-value can flip decisions when $\\alpha$ changes — which is why $\\alpha$ must be chosen BEFORE looking at the data.`,
+    solutionNarrative: `p-value $= ${c.pv}$ ${c.reject ? "<" : "\\ge"} $\\alpha = ${c.alpha}$, so we ${c.reject ? "reject $H_0$: the result is significant at this level" : "fail to reject $H_0$: the evidence isn't strong enough at this level"}. Note the same p-value can flip decisions when $\\alpha$ changes, which is why $\\alpha$ must be chosen BEFORE looking at the data.`,
   };
 };
 
@@ -510,11 +510,11 @@ fill["st2-error-2"] = (rng, idx) => {
     id: `gen.st2-error-2.${idx}`, generated: true, concepts: ["errors-and-significance"], difficulty: 2, context: "applied",
     prompt: `${scen.setting}: take $H_0$ to be "${scen.h0}". Classify each mistake. (Type I = rejecting a true $H_0$; Type II = failing to reject a false $H_0$.)`,
     steps: [
-      { instruction: `"${scen.e1}" is which error? Type 'Type I' or 'Type II'.`, answer: "Type I", accept: ["type 1", "I", "1"], hint: `$H_0$ was true, but we rejected it — a false alarm.` },
-      { instruction: `"${scen.e2}" is which error? Type 'Type I' or 'Type II'.`, answer: "Type II", accept: ["type 2", "II", "2"], hint: `$H_0$ was false, but we failed to reject it — a miss.` },
+      { instruction: `"${scen.e1}" is which error? Type 'Type I' or 'Type II'.`, answer: "Type I", accept: ["type 1", "I", "1"], hint: `$H_0$ was true, but we rejected it: a false alarm.` },
+      { instruction: `"${scen.e2}" is which error? Type 'Type I' or 'Type II'.`, answer: "Type II", accept: ["type 2", "II", "2"], hint: `$H_0$ was false, but we failed to reject it: a miss.` },
     ],
     finalAnswer: { value: "Type II", unit: "" },
-    solutionNarrative: `With $H_0$ = "${scen.h0}": ${scen.e1} rejects a true null (Type I), while ${scen.e2} fails to reject a false null (Type II). Which error is worse depends on the stakes — that is what should drive the choice of $\\alpha$.`,
+    solutionNarrative: `With $H_0$ = "${scen.h0}": ${scen.e1} rejects a true null (Type I), while ${scen.e2} fails to reject a false null (Type II). Which error is worse depends on the stakes: that is what should drive the choice of $\\alpha$.`,
   };
 };
 fill["st2-error-3"] = (rng, idx) => {
@@ -593,7 +593,7 @@ fill["st2-scatter-3"] = (rng, idx) => {
       { instruction: `Is "${scen.lurk} drives both variables" a plausible alternative explanation? Type 'yes' or 'no'.`, answer: "yes", accept: [], hint: `A lurking variable can create correlation with no causal link between the pair.` },
     ],
     finalAnswer: { value: "no", unit: "" },
-    solutionNarrative: `The association is positive and strong, but $r$ says nothing about WHY: ${scen.lurk} plausibly drives both ${scen.a} and ${scen.b}. Correlation alone never proves causation — that takes a controlled experiment.`,
+    solutionNarrative: `The association is positive and strong, but $r$ says nothing about WHY: ${scen.lurk} plausibly drives both ${scen.a} and ${scen.b}. Correlation alone never proves causation: that takes a controlled experiment.`,
   };
 };
 
@@ -649,10 +649,10 @@ fill["st2-corr-3"] = (rng, idx) => {
       { instruction: `Compute $S_{xy} = \\sum(x-\\bar{x})(y-\\bar{y})$ with $\\bar{x} = ${x0}$, $\\bar{y} = ${y0}$. (Give a number.)`, answer: `${sxy}`, accept: [], hint: `Deviations of $x$: $${DX.join(", ")}$; of $y$: $${pat.dy.join(", ")}$.` },
       { instruction: `Compute $r = \\dfrac{${sxy}}{\\sqrt{20 \\times 20}}$. (Give a decimal.)`, answer: `${rT}`, accept: [`${sxy}/20`], hint: `$\\sqrt{400} = 20$.` },
       { instruction: `Direction: type 'positive' or 'negative'.`, answer: rT > 0 ? "positive" : "negative", accept: [], hint: `The sign of $r$.` },
-      { instruction: `Strength on the given scale: type 'strong', 'moderate', or 'weak'.`, answer: strength, accept: [], hint: `$|r| = ${absR}$ — compare with 0.8 and 0.5.` },
+      { instruction: `Strength on the given scale: type 'strong', 'moderate', or 'weak'.`, answer: strength, accept: [], hint: `$|r| = ${absR}$: compare with 0.8 and 0.5.` },
     ],
     finalAnswer: { value: `${rT}`, unit: "" },
-    solutionNarrative: `$S_{xy} = ${sxy}$ gives $r = ${rT}$: a ${strength} ${rT > 0 ? "positive" : "negative"} linear association between ad spend and sales${rT > 0 ? "" : " (more spend, fewer sales — worth investigating!)"}.`,
+    solutionNarrative: `$S_{xy} = ${sxy}$ gives $r = ${rT}$: a ${strength} ${rT > 0 ? "positive" : "negative"} linear association between ad spend and sales${rT > 0 ? "" : " (more spend, fewer sales: worth investigating!)"}.`,
   };
 };
 
@@ -747,7 +747,7 @@ fill["st2-pred-1"] = (rng, idx) => {
       { instruction: `Add the intercept: $${a} + (${d10(bxT)})$. (Give a number.)`, answer: d10(yhatT), accept: [], hint: `Intercept plus slope term.` },
     ],
     finalAnswer: { value: d10(yhatT), unit: "" },
-    solutionNarrative: `$\\hat{y} = ${a} + (${d10(bT)})(${xstar}) = ${d10(yhatT)}$ — plug in and evaluate.`,
+    solutionNarrative: `$\\hat{y} = ${a} + (${d10(bT)})(${xstar}) = ${d10(yhatT)}$: plug in and evaluate.`,
   };
 };
 fill["st2-pred-2"] = (rng, idx) => {
@@ -783,9 +783,9 @@ fill["st2-pred-3"] = (rng, idx) => {
     steps: [
       { instruction: `Mechanically, what does the line give at $x = ${xstar}$? Compute $${a} + (${d10(bT)})(${xstar})$. (Give a number.)`, answer: d10(yhatT), accept: [], hint: `Plug in and evaluate.` },
       { instruction: `Is predicting at $x = ${xstar}$ interpolation or extrapolation? Type one.`, answer: "extrapolation", accept: ["extrapolating"], hint: `Compare $${xstar}$ with the data range $[${xlo}, ${xhi}]$.` },
-      { instruction: `Should this prediction be trusted as much as one inside $[${xlo}, ${xhi}]$? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `The line was never tested out there — the pattern may bend.` },
+      { instruction: `Should this prediction be trusted as much as one inside $[${xlo}, ${xhi}]$? Type 'yes' or 'no'.`, answer: "no", accept: [], hint: `The line was never tested out there: the pattern may bend.` },
     ],
     finalAnswer: { value: "extrapolation", unit: "" },
-    solutionNarrative: `The line dutifully outputs ${d10(yhatT)}, but $x = ${xstar}$ lies far outside the observed range $[${xlo}, ${xhi}]$ — this is extrapolation, and the linear pattern has no evidence behind it out there.`,
+    solutionNarrative: `The line dutifully outputs ${d10(yhatT)}, but $x = ${xstar}$ lies far outside the observed range $[${xlo}, ${xhi}]$: this is extrapolation, and the linear pattern has no evidence behind it out there.`,
   };
 };

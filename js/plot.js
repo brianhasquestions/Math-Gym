@@ -6,16 +6,16 @@
 // automatically with the theme.
 //
 // Supported spec.type:
-//   "cartesian"    — axes/grid + function curves, points, segments (the default)
-//   "elliptic"     — the real elliptic curve y^2 = x^3 + a x + b (two branches),
+//   "cartesian": axes/grid + function curves, points, segments (the default)
+//   "elliptic": the real elliptic curve y^2 = x^3 + a x + b (two branches),
 //                    with optional chord/tangent construction for point addition
-//   "modLattice"   — integer points of an elliptic curve over Z_p as a dot grid
-//   "graph"        — a node/edge diagram (discrete-math graphs, trees, digraphs)
+//   "modLattice": integer points of an elliptic curve over Z_p as a dot grid
+//   "graph": a node/edge diagram (discrete-math graphs, trees, digraphs)
 //
 // Cartesian extras: a curve may carry "fillRange": [a, b] (or "fill": true for
-// the whole x-range) to shade the region between the curve and y = 0 — used for
+// the whole x-range) to shade the region between the curve and y = 0: used for
 // definite-integral area pictures. A segment may carry "arrow": true to draw an
-// arrowhead at its `to` end — used for vectors.
+// arrowhead at its `to` end: used for vectors.
 //
 // A spec is authored as a JSON object, either as the value of a problem's
 // `plot` field or inside a ```plot fenced code block in markdown.
@@ -23,7 +23,7 @@
 // --- A small, safe expression evaluator (functions of x) --------------------
 // Supports + - * / ^, unary minus, parentheses, the variable x, the constants
 // pi and e, and the functions sin cos tan exp ln log sqrt abs. No access to any
-// globals — it only ever sees the token stream we tokenize here.
+// globals: it only ever sees the token stream we tokenize here.
 const FUNCS = {
   sin: Math.sin, cos: Math.cos, tan: Math.tan,
   exp: Math.exp, ln: Math.log, log: Math.log,
@@ -286,7 +286,7 @@ function modLattice(spec) {
 }
 
 // --- Node/edge graph diagram (discrete math) --------------------------------
-// spec.nodes: [{ id, x, y, label?, color? }]  — x/y in any abstract coordinates;
+// spec.nodes: [{ id, x, y, label?, color? }]: x/y in any abstract coordinates;
 //   the diagram is scaled to fit. label defaults to id.
 // spec.edges: [["A","B"], ...] or [{ from, to, directed?, dashed?, label?, color? }]
 function graphDiagram(spec) {

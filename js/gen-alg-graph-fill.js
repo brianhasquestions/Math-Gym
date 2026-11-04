@@ -4,7 +4,7 @@
 // always has fresh problems at every tier. Self-contained pack: exports a
 // `fill` map of template-name -> (rng, idx) => problem, matching the shape
 // used by js/generator.js's `generators` map (same pattern as gen-de-fill.js
-// and gen-linalg-fill.js). No imports from generator.js — own helper copies.
+// and gen-linalg-fill.js). No imports from generator.js; own helper copies.
 
 const gcd = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; };
 const nz = (rng, lo, hi) => { const v = rng.int(lo, hi); return v === 0 ? hi : v; };
@@ -34,7 +34,7 @@ fill["agr-plot-points-d1"] = (rng, idx) => {
     prompt: `On a city map, city hall sits at the origin $(0, 0)$. The ${place} is ${a} blocks east and ${b} blocks north. (East is the positive $x$ direction, north is positive $y$.)`,
     steps: [
       { instruction: `Write the ${place}'s location as an ordered pair $(x, y)$.`, answer: pair(a, b), accept: [`(${a},${b})`], hint: "East gives the x-coordinate, north gives the y-coordinate." },
-      { instruction: "Which quadrant of the coordinate plane is that point in? (Give the quadrant number, 1–4.)", answer: "1", accept: QUAD_ACCEPT[1], hint: "Both coordinates are positive — upper right." },
+      { instruction: "Which quadrant of the coordinate plane is that point in? (Give the quadrant number, 1–4.)", answer: "1", accept: QUAD_ACCEPT[1], hint: "Both coordinates are positive: upper right." },
     ],
     finalAnswer: { value: pair(a, b), unit: "" },
     solutionNarrative: `East is $x$ and north is $y$, so the ${place} is at $(${a}, ${b})$. Both coordinates are positive, so it is in quadrant I.`,
@@ -107,7 +107,7 @@ fill["agr-slope-two-points-d1"] = (rng, idx) => {
   };
 };
 
-// d2: applied steady rate — slope of a real-world data line.
+// d2: applied steady rate; slope of a real-world data line.
 const RATE_CTX = [
   { thing: "A hiker's trail log", yname: "miles from the trailhead", xname: "hours", unit: "miles per hour", lo: 2, hi: 4 },
   { thing: "A freelancer's invoice tracker", yname: "dollars billed", xname: "hours", unit: "dollars per hour", lo: 20, hi: 60 },
@@ -134,7 +134,7 @@ fill["agr-slope-two-points-d2"] = (rng, idx) => {
   };
 };
 
-// d3: mixed special cases — vertical (undefined), horizontal (0), or a
+// d3: mixed special cases; vertical (undefined), horizontal (0), or a
 // negative fraction slope in lowest terms.
 const FRAC_PAIRS = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5]];
 fill["agr-slope-two-points-d3"] = (rng, idx) => {
@@ -152,7 +152,7 @@ fill["agr-slope-two-points-d3"] = (rng, idx) => {
         { instruction: "What is the slope? (Give a number, or type 'undefined'.)", answer: "undefined", accept: ["no slope", "dne", "none"], hint: "The slope formula would divide by a run of 0." },
       ],
       finalAnswer: { value: "undefined", unit: "" },
-      solutionNarrative: `The run is $${c} - (${c}) = 0$, so the line is vertical and its slope is undefined — you cannot divide by zero.`,
+      solutionNarrative: `The run is $${c} - (${c}) = 0$, so the line is vertical and its slope is undefined: you cannot divide by zero.`,
     };
   }
   if (kind === "horizontal") {
@@ -162,7 +162,7 @@ fill["agr-slope-two-points-d3"] = (rng, idx) => {
       steps: [
         { instruction: "Compute the rise, $y_2 - y_1$.", answer: "0", accept: [], hint: `$${c} - (${c})$.` },
         { instruction: "Is the line horizontal, vertical, or slanted?", answer: "horizontal", accept: [], hint: "Both points share the same y-coordinate." },
-        { instruction: "What is the slope?", answer: "0", accept: ["zero"], hint: `A rise of 0 over a run of ${xb - xa} is just $0$ — a real number, unlike a vertical line's slope.` },
+        { instruction: "What is the slope?", answer: "0", accept: ["zero"], hint: `A rise of 0 over a run of ${xb - xa} is just $0$, a real number, unlike a vertical line's slope.` },
       ],
       finalAnswer: { value: "0", unit: "" },
       solutionNarrative: `The rise is $0$ over a run of $${xb - xa}$, so the slope is $0$: the line is horizontal. (Zero slope and undefined slope are different things.)`,
@@ -177,7 +177,7 @@ fill["agr-slope-two-points-d3"] = (rng, idx) => {
   return { ...base,
     prompt: `Find the slope of the line through $(${x1}, ${y1})$ and $(${x2}, ${y2})$.`,
     steps: [
-      { instruction: "Compute the rise, $y_2 - y_1$.", answer: `${y2 - y1}`, accept: [], hint: `$${y2} - ${y1}$ — the line falls, so this is negative.` },
+      { instruction: "Compute the rise, $y_2 - y_1$.", answer: `${y2 - y1}`, accept: [], hint: `$${y2} - ${y1}$: the line falls, so this is negative.` },
       { instruction: "Compute the run, $x_2 - x_1$.", answer: `${q * k}`, accept: [], hint: `$${x2} - (${x1})$.` },
       { instruction: "Write the slope as a fraction in lowest terms.", answer: frac(y2 - y1, q * k), accept: [`${y2 - y1}/${q * k}`, ...(dec ? [dec] : [])], hint: `$m = ${y2 - y1}/${q * k}$; reduce.` },
     ],
@@ -200,7 +200,7 @@ fill["agr-slope-intercept-d1"] = (rng, idx) => {
     prompt: `Consider the line $${line}$.`,
     steps: [
       { instruction: "What is the slope of the line?", answer: `${m}`, accept: [`m=${m}`], hint: "In $y = mx + b$, the slope is the coefficient of $x$." },
-      { instruction: "What is the y-intercept (as a number)?", answer: `${b}`, accept: [`b=${b}`], hint: "The constant term $b$ — mind the sign." },
+      { instruction: "What is the y-intercept (as a number)?", answer: `${b}`, accept: [`b=${b}`], hint: "The constant term $b$: mind the sign." },
       { instruction: "Write the point where the line crosses the y-axis as an ordered pair.", answer: pair(0, b), accept: [`(0,${b})`], hint: "The line crosses the y-axis where $x = 0$." },
     ],
     finalAnswer: { value: `slope ${m}, y-intercept ${b}`, unit: "" },
@@ -208,7 +208,7 @@ fill["agr-slope-intercept-d1"] = (rng, idx) => {
   };
 };
 
-// d2: applied — write the cost line from a rate plus a flat fee, then use it.
+// d2: applied; write the cost line from a rate plus a flat fee, then use it.
 const FEE_CTX = [
   { who: "An electrician", fee: "service-call fee", per: "per hour of work", xIs: "hours", rlo: 9, rhi: 18, flo: 7, fhi: 19, scale: 5 },
   { who: "A moving company", fee: "truck fee", per: "per hour of labor", xIs: "hours", rlo: 8, rhi: 16, flo: 10, fhi: 24, scale: 5 },
@@ -297,11 +297,11 @@ fill["agr-intercepts-d2"] = (rng, idx) => {
       { instruction: "Write the x-intercept as an ordered pair.", answer: pair(xi, 0), accept: [`(${xi},0)`], hint: "On the x-axis, $y = 0$." },
     ],
     finalAnswer: { value: `(${xi}, 0) and (0, ${yi})`, unit: "" },
-    solutionNarrative: `With $x = 0$: $${B}y = ${C}$, so the y-intercept is $(0, ${yi})$. With $y = 0$: $${A}x = ${C}$, so the x-intercept is $(${xi}, 0)$. Plot both points and connect — two points make the line.`,
+    solutionNarrative: `With $x = 0$: $${B}y = ${C}$, so the y-intercept is $(0, ${yi})$. With $y = 0$: $${A}x = ${C}$, so the x-intercept is $(${xi}, 0)$. Plot both points and connect: two points make the line.`,
   };
 };
 
-// d3: applied draining/run-out model — interpret both intercepts and the slope.
+// d3: applied draining/run-out model; interpret both intercepts and the slope.
 const DRAIN_CTX = [
   { thing: "water tank", q: "volume", sym: "V", unit: "gallons", tunit: "minutes", verb: "drains" },
   { thing: "phone battery", q: "charge", sym: "B", unit: "percent", tunit: "hours", verb: "discharges" },
@@ -318,12 +318,12 @@ fill["agr-intercepts-d3"] = (rng, idx) => {
     id: `gen.agr-intercepts-d3.${idx}`, generated: true, concepts: ["intercepts-and-graphing"], difficulty: 3, context: "applied",
     prompt: `A ${ctx.thing} ${ctx.verb} at a steady rate. Its ${ctx.q} after $t$ ${ctx.tunit} is $${S} = ${V0} - ${r}t$ (in ${ctx.unit}).`,
     steps: [
-      { instruction: `What is the ${ctx.q} at $t = 0$ (the ${S}-intercept)?`, answer: `${V0}`, accept: [`${S}=${V0}`], hint: "Substitute $t = 0$ — that's the starting value." },
+      { instruction: `What is the ${ctx.q} at $t = 0$ (the ${S}-intercept)?`, answer: `${V0}`, accept: [`${S}=${V0}`], hint: "Substitute $t = 0$: that's the starting value." },
       { instruction: `Set $${S} = 0$ and solve: after how many ${ctx.tunit} does the ${ctx.thing} hit zero?`, answer: `${T}`, accept: [`t=${T}`], hint: `$${V0} - ${r}t = 0$, so $${r}t = ${V0}$.` },
-      { instruction: `Write that run-out point as an ordered pair $(t, ${S})$.`, answer: pair(T, 0), accept: [`(${T},0)`], hint: "It is the t-intercept — the moment the quantity reaches zero." },
+      { instruction: `Write that run-out point as an ordered pair $(t, ${S})$.`, answer: pair(T, 0), accept: [`(${T},0)`], hint: "It is the t-intercept: the moment the quantity reaches zero." },
       { instruction: "What is the slope of this line, including its sign?", answer: `${-r}`, accept: [`m=${-r}`], hint: `The ${ctx.q} changes by how many ${ctx.unit} per ${ctx.tunit.replace(/s$/, "")}? Decreasing means negative.` },
     ],
     finalAnswer: { value: `${T}`, unit: ctx.tunit },
-    solutionNarrative: `The intercepts tell the story: the ${ctx.thing} starts at $(0, ${V0})$ — ${V0} ${ctx.unit} — and empties at $(${T}, 0)$, since $${V0} - ${r}t = 0$ gives $t = ${T}$. The slope $-${r}$ is the drain rate in ${ctx.unit} per ${ctx.tunit.replace(/s$/, "")}.`,
+    solutionNarrative: `The intercepts tell the story: the ${ctx.thing} starts at $(0, ${V0})$, ${V0} ${ctx.unit}, and empties at $(${T}, 0)$, since $${V0} - ${r}t = 0$ gives $t = ${T}$. The slope $-${r}$ is the drain rate in ${ctx.unit} per ${ctx.tunit.replace(/s$/, "")}.`,
   };
 };

@@ -1,4 +1,4 @@
-// theme.js — theme registry, persistence, and application.
+// theme.js: theme registry, persistence, and application.
 // Themes are pure CSS (token sets under `:root[data-theme="..."]`); this module
 // just records the choice and sets the `data-theme` attribute on <html>.
 
@@ -41,7 +41,7 @@ const FAVICON = {
   slate: { badge: "#3b82f6", mark: "#ffffff", rx: 7 },
 };
 
-// The shared logo mark — a rounded badge with a radical (√). Reused for the
+// The shared logo mark: a rounded badge with a radical (√). Reused for the
 // header logo (themed via CSS classes) and the favicon (literal colors).
 export function logoMarkup() {
   return '<svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">' +

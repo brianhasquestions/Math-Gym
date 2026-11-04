@@ -42,7 +42,7 @@ fill["cr1-mod-d2"] = (rng, idx) => {
   const a = r - k * n; // negative by construction (r < n <= k*n)
   return {
     id: `gen.cr1-mod-d2.${idx}`, generated: true, concepts: ["compute-mod"], difficulty: 2, context: "abstract",
-    prompt: `Compute $${a} \\bmod ${n}$. (The answer must land in the range $0$ to $${n - 1}$ — decryption produces negatives like this all the time.)`,
+    prompt: `Compute $${a} \\bmod ${n}$. (The answer must land in the range $0$ to $${n - 1}$: decryption produces negatives like this all the time.)`,
     steps: [
       { instruction: `How many times must you add ${n} to ${a} to land in the range $0..${n - 1}$?`, answer: `${k}`, accept: [], hint: `Each addition of ${n} keeps the residue the same; count until you are no longer negative.` },
       { instruction: `So $${a} \\bmod ${n} = $ ?`, answer: `${r}`, accept: [], hint: `$${a} + ${k} \\cdot ${n} = ${r}$.` },
@@ -66,10 +66,10 @@ fill["cr1-mod-d3"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $${a} \\bmod ${n}$.`, answer: `${ra}`, accept: [], hint: `Find the largest multiple of ${n} inside ${a} and subtract.` },
       { instruction: `Compute $${b} \\bmod ${n}$.`, answer: `${rb}`, accept: [], hint: `Find the largest multiple of ${n} inside ${b} and subtract.` },
-      { instruction: `Do they leave the same remainder — is $${a} \\equiv ${b} \\pmod{${n}}$? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: "Congruent means equal remainders mod the modulus." },
+      { instruction: `Do they leave the same remainder: is $${a} \\equiv ${b} \\pmod{${n}}$? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: "Congruent means equal remainders mod the modulus." },
     ],
     finalAnswer: { value: yn, unit: "" },
-    solutionNarrative: `$${a} \\bmod ${n} = ${ra}$ and $${b} \\bmod ${n} = ${rb}$ — ${congruent ? "equal residues, so yes, congruent" : "different residues, so no, not congruent"}.`,
+    solutionNarrative: `$${a} \\bmod ${n} = ${ra}$ and $${b} \\bmod ${n} = ${rb}$: ${congruent ? "equal residues, so yes, congruent" : "different residues, so no, not congruent"}.`,
   };
 };
 
@@ -97,7 +97,7 @@ fill["cr1-modops-d2"] = (rng, idx) => {
   const ra = mod(a, n), rb = mod(b, n), p = ra * rb, r = mod(p, n);
   return {
     id: `gen.cr1-modops-d2.${idx}`, generated: true, concepts: ["modular-add-mult"], difficulty: 2, context: "abstract",
-    prompt: `Compute $(${a} \\cdot ${b}) \\bmod ${n}$ using reduce-as-you-go — never multiply the big numbers directly.`,
+    prompt: `Compute $(${a} \\cdot ${b}) \\bmod ${n}$ using reduce-as-you-go: never multiply the big numbers directly.`,
     steps: [
       { instruction: `Compute $${a} \\bmod ${n}$.`, answer: `${ra}`, accept: [], hint: `Largest multiple of ${n} in ${a}, then subtract.` },
       { instruction: `Compute $${b} \\bmod ${n}$.`, answer: `${rb}`, accept: [], hint: `Largest multiple of ${n} in ${b}, then subtract.` },
@@ -143,10 +143,10 @@ fill["cr1-modinv-d1"] = (rng, idx) => {
     steps: [
       { instruction: `Compute $${a} \\cdot ${inv}$.`, answer: `${p}`, accept: [], hint: "Just multiply." },
       { instruction: `Reduce: $${p} \\bmod ${n} = $ ?`, answer: "1", accept: [], hint: `Subtract the largest multiple of ${n} in ${p}.` },
-      { instruction: `Did the product reduce to 1 — is ${inv} the inverse of ${a} mod ${n}? Type 'yes' or 'no'.`, answer: "yes", accept: ["y"], hint: "An inverse is exactly a number whose product with $a$ reduces to 1." },
+      { instruction: `Did the product reduce to 1: is ${inv} the inverse of ${a} mod ${n}? Type 'yes' or 'no'.`, answer: "yes", accept: ["y"], hint: "An inverse is exactly a number whose product with $a$ reduces to 1." },
     ],
     finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$${a} \\cdot ${inv} = ${p} \\equiv 1 \\pmod{${n}}$, so yes — multiplying by ${inv} undoes multiplying by ${a} in mod-${n} arithmetic.`,
+    solutionNarrative: `$${a} \\cdot ${inv} = ${p} \\equiv 1 \\pmod{${n}}$, so yes: multiplying by ${inv} undoes multiplying by ${a} in mod-${n} arithmetic.`,
   };
 };
 
@@ -157,7 +157,7 @@ fill["cr1-modinv-d2"] = (rng, idx) => {
   const p = a * inv;
   return {
     id: `gen.cr1-modinv-d2.${idx}`, generated: true, concepts: ["modular-inverse"], difficulty: 2, context: "abstract",
-    prompt: `Find $${a}^{-1} \\bmod ${n}$ — the number $x$ in $1..${n - 1}$ with $${a}x \\equiv 1 \\pmod{${n}}$ — by testing candidates.`,
+    prompt: `Find $${a}^{-1} \\bmod ${n}$, the number $x$ in $1..${n - 1}$ with $${a}x \\equiv 1 \\pmod{${n}}$, by testing candidates.`,
     steps: [
       { instruction: `For $x$ to be the inverse, $${a}x \\bmod ${n}$ must equal what?`, answer: "1", accept: [], hint: "That is the definition of a modular inverse." },
       { instruction: `Test $x = 1, 2, 3, \\dots$ in turn: which $x$ works?`, answer: `${inv}`, accept: [`x=${inv}`], hint: `Multiply ${a} by each candidate and reduce mod ${n} until you hit 1.` },
@@ -189,7 +189,7 @@ fill["cr1-modinv-d3"] = (rng, idx) => {
     finalAnswer: { value: exists ? `${inv}` : "none", unit: "" },
     solutionNarrative: exists
       ? `$\\gcd(${a}, ${n}) = 1$, so an inverse exists; testing gives $${a} \\cdot ${inv} = ${a * inv} \\equiv 1 \\pmod{${n}}$.`
-      : `$\\gcd(${a}, ${n}) = ${g} \\ne 1$, so no inverse exists — every multiple of ${a} stays divisible by ${g} mod ${n} and can never reduce to 1.`,
+      : `$\\gcd(${a}, ${n}) = ${g} \\ne 1$, so no inverse exists: every multiple of ${a} stays divisible by ${g} mod ${n} and can never reduce to 1.`,
   };
 };
 
@@ -309,12 +309,12 @@ fill["cr1-prime-d2"] = (rng, idx) => {
     id: `gen.cr1-prime-d2.${idx}`, generated: true, concepts: ["primes-and-coprimality"], difficulty: 2, context: "abstract",
     prompt: `Find the prime factorization of ${n} by peeling off small primes.`,
     steps: [
-      { instruction: `Divide out the 2s: how many times does 2 divide ${n}?`, answer: `${a}`, accept: [], hint: `Halve repeatedly: ${n}${a >= 1 ? ` \\to ${n / 2}` : ""}${a >= 2 ? ` \\to ${n / 4}` : ""}${a >= 3 ? ` \\to ${n / 8}` : ""} — stop when the result is odd.` },
+      { instruction: `Divide out the 2s: how many times does 2 divide ${n}?`, answer: `${a}`, accept: [], hint: `Halve repeatedly: ${n}${a >= 1 ? ` \\to ${n / 2}` : ""}${a >= 2 ? ` \\to ${n / 4}` : ""}${a >= 3 ? ` \\to ${n / 8}` : ""}: stop when the result is odd.` },
       { instruction: `What odd number remains after removing all the 2s?`, answer: `${opt.m}`, accept: [], hint: `$${n} \\div ${2 ** a}$.` },
       { instruction: `Factor ${opt.m} into primes ($${opt.m} = ${opt.factors}$). In total, how many prime factors does ${n} have, counted with multiplicity?`, answer: `${totalCount}`, accept: [], hint: `${a} factor${a === 1 ? "" : "s"} of 2 plus ${opt.count} odd prime factor${opt.count === 1 ? "" : "s"}.` },
     ],
     finalAnswer: { value: `${n} = 2^${a} * ${opt.m}`, unit: "" },
-    solutionNarrative: `$${n} = 2^{${a}} \\cdot ${opt.factors}$ — ${totalCount} prime factors with multiplicity. Unique factorization guarantees this is the only way it breaks down.`,
+    solutionNarrative: `$${n} = 2^{${a}} \\cdot ${opt.factors}$: ${totalCount} prime factors with multiplicity. Unique factorization guarantees this is the only way it breaks down.`,
   };
 };
 
@@ -334,7 +334,7 @@ fill["cr1-prime-d3"] = (rng, idx) => {
       { instruction: `Coprime means $\\gcd = 1$. Are ${a} and ${b} coprime? Type 'yes' or 'no'.`, answer: yn, accept: [yn[0]], hint: `The gcd is ${g}.` },
     ],
     finalAnswer: { value: yn, unit: "" },
-    solutionNarrative: `$${a} = ${g} \\cdot ${p}$ and $${b} = ${g} \\cdot ${q}$ with $\\gcd(${p}, ${q}) = 1$, so $\\gcd(${a}, ${b}) = ${g}$ — ${coprime ? "coprime" : "NOT coprime"}.`,
+    solutionNarrative: `$${a} = ${g} \\cdot ${p}$ and $${b} = ${g} \\cdot ${q}$ with $\\gcd(${p}, ${q}) = 1$, so $\\gcd(${a}, ${b}) = ${g}$: ${coprime ? "coprime" : "NOT coprime"}.`,
   };
 };
 
@@ -351,7 +351,7 @@ fill["cr1-euclid-d1"] = (rng, idx) => {
     steps: [
       { instruction: `Divide ${a} by ${b}: what is the remainder? ($${a} = ${q1} \\cdot ${b} + r$)`, answer: `${g}`, accept: [], hint: `$${a} - ${q1 * b}$.` },
       { instruction: `Divide ${b} by ${g}: what is the remainder?`, answer: "0", accept: [], hint: `$${g} \\cdot ${q2} = ${b}$ exactly.` },
-      { instruction: `The remainder hit 0. What is the last NONZERO remainder — the gcd?`, answer: `${g}`, accept: [], hint: "Look one line up." },
+      { instruction: `The remainder hit 0. What is the last NONZERO remainder: the gcd?`, answer: `${g}`, accept: [], hint: "Look one line up." },
     ],
     finalAnswer: { value: `${g}`, unit: "" },
     solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${g}$; $${b} = ${q2} \\cdot ${g} + 0$. The last nonzero remainder is ${g}, so $\\gcd(${a}, ${b}) = ${g}$.`,
@@ -373,7 +373,7 @@ fill["cr1-euclid-d2"] = (rng, idx) => {
       { instruction: `So $\\gcd(${a}, ${b}) = $ ?`, answer: `${r2}`, accept: [], hint: "The last nonzero remainder." },
     ],
     finalAnswer: { value: `${r2}`, unit: "" },
-    solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${r1}$; $${b} = ${q2} \\cdot ${r1} + ${r2}$; $${r1} = ${q3} \\cdot ${r2} + 0$. So $\\gcd = ${r2}$ — no factoring required.`,
+    solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${r1}$; $${b} = ${q2} \\cdot ${r1} + ${r2}$; $${r1} = ${q3} \\cdot ${r2} + 0$. So $\\gcd = ${r2}$, no factoring required.`,
   };
 };
 
@@ -385,7 +385,7 @@ fill["cr1-euclid-d3"] = (rng, idx) => {
   const q1 = rng.int(1, 3), a = q1 * b + r1;
   return {
     id: `gen.cr1-euclid-d3.${idx}`, generated: true, concepts: ["euclidean-algorithm"], difficulty: 3, context: "abstract",
-    prompt: `Find $\\gcd(${a}, ${b})$ — four divisions of the Euclidean cascade. Track each remainder carefully.`,
+    prompt: `Find $\\gcd(${a}, ${b})$: four divisions of the Euclidean cascade. Track each remainder carefully.`,
     steps: [
       { instruction: `Divide ${a} by ${b}: what is the remainder? ($${b} \\cdot ${q1} = ${q1 * b}$)`, answer: `${r1}`, accept: [], hint: `$${a} - ${q1 * b}$.` },
       { instruction: `Divide ${b} by ${r1}: what is the remainder? ($${r1} \\cdot ${q2} = ${q2 * r1}$)`, answer: `${r2}`, accept: [], hint: `$${b} - ${q2 * r1}$.` },
@@ -428,7 +428,7 @@ fill["cr1-exteuclid-d2"] = (rng, idx) => {
   const q1 = rng.int(1, 3), a = q1 * b + r;
   return {
     id: `gen.cr1-exteuclid-d2.${idx}`, generated: true, concepts: ["extended-euclid"], difficulty: 2, context: "abstract",
-    prompt: `Express $\\gcd(${a}, ${b})$ as a combination $${a}x + ${b}y$. The Euclidean division is short here — one back-substitution does it.`,
+    prompt: `Express $\\gcd(${a}, ${b})$ as a combination $${a}x + ${b}y$. The Euclidean division is short here: one back-substitution does it.`,
     steps: [
       { instruction: `Divide ${a} by ${b}: what is the remainder? (This remainder is the gcd, since ${b} is a multiple of it.)`, answer: `${r}`, accept: [], hint: `$${a} - ${q1} \\cdot ${b}$.` },
       { instruction: `The division says $${a} = q \\cdot ${b} + ${r}$. What is the quotient $q$?`, answer: `${q1}`, accept: [], hint: `How many whole times does ${b} fit into ${a}?` },
@@ -436,7 +436,7 @@ fill["cr1-exteuclid-d2"] = (rng, idx) => {
       { instruction: `Verify: $${a} \\cdot 1 + ${b} \\cdot (${-q1}) = $ ?`, answer: `${r}`, accept: [], hint: `$${a} - ${q1 * b}$.` },
     ],
     finalAnswer: { value: `x = 1, y = ${-q1}`, unit: "" },
-    solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${r}$ and ${b} is a multiple of ${r}, so $\\gcd = ${r}$. Rearranging the division: $${r} = ${a} \\cdot 1 + ${b} \\cdot (${-q1})$ — Bézout coefficients $x = 1$, $y = ${-q1}$.`,
+    solutionNarrative: `$${a} = ${q1} \\cdot ${b} + ${r}$ and ${b} is a multiple of ${r}, so $\\gcd = ${r}$. Rearranging the division: $${r} = ${a} \\cdot 1 + ${b} \\cdot (${-q1})$: Bézout coefficients $x = 1$, $y = ${-q1}$.`,
   };
 };
 
@@ -448,7 +448,7 @@ fill["cr1-exteuclid-d3"] = (rng, idx) => {
   const k = (p - 1) / n;
   return {
     id: `gen.cr1-exteuclid-d3.${idx}`, generated: true, concepts: ["extended-euclid"], difficulty: 3, context: "applied",
-    prompt: `Toy RSA key generation: the public exponent is $e = ${a}$ and $\\varphi = ${n}$. The private key is $d = e^{-1} \\bmod \\varphi$ — found with extended Euclid (run the divisions, then back-substitute; or test candidates and confirm).`,
+    prompt: `Toy RSA key generation: the public exponent is $e = ${a}$ and $\\varphi = ${n}$. The private key is $d = e^{-1} \\bmod \\varphi$: found with extended Euclid (run the divisions, then back-substitute; or test candidates and confirm).`,
     steps: [
       { instruction: `First the safety check: $\\gcd(${a}, ${n}) = $ ? (It must be 1 or no key exists.)`, answer: "1", accept: [], hint: `Run Euclid: keep dividing and taking remainders until 0; the last nonzero remainder is the gcd.` },
       { instruction: `Find $d$ with $${a}d \\equiv 1 \\pmod{${n}}$, giving your answer in the range $0..${n - 1}$.`, answer: `${inv}`, accept: [`d=${inv}`, `${inv - n}`], hint: `Back-substitution yields some coefficient $x$ with $${a}x + ${n}y = 1$; if $x$ is negative, add ${n}.` },
@@ -477,7 +477,7 @@ fill["cr1-gcdcrypto-d1"] = (rng, idx) => {
       { instruction: `Divide the denominator by the gcd: $${den} \\div ${g} = $ ?`, answer: `${q}`, accept: [], hint: "One division." },
     ],
     finalAnswer: { value: `${p}/${q}`, unit: "" },
-    solutionNarrative: `$\\gcd(${num}, ${den}) = ${g}$, so $\\frac{${num}}{${den}} = \\frac{${p}}{${q}}$ — lowest terms in a single gcd.`,
+    solutionNarrative: `$\\gcd(${num}, ${den}) = ${g}$, so $\\frac{${num}}{${den}} = \\frac{${p}}{${q}}$: lowest terms in a single gcd.`,
   };
 };
 
@@ -502,8 +502,8 @@ fill["cr1-gcdcrypto-d2"] = (rng, idx) => {
     ],
     finalAnswer: { value: yn, unit: "" },
     solutionNarrative: valid
-      ? `$\\varphi = ${phi}$ and $\\gcd(${e}, ${phi}) = 1$, so $e = ${e}$ is legal — its inverse $d$ exists and the key pair can be built.`
-      : `$\\varphi = ${phi}$ but $\\gcd(${e}, ${phi}) = ${g} \\ne 1$, so $e = ${e}$ has NO inverse mod ${phi} — key generation must pick a different $e$.`,
+      ? `$\\varphi = ${phi}$ and $\\gcd(${e}, ${phi}) = 1$, so $e = ${e}$ is legal: its inverse $d$ exists and the key pair can be built.`
+      : `$\\varphi = ${phi}$ but $\\gcd(${e}, ${phi}) = ${g} \\ne 1$, so $e = ${e}$ has NO inverse mod ${phi}: key generation must pick a different $e$.`,
   };
 };
 
@@ -516,7 +516,7 @@ fill["cr1-gcdcrypto-d3"] = (rng, idx) => {
   const l = g * p * q;
   return {
     id: `gen.cr1-gcdcrypto-d3.${idx}`, generated: true, concepts: ["gcd-in-crypto"], difficulty: 3, context: "applied",
-    prompt: `Two meshed cipher-machine rotors have ${a} and ${b} teeth, with painted marks currently aligned. The marks realign after $\\mathrm{lcm}(${a}, ${b})$ teeth have passed. Find when — and how many full turns each rotor makes.`,
+    prompt: `Two meshed cipher-machine rotors have ${a} and ${b} teeth, with painted marks currently aligned. The marks realign after $\\mathrm{lcm}(${a}, ${b})$ teeth have passed. Find when, and how many full turns each rotor makes.`,
     steps: [
       { instruction: `Compute $\\gcd(${a}, ${b})$.`, answer: `${g}`, accept: [], hint: `Run Euclid: $${Math.max(a, b)} \\bmod ${Math.min(a, b)}$, and so on.` },
       { instruction: `Compute $\\mathrm{lcm}(${a}, ${b}) = \\dfrac{${a} \\cdot ${b}}{\\gcd}$.`, answer: `${l}`, accept: [], hint: `$${a * b} \\div ${g}$.` },
@@ -524,6 +524,6 @@ fill["cr1-gcdcrypto-d3"] = (rng, idx) => {
       { instruction: `And the ${b}-tooth rotor?`, answer: `${p}`, accept: [], hint: `$${l} \\div ${b}$.` },
     ],
     finalAnswer: { value: `${l}`, unit: "teeth" },
-    solutionNarrative: `$\\gcd(${a}, ${b}) = ${g}$, so $\\mathrm{lcm} = \\frac{${a} \\cdot ${b}}{${g}} = ${l}$: the marks realign after ${l} teeth — ${q} turns of the ${a}-tooth rotor and ${p} of the ${b}-tooth one. Rotor-cycle alignment like this is what made Enigma's period structure attackable.`,
+    solutionNarrative: `$\\gcd(${a}, ${b}) = ${g}$, so $\\mathrm{lcm} = \\frac{${a} \\cdot ${b}}{${g}} = ${l}$: the marks realign after ${l} teeth: ${q} turns of the ${a}-tooth rotor and ${p} of the ${b}-tooth one. Rotor-cycle alignment like this is what made Enigma's period structure attackable.`,
   };
 };

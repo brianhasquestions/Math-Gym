@@ -8,7 +8,7 @@
 // matching js/generator.js's registry shape. Deterministic: all numbers come
 // from the passed rng, and every template returns a FIXED difficulty + concepts
 // list so single-probe tier detection is reliable. Problems are single-step on
-// purpose — these are rapid-fire fact drills, not multi-step derivations.
+// purpose; these are rapid-fire fact drills, not multi-step derivations.
 
 export const fill = {};
 
@@ -162,7 +162,7 @@ fill["ari-twodigit-d3"] = (rng, idx) => {
   const ctx = rng.pick(["pages read", "minutes practiced", "steps climbed"]);
   const prompt = applied
     ? `Yesterday: ${a} ${ctx}. Today: ${b}. What's the two-day total?`
-    : `${rng.pick(ADD_ASK)} $${a} + ${b}$ (in your head — add tens, then ones).`;
+    : `${rng.pick(ADD_ASK)} $${a} + ${b}$ (in your head: add tens, then ones).`;
   const compensate = bO === 9 || bO === 8;
   const hint = compensate
     ? `Compensate: $${b}$ is $${(bT + 1) * 10} - ${(bT + 1) * 10 - b}$, so add $${(bT + 1) * 10}$ and take back ${(bT + 1) * 10 - b}.`
@@ -193,7 +193,7 @@ fill["ari-t25-d1"] = (rng, idx) => {
     finalAnswer: { value: `${a * b}`, unit: "" },
     solutionNarrative: t === 2
       ? `Times 2 is doubling: $${n} + ${n} = ${2 * n}$.`
-      : `Count by fives ${n} times: $5 \\times ${n} = ${5 * n}$ — it ends in ${(5 * n) % 10 === 0 ? "0" : "5"}, like every multiple of 5.`,
+      : `Count by fives ${n} times: $5 \\times ${n} = ${5 * n}$: it ends in ${(5 * n) % 10 === 0 ? "0" : "5"}, like every multiple of 5.`,
   };
 };
 
@@ -223,7 +223,7 @@ fill["ari-t25-d3"] = (rng, idx) => {
       prompt: `Fill in the blank: $${t} \\times \\underline{\\;\\;} = ${t * n}$`,
       steps: [{ instruction: "What factor completes it?", answer: `${n}`, accept: [], hint: `How many ${t}s make ${t * n}? Skip-count by ${t}.` }],
       finalAnswer: { value: `${n}`, unit: "" },
-      solutionNarrative: `Ask "how many ${t}s in ${t * n}?" — that's division in disguise: $${t * n} \\div ${t} = ${n}$.`,
+      solutionNarrative: `Ask "how many ${t}s in ${t * n}?": that's division in disguise: $${t * n} \\div ${t} = ${n}$.`,
     };
   }
   const thing = rng.pick(["packs of gum with", "boxes of crayons with", "bags of apples with", "rows of chairs with"]);
@@ -244,7 +244,7 @@ fill["ari-t69-d1"] = (rng, idx) => {
   return {
     id: `gen.ari-t69-d1.${idx}`, generated: true, concepts: ["tables-6-9"], difficulty: 1, context: "abstract",
     prompt: `${rng.pick(MUL_ASK)} $${a} \\times ${b}$`,
-    steps: [{ instruction: "Give the product.", answer: `${a * b}`, accept: [], hint: `Same as $${n} \\times ${t}$ — use the smaller table you already know.` }],
+    steps: [{ instruction: "Give the product.", answer: `${a * b}`, accept: [], hint: `Same as $${n} \\times ${t}$: use the smaller table you already know.` }],
     finalAnswer: { value: `${a * b}`, unit: "" },
     solutionNarrative: `Order doesn't matter: $${t} \\times ${n} = ${n} \\times ${t} = ${t * n}$. Half the big tables are already in the small ones.`,
   };
@@ -324,7 +324,7 @@ fill["ari-t1012-d3"] = (rng, idx) => {
     return {
       id: `gen.ari-t1012-d3.${idx}`, generated: true, concepts: ["tables-10-12"], difficulty: 3, context: "abstract",
       prompt: `Fill in the blank: $${t} \\times \\underline{\\;\\;} = ${t * n}$`,
-      steps: [{ instruction: "What is the missing factor?", answer: `${n}`, accept: [], hint: `Try $10 \\times n$ first — it gets you most of the way to ${t * n}.` }],
+      steps: [{ instruction: "What is the missing factor?", answer: `${n}`, accept: [], hint: `Try $10 \\times n$ first: it gets you most of the way to ${t * n}.` }],
       finalAnswer: { value: `${n}`, unit: "" },
       solutionNarrative: `$${t} \\times ${n} = ${10 * n} + ${(t - 10) * n} = ${t * n}$, so the missing factor is ${n} ($${t * n} \\div ${t} = ${n}$).`,
     };

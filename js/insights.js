@@ -1,4 +1,4 @@
-// insights.js — cross-topic intelligence (ROADMAP Phase 5).
+// insights.js: cross-topic intelligence (ROADMAP Phase 5).
 //
 // Pure logic over two data sources we already have:
 //   1. the prerequisite graph, authored as `prerequisites: [topicId,...]` in each
@@ -10,14 +10,14 @@
 //   • "Where should I pick up in this subject?"                 (recommended next)
 //   • "Which skills are weakest across this whole subject?"     (diagnostic)
 //
-// No DOM here — pages import these and render. Topic files are fetched via the
+// No DOM here: pages import these and render. Topic files are fetched via the
 // cached content-loader, so repeat calls in a page are cheap.
 
 import { loadManifest, loadTopic } from "./content-loader.js";
 import { getTopicState } from "./progress-store.js";
 import { topicProgress, reviewStatus } from "./mastery-model.js";
 
-// ---- Topic status (no fetch — reads stored progress only) -----------------
+// ---- Topic status (no fetch: reads stored progress only) -----------------
 // Returns a stable shape whether or not the learner has ever touched the topic.
 export function topicStatus(topicId) {
   const st = getTopicState(topicId);
@@ -182,7 +182,7 @@ async function weakConceptsForSubject(subject) {
   for (const t of subject.topics || []) {
     const st = getTopicState(t.id);
     if (!st || !st.concepts) continue;
-    let topic = null; // lazy — only load the file if this topic has weak concepts
+    let topic = null; // lazy: only load the file if this topic has weak concepts
     for (const [cid, cs] of Object.entries(st.concepts)) {
       if (cs.mastered || (cs.attempts || 0) === 0) continue;
       if (!topic) topic = await loadTopic(t.id);

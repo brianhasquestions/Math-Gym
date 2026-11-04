@@ -1,14 +1,14 @@
 // gen-crypto4-fill.js
 // Parametric generators for the Cryptography capstone topic:
 //   content/cryptography/crypto-weaknesses.json  (cr4-*)
-// "How Cryptography Breaks: Attacks and Misuse" — the MATH of why real
+// "How Cryptography Breaks: Attacks and Misuse": the MATH of why real
 // deployments fail: keystream/nonce reuse, ECB structure leakage, ECDSA nonce
 // reuse (the PS3 break), and textbook-RSA misuse (small-e cube root, shared
 // prime via gcd).
 //
 // Self-contained: exports a `fill` map of template-name -> generator fn,
 // matching the registry shape in js/generator.js (merged via Object.assign).
-// Deterministic from the passed rng. Every value is computed by construction —
+// Deterministic from the passed rng. Every value is computed by construction:
 // the secret (key / nonce / private scalar / prime) is chosen FIRST and the
 // attacker's inputs are built backward from it, so each recovered answer is
 // exactly the planted secret and self-checks against the real grader.
@@ -33,7 +33,7 @@ export const fill = {};
 // C1^C2 = M1^M2 (the key cancels); a crib M1 then recovers K and M2.
 // ============================================================================
 
-// d1 — 4-bit nibbles: recover the reused key from one known plaintext.
+// d1: 4-bit nibbles: recover the reused key from one known plaintext.
 fill["cr4-ksr-d1"] = (rng, idx) => {
   const K = rng.int(1, 15);
   let M1 = rng.int(1, 15), M2 = rng.int(1, 15);
@@ -44,7 +44,7 @@ fill["cr4-ksr-d1"] = (rng, idx) => {
     id: `gen.cr4-ksr-d1.${idx}`, generated: true, concepts: ["keystream-reuse"], difficulty: 1, context: "applied",
     prompt: `A stream cipher reused its keystream nibble $K$ on two messages: $C_1 = M_1 \\oplus K = ${C1}$ and $C_2 = M_2 \\oplus K = ${C2}$ (4-bit values). You know the first message was $M_1 = ${M1}$. Recover the key. (All answers in decimal.)`,
     steps: [
-      { instruction: `Compute $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$. (This equals $M_1 \\oplus M_2$ — the key cancels.)`, answer: `${xC}`, accept: [bin4(xC)], hint: `$${bin4(C1)} \\oplus ${bin4(C2)}$, column by column.` },
+      { instruction: `Compute $C_1 \\oplus C_2 = ${C1} \\oplus ${C2}$. (This equals $M_1 \\oplus M_2$: the key cancels.)`, answer: `${xC}`, accept: [bin4(xC)], hint: `$${bin4(C1)} \\oplus ${bin4(C2)}$, column by column.` },
       { instruction: `Recover the key: $K = C_1 \\oplus M_1 = ${C1} \\oplus ${M1}$.`, answer: `${K}`, accept: [bin4(K)], hint: `$${bin4(C1)} \\oplus ${bin4(M1)}$.` },
     ],
     finalAnswer: { value: `${K}`, unit: "" },
@@ -52,7 +52,7 @@ fill["cr4-ksr-d1"] = (rng, idx) => {
   };
 };
 
-// d2 — full bytes: recover K, then the second message M2.
+// d2: full bytes: recover K, then the second message M2.
 fill["cr4-ksr-d2"] = (rng, idx) => {
   const K = rng.int(1, 255);
   let M1 = rng.int(1, 255), M2 = rng.int(1, 255);
@@ -72,7 +72,7 @@ fill["cr4-ksr-d2"] = (rng, idx) => {
   };
 };
 
-// d3 — recover K and M2, then reason about the GCM wear-out bound (2^36 - 32).
+// d3: recover K and M2, then reason about the GCM wear-out bound (2^36 - 32).
 fill["cr4-ksr-d3"] = (rng, idx) => {
   const K = rng.int(1, 255);
   let M1 = rng.int(1, 255), M2 = rng.int(1, 255);
@@ -89,13 +89,13 @@ fill["cr4-ksr-d3"] = (rng, idx) => {
       { instruction: `The wear-out limit is $2^{36} - 32$ bytes. Compute that number.`, answer: `68719476704`, accept: [], hint: `$2^{36} = 68719476736$; subtract 32.` },
     ],
     finalAnswer: { value: `${M2}`, unit: "" },
-    solutionNarrative: `$C_1 \\oplus C_2 = ${xC} = M_1 \\oplus M_2$, so $M_2 = ${M1} \\oplus ${xC} = ${M2}$ and $K = ${C1} \\oplus ${M1} = ${K}$. Even with UNIQUE nonces, GCM still wears out at $2^{36}-32 = 68719476704$ bytes per key/nonce pair — see Soatok, "Comparison of Symmetric Encryption Methods".`,
+    solutionNarrative: `$C_1 \\oplus C_2 = ${xC} = M_1 \\oplus M_2$, so $M_2 = ${M1} \\oplus ${xC} = ${M2}$ and $K = ${C1} \\oplus ${M1} = ${K}$. Even with UNIQUE nonces, GCM still wears out at $2^{36}-32 = 68719476704$ bytes per key/nonce pair: see Soatok, "Comparison of Symmetric Encryption Methods".`,
   };
 };
 
 // ============================================================================
 // ecb-patterns : ECB encrypts each block independently, so identical plaintext
-// blocks become identical ciphertext blocks — structure leaks (the "ECB
+// blocks become identical ciphertext blocks: structure leaks (the "ECB
 // penguin"). We count distinct blocks, repeats, and how many blocks leak.
 // ============================================================================
 
@@ -109,7 +109,7 @@ function ecbStats(labels) {
   return { N: labels.length, distinct, repeatedGroups, leaked };
 }
 
-// d1 — short block stream with one repeated block.
+// d1: short block stream with one repeated block.
 fill["cr4-ecb-d1"] = (rng, idx) => {
   // Two identical blocks A plus two distinct singles; shuffle positions a little.
   const arrangements = [
@@ -126,11 +126,11 @@ fill["cr4-ecb-d1"] = (rng, idx) => {
       { instruction: `The value 9F appears twice, so how many of the ${st.N} blocks are proven identical to another? (Count both copies.)`, answer: `2`, accept: [], hint: `Two blocks share the value 9F.` },
     ],
     finalAnswer: { value: `2`, unit: "blocks" },
-    solutionNarrative: `The repeated value 9F betrays two identical plaintext blocks — ${st.distinct} distinct values across ${st.N} blocks. ECB never hides where a message repeats itself.`,
+    solutionNarrative: `The repeated value 9F betrays two identical plaintext blocks: ${st.distinct} distinct values across ${st.N} blocks. ECB never hides where a message repeats itself.`,
   };
 };
 
-// d2 — larger stream, two repeated groups; count leaked blocks.
+// d2: larger stream, two repeated groups; count leaked blocks.
 fill["cr4-ecb-d2"] = (rng, idx) => {
   const arrangements = [
     ["P", "Q", "P", "Q", "R", "P"], ["P", "P", "Q", "R", "Q", "P"], ["Q", "P", "R", "P", "Q", "P"],
@@ -152,7 +152,7 @@ fill["cr4-ecb-d2"] = (rng, idx) => {
   };
 };
 
-// d3 — penguin arithmetic: a flat region of identical plaintext blocks.
+// d3: penguin arithmetic: a flat region of identical plaintext blocks.
 fill["cr4-ecb-d3"] = (rng, idx) => {
   const total = rng.pick([12, 16, 20, 24]);        // total blocks in the image
   const flat = rng.int(4, total - 3);              // identical background blocks
@@ -167,7 +167,7 @@ fill["cr4-ecb-d3"] = (rng, idx) => {
       { instruction: `A secure (randomized) mode would make all ${total} blocks look distinct. How many MORE distinct values would that be than ECB gives here? (${total} minus your first answer.)`, answer: `${total - distinct}`, accept: [], hint: `$${total} - ${distinct}$.` },
     ],
     finalAnswer: { value: `${distinct}`, unit: "distinct blocks" },
-    solutionNarrative: `ECB collapses the ${flat}-block background to a single repeated ciphertext value, giving only ${distinct} distinct blocks instead of ${total}. The outline of the image survives encryption — the failure is structural, not a math bug in AES.`,
+    solutionNarrative: `ECB collapses the ${flat}-block background to a single repeated ciphertext value, giving only ${distinct} distinct blocks instead of ${total}. The outline of the image survives encryption: the failure is structural, not a math bug in AES.`,
   };
 };
 
@@ -207,7 +207,7 @@ function ecdsaCase(rng, tier) {
   return { n: 11, d: 3, k: 4, r: 5, z1: 6, z2: 2, s1: 8, s2: 7, sdiff: 1, zdiff: 4, kRec: 4, dRec: 3 };
 }
 
-// d1 — recover the shared nonce k.
+// d1: recover the shared nonce k.
 fill["cr4-ecdsa-d1"] = (rng, idx) => {
   const c = ecdsaCase(rng, 1);
   return {
@@ -223,7 +223,7 @@ fill["cr4-ecdsa-d1"] = (rng, idx) => {
   };
 };
 
-// d2 — recover k, then the private key d.
+// d2: recover k, then the private key d.
 fill["cr4-ecdsa-d2"] = (rng, idx) => {
   const c = ecdsaCase(rng, 2);
   const rinv = modinv(c.r, c.n);
@@ -237,11 +237,11 @@ fill["cr4-ecdsa-d2"] = (rng, idx) => {
       { instruction: `Recover the private key $d = (s_1 k - z_1) \\cdot r^{-1} = ${skz} \\cdot ${c.r}^{-1} \\bmod ${c.n}$.`, answer: `${c.d}`, accept: [], hint: `$r^{-1} = ${rinv} \\bmod ${c.n}$; multiply.` },
     ],
     finalAnswer: { value: `${c.d}`, unit: "" },
-    solutionNarrative: `From $s_1 = k^{-1}(z_1 + rd)$ we get $d = (s_1 k - z_1)/r = ${c.d} \\bmod ${c.n}$. This is exactly the Sony PS3 break — reused nonces exposed the master signing key. See Soatok, "Guidance for Choosing an Elliptic Curve Signature Algorithm in 2022".`,
+    solutionNarrative: `From $s_1 = k^{-1}(z_1 + rd)$ we get $d = (s_1 k - z_1)/r = ${c.d} \\bmod ${c.n}$. This is exactly the Sony PS3 break: reused nonces exposed the master signing key. See Soatok, "Guidance for Choosing an Elliptic Curve Signature Algorithm in 2022".`,
   };
 };
 
-// d3 — full recovery and contrast with Ed25519's deterministic nonces.
+// d3: full recovery and contrast with Ed25519's deterministic nonces.
 fill["cr4-ecdsa-d3"] = (rng, idx) => {
   const c = ecdsaCase(rng, 3);
   const rinv = modinv(c.r, c.n);
@@ -257,7 +257,7 @@ fill["cr4-ecdsa-d3"] = (rng, idx) => {
       { instruction: `Ed25519 derives $k$ deterministically from the key and message, so two signatures on different messages CANNOT share a nonce. Under Ed25519, how many private keys does this reuse attack recover? (A number.)`, answer: `0`, accept: ["none", "zero"], hint: `Deterministic nonces make the reuse condition impossible.` },
     ],
     finalAnswer: { value: `${c.d}`, unit: "" },
-    solutionNarrative: `$k = ${c.k}$ and $d = (s_1 k - z_1)/r = ${c.d} \\bmod ${c.n}$ — total compromise from one repeated nonce. Ed25519's deterministic nonces make this recover 0 keys, which is why Soatok's ECC guidance recommends it over ECDSA.`,
+    solutionNarrative: `$k = ${c.k}$ and $d = (s_1 k - z_1)/r = ${c.d} \\bmod ${c.n}$: total compromise from one repeated nonce. Ed25519's deterministic nonces make this recover 0 keys, which is why Soatok's ECC guidance recommends it over ECDSA.`,
   };
 };
 
@@ -267,22 +267,22 @@ fill["cr4-ecdsa-d3"] = (rng, idx) => {
 //   (b) shared prime: gcd(n1, n2) recovers the common factor (Euclid).
 // ============================================================================
 
-// d1 — small-e cube root recovery (m = 2..6, so m^3 < any real n).
+// d1: small-e cube root recovery (m = 2..6, so m^3 < any real n).
 fill["cr4-rsa-d1"] = (rng, idx) => {
   const m = rng.int(2, 6);
   const c = m * m * m;
   return {
     id: `gen.cr4-rsa-d1.${idx}`, generated: true, concepts: ["rsa-misuse"], difficulty: 1, context: "applied",
-    prompt: `A system uses textbook RSA with public exponent $e = 3$ and NO padding. A small message $m$ was encrypted as $c = m^3 \\bmod n$, but $m$ was so small that $m^3 < n$ — so no wraparound happened and $c = ${c}$ exactly. Recover $m$.`,
+    prompt: `A system uses textbook RSA with public exponent $e = 3$ and NO padding. A small message $m$ was encrypted as $c = m^3 \\bmod n$, but $m$ was so small that $m^3 < n$, so no wraparound happened and $c = ${c}$ exactly. Recover $m$.`,
     steps: [
       { instruction: `Since $c = m^3$ was never reduced, recover $m$ as the integer cube root of $c = ${c}$. What is $m$?`, answer: `${m}`, accept: [], hint: `What integer cubed gives ${c}? ($${m - 1}^3 = ${(m - 1) ** 3}$, $${m}^3 = ${c}$.)` },
     ],
     finalAnswer: { value: `${m}`, unit: "" },
-    solutionNarrative: `With $e = 3$, no padding, and $m^3 < n$, the ciphertext is a plain cube: $m = \\sqrt[3]{${c}} = ${m}$. Padding (OAEP) exists precisely to stop this — see Soatok, "How To Learn Cryptography as a Programmer".`,
+    solutionNarrative: `With $e = 3$, no padding, and $m^3 < n$, the ciphertext is a plain cube: $m = \\sqrt[3]{${c}} = ${m}$. Padding (OAEP) exists precisely to stop this: see Soatok, "How To Learn Cryptography as a Programmer".`,
   };
 };
 
-// d2 — shared prime via gcd; recover the common prime factor.
+// d2: shared prime via gcd; recover the common prime factor.
 fill["cr4-rsa-d2"] = (rng, idx) => {
   const p = rng.pick([5, 7, 11]);
   const others = [13, 17, 19, 23].filter((x) => x !== p);
@@ -297,11 +297,11 @@ fill["cr4-rsa-d2"] = (rng, idx) => {
       { instruction: `Factor $n_1 = ${n1}$ using the recovered prime: what is the OTHER factor, $q_1 = n_1 / p$?`, answer: `${q1}`, accept: [], hint: `$${n1} / ${p}$.` },
     ],
     finalAnswer: { value: `${p}`, unit: "" },
-    solutionNarrative: `$\\gcd(${n1}, ${n2}) = ${p}$ instantly factors both keys: $n_1 = ${p} \\times ${q1}$. Real scans of the internet found thousands of live keys sharing primes this way — a randomness failure, not a break of RSA's math.`,
+    solutionNarrative: `$\\gcd(${n1}, ${n2}) = ${p}$ instantly factors both keys: $n_1 = ${p} \\times ${q1}$. Real scans of the internet found thousands of live keys sharing primes this way: a randomness failure, not a break of RSA's math.`,
   };
 };
 
-// d3 — shared prime -> full private-key recovery.
+// d3: shared prime -> full private-key recovery.
 fill["cr4-rsa-d3"] = (rng, idx) => {
   const p = rng.pick([7, 11, 13]);
   const others = [17, 19, 23, 29].filter((x) => x !== p);
@@ -322,6 +322,6 @@ fill["cr4-rsa-d3"] = (rng, idx) => {
       { instruction: `Recover the private key $d = e^{-1} \\bmod \\varphi = ${e}^{-1} \\bmod ${phi}$.`, answer: `${d}`, accept: [], hint: `Find $d$ with $${e}d \\equiv 1 \\pmod{${phi}}$.` },
     ],
     finalAnswer: { value: `${d}`, unit: "" },
-    solutionNarrative: `One gcd factors $n_1 = ${p} \\times ${q1}$, giving $\\varphi = ${phi}$ and $d = ${e}^{-1} \\bmod ${phi} = ${d}$ — the whole private key. Don't roll your own RSA: use vetted libraries with OAEP. See Soatok, "Cryptography Engineering Has An Intrinsic Duty of Care".`,
+    solutionNarrative: `One gcd factors $n_1 = ${p} \\times ${q1}$, giving $\\varphi = ${phi}$ and $d = ${e}^{-1} \\bmod ${phi} = ${d}$: the whole private key. Don't roll your own RSA: use vetted libraries with OAEP. See Soatok, "Cryptography Engineering Has An Intrinsic Duty of Care".`,
   };
 };

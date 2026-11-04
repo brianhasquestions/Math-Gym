@@ -8,17 +8,17 @@
     {
       "id": "excluded-values",
       "label": "Excluded values and domain",
-      "microLesson": "A fraction is undefined when its denominator is zero — you can't divide by nothing. So for any rational expression, the **excluded values** are exactly the numbers that make the denominator zero. To find them, set the denominator equal to zero and solve. For $\\frac{x+1}{x-3}$, the denominator $x-3=0$ at $x=3$, so $x=3$ is excluded and the domain is 'all real numbers except 3.' Factor the denominator first when it has more than one piece."
+      "microLesson": "A fraction is undefined when its denominator is zero: you can't divide by nothing. So for any rational expression, the **excluded values** are exactly the numbers that make the denominator zero. To find them, set the denominator equal to zero and solve. For $\\frac{x+1}{x-3}$, the denominator $x-3=0$ at $x=3$, so $x=3$ is excluded and the domain is 'all real numbers except 3.' Factor the denominator first when it has more than one piece."
     },
     {
       "id": "simplify-rational",
       "label": "Simplifying by factoring",
-      "microLesson": "Simplify a rational expression the same way you simplify a number fraction: factor the top and bottom, then cancel any factor they share. $\\frac{x^2-9}{x^2-3x}=\\frac{(x-3)(x+3)}{x(x-3)}=\\frac{x+3}{x}$. **Only whole factors cancel**, never single terms across a $+$ or $-$. The excluded values come from the *original* denominator (here $x=0$ and $x=3$), even ones that cancel away — the simplified form must agree with the original everywhere it was defined."
+      "microLesson": "Simplify a rational expression the same way you simplify a number fraction: factor the top and bottom, then cancel any factor they share. $\\frac{x^2-9}{x^2-3x}=\\frac{(x-3)(x+3)}{x(x-3)}=\\frac{x+3}{x}$. **Only whole factors cancel**, never single terms across a $+$ or $-$. The excluded values come from the *original* denominator (here $x=0$ and $x=3$), even ones that cancel away: the simplified form must agree with the original everywhere it was defined."
     },
     {
       "id": "evaluate-rational",
       "label": "Evaluating at a value",
-      "microLesson": "To evaluate a rational expression at a number, substitute that number for the variable everywhere, then simplify the top and bottom separately and divide. For $\\frac{2x+1}{x-4}$ at $x=6$: top $=2(6)+1=13$, bottom $=6-4=2$, so the value is $\\frac{13}{2}$. Always check the value you plug in isn't an excluded value — if it makes the bottom zero, the expression is undefined there."
+      "microLesson": "To evaluate a rational expression at a number, substitute that number for the variable everywhere, then simplify the top and bottom separately and divide. For $\\frac{2x+1}{x-4}$ at $x=6$: top $=2(6)+1=13$, bottom $=6-4=2$, so the value is $\\frac{13}{2}$. Always check the value you plug in isn't an excluded value: if it makes the bottom zero, the expression is undefined there."
     },
     {
       "id": "solve-rational-equations",
@@ -28,17 +28,17 @@
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## Fractions, but with a variable in them\n\nA **rational expression** is just a fraction whose top and bottom are polynomials — like $\\frac{x+1}{x-3}$ or $\\frac{2}{x}$. They show up the instant a real quantity is a *ratio that changes*: cost split among a varying number of people, a concentration as you add water, a speed measured as distance over time, or how long a job takes when workers combine their rates. Wherever you'd naturally say 'per' or 'split between,' a rational expression is hiding.\n\nEverything you already know about ordinary fractions carries over — with one new rule that dominates the whole topic.\n\n## The one rule that changes everything: you can't divide by zero\n\nA fraction is **undefined** whenever its denominator equals zero. With a variable down there, that means certain inputs are forbidden. The numbers that make the denominator zero are the **excluded values**, and the set of all *allowed* inputs is the **domain**.\n\nTo find them, set the denominator equal to zero and solve:\n\n$$\\frac{x+1}{x-3}: \\quad x - 3 = 0 \\;\\Rightarrow\\; x = 3 \\text{ is excluded.}$$\n\nIf the denominator factors, every factor gives an excluded value: $\\frac{5}{x^2-x-6}=\\frac{5}{(x-3)(x+2)}$ is undefined at $x = 3$ **and** $x = -2$. This isn't a technicality — in an applied model, an excluded value is often a genuinely impossible scenario (splitting a bill among zero people, a trip with zero time elapsed).\n\n## Simplifying: factor, then cancel\n\nYou simplify a rational expression exactly like a number fraction — factor top and bottom and cancel **shared factors**:\n\n$$\\frac{x^2-9}{x^2-3x} = \\frac{(x-3)(x+3)}{x(x-3)} = \\frac{x+3}{x}.$$\n\nTwo cautions. First, **only whole factors cancel** — never reach across a $+$ or $-$ to cancel a single term ($\\frac{x+3}{x}$ is already fully reduced; the $x$'s do *not* cancel). Second, the excluded values are read off the **original** denominator. Here that's $x = 0$ and $x = 3$ — the $x=3$ restriction survives even though the $(x-3)$ cancelled, because the original expression was never defined there.\n\n## Evaluating at a number\n\nTo evaluate, substitute and simplify top and bottom separately:\n\n$$\\frac{2x+1}{x-4} \\text{ at } x = 6: \\quad \\frac{2(6)+1}{6-4} = \\frac{13}{2}.$$\n\nJust confirm the input isn't an excluded value first — plugging in $x = 4$ above would be dividing by zero.\n\n## Solving rational equations: clear the denominators\n\nThe payoff. To solve an equation containing fractions, **multiply every term by the least common denominator (LCD)**. The denominators cancel and you're left with a clean linear or quadratic equation:\n\n$$\\frac{3}{x} = \\frac{1}{4} \\;\\Rightarrow\\; \\text{(multiply by } 4x) \\;\\Rightarrow\\; 12 = x.$$\n\n### The extraneous-root trap\n\nClearing denominators can manufacture fake solutions. **Always check each answer against the original excluded values.** If a candidate makes an original denominator zero, it's **extraneous** — discard it. For example, $\\frac{x}{x-2} = \\frac{2}{x-2}$ leads to $x = 2$, but $x = 2$ is excluded, so the equation has **no solution.** Skipping the check is the single most common mistake in this topic."
+    "body": "## Fractions, but with a variable in them\n\nA **rational expression** is just a fraction whose top and bottom are polynomials: like $\\frac{x+1}{x-3}$ or $\\frac{2}{x}$. They show up the instant a real quantity is a *ratio that changes*: cost split among a varying number of people, a concentration as you add water, a speed measured as distance over time, or how long a job takes when workers combine their rates. Wherever you'd naturally say 'per' or 'split between,' a rational expression is hiding.\n\nEverything you already know about ordinary fractions carries over, with one new rule that dominates the whole topic.\n\n## The one rule that changes everything: you can't divide by zero\n\nA fraction is **undefined** whenever its denominator equals zero. With a variable down there, that means certain inputs are forbidden. The numbers that make the denominator zero are the **excluded values**, and the set of all *allowed* inputs is the **domain**.\n\nTo find them, set the denominator equal to zero and solve:\n\n$$\\frac{x+1}{x-3}: \\quad x - 3 = 0 \\;\\Rightarrow\\; x = 3 \\text{ is excluded.}$$\n\nIf the denominator factors, every factor gives an excluded value: $\\frac{5}{x^2-x-6}=\\frac{5}{(x-3)(x+2)}$ is undefined at $x = 3$ **and** $x = -2$. This isn't a technicality: in an applied model, an excluded value is often a genuinely impossible scenario (splitting a bill among zero people, a trip with zero time elapsed).\n\n## Simplifying: factor, then cancel\n\nYou simplify a rational expression exactly like a number fraction: factor top and bottom and cancel **shared factors**:\n\n$$\\frac{x^2-9}{x^2-3x} = \\frac{(x-3)(x+3)}{x(x-3)} = \\frac{x+3}{x}.$$\n\nTwo cautions. First, **only whole factors cancel**: never reach across a $+$ or $-$ to cancel a single term ($\\frac{x+3}{x}$ is already fully reduced; the $x$'s do *not* cancel). Second, the excluded values are read off the **original** denominator. Here that's $x = 0$ and $x = 3$: the $x=3$ restriction survives even though the $(x-3)$ cancelled, because the original expression was never defined there.\n\n## Evaluating at a number\n\nTo evaluate, substitute and simplify top and bottom separately:\n\n$$\\frac{2x+1}{x-4} \\text{ at } x = 6: \\quad \\frac{2(6)+1}{6-4} = \\frac{13}{2}.$$\n\nJust confirm the input isn't an excluded value first: plugging in $x = 4$ above would be dividing by zero.\n\n## Solving rational equations: clear the denominators\n\nThe payoff. To solve an equation containing fractions, **multiply every term by the least common denominator (LCD)**. The denominators cancel and you're left with a clean linear or quadratic equation:\n\n$$\\frac{3}{x} = \\frac{1}{4} \\;\\Rightarrow\\; \\text{(multiply by } 4x) \\;\\Rightarrow\\; 12 = x.$$\n\n### The extraneous-root trap\n\nClearing denominators can manufacture fake solutions. **Always check each answer against the original excluded values.** If a candidate makes an original denominator zero, it's **extraneous**: discard it. For example, $\\frac{x}{x-2} = \\frac{2}{x-2}$ leads to $x = 2$, but $x = 2$ is excluded, so the equation has **no solution.** Skipping the check is the single most common mistake in this topic."
   },
   "application": {
     "summary": "Rational expressions model any 'rate,' 'ratio,' or 'per' quantity that varies: how long a job takes when workers combine their speeds (work-rate), the average speed of a round trip, a concentration as you dilute or strengthen a mixture, and the cost per person when a fixed bill is split among a changing number of people.",
     "domains": ["personal finance", "physics", "chemistry", "project planning"],
-    "workedExample": "**Two pumps draining a pool (work-rate).**\n\nA big pump empties a pool in 6 hours; a small pump empties the same pool in 12 hours. Running together, how long do they take?\n\nThe trick with work-rate problems is to add **rates**, not times. In one hour the big pump does $\\frac{1}{6}$ of the job and the small one does $\\frac{1}{12}$. If together they finish in $t$ hours, their combined rate is $\\frac{1}{t}$:\n\n$$\\frac{1}{6} + \\frac{1}{12} = \\frac{1}{t}.$$\n\nMultiply every term by the LCD $12t$: $2t + t = 12$, so $3t = 12$ and $t = 4$ hours. Notice the answer is **less** than either pump alone — that's the sanity check for work-rate problems. The identical setup answers 'two people painting a fence,' 'two drains in a sink,' or 'two crews on a build.'",
+    "workedExample": "**Two pumps draining a pool (work-rate).**\n\nA big pump empties a pool in 6 hours; a small pump empties the same pool in 12 hours. Running together, how long do they take?\n\nThe trick with work-rate problems is to add **rates**, not times. In one hour the big pump does $\\frac{1}{6}$ of the job and the small one does $\\frac{1}{12}$. If together they finish in $t$ hours, their combined rate is $\\frac{1}{t}$:\n\n$$\\frac{1}{6} + \\frac{1}{12} = \\frac{1}{t}.$$\n\nMultiply every term by the LCD $12t$: $2t + t = 12$, so $3t = 12$ and $t = 4$ hours. Notice the answer is **less** than either pump alone: that's the sanity check for work-rate problems. The identical setup answers 'two people painting a fence,' 'two drains in a sink,' or 'two crews on a build.'",
     "domainNotes": [
       "**Work-rate:** add the per-hour rates ($\\frac{1}{a} + \\frac{1}{b} = \\frac{1}{t}$); the combined time is always shorter than the fastest worker alone.",
-      "**Travel:** average speed of a round trip is total distance over total time, $\\frac{2d}{\\,d/r_1 + d/r_2\\,}$ — not the average of the two speeds.",
+      "**Travel:** average speed of a round trip is total distance over total time, $\\frac{2d}{\\,d/r_1 + d/r_2\\,}$: not the average of the two speeds.",
       "**Chemistry/cooking:** concentration is (amount of solute) / (total mixture); adding water grows only the denominator.",
-      "**Finance:** cost per person is (fixed bill) / (number of people) — undefined for zero people, and it drops as the group grows."
+      "**Finance:** cost per person is (fixed bill) / (number of people): undefined for zero people, and it drops as the group grows."
     ]
   },
   "generators": ["excluded-value-v1", "simplify-rational-v1", "eval-rational-v1", "solve-rational-eq-v1", "a2l-excluded-d2", "a2l-excluded-d3", "a2l-simplify-rational-d1", "a2l-simplify-rational-d3", "a2l-eval-rational-d1", "a2l-eval-rational-d3", "a2l-solve-rational-d1"],
@@ -67,7 +67,7 @@
         { "instruction": "Explain in one word what splitting a bill among that many people would mean. Type the number that is excluded.", "answer": "0", "accept": ["zero", "n=0"], "hint": "You can't split a bill among zero people." }
       ],
       "finalAnswer": { "value": "0", "unit": "people" },
-      "solutionNarrative": "The expression $\\frac{240}{n}$ is undefined when $n = 0$ — splitting a bill among zero people is meaningless, which is exactly why the math forbids it."
+      "solutionNarrative": "The expression $\\frac{240}{n}$ is undefined when $n = 0$: splitting a bill among zero people is meaningless, which is exactly why the math forbids it."
     },
     {
       "id": "algebra-2.rational-expressions.s03",
@@ -215,7 +215,7 @@
         { "instruction": "So how many solutions does the equation have? Type a number or 'none'.", "answer": "none", "accept": ["no solution", "0", "zero"], "hint": "The only candidate is excluded, so it's extraneous." }
       ],
       "finalAnswer": { "value": "none", "unit": "" },
-      "solutionNarrative": "Clearing $(x-2)$ gives $x = 2$, but $x = 2$ makes the original denominator zero — it's extraneous. With no valid candidate, the equation has no solution."
+      "solutionNarrative": "Clearing $(x-2)$ gives $x = 2$, but $x = 2$ makes the original denominator zero: it's extraneous. With no valid candidate, the equation has no solution."
     },
     {
       "id": "algebra-2.rational-expressions.s14",
@@ -229,7 +229,7 @@
         { "instruction": "Solve for $t$ (hours).", "answer": "t = 4", "accept": ["t=4", "4"], "hint": "Divide both sides by 3." }
       ],
       "finalAnswer": { "value": "4", "unit": "hours" },
-      "solutionNarrative": "Multiplying $\\frac{1}{6} + \\frac{1}{12} = \\frac{1}{t}$ by $12t$ gives $2t + t = 12$, so $3t = 12$ and $t = 4$ hours — faster than either pump alone, as expected."
+      "solutionNarrative": "Multiplying $\\frac{1}{6} + \\frac{1}{12} = \\frac{1}{t}$ by $12t$ gives $2t + t = 12$, so $3t = 12$ and $t = 4$ hours, faster than either pump alone, as expected."
     },
     {
       "id": "algebra-2.rational-expressions.s15",
@@ -242,7 +242,7 @@
         { "instruction": "Combine like terms and solve for $t$ (hours).", "answer": "t = 2", "accept": ["t=2", "2"], "hint": "$3t = 6$, so divide by 3." }
       ],
       "finalAnswer": { "value": "2", "unit": "hours" },
-      "solutionNarrative": "Multiplying by $6t$ gives $2t + t = 6$, so $3t = 6$ and $t = 2$ hours together — shorter than Ana's solo 3 hours, as it should be."
+      "solutionNarrative": "Multiplying by $6t$ gives $2t + t = 6$, so $3t = 6$ and $t = 2$ hours together, shorter than Ana's solo 3 hours, as it should be."
     },
     {
       "id": "algebra-2.rational-expressions.s16",
@@ -256,7 +256,7 @@
         { "instruction": "Add the two times. Does the total equal the stated 3.5 hours? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "$2 + 1.5 = 3.5$." }
       ],
       "finalAnswer": { "value": "15", "unit": "mph" },
-      "solutionNarrative": "At $x = 15$: the outbound time is $\\frac{30}{15} = 2$ h and the return time is $\\frac{30}{20} = 1.5$ h, totaling $3.5$ h — exactly the stated total. So $x = 15$ mph satisfies the equation, confirming the solution by substitution."
+      "solutionNarrative": "At $x = 15$: the outbound time is $\\frac{30}{15} = 2$ h and the return time is $\\frac{30}{20} = 1.5$ h, totaling $3.5$ h, exactly the stated total. So $x = 15$ mph satisfies the equation, confirming the solution by substitution."
     }
   ]
 }

@@ -2,7 +2,7 @@
 // Parametric generators for two wave-14 curriculum-gap topics:
 //   algebra.absolute-value            (aab- prefix)
 //   algebra-2.function-transformations (a2v- prefix)
-// One template per (concept, difficulty) tier — 12 per topic, 24 total.
+// One template per (concept, difficulty) tier; 12 per topic, 24 total.
 // Self-contained: no imports from generator.js. Exports a `fill` map of
 // template-name -> generator fn, matching the pack pattern of gen-nt2-fill.js.
 // Every answer is computed in-pack from the SAME numbers shown in the prompt.
@@ -92,11 +92,11 @@ fill["aab-meaning-2"] = (rng, idx) => {
       { instruction: `So the distance is $|${diff}| = $ ?`, answer: `${diff}`, accept: [], hint: `${diff} is already positive.` },
     ],
     finalAnswer: { value: `${diff}`, unit: ctx.unit },
-    solutionNarrative: `$|${b} - (${a})| = |${diff}| = ${diff}$ — the gap between the two values on the number line.`,
+    solutionNarrative: `$|${b} - (${a})| = |${diff}| = ${diff}$: the gap between the two values on the number line.`,
   };
 };
 
-// d3: which x sit at distance c from m — |x - m| = c read as distance.
+// d3: which x sit at distance c from m; |x - m| = c read as distance.
 fill["aab-meaning-3"] = (rng, idx) => {
   const c = rng.int(2, 9);
   const m = nzInt(rng, 6);
@@ -203,7 +203,7 @@ fill["aab-equation-3"] = (rng, idx) => {
 
 // --- less-than-inequalities ---
 
-// d1: |x| < c — a single band.
+// d1: |x| < c; a single band.
 fill["aab-less-1"] = (rng, idx) => {
   const c = rng.int(2, 12);
   return {
@@ -218,7 +218,7 @@ fill["aab-less-1"] = (rng, idx) => {
   };
 };
 
-// d2: |x + b| <= c — shift the band.
+// d2: |x + b| <= c; shift the band.
 fill["aab-less-2"] = (rng, idx) => {
   const b = nzInt(rng, 7);
   const c = rng.int(2, 9);
@@ -266,7 +266,7 @@ fill["aab-less-3"] = (rng, idx) => {
 
 // --- greater-than-inequalities ---
 
-// d1: |x| > c — two rays.
+// d1: |x| > c; two rays.
 fill["aab-greater-1"] = (rng, idx) => {
   const c = rng.int(2, 12);
   return {
@@ -280,7 +280,7 @@ fill["aab-greater-1"] = (rng, idx) => {
   };
 };
 
-// d2: |x + b| >= c — shifted rays.
+// d2: |x + b| >= c; shifted rays.
 fill["aab-greater-2"] = (rng, idx) => {
   const b = nzInt(rng, 7);
   const c = rng.int(2, 9);
@@ -338,8 +338,8 @@ fill["a2v-shift-1"] = (rng, idx) => {
   const defs = {
     up:    { g: `f(x) + ${k}`, where: "OUTSIDE the function, so it acts on y", img: [p, q + k], why: "Outside changes behave exactly as written." },
     down:  { g: `f(x) - ${k}`, where: "OUTSIDE the function, so it acts on y", img: [p, q - k], why: "Outside changes behave exactly as written." },
-    right: { g: `f(x - ${k})`, where: "INSIDE the function, so it acts on x — backwards", img: [p + k, q], why: "Inside changes do the opposite of their sign: minus moves right." },
-    left:  { g: `f(x + ${k})`, where: "INSIDE the function, so it acts on x — backwards", img: [p - k, q], why: "Inside changes do the opposite of their sign: plus moves left." },
+    right: { g: `f(x - ${k})`, where: "INSIDE the function, so it acts on x, backwards", img: [p + k, q], why: "Inside changes do the opposite of their sign: minus moves right." },
+    left:  { g: `f(x + ${k})`, where: "INSIDE the function, so it acts on x, backwards", img: [p - k, q], why: "Inside changes do the opposite of their sign: plus moves left." },
   };
   const d = defs[kind];
   const [ix, iy] = d.img;
@@ -405,7 +405,7 @@ fill["a2v-reflect-1"] = (rng, idx) => {
     id: `gen.a2v-reflect-1.${idx}`, generated: true, concepts: ["reflections"], difficulty: 1, context: "abstract",
     prompt: `Let $g(x) = ${outside ? "-f(x)" : "f(-x)"}$, and suppose $(${p}, ${q})$ is on the graph of $f$. Which axis does the graph flip over, and where does the point land?`,
     steps: [
-      { instruction: `The minus sign is ${outside ? "OUTSIDE, acting on the output" : "INSIDE, acting on the input"}. Which axis is the mirror? Answer with one of: x-axis, y-axis.`, answer: axis, accept: [axis.replace("-", " "), `the ${axis}`], hint: outside ? `Outside minus negates y — that flips over the x-axis.` : `Inside minus negates x — a left-right mirror.` },
+      { instruction: `The minus sign is ${outside ? "OUTSIDE, acting on the output" : "INSIDE, acting on the input"}. Which axis is the mirror? Answer with one of: x-axis, y-axis.`, answer: axis, accept: [axis.replace("-", " "), `the ${axis}`], hint: outside ? `Outside minus negates y: that flips over the x-axis.` : `Inside minus negates x: a left-right mirror.` },
       { instruction: `Where does $(${p}, ${q})$ land? Write it in the form <x, y> (e.g. <3, -2>).`, answer: `<${ix}, ${iy}>`, accept: [`(${ix}, ${iy})`, `${ix}, ${iy}`], hint: outside ? `Keep x; negate y.` : `Negate x; keep y.` },
     ],
     finalAnswer: { value: `<${ix}, ${iy}>`, unit: "" },
@@ -465,7 +465,7 @@ fill["a2v-stretch-1"] = (rng, idx) => {
   };
 };
 
-// d2: horizontal scaling f(bx) or f(x/b) — classify + image point.
+// d2: horizontal scaling f(bx) or f(x/b); classify + image point.
 fill["a2v-stretch-2"] = (rng, idx) => {
   const b = rng.int(2, 4);
   const compress = rng.float() < 0.5;
@@ -517,7 +517,7 @@ fill["a2v-stretch-3"] = (rng, idx) => {
 
 // --- combining-transformations ---
 
-// d1: a f(x) + k on a point — order of operations on y.
+// d1: a f(x) + k on a point; order of operations on y.
 fill["a2v-combine-1"] = (rng, idx) => {
   const a = rng.int(2, 4);
   const k = nzInt(rng, 5);
@@ -528,7 +528,7 @@ fill["a2v-combine-1"] = (rng, idx) => {
     id: `gen.a2v-combine-1.${idx}`, generated: true, concepts: ["combining-transformations"], difficulty: 1, context: "abstract",
     prompt: `Let $g(x) = ${a}f(x) ${addConst(k)}$, and suppose $(${p}, ${q})$ is on the graph of $f$. Where does the point land? (Stretch first, then shift.)`,
     steps: [
-      { instruction: `Apply the operations to $y = ${q}$ in order: multiply by ${a}, THEN ${k > 0 ? `add ${k}` : `subtract ${-k}`}. What is the new y-value?`, answer: `${iy}`, accept: [], hint: `$${a} \\cdot ${q < 0 ? `(${q})` : q} ${addConst(k)}$ — multiplication before addition.` },
+      { instruction: `Apply the operations to $y = ${q}$ in order: multiply by ${a}, THEN ${k > 0 ? `add ${k}` : `subtract ${-k}`}. What is the new y-value?`, answer: `${iy}`, accept: [], hint: `$${a} \\cdot ${q < 0 ? `(${q})` : q} ${addConst(k)}$: multiplication before addition.` },
       { instruction: `Write the image in the form <x, y> (e.g. <3, -2>).`, answer: `<${p}, ${iy}>`, accept: [`(${p}, ${iy})`, `${p}, ${iy}`], hint: `Nothing touched the input, so x stays ${p}.` },
     ],
     finalAnswer: { value: `<${p}, ${iy}>`, unit: "" },

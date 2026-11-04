@@ -70,7 +70,7 @@ fill["fm2-bond-pricing-1"] = (rng, idx) => {
       { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `A par bond prices at face value.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `Coupons worth $${C}\\cdot${rnd(af, 6)} = \\$${money(coupPV)}$, face worth \\$${money(facePV)}$; the price is \\$${money(price)}$ — par, because the coupon rate equals the market rate.`,
+    solutionNarrative: `Coupons worth $${C}\\cdot${rnd(af, 6)} = \\$${money(coupPV)}$, face worth \\$${money(facePV)}$; the price is \\$${money(price)}$: par, because the coupon rate equals the market rate.`,
   };
 };
 
@@ -94,7 +94,7 @@ fill["fm2-bond-pricing-2"] = (rng, idx) => {
       { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(coupPV + facePV)], hint: `A discount bond prices below \\$1,000.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `Coupons worth \\$${money(coupPV)}, face worth \\$${money(facePV)}; price \\$${money(price)} — a discount, since the ${pct(couponRate, 2)}% coupon is below the ${pct(r, 2)}% market rate.`,
+    solutionNarrative: `Coupons worth \\$${money(coupPV)}, face worth \\$${money(facePV)}; price \\$${money(price)}: a discount, since the ${pct(couponRate, 2)}% coupon is below the ${pct(r, 2)}% market rate.`,
   };
 };
 
@@ -118,7 +118,7 @@ fill["fm2-bond-pricing-3"] = (rng, idx) => {
       { instruction: `Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(coupPV + facePV)], hint: `A premium bond prices above \\$1,000.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `Coupons worth \\$${money(coupPV)}, face worth \\$${money(facePV)}; price \\$${money(price)} — a premium, since the ${pct(couponRate, 2)}% coupon beats the ${pct(r, 2)}% market rate.`,
+    solutionNarrative: `Coupons worth \\$${money(coupPV)}, face worth \\$${money(facePV)}; price \\$${money(price)}: a premium, since the ${pct(couponRate, 2)}% coupon beats the ${pct(r, 2)}% market rate.`,
   };
 };
 
@@ -134,7 +134,7 @@ fill["fm2-premium-par-discount-1"] = (rng, idx) => {
       { instruction: `A coupon rate higher than the market rate means the bond sells at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.`, answer: "premium", accept: ["at a premium"], hint: `A richer-than-market coupon commands a price above face value.` },
     ],
     finalAnswer: { value: "premium", unit: "" },
-    solutionNarrative: `The coupon rate (${coupon}%) exceeds the market rate (${market}%), so the bond sells above face value — at a premium.`,
+    solutionNarrative: `The coupon rate (${coupon}%) exceeds the market rate (${market}%), so the bond sells above face value: at a premium.`,
   };
 };
 
@@ -165,7 +165,7 @@ fill["fm2-premium-par-discount-3"] = (rng, idx) => {
       { instruction: `When the coupon rate equals the market rate, the bond sells at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.`, answer: "par", accept: ["at par"], hint: `Equal rates mean the price equals the face value.` },
     ],
     finalAnswer: { value: "par", unit: "" },
-    solutionNarrative: `When the coupon rate equals the market rate, there is no reason to price above or below face value — the bond trades at par.`,
+    solutionNarrative: `When the coupon rate equals the market rate, there is no reason to price above or below face value: the bond trades at par.`,
   };
 };
 
@@ -266,7 +266,7 @@ fill["fm2-rate-sensitivity-2"] = (rng, idx) => {
       { instruction: `Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `Sum the two present values.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `At ${pct(r, 2)}%: coupons \\$${money(coupPV)}, face \\$${money(facePV)}, price \\$${money(price)} — below par, confirming a rate rise pushes the price down.`,
+    solutionNarrative: `At ${pct(r, 2)}%: coupons \\$${money(coupPV)}, face \\$${money(facePV)}, price \\$${money(price)}: below par, confirming a rate rise pushes the price down.`,
   };
 };
 
@@ -291,7 +291,7 @@ fill["fm2-rate-sensitivity-3"] = (rng, idx) => {
       { instruction: `Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(price), accept: [money(rN(coupPV, 2) + rN(facePV, 2))], hint: `Sum the two present values.` },
     ],
     finalAnswer: { value: money(price), unit: "dollars" },
-    solutionNarrative: `At ${pct(r, 2)}%: coupons \\$${money(coupPV)}, face \\$${money(facePV)}, price \\$${money(price)} — a premium, confirming a rate drop lifts the price.`,
+    solutionNarrative: `At ${pct(r, 2)}%: coupons \\$${money(coupPV)}, face \\$${money(facePV)}, price \\$${money(price)}: a premium, confirming a rate drop lifts the price.`,
   };
 };
 
@@ -738,7 +738,7 @@ fill["fm2-inflation-real-3"] = (rng, idx) => {
       { instruction: `Multiply by \\$${P} for the future nominal cost (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.`, answer: money(future), accept: [money(P * factor)], hint: `$${P} \\times ${rnd(factor, 6)}$.` },
     ],
     finalAnswer: { value: money(future), unit: "dollars" },
-    solutionNarrative: `$${P}\\cdot(1+${i})^${n} = ${P}\\cdot${rnd(factor, 6)} = \\$${money(future)}$ — the budget balloons in raw dollars, the core reason plans must use real values.`,
+    solutionNarrative: `$${P}\\cdot(1+${i})^${n} = ${P}\\cdot${rnd(factor, 6)} = \\$${money(future)}$: the budget balloons in raw dollars, the core reason plans must use real values.`,
   };
 };
 
@@ -797,6 +797,6 @@ fill["fm2-fisher-rate-3"] = (rng, idx) => {
       { instruction: `Convert to a percent, round to 2 decimals. Enter the real rate as a percent (a number, no % sign).`, answer: pct(real, 2), accept: [], hint: `$${rnd(real, 6)} \\times 100$.` },
     ],
     finalAnswer: { value: pct(real, 2), unit: "percent" },
-    solutionNarrative: `$r_{\\text{real}} = \\dfrac{${1 + nom}}{${1 + infl}} - 1 = ${rnd(real, 6)} = ${pct(real, 2)}\\%$ — notably below the ${shortcut}% shortcut, since Fisher divides rather than subtracts.`,
+    solutionNarrative: `$r_{\\text{real}} = \\dfrac{${1 + nom}}{${1 + infl}} - 1 = ${rnd(real, 6)} = ${pct(real, 2)}\\%$: notably below the ${shortcut}% shortcut, since Fisher divides rather than subtracts.`,
   };
 };
