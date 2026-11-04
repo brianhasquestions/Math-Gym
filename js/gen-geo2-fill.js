@@ -540,9 +540,19 @@ fill["geo2-compositions-2"] = (rng, idx) => {
 
 fill["geo2-compositions-3"] = (rng, idx) => {
   const type = rng.pick(["reflection-x", "reflection-y", "rotation", "dilation"]);
-  const p = nz(rng, 6), q = nz(rng, 6);
-  let r = nz(rng, 6), s = nz(rng, 6);
-  if (r === p && s === q) r = -r; // two DISTINCT pre-image points
+  // Redraw until the two pairs identify the move uniquely: a reflection whose
+  // points share the coordinate it flips is also a translation, and points
+  // both on y = x (or both on y = -x) let a reflection or half-turn pass for a
+  // quarter-turn or a reflection over a diagonal.
+  let p, q, r, s;
+  do {
+    p = nz(rng, 6); q = nz(rng, 6); r = nz(rng, 6); s = nz(rng, 6);
+  } while (
+    (r === p && s === q) ||
+    (type === "reflection-x" && q === s) ||
+    (type === "reflection-y" && p === r) ||
+    (type !== "dilation" && ((q === p && s === r) || (q === -p && s === -r)))
+  );
   const k = rng.int(2, 4);
   const img = (x, y) =>
     type === "reflection-x" ? [x, -y] :

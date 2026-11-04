@@ -1675,8 +1675,10 @@ generators["critical-quadratic-v1"] = (rng, idx) => {
   };
 };
 generators["increasing-decreasing-v1"] = (rng, idx) => {
-  const a = rng.int(1, 4), b = nz(rng, -6, 6), c = nz(rng, -6, 6), p = nz(rng, -4, 4);
-  const slope = 2 * a * p + b, inc = slope > 0;
+  // Redraw when f'(p) = 0 (a stationary point is neither increasing nor decreasing).
+  let a, b, c, p, slope;
+  do { a = rng.int(1, 4); b = nz(rng, -6, 6); c = nz(rng, -6, 6); p = nz(rng, -4, 4); slope = 2 * a * p + b; } while (slope === 0);
+  const inc = slope > 0;
   return {
     id: `gen.increasing-decreasing-v1.${idx}`, generated: true, concepts: ["increasing-decreasing"], difficulty: 2, context: "abstract",
     prompt: `Is $f(x) = ${a}x^2 ${signed(b)}x ${signed(c)}$ increasing or decreasing at $x = ${p}$?`,
@@ -1685,7 +1687,10 @@ generators["increasing-decreasing-v1"] = (rng, idx) => {
   };
 };
 generators["concavity-v1"] = (rng, idx) => {
-  const b = nz(rng, -5, 5), p = nz(rng, -4, 4), fpp = 6 * p + 2 * b, up = fpp > 0;
+  // Redraw when f''(p) = 0 (no concavity verdict at an inflection point).
+  let b, p, fpp;
+  do { b = nz(rng, -5, 5); p = nz(rng, -4, 4); fpp = 6 * p + 2 * b; } while (fpp === 0);
+  const up = fpp > 0;
   return {
     id: `gen.concavity-v1.${idx}`, generated: true, concepts: ["concavity-inflection"], difficulty: 2, context: "abstract",
     prompt: `Is $f(x) = x^3 ${signed(b)}x^2$ concave up or concave down at $x = ${p}$?`,
@@ -2138,9 +2143,9 @@ generators["critical-point-2d-v1"] = (rng, idx) => {
   };
 };
 generators["second-deriv-test-v1"] = (rng, idx) => {
-  const a = nz(rng, -3, 3), b = nz(rng, -3, 3), c = nz(rng, -3, 3);
-  // f_xx = 2a, f_yy = 2b, f_xy = c ; D = 4ab - c^2
-  const D = 4 * a * b - c * c;
+  // f_xx = 2a, f_yy = 2b, f_xy = c ; D = 4ab - c^2. Redraw D = 0 (test inconclusive).
+  let a, b, c, D;
+  do { a = nz(rng, -3, 3); b = nz(rng, -3, 3); c = nz(rng, -3, 3); D = 4 * a * b - c * c; } while (D === 0);
   const cls = D < 0 ? "saddle point" : a > 0 ? "minimum" : "maximum";
   return {
     id: `gen.second-deriv-test-v1.${idx}`, generated: true, concepts: ["second-derivative-test"], difficulty: 2, context: "abstract",

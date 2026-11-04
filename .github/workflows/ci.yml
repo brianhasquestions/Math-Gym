@@ -26,6 +26,11 @@ jobs:
       # double-escaped LaTeX, ${} placeholders, float noise, broken tables).
       - name: Render lint (every learner-visible string)
         run: node tools/render-lint.mjs
+      # Independent recomputation of generated answers (tools/oracles/*.mjs):
+      # catches generators whose stated answer is wrong on some draws, which
+      # self-grading can never see.
+      - name: Generator oracles (300 draws each)
+        run: node tools/oracles.mjs
       - name: Regenerate sitemap and check it is committed
         run: |
           node tools/gen-sitemap.mjs

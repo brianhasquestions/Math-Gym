@@ -152,7 +152,11 @@ fill["gt2-zerosum-1"] = (rng, idx) => {
   };
 };
 fill["gt2-zerosum-2"] = (rng, idx) => {
-  const { M } = withSaddle(rng, 2);
+  // Redraw ties within a column: a tie makes both rows best responses, so the
+  // keyed single answer would be wrong for the other row.
+  let M, guard = 0;
+  do { M = withSaddle(rng, 2).M; guard++; } while ((M[0][0] === M[1][0] || M[0][1] === M[1][1]) && guard < 200);
+  if (M[0][0] === M[1][0] || M[0][1] === M[1][1]) M = [[5, 8], [1, 3]];
   const [[a, b], [c, d]] = M;
   // Row player compares own choices; best response reasoning off the raw matrix.
   return {
@@ -614,27 +618,44 @@ fill["gt2-firstmover-2"] = (rng, idx) => {
   };
 };
 fill["gt2-firstmover-3"] = (rng, idx) => {
-  const T = buildTree(rng);
-  const f = fold(T);
-  // Also fold the tree with roles swapped: what if P1 were the FOLLOWER instead?
-  // If P2 moved first, P2 would pick the branch maximizing P2's folded payoff.
-  const p2IfL = (T.p2AtN1 === "a" ? T.LA : T.LB)[1];
-  const p2IfR = (T.p2AtN2 === "a" ? T.RA : T.RB)[1];
-  const p2Leads = p2IfL > p2IfR ? "L" : "R";
-  const p1AsFollower = p2Leads === "L" ? (T.p2AtN1 === "a" ? T.LA : T.LB)[0] : (T.p2AtN2 === "a" ? T.RA : T.RB)[0];
+  // Reversed order: Firm 2 commits to a or b FIRST, then Firm 1 picks L or R.
+  // Facing a, Firm 1 compares LA vs RA; facing b, LB vs RB. Firm 2 picks the
+  // action whose induced outcome pays Firm 2 more. Redraw until neither order
+  // has a tie at any decision and leading vs following differ.
+  let T, f, p1AsFollower, guard = 0;
+  const reversed = (T) => {
+    const f1Reply = (l, r) => (l[0] === r[0] ? null : l[0] > r[0] ? l : r);
+    const ifA = f1Reply(T.LA, T.RA), ifB = f1Reply(T.LB, T.RB);
+    if (!ifA || !ifB || ifA[1] === ifB[1]) return null;
+    return (ifA[1] > ifB[1] ? ifA : ifB)[0];
+  };
+  do {
+    T = buildTree(rng);
+    f = fold(T);
+    p1AsFollower = reversed(T);
+    guard++;
+  } while ((p1AsFollower === null || p1AsFollower === f.outcome[0]) && guard < 300);
+  if (p1AsFollower === null || p1AsFollower === f.outcome[0]) {
+    // Leading: n1 -> b (1,4), n2 -> a (2,5); Firm 1 takes R for 2.
+    // Following: vs a Firm 1 takes LA (3,1); vs b takes RB (4,2); Firm 2 picks b, Firm 1 gets 4.
+    const LA = [3, 1], LB = [1, 4], RA = [2, 5], RB = [4, 2];
+    T = { LA, LB, RA, RB, p2AtN1: "b", p2AtN2: "a", u1IfL: 1, u1IfR: 2 };
+    f = fold(T);
+    p1AsFollower = reversed(T);
+  }
   const leaderBetter = f.outcome[0] > p1AsFollower;
   return {
     id: `gen.gt2-firstmover-3.${idx}`, generated: true, concepts: ["first-mover-and-commitment"], difficulty: 3, context: "applied",
-    prompt: `A commitment game. When Firm 1 LEADS it commits first (L/R) and Firm 2 replies (a/b). Compare Firm 1's payoff as leader to its payoff if Firm 2 led instead. Leaves $(u_1,u_2)$.`,
+    prompt: `A commitment game. When Firm 1 LEADS it commits first (L/R) and Firm 2 replies (a/b). Compare Firm 1's payoff as leader to its payoff if Firm 2 led instead (Firm 2 commits to a or b first, then Firm 1 picks L or R). Leaves $(u_1,u_2)$.`,
     plot: treePlot(T, "Who benefits from moving first? Compare the two leadership orders."),
     steps: [
       { instruction: `With Firm 1 leading, which branch does it commit to: "L" or "R"?`, answer: f.rootChoice, accept: [], hint: `Larger folded value: ${T.u1IfL} (L) vs ${T.u1IfR} (R).` },
       { instruction: `Firm 1's payoff as leader? (A number.)`, answer: `${f.outcome[0]}`, accept: [], hint: `Folded leaf's first coordinate.` },
-      { instruction: `If instead Firm 2 led, it would choose the branch best for itself, leaving Firm 1 with ${p1AsFollower}. Is Firm 1 better off LEADING than following? Type 'yes' or 'no'.`, answer: yn(leaderBetter), accept: [], hint: `Compare ${f.outcome[0]} (leading) with ${p1AsFollower} (following).` },
+      { instruction: `If instead Firm 2 led, it would commit to a or b, Firm 1 would best-respond with L or R, and Firm 2 would pick the action that pays it more, leaving Firm 1 with ${p1AsFollower}. Is Firm 1 better off LEADING than following? Type 'yes' or 'no'.`, answer: yn(leaderBetter), accept: [], hint: `Compare ${f.outcome[0]} (leading) with ${p1AsFollower} (following).` },
       { instruction: `What is Firm 1's payoff difference between leading and following? (A number; leader minus follower.)`, answer: `${f.outcome[0] - p1AsFollower}`, accept: [], hint: `$${f.outcome[0]} - ${p1AsFollower}$.` },
     ],
     finalAnswer: { value: `${f.outcome[0] - p1AsFollower}`, unit: "" },
-    solutionNarrative: `Leading, Firm 1 commits to ${f.rootChoice} and earns ${f.outcome[0]}. If Firm 2 led it would steer to the branch worth ${p1AsFollower} for Firm 1. The gap is $${f.outcome[0]}-${p1AsFollower}=${f.outcome[0] - p1AsFollower}$, so Firm 1 ${leaderBetter ? "enjoys a genuine first-mover advantage" : "does not gain (or even loses) by moving first: first-mover advantage is not automatic"}.`,
+    solutionNarrative: `Leading, Firm 1 commits to ${f.rootChoice} and earns ${f.outcome[0]}. If Firm 2 led, it would commit to the action (a or b) whose outcome, after Firm 1's best reply, pays Firm 2 more, leaving Firm 1 with ${p1AsFollower}. The gap is $${f.outcome[0]}-${p1AsFollower}=${f.outcome[0] - p1AsFollower}$, so Firm 1 ${leaderBetter ? "enjoys a genuine first-mover advantage" : "does not gain (or even loses) by moving first: first-mover advantage is not automatic"}.`,
   };
 };
 

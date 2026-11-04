@@ -325,6 +325,8 @@ fill["nm2-gauss-1"] = (rng, idx) => {
   const x = rng.int(1, 5), y = rng.int(-4, 4);
   const a11 = 1, a12 = rng.int(1, 4);
   let a21 = rng.int(2, 4), a22 = rng.int(1, 4);
+  // reject det = a22 - a21*a12 = 0 (singular: no unique solution, y = 0/0)
+  while (a22 === a21 * a12) { a21 = rng.int(2, 4); a22 = rng.int(1, 4); }
   const b1 = a11 * x + a12 * y;
   const b2 = a21 * x + a22 * y;
   const m = a21 / a11;               // integer since a11=1
@@ -375,11 +377,19 @@ fill["nm2-gauss-3"] = (rng, idx) => {
   const x = rng.int(1, 3), y = rng.int(-2, 3), z = rng.int(1, 3);
   // Upper-triangular-friendly construction. Use small integer coefficients,
   // first pivot 1.
-  const A = [
+  // Redraw until the system is nonsingular and the second pivot (after
+  // eliminating x) is nonzero, so plain elimination needs no row swap.
+  const draw = () => [
     [1, rng.int(1, 2), rng.int(1, 2)],
     [rng.int(1, 3), rng.int(2, 4), rng.int(1, 3)],
     [rng.int(1, 3), rng.int(1, 3), rng.int(2, 4)],
   ];
+  const det3 = (M) =>
+    M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) -
+    M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0]) +
+    M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+  let A = draw();
+  while (det3(A) === 0 || A[1][1] - A[1][0] * A[0][1] === 0) A = draw();
   const b = [
     A[0][0] * x + A[0][1] * y + A[0][2] * z,
     A[1][0] * x + A[1][1] * y + A[1][2] * z,
@@ -408,7 +418,7 @@ fill["nm2-gauss-3"] = (rng, idx) => {
 fill["nm2-pivot-1"] = (rng, idx) => {
   const scen = rng.pick([
     { top: 0, bot: 3, need: "yes", why: "the top pivot is exactly 0, so you cannot divide by it: you must swap in a nonzero row" },
-    { top: 2, bot: 5, need: "no", why: "the top pivot is a healthy nonzero number, so no swap is required" },
+    { top: 2, bot: 5, need: "yes", why: "partial pivoting always brings the largest-magnitude entry to the pivot, and $|5| > |2|$, so swap even though 2 is nonzero" },
     { top: 0, bot: 4, need: "yes", why: "a zero pivot forces a row swap before elimination can proceed" },
     { top: 6, bot: 1, need: "no", why: "the current pivot is already the larger entry, so it is fine to keep" },
   ]);

@@ -791,7 +791,22 @@ fill["dm-gr-deg-d2"] = (rng, idx) => {
   };
 };
 fill["dm-gr-deg-d3"] = (rng, idx) => {
-  const n1 = rng.pick([4, 6]), d1 = rng.int(3, 5), n2 = rng.pick([2, 4]), d2 = rng.int(2, 4);
+  // Redraw until the degree sequence is graphical (Havel-Hakimi), so the
+  // described network can actually be built with single cables.
+  const graphical = (seq) => {
+    const s = [...seq];
+    for (;;) {
+      s.sort((x, y) => y - x);
+      const top = s.shift();
+      if (top === 0) return true;
+      if (top > s.length) return false;
+      for (let i = 0; i < top; i++) if (--s[i] < 0) return false;
+    }
+  };
+  let n1, d1, n2, d2;
+  do {
+    n1 = rng.pick([4, 6]); d1 = rng.int(3, 5); n2 = rng.pick([2, 4]); d2 = rng.int(2, 4);
+  } while (!graphical([...Array(n1).fill(d1), ...Array(n2).fill(d2)]));
   const sum = n1 * d1 + n2 * d2;
   const oddClaim = rng.pick([3, 5, 7]);
   return {

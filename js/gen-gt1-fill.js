@@ -311,8 +311,10 @@ fill["gt1-iesds-2"] = (rng, idx) => {
     pay = [[[v[0], v[1]], [v[2], v[3]]], [[v[4], v[5]], [v[6], v[7]]]];
     cdom = colDominance(pay);
     guard++;
-  } while (!cdom && guard < 300);
-  if (!cdom) { pay = [[[1, 5], [3, 4]], [[2, 3], [4, 1]]]; cdom = colDominance(pay); }
+    // Only Column may have a strictly dominated strategy, so "Column" is the
+    // unique answer to "which player removes first".
+  } while ((!cdom || rowDominance(pay)) && guard < 300);
+  if (!cdom || rowDominance(pay)) { pay = [[[1, 5], [5, 4]], [[2, 3], [4, 1]]]; cdom = colDominance(pay); }
   const survCol = cdom.dom;
   const rowBest = rowBestResponse(pay, survCol);
   if (rowBest === -1) { return fill["gt1-iesds-2"](rng, idx); }
@@ -724,28 +726,31 @@ function colMixMakesRowIndifferent(pay) {
 }
 
 // Build a 2x2 with a proper interior mixed equilibrium (both mixing in (0,1))
-// and no pure NE (so mixing is THE equilibrium). We use the anti-coordination /
-// matching structure and verify both p and q lie strictly in (0,1).
-function mixingGame(rng) {
+// and no pure NE (so mixing is THE equilibrium). Each player's four payoffs are
+// drawn independently (an asymmetric game, so p and q vary rather than always
+// being 1/2), then we redraw until best responses cycle and both p and q lie
+// strictly in (0,1). With `kicker` set, Row must prefer to MISMATCH Column and
+// Column to MATCH Row (the penalty-kick story).
+function mixingGame(rng, kicker = false) {
+  const ok = (pay, p, q) => {
+    if (!p || !q || pureNash(pay).length > 0) return false;
+    if (p.n <= 0 || p.n >= p.d || q.n <= 0 || q.n >= q.d) return false;
+    if (kicker && !(pay[1][0][0] > pay[0][0][0] && pay[0][1][0] > pay[1][1][0])) return false;
+    return true;
+  };
   let pay, p, q, guard = 0;
   do {
-    // Random payoffs but structured so best responses cycle: use a "match vs
-    // mismatch" template with random distinct values.
-    const v = distinctInts(rng, 4, 1, 8);
-    const [a, b, c, d] = v;
-    // Row prefers to match column; Column prefers to mismatch -> cyclic.
+    const r = distinctInts(rng, 4, 0, 9), c = distinctInts(rng, 4, 0, 9);
     pay = [
-      [[a, b], [c, d]],
-      [[c, d], [a, b]],
+      [[r[0], c[0]], [r[1], c[1]]],
+      [[r[2], c[2]], [r[3], c[3]]],
     ];
-    // Ensure no pure NE and non-degenerate mixes.
     p = rowMixMakesColIndifferent(pay);
     q = colMixMakesRowIndifferent(pay);
     guard++;
-  } while ((!p || !q || pureNash(pay).length > 0 ||
-            p.n <= 0 || p.n >= p.d || q.n <= 0 || q.n >= q.d) && guard < 400);
-  if (guard >= 400) {
-    pay = [[[2, 1], [0, 4]], [[0, 4], [2, 1]]];
+  } while (!ok(pay, p, q) && guard < 600);
+  if (!ok(pay, p, q)) {
+    pay = [[[1, 3], [4, 1]], [[3, 0], [2, 2]]];
     p = rowMixMakesColIndifferent(pay); q = colMixMakesRowIndifferent(pay);
   }
   return { pay, p, q };
@@ -865,7 +870,7 @@ fill["gt1-indiff-2"] = (rng, idx) => {
 };
 fill["gt1-indiff-3"] = (rng, idx) => {
   // Applied: penalty kicks. Solve keeper's mix to make kicker indifferent.
-  const { pay, p } = mixingGame(rng);
+  const { pay, p } = mixingGame(rng, true);
   const rl = ["Kick Left", "Kick Right"], cl = ["Dive Left", "Dive Right"];
   const q = colMixMakesRowIndifferent(pay);
   const A = pay[0][0][0], B = pay[0][1][0], C = pay[1][0][0], D = pay[1][1][0];
@@ -1157,8 +1162,10 @@ fill["gt1-anti-1"] = (rng, idx) => {
 fill["gt1-anti-2"] = (rng, idx) => {
   const rl = ["Swerve", "Straight"], cl = ["Swerve", "Straight"];
   const crash = rng.pick([-2, -4, -6]);
-  const win = rng.int(2, 4);
-  const both = rng.int(1, 2);
+  // win must strictly beat mutual Swerve, else (Swerve, Swerve) is a third
+  // (weak) equilibrium.
+  let win, both;
+  do { win = rng.int(2, 4); both = rng.int(1, 2); } while (win <= both);
   const pay = [
     [[both, both], [0, win]],
     [[win, 0], [crash, crash]],

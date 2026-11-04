@@ -183,7 +183,7 @@ fill["nt1-sieve-1"] = (rng, idx) => {
         { instruction: `So is ${n} prime or composite? Type 'prime' or 'composite'.`, answer: "prime", accept: ["p"], hint: `No prime up to $\\sqrt{n}$ divides it.` },
       ]
     : [
-        { instruction: `Find a prime factor of ${n} (try the small primes ${testPrimes.join(", ")}).`, answer: `${item.f}`, accept: [], hint: item.f === 3 ? `The digit sum of ${n} is a multiple of 3.` : item.f === 5 ? `${n} ends in 0 or 5.` : `$7 \\cdot ${n / item.f} = ${n}$.` },
+        { instruction: `Find the smallest prime factor of ${n} (try the small primes ${testPrimes.join(", ")}).`, answer: `${item.f}`, accept: [], hint: item.f === 3 ? `The digit sum of ${n} is a multiple of 3.` : item.f === 5 ? `${n} ends in 0 or 5.` : `$7 \\cdot ${n / item.f} = ${n}$.` },
         { instruction: `So is ${n} prime or composite? Type 'prime' or 'composite'.`, answer: "composite", accept: ["c"], hint: `It has a divisor other than 1 and itself.` },
       ];
   return {
@@ -231,7 +231,9 @@ fill["nt1-sieve-3"] = (rng, idx) => {
       { instruction: `So is ${item.n} prime or composite? Type 'prime' or 'composite'.`, answer: "composite", accept: ["c"], hint: `It equals $${item.f} \\cdot ${item.c}$.` },
     ],
     finalAnswer: { value: "composite", unit: "" },
-    solutionNarrative: `$${item.n} = ${item.f} \\cdot ${item.c}$. Because both factors exceed 10, ${item.n} slips past a careless check, but trial division up to $\\sqrt{${item.n}} \\approx ${maxTest}$ catches ${item.f}.`,
+    solutionNarrative: item.f > 10
+      ? `$${item.n} = ${item.f} \\cdot ${item.c}$. Because both factors exceed 10, ${item.n} slips past a careless check, but trial division up to $\\sqrt{${item.n}} \\approx ${maxTest}$ catches ${item.f}.`
+      : `$${item.n} = ${item.f} \\cdot ${item.c}$. It is odd, its digit sum is not a multiple of 3 and it does not end in 0 or 5, so ${item.n} slips past a careless check, but trial division up to $\\sqrt{${item.n}} \\approx ${maxTest}$ catches ${item.f}.`,
   };
 };
 

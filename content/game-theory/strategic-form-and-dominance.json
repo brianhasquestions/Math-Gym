@@ -160,7 +160,7 @@
       "concepts": ["iterated-elimination"],
       "difficulty": 2,
       "context": "abstract",
-      "prompt": "Each cell is (Row's payoff, Column's payoff). Solve by IESDS.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 1, 5 | 3, 4 |\n| **Bottom** | 2, 3 | 4, 1 |",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Solve by IESDS.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 1, 5 | 5, 4 |\n| **Bottom** | 2, 3 | 4, 1 |",
       "steps": [
         { "instruction": "Which player has a strictly dominated strategy to remove first? Type 'Row' or 'Column'.", "answer": "Column", "accept": ["col"], "hint": "Column's Right loses in both rows (4<5 and 1<3)." },
         { "instruction": "Eliminate Column's Right. Which Column strategy survives? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "Keep the dominant column." },

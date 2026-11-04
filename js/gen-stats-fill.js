@@ -217,19 +217,22 @@ fill["stat-desc-out-d3"] = (rng, idx) => {
   b.sort((x, y) => x - y);
   const base7 = b.slice(0, 7); // seven moderate values
   // Actually build 8 sorted values: 7 moderate + 1 big outlier.
-  const moderate = [];
-  let cur = rng.int(2, 5);
-  for (let i = 0; i < 7; i++) { moderate.push(cur); cur += rng.int(1, 3); }
   // quartiles by median-of-halves on n=8: lower half = first 4, upper half = last 4.
-  // Choose outlier so it clearly exceeds the fence.
-  const lowerVals = moderate.slice(0, 4);
-  const q1 = (lowerVals[1] + lowerVals[2]) / 2;
-  // upper half will be moderate[4], moderate[5], moderate[6], outlier
-  let outlier = moderate[6] + rng.int(15, 30);
-  const upperVals = [moderate[4], moderate[5], moderate[6], outlier];
-  const q3 = (upperVals[1] + upperVals[2]) / 2;
-  const iqr = q3 - q1;
-  const fence = q3 + 1.5 * iqr;
+  // Resample until the outlier clears the fence by at least 1 (no near-ties).
+  let moderate, lowerVals, q1, outlier, upperVals, q3, iqr, fence;
+  do {
+    moderate = [];
+    let cur = rng.int(2, 5);
+    for (let i = 0; i < 7; i++) { moderate.push(cur); cur += rng.int(1, 3); }
+    lowerVals = moderate.slice(0, 4);
+    q1 = (lowerVals[1] + lowerVals[2]) / 2;
+    // upper half is moderate[4], moderate[5], moderate[6], outlier
+    outlier = moderate[6] + rng.int(15, 30);
+    upperVals = [moderate[4], moderate[5], moderate[6], outlier];
+    q3 = (upperVals[1] + upperVals[2]) / 2;
+    iqr = q3 - q1;
+    fence = q3 + 1.5 * iqr;
+  } while (outlier < fence + 1);
   const data = [...moderate, outlier];
   const isOut = outlier > fence;
   return {
@@ -239,10 +242,10 @@ fill["stat-desc-out-d3"] = (rng, idx) => {
       { instruction: `$Q_1$ is the median of the lower half $\\{${lowerVals.join(", ")}\\}$: average the two middle values. (Give a number.)`, answer: `${q1}`, accept: [], hint: `$(${lowerVals[1]} + ${lowerVals[2]})/2$.` },
       { instruction: `$Q_3$ is the median of the upper half $\\{${upperVals.join(", ")}\\}$: average the two middle values. (Give a number.)`, answer: `${q3}`, accept: [], hint: `$(${upperVals[1]} + ${upperVals[2]})/2$.` },
       { instruction: "Compute the IQR $= Q_3 - Q_1$. (Give a number.)", answer: `${iqr}`, accept: [], hint: `$${q3} - ${q1}$.` },
-      { instruction: `Compute the upper fence $Q_3 + 1.5\\,\\text{IQR}$, then answer: is ${outlier} above it, making it an outlier? Answer yes or no.`, answer: "yes", accept: [], hint: `Upper fence $= ${q3} + 1.5(${iqr}) = ${fence}$; ${outlier} exceeds it.` },
+      { instruction: `Compute the upper fence $Q_3 + 1.5\\,\\text{IQR}$, then answer: is ${outlier} above it, making it an outlier? Answer yes or no.`, answer: isOut ? "yes" : "no", accept: [], hint: `Upper fence $= ${q3} + 1.5(${iqr}) = ${fence}$; ${isOut ? `${outlier} exceeds it` : `${outlier} does not exceed it`}.` },
     ],
-    finalAnswer: { value: "yes", unit: "" },
-    solutionNarrative: `$Q_1 = ${q1}$, $Q_3 = ${q3}$, IQR $= ${iqr}$, so the upper fence is $${q3} + 1.5(${iqr}) = ${fence}$. Since $${outlier} > ${fence}$, the ${outlier} ms request is a genuine outlier${isOut ? "" : ""}.`,
+    finalAnswer: { value: isOut ? "yes" : "no", unit: "" },
+    solutionNarrative: `$Q_1 = ${q1}$, $Q_3 = ${q3}$, IQR $= ${iqr}$, so the upper fence is $${q3} + 1.5(${iqr}) = ${fence}$. ${isOut ? `Since $${outlier} > ${fence}$, the ${outlier} ms request is a genuine outlier.` : `Since $${outlier} \\le ${fence}$, the ${outlier} ms request is not an outlier.`}`,
   };
 };
 
@@ -857,8 +860,12 @@ fill["stat-cond-bayes-d3"] = (rng, idx) => {
 // --- expected-value ---
 fill["stat-rv-ev-d1"] = (rng, idx) => {
   // Two-value RV, each prob 0.5. E[X] = (a+b)/2, forced even so E is clean.
-  let a = rng.int(0, 8), b = rng.int(0, 8);
-  if ((a + b) % 2 !== 0) b = b + 1 <= 9 ? b + 1 : b - 1;
+  // Resample while the two values coincide (a one-point "distribution").
+  let a, b;
+  do {
+    a = rng.int(0, 8); b = rng.int(0, 8);
+    if ((a + b) % 2 !== 0) b = b + 1 <= 9 ? b + 1 : b - 1;
+  } while (a === b);
   const t1 = a * 0.5, t2 = b * 0.5, ev = (a + b) / 2;
   return {
     id: `gen.stat-rv-ev-d1.${idx}`, generated: true, concepts: ["expected-value"], difficulty: 1, context: "abstract",
@@ -1055,7 +1062,9 @@ fill["stat-rv-dec-d2"] = (rng, idx) => {
   // Warranty vs expected repair. Expected cost = cost*p; compare to warranty price.
   const repair = 100 * rng.int(2, 6), p = rng.int(3, 8) / 100;
   const exp = Math.round(repair * p * 100) / 100;
-  const warranty = rng.int(Math.max(5, Math.round(exp) - 8), Math.round(exp) + 15);
+  // Exclude ties (warranty = expected cost has no definite yes/no).
+  let warranty;
+  do { warranty = rng.int(Math.max(5, Math.round(exp) - 8), Math.round(exp) + 15); } while (warranty === exp);
   const worth = warranty < exp ? "yes" : "no";
   return {
     id: `gen.stat-rv-dec-d2.${idx}`, generated: true, concepts: ["decisions-with-ev"], difficulty: 2, context: "applied",

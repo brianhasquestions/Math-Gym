@@ -262,25 +262,31 @@ fill["nm1-float-2"] = (rng, idx) => {
 
 // d3: catastrophic cancellation: significant digits lost when subtracting.
 fill["nm1-float-3"] = (rng, idx) => {
-  // two 6-sig-fig numbers agreeing in the first k digits; result keeps (6-k) sig figs.
+  // two 5-sig-fig numbers 0.DDDDD agreeing in exactly their first k digits,
+  // whose difference keeps exactly (5-k) sig figs.
   const k = rng.pick([3, 4]);
   const lead = rng.int(100, 999); // shared leading 3 digits
-  const tailA = rng.int(10, 99);
-  const tailB = tailA - rng.int(1, 9);
-  // build numbers like 1.234 56 vs 1.234 41
+  let tailA, tailB;
+  do {
+    tailA = rng.int(10, 99);
+    tailB = tailA - rng.int(1, 9 + 80 * (4 - k));
+  } while (tailB < 0
+    || (Math.floor(tailA / 10) === Math.floor(tailB / 10) ? 4 : 3) !== k
+    || String(tailA - tailB).length !== 5 - k);
+  // build numbers like 0.12356 vs 0.12341
   const a = lead / 1000 + tailA / 100000;
   const b = lead / 1000 + tailB / 100000;
-  const diff = Math.round((a - b) * 100000) / 100000;
-  const sigLost = k; // roughly k leading digits cancel
+  const diff = (tailA - tailB) / 100000;
+  const sigLost = k; // the k shared leading digits cancel
   return {
     id: `gen.nm1-float-3.${idx}`, generated: true, concepts: ["floating-point-and-machine-epsilon"], difficulty: 3, context: "abstract",
-    prompt: `Two 6-significant-figure values are $a = ${a.toFixed(5)}$ and $b = ${b.toFixed(5)}$. They agree in their leading digits. Compute $a - b$ (exact), then note how cancellation destroys precision.`,
+    prompt: `Two 5-significant-figure values are $a = ${a.toFixed(5)}$ and $b = ${b.toFixed(5)}$. They agree in their leading digits. Compute $a - b$ (exact), then note how cancellation destroys precision.`,
     steps: [
-      { instruction: `Subtract: $${a.toFixed(5)} - ${b.toFixed(5)}$. Round to 5 decimals.`, answer: rnd(diff, 5), accept: nbrs(diff, 5), hint: "Line up the decimals and subtract." },
-      { instruction: `The two inputs shared their first ${sigLost} significant digits, which cancelled. Roughly how many significant digits does the difference retain? (6 minus the ${sigLost} that cancelled.)`, answer: `${6 - sigLost}`, accept: [], hint: `$6 - ${sigLost}$.` },
+      { instruction: `Subtract: $${a.toFixed(5)} - ${b.toFixed(5)}$. Round to 5 decimals.`, answer: rnd(diff, 5), accept: [rnd(diff, 6)], hint: "Line up the decimals and subtract." },
+      { instruction: `The two inputs shared their first ${sigLost} significant digits, which cancelled. Roughly how many significant digits does the difference retain? (5 minus the ${sigLost} that cancelled.)`, answer: `${5 - sigLost}`, accept: [], hint: `$5 - ${sigLost}$.` },
     ],
     finalAnswer: { value: rnd(diff, 5), unit: "" },
-    solutionNarrative: `$a - b = ${rnd(diff, 5)}$. The shared leading digits cancel, so only about $${6 - sigLost}$ significant digits of accuracy survive: the hallmark of catastrophic cancellation.`,
+    solutionNarrative: `$a - b = ${rnd(diff, 5)}$. The shared leading digits cancel, so only $${5 - sigLost}$ significant digit${5 - sigLost === 1 ? "" : "s"} of accuracy survive${5 - sigLost === 1 ? "s" : ""}: the hallmark of catastrophic cancellation.`,
   };
 };
 
@@ -320,7 +326,7 @@ fill["nm1-signchange-2"] = (rng, idx) => {
   // f(x) = x^2 + k x + m chosen so it has a root in (a, c): pick m so f(a)*f(c) < 0.
   // Simpler: f(x) = x^3 - K with a real root between a and c is messy; use (x - root) form.
   // Use f(x) = x^2 - N with N between a^2.. ensure sign change; fall back to linear-ish.
-  const N = rng.pick([2, 5, 7, 11]);
+  const N = rng.pick([2, 5, 7, 8]); // 1 < N < 9 so f(1) < 0 < f(3)
   const fa = a * a - N, fc = c * c - N;
   // guarantee a sign change by construction: choose a=-? no. Instead evaluate given a<0<c around sqrt.
   // Use interval [1, 3] style with N in between to be safe:
@@ -344,10 +350,13 @@ fill["nm1-signchange-2"] = (rng, idx) => {
 fill["nm1-signchange-3"] = (rng, idx) => {
   const target = rng.pick([50, 60, 75, 100]);
   // g(t) = a t^2 with a chosen so g crosses target between t=lo and t=hi
-  const lo = rng.int(2, 4);
-  const hi = lo + 1;
-  const a = rng.pick([6, 8, 10, 12]);
-  // ensure a*lo^2 < target < a*hi^2
+  // redraw until a*lo^2 < target < a*hi^2, so f really changes sign on [lo, hi]
+  let lo, hi, a;
+  do {
+    lo = rng.int(2, 4);
+    hi = lo + 1;
+    a = rng.pick([6, 8, 10, 12]);
+  } while (!(a * lo * lo < target && target < a * hi * hi));
   const glo = a * lo * lo, ghi = a * hi * hi;
   return {
     id: `gen.nm1-signchange-3.${idx}`, generated: true, concepts: ["sign-change-and-ivt"], difficulty: 3, context: "applied",

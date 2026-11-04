@@ -251,7 +251,9 @@ fill["laf2-dynamics-d2"] = (rng, idx) => {
 
 fill["laf2-dynamics-d3"] = (rng, idx) => {
   const l1 = rng.int(2, 4);            // dominant growth factor
-  const neg = rng.int(1, 3);
+  // neg < l1 keeps l1 the unique largest |lambda| and the fecundity a = l1 - neg > 0
+  let neg = rng.int(1, 3);
+  while (neg >= l1) neg = rng.int(1, 3);
   const l2 = -neg;                      // decaying/oscillating mode
   const a = l1 + l2;                    // trace
   const prod = l1 * neg;                // -det

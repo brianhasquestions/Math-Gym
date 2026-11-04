@@ -139,16 +139,17 @@ fill["def-separable-recognition-d3"] = (rng, idx) => {
 
 // slope-fields: d2, d3
 fill["def-slope-fields-d2"] = (rng, idx) => {
-  const a = nz(rng, -4, 4), x = rng.int(-3, 4), y = rng.int(-3, 4);
-  const slope = a * x * x - y;
+  // Redraw zero slopes (a horizontal tangent is neither increasing nor decreasing).
+  let a, x, y, slope;
+  do { a = nz(rng, -4, 4); x = rng.int(-3, 4); y = rng.int(-3, 4); slope = a * x * x - y; } while (slope === 0);
   return {
     id: `gen.def-slope-fields-d2.${idx}`, generated: true, concepts: ["slope-fields"], difficulty: 2, context: "abstract",
     prompt: `For $\\frac{dy}{dx} = ${a}x^2 - y$, a solution curve passes through $(${x}, ${y})$.`,
     steps: [
       { instruction: `Find the slope $\\frac{dy}{dx}$ at $(${x}, ${y})$.`, answer: `${slope}`, accept: [], hint: `$\\frac{dy}{dx} = ${a}x^2 - y = ${a}(${x})^2 - (${y})$.` },
-      { instruction: "Is the solution curve increasing or decreasing at that point? Type 'increasing' or 'decreasing'.", answer: slope >= 0 ? "increasing" : "decreasing", accept: slope >= 0 ? ["rising"] : ["falling"], hint: slope >= 0 ? "A nonnegative slope means the curve is rising." : "A negative slope means the curve is falling." },
+      { instruction: "Is the solution curve increasing or decreasing at that point? Type 'increasing' or 'decreasing'.", answer: slope > 0 ? "increasing" : "decreasing", accept: slope > 0 ? ["rising"] : ["falling"], hint: slope > 0 ? "A positive slope means the curve is rising." : "A negative slope means the curve is falling." },
     ],
-    finalAnswer: { value: `${slope}`, unit: "" }, solutionNarrative: `At $(${x}, ${y})$, $\\frac{dy}{dx} = ${a}(${x})^2 - ${y} = ${slope}$, so the curve is ${slope >= 0 ? "increasing" : "decreasing"}.`,
+    finalAnswer: { value: `${slope}`, unit: "" }, solutionNarrative: `At $(${x}, ${y})$, $\\frac{dy}{dx} = ${a}(${x})^2 - (${y}) = ${slope}$, so the curve is ${slope > 0 ? "increasing" : "decreasing"}.`,
   };
 };
 fill["def-slope-fields-d3"] = (rng, idx) => {

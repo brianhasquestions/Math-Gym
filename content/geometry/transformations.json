@@ -23,7 +23,7 @@
     {
       "id": "compositions-and-identify",
       "label": "Compositions and identifying transformations",
-      "microLesson": "A **composition** applies transformations in sequence, and order matters: translate-then-reflect usually lands somewhere different from reflect-then-translate. Work one stage at a time. To **identify** an unknown transformation, compare coordinates: all points shifted by the same amounts → *translation*; exactly one coordinate flips sign → *reflection* over an axis; both flip → *rotation* of $180^\\circ$; both multiplied by the same factor → *dilation*. Two point pairs are enough to pin it down."
+      "microLesson": "A **composition** applies transformations in sequence, and order matters: translate-then-reflect usually lands somewhere different from reflect-then-translate. Work one stage at a time. To **identify** an unknown transformation, compare coordinates: all points shifted by the same amounts → *translation*; exactly one coordinate flips sign → *reflection* over an axis; both flip → *rotation* of $180^\\circ$; both multiplied by the same factor → *dilation*. Two point pairs usually pin it down, but not always: if a reflection's two points share the coordinate it flips (as in $(5, 2)$ and $(5, -4)$ reflected over the y-axis), the same pairs also fit a translation, and points that both sit on $y = x$ or $y = -x$ can fit two different moves. When the pairs fit more than one move, check a third point."
     }
   ],
   "lecture": {

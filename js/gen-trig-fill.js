@@ -317,9 +317,12 @@ fill["trg-amp-mid-d1"] = (rng, idx) => {
 
 // amplitude-midline: d2 (from max/min)
 fill["trg-amp-mid-d2"] = (rng, idx) => {
-  const A = rng.int(2, 8), D = rng.int(-3, 9);
-  const M = D + A, m = D - A;
+  const A = rng.int(2, 8);
   const ctx = rng.pick(["A buoy's height above the seabed", "A city's daily temperature", "The water depth at a pier", "A vibrating spring's length"]);
+  // Heights, depths and lengths cannot go negative: keep min = D - A >= 1.
+  // Only temperature may dip below zero.
+  const D = ctx.includes("temperature") ? rng.int(-3, 9) : rng.int(A + 1, A + 8);
+  const M = D + A, m = D - A;
   return {
     id: `gen.trg-amp-mid-d2.${idx}`, generated: true, concepts: ["amplitude-midline"], difficulty: 2, context: "applied",
     prompt: `${ctx} oscillates sinusoidally between a minimum of ${m} and a maximum of ${M}. Find the amplitude and midline of the model.`,
