@@ -1,0 +1,378 @@
+{
+  "id": "cryptography.hashes-macs-signatures",
+  "subject": "cryptography",
+  "title": "Hashes, MACs and Digital Signatures",
+  "prerequisites": ["cryptography.rsa", "cryptography.aes-modes"],
+  "estimatedMinutes": 60,
+  "keyConcepts": [
+    {
+      "id": "hash-properties",
+      "label": "Preimage, second-preimage and collision resistance",
+      "microLesson": "Preimage resistance: given only a digest $y$, finding any $x$ with $H(x) = y$ is infeasible. Second-preimage resistance: given a specific $x$, finding a different $x'$ with the same digest is infeasible. Collision resistance: finding any pair $x \\ne x'$ with equal digests is infeasible. Generic costs for an $n$-bit hash are $2^n$, $2^n$ and $2^{n/2}$. The toy $h(x) = (x^2 + c) \\bmod p$ fails all three because $x$ and $p - x$ always collide."
+    },
+    {
+      "id": "birthday-bound",
+      "label": "The birthday bound and security levels",
+      "microLesson": "$k$ random digests from $N$ possibilities form $\\binom{k}{2} \\approx k^2/2$ pairs, each colliding with probability $1/N$, so collisions appear once $k \\approx \\sqrt{N}$. For an $n$-bit hash that is $2^{n/2}$ tries. SHA-256 therefore has 128-bit collision security (and 256-bit preimage security); a hash truncated to $t$ bits has only $t/2$-bit collision security; $s$-bit security needs $2s$ output bits."
+    },
+    {
+      "id": "merkle-damgard",
+      "label": "Merkle-Damgård chaining and length extension",
+      "microLesson": "MD5, SHA-1 and SHA-2 fold blocks into a chaining value, $h_i = f(h_{i-1}, m_i)$, and output the last one. Because the digest is the whole internal state, anyone holding $H(m)$ can compute $H(m \\,\\|\\, \\text{pad} \\,\\|\\, x)$ without knowing $m$. So the naive MAC $H(K \\,\\|\\, m)$ is forgeable by length extension. SHA-3, BLAKE2/3 and truncated hashes such as SHA-512/256 are not extendable."
+    },
+    {
+      "id": "hmac",
+      "label": "HMAC versus naive keyed hashing",
+      "microLesson": "$\\text{HMAC}(K, m) = H((K \\oplus \\text{opad}) \\,\\|\\, H((K \\oplus \\text{ipad}) \\,\\|\\, m))$ with ipad $= 0x36 = 54$ and opad $= 0x5C = 92$ repeated to the block size. The inner pass hashes the message; the outer keyed pass hashes the inner digest, so the published tag is never a state an attacker can extend. $H(m \\,\\|\\, K)$ instead falls to any offline collision. Compare tags in constant time."
+    },
+    {
+      "id": "rsa-signatures",
+      "label": "RSA signatures, forgery and PSS",
+      "microLesson": "Sign $s = m^d \\bmod n$ with the private key; verify $s^e \\bmod n = m$ with the public key. Raw RSA signatures are forgeable: any $s$ signs $m = s^e$, and $s_1 s_2$ signs $m_1 m_2 \\bmod n$ because RSA is multiplicative. RSA-PSS fixes this by signing a salted, hashed, structured encoding of the message. OAEP is the padding for encryption, not signatures."
+    },
+    {
+      "id": "signature-nonces",
+      "label": "Schnorr, ECDSA and deterministic EdDSA nonces",
+      "microLesson": "Schnorr: $r = g^k$, $e = H(r \\,\\|\\, m)$, $s = k + xe \\bmod q$, and $g^s = r y^e$ verifies. The nonce $k$ must be secret, unique and unbiased; a repeat gives $x = (s_1 - s_2)/(e_1 - e_2)$. ECDSA classically draws $k$ from an RNG each time; EdDSA (Ed25519) derives $k = H(\\text{prefix} \\,\\|\\, m)$ from secret key material, so no RNG failure can repeat it. RFC 6979 does the same for ECDSA."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## Three tools for \"is this the real message?\"\n\nEncryption hides data. It does not tell you whether the data is the data that was sent, or who sent it. This lesson covers the three tools that do:\n\n- A **hash function** $H$ maps any input to a short fixed-length **digest**, with no key at all. It answers \"is this the same data?\"\n- A **MAC** (message authentication code) is a keyed checksum: $\\text{tag} = \\text{MAC}_K(m)$. Anyone holding the shared key $K$ can create or check tags, so it answers \"did someone with the key send this?\"\n- A **digital signature** uses a key pair: sign with the private key, verify with the public key. Anyone can verify, only the key holder can sign, so it answers \"did *this person* sign this?\"\n\nThe math is all toy-sized below, but the structure of every attack and every fix is the real one.\n\n## 1. What a hash function promises\n\nA cryptographic hash is supposed to behave like a random function that nobody can steer. That is made precise by three properties, ordered by how much freedom the attacker gets:\n\n| Property | Attacker is given | Attacker must find | Generic cost, $n$-bit hash |\n|---|---|---|---|\n| Preimage resistance | a digest $y$ | **any** $x$ with $H(x) = y$ | about $2^n$ |\n| Second-preimage resistance | a specific input $x$ | a **different** $x'$ with $H(x') = H(x)$ | about $2^n$ |\n| Collision resistance | nothing | **any pair** $x \\ne x'$ with $H(x) = H(x')$ | about $2^{n/2}$ |\n\nCollision resistance implies second-preimage resistance (a second preimage *is* a collision), so collisions are the weakest point and the first property to fall when a hash ages. Real-world mapping: cracking an unsalted password digest is a preimage problem; forging a document to match one you were handed is a second preimage; preparing a harmless and an evil certificate request together so one signature covers both is a collision.\n\nThe practice problems use the toy hash $h(x) = (x^2 + c) \\bmod p$. It fails everything instantly: $x$ and $p - x$ always collide (since $(p - x)^2 \\equiv x^2$), so a second preimage costs one subtraction, and a preimage is just a modular square root. A real hash like SHA-256 has no algebra to exploit, so the only known attacks are generic search.\n\n(Password storage needs more than preimage resistance: it needs *slow*, salted hashes such as Argon2, scrypt or bcrypt, because human passwords come from a small guessable space.)\n\n## 2. The birthday bound\n\nWhy do collisions cost only $2^{n/2}$? Hash $k$ random inputs into $N = 2^n$ possible digests. There are\n\n$$\\binom{k}{2} = \\frac{k(k-1)}{2} \\approx \\frac{k^2}{2}$$\n\npairs, and each pair collides with probability $1/N$, so the expected number of colliding pairs is about $k^2/(2N)$. That reaches $1$ when $k \\approx \\sqrt{2N}$, and the probability of at least one collision is $1 - e^{-k^2/(2N)}$, which passes 50% at $k \\approx 1.18\\sqrt{N}$. This is the **birthday paradox**: with $N = 365$ days, 23 people give better-than-even odds of a shared birthday.\n\nFor an $n$-bit hash, $\\sqrt{N} = 2^{n/2}$. So:\n\n- **SHA-256** has 256-bit output, $2^{256}$ work for preimages, but only $2^{128}$ for collisions. Its **security level** is quoted as 128 bits: the cheapest generic attack sets the level.\n- **Truncating** a hash to $t$ bits drops collision security to $t/2$ bits. A 64-bit tag gives only $2^{32}$ collision resistance, which a laptop finishes in minutes.\n- To get $s$-bit collision security you need at least $2s$ output bits.\n\nGeneric bounds are upper limits; cryptanalysis can do better. MD5 (128 bits) has had practical collisions since 2004, and the 2012 Flame malware used a chosen-prefix MD5 collision to forge a Microsoft code-signing certificate. SHA-1 (160 bits, generic $2^{80}$) fell to the 2017 SHAttered collision at roughly $2^{63}$ work. SHA-2 and SHA-3 have no known shortcuts.\n\n## 3. Merkle-Damgård and length extension\n\nMD5, SHA-1 and the whole SHA-2 family are built the same way. Split the padded message into blocks $m_1, m_2, \\dots$, start from a fixed $h_0 = IV$, and fold in one block at a time with a **compression function** $f$:\n\n$$h_i = f(h_{i-1}, m_i), \\qquad H(m) = h_{\\text{last}}.$$\n\n```plot\n{\"type\":\"graph\",\"width\":460,\"height\":220,\"nodeRadius\":17,\"nodes\":[{\"id\":\"IV\",\"x\":0,\"y\":1,\"color\":\"warn\"},{\"id\":\"m1\",\"label\":\"m1\",\"x\":2,\"y\":2},{\"id\":\"F1\",\"label\":\"f\",\"x\":2,\"y\":1},{\"id\":\"m2\",\"label\":\"m2\",\"x\":4,\"y\":2},{\"id\":\"F2\",\"label\":\"f\",\"x\":4,\"y\":1},{\"id\":\"m3\",\"label\":\"pad\",\"x\":6,\"y\":2},{\"id\":\"F3\",\"label\":\"f\",\"x\":6,\"y\":1},{\"id\":\"D\",\"label\":\"H(m)\",\"x\":8,\"y\":1,\"color\":\"good\"}],\"edges\":[{\"from\":\"IV\",\"to\":\"F1\",\"directed\":true,\"label\":\"h0\"},{\"from\":\"m1\",\"to\":\"F1\",\"directed\":true},{\"from\":\"F1\",\"to\":\"F2\",\"directed\":true,\"label\":\"h1\"},{\"from\":\"m2\",\"to\":\"F2\",\"directed\":true},{\"from\":\"F2\",\"to\":\"F3\",\"directed\":true,\"label\":\"h2\"},{\"from\":\"m3\",\"to\":\"F3\",\"directed\":true},{\"from\":\"F3\",\"to\":\"D\",\"directed\":true,\"label\":\"h3\"}],\"caption\":\"Merkle-Damgård: the compression function f folds in one block at a time. The digest is simply the last chaining value, so it can be fed straight back in.\"}\n```\n\nThe padding (**Merkle-Damgård strengthening**) appends a 1 bit, zeros, and the message length, so different-length messages never share a final block. The design has a well-known side effect: **the digest is the entire internal state**. Anyone holding $H(m)$ can keep hashing: $f(H(m), x)$ is exactly the hash of $m$, its padding, and then $x$. They do not need to know $m$, only its length (to reconstruct the padding as \"glue\").\n\nThat is harmless for a plain hash and fatal for the naive MAC $\\text{tag} = H(K \\,\\|\\, m)$. Given one valid tag, an attacker computes a valid tag for $K \\,\\|\\, m \\,\\|\\, \\text{pad} \\,\\|\\, x$ without the key: the **length-extension attack**. In 2009 Thai Duong and Juliano Rizzo used it to forge Flickr API calls signed as $\\text{MD5}(\\text{secret} \\,\\|\\, \\text{args})$.\n\nWhich hashes are affected: MD5, SHA-1, SHA-256 and SHA-512 (full-length output). Not affected: SHA-3 (a sponge whose output is only part of the state), BLAKE2 and BLAKE3, and truncated variants such as SHA-512/256 and SHA-384, whose published digest hides part of the state.\n\n## 4. MACs done right: HMAC\n\nTwo tempting fixes for $H(K \\,\\|\\, m)$ are both weak:\n\n- **Secret suffix**, $H(m \\,\\|\\, K)$, stops length extension, but now any offline collision $H(m) = H(m')$ between equal-length messages carries straight through the key block, so one collision (found without the key) turns a tag on $m$ into a tag on $m'$. MAC security would rest on collision resistance, the weakest property.\n- **Key on both ends**, $H(K \\,\\|\\, m \\,\\|\\, K)$, has a messy history of partial attacks. Do not improvise here.\n\n**HMAC** (RFC 2104) is the standard answer:\n\n$$\\text{HMAC}(K, m) = H\\big((K \\oplus \\text{opad}) \\,\\|\\, H((K \\oplus \\text{ipad}) \\,\\|\\, m)\\big),$$\n\nwhere the key is padded with zeros to the hash's block size (64 bytes for SHA-256; longer keys are hashed first), $\\text{ipad}$ is the byte $0x36$ repeated, and $\\text{opad}$ is the byte $0x5C$ repeated.\n\n```plot\n{\"type\":\"graph\",\"width\":460,\"height\":260,\"nodeRadius\":18,\"nodes\":[{\"id\":\"KI\",\"label\":\"Kin\",\"x\":0,\"y\":2,\"color\":\"warn\"},{\"id\":\"M\",\"label\":\"m\",\"x\":2,\"y\":2},{\"id\":\"HI\",\"label\":\"H\",\"x\":1,\"y\":1},{\"id\":\"KO\",\"label\":\"Kout\",\"x\":3,\"y\":1,\"color\":\"warn\"},{\"id\":\"HO\",\"label\":\"H\",\"x\":2,\"y\":0},{\"id\":\"T\",\"label\":\"tag\",\"x\":4,\"y\":0,\"color\":\"good\"}],\"edges\":[{\"from\":\"KI\",\"to\":\"HI\",\"directed\":true},{\"from\":\"M\",\"to\":\"HI\",\"directed\":true},{\"from\":\"HI\",\"to\":\"HO\",\"directed\":true,\"label\":\"inner\"},{\"from\":\"KO\",\"to\":\"HO\",\"directed\":true},{\"from\":\"HO\",\"to\":\"T\",\"directed\":true}],\"caption\":\"HMAC, with Kin = K ⊕ ipad and Kout = K ⊕ opad: an inner keyed hash of the message, then an outer keyed hash of that short digest. The published tag is never an internal state an attacker can continue.\"}\n```\n\nWhy two keyed passes work: the inner pass hashes the message under one derived key, and the outer pass hashes that short inner digest under a second derived key. The tag an attacker sees is the output of the *outer* hash. Extending it computes $H(K \\oplus \\text{opad} \\,\\|\\, \\text{inner} \\,\\|\\, x)$, a hash of the wrong thing; the real tag for $m \\,\\|\\, x$ needs the new inner digest pushed through the outer keyed pass, and the attacker knows neither. HMAC's security proof needs only that the compression function behaves like a pseudorandom function, a much weaker assumption than collision resistance.\n\nTwo practical rules: compare tags in **constant time** (an early-exit comparison leaks how many bytes matched), and never reuse one key for both a MAC and something else. Note too that the GCM tag in [AES Modes of Operation](https://mathgym.io/topic.html?id=cryptography.aes-modes) is a different kind of MAC, a polynomial evaluated at a secret point, with its own nonce rules.\n\n## 5. Digital signatures from RSA\n\nWith an RSA key $(n, e)$ public and $d$ private, signing is the private-key operation and verifying is the public-key one:\n\n$$s = m^d \\bmod n, \\qquad \\text{valid} \\iff s^e \\bmod n = m.$$\n\nIt works because $(m^d)^e = m^{de} \\equiv m \\pmod n$. MACs cannot do what this does: anyone with the public key can verify, and only the holder of $d$ can sign, so a signature can convince third parties (a MAC cannot, since every verifier could also have made the tag).\n\n**Raw (\"textbook\") RSA signatures are broken**, for reasons that have nothing to do with factoring:\n\n- **Existential forgery.** Pick any $s$, compute $m = s^e \\bmod n$. Then $(m, s)$ is a valid pair. The attacker does not control $m$, but a scheme that accepts it is already broken.\n- **Multiplicative malleability.** RSA is multiplicative: $(m_1 m_2)^d = m_1^d m_2^d$. Given genuine signatures $s_1$ on $m_1$ and $s_2$ on $m_2$, the product $s_1 s_2 \\bmod n$ is a valid signature on $m_1 m_2 \\bmod n$, a message the key holder never signed.\n\nThe fix is to sign a structured **encoding of the hash** of the message, never $m$ itself. **RSA-PSS** (Probabilistic Signature Scheme, Bellare and Rogaway) hashes the message together with a random salt, expands that with a mask generation function, and lays it out in a fixed format with check bytes. Products of encodings are not encodings, random $s^e$ values almost never parse, and PSS has a security proof reducing forgery to inverting RSA. TLS 1.3 requires PSS for RSA handshake signatures. The older deterministic PKCS#1 v1.5 encoding is still common in certificates; it is sound when verified strictly, but in 2006 Bleichenbacher showed that sloppy parsers with $e = 3$ accept forged signatures. (OAEP is the corresponding padding for RSA *encryption*; do not confuse the two.)\n\n## 6. Nonces: Schnorr, ECDSA and EdDSA\n\nDiscrete-log signatures need a fresh secret **nonce** $k$ for every signature. In a group of prime order $q$ generated by $g$, with private key $x$ and public key $y = g^x$, a **Schnorr** signature is\n\n$$r = g^k, \\qquad e = H(r \\,\\|\\, m), \\qquad s = (k + x e) \\bmod q,$$\n\nand it verifies because $g^s = g^{k + xe} = g^k (g^x)^e = r \\, y^e$. The nonce $k$ is a one-time mask on the private key inside $s$, so it must be **secret, unique, and unbiased**:\n\n- Reuse $k$ on two messages and $s_1 - s_2 = x(e_1 - e_2)$, so $x = (s_1 - s_2)(e_1 - e_2)^{-1} \\bmod q$. ECDSA has the same failure with slightly different algebra; that attack, and the PlayStation 3 key it exposed, are worked through in [How Cryptography Breaks](https://mathgym.io/topic.html?id=cryptography.crypto-weaknesses), section 3.\n- Even partial leaks matter: a few biased or leaked bits per nonce, collected over many signatures, let lattice attacks recover the key (TPM-Fail and Minerva, 2019).\n\nClassic **ECDSA** draws $k$ from a random number generator at signing time, so it is only as strong as that generator on every single signature. **EdDSA** (Ed25519 is the common instance, and it is a Schnorr-style signature) removes the generator from the picture: $k = H(\\text{prefix} \\,\\|\\, m)$, where the prefix is secret material derived from the private key. The same message always gets the same nonce (and the same signature, which leaks nothing new); different messages get unrelated nonces; and no RNG failure can repeat one. RFC 6979 retrofits the same idea onto ECDSA. Soatok's [\"Guidance for Choosing an Elliptic Curve Signature Algorithm in 2022\"](https://soatok.blog/2022/05/19/guidance-for-choosing-an-elliptic-curve-signature-algorithm-in-2022/) recommends Ed25519 as the default for exactly this reason.\n\n## The through-line\n\nHashes give integrity with no key, MACs add a shared key, and signatures add public verifiability. Each has one classic trap, and each trap is a structural property you can compute by hand: $2^{n/2}$ for collisions, a digest that *is* the internal state, a multiplicative homomorphism, a nonce that must never repeat. The standard constructions (SHA-256 with HMAC, RSA-PSS, Ed25519) exist precisely to close them, which is why Soatok's advice in [\"How To Learn Cryptography as a Programmer\"](https://soatok.blog/2020/06/10/how-to-learn-cryptography-as-a-programmer/) is to use vetted constructions and learn the attacks by doing them, never to improvise your own."
+  },
+  "application": {
+    "summary": "Hashes, MACs and signatures are how software updates, certificates, API requests, package managers and blockchains prove that data is unmodified and from the right party. Each has a classic failure (short or truncated digests, length extension on H(key || message), raw RSA malleability, repeated or biased nonces) and a standard fix: SHA-256 or SHA-3, HMAC, RSA-PSS and Ed25519.",
+    "domains": ["Software updates and code signing", "TLS certificates", "API authentication", "Cryptocurrency", "CTF / security research"],
+    "workedExample": "**Forging a secret-prefix MAC, then watching HMAC stop it (toy numbers).**\n\nA server tags messages with $\\text{tag} = H(k \\,\\|\\, m)$, using a toy Merkle-Damgård hash with compression function $f(h, m) = (h + m)^2 \\bmod 29$ and $IV = 3$. The key is one secret block. (The toy skips length padding.)\n\n*Step 1: what the server does.* With secret $k = 11$ and message $m = 8$: $h_1 = f(3, 11)$: $(3 + 11)^2 = 196 \\equiv 22$. Then $t = f(22, 8)$: $(22 + 8)^2 = 900 \\equiv 1$. The server publishes $m = 8$ and $t = 1$.\n\n*Step 2: the attack.* Knowing only $t = 1$, the attacker appends $x = 5$ and computes $f(1, 5)$: $(1 + 5)^2 = 36 \\equiv 7$. They submit $m \\,\\|\\, x$ with tag $7$.\n\n*Step 3: the server checks.* It recomputes $f(f(f(3, 11), 8), 5)$ from scratch. The first two steps reproduce $t = 1$, so the result is $f(1, 5) = 7$, which matches. Forgery accepted, key never seen.\n\n*Step 4: the same message under toy HMAC.* Now let $k = 11$ be the inner key block and $k_{out} = 4$ the outer one. The inner digest is the old $t = 1$. The outer pass gives $f(3, 4)$: $(3 + 4)^2 = 49 \\equiv 20$, then $\\text{tag} = f(20, 1)$: $(20 + 1)^2 = 441 \\equiv 6$.\n\n*Step 5: the attack fails.* The attacker extends the tag: $f(6, 5)$: $(6 + 5)^2 = 121 \\equiv 5$. The server's real tag for $m \\,\\|\\, x$ needs the new inner digest $f(1, 5) = 7$ and then $f(20, 7)$: $(20 + 7)^2 = 729 \\equiv 4$. The guess 5 does not match 4, so the forgery is rejected. The attacker extended the outer hash, but the tag depends on the inner one, behind a second key.",
+    "domainNotes": ["**Software updates and code signing:** operating systems and package managers check a signature over a hash of every update. The 2012 Flame malware forged a Microsoft code-signing certificate with a chosen-prefix MD5 collision, which is why signing moved to SHA-256.", "**TLS certificates:** a certificate is a CA's signature over a hash of the site's public key and name. Browsers stopped accepting SHA-1 certificates after collisions became affordable, and TLS 1.3 handshakes sign with RSA-PSS, ECDSA or EdDSA.", "**API authentication:** webhook and request signing (cloud provider APIs, payment webhooks, JWTs with HS256) use HMAC-SHA256. Flickr's 2009 API used MD5(secret || arguments) and fell to length extension.", "**Cryptocurrency:** Bitcoin addresses are hashes of public keys, transactions are signed with ECDSA or (since Taproot) Schnorr, and wallets with weak nonce generation have lost funds to nonce-reuse key recovery.", "**CTF / security research:** length extension, RSA signature forgery and nonce reuse are staples of Cryptopals and CryptoHack. Tools such as hash_extender automate the length-extension padding you computed by hand here."]
+  },
+  "generators": [
+    "cr6-hp-d1", "cr6-hp-d2", "cr6-hp-d3",
+    "cr6-bday-d1", "cr6-bday-d2", "cr6-bday-d3",
+    "cr6-md-d1", "cr6-md-d2", "cr6-md-d3",
+    "cr6-hmac-d1", "cr6-hmac-d2", "cr6-hmac-d3",
+    "cr6-rsa-d1", "cr6-rsa-d2", "cr6-rsa-d3",
+    "cr6-sch-d1", "cr6-sch-d2", "cr6-sch-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.hashes-macs-signatures.s01",
+      "concepts": ["hash-properties"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "A toy hash is $h(x) = (x^2 + 6) \\bmod 19$ (inputs are whole numbers $1$ to $18$). Separately, consider this attack goal: A vendor publishes the digest of its installer; an attacker wants a DIFFERENT, malicious installer whose digest matches that installer's.",
+      "steps": [
+        { "instruction": "Compute the toy digest $h(6)$.", "answer": "4", "accept": [], "hint": "$6^2 + 6 = 42$, and $42 \\bmod 19 = 4$." },
+        { "instruction": "Which property does the attack goal target? (preimage, second preimage, or collision)", "answer": "second preimage", "accept": [], "hint": "Preimage: only a digest is given. Second preimage: one specific input is given and you need another. Collision: you pick both inputs." },
+        { "instruction": "For an ideal $n$-bit hash, which of the three attacks is generically cheapest? (preimage, second preimage, or collision)", "answer": "collision", "accept": [], "hint": "Freedom to choose both inputs lets the birthday paradox work for you: about $2^{n/2}$ tries instead of $2^n$." }
+      ],
+      "finalAnswer": { "value": "second preimage", "unit": "" },
+      "solutionNarrative": "$h(6) = 4$. The scenario is a second preimage attack. Generic costs for an ideal $n$-bit hash are about $2^n$ for preimages and second preimages, but only about $2^{n/2}$ for collisions, which is why collision resistance sets a hash's security level."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s02",
+      "concepts": ["hash-properties"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Toy hash $h(x) = (x^2 + 6) \\bmod 13$ on inputs $1$ to $12$. You are given the input $x = 4$ and must find a second preimage: a DIFFERENT input $x'$ in the same range with $h(x') = h(x)$.",
+      "steps": [
+        { "instruction": "Compute $h(4)$.", "answer": "9", "accept": [], "hint": "$4^2 + 6 = 22$, and $22 \\bmod 13 = 9$." },
+        { "instruction": "Find the second preimage $x'$. (Hint: squaring cannot tell $x$ from $-x$.)", "answer": "9", "accept": [], "hint": "$-4 \\equiv 13 - 4 = 9 \\pmod{13}$, and $9^2 + 6 = 87 \\equiv 9$." },
+        { "instruction": "Is this toy hash second-preimage resistant? (yes or no)", "answer": "no", "accept": [], "hint": "You just found a second preimage with one subtraction." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$h(4) = h(9) = 9$, because $(p - x)^2 \\equiv x^2 \\pmod p$. The toy hash has algebraic structure an attacker can invert. A real hash such as SHA-256 is designed so that no shortcut is known and finding a second preimage takes about $2^{256}$ tries."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s03",
+      "concepts": ["hash-properties"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Toy hash $h(x) = (x^2 + 6) \\bmod 19$ on inputs $1$ to $18$. You see only the digest $y = 4$. Find every preimage: all inputs $x$ in range with $h(x) = 4$.",
+      "steps": [
+        { "instruction": "Undo the constant: compute $y - 6 \\bmod 19$, the value $x^2$ must have.", "answer": "17", "accept": [], "hint": "$4 - 6 = -2$; add 19 if negative." },
+        { "instruction": "Find the SMALLER input $x$ with $x^2 \\equiv 17 \\pmod{19}$.", "answer": "6", "accept": [], "hint": "Square $1, 2, 3, \\dots$ mod 19 until you hit 17." },
+        { "instruction": "Find the LARGER input with $x^2 \\equiv 17 \\pmod{19}$.", "answer": "13", "accept": [], "hint": "It is 19 minus the smaller one." },
+        { "instruction": "Is this toy hash preimage resistant? (yes or no)", "answer": "no", "accept": [], "hint": "A short search (or a modular square root) inverted it." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "$x^2 \\equiv 17 \\pmod{19}$ has the two roots 6 and 13, and both hash to 4. With only 18 possible inputs, brute force alone breaks preimage resistance; a real 256-bit hash has no algebra to undo and a search space of $2^{256}$."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s04",
+      "concepts": ["birthday-bound"],
+      "difficulty": 1,
+      "context": "applied",
+      "prompt": "SHA-224 has a 224-bit output. Treat it as an ideal hash (ignore any known cryptanalysis) and count generic brute-force work. An attacker's cluster computes $2^{30}$ hashes per second.",
+      "steps": [
+        { "instruction": "A preimage search takes about $2^n$ tries. Give the exponent $n$.", "answer": "224", "accept": [], "hint": "Each try hits a given 224-bit digest with probability $2^{-224}$." },
+        { "instruction": "A collision search takes about $2^{n/2}$ tries (the birthday bound). Give that exponent.", "answer": "112", "accept": [], "hint": "$224 / 2$." },
+        { "instruction": "At $2^{30}$ hashes per second, the collision search takes about $2^t$ seconds. Give $t$.", "answer": "82", "accept": [], "hint": "$2^{112} / 2^{30} = 2^{112 - 30}$." }
+      ],
+      "finalAnswer": { "value": "112", "unit": "" },
+      "solutionNarrative": "Preimages cost about $2^{224}$ and collisions about $2^{112}$, so SHA-224 offers at most 112-bit collision security; at $2^{30}$ hashes per second that is $2^{82}$ seconds. This is why SHA-224 is described as having 112-bit security: the collision bound, not the preimage bound, sets the level."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s05",
+      "concepts": ["birthday-bound"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A toy checksum has $N = 100$ equally likely outputs. You hash $k = 28$ different random inputs. Every pair of inputs collides with probability $1/N$.",
+      "steps": [
+        { "instruction": "How many pairs of inputs are there? ($\\binom{k}{2} = k(k-1)/2$)", "answer": "378", "accept": [], "hint": "$28 \\cdot 27 / 2$." },
+        { "instruction": "Expected number of colliding pairs, $\\binom{k}{2} / N$? Give it as an exact fraction in lowest terms.", "answer": "189/50", "accept": [], "hint": "$378 / 100$, reduced." },
+        { "instruction": "What is the smallest $k$ for which $\\binom{k}{2} \\ge N$, so you expect at least one collision?", "answer": "15", "accept": [], "hint": "Try $k$ near $\\sqrt{2N} \\approx 14.1$." }
+      ],
+      "finalAnswer": { "value": "189/50", "unit": "" },
+      "solutionNarrative": "28 inputs make 378 pairs, so about $378/100 = 3.78$ colliding pairs are expected. The pair count grows like $k^2/2$, so collisions show up after only about $\\sqrt{2N}$ inputs (here 15), not $N$. For an $n$-bit hash, $N = 2^n$ and $\\sqrt{N} = 2^{n/2}$: the birthday bound."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s06",
+      "concepts": ["birthday-bound"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Design review. (1) A protocol truncates SHA-256 to 128 bits to save space. An attacker can afford about $2^{100}$ hash computations. Treat the truncated hash as ideal. (2) Separately, a designer wants 112-bit security against collisions.",
+      "steps": [
+        { "instruction": "For (1), a collision on the 128-bit tag takes about $2^x$ tries. Give $x$.", "answer": "64", "accept": [], "hint": "Birthday bound: half the output length." },
+        { "instruction": "Can the attacker afford a collision? (yes or no)", "answer": "yes", "accept": [], "hint": "Compare $2^{100}$ with $2^{64}$." },
+        { "instruction": "A preimage on the 128-bit tag takes about $2^y$ tries. Give $y$.", "answer": "128", "accept": [], "hint": "No birthday trick for preimages." },
+        { "instruction": "Can the attacker afford a preimage? (yes or no)", "answer": "no", "accept": [], "hint": "Compare $2^{100}$ with $2^{128}$." },
+        { "instruction": "For (2), what is the minimum output length in bits?", "answer": "224", "accept": [], "hint": "Collisions cost $2^{n/2}$, so you need $n/2 \\ge 112$." }
+      ],
+      "finalAnswer": { "value": "224", "unit": "bits" },
+      "solutionNarrative": "A 128-bit tag gives only 64-bit collision security, so a $2^{100}$ budget is enough to find a collision and is far from a preimage ($2^{128}$). For 112-bit collision security you need at least 224 output bits, which is why SHA-256 is called a 128-bit-secure hash."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s07",
+      "concepts": ["merkle-damgard"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A toy Merkle-Damgård hash uses the compression function $f(h, m) = (h + m)^2 \\bmod 37$ and starts from $h_0 = IV = 3$. Each block updates the chaining value, $h_i = f(h_{i-1}, m_i)$, and the digest is the last $h_i$. Hash the two-block message $(m_1, m_2) = (18, 6)$.",
+      "steps": [
+        { "instruction": "Compute $h_1 = f(3, 18)$.", "answer": "34", "accept": [], "hint": "$(3 + 18)^2 = 441$, and $441 \\bmod 37 = 34$." },
+        { "instruction": "Compute the digest $h_2 = f(h_1, 6)$.", "answer": "9", "accept": [], "hint": "$(34 + 6)^2 = 1600$, and $1600 \\bmod 37 = 9$." },
+        { "instruction": "Someone who knows only the digest $h_2$ (not $m_1$ or $m_2$) appends a block $m_3$. Can they compute the digest of $(m_1, m_2, m_3)$? (yes or no)", "answer": "yes", "accept": [], "hint": "The next step is $f(h_2, m_3)$: it needs only the chaining value and the new block." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$h_1 = 34$ and $h_2 = 9$. The digest IS the internal state after the last block, so anyone holding it can keep hashing more blocks. That is harmless for a plain hash and fatal for a MAC built as $H(k \\,\\|\\, m)$."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s08",
+      "concepts": ["merkle-damgard"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A server authenticates messages with the naive MAC $\\text{tag} = H(k \\,\\|\\, m)$, where $k$ is one secret key block and $H$ is the toy Merkle-Damgård hash with $f(h, m) = (h + m)^2 \\bmod 37$ and $IV = 25$. You see the message block $m = 5$ and its tag $t = 12$. You want a valid tag for the longer message $m \\,\\|\\, x$ with $x = 31$. (This toy skips the final length padding; a real attack includes that padding as glue between the old message and the new block.)",
+      "steps": [
+        { "instruction": "Forge the tag: continue the chain from $t$, computing $f(t, x) = f(12, 31)$.", "answer": "36", "accept": [], "hint": "$(12 + 31)^2 = 1849$, and $1849 \\bmod 37 = 36$." },
+        { "instruction": "Did the forgery need the key $k$? (yes or no)", "answer": "no", "accept": [], "hint": "The tag already is the chaining value after $k$ and $m$." },
+        { "instruction": "Would the same attack work if $H$ were SHA-256 used as $H(k \\,\\|\\, m)$? (yes or no)", "answer": "yes", "accept": [], "hint": "SHA-256 is a Merkle-Damgård hash whose digest is its full internal state." }
+      ],
+      "finalAnswer": { "value": "36", "unit": "" },
+      "solutionNarrative": "The server's tag for $k \\,\\|\\, m \\,\\|\\, x$ is $f(t, x) = 36$, which you computed without the key. This is the length-extension attack. It works on MD5, SHA-1, SHA-256 and SHA-512; SHA-3, BLAKE2 and the truncated SHA-512/256 resist it, and HMAC defeats it for any of them."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s09",
+      "concepts": ["merkle-damgard"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Naive MAC $\\text{tag} = H(k \\,\\|\\, m)$ with the toy Merkle-Damgård hash: $f(h, m) = (h + m)^2 \\bmod 37$, $IV = 8$, one key block and one message block. To check the attack end to end, you are shown the key $k = 13$. The message is $m = 34$, and the attacker will append $x = 4$. (This toy skips the final length padding; a real attack includes that padding as glue between the old message and the new block.)",
+      "steps": [
+        { "instruction": "Server side: $h_1 = f(IV, k) = f(8, 13)$.", "answer": "34", "accept": [], "hint": "$(8 + 13)^2 = 441$, and $441 \\bmod 37 = 34$." },
+        { "instruction": "Server side: the published tag $t = f(h_1, m) = f(34, 34)$.", "answer": "36", "accept": [], "hint": "$(34 + 34)^2 = 4624$, and $4624 \\bmod 37 = 36$." },
+        { "instruction": "Attacker side (knows only $t$ and $x$): forged tag $f(t, x) = f(36, 4)$.", "answer": "9", "accept": [], "hint": "$(36 + 4)^2 = 1600$, and $1600 \\bmod 37 = 9$." },
+        { "instruction": "The server verifies $m \\,\\|\\, x$ by hashing $k \\,\\|\\, m \\,\\|\\, x$ from scratch. Does it accept the forged tag? (yes or no)", "answer": "yes", "accept": [], "hint": "From scratch it computes $f(f(f(IV, k), m), x)$, and $f(f(IV, k), m)$ is $t$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "$h_1 = 34$, $t = 36$, and the forgery $f(36, 4) = 9$ equals the server's own computation of $H(k \\,\\|\\, m \\,\\|\\, x)$, so it verifies. The attacker never saw $k$. In the real attack the appended data also carries the padding of the original message, which the attacker can compute from its length."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s10",
+      "concepts": ["hmac"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "HMAC computes $\\text{HMAC}(K, m) = H\\big((K \\oplus \\text{opad}) \\,\\|\\, H((K \\oplus \\text{ipad}) \\,\\|\\, m)\\big)$, where ipad is the byte $0x36 = 54$ and opad is the byte $0x5C = 92$, each repeated to the hash's block size. Take a one-byte toy key $K = 128$ (all answers in decimal).",
+      "steps": [
+        { "instruction": "Compute the inner key byte $K \\oplus 54$.", "answer": "182", "accept": [], "hint": "$10000000 \\oplus 00110110 = 10110110$." },
+        { "instruction": "Compute the outer key byte $K \\oplus 92$.", "answer": "220", "accept": [], "hint": "$10000000 \\oplus 01011100 = 11011100$." },
+        { "instruction": "Which pass hashes the message itself: the inner or the outer? (inner or outer)", "answer": "inner", "accept": [], "hint": "The outer pass hashes only the outer key and the inner digest." },
+        { "instruction": "How many calls to the full hash function $H$ does one HMAC make?", "answer": "2", "accept": [], "hint": "Count the $H$ symbols in the formula." }
+      ],
+      "finalAnswer": { "value": "182", "unit": "" },
+      "solutionNarrative": "$K \\oplus 54 = 182$ and $K \\oplus 92 = 220$: two different keys derived from one. The inner pass hashes the message; the outer pass hashes that short digest under the second key, so the published tag is never the inner chaining state an attacker could extend."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s11",
+      "concepts": ["hmac"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Toy HMAC over the toy Merkle-Damgård hash $H$ with $f(h, m) = (h + m)^2 \\bmod 43$ and $IV = 19$. The inner key block is $k_{in} = 36$ and the outer key block is $k_{out} = 26$ (standing in for $K \\oplus \\text{ipad}$ and $K \\oplus \\text{opad}$). Compute $\\text{tag} = H(k_{out} \\,\\|\\, H(k_{in} \\,\\|\\, m))$ for the one-block message $m = 5$.",
+      "steps": [
+        { "instruction": "Inner pass, block 1: $f(IV, k_{in}) = f(19, 36)$.", "answer": "15", "accept": [], "hint": "$(19 + 36)^2 = 3025$, and $3025 \\bmod 43 = 15$." },
+        { "instruction": "Inner digest: $f(15, m) = f(15, 5)$.", "answer": "13", "accept": [], "hint": "$(15 + 5)^2 = 400$, and $400 \\bmod 43 = 13$." },
+        { "instruction": "Outer pass, block 1: $f(IV, k_{out}) = f(19, 26)$.", "answer": "4", "accept": [], "hint": "$(19 + 26)^2 = 2025$, and $2025 \\bmod 43 = 4$." },
+        { "instruction": "Tag: $f(4, \\text{inner digest}) = f(4, 13)$.", "answer": "31", "accept": [], "hint": "$(4 + 13)^2 = 289$, and $289 \\bmod 43 = 31$." }
+      ],
+      "finalAnswer": { "value": "31", "unit": "" },
+      "solutionNarrative": "Inner digest 13, outer chain 4, tag 31. Four compression calls for a one-block message: HMAC costs two extra blocks of hashing, which is nothing next to the protection the outer keyed pass buys."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s12",
+      "concepts": ["hmac"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Toy HMAC with the toy hash $f(h, m) = (h + m)^2 \\bmod 31$, $IV = 10$ and outer key block $k_{out} = 11$. For the message $m = 5$ the server's inner digest is $H(k_{in} \\,\\|\\, m) = 25$ and the published tag is $t = H(k_{out} \\,\\|\\, 25) = 1$. An attacker tries length extension: they append $x = 29$ and submit $f(t, x)$ as the tag for $m \\,\\|\\, x$.",
+      "steps": [
+        { "instruction": "Attacker's guess: $f(t, x) = f(1, 29)$.", "answer": "1", "accept": [], "hint": "$(1 + 29)^2 = 900$, and $900 \\bmod 31 = 1$." },
+        { "instruction": "Server, new inner digest for $m \\,\\|\\, x$: $f(25, 29)$.", "answer": "2", "accept": [], "hint": "$(25 + 29)^2 = 2916$, and $2916 \\bmod 31 = 2$." },
+        { "instruction": "Server, outer chain: $f(IV, k_{out}) = f(10, 11)$.", "answer": "7", "accept": [], "hint": "$(10 + 11)^2 = 441$, and $441 \\bmod 31 = 7$." },
+        { "instruction": "Server, real tag: $f(7, 2)$.", "answer": "19", "accept": [], "hint": "$(7 + 2)^2 = 81$, and $81 \\bmod 31 = 19$." },
+        { "instruction": "Does the attacker's guess match the real tag? (yes or no)", "answer": "no", "accept": [], "hint": "Compare 1 with 19." }
+      ],
+      "finalAnswer": { "value": "19", "unit": "" },
+      "solutionNarrative": "The guess 1 is $H(k_{out} \\,\\|\\, 25 \\,\\|\\, 29)$, a hash of the wrong thing. The real tag 19 needs the new INNER digest pushed through the outer keyed pass, and the attacker knows neither the inner digest nor $k_{out}$. Extending the outer hash gets them nowhere, which is exactly why HMAC uses two keyed passes."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s13",
+      "concepts": ["rsa-signatures"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Toy RSA signatures. The public key is $(n, e) = (55, 3)$. A signature $s$ on message $m$ is valid when $s^e \\bmod n = m$. You receive the message $m = 3$ with claimed signature $s = 42$.",
+      "steps": [
+        { "instruction": "Compute $s^3 \\bmod 55 = 42^3 \\bmod 55$.", "answer": "3", "accept": [], "hint": "$42^2 = 1764 \\equiv 4$, then $4 \\cdot 42 = 168 \\equiv 3 \\pmod{55}$." },
+        { "instruction": "Is the signature valid for $m = 3$? (yes or no)", "answer": "yes", "accept": [], "hint": "Compare 3 with 3." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$42^3 \\equiv 3 \\pmod{55}$, which matches, so the signature is valid. Verification needs only the public key, which is the point of a signature: anyone can check it, but only the holder of $d$ can produce it."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s14",
+      "concepts": ["rsa-signatures"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Toy RSA key: $n = 33 = 3 \\cdot 11$, public exponent $e = 7$, private exponent $d = 3$ (check: $7 \\cdot 3 = 21 \\equiv 1 \\pmod{20}$). Sign the message $m = 16$ with $s = m^d \\bmod n$, then verify it.",
+      "steps": [
+        { "instruction": "Sign: $s = 16^{3} \\bmod 33$.", "answer": "4", "accept": [], "hint": "Square repeatedly mod 33: $16^{1} \\equiv 16,\\ 16^{2} \\equiv 25$. Then multiply the powers for $3 = 2 + 1$, reducing mod 33 as you go." },
+        { "instruction": "Verify: $s^{7} \\bmod 33 = 4^{7} \\bmod 33$.", "answer": "16", "accept": [], "hint": "Square repeatedly mod 33: $4^{1} \\equiv 4,\\ 4^{2} \\equiv 16,\\ 4^{4} \\equiv 25$. Then multiply the powers for $7 = 4 + 2 + 1$, reducing mod 33 as you go." },
+        { "instruction": "Which key did signing use? (public or private)", "answer": "private", "accept": [], "hint": "Signing uses $d$; verifying uses $e$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$s = 16^{3} \\equiv 4$ and $s^{7} \\equiv 16 \\pmod{33}$, so verification recovers $m$. Signing is RSA decryption applied to the message, and verifying is RSA encryption applied to the signature. Real systems never sign $m$ raw: they hash it and encode it with a padding scheme such as PSS."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s15",
+      "concepts": ["rsa-signatures"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Raw (textbook) RSA signatures with public key $(n, e) = (51, 3)$. You hold two genuine signatures: $s_1 = 43$ on $m_1 = 49$ and $s_2 = 10$ on $m_2 = 31$. You never see the private key. Forge a signature on a third message using $(m_1 m_2)^d = m_1^d m_2^d$.",
+      "steps": [
+        { "instruction": "The message you can forge: $m_3 = m_1 m_2 \\bmod 51$.", "answer": "40", "accept": [], "hint": "$49 \\cdot 31 = 1519$, then reduce mod 51." },
+        { "instruction": "The forged signature: $s_3 = s_1 s_2 \\bmod 51$.", "answer": "22", "accept": [], "hint": "$43 \\cdot 10 = 430$, then reduce mod 51." },
+        { "instruction": "Verify it: $s_3^{3} \\bmod 51$.", "answer": "40", "accept": [], "hint": "Square repeatedly mod 51: $22^{1} \\equiv 22,\\ 22^{2} \\equiv 25$. Then multiply the powers for $3 = 2 + 1$, reducing mod 51 as you go." },
+        { "instruction": "Which padding scheme is designed for RSA signatures and blocks this algebra with a random salt and a hashed encoding? (PSS or OAEP)", "answer": "PSS", "accept": ["RSA PSS", "RSASSA PSS"], "hint": "OAEP is the padding for RSA encryption; the signature scheme is the Probabilistic Signature Scheme." }
+      ],
+      "finalAnswer": { "value": "22", "unit": "" },
+      "solutionNarrative": "$s_3 = 43 \\cdot 10 \\equiv 22$ and $s_3^{3} \\equiv 40 = m_3 \\pmod{51}$: a valid signature on 40 that the key holder never made. Raw RSA signatures are malleable because RSA is multiplicative. RSA-PSS signs a randomized, hashed encoding of the message, so products of encodings are not encodings of anything meaningful."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s16",
+      "concepts": ["signature-nonces"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Toy Schnorr signature with $p = 23$, $q = 11$, $g = 12$ (so $g^{11} \\equiv 1 \\pmod{23}$). The private key is $x = 5$. To sign, pick a secret nonce $k$, publish $r = g^k \\bmod p$, hash to get $e = H(r \\,\\|\\, m)$, and compute $s = (k + x e) \\bmod q$. Here the nonce is $k = 7$ and the hash gives $e = 2$.",
+      "steps": [
+        { "instruction": "Compute $r = 12^{7} \\bmod 23$.", "answer": "16", "accept": [], "hint": "Square repeatedly mod 23: $12^{1} \\equiv 12,\\ 12^{2} \\equiv 6,\\ 12^{4} \\equiv 13$. Then multiply the powers for $7 = 4 + 2 + 1$, reducing mod 23 as you go." },
+        { "instruction": "Compute $x e \\bmod 11 = 5 \\cdot 2 \\bmod 11$.", "answer": "10", "accept": [], "hint": "$5 \\cdot 2 = 10$, then reduce mod 11." },
+        { "instruction": "Compute $s = (k + x e) \\bmod 11$.", "answer": "6", "accept": [], "hint": "$7 + 10 = 17$, then reduce mod 11." }
+      ],
+      "finalAnswer": { "value": "6", "unit": "" },
+      "solutionNarrative": "The signature is $(r, s) = (16, 6)$. Exponents live mod $q = 11$ because $g$ has order 11. The nonce $k$ masks $x$ inside $s$: if $k$ ever leaks or repeats, $x$ falls out with one subtraction and one division."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s17",
+      "concepts": ["signature-nonces"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Verify a toy Schnorr signature. Group: $p = 23$, $q = 11$, $g = 2$ (so $g^{11} \\equiv 1 \\pmod{23}$). Public key $y = 12$. The message hashes to $e = 6$ and the claimed signature is $(r, s) = (3, 2)$. It is valid when $g^s \\equiv r \\cdot y^e \\pmod p$.",
+      "steps": [
+        { "instruction": "Compute $g^s = 2^{2} \\bmod 23$.", "answer": "4", "accept": [], "hint": "Square repeatedly mod 23: $2^{1} \\equiv 2,\\ 2^{2} \\equiv 4$. Then multiply the powers for $2 = 2$, reducing mod 23 as you go." },
+        { "instruction": "Compute $y^e = 12^{6} \\bmod 23$.", "answer": "9", "accept": [], "hint": "Square repeatedly mod 23: $12^{1} \\equiv 12,\\ 12^{2} \\equiv 6,\\ 12^{4} \\equiv 13$. Then multiply the powers for $6 = 4 + 2$, reducing mod 23 as you go." },
+        { "instruction": "Compute $r \\cdot y^e \\bmod 23$.", "answer": "4", "accept": [], "hint": "$3 \\cdot 9 = 27$, then reduce mod 23." },
+        { "instruction": "Is the signature valid? (yes or no)", "answer": "yes", "accept": [], "hint": "Compare 4 with 4." }
+      ],
+      "finalAnswer": { "value": "yes", "unit": "" },
+      "solutionNarrative": "$g^s \\equiv 4$ and $r y^e \\equiv 4$, so the signature is valid. It works because $g^{k + xe} = g^k (g^x)^e = r y^e$: the verifier checks the algebra without ever learning $k$ or $x$."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s18",
+      "concepts": ["signature-nonces"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "An EdDSA-style signer never asks a random number generator for its nonce. It derives it from a secret nonce key $z$ and the message: real Ed25519 uses $k = H(\\text{prefix} \\,\\|\\, m)$; this toy uses $k = (z \\cdot h + 1) \\bmod q$, where $h$ is the message's hash value. Schnorr group order $q = 11$, nonce key $z = 4$, private key $x = 6$. Message A has $h_A = 5$ and challenge $e_A = 7$; message B has $h_B = 2$.",
+      "steps": [
+        { "instruction": "Nonce for A: $k_A = (4 \\cdot 5 + 1) \\bmod 11$.", "answer": "10", "accept": [], "hint": "$4 \\cdot 5 + 1 = 21$, then reduce mod 11." },
+        { "instruction": "Signature value for A: $s_A = (k_A + x e_A) \\bmod 11$.", "answer": "8", "accept": [], "hint": "$10 + 6 \\cdot 7 = 52$, then reduce mod 11." },
+        { "instruction": "Nonce for B: $k_B = (4 \\cdot 2 + 1) \\bmod 11$.", "answer": "9", "accept": [], "hint": "$4 \\cdot 2 + 1 = 9$, then reduce mod 11." },
+        { "instruction": "Under this rule, can two messages with DIFFERENT hash values ever get the same nonce? (yes or no)", "answer": "no", "accept": [], "hint": "Equal nonces need $z(h_A - h_B) \\equiv 0 \\pmod{11}$, impossible for prime $q$ with $z \\not\\equiv 0$ and $h_A \\ne h_B$." },
+        { "instruction": "Which scheme, as usually deployed, draws $k$ from a random number generator at signing time, so a weak generator can repeat it and leak the key? (ECDSA or EdDSA)", "answer": "ECDSA", "accept": [], "hint": "EdDSA (Ed25519) derives $k$ deterministically; classic ECDSA needs fresh randomness for every signature." }
+      ],
+      "finalAnswer": { "value": "8", "unit": "" },
+      "solutionNarrative": "$k_A = 10$, $s_A = 8$, $k_B = 9$. Different messages get different nonces, and signing the same message twice repeats the same $k$ and the same signature, which leaks nothing new. A random-nonce scheme like ECDSA (or Schnorr with a bad generator) is only as strong as its generator: one repeated $k$ on two different messages reveals $x$. RFC 6979 retrofits deterministic nonces onto ECDSA for the same reason."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s19",
+      "concepts": ["birthday-bound"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "A toy checksum has $N = 250$ equally likely outputs. You hash $k = 24$ different random inputs. Every pair of inputs collides with probability $1/N$.",
+      "steps": [
+        { "instruction": "How many pairs of inputs are there? ($\\binom{k}{2} = k(k-1)/2$)", "answer": "276", "accept": [], "hint": "$24 \\cdot 23 / 2$." },
+        { "instruction": "Expected number of colliding pairs, $\\binom{k}{2} / N$? Give it as an exact fraction in lowest terms.", "answer": "138/125", "accept": [], "hint": "$276 / 250$, reduced." },
+        { "instruction": "What is the smallest $k$ for which $\\binom{k}{2} \\ge N$, so you expect at least one collision?", "answer": "23", "accept": [], "hint": "Try $k$ near $\\sqrt{2N} \\approx 22.4$." }
+      ],
+      "finalAnswer": { "value": "138/125", "unit": "" },
+      "solutionNarrative": "24 inputs make 276 pairs, so about $276/250 = 1.104$ colliding pairs are expected. The pair count grows like $k^2/2$, so collisions show up after only about $\\sqrt{2N}$ inputs (here 23), not $N$. For an $n$-bit hash, $N = 2^n$ and $\\sqrt{N} = 2^{n/2}$: the birthday bound."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s20",
+      "concepts": ["merkle-damgard"],
+      "difficulty": 2,
+      "context": "applied",
+      "prompt": "A server authenticates messages with the naive MAC $\\text{tag} = H(k \\,\\|\\, m)$, where $k$ is one secret key block and $H$ is the toy Merkle-Damgård hash with $f(h, m) = (h + m)^2 \\bmod 29$ and $IV = 1$. You see the message block $m = 20$ and its tag $t = 4$. You want a valid tag for the longer message $m \\,\\|\\, x$ with $x = 3$. (This toy skips the final length padding; a real attack includes that padding as glue between the old message and the new block.)",
+      "steps": [
+        { "instruction": "Forge the tag: continue the chain from $t$, computing $f(t, x) = f(4, 3)$.", "answer": "20", "accept": [], "hint": "$(4 + 3)^2 = 49$, and $49 \\bmod 29 = 20$." },
+        { "instruction": "Did the forgery need the key $k$? (yes or no)", "answer": "no", "accept": [], "hint": "The tag already is the chaining value after $k$ and $m$." },
+        { "instruction": "Would the same attack work if $H$ were SHA-256 used as $H(k \\,\\|\\, m)$? (yes or no)", "answer": "yes", "accept": [], "hint": "SHA-256 is a Merkle-Damgård hash whose digest is its full internal state." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "" },
+      "solutionNarrative": "The server's tag for $k \\,\\|\\, m \\,\\|\\, x$ is $f(t, x) = 20$, which you computed without the key. This is the length-extension attack. It works on MD5, SHA-1, SHA-256 and SHA-512; SHA-3, BLAKE2 and the truncated SHA-512/256 resist it, and HMAC defeats it for any of them."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s21",
+      "concepts": ["rsa-signatures"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Toy RSA signatures. The public key is $(n, e) = (55, 3)$. A signature $s$ on message $m$ is valid when $s^e \\bmod n = m$. You receive the message $m = 42$ with claimed signature $s = 34$.",
+      "steps": [
+        { "instruction": "Compute $s^3 \\bmod 55 = 34^3 \\bmod 55$.", "answer": "34", "accept": [], "hint": "$34^2 = 1156 \\equiv 1$, then $1 \\cdot 34 = 34 \\equiv 34 \\pmod{55}$." },
+        { "instruction": "Is the signature valid for $m = 42$? (yes or no)", "answer": "no", "accept": [], "hint": "Compare 34 with 42." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$34^3 \\equiv 34 \\pmod{55}$, which does not match $m = 42$, so the signature is invalid. Verification needs only the public key, which is the point of a signature: anyone can check it, but only the holder of $d$ can produce it."
+    },
+    {
+      "id": "cryptography.hashes-macs-signatures.s22",
+      "concepts": ["signature-nonces"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Verify a toy Schnorr signature. Group: $p = 47$, $q = 23$, $g = 2$ (so $g^{23} \\equiv 1 \\pmod{47}$). Public key $y = 9$. The message hashes to $e = 6$ and the claimed signature is $(r, s) = (17, 5)$. It is valid when $g^s \\equiv r \\cdot y^e \\pmod p$.",
+      "steps": [
+        { "instruction": "Compute $g^s = 2^{5} \\bmod 47$.", "answer": "32", "accept": [], "hint": "Square repeatedly mod 47: $2^{1} \\equiv 2,\\ 2^{2} \\equiv 4,\\ 2^{4} \\equiv 16$. Then multiply the powers for $5 = 4 + 1$, reducing mod 47 as you go." },
+        { "instruction": "Compute $y^e = 9^{6} \\bmod 47$.", "answer": "12", "accept": [], "hint": "Square repeatedly mod 47: $9^{1} \\equiv 9,\\ 9^{2} \\equiv 34,\\ 9^{4} \\equiv 28$. Then multiply the powers for $6 = 4 + 2$, reducing mod 47 as you go." },
+        { "instruction": "Compute $r \\cdot y^e \\bmod 47$.", "answer": "16", "accept": [], "hint": "$17 \\cdot 12 = 204$, then reduce mod 47." },
+        { "instruction": "Is the signature valid? (yes or no)", "answer": "no", "accept": [], "hint": "Compare 32 with 16." }
+      ],
+      "finalAnswer": { "value": "no", "unit": "" },
+      "solutionNarrative": "$g^s \\equiv 32$ and $r y^e \\equiv 16$, so the signature is invalid. It works because $g^{k + xe} = g^k (g^x)^e = r y^e$: the verifier checks the algebra without ever learning $k$ or $x$."
+    }
+  ]
+}

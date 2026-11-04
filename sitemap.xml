@@ -463,6 +463,9 @@
     <loc>https://mathgym.io/topic.html?id=cryptography.ecc</loc>
   </url>
   <url>
+    <loc>https://mathgym.io/topic.html?id=cryptography.hashes-macs-signatures</loc>
+  </url>
+  <url>
     <loc>https://mathgym.io/topic.html?id=cryptography.crypto-weaknesses</loc>
   </url>
   <url>
