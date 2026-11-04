@@ -1,6 +1,7 @@
 // Oracles for the cryptography packs that teach attacks and modes:
 // gen-crypto4-fill.js (cr4-, "How Cryptography Breaks"),
-// gen-crypto5-fill.js (cr5-, AES modes of operation) and
+// gen-crypto5-fill.js (cr5-, AES modes of operation),
+// gen-crypto6-fill.js (cr6-, hashes, MACs and signatures) and
 // gen-crypto7-fill.js (cr7-, discrete-log and RSA attacks).
 //
 // Every oracle re-reads the givens from the PROMPT and recomputes each step by
@@ -120,6 +121,43 @@ function ghashSecrets(P) {
   return { pp, a1, a2, b2, TA, TB, H: sols[0][0], S: sols[0][1] };
 }
 
+// ---------------------------------------------------------------- cr6
+// Hashes, MACs and signatures. Powers are recomputed by repeated
+// multiplication, RSA keys by trial factoring, Schnorr secrets by brute-force
+// discrete logs, and every yes/no verdict by simulating both sides.
+const W6 = ["yes", "no", "preimage", "second preimage", "collision", "inner", "outer", "public", "private", "PSS", "OAEP", "ECDSA", "EdDSA"];
+const pw = (b, e, m) => { let r = 1 % m; for (let i = 0; i < e; i++) r = (r * b) % m; return r; };
+// Like check(), with this pack's menu words and optional extra wrong answers per step.
+function check6(p, exp, { checkStep }, extra = []) {
+  const ans = p.steps.map((s) => s.answer);
+  if (exp.length !== ans.length || exp.some((v, k) => String(v) !== ans[k])) return `answers ${ans.join("|")}, want ${exp.join("|")}`;
+  for (const [k, s] of p.steps.entries()) {
+    const a = Number(s.answer);
+    const wrong = (Number.isFinite(a) ? [a + 1, a - 1, a + 11, a + 16, a + 17, Number(a.toString(2))] : W6).concat(extra[k] || []);
+    for (const w of wrong) if (String(w) !== s.answer && checkStep(s, String(w))) return `wrong answer '${w}' accepted for '${s.answer}'`;
+  }
+  return null;
+}
+const toyHashOf = (P) => { const [c, pp] = num(P, /h\(x\) = \(x\^2 \+ (\d+)\) \\bmod (\d+)/); return { c, pp, h: (x) => md(x * x + c, pp) }; };
+const toyF = (P) => {
+  const [pp] = num(P, /f\(h, m\) = \(h \+ m\)\^2 \\bmod (\d+)/), [IV] = num(P, /IV = (\d+)/);
+  return { pp, IV, f: (h, m) => md((h + m) * (h + m), pp) };
+};
+const factor = (n) => { for (let q = 2; q * q <= n; q++) if (n % q === 0) return [q, n / q]; throw new Error(`${n} is prime`); };
+const rsaD = (n, e) => {
+  const [a, b] = factor(n);
+  if (!isPrime(a) || !isPrime(b) || a === b) throw new Error(`${n} is not a product of two distinct primes`);
+  const d = inv(e, (a - 1) * (b - 1));
+  if (d === null) throw new Error(`e = ${e} not invertible`);
+  return d;
+};
+const dlog = (g, y, p) => { for (let x = 0; x < p; x++) if (pw(g, x, p) === y) return x; throw new Error(`no log of ${y}`); };
+const group = (P) => {
+  const [pp] = num(P, /\$p = (\d+)\$/), [q] = num(P, /\$q = (\d+)\$/), [g] = num(P, /\$g = (\d+)\$/);
+  if (!isPrime(pp) || !isPrime(q) || g === 1 || pw(g, q, pp) !== 1) throw new Error(`g = ${g} does not have order ${q} mod ${pp}`);
+  return { pp, q, g };
+};
+
 export const oracles = {
   "cr4-ksr-d1": ksr(1), "cr4-ksr-d2": ksr(2), "cr4-ksr-d3": ksr(3),
   "cr4-ecb-d1": guard((p, ctx) => {
@@ -215,6 +253,121 @@ export const oracles = {
     const m = modeOf(p.prompt.split("(2)")[0]), [servers] = num(p.prompt, /\(2\)[^]*?(\d+) servers/);
     return check(p, [m, 32 - Math.log2(servers), "yes"], ctx);
   }),
+  "cr6-hp-d1": guard((p, ctx) => {
+    const H = toyHashOf(p.prompt), [x] = num(p.steps[0].instruction, /h\((\d+)\)/);
+    const kw = { ANY: "preimage", DIFFERENT: "second preimage", BOTH: "collision" };
+    const hits = Object.keys(kw).filter((w) => p.prompt.includes(w));
+    if (hits.length !== 1) return `scenario matches ${hits.length} properties`;
+    return check6(p, [H.h(x), kw[hits[0]], "collision"], ctx);
+  }),
+  "cr6-hp-d2": guard((p, ctx) => {
+    const H = toyHashOf(p.prompt), [x] = num(p.prompt, /input \$x = (\d+)\$/);
+    const sec = [...Array(H.pp).keys()].filter((v) => v >= 1 && v !== x && H.h(v) === H.h(x));
+    if (sec.length !== 1) return `${sec.length} second preimages`;
+    return check6(p, [H.h(x), sec[0], "no"], ctx, [[], [x]]);
+  }),
+  "cr6-hp-d3": guard((p, ctx) => {
+    const H = toyHashOf(p.prompt), [y] = num(p.prompt, /digest \$y = (\d+)\$/);
+    const pre = [...Array(H.pp).keys()].filter((v) => v >= 1 && H.h(v) === y);
+    if (pre.length !== 2) return `${pre.length} preimages`;
+    return check6(p, [md(y - H.c, H.pp), pre[0], pre[1], "no"], ctx, [[y - H.c + H.pp, y], [pre[1]], [pre[0]]]);
+  }),
+  "cr6-bday-d1": guard((p, ctx) => {
+    const [n] = num(p.prompt, /a (\d+)-bit output/), [r] = num(p.prompt, /computes \$2\^\{(\d+)\}\$ hashes/);
+    return check6(p, [n, n / 2, n / 2 - r], ctx, [[n / 2], [n], [n - r, r - n / 2]]);
+  }),
+  "cr6-bday-d2": guard((p, ctx) => {
+    const [N] = num(p.prompt, /\$N = (\d+)\$/), [k] = num(p.prompt, /\$k = (\d+)\$/);
+    let pairs = 0; for (let i = 0; i < k; i++) for (let j = i + 1; j < k; j++) pairs++;
+    let kmin = 1, cnt = 0; while (cnt < N) { cnt += kmin; kmin++; } // adding the kmin-th input adds kmin - 1 pairs
+    let a = pairs, b = N; for (let f = 2; f <= b; f++) while (a % f === 0 && b % f === 0) { a /= f; b /= f; }
+    const v = pairs / N, near = [v + 0.01, v - 0.01, v + 0.05, v * 1.04, (k * k) / 2 / N, k / N];
+    // A correct rounding of v (2+ significant figures) is accepted by design, so only probe non-roundings.
+    const rounding = (w) => { const dp = (String(w).split(".")[1] || "").length; return Number(v.toFixed(dp)) === w; };
+    return check6(p, [pairs, b === 1 ? a : `${a}/${b}`, kmin], ctx, [[k * k], near.filter((w) => !rounding(w)), [N, Math.round(Math.sqrt(N))]]);
+  }),
+  "cr6-bday-d3": guard((p, ctx) => {
+    const [t] = num(p.prompt, /SHA-256 to (\d+) bits/), [b] = num(p.prompt, /about \$2\^\{(\d+)\}\$ hash/), [s] = num(p.prompt, /wants (\d+)-bit security/);
+    if (b === t / 2 || b === t) return "budget sits exactly on a bound";
+    return check6(p, [t / 2, b > t / 2 ? "yes" : "no", t, b > t ? "yes" : "no", 2 * s], ctx, [[t], [], [t / 2], [], [s]]);
+  }),
+  "cr6-md-d1": guard((p, ctx) => {
+    const T = toyF(p.prompt), [m1, m2] = num(p.prompt, /\(m_1, m_2\) = \((\d+), (\d+)\)/), h1 = T.f(T.IV, m1);
+    return check6(p, [h1, T.f(h1, m2), "yes"], ctx);
+  }),
+  "cr6-md-d2": guard((p, ctx) => {
+    const T = toyF(p.prompt), [m] = num(p.prompt, /block \$m = (\d+)\$/), [t] = num(p.prompt, /tag \$t = (\d+)\$/), [x] = num(p.prompt, /\$x = (\d+)\$/);
+    const keys = [...Array(T.pp).keys()].filter((k) => k >= 1 && T.f(T.f(T.IV, k), m) === t);
+    if (!keys.length) return "no key block produces the stated tag";
+    for (const k of keys) if (T.f(T.f(T.f(T.IV, k), m), x) !== T.f(t, x)) return "forgery does not verify";
+    return check6(p, [T.f(t, x), "no", "yes"], ctx, [[t]]);
+  }),
+  "cr6-md-d3": guard((p, ctx) => {
+    const T = toyF(p.prompt), [k] = num(p.prompt, /key \$k = (\d+)\$/), [m] = num(p.prompt, /message is \$m = (\d+)\$/), [x] = num(p.prompt, /append \$x = (\d+)\$/);
+    const h1 = T.f(T.IV, k), t = T.f(h1, m), forged = T.f(t, x), server = [k, m, x].reduce((h, blk) => T.f(h, blk), T.IV);
+    return check6(p, [h1, t, forged, server === forged ? "yes" : "no"], ctx);
+  }),
+  "cr6-hmac-d1": guard((p, ctx) => {
+    const [K] = num(p.prompt, /key \$K = (\d+)\$/);
+    if (parseInt("36", 16) !== 54 || parseInt("5C", 16) !== 92) return "pad constants";
+    return check6(p, [K ^ 0x36, K ^ 0x5c, "inner", 2], ctx, [[K ^ 0x5c], [K ^ 0x36], [], [1, 3]]);
+  }),
+  "cr6-hmac-d2": guard((p, ctx) => {
+    const T = toyF(p.prompt), [ki] = num(p.prompt, /k_\{in\} = (\d+)\$/), [ko] = num(p.prompt, /k_\{out\} = (\d+)\$/), [m] = num(p.prompt, /message \$m = (\d+)\$/);
+    const inner = T.f(T.f(T.IV, ki), m), o1 = T.f(T.IV, ko);
+    return check6(p, [T.f(T.IV, ki), inner, o1, T.f(o1, inner)], ctx, [[], [], [], [T.f(inner, ko)]]);
+  }),
+  "cr6-hmac-d3": guard((p, ctx) => {
+    const T = toyF(p.prompt), [ko] = num(p.prompt, /k_\{out\} = (\d+)\$/), [inner] = num(p.prompt, /\\\|\\, m\) = (\d+)\$/), [tag] = num(p.prompt, /tag is \$t = [^$]*= (\d+)\$/), [x] = num(p.prompt, /append \$x = (\d+)\$/);
+    const o1 = T.f(T.IV, ko);
+    if (T.f(o1, inner) !== tag) return "published tag does not match the inner digest";
+    const guess = T.f(tag, x), inner2 = T.f(inner, x), real = T.f(o1, inner2);
+    if (guess === real) return "degenerate: the length-extension guess happens to be right";
+    return check6(p, [guess, inner2, o1, real, "no"], ctx, [[], [], [], [guess]]);
+  }),
+  "cr6-rsa-d1": guard((p, ctx) => {
+    const [n, e] = num(p.prompt, /\(n, e\) = \((\d+), (\d+)\)/), [m] = num(p.prompt, /message \$m = (\d+)\$/), [s] = num(p.prompt, /signature \$s = (\d+)\$/);
+    rsaD(n, e);
+    const v = pw(s, e, n);
+    return check6(p, [v, v === m ? "yes" : "no"], ctx);
+  }),
+  "cr6-rsa-d2": guard((p, ctx) => {
+    const [n] = num(p.prompt, /\$n = (\d+) =/), [e] = num(p.prompt, /exponent \$e = (\d+)\$/), [d] = num(p.prompt, /exponent \$d = (\d+)\$/), [m] = num(p.prompt, /message \$m = (\d+)\$/);
+    rsaD(n, e);
+    if ([...Array(n).keys()].some((u) => pw(pw(u, d, n), e, n) !== u)) return `d = ${d} is not a private exponent for e = ${e}`;
+    const s = pw(m, d, n);
+    if (s === m) return "message is a fixed point";
+    return check6(p, [s, pw(s, e, n), "private"], ctx, [[pw(m, e, n)]]);
+  }),
+  "cr6-rsa-d3": guard((p, ctx) => {
+    const [n, e] = num(p.prompt, /\(n, e\) = \((\d+), (\d+)\)/), [s1, m1] = num(p.prompt, /\$s_1 = (\d+)\$ on \$m_1 = (\d+)\$/), [s2, m2] = num(p.prompt, /\$s_2 = (\d+)\$ on \$m_2 = (\d+)\$/);
+    const d = rsaD(n, e);
+    if (pw(m1, d, n) !== s1 || pw(m2, d, n) !== s2) return "given signatures are not genuine";
+    const m3 = (m1 * m2) % n, s3 = (s1 * s2) % n;
+    if ([1, m1, m2].includes(m3)) return "forged message repeats a known one";
+    if (pw(s3, e, n) !== m3) return "forgery does not verify";
+    return check6(p, [m3, s3, m3, "PSS"], ctx, [[m1 + m2], [s1 + s2]]);
+  }),
+  "cr6-sch-d1": guard((p, ctx) => {
+    const G = group(p.prompt), [x] = num(p.prompt, /private key is \$x = (\d+)\$/), [k] = num(p.prompt, /nonce is \$k = (\d+)\$/), [e] = num(p.prompt, /gives \$e = (\d+)\$/);
+    return check6(p, [pw(G.g, k, G.pp), md(x * e, G.q), md(k + x * e, G.q)], ctx, [[], [], [md(k + x * e, G.pp)]]);
+  }),
+  "cr6-sch-d2": guard((p, ctx) => {
+    const G = group(p.prompt), [y] = num(p.prompt, /Public key \$y = (\d+)\$/), [e] = num(p.prompt, /hashes to \$e = (\d+)\$/), [r, s] = num(p.prompt, /\(r, s\) = \((\d+), (\d+)\)/);
+    const x = dlog(G.g, y, G.pp), k = dlog(G.g, r, G.pp), honest = md(k + x * e, G.q) === s;
+    const gs = pw(G.g, s, G.pp), ye = pw(y, e, G.pp), rhs = md(r * ye, G.pp);
+    if ((gs === rhs) !== honest) return "verification equation disagrees with the signing equation";
+    return check6(p, [gs, ye, rhs, honest ? "yes" : "no"], ctx);
+  }),
+  "cr6-sch-d3": guard((p, ctx) => {
+    const [q] = num(p.prompt, /order \$q = (\d+)\$/), [z] = num(p.prompt, /nonce key \$z = (\d+)\$/), [x] = num(p.prompt, /private key \$x = (\d+)\$/);
+    const [hA] = num(p.prompt, /\$h_A = (\d+)\$/), [eA] = num(p.prompt, /\$e_A = (\d+)\$/), [hB] = num(p.prompt, /\$h_B = (\d+)\$/);
+    const nonce = (h) => md(z * h + 1, q), seen = new Set();
+    for (let h = 1; h < q; h++) seen.add(nonce(h));
+    const clash = seen.size < q - 1 ? "yes" : "no";
+    if (!nonce(hA) || !nonce(hB)) return "zero nonce";
+    return check6(p, [nonce(hA), md(nonce(hA) + x * eA, q), nonce(hB), clash, "ECDSA"], ctx);
+  }),
 };
 
 // ---------------------------------------------------------------- cr7
@@ -223,9 +376,9 @@ export const oracles = {
 // inverses by search, CRT solutions by scanning the whole range, Håstad
 // messages by trying every m. The prompt's own claims (primitive root, first
 // Fermat a works, every ciphertext wrapped, ...) are re-checked too.
-const pw = (b, e, m) => { let r = 1 % m; b = md(b, m); for (let k = 0; k < e; k++) r = (r * b) % m; return r; };
+const pw7 = (b, e, m) => { let r = 1 % m; b = md(b, m); for (let k = 0; k < e; k++) r = (r * b) % m; return r; };
 const ord = (g, p) => { let v = g % p; for (let k = 1; k < p; k++) { if (v === 1) return k; v = (v * g) % p; } return 0; };
-const dlog = (g, h, p) => { let v = 1; for (let x = 0; x < p - 1; x++) { if (v === h) return x; v = (v * g) % p; } throw new Error(`${h} is not a power of ${g} mod ${p}`); };
+const dlog7 = (g, h, p) => { let v = 1; for (let x = 0; x < p - 1; x++) { if (v === h) return x; v = (v * g) % p; } throw new Error(`${h} is not a power of ${g} mod ${p}`); };
 const trialFactor = (n) => { for (let d = 2; d * d <= n; d++) if (n % d === 0) return [d, n / d]; return [n, 1]; };
 const bigPrime = (n) => { let best = 1; for (let d = 2; d <= n; d++) if (n % d === 0 && isPrime(d)) best = d; return best; };
 const cube = (n) => { for (let r = 0; r * r * r <= n; r++) if (r * r * r === n) return true; return false; };
@@ -236,9 +389,9 @@ const scan = (pairs, M) => { const xs = []; for (let x = 0; x < M; x++) if (pair
 const bsgs7 = (tier) => guard((p, ctx) => {
   const [g, h, P] = num(p.prompt, /Solve \$(\d+)\^x \\equiv (\d+) \\pmod\{(\d+)\}/);
   if (!isPrime(P) || ord(g, P) !== P - 1) return `${g} is not a primitive root mod ${P}`;
-  const x = dlog(g, h, P);
+  const x = dlog7(g, h, P);
   let m = 1; while (m * m < P - 1) m++;
-  const gim = inv(pw(g, m, P), P), i = Math.floor(x / m), j = x % m;
+  const gim = inv(pw7(g, m, P), P), i = Math.floor(x / m), j = x % m;
   if (x < m || j === 0) return `degenerate log x = ${x} for m = ${m}`;
   if (tier === 1) return i !== 1 ? `match at i = ${i}, not 1` : check(p, [m, gim, md(h * gim, P), j, x], ctx);
   if (tier === 2) return check(p, [m, gim, i, j, x], ctx);
@@ -274,16 +427,16 @@ const ph7 = (tier) => guard((p, ctx) => {
     const b1 = bigPrime(p1 - 1), b2 = bigPrime(p2 - 1), safe = b1 > b2 ? p1 : p2;
     if (b1 === b2 || safe !== ps || 2 * bigPrime(ps - 1) + 1 !== ps) return "the named prime is not the safe one";
     if (ord(g, ps) !== ps - 1) return `${g} is not a primitive root mod ${ps}`;
-    return check(p, [b1, b2, safe === p1 ? "first" : "second", pw(h, (ps - 1) / 2, ps), dlog(g, h, ps) % 2], ctx);
+    return check(p, [b1, b2, safe === p1 ? "first" : "second", pw7(h, (ps - 1) / 2, ps), dlog7(g, h, ps) % 2], ctx);
   }
   const [pp] = num(P, /\$p = (\d+)\$/), [g] = num(P, /primitive root \$g = (\d+)\$/), [h] = num(P, /\\equiv (\d+) \\pmod/);
   if (ord(g, pp) !== pp - 1) return `${g} is not a primitive root mod ${pp}`;
-  const x = dlog(g, h, pp);
+  const x = dlog7(g, h, pp);
   if (x < 2) return `trivial log ${x}`;
   if (tier === 1) {
     const [q] = num(P, /power \$\(p - 1\)\/(\d+)\$/), e = (pp - 1) / q;
     if (!isPrime(q) || !Number.isInteger(e) || x % q === 0) return `bad subgroup q = ${q} (x = ${x})`;
-    return check(p, [e, pw(g, e, pp), pw(h, e, pp), x % q], ctx);
+    return check(p, [e, pw7(g, e, pp), pw7(h, e, pp), x % q], ctx);
   }
   const qs = []; for (let q = 2; q < pp; q++) if ((pp - 1) % q === 0 && isPrime(q)) qs.push(q);
   return check(p, [...qs.map((q) => x % q), x], ctx);
@@ -312,21 +465,21 @@ const rcrt7 = (tier) => guard((p, ctx) => {
   const P = p.prompt;
   if (tier === 3) {
     const [n] = num(P, /\$n = (\d+)\$/), [e] = num(P, /\$e = (\d+)\$/), [m] = num(P, /message \$m = (\d+)\$/), [sf] = num(P, /s' = (\d+)\$/);
-    const v = pw(sf, e, n), D = md(v - m, n), g = gcd(D, n);
+    const v = pw7(sf, e, n), D = md(v - m, n), g = gcd(D, n);
     if (g === 1 || g === n || !isPrime(g) || !isPrime(n / g)) return `gcd ${g} does not split ${n}`;
     return check(p, [v, D, g, n / g, "yes"], ctx);
   }
   const [pp] = num(P, /\$p = (\d+)\$/), [q] = num(P, /\$q = (\d+)\$/), [c] = num(P, /Decrypt \$c = (\d+)\$/);
   if (tier === 1) {
-    const [d] = num(P, /\$d = (\d+)\$/), dp = d % (pp - 1), dq = d % (q - 1), m = pw(c, d, pp * q);
-    if (pw(c, dp, pp) !== m % pp || pw(c, dq, q) !== m % q) return "CRT halves disagree with c^d mod n";
+    const [d] = num(P, /\$d = (\d+)\$/), dp = d % (pp - 1), dq = d % (q - 1), m = pw7(c, d, pp * q);
+    if (pw7(c, dp, pp) !== m % pp || pw7(c, dq, q) !== m % q) return "CRT halves disagree with c^d mod n";
     return check(p, [dp, dq, m % pp, m % q], ctx);
   }
   const [n] = num(P, /\$n = (\d+)\$/), [e] = num(P, /\$e = (\d+)\$/), [dp] = num(P, /\$d_p = (\d+)\$/), [dq] = num(P, /\$d_q = (\d+)\$/);
-  const ms = []; for (let m = 0; m < n; m++) if (pw(m, e, n) === c) ms.push(m);
+  const ms = []; for (let m = 0; m < n; m++) if (pw7(m, e, n) === c) ms.push(m);
   if (ms.length !== 1 || n !== pp * q) return `${ms.length} plaintexts encrypt to c`;
   const m = ms[0];
-  if (pw(c, dp, pp) !== m % pp || pw(c, dq, q) !== m % q) return "d_p or d_q is wrong";
+  if (pw7(c, dp, pp) !== m % pp || pw7(c, dq, q) !== m % q) return "d_p or d_q is wrong";
   return check(p, [m % pp, m % q, inv(q, pp), (m - (m % q)) / q, m], ctx);
 });
 
