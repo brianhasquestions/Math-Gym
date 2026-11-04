@@ -29,6 +29,7 @@ import { fill as crypto3Fill } from "./gen-crypto3-fill.js";        // cr3-
 import { fill as crypto4Fill } from "./gen-crypto4-fill.js";        // cr4- (weaknesses)
 import { fill as crypto5Fill } from "./gen-crypto5-fill.js";        // cr5- (AES modes)
 import { fill as crypto6Fill } from "./gen-crypto6-fill.js";        // cr6- (hashes, MACs, signatures)
+import { fill as crypto7Fill } from "./gen-crypto7-fill.js";        // cr7- (discrete-log and RSA attacks)
 import { fill as discreteFill } from "./gen-discrete-fill.js";      // dm-  (discrete math)
 import { fill as statsFill } from "./gen-stats-fill.js";            // stat- (statistics)
 import { fill as alg2Fill } from "./gen-alg2-fill.js";              // a2f-  (algebra-2 complex/polynomial)
@@ -2702,7 +2703,7 @@ generators["simplify-rational-v1"] = (rng, idx) => {
 // here (there are none: fill packs use the def-*/laf-* prefixes).
 Object.assign(generators, deFill, linAlgFill,
   algGraphFill, calc1Fill, geoFill, deFill2, linAlgFill2, trigFill, trig2Fill,
-  geoProofFill, calc3ProofFill, crypto1Fill, crypto2Fill, crypto3Fill, crypto4Fill, crypto5Fill, crypto6Fill,
+  geoProofFill, calc3ProofFill, crypto1Fill, crypto2Fill, crypto3Fill, crypto4Fill, crypto5Fill, crypto6Fill, crypto7Fill,
   discreteFill, statsFill,
   alg2Fill, trig3Fill, calc1bFill, calc2Fill, calc3vFill, lapGsFill, stats2Fill,
   geo2Fill, discrete2Fill, deFill3, alg2bFill, calc2bFill, calc3sFill,
