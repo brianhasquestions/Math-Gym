@@ -20,6 +20,12 @@ jobs:
         run: node tools/test.mjs
       - name: Validate all content (0 failing required)
         run: node tools/validate.mjs --quiet-warnings
+      # validate.mjs only proves answers self-grade; this renders every lecture,
+      # seed and 25 draws per generator through the real renderer + KaTeX and
+      # fails on anything a learner would see broken (KaTeX errors, unpaired $,
+      # double-escaped LaTeX, ${} placeholders, float noise, broken tables).
+      - name: Render lint (every learner-visible string)
+        run: node tools/render-lint.mjs
       - name: Regenerate sitemap and check it is committed
         run: |
           node tools/gen-sitemap.mjs

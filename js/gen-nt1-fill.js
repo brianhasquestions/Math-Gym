@@ -1092,7 +1092,7 @@ fill["nt1-general-2"] = (rng, idx) => {
 fill["nt1-general-3"] = (rng, idx) => {
   // Find a solution meeting a constraint (smallest positive x) using increments.
   const combos = [
-    { a: 5, b: 3, c: 40, x0: 8, y0: 0 }, { a: 4, b: 7, c: 50, x0: 12, y0: 2 },
+    { a: 5, b: 3, c: 40, x0: 8, y0: 0 }, { a: 4, b: 7, c: 50, x0: 9, y0: 2 },
     { a: 3, b: 7, c: 40, x0: 11, y0: 1 }, { a: 5, b: 8, c: 60, x0: 12, y0: 0 },
   ];
   const c = rng.pick(combos);

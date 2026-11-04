@@ -49,7 +49,7 @@ fill["fm3-level-1"] = (rng, idx) => {
   const PV = 1000 * k;
   return {
     id: `gen.fm3-level-1.${idx}`, generated: true, concepts: ["level-perpetuity"], difficulty: 1, context: "applied",
-    prompt: `An investment promises \\$${C} at the end of every year, forever, when money is worth ${iP}\\% per year. Find its present value with $PV = \\dfrac{C}{i}$. Enter as a number, no $ or commas.`,
+    prompt: `An investment promises \\$${C} at the end of every year, forever, when money is worth ${iP}\\% per year. Find its present value with $PV = \\dfrac{C}{i}$. Enter as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Write the rate $i$ as a decimal.`, answer: rateStr(iP), accept: [], hint: `${iP}% as a decimal.` },
       { instruction: `Compute $PV = \\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PV), accept: moneyAccepts(PV), hint: `Dividing by ${rateStr(iP)} is multiplying by ${100 / iP}.` },
@@ -68,7 +68,7 @@ fill["fm3-level-2"] = (rng, idx) => {
   const PV = 1000 * k;
   return {
     id: `gen.fm3-level-2.${idx}`, generated: true, concepts: ["level-perpetuity"], difficulty: 2, context: "applied",
-    prompt: `A trust pays \\$${C} at the end of every month, forever. Money is worth ${annualP}\\% per year, compounded monthly. Find the present value: use the MONTHLY rate $i = ${annualP}\\%/12$ in $PV = C/i$. Enter as a number, no $ or commas.`,
+    prompt: `A trust pays \\$${C} at the end of every month, forever. Money is worth ${annualP}\\% per year, compounded monthly. Find the present value: use the MONTHLY rate $i = ${annualP}\\%/12$ in $PV = C/i$. Enter as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Find the monthly rate $i = ${rateStr(annualP)}/12$. Enter as a decimal.`, answer: `${im}`, accept: [`${annualP / 100}/12`], hint: `Divide the annual decimal rate by 12.` },
       { instruction: `Compute $PV = \\dfrac{${C}}{${im}}$. Enter a number.`, answer: money(PV), accept: moneyAccepts(PV), hint: `Dividing by ${im} is multiplying by ${Math.round(1 / im)}.` },
@@ -86,7 +86,7 @@ fill["fm3-level-3"] = (rng, idx) => {
   const PV = 1000 * k;
   return {
     id: `gen.fm3-level-3.${idx}`, generated: true, concepts: ["level-perpetuity"], difficulty: 3, context: "applied",
-    prompt: `A donor wants to endow a \\$${C}-per-year prize forever, with the fund earning ${iP}\\% per year and the prize paid from interest at the end of each year. Find the required endowment, the interest earned in year one, and the fund balance after the first prize is paid. Enter each as a number, no $ or commas.`,
+    prompt: `A donor wants to endow a \\$${C}-per-year prize forever, with the fund earning ${iP}\\% per year and the prize paid from interest at the end of each year. Find the required endowment, the interest earned in year one, and the fund balance after the first prize is paid. Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Required endowment $PV = \\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PV), accept: moneyAccepts(PV), hint: `Level perpetuity: $C/i$.` },
       { instruction: `Interest earned in year one: $PV \\times ${rateStr(iP)}$. Enter a number.`, answer: money(C), accept: moneyAccepts(C), hint: `It exactly equals the prize — that is the whole design.` },
@@ -108,7 +108,7 @@ fill["fm3-due-1"] = (rng, idx) => {
   const due = PV0 + C; // (C/i)(1+i) = C/i + C exactly
   return {
     id: `gen.fm3-due-1.${idx}`, generated: true, concepts: ["perpetuity-due-and-deferred"], difficulty: 1, context: "applied",
-    prompt: `A ground lease pays \\$${C} at the BEGINNING of each year, forever, at ${iP}\\% per year. Compute the ordinary perpetuity value first, then multiply by $(1 + i)$ for the perpetuity-due. Enter each as a number, no $ or commas.`,
+    prompt: `A ground lease pays \\$${C} at the BEGINNING of each year, forever, at ${iP}\\% per year. Compute the ordinary perpetuity value first, then multiply by $(1 + i)$ for the perpetuity-due. Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Ordinary value: $\\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PV0), accept: moneyAccepts(PV0), hint: `End-of-year version first.` },
       { instruction: `Multiply by $(1 + ${rateStr(iP)})$. Enter a number.`, answer: money(due), accept: moneyAccepts(due), hint: `$${disp(PV0)} \\times ${1 + iP / 100}$ — equivalently the ordinary value plus one payment.` },
@@ -133,7 +133,7 @@ fill["fm3-due-2"] = (rng, idx) => {
   const PV = Math.round((k * Fint) / 10) / 100; // = PV0 * F, rounded to cents exactly
   return {
     id: `gen.fm3-due-2.${idx}`, generated: true, concepts: ["perpetuity-due-and-deferred"], difficulty: 2, context: "applied",
-    prompt: `A pension of \\$${C} per year (end of year) starts ${m} years from now and then runs forever, at ${iP}\\% per year. Value the perpetuity as of year ${m}, then discount back using the given factor $(1 + ${rateStr(iP)})^{-${m}} = ${F}$. Enter each as a number rounded to the nearest cent, no $ or commas.`,
+    prompt: `A pension of \\$${C} per year (end of year) starts ${m} years from now and then runs forever, at ${iP}\\% per year. Value the perpetuity as of year ${m}, then discount back using the given factor $(1 + ${rateStr(iP)})^{-${m}} = ${F}$. Enter each as a number rounded to the nearest cent, no \\$ or commas.`,
     steps: [
       { instruction: `Value at year ${m} (just before payments begin): $\\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PV0), accept: moneyAccepts(PV0), hint: `A standard perpetuity, seen from year ${m}.` },
       { instruction: `Discount to today: $${disp(PV0)} \\times ${F}$. Enter a number rounded to the nearest cent.`, answer: money(PV), accept: moneyAccepts(PV), hint: `Multiply by the stated discount factor.` },
@@ -152,7 +152,7 @@ fill["fm3-due-3"] = (rng, idx) => {
   const due = PV0 + C;
   return {
     id: `gen.fm3-due-3.${idx}`, generated: true, concepts: ["perpetuity-due-and-deferred"], difficulty: 3, context: "applied",
-    prompt: `Two contracts each pay \\$${C} per year forever at ${iP}\\% per year: contract X pays at the end of each year, contract Y at the beginning. Find both values and the premium Y commands over X. Enter each as a number, no $ or commas.`,
+    prompt: `Two contracts each pay \\$${C} per year forever at ${iP}\\% per year: contract X pays at the end of each year, contract Y at the beginning. Find both values and the premium Y commands over X. Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Value of X (ordinary): $\\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PV0), accept: moneyAccepts(PV0), hint: `$C/i$.` },
       { instruction: `Value of Y (due): multiply by $(1 + ${rateStr(iP)})$. Enter a number.`, answer: money(due), accept: moneyAccepts(due), hint: `$${disp(PV0)} \\times ${1 + iP / 100}$.` },
@@ -175,7 +175,7 @@ fill["fm3-grow-1"] = (rng, idx) => {
   const PV = 10000 * k;
   return {
     id: `gen.fm3-grow-1.${idx}`, generated: true, concepts: ["growing-perpetuity"], difficulty: 1, context: "applied",
-    prompt: `A stock will pay a dividend of \\$${C} one year from now, growing ${gP}\\% per year forever. The required return is ${iP}\\% per year. Find the value with the growing-perpetuity formula $PV = \\dfrac{C}{i - g}$ (valid because $i > g$). Enter each as a number, no $ or commas.`,
+    prompt: `A stock will pay a dividend of \\$${C} one year from now, growing ${gP}\\% per year forever. The required return is ${iP}\\% per year. Find the value with the growing-perpetuity formula $PV = \\dfrac{C}{i - g}$ (valid because $i > g$). Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Compute the spread $i - g = ${rateStr(iP)} - ${rateStr(gP)}$. Enter as a decimal.`, answer: rateStr(sP), accept: [], hint: `Subtract the decimals.` },
       { instruction: `Compute $PV = \\dfrac{${C}}{${rateStr(sP)}}$. Enter a number.`, answer: money(PV), accept: moneyAccepts(PV), hint: `Dividing by ${rateStr(sP)} is multiplying by ${100 / sP}.` },
@@ -196,7 +196,7 @@ fill["fm3-grow-2"] = (rng, idx) => {
   const PV = C1 * (sP === 4 ? 25 : 20);      // C1 / (s/100), exact integer
   return {
     id: `gen.fm3-grow-2.${idx}`, generated: true, concepts: ["growing-perpetuity"], difficulty: 2, context: "applied",
-    prompt: `A company JUST PAID a dividend of \\$${C0}. Dividends grow ${gP}\\% per year forever and the required return is ${iP}\\% per year. The formula $PV = \\dfrac{C_1}{i - g}$ needs NEXT year's payment $C_1$, not the one already paid. Enter each as a number, no $ or commas.`,
+    prompt: `A company JUST PAID a dividend of \\$${C0}. Dividends grow ${gP}\\% per year forever and the required return is ${iP}\\% per year. The formula $PV = \\dfrac{C_1}{i - g}$ needs NEXT year's payment $C_1$, not the one already paid. Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Grow the payment one step: $C_1 = ${C0} \\times (1 + ${rateStr(gP)})$. Enter a number.`, answer: money(C1), accept: moneyAccepts(C1), hint: `$${C0} \\times ${1 + gP / 100}$.` },
       { instruction: `Compute the spread $i - g$. Enter as a decimal.`, answer: rateStr(sP), accept: [], hint: `$${rateStr(iP)} - ${rateStr(gP)}$.` },
@@ -236,7 +236,7 @@ fill["fm3-app-1"] = (rng, idx) => {
   const D = Math.round(P * iP) / 100; // clean to cents for all combos
   return {
     id: `gen.fm3-app-1.${idx}`, generated: true, concepts: ["perpetuity-applications"], difficulty: 1, context: "applied",
-    prompt: `A preferred share pays a fixed dividend of \\$${money(D)} per year, forever. Investors require ${iP}\\% per year. Price the share as a level perpetuity. Enter each as a number, no $ or commas.`,
+    prompt: `A preferred share pays a fixed dividend of \\$${money(D)} per year, forever. Investors require ${iP}\\% per year. Price the share as a level perpetuity. Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Write the required return $i$ as a decimal.`, answer: rateStr(iP), accept: [], hint: `${iP}% as a decimal.` },
       { instruction: `Price $= \\dfrac{${money(D)}}{${rateStr(iP)}}$. Enter a number.`, answer: money(P), accept: moneyAccepts(P), hint: `Dividend over required return.` },
@@ -262,7 +262,7 @@ fill["fm3-app-2"] = (rng, idx) => {
     prompt: `A rental building sells for \\$${price} and produces a net operating income (NOI) of \\$${NOI} per year. Its cap rate is $\\text{NOI}/\\text{price}$ — exactly the perpetuity rate $i = C/PV$. Find the cap rate, then what the building would fetch if the market cap rate moved to ${r2P}\\%.`,
     steps: [
       { instruction: `Cap rate $= \\dfrac{${NOI}}{${price}}$. Enter as a percent number (e.g. enter 6 for 6%).`, answer: `${r1P}`, accept: [], hint: `Divide, then multiply by 100.` },
-      { instruction: `Revalue at a ${r2P}\\% cap rate: $\\dfrac{${NOI}}{${rateStr(r2P)}}$. Enter a number, no $ or commas.`, answer: money(v2), accept: moneyAccepts(v2), hint: `Same income, new perpetuity rate.` },
+      { instruction: `Revalue at a ${r2P}\\% cap rate: $\\dfrac{${NOI}}{${rateStr(r2P)}}$. Enter a number, no \\$ or commas.`, answer: money(v2), accept: moneyAccepts(v2), hint: `Same income, new perpetuity rate.` },
     ],
     finalAnswer: { value: money(v2), unit: "dollars" },
     solutionNarrative: `Cap rate $= ${NOI}/${price} = ${r1P}\\%$. At a ${r2P}\\% cap rate the same \\$${NOI} income is worth $\\dfrac{${NOI}}{${rateStr(r2P)}} = \\$${disp(v2)}$ — ${r2P < r1P ? "lower rates inflate" : "higher rates deflate"} property values, exactly as $C/i$ predicts.`,
@@ -284,7 +284,7 @@ fill["fm3-app-3"] = (rng, idx) => {
   const extra = Math.round((PVgrow - PVlevel) * 100) / 100;
   return {
     id: `gen.fm3-app-3.${idx}`, generated: true, concepts: ["perpetuity-applications"], difficulty: 3, context: "applied",
-    prompt: `A university wants a scholarship paying \\$${C} next year and growing ${gP}\\% per year forever to keep up with costs; the endowment earns ${iP}\\% per year. Find the endowment needed WITH growth, the endowment for a level (non-growing) \\$${C} scholarship, and the extra cost of inflation-proofing. Enter each as a number, no $ or commas.`,
+    prompt: `A university wants a scholarship paying \\$${C} next year and growing ${gP}\\% per year forever to keep up with costs; the endowment earns ${iP}\\% per year. Find the endowment needed WITH growth, the endowment for a level (non-growing) \\$${C} scholarship, and the extra cost of inflation-proofing. Enter each as a number, no \\$ or commas.`,
     steps: [
       { instruction: `Growing version: $PV = \\dfrac{${C}}{${rateStr(iP)} - ${rateStr(gP)}}$. Enter a number.`, answer: money(PVgrow), accept: moneyAccepts(PVgrow), hint: `The spread is $${rateStr(sP)}$.` },
       { instruction: `Level version: $PV = \\dfrac{${C}}{${rateStr(iP)}}$. Enter a number.`, answer: money(PVlevel), accept: moneyAccepts(PVlevel), hint: `Plain $C/i$.` },

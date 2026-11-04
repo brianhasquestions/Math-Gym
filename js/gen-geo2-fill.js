@@ -98,7 +98,7 @@ fill["geo2-angle-sums-3"] = (rng, idx) => {
     prompt: `Each interior angle of a regular polygon measures $${I}^\\circ$. How many sides does the polygon have?`,
     steps: [
       { instruction: "Interior and exterior angles at a vertex are supplementary. Find each exterior angle, in degrees.", answer: `${e}`, accept: [`${e} degrees`], hint: `$180 - ${I}$.` },
-      { instruction: "The exterior angles sum to $360^\\circ$. Solve $n \\cdot ${e} = 360$ for the number of sides $n$.", answer: `${n}`, accept: [`n=${n}`, `${n} sides`], hint: `360 ÷ ${e}.` },
+      { instruction: `The exterior angles sum to $360^\\circ$. Solve $n \\cdot ${e} = 360$ for the number of sides $n$.`, answer: `${n}`, accept: [`n=${n}`, `${n} sides`], hint: `360 ÷ ${e}.` },
     ],
     finalAnswer: { value: `${n}`, unit: "sides" },
     solutionNarrative: `Each exterior angle is $180 - ${I} = ${e}^\\circ$, and the exterior angles total $360^\\circ$, so $n = 360/${e} = ${n}$ sides.`,

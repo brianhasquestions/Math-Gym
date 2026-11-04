@@ -100,14 +100,14 @@
       "concepts": ["exponential-growth"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A bacterial population grows continuously as $P(t) = 2000\\, e^{kt}$. It is observed to grow to 3200 in 4 hours, so $k = \\frac{\\ln 1.6}{4}$. First find $k$ (round to 5 decimals), then predict the population after 25 hours (round to the nearest whole cell). Use $\\ln 1.6 \\approx 0.4700$ and $e \\approx 2.718$.",
+      "prompt": "A bacterial population grows continuously as $P(t) = 2000\\, e^{kt}$. It is observed to grow to 3200 in 4 hours, so $k = \\frac{\\ln 1.6}{4}$. First find $k$ (round to 5 decimals), then predict the population after 25 hours (round to the nearest whole cell). Use $\\ln 1.6 \\approx 0.4700$, and your calculator's $e^x$ key for the last step.",
       "steps": [
         { "instruction": "Compute the growth constant $k = \\frac{\\ln 1.6}{4}$ (round to 5 decimals).", "answer": "0.11750", "accept": ["0.1175"], "hint": "Divide 0.4700 by 4." },
         { "instruction": "Compute the exponent $k \\times 25$ (round to 4 decimals).", "answer": "2.9375", "accept": ["2.9375"], "hint": "Multiply your $k$ by 25." },
-        { "instruction": "Evaluate $2000\\, e^{2.9375}$ and round to the nearest whole cell.", "answer": "37703", "accept": ["37703", "37702", "37704"], "hint": "$e^{2.9375} \\approx 18.85$; multiply by 2000." }
+        { "instruction": "Evaluate $2000\\, e^{2.9375}$ and round to the nearest whole cell.", "answer": "37737", "accept": ["37726"], "hint": "$e^{2.9375} \\approx 18.8686$; multiply by 2000." }
       ],
-      "finalAnswer": { "value": "37703", "unit": "cells" },
-      "solutionNarrative": "From the data $k = \\frac{\\ln 1.6}{4} \\approx 0.11750$. After 25 hours the exponent is $0.11750 \\cdot 25 = 2.9375$, so $P = 2000\\, e^{2.9375} \\approx 2000 \\cdot 18.85 \\approx 37703$ cells."
+      "finalAnswer": { "value": "37737", "unit": "cells" },
+      "solutionNarrative": "From the data $k = \\frac{\\ln 1.6}{4} \\approx 0.11750$. After 25 hours the exponent is $0.11750 \\cdot 25 = 2.9375$, so $P = 2000\\, e^{2.9375} \\approx 2000 \\cdot 18.8686 \\approx 37737$ cells. (Using $e \\approx 2.718$ instead gives 37726 — small rounding in $e$ grows when the exponent is large.)"
     },
     {
       "id": "differential-equations.growth-decay-cooling.s06",

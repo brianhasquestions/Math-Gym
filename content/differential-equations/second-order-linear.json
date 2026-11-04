@@ -13,7 +13,7 @@
     {
       "id": "classify-roots",
       "label": "Classifying the roots",
-      "microLesson": "The discriminant $b^2 - 4ac$ of the characteristic equation sorts the behavior into exactly three cases. Positive → **real distinct** (two different real roots). Zero → **repeated** (one real root, a double root). Negative → **complex** (a conjugate pair $\\\\alpha \\\\pm \\\\beta i$). You don't need to write the general solution to classify — the sign of the discriminant alone names the case."
+      "microLesson": "The discriminant $b^2 - 4ac$ of the characteristic equation sorts the behavior into exactly three cases. Positive → **real distinct** (two different real roots). Zero → **repeated** (one real root, a double root). Negative → **complex** (a conjugate pair $\\alpha \\pm \\beta i$). You don't need to write the general solution to classify — the sign of the discriminant alone names the case."
     },
     {
       "id": "discriminant-and-behavior",
@@ -23,12 +23,12 @@
     {
       "id": "oscillation-applied",
       "label": "Oscillation: frequency and period",
-      "microLesson": "An undamped spring-mass system $m y'' + k y = 0$ has characteristic roots $\\\\pm i\\\\sqrt{k/m}$, a pure complex pair. The **natural angular frequency** is $\\\\omega = \\\\sqrt{k/m}$ (radians per second), and the **period** is $T = 2\\\\pi/\\\\omega$ (seconds per cycle). Add damping and the roots gain a real part; whether they stay complex (underdamped, still oscillating) or become real (over/critically damped, no oscillation) decides whether the system rings or just settles."
+      "microLesson": "An undamped spring-mass system $m y'' + k y = 0$ has characteristic roots $\\pm i\\sqrt{k/m}$, a pure complex pair. The **natural angular frequency** is $\\omega = \\sqrt{k/m}$ (radians per second), and the **period** is $T = 2\\pi/\\omega$ (seconds per cycle). Add damping and the roots gain a real part; whether they stay complex (underdamped, still oscillating) or become real (over/critically damped, no oscillation) decides whether the system rings or just settles."
     }
   ],
   "lecture": {
     "format": "markdown+latex",
-    "body": "## The equation behind everything that bounces, sways, or settles\n\nA car hitting a pothole, a skyscraper leaning in the wind, the current in a radio tuner, a diving board after the diver leaves — all of them obey the **same** equation:\n\n$$a y'' + b y' + c y = 0.$$\n\nHere $y(t)$ is the thing that moves (displacement, charge, angle), $y'$ is its rate of change (velocity, current), and $y''$ its acceleration. The coefficients come straight from the physics: a mass $m$, a damping/resistance $c$, a stiffness $k$. Solving this one template tells you whether a system **oscillates, overshoots, or quietly settles** — the difference between a comfortable ride and a bone-rattling one.\n\n## The trick: turn calculus into a quadratic\n\nThe magic of *constant coefficients* is that you never have to do hard calculus. Guess that the solution is an exponential, $y = e^{rt}$. Then $y' = r e^{rt}$ and $y'' = r^2 e^{rt}$. Substitute:\n\n$$a r^2 e^{rt} + b r e^{rt} + c e^{rt} = 0.$$\n\nThe $e^{rt}$ is never zero, so divide it out and you're left with a plain **quadratic in $r$**:\n\n$$a r^2 + b r + c = 0.$$\n\nThis is the **characteristic equation**. Everything you learned about quadratics now pays off: factor it, use the quadratic formula, and read the discriminant.\n\n### Worked example\n\nFor $y'' + 5y' + 6y = 0$, the characteristic equation is $r^2 + 5r + 6 = 0$, which factors as $(r + 2)(r + 3) = 0$. The roots are $r = -2$ or $r = -3$. Both are negative reals, so the system decays to rest without oscillating.\n\n## Three cases, decided by the discriminant\n\nThe discriminant $b^2 - 4ac$ of the characteristic equation splits behavior into exactly three families:\n\n- **$b^2 - 4ac > 0$ — real distinct roots.** Two different real exponents. The system slides back to equilibrium **without oscillating**. In a damped mechanical system this is **overdamped**.\n- **$b^2 - 4ac = 0$ — a repeated (double) root.** One real exponent. This is the **critically damped** case: the fastest possible return with no overshoot — exactly what a good shock absorber aims for.\n- **$b^2 - 4ac < 0$ — complex conjugate roots** $\\\\alpha \\\\pm \\\\beta i$. The system **oscillates**. If $\\\\alpha < 0$ the oscillation decays (**underdamped** — it rings and settles); if $\\\\alpha = 0$ it oscillates forever (pure vibration).\n\nNotice you can name the behavior from the sign of one number, **before** writing any messy solution involving $e^{t}$, $\\\\sin$, or $\\\\cos$.\n\n## Frequency and period of a vibration\n\nStrip out damping and you get the cleanest case, the undamped spring-mass system:\n\n$$m y'' + k y = 0 \\\\;\\\\Rightarrow\\\\; r^2 = -\\\\tfrac{k}{m} \\\\;\\\\Rightarrow\\\\; r = \\\\pm i\\\\sqrt{\\\\tfrac{k}{m}}.$$\n\nThe roots are purely imaginary, so the motion is a pure sinusoid. Its **natural angular frequency** is\n\n$$\\\\omega = \\\\sqrt{\\\\frac{k}{m}} \\\\quad (\\\\text{rad/s}),$$\n\nand the **period** — the time for one full cycle — is\n\n$$T = \\\\frac{2\\\\pi}{\\\\omega} \\\\quad (\\\\text{s}).$$\n\nStiffer spring (bigger $k$) → faster vibration; heavier mass (bigger $m$) → slower vibration. That is the whole logic of tuning a guitar string, a car's suspension, or a building's mass damper."
+    "body": "## The equation behind everything that bounces, sways, or settles\n\nA car hitting a pothole, a skyscraper leaning in the wind, the current in a radio tuner, a diving board after the diver leaves — all of them obey the **same** equation:\n\n$$a y'' + b y' + c y = 0.$$\n\nHere $y(t)$ is the thing that moves (displacement, charge, angle), $y'$ is its rate of change (velocity, current), and $y''$ its acceleration. The coefficients come straight from the physics: a mass $m$, a damping/resistance $c$, a stiffness $k$. Solving this one template tells you whether a system **oscillates, overshoots, or quietly settles** — the difference between a comfortable ride and a bone-rattling one.\n\n## The trick: turn calculus into a quadratic\n\nThe magic of *constant coefficients* is that you never have to do hard calculus. Guess that the solution is an exponential, $y = e^{rt}$. Then $y' = r e^{rt}$ and $y'' = r^2 e^{rt}$. Substitute:\n\n$$a r^2 e^{rt} + b r e^{rt} + c e^{rt} = 0.$$\n\nThe $e^{rt}$ is never zero, so divide it out and you're left with a plain **quadratic in $r$**:\n\n$$a r^2 + b r + c = 0.$$\n\nThis is the **characteristic equation**. Everything you learned about quadratics now pays off: factor it, use the quadratic formula, and read the discriminant.\n\n### Worked example\n\nFor $y'' + 5y' + 6y = 0$, the characteristic equation is $r^2 + 5r + 6 = 0$, which factors as $(r + 2)(r + 3) = 0$. The roots are $r = -2$ or $r = -3$. Both are negative reals, so the system decays to rest without oscillating.\n\n## Three cases, decided by the discriminant\n\nThe discriminant $b^2 - 4ac$ of the characteristic equation splits behavior into exactly three families:\n\n- **$b^2 - 4ac > 0$ — real distinct roots.** Two different real exponents. The system slides back to equilibrium **without oscillating**. In a damped mechanical system this is **overdamped**.\n- **$b^2 - 4ac = 0$ — a repeated (double) root.** One real exponent. This is the **critically damped** case: the fastest possible return with no overshoot — exactly what a good shock absorber aims for.\n- **$b^2 - 4ac < 0$ — complex conjugate roots** $\\alpha \\pm \\beta i$. The system **oscillates**. If $\\alpha < 0$ the oscillation decays (**underdamped** — it rings and settles); if $\\alpha = 0$ it oscillates forever (pure vibration).\n\nNotice you can name the behavior from the sign of one number, **before** writing any messy solution involving $e^{t}$, $\\sin$, or $\\cos$.\n\n## Frequency and period of a vibration\n\nStrip out damping and you get the cleanest case, the undamped spring-mass system:\n\n$$m y'' + k y = 0 \\;\\Rightarrow\\; r^2 = -\\tfrac{k}{m} \\;\\Rightarrow\\; r = \\pm i\\sqrt{\\tfrac{k}{m}}.$$\n\nThe roots are purely imaginary, so the motion is a pure sinusoid. Its **natural angular frequency** is\n\n$$\\omega = \\sqrt{\\frac{k}{m}} \\quad (\\text{rad/s}),$$\n\nand the **period** — the time for one full cycle — is\n\n$$T = \\frac{2\\pi}{\\omega} \\quad (\\text{s}).$$\n\nStiffer spring (bigger $k$) → faster vibration; heavier mass (bigger $m$) → slower vibration. That is the whole logic of tuning a guitar string, a car's suspension, or a building's mass damper."
   },
   "application": {
     "summary": "Second-order linear equations are the master template for vibration and damping: a spring-mass system, a shock absorber, an RLC circuit, and a swaying building are all the same equation $ay'' + by' + cy = 0$. The characteristic-equation roots — set by the discriminant — decide whether the system oscillates (underdamped), creeps back (overdamped), or returns fastest without overshoot (critically damped), and the imaginary part fixes the frequency and period.",
@@ -36,8 +36,8 @@
     "workedExample": "**Tuning a shock absorber.**\n\nA car's suspension is modeled by $m y'' + c y' + k y = 0$ with mass $m = 1$ (scaled units), spring stiffness $k = 16$, and an adjustable damping $c$. We want the ride that returns to level fastest *without* bouncing — the **critically damped** case.\n\nThe characteristic equation is $r^2 + c r + 16 = 0$, with discriminant $c^2 - 4(1)(16) = c^2 - 64$.\n\n- If $c = 4$: discriminant $16 - 64 = -48 < 0$ → complex roots → **underdamped**, the car bounces.\n- If $c = 10$: discriminant $100 - 64 = 36 > 0$ → real distinct roots → **overdamped**, the car returns sluggishly.\n- If $c = 8$: discriminant $64 - 64 = 0$ → a repeated root → **critically damped**, the sweet spot.\n\nSo the engineer sets $c = 8$. The exact same discriminant test tells a circuit designer whether an RLC filter rings or settles, and tells a structural engineer whether a tower's sway damps out — one quadratic, three industries.",
     "domainNotes": [
       "**Mechanical:** spring-mass-damper systems; shock absorbers tuned to critical damping so a car doesn't oscillate after a bump.",
-      "**Electrical:** series RLC circuits, where $L q'' + R q' + \\\\tfrac{1}{C} q = 0$ has the identical form; the discriminant decides ringing vs. smooth decay.",
-      "**Structural:** building sway and tuned mass dampers; natural frequency $\\\\sqrt{k/m}$ must be kept away from wind or earthquake driving frequencies.",
+      "**Electrical:** series RLC circuits, where $L q'' + R q' + \\tfrac{1}{C} q = 0$ has the identical form; the discriminant decides ringing vs. smooth decay.",
+      "**Structural:** building sway and tuned mass dampers; natural frequency $\\sqrt{k/m}$ must be kept away from wind or earthquake driving frequencies.",
       "**Physics:** any small oscillation — pendulums, molecular bonds — linearizes to this constant-coefficient form near equilibrium."
     ]
   },
@@ -50,7 +50,7 @@
       "context": "abstract",
       "prompt": "Write the characteristic equation for $y'' + 5y' + 6y = 0$, then find its roots.",
       "steps": [
-        { "instruction": "Replace $y''$ with $r^2$, $y'$ with $r$, and $y$ with $1$ to write the characteristic equation.", "answer": "r^2 + 5r + 6 = 0", "accept": ["r^2+5r+6=0"], "hint": "Each derivative becomes a power of $r$: $y'' \\\\to r^2$, $y' \\\\to r$, $y \\\\to 1$." },
+        { "instruction": "Replace $y''$ with $r^2$, $y'$ with $r$, and $y$ with $1$ to write the characteristic equation.", "answer": "r^2 + 5r + 6 = 0", "accept": ["r^2+5r+6=0"], "hint": "Each derivative becomes a power of $r$: $y'' \\to r^2$, $y' \\to r$, $y \\to 1$." },
         { "instruction": "Factor and solve for both roots. Separate them with 'or' or a comma.", "form": "solutions", "answer": "r = -2 or r = -3", "accept": ["-2, -3", "-3, -2"], "hint": "$(r+2)(r+3)=0$." }
       ],
       "finalAnswer": { "value": "r = -2, r = -3", "unit": "" },
@@ -63,7 +63,7 @@
       "context": "abstract",
       "prompt": "Write the characteristic equation for $y'' - 7y' + 12y = 0$, then find its roots.",
       "steps": [
-        { "instruction": "Write the characteristic equation.", "answer": "r^2 - 7r + 12 = 0", "accept": ["r^2-7r+12=0"], "hint": "$y'' \\\\to r^2$, $y' \\\\to r$, $y \\\\to 1$." },
+        { "instruction": "Write the characteristic equation.", "answer": "r^2 - 7r + 12 = 0", "accept": ["r^2-7r+12=0"], "hint": "$y'' \\to r^2$, $y' \\to r$, $y \\to 1$." },
         { "instruction": "Factor and solve for both roots.", "form": "solutions", "answer": "r = 3 or r = 4", "accept": ["3, 4", "4, 3"], "hint": "Two numbers multiplying to 12 and adding to 7." }
       ],
       "finalAnswer": { "value": "r = 3, r = 4", "unit": "" },
@@ -80,7 +80,7 @@
         { "instruction": "Solve for both roots.", "form": "solutions", "answer": "r = 1/2 or r = -3", "accept": ["1/2, -3", "0.5, -3", "-3, 1/2", "-3, 0.5"], "hint": "$(2r - 1)(r + 3) = 0$." }
       ],
       "finalAnswer": { "value": "r = 1/2, r = -3", "unit": "" },
-      "solutionNarrative": "$2r^2 + 5r - 3 = 0 = (2r-1)(r+3)$, so $r = \\\\tfrac{1}{2}$ or $r = -3$."
+      "solutionNarrative": "$2r^2 + 5r - 3 = 0 = (2r-1)(r+3)$, so $r = \\tfrac{1}{2}$ or $r = -3$."
     },
     {
       "id": "differential-equations.second-order-linear.s04",
@@ -89,12 +89,12 @@
       "context": "applied",
       "prompt": "A mass on a spring with light damping is modeled by $y'' + 2y' + 5y = 0$. Write its characteristic equation and find the complex roots.",
       "steps": [
-        { "instruction": "Write the characteristic equation.", "answer": "r^2 + 2r + 5 = 0", "accept": ["r^2+2r+5=0"], "hint": "$y'' \\\\to r^2$, $y' \\\\to r$, $y \\\\to 1$." },
+        { "instruction": "Write the characteristic equation.", "answer": "r^2 + 2r + 5 = 0", "accept": ["r^2+2r+5=0"], "hint": "$y'' \\to r^2$, $y' \\to r$, $y \\to 1$." },
         { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=2$, $c=5$).", "answer": "-16", "accept": [], "hint": "$2^2 - 4(1)(5) = 4 - 20$." },
-        { "instruction": "Apply the quadratic formula to find both complex roots.", "form": "solutions", "answer": "r = -1 + 2i or r = -1 - 2i", "accept": ["-1+2i, -1-2i", "-1-2i, -1+2i"], "hint": "$r = \\\\dfrac{-2 \\\\pm \\\\sqrt{-16}}{2} = -1 \\\\pm 2i$." }
+        { "instruction": "Apply the quadratic formula to find both complex roots.", "form": "solutions", "answer": "r = -1 + 2i or r = -1 - 2i", "accept": ["-1+2i, -1-2i", "-1-2i, -1+2i"], "hint": "$r = \\dfrac{-2 \\pm \\sqrt{-16}}{2} = -1 \\pm 2i$." }
       ],
       "finalAnswer": { "value": "r = -1 + 2i, r = -1 - 2i", "unit": "" },
-      "solutionNarrative": "$r^2 + 2r + 5 = 0$ has discriminant $-16$, so $r = \\\\dfrac{-2 \\\\pm \\\\sqrt{-16}}{2} = -1 \\\\pm 2i$. The negative real part means the oscillation decays."
+      "solutionNarrative": "$r^2 + 2r + 5 = 0$ has discriminant $-16$, so $r = \\dfrac{-2 \\pm \\sqrt{-16}}{2} = -1 \\pm 2i$. The negative real part means the oscillation decays."
     },
     {
       "id": "differential-equations.second-order-linear.s05",
@@ -169,7 +169,7 @@
       "context": "applied",
       "prompt": "A series RLC circuit gives $q'' + 2q' + 10q = 0$ for the charge $q$. Compute the discriminant of its characteristic equation and state whether the circuit is overdamped, critically damped, or underdamped.",
       "steps": [
-        { "instruction": "Write the characteristic equation.", "answer": "r^2 + 2r + 10 = 0", "accept": ["r^2+2r+10=0"], "hint": "$q'' \\\\to r^2$, $q' \\\\to r$, $q \\\\to 1$." },
+        { "instruction": "Write the characteristic equation.", "answer": "r^2 + 2r + 10 = 0", "accept": ["r^2+2r+10=0"], "hint": "$q'' \\to r^2$, $q' \\to r$, $q \\to 1$." },
         { "instruction": "Compute the discriminant $b^2 - 4ac$ (here $a=1$, $b=2$, $c=10$).", "answer": "-36", "accept": [], "hint": "$2^2 - 4(1)(10) = 4 - 40$." },
         { "instruction": "The discriminant is negative (complex roots). What damping type is this?", "answer": "underdamped", "accept": ["under damped", "under-damped"], "hint": "Complex roots → oscillation → underdamped." }
       ],
@@ -181,25 +181,25 @@
       "concepts": ["oscillation-applied"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "An undamped spring-mass system is $y'' + 25y = 0$ (so $k/m = 25$). Find its natural angular frequency $\\\\omega$.",
+      "prompt": "An undamped spring-mass system is $y'' + 25y = 0$ (so $k/m = 25$). Find its natural angular frequency $\\omega$.",
       "steps": [
-        { "instruction": "The characteristic equation is $r^2 + 25 = 0$, so $r = \\\\pm i\\\\omega$. Compute $\\\\omega = \\\\sqrt{k/m}$ in rad/s.", "answer": "5", "accept": ["5 rad/s"], "hint": "$\\\\omega = \\\\sqrt{25}$." }
+        { "instruction": "The characteristic equation is $r^2 + 25 = 0$, so $r = \\pm i\\omega$. Compute $\\omega = \\sqrt{k/m}$ in rad/s.", "answer": "5", "accept": ["5 rad/s"], "hint": "$\\omega = \\sqrt{25}$." }
       ],
       "finalAnswer": { "value": "5", "unit": "rad/s" },
-      "solutionNarrative": "$r^2 = -25$ gives $r = \\\\pm 5i$, so the natural angular frequency is $\\\\omega = \\\\sqrt{25} = 5$ rad/s."
+      "solutionNarrative": "$r^2 = -25$ gives $r = \\pm 5i$, so the natural angular frequency is $\\omega = \\sqrt{25} = 5$ rad/s."
     },
     {
       "id": "differential-equations.second-order-linear.s12",
       "concepts": ["oscillation-applied"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A 2 kg mass hangs from a spring with stiffness $k = 50$ N/m, undamped: $2y'' + 50y = 0$. Find the natural angular frequency $\\\\omega$ in rad/s.",
+      "prompt": "A 2 kg mass hangs from a spring with stiffness $k = 50$ N/m, undamped: $2y'' + 50y = 0$. Find the natural angular frequency $\\omega$ in rad/s.",
       "steps": [
         { "instruction": "Write the characteristic equation.", "answer": "2r^2 + 50 = 0", "accept": ["2r^2+50=0"], "hint": "Carry over both coefficients." },
-        { "instruction": "Solve for $r$, then read off $\\\\omega = \\\\sqrt{k/m}$. Compute $\\\\omega$ in rad/s.", "answer": "5", "accept": ["5 rad/s"], "hint": "$r^2 = -25$, so $\\\\omega = \\\\sqrt{50/2} = \\\\sqrt{25}$." }
+        { "instruction": "Solve for $r$, then read off $\\omega = \\sqrt{k/m}$. Compute $\\omega$ in rad/s.", "answer": "5", "accept": ["5 rad/s"], "hint": "$r^2 = -25$, so $\\omega = \\sqrt{50/2} = \\sqrt{25}$." }
       ],
       "finalAnswer": { "value": "5", "unit": "rad/s" },
-      "solutionNarrative": "$2r^2 + 50 = 0 \\\\Rightarrow r^2 = -25 \\\\Rightarrow r = \\\\pm 5i$, so $\\\\omega = \\\\sqrt{k/m} = \\\\sqrt{25} = 5$ rad/s."
+      "solutionNarrative": "$2r^2 + 50 = 0 \\Rightarrow r^2 = -25 \\Rightarrow r = \\pm 5i$, so $\\omega = \\sqrt{k/m} = \\sqrt{25} = 5$ rad/s."
     },
     {
       "id": "differential-equations.second-order-linear.s13",
@@ -208,11 +208,11 @@
       "context": "applied",
       "prompt": "A building's sway is modeled (undamped) by $y'' + 16y = 0$. Find the period $T$ of one full oscillation. Round to two decimal places.",
       "steps": [
-        { "instruction": "Find the natural angular frequency $\\\\omega = \\\\sqrt{k/m}$ in rad/s.", "answer": "4", "accept": ["4 rad/s"], "hint": "$\\\\omega = \\\\sqrt{16}$." },
-        { "instruction": "Compute the period $T = 2\\\\pi/\\\\omega$ in seconds, rounded to two decimals.", "answer": "1.57", "accept": ["1.57 s", "1.57 seconds"], "hint": "$T = 2\\\\pi / 4 = \\\\pi/2 \\\\approx 1.57$." }
+        { "instruction": "Find the natural angular frequency $\\omega = \\sqrt{k/m}$ in rad/s.", "answer": "4", "accept": ["4 rad/s"], "hint": "$\\omega = \\sqrt{16}$." },
+        { "instruction": "Compute the period $T = 2\\pi/\\omega$ in seconds, rounded to two decimals.", "answer": "1.57", "accept": ["1.57 s", "1.57 seconds"], "hint": "$T = 2\\pi / 4 = \\pi/2 \\approx 1.57$." }
       ],
       "finalAnswer": { "value": "1.57", "unit": "seconds" },
-      "solutionNarrative": "$\\\\omega = \\\\sqrt{16} = 4$ rad/s, so $T = 2\\\\pi/4 = \\\\pi/2 \\\\approx 1.57$ s per cycle."
+      "solutionNarrative": "$\\omega = \\sqrt{16} = 4$ rad/s, so $T = 2\\pi/4 = \\pi/2 \\approx 1.57$ s per cycle."
     },
     {
       "id": "differential-equations.second-order-linear.s14",
@@ -221,7 +221,7 @@
       "context": "abstract",
       "prompt": "For $y'' + 4y' + 4y = 0$, write the characteristic equation, find its root, and classify it.",
       "steps": [
-        { "instruction": "Write the characteristic equation.", "answer": "r^2 + 4r + 4 = 0", "accept": ["r^2+4r+4=0"], "hint": "$y'' \\\\to r^2$, $y' \\\\to r$, $y \\\\to 1$." },
+        { "instruction": "Write the characteristic equation.", "answer": "r^2 + 4r + 4 = 0", "accept": ["r^2+4r+4=0"], "hint": "$y'' \\to r^2$, $y' \\to r$, $y \\to 1$." },
         { "instruction": "Solve for the root(s).", "form": "solutions", "answer": "r = -2", "accept": ["-2"], "hint": "$(r+2)^2 = 0$." },
         { "instruction": "Classify the root in words.", "answer": "repeated", "accept": ["double root", "repeated root", "repeated real root"], "hint": "One value satisfies the equation twice." }
       ],
@@ -265,10 +265,10 @@
       "prompt": "Write the characteristic equation for $y'' - 4y = 0$ and find its roots.",
       "steps": [
         { "instruction": "Write the characteristic equation.", "answer": "r^2 - 4 = 0", "accept": ["r^2-4=0"], "hint": "There is no $y'$ term, so no $r$ term." },
-        { "instruction": "Solve for both roots.", "form": "solutions", "answer": "r = 2 or r = -2", "accept": ["2, -2", "-2, 2"], "hint": "$r^2 = 4$, so $r = \\\\pm 2$." }
+        { "instruction": "Solve for both roots.", "form": "solutions", "answer": "r = 2 or r = -2", "accept": ["2, -2", "-2, 2"], "hint": "$r^2 = 4$, so $r = \\pm 2$." }
       ],
       "finalAnswer": { "value": "r = 2, r = -2", "unit": "" },
-      "solutionNarrative": "$r^2 - 4 = 0$ gives $r = \\\\pm 2$, i.e. $r = 2$ or $r = -2$ — real distinct roots."
+      "solutionNarrative": "$r^2 - 4 = 0$ gives $r = \\pm 2$, i.e. $r = 2$ or $r = -2$ — real distinct roots."
     }
   ]
 }

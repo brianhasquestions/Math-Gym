@@ -48,7 +48,7 @@
       "concepts": ["future-value"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A single sum of \\$1,000 grows at 6% per year for 5 years. Find its future value with $FV = PV(1 + i)^n$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A single sum of \\$1,000 grows at 6% per year for 5 years. Find its future value with $FV = PV(1 + i)^n$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the growth factor $1 + i = 1 + 0.06$. Enter as a decimal.", "answer": "1.06", "accept": [], "hint": "Add the decimal rate to 1." },
         { "instruction": "Compute $FV = 1000 \\cdot 1.06^{5}$. Enter a number rounded to the nearest cent.", "answer": "1338.23", "accept": ["1338.230", "$1338.23"], "hint": "Raise 1.06 to the 5th power, then multiply by 1000." }
@@ -61,7 +61,7 @@
       "concepts": ["future-value"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "\\$2,000 is invested at 6% per year, compounded monthly, for 3 years. Find its future value. The per-period rate is $i = 6\\%/12$ and the number of periods is $n = 12 \\times 3$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "\\$2,000 is invested at 6% per year, compounded monthly, for 3 years. Find its future value. The per-period rate is $i = 6\\%/12$ and the number of periods is $n = 12 \\times 3$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly factor $1 + 0.06/12$. Enter as a decimal.", "answer": "1.005", "accept": [], "hint": "Divide 0.06 by 12, add 1." },
         { "instruction": "Find the number of periods $n = 12 \\times 3$. Enter a whole number.", "answer": "36", "accept": [], "hint": "Months in 3 years." },
@@ -75,7 +75,7 @@
       "concepts": ["future-value"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "\\$1,500 grows at 7% per year. Compare leaving it invested 5 years versus 10 years, and find how much MORE the longer horizon yields. Use $FV = PV(1 + i)^n$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "\\$1,500 grows at 7% per year. Compare leaving it invested 5 years versus 10 years, and find how much MORE the longer horizon yields. Use $FV = PV(1 + i)^n$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the 5-year value $FV = 1500 \\cdot 1.07^{5}$. Enter a number rounded to the nearest cent.", "answer": "2103.83", "accept": ["2103.830", "$2103.83"], "hint": "1.07 to the 5th power, times 1500." },
         { "instruction": "Compute the 10-year value $FV = 1500 \\cdot 1.07^{10}$. Enter a number rounded to the nearest cent.", "answer": "2950.73", "accept": ["2950.730", "$2950.73"], "hint": "1.07 to the 10th power, times 1500." },
@@ -89,7 +89,7 @@
       "concepts": ["present-value"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You are promised \\$5,000 in 4 years. If money is worth 5% per year, what is that promise worth today? Use $PV = \\dfrac{FV}{(1 + i)^n}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You are promised \\$5,000 in 4 years. If money is worth 5% per year, what is that promise worth today? Use $PV = \\dfrac{FV}{(1 + i)^n}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the discount factor $(1 + i)^n = 1.05^{4}$. Enter as a decimal (round to 6 places).", "answer": "1.215506", "accept": ["1.05^4", "1.05^(4)"], "hint": "Raise 1.05 to the 4th power." },
         { "instruction": "Divide the future value by that factor: $PV = 5000 / 1.05^{4}$. Enter a number rounded to the nearest cent.", "answer": "4113.51", "accept": ["4113.510", "$4113.51"], "hint": "Discounting divides; it undoes the growth." }
@@ -102,7 +102,7 @@
       "concepts": ["present-value"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "How much must you deposit today at 6% per year to have \\$10,000 in 8 years? This is the present value $PV = \\dfrac{FV}{(1 + i)^n}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "How much must you deposit today at 6% per year to have \\$10,000 in 8 years? This is the present value $PV = \\dfrac{FV}{(1 + i)^n}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the growth factor $1 + i$. Enter as a decimal.", "answer": "1.06", "accept": [], "hint": "Add 0.06 to 1." },
         { "instruction": "Compute $PV = 10000 / 1.06^{8}$. Enter a number rounded to the nearest cent.", "answer": "6274.12", "accept": ["6274.120", "$6274.12"], "hint": "Divide 10000 by 1.06 raised to the 8th power." }
@@ -115,7 +115,7 @@
       "concepts": ["present-value"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "You need \\$8,000 in 3 years. Money earns 12% per year compounded monthly. What single deposit today funds it? Discount with the per-period rate $i = 12\\%/12$ over 36 months. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You need \\$8,000 in 3 years. Money earns 12% per year compounded monthly. What single deposit today funds it? Discount with the per-period rate $i = 12\\%/12$ over 36 months. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly factor $1 + 0.12/12$. Enter as a decimal.", "answer": "1.01", "accept": [], "hint": "Divide 0.12 by 12, add 1." },
         { "instruction": "Find the number of periods $n = 12 \\times 3$. Enter a whole number.", "answer": "36", "accept": [], "hint": "Months in 3 years." },
@@ -168,7 +168,7 @@
       "concepts": ["comparing-cash-flows"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "Offer A pays \\$3,000 today. Offer B pays \\$3,600 in 3 years. Money is worth 6% per year. Which is worth more today? Discount Offer B to the present with $PV = FV/(1+i)^n$. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Offer A pays \\$3,000 today. Offer B pays \\$3,600 in 3 years. Money is worth 6% per year. Which is worth more today? Discount Offer B to the present with $PV = FV/(1+i)^n$. Enter money as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the present value of Offer B: $PV = 3600 / 1.06^{3}$. Enter a number rounded to the nearest cent.", "answer": "3022.63", "accept": ["3022.630", "$3022.63"], "hint": "Divide by $(1.06)^{3}$." },
         { "instruction": "Compare Offer A's \\$3,000 today with Offer B's present value. Which offer is worth more today? Answer 'Offer A' or 'Offer B'.", "answer": "Offer B", "accept": ["B", "offer b", "the second offer"], "hint": "The larger present value wins." }
@@ -181,7 +181,7 @@
       "concepts": ["comparing-cash-flows"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "Offer A pays \\$4,000 in 2 years; Offer B pays \\$5,000 in 5 years. At 6% per year, which is worth more today? Discount each with $PV = FV/(1+i)^n$. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Offer A pays \\$4,000 in 2 years; Offer B pays \\$5,000 in 5 years. At 6% per year, which is worth more today? Discount each with $PV = FV/(1+i)^n$. Enter money as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Present value of Offer A: $4000 / 1.06^{2}$. Enter a number rounded to the nearest cent.", "answer": "3559.99", "accept": ["3559.990", "$3559.99"], "hint": "Discount 2 years." },
         { "instruction": "Present value of Offer B: $5000 / 1.06^{5}$. Enter a number rounded to the nearest cent.", "answer": "3736.29", "accept": ["3736.290", "$3736.29"], "hint": "Discount 5 years." },
@@ -195,7 +195,7 @@
       "concepts": ["comparing-cash-flows"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "You can take a lump sum of \\$5,000 today, or an installment plan of \\$3,000 in 1 year and \\$3,000 in 3 years. At 6% per year, which is worth more today? Discount each installment and add. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You can take a lump sum of \\$5,000 today, or an installment plan of \\$3,000 in 1 year and \\$3,000 in 3 years. At 6% per year, which is worth more today? Discount each installment and add. Enter money as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Present value of the first installment: $3000 / 1.06^{1}$. Enter a number rounded to the nearest cent.", "answer": "2830.19", "accept": ["2830.190", "$2830.19"], "hint": "Discount \\$3,000 back 1 year." },
         { "instruction": "Present value of the second installment: $3000 / 1.06^{3}$. Enter a number rounded to the nearest cent.", "answer": "2518.86", "accept": ["2518.860", "$2518.86"], "hint": "Discount \\$3,000 back 3 years." },
@@ -210,7 +210,7 @@
       "concepts": ["future-value"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "Evaluate $FV = PV(1 + i)^n$ for $PV = 800$, $i = 0.04$, $n = 3$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Evaluate $FV = PV(1 + i)^n$ for $PV = 800$, $i = 0.04$, $n = 3$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the growth factor $1 + i$. Enter as a decimal.", "answer": "1.04", "accept": [], "hint": "Add 0.04 to 1." },
         { "instruction": "Compute $FV = 800 \\cdot 1.04^{3}$. Enter a number rounded to the nearest cent.", "answer": "899.89", "accept": ["899.890", "$899.89"], "hint": "1.04 cubed, times 800." }
@@ -223,7 +223,7 @@
       "concepts": ["present-value"],
       "difficulty": 2,
       "context": "abstract",
-      "prompt": "Evaluate $PV = \\dfrac{FV}{(1+i)^n}$ for $FV = 2500$, $i = 0.08$, $n = 6$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Evaluate $PV = \\dfrac{FV}{(1+i)^n}$ for $FV = 2500$, $i = 0.08$, $n = 6$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the discount factor $1.08^{6}$. Enter as a decimal (round to 6 places).", "answer": "1.586874", "accept": ["1.08^6"], "hint": "Raise 1.08 to the 6th power." },
         { "instruction": "Compute $PV = 2500 / 1.08^{6}$. Enter a number rounded to the nearest cent.", "answer": "1575.42", "accept": ["1575.420", "$1575.42"], "hint": "Divide 2500 by the discount factor." }
@@ -249,7 +249,7 @@
       "concepts": ["comparing-cash-flows", "present-value"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A bonus can be taken as \\$2,000 now or \\$2,300 in 2 years. Money is worth 7% per year. Discount the delayed bonus and decide which is worth more today. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A bonus can be taken as \\$2,000 now or \\$2,300 in 2 years. Money is worth 7% per year. Discount the delayed bonus and decide which is worth more today. Enter money as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Present value of the delayed bonus: $2300 / 1.07^{2}$. Enter a number rounded to the nearest cent.", "answer": "2008.91", "accept": ["2008.910", "$2008.91"], "hint": "Discount \\$2,300 back 2 years at 7%." },
         { "instruction": "Which is worth more today? Answer 'the bonus now' or 'the delayed bonus'.", "answer": "the delayed bonus", "accept": ["delayed bonus", "the delayed one", "delayed"], "hint": "Compare the present value with \\$2,000." }

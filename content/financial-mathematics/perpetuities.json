@@ -48,7 +48,7 @@
       "concepts": ["level-perpetuity"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A trust pays \\$500 at the end of every year, forever, when money is worth 5% per year. Find the present value with $PV = \\dfrac{C}{i}$. Enter as a number, no $ or commas.",
+      "prompt": "A trust pays \\$500 at the end of every year, forever, when money is worth 5% per year. Find the present value with $PV = \\dfrac{C}{i}$. Enter as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Write the rate $i$ as a decimal.", "answer": "0.05", "accept": [], "hint": "5% as a decimal." },
         { "instruction": "Compute $PV = \\dfrac{500}{0.05}$. Enter a number.", "answer": "10000", "accept": ["10000.00", "500/0.05"], "hint": "Dividing by 0.05 is multiplying by 20." }
@@ -61,7 +61,7 @@
       "concepts": ["level-perpetuity"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A trust pays \\$50 at the end of every month, forever. Money is worth 6% per year, compounded monthly. Use the MONTHLY rate $i = 6\\%/12$ in $PV = C/i$. Enter as a number, no $ or commas.",
+      "prompt": "A trust pays \\$50 at the end of every month, forever. Money is worth 6% per year, compounded monthly. Use the MONTHLY rate $i = 6\\%/12$ in $PV = C/i$. Enter as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Divide the annual decimal rate by 12." },
         { "instruction": "Compute $PV = \\dfrac{50}{0.005}$. Enter a number.", "answer": "10000", "accept": ["10000.00"], "hint": "Dividing by 0.005 is multiplying by 200." }
@@ -74,7 +74,7 @@
       "concepts": ["level-perpetuity"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A donor endows a \\$2,000-per-year prize forever; the fund earns 4% per year, paying the prize from interest at the end of each year. Find the required endowment, the interest earned in year one, and the fund balance after the first prize is paid. Enter each as a number, no $ or commas.",
+      "prompt": "A donor endows a \\$2,000-per-year prize forever; the fund earns 4% per year, paying the prize from interest at the end of each year. Find the required endowment, the interest earned in year one, and the fund balance after the first prize is paid. Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Required endowment $PV = \\dfrac{2000}{0.04}$. Enter a number.", "answer": "50000", "accept": ["50000.00"], "hint": "Level perpetuity: $C/i$." },
         { "instruction": "Interest in year one: $50000 \\times 0.04$. Enter a number.", "answer": "2000", "accept": ["2000.00"], "hint": "It exactly equals the prize." },
@@ -88,7 +88,7 @@
       "concepts": ["perpetuity-due-and-deferred"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A ground rent of \\$400 is paid at the BEGINNING of each year, forever, at 5% per year. Compute the ordinary perpetuity value, then multiply by $(1+i)$ for the perpetuity-due. Enter each as a number, no $ or commas.",
+      "prompt": "A ground rent of \\$400 is paid at the BEGINNING of each year, forever, at 5% per year. Compute the ordinary perpetuity value, then multiply by $(1+i)$ for the perpetuity-due. Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Ordinary value: $\\dfrac{400}{0.05}$. Enter a number.", "answer": "8000", "accept": ["8000.00"], "hint": "End-of-year version first." },
         { "instruction": "Multiply by $1.05$ for the due. Enter a number.", "answer": "8400", "accept": ["8400.00"], "hint": "$8000 \\times 1.05$ — the ordinary value plus one payment." }
@@ -101,7 +101,7 @@
       "concepts": ["perpetuity-due-and-deferred"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A pension of \\$600 per year (end of year) begins after year 4 and runs forever, at 5% per year. Value the perpetuity as of year 4, then discount back with the given factor $(1.05)^{-4} = 0.822702$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A pension of \\$600 per year (end of year) begins after year 4 and runs forever, at 5% per year. Value the perpetuity as of year 4, then discount back with the given factor $(1.05)^{-4} = 0.822702$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Value at year 4: $\\dfrac{600}{0.05}$. Enter a number.", "answer": "12000", "accept": ["12000.00"], "hint": "A plain perpetuity, seen from year 4." },
         { "instruction": "Discount to today: $12000 \\times 0.822702$. Enter a number rounded to the nearest cent.", "answer": "9872.42", "accept": ["9872.424"], "hint": "Multiply by the stated factor." }
@@ -114,7 +114,7 @@
       "concepts": ["perpetuity-due-and-deferred"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "Two contracts each pay \\$1,000 per year forever at 8% per year: contract X pays at the end of each year, contract Y at the beginning. Find both values and Y's premium over X. Enter each as a number, no $ or commas.",
+      "prompt": "Two contracts each pay \\$1,000 per year forever at 8% per year: contract X pays at the end of each year, contract Y at the beginning. Find both values and Y's premium over X. Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Value of X (ordinary): $\\dfrac{1000}{0.08}$. Enter a number.", "answer": "12500", "accept": ["12500.00"], "hint": "$C/i$." },
         { "instruction": "Value of Y (due): $12500 \\times 1.08$. Enter a number.", "answer": "13500", "accept": ["13500.00"], "hint": "One extra period of value on the whole stream." },
@@ -128,7 +128,7 @@
       "concepts": ["growing-perpetuity"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A stock will pay \\$800 one year from now, growing 3% per year forever. The required return is 7% per year. Use $PV = \\dfrac{C}{i - g}$ (valid since $i > g$). Enter each as a number, no $ or commas.",
+      "prompt": "A stock will pay \\$800 one year from now, growing 3% per year forever. The required return is 7% per year. Use $PV = \\dfrac{C}{i - g}$ (valid since $i > g$). Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the spread $i - g = 0.07 - 0.03$. Enter as a decimal.", "answer": "0.04", "accept": [], "hint": "Subtract the decimals." },
         { "instruction": "Compute $PV = \\dfrac{800}{0.04}$. Enter a number.", "answer": "20000", "accept": ["20000.00"], "hint": "Dividing by 0.04 is multiplying by 25." }
@@ -141,7 +141,7 @@
       "concepts": ["growing-perpetuity"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A company JUST PAID a \\$1,000 dividend. Dividends grow 2% per year forever; the required return is 6%. The formula needs NEXT year's dividend: $PV = \\dfrac{C_1}{i - g}$ with $C_1 = C_0(1+g)$. Enter each as a number, no $ or commas.",
+      "prompt": "A company JUST PAID a \\$1,000 dividend. Dividends grow 2% per year forever; the required return is 6%. The formula needs NEXT year's dividend: $PV = \\dfrac{C_1}{i - g}$ with $C_1 = C_0(1+g)$. Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Grow the dividend one step: $C_1 = 1000 \\times 1.02$. Enter a number.", "answer": "1020", "accept": ["1020.00"], "hint": "The just-paid dividend is already gone." },
         { "instruction": "Compute $PV = \\dfrac{1020}{0.06 - 0.02}$. Enter a number.", "answer": "25500", "accept": ["25500.00"], "hint": "$1020 / 0.04$." }
@@ -167,7 +167,7 @@
       "concepts": ["perpetuity-applications"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A preferred share pays a fixed \\$3 dividend per year, forever. Investors require 6% per year. Price the share as a perpetuity. Enter each as a number, no $ or commas.",
+      "prompt": "A preferred share pays a fixed \\$3 dividend per year, forever. Investors require 6% per year. Price the share as a perpetuity. Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Write the required return as a decimal.", "answer": "0.06", "accept": [], "hint": "6% as a decimal." },
         { "instruction": "Price $= \\dfrac{3}{0.06}$. Enter a number.", "answer": "50", "accept": ["50.00"], "hint": "Dividend over required return." }
@@ -183,7 +183,7 @@
       "prompt": "A rental building sells for \\$300,000 with net operating income (NOI) of \\$24,000 per year. Find its cap rate ($\\text{NOI}/\\text{price}$, the perpetuity rate $i = C/PV$), then its value if the market cap rate moved to 6%.",
       "steps": [
         { "instruction": "Cap rate $= \\dfrac{24000}{300000}$. Enter as a percent number (enter 8 for 8%).", "answer": "8", "accept": ["8%"], "hint": "Divide, then multiply by 100." },
-        { "instruction": "Revalue at a 6% cap rate: $\\dfrac{24000}{0.06}$. Enter a number, no $ or commas.", "answer": "400000", "accept": ["400000.00"], "hint": "Same income, smaller perpetuity rate." }
+        { "instruction": "Revalue at a 6% cap rate: $\\dfrac{24000}{0.06}$. Enter a number, no \\$ or commas.", "answer": "400000", "accept": ["400000.00"], "hint": "Same income, smaller perpetuity rate." }
       ],
       "finalAnswer": { "value": "400000", "unit": "dollars" },
       "solutionNarrative": "Cap rate 8%; at a 6% cap the same \\$24,000 income supports a \\$400,000 price — lower rates mechanically inflate property values, exactly as $C/i$ predicts."
@@ -193,7 +193,7 @@
       "concepts": ["perpetuity-applications"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A university wants a scholarship paying \\$5,000 next year, growing 4% per year forever; the endowment earns 8%. Find the endowment needed with growth, the endowment for a level \\$5,000 scholarship, and the extra cost of inflation-proofing. Enter each as a number, no $ or commas.",
+      "prompt": "A university wants a scholarship paying \\$5,000 next year, growing 4% per year forever; the endowment earns 8%. Find the endowment needed with growth, the endowment for a level \\$5,000 scholarship, and the extra cost of inflation-proofing. Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Growing version: $\\dfrac{5000}{0.08 - 0.04}$. Enter a number.", "answer": "125000", "accept": ["125000.00"], "hint": "The spread is 0.04." },
         { "instruction": "Level version: $\\dfrac{5000}{0.08}$. Enter a number.", "answer": "62500", "accept": ["62500.00"], "hint": "Plain $C/i$." },
@@ -207,7 +207,7 @@
       "concepts": ["perpetuity-applications"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "How much must be donated today to fund a \\$1,200-per-year scholarship forever, if the endowment earns 4% per year? Enter each as a number, no $ or commas.",
+      "prompt": "How much must be donated today to fund a \\$1,200-per-year scholarship forever, if the endowment earns 4% per year? Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Write the rate as a decimal.", "answer": "0.04", "accept": [], "hint": "4% as a decimal." },
         { "instruction": "Endowment $= \\dfrac{1200}{0.04}$. Enter a number.", "answer": "30000", "accept": ["30000.00"], "hint": "Dividing by 0.04 is multiplying by 25." }
@@ -220,7 +220,7 @@
       "concepts": ["perpetuity-due-and-deferred"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "An office lease pays \\$900 at the beginning of each year, forever, at 6% per year. Find the perpetuity-due value. Enter each as a number, no $ or commas.",
+      "prompt": "An office lease pays \\$900 at the beginning of each year, forever, at 6% per year. Find the perpetuity-due value. Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Ordinary value: $\\dfrac{900}{0.06}$. Enter a number.", "answer": "15000", "accept": ["15000.00"], "hint": "End-of-year version first." },
         { "instruction": "Multiply by $1.06$. Enter a number.", "answer": "15900", "accept": ["15900.00"], "hint": "Equivalently, add one \\$900 payment." }
@@ -233,7 +233,7 @@
       "concepts": ["growing-perpetuity"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A royalty stream pays \\$700 one year from now, growing 3% per year forever; money is worth 5%. Check that $i > g$, then price the stream with $PV = \\dfrac{C}{i-g}$. Enter each as a number, no $ or commas.",
+      "prompt": "A royalty stream pays \\$700 one year from now, growing 3% per year forever; money is worth 5%. Check that $i > g$, then price the stream with $PV = \\dfrac{C}{i-g}$. Enter each as a number, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the spread $i - g = 0.05 - 0.03$. Enter as a decimal.", "answer": "0.02", "accept": [], "hint": "Positive, so the formula applies." },
         { "instruction": "$PV = \\dfrac{700}{0.02}$. Enter a number.", "answer": "35000", "accept": ["35000.00"], "hint": "Dividing by 0.02 is multiplying by 50." }
@@ -246,7 +246,7 @@
       "concepts": ["perpetuity-due-and-deferred"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A settlement pays \\$3,000 per year (end of year) forever, but only starting after year 3, at 6% per year. Value it as of year 3, then discount with the given factor $(1.06)^{-3} = 0.839619$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A settlement pays \\$3,000 per year (end of year) forever, but only starting after year 3, at 6% per year. Value it as of year 3, then discount with the given factor $(1.06)^{-3} = 0.839619$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Value at year 3: $\\dfrac{3000}{0.06}$. Enter a number.", "answer": "50000", "accept": ["50000.00"], "hint": "A plain perpetuity from year 3's viewpoint." },
         { "instruction": "Discount to today: $50000 \\times 0.839619$. Enter a number rounded to the nearest cent.", "answer": "41980.95", "accept": [], "hint": "Multiply by the stated factor." }

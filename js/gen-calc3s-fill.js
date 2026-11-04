@@ -102,7 +102,7 @@ fill["c3s-div-curl-3"] = (rng, idx) => {
         { instruction: `Compute the z-component of the curl, $Q_x - P_y$, for $Q = ${cf(c)}x + ${2 * b}y$ and $P = ${2 * a}x + ${cf(c)}y$.`, answer: "0", accept: [], hint: `$Q_x = ${c}$ and $P_y = ${c}$ — they cancel.` },
         { instruction: "The x- and y-components also vanish. Give $\\operatorname{curl}\\vec{F}$ as a numeric vector.", answer: V(0, 0, 0), accept: [Pn(0, 0, 0)], hint: "All three components are differences of matching cross-partials." },
         { instruction: "Compute $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$.", answer: `${k}`, accept: [], hint: `$${2 * a} + ${2 * b} + ${2 * e}$.` },
-        { instruction: "Classify the field: type 'irrotational', 'incompressible', or 'neither'.", answer: "irrotational", accept: ["curl-free", "curl free"], hint: `Curl $\\vec{0}$ everywhere, divergence ${k} \\neq 0$.` },
+        { instruction: "Classify the field: type 'irrotational', 'incompressible', or 'neither'.", answer: "irrotational", accept: ["curl-free", "curl free"], hint: `Curl $\\vec{0}$ everywhere, divergence $${k} \\neq 0$.` },
       ],
       finalAnswer: { value: "irrotational", unit: "" },
       solutionNarrative: `$\\operatorname{curl}\\vec{F} = \\vec{0}$ (this field is the gradient of $${cf(a)}x^2 + ${cf(c)}xy + ${cf(b)}y^2 + ${cf(e)}z^2$) but $\\operatorname{div}\\vec{F} = ${k} \\neq 0$, so the field is irrotational and not incompressible.`,
@@ -120,7 +120,7 @@ fill["c3s-div-curl-3"] = (rng, idx) => {
       { instruction: "Compute $\\operatorname{div}\\vec{F} = P_x + Q_y + R_z$.", answer: `${d}`, accept: [], hint: d === 0 ? "Each component is missing its own variable, so every partial in the sum is 0." : `Only $P = ${Ptxt}$ contributes: $P_x = ${d}$.` },
       { instruction: `Compute the x-component of the curl, $R_y - Q_z$, for $R = ${cf(c)}x$ and $Q = ${cf(b)}z$.`, answer: `${-b}`, accept: [], hint: `$R_y = 0$ and $Q_z = ${b}$.` },
       { instruction: `The other components work the same way. Give $\\operatorname{curl}\\vec{F}$ as a numeric vector.`, answer: V(...curl), accept: [Pn(...curl)], hint: `$\\langle R_y - Q_z,\\; P_z - R_x,\\; Q_x - P_y \\rangle = \\langle 0 - ${b},\\; 0 - ${c},\\; 0 - ${a} \\rangle$.` },
-      { instruction: "Classify the field: type 'irrotational', 'incompressible', or 'neither'.", answer: label, accept: label === "incompressible" ? ["divergence-free", "divergence free", "source-free"] : ["none"], hint: label === "incompressible" ? "The divergence is 0 everywhere but the curl is not $\\vec{0}$." : `The divergence is ${d} \\neq 0$ AND the curl is not $\\vec{0}$.` },
+      { instruction: "Classify the field: type 'irrotational', 'incompressible', or 'neither'.", answer: label, accept: label === "incompressible" ? ["divergence-free", "divergence free", "source-free"] : ["none"], hint: label === "incompressible" ? "The divergence is 0 everywhere but the curl is not $\\vec{0}$." : `The divergence is $${d} \\neq 0$ AND the curl is not $\\vec{0}$.` },
     ],
     finalAnswer: { value: label, unit: "" },
     solutionNarrative: label === "incompressible"

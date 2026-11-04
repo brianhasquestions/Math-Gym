@@ -442,7 +442,7 @@ fill["st2-decide-1"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: reject ? "reject" : "fail to reject", accept: reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Beyond the critical value $\\to$ reject; otherwise $\\to$ fail to reject.` },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$z = ${z}$ ${reject ? ">" : "\\le"} 1.645$, so we ${reject ? "reject $H_0$ — the result is statistically significant at the 5% level" : "fail to reject $H_0$ — the data are compatible with the null"}.`,
+    solutionNarrative: `$z = ${z} ${reject ? ">" : "\\le"} 1.645$, so we ${reject ? "reject $H_0$ — the result is statistically significant at the 5% level" : "fail to reject $H_0$ — the data are compatible with the null"}.`,
   };
 };
 fill["st2-decide-2"] = (rng, idx) => {

@@ -79,7 +79,7 @@
       "concepts": ["measures-of-center"],
       "difficulty": 2,
       "context": "abstract",
-      "prompt": "For the data set $\\{2, 4, 4, 4, 7, 9\\}$, the mean, median, and mode are three different numbers. Find the mode (the most frequently occurring value).",
+      "prompt": "For the data set $\\{2, 4, 4, 4, 7, 9\\}$, the median and the mode happen to coincide but the mean does not. Find the mode (the most frequently occurring value).",
       "steps": [
         { "instruction": "Which value appears most often? (Give a number.)", "answer": "4", "accept": [], "hint": "Count how many times each value occurs; 4 appears three times." },
         { "instruction": "As a check, find the mean: sum is 30, divided by $n = 6$. (Give a number.)", "answer": "5", "accept": [], "hint": "$30 / 6$." }

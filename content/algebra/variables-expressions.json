@@ -101,7 +101,7 @@
       "concepts": ["combine-like-terms"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You earn \\$9 per hour mowing lawns and \\$9 per hour washing cars. If you work $h$ hours total, your earnings are $9h$ from mowing plus another $9h$ from washing? No — you work $h$ hours mowing and a separate $h$ hours washing at \\$9 each, giving $9h + 9h$. Simplify this expression.",
+      "prompt": "You earn \\$9 per hour mowing lawns and \\$9 per hour washing cars. You spend $h$ hours mowing and a separate $h$ hours washing, so your earnings are $9h + 9h$. Simplify this expression.",
       "steps": [
         { "instruction": "Combine the like terms $9h + 9h$.", "answer": "18h", "accept": [], "hint": "Add the coefficients: $9 + 9 = 18$." }
       ],

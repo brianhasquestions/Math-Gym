@@ -48,7 +48,7 @@
       "concepts": ["fv-ordinary-annuity"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You deposit \\$1,000 at the end of each year into an account earning 6% per year for 5 years. Find the future value with $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You deposit \\$1,000 at the end of each year into an account earning 6% per year for 5 years. Find the future value with $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Write the per-period rate $i$ as a decimal.", "answer": "0.06", "accept": [], "hint": "6% as a decimal." },
         { "instruction": "Compute the annuity factor $\\dfrac{(1+0.06)^{5} - 1}{0.06}$. Enter as a decimal (round to 6 places).", "answer": "5.637093", "accept": ["(1.06^5-1)/0.06"], "hint": "Raise 1.06 to the 5th power, subtract 1, divide by 0.06." },
@@ -62,7 +62,7 @@
       "concepts": ["fv-ordinary-annuity"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "You contribute \\$100 at the end of each month to a fund earning 6% per year, compounded monthly, for 3 years. Find the future value. Use $i = 6\\%/12$ and $n = 12 \\times 3$ in $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You contribute \\$100 at the end of each month to a fund earning 6% per year, compounded monthly, for 3 years. Find the future value. Use $i = 6\\%/12$ and $n = 12 \\times 3$ in $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Divide the annual decimal rate by 12." },
         { "instruction": "Find the number of periods $n = 12 \\times 3$. Enter a whole number.", "answer": "36", "accept": [], "hint": "Months in 3 years." },
@@ -76,7 +76,7 @@
       "concepts": ["fv-ordinary-annuity"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "You save \\$5,000 at the end of each year at 7% per year for 20 years. Find the future value, then how much of it is investment growth (beyond what you contributed). Use $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You save \\$5,000 at the end of each year at 7% per year for 20 years. Find the future value, then how much of it is investment growth (beyond what you contributed). Use $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the future value $FV = 5000 \\cdot \\dfrac{(1.07)^{20} - 1}{0.07}$. Enter a number rounded to the nearest cent.", "answer": "204977.46", "accept": ["204977.460", "$204977.46"], "hint": "Annuity factor times the payment." },
         { "instruction": "Find the total you contributed: $5000 \\times 20$. Enter a number rounded to the nearest cent.", "answer": "100000.00", "accept": ["100000", "100000.0", "$100000.00"], "hint": "Payment times number of deposits." },
@@ -90,7 +90,7 @@
       "concepts": ["pv-ordinary-annuity"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "An investment will pay you \\$2,000 at the end of each year for 6 years. At 5% per year, what is that income stream worth today? Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "An investment will pay you \\$2,000 at the end of each year for 6 years. At 5% per year, what is that income stream worth today? Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Write the per-period rate $i$ as a decimal.", "answer": "0.05", "accept": [], "hint": "5% as a decimal." },
         { "instruction": "Compute the present-value factor $\\dfrac{1 - (1.05)^{-6}}{0.05}$. Enter as a decimal (round to 6 places).", "answer": "5.075692", "accept": ["(1-1.05^(-6))/0.05"], "hint": "$(1.05)^{-6}$ is 1 divided by $1.05^6$." },
@@ -104,7 +104,7 @@
       "concepts": ["pv-ordinary-annuity"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A lottery pays \\$5,000 at the end of each year for 10 years. Money is worth 6% per year. Find the cash value today (the present value of the payments). Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A lottery pays \\$5,000 at the end of each year for 10 years. Money is worth 6% per year. Find the cash value today (the present value of the payments). Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute $(1.06)^{-10}$. Enter as a decimal (round to 6 places).", "answer": "0.558395", "accept": ["1.06^(-10)", "1/1.06^10"], "hint": "Reciprocal of $1.06^{10}$." },
         { "instruction": "Compute $PV = 5000 \\cdot \\dfrac{1 - (1.06)^{-10}}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "36800.44", "accept": ["36800.440", "$36800.44"], "hint": "Subtract from 1, divide by 0.06, times 5000." }
@@ -117,7 +117,7 @@
       "concepts": ["pv-ordinary-annuity"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A pension pays \\$8,000 at the end of each year for 12 years at 5% per year. Find its present value, the nominal total of all payments, and the gap between them (what discounting removes). Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A pension pays \\$8,000 at the end of each year for 12 years at 5% per year. Find its present value, the nominal total of all payments, and the gap between them (what discounting removes). Use $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the present value $PV = 8000 \\cdot \\dfrac{1 - (1.05)^{-12}}{0.05}$. Enter a number rounded to the nearest cent.", "answer": "70906.01", "accept": ["70906.010", "$70906.01"], "hint": "Annuity present-value factor times the payment." },
         { "instruction": "Find the nominal total paid: $8000 \\times 12$. Enter a number rounded to the nearest cent.", "answer": "96000.00", "accept": ["96000", "96000.0", "$96000.00"], "hint": "Payment times number of payments." },
@@ -131,7 +131,7 @@
       "concepts": ["annuity-due"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You deposit \\$1,000 at the beginning of each year (an annuity due) at 6% per year for 5 years. Find the future value: compute the ordinary-annuity future value, then multiply by $(1 + i)$ because each deposit earns one extra period. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You deposit \\$1,000 at the beginning of each year (an annuity due) at 6% per year for 5 years. Find the future value: compute the ordinary-annuity future value, then multiply by $(1 + i)$ because each deposit earns one extra period. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Ordinary-annuity future value: $1000 \\cdot \\dfrac{(1.06)^{5} - 1}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "5637.09", "accept": ["5637.090", "$5637.09"], "hint": "The end-of-period version first." },
         { "instruction": "Multiply by $(1 + i) = 1.06$ for the annuity-due adjustment. Enter a number rounded to the nearest cent.", "answer": "5975.32", "accept": ["5975.320", "$5975.32"], "hint": "$5637.09 \\times 1.06$." }
@@ -144,7 +144,7 @@
       "concepts": ["annuity-due"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "Rent of \\$1,200 is paid at the beginning of each year for 8 years. At 7% per year, find the present value of this annuity due. Compute the ordinary present value, then multiply by $(1 + i)$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Rent of \\$1,200 is paid at the beginning of each year for 8 years. At 7% per year, find the present value of this annuity due. Compute the ordinary present value, then multiply by $(1 + i)$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Ordinary present value: $1200 \\cdot \\dfrac{1 - (1.07)^{-8}}{0.07}$. Enter a number rounded to the nearest cent.", "answer": "7165.56", "accept": ["7165.560", "$7165.56"], "hint": "End-of-period present value first." },
         { "instruction": "Multiply by $(1 + i) = 1.07$ for the due adjustment. Enter a number rounded to the nearest cent.", "answer": "7667.15", "accept": ["7667.150", "$7667.15"], "hint": "$7165.56 \\times 1.07$." }
@@ -157,7 +157,7 @@
       "concepts": ["annuity-due", "fv-ordinary-annuity"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "Saving \\$2,000 a year at 6% for 10 years, compare paying at the end of each year (ordinary) versus the beginning (due), and find how much MORE the annuity due accumulates. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Saving \\$2,000 a year at 6% for 10 years, compare paying at the end of each year (ordinary) versus the beginning (due), and find how much MORE the annuity due accumulates. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Ordinary future value: $2000 \\cdot \\dfrac{(1.06)^{10} - 1}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "26361.59", "accept": ["26361.590", "$26361.59"], "hint": "End-of-year deposits." },
         { "instruction": "Annuity-due future value: multiply the ordinary value by $(1 + 0.06)$. Enter a number rounded to the nearest cent.", "answer": "27943.29", "accept": ["27943.290", "$27943.29"], "hint": "$26361.59 \\times 1.06$." },
@@ -171,7 +171,7 @@
       "concepts": ["sinking-funds-and-savings"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You want \\$10,000 in 5 years by depositing an equal amount at the end of each year into an account earning 6% per year. Solve $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$ for the payment $PMT$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You want \\$10,000 in 5 years by depositing an equal amount at the end of each year into an account earning 6% per year. Solve $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$ for the payment $PMT$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the annuity factor $\\dfrac{(1.06)^{5} - 1}{0.06}$. Enter as a decimal (round to 6 places).", "answer": "5.637093", "accept": ["(1.06^5-1)/0.06"], "hint": "Same factor as future value, before multiplying by PMT." },
         { "instruction": "Divide the goal by the factor: $PMT = 10000 / 5.637093$. Enter a number rounded to the nearest cent.", "answer": "1773.96", "accept": ["1773.960", "$1773.96"], "hint": "Rearranged formula: the goal divided by the factor." }
@@ -184,7 +184,7 @@
       "concepts": ["sinking-funds-and-savings"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "You want \\$20,000 in 3 years for a down payment, saving at the end of each month in a fund earning 6% per year, compounded monthly. Find the required monthly deposit. Use $i = 6\\%/12$, $n = 12 \\times 3$, and $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You want \\$20,000 in 3 years for a down payment, saving at the end of each month in a fund earning 6% per year, compounded monthly. Find the required monthly deposit. Use $i = 6\\%/12$, $n = 12 \\times 3$, and $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Annual decimal rate over 12." },
         { "instruction": "Find the number of periods $n = 12 \\times 3$. Enter a whole number.", "answer": "36", "accept": [], "hint": "Months in 3 years." },
@@ -198,7 +198,7 @@
       "concepts": ["sinking-funds-and-savings"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "To have \\$30,000 in 15 years you deposit equally at the end of each year at 6% per year. Find the annual deposit, the total you actually deposit, and how much of the goal is interest. Use $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "To have \\$30,000 in 15 years you deposit equally at the end of each year at 6% per year. Find the annual deposit, the total you actually deposit, and how much of the goal is interest. Use $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the deposit $PMT = 30000 / \\dfrac{(1.06)^{15} - 1}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "1288.88", "accept": ["1288.880", "$1288.88"], "hint": "Goal divided by the annuity factor." },
         { "instruction": "Find the total deposited: $PMT \\times 15$. Enter a number rounded to the nearest cent.", "answer": "19333.24", "accept": ["19333.240", "$19333.24"], "hint": "Payment times the number of deposits." },
@@ -212,7 +212,7 @@
       "concepts": ["fv-ordinary-annuity"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "Evaluate $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$ for $PMT = 500$, $i = 0.08$, $n = 4$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Evaluate $FV = PMT \\cdot \\dfrac{(1+i)^n - 1}{i}$ for $PMT = 500$, $i = 0.08$, $n = 4$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the annuity factor $\\dfrac{(1.08)^{4} - 1}{0.08}$. Enter as a decimal (round to 6 places).", "answer": "4.506112", "accept": ["(1.08^4-1)/0.08"], "hint": "1.08 to the 4th, minus 1, over 0.08." },
         { "instruction": "Multiply by 500. Enter a number rounded to the nearest cent.", "answer": "2253.06", "accept": ["2253.060", "$2253.06"], "hint": "$500 \\times 4.506112$." }
@@ -225,7 +225,7 @@
       "concepts": ["pv-ordinary-annuity"],
       "difficulty": 2,
       "context": "abstract",
-      "prompt": "Evaluate $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$ for $PMT = 300$, $i = 0.06$, $n = 5$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Evaluate $PV = PMT \\cdot \\dfrac{1 - (1+i)^{-n}}{i}$ for $PMT = 300$, $i = 0.06$, $n = 5$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the factor $\\dfrac{1 - (1.06)^{-5}}{0.06}$. Enter as a decimal (round to 6 places).", "answer": "4.212364", "accept": ["(1-1.06^(-5))/0.06"], "hint": "$(1.06)^{-5}$ is 1 over $1.06^5$." },
         { "instruction": "Multiply by 300. Enter a number rounded to the nearest cent.", "answer": "1263.71", "accept": ["1263.710", "$1263.71"], "hint": "$300 \\times 4.212364$." }
@@ -238,7 +238,7 @@
       "concepts": ["annuity-due"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "An ordinary annuity of \\$500 per year at 5% for 6 years has future value $500 \\cdot \\dfrac{(1.05)^6 - 1}{0.05}$. Convert it to an annuity due by multiplying by $(1 + i)$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "An ordinary annuity of \\$500 per year at 5% for 6 years has future value $500 \\cdot \\dfrac{(1.05)^6 - 1}{0.05}$. Convert it to an annuity due by multiplying by $(1 + i)$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the ordinary future value $500 \\cdot \\dfrac{(1.05)^{6} - 1}{0.05}$. Enter a number rounded to the nearest cent.", "answer": "3400.96", "accept": ["3400.960", "$3400.96"], "hint": "Annuity factor times 500." },
         { "instruction": "Multiply by $(1 + 0.05)$ for the due. Enter a number rounded to the nearest cent.", "answer": "3571.00", "accept": ["3571", "3571.0", "$3571.00"], "hint": "$3400.96 \\times 1.05$." }
@@ -251,7 +251,7 @@
       "concepts": ["sinking-funds-and-savings"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "You want \\$6,000 in 4 years for a vacation, depositing equally at the end of each year at 5% per year. Find the required annual deposit with $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You want \\$6,000 in 4 years for a vacation, depositing equally at the end of each year at 5% per year. Find the required annual deposit with $PMT = \\dfrac{FV}{((1+i)^n - 1)/i}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the annuity factor $\\dfrac{(1.05)^{4} - 1}{0.05}$. Enter as a decimal (round to 6 places).", "answer": "4.310125", "accept": ["(1.05^4-1)/0.05"], "hint": "1.05 to the 4th, minus 1, over 0.05." },
         { "instruction": "Divide the \\$6,000 goal by the factor. Enter a number rounded to the nearest cent.", "answer": "1392.07", "accept": ["1392.070", "$1392.07"], "hint": "$6000 / 4.310125$." }

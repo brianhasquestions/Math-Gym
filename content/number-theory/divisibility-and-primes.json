@@ -33,7 +33,7 @@
   "application": {
     "summary": "Divisibility, primality, and unique factorization are the substrate of the whole subject: the divisor-count formula answers combinatorial counting, primality underlies key generation, and factorization difficulty is the security assumption behind RSA — a link we point at here without re-deriving the crypto.",
     "domains": ["cryptography", "computer science", "combinatorics", "everyday life"],
-    "workedExample": "**Counting divisors without listing them.**\n\nHow many positive divisors does 360 have? Listing them by hand is error-prone; the Fundamental Theorem makes it a one-liner. Factor: $360 = 2^3 \\cdot 3^2 \\cdot 5$. Each divisor chooses a power of 2 (from $2^0$ to $2^3$: 4 choices), a power of 3 (3 choices), and a power of 5 (2 choices), independently. So\n\n$$d(360) = (3+1)(2+1)(1+1) = 4 \\cdot 3 \\cdot 2 = 24.$$\n\nTwenty-four divisors, counted with certainty, from three small factors — no listing. The same formula tells you 360 is *not* a perfect square (the exponents 3 and 1 are odd), and it is the engine behind questions like 'which number under 100 has the most divisors?' (answer: 60 and 90 and 96 tie... actually 96 = $2^5 \\cdot 3$ gives 12, while 60 = $2^2 \\cdot 3 \\cdot 5$ gives 12 too — the formula settles the contest instantly).",
+    "workedExample": "**Counting divisors without listing them.**\n\nHow many positive divisors does 360 have? Listing them by hand is error-prone; the Fundamental Theorem makes it a one-liner. Factor: $360 = 2^3 \\cdot 3^2 \\cdot 5$. Each divisor chooses a power of 2 (from $2^0$ to $2^3$: 4 choices), a power of 3 (3 choices), and a power of 5 (2 choices), independently. So\n\n$$d(360) = (3+1)(2+1)(1+1) = 4 \\cdot 3 \\cdot 2 = 24.$$\n\nTwenty-four divisors, counted with certainty, from three small factors — no listing. The same formula tells you 360 is *not* a perfect square (the exponents 3 and 1 are odd), and it is the engine behind questions like 'which number under 100 has the most divisors?' (answer: a five-way tie at 12 divisors — 60, 72, 84, 90 and 96; e.g. $96 = 2^5 \\cdot 3$ gives $6 \\cdot 2 = 12$ and $60 = 2^2 \\cdot 3 \\cdot 5$ gives $3 \\cdot 2 \\cdot 2 = 12$ — the formula settles the contest without listing a single divisor).",
     "domainNotes": [
       "**Cryptography:** RSA key generation begins by picking large primes; its security rests on the *conjectured* hardness of prime factorization — factor the modulus and you break the key. This topic supplies the primality and factorization language; the crypto course supplies the attack.",
       "**Computer science:** the divisor-count and factorization routines appear in hash design, cycle-length analysis, and fast algorithms; the $\\sqrt{n}$ trial-division bound is a staple interview result.",
@@ -260,7 +260,7 @@
       "concepts": ["divisibility-rules"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A cashier needs to split $135 into equal $5 bills' worth of stacks. Is 135 divisible by 5, and by how? Use the last-digit rule.",
+      "prompt": "A cashier needs to split \\$135 into stacks of \\$5 bills. Is 135 divisible by 5, and by how? Use the last-digit rule.",
       "steps": [
         { "instruction": "Does 135 end in 0 or 5? So is it divisible by 5? Type 'yes' or 'no'.", "answer": "yes", "accept": ["y"], "hint": "The last digit is 5." },
         { "instruction": "Compute $135 \\div 5$.", "answer": "27", "accept": [], "hint": "$5 \\cdot 27 = 135$." }

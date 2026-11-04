@@ -50,9 +50,9 @@
       "prompt": "A 3-year bond has face value \\$1,000 and pays an annual coupon of \\$40. The market rate is 4% per year. Because the coupon rate equals the market rate, price the bond. Use $\\text{Price} = C \\cdot \\dfrac{1-(1+r)^{-n}}{r} + \\dfrac{F}{(1+r)^n}$ with $C=40$, $r=0.04$, $n=3$.",
       "steps": [
         { "instruction": "Compute the annuity factor $\\dfrac{1-(1.04)^{-3}}{0.04}$ (round to 6 decimal places).", "answer": "2.775091", "accept": [], "hint": "$(1.04)^{-3} = 0.888996$, so $1 - 0.888996 = 0.111004$, divided by $0.04$." },
-        { "instruction": "Value the coupons: multiply the annuity factor by the \\$40 coupon (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "111.00", "accept": ["111"], "hint": "$40 \\times 2.775091$." },
-        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.04)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "889.00", "accept": ["889"], "hint": "$1000 / 1.124864$." },
-        { "instruction": "Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1000.00", "accept": ["1000"], "hint": "$111.00 + 889.00$; a bond at par prices at face value." }
+        { "instruction": "Value the coupons: multiply the annuity factor by the \\$40 coupon (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "111.00", "accept": ["111"], "hint": "$40 \\times 2.775091$." },
+        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.04)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "889.00", "accept": ["889"], "hint": "$1000 / 1.124864$." },
+        { "instruction": "Add the two parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1000.00", "accept": ["1000"], "hint": "$111.00 + 889.00$; a bond at par prices at face value." }
       ],
       "finalAnswer": { "value": "1000.00", "unit": "dollars" },
       "solutionNarrative": "The coupons are worth $40 \\cdot 2.775091 = \\$111.00$ and the face value is worth $1000/(1.04)^3 = \\$889.00$; together the price is \\$1,000.00 — exactly par, because the coupon rate equals the market rate."
@@ -65,9 +65,9 @@
       "prompt": "A 3-year bond has face value \\$1,000 and a 5% annual coupon (\\$50 per year). The market rate is 6% per year. Price it with $C=50$, $r=0.06$, $n=3$.",
       "steps": [
         { "instruction": "Compute the annuity factor $\\dfrac{1-(1.06)^{-3}}{0.06}$ (round to 6 decimal places).", "answer": "2.673012", "accept": [], "hint": "$(1.06)^{-3} = 0.839619$; $1 - 0.839619 = 0.160381$, over $0.06$." },
-        { "instruction": "Value the coupons: $50 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "133.65", "accept": [], "hint": "$50 \\times 2.673012$." },
-        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.06)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "839.62", "accept": [], "hint": "$1000 / 1.191016$." },
-        { "instruction": "Add the parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "973.27", "accept": [], "hint": "$133.65 + 839.62$." }
+        { "instruction": "Value the coupons: $50 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "133.65", "accept": [], "hint": "$50 \\times 2.673012$." },
+        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.06)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "839.62", "accept": [], "hint": "$1000 / 1.191016$." },
+        { "instruction": "Add the parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "973.27", "accept": [], "hint": "$133.65 + 839.62$." }
       ],
       "finalAnswer": { "value": "973.27", "unit": "dollars" },
       "solutionNarrative": "Coupons: $50 \\cdot 2.673012 = \\$133.65$. Face: $1000/(1.06)^3 = \\$839.62$. Price $= \\$973.27$, a discount because the 5% coupon is below the 6% market rate."
@@ -80,9 +80,9 @@
       "prompt": "A 4-year bond has face value \\$1,000 and a 7% annual coupon (\\$70 per year). The market rate is 5% per year. Price it with $C=70$, $r=0.05$, $n=4$.",
       "steps": [
         { "instruction": "Compute the annuity factor $\\dfrac{1-(1.05)^{-4}}{0.05}$ (round to 6 decimal places).", "answer": "3.545951", "accept": [], "hint": "$(1.05)^{-4} = 0.822702$; $1 - 0.822702 = 0.177298$, over $0.05$." },
-        { "instruction": "Value the coupons: $70 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "248.22", "accept": [], "hint": "$70 \\times 3.545951$." },
-        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.05)^4}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "822.70", "accept": [], "hint": "$1000 / 1.215506$." },
-        { "instruction": "Add the parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1070.92", "accept": [], "hint": "$248.22 + 822.70$; a premium, since 7% beats the 5% market rate." }
+        { "instruction": "Value the coupons: $70 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "248.22", "accept": [], "hint": "$70 \\times 3.545951$." },
+        { "instruction": "Value the face amount: $\\dfrac{1000}{(1.05)^4}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "822.70", "accept": [], "hint": "$1000 / 1.215506$." },
+        { "instruction": "Add the parts for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1070.92", "accept": [], "hint": "$248.22 + 822.70$; a premium, since 7% beats the 5% market rate." }
       ],
       "finalAnswer": { "value": "1070.92", "unit": "dollars" },
       "solutionNarrative": "Coupons: $70 \\cdot 3.545951 = \\$248.22$. Face: $1000/(1.05)^4 = \\$822.70$. Price $= \\$1{,}070.92$, a premium because the 7% coupon exceeds the 5% market rate."
@@ -188,9 +188,9 @@
       "steps": [
         { "instruction": "Will the new price be above or below \\$1,000? Answer exactly one of: above, below.", "answer": "below", "accept": ["under", "lower"], "hint": "Rates rose above the 5% coupon, so the price falls below face value." },
         { "instruction": "Compute the annuity factor $\\dfrac{1-(1.08)^{-3}}{0.08}$ (round to 6 decimal places).", "answer": "2.577097", "accept": [], "hint": "$(1.08)^{-3} = 0.793832$; $1 - 0.793832 = 0.206168$, over $0.08$." },
-        { "instruction": "Value the coupons: $50 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "128.85", "accept": [], "hint": "$50 \\times 2.577097$." },
-        { "instruction": "Value the face: $\\dfrac{1000}{(1.08)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "793.83", "accept": [], "hint": "$1000 / 1.259712$." },
-        { "instruction": "Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "922.69", "accept": ["922.68"], "hint": "$128.85 + 793.83$." }
+        { "instruction": "Value the coupons: $50 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "128.85", "accept": [], "hint": "$50 \\times 2.577097$." },
+        { "instruction": "Value the face: $\\dfrac{1000}{(1.08)^3}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "793.83", "accept": [], "hint": "$1000 / 1.259712$." },
+        { "instruction": "Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "922.69", "accept": ["922.68"], "hint": "$128.85 + 793.83$." }
       ],
       "finalAnswer": { "value": "922.69", "unit": "dollars" },
       "solutionNarrative": "At 8%: coupons worth $50 \\cdot 2.577097 = \\$128.85$, face worth \\$793.83, price \\$922.69 — well below par, confirming that a rate rise pushes the price down."
@@ -204,9 +204,9 @@
       "steps": [
         { "instruction": "Will the new price be above or below \\$1,000? Answer exactly one of: above, below.", "answer": "above", "accept": ["over", "higher"], "hint": "The 6% coupon now beats the 4% market rate, so the price is a premium." },
         { "instruction": "Compute the annuity factor $\\dfrac{1-(1.04)^{-4}}{0.04}$ (round to 6 decimal places).", "answer": "3.629895", "accept": [], "hint": "$(1.04)^{-4} = 0.854804$; $1 - 0.854804 = 0.145196$, over $0.04$." },
-        { "instruction": "Value the coupons: $60 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "217.79", "accept": [], "hint": "$60 \\times 3.629895$." },
-        { "instruction": "Value the face: $\\dfrac{1000}{(1.04)^4}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "854.80", "accept": [], "hint": "$1000 / 1.169859$." },
-        { "instruction": "Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1072.60", "accept": ["1072.59"], "hint": "$217.79 + 854.80$." }
+        { "instruction": "Value the coupons: $60 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "217.79", "accept": [], "hint": "$60 \\times 3.629895$." },
+        { "instruction": "Value the face: $\\dfrac{1000}{(1.04)^4}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "854.80", "accept": [], "hint": "$1000 / 1.169859$." },
+        { "instruction": "Add for the new price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1072.60", "accept": ["1072.59"], "hint": "$217.79 + 854.80$." }
       ],
       "finalAnswer": { "value": "1072.60", "unit": "dollars" },
       "solutionNarrative": "At 4%: coupons worth $60 \\cdot 3.629895 = \\$217.79$, face worth \\$854.80, price \\$1,072.60 — a premium, confirming that a rate drop lifts the price."
@@ -220,9 +220,9 @@
       "steps": [
         { "instruction": "Does the bond sell at a premium, at par, or at a discount? Answer exactly one of: premium, par, discount.", "answer": "premium", "accept": ["at a premium"], "hint": "The 8% coupon exceeds the 6% market rate." },
         { "instruction": "Compute the annuity factor $\\dfrac{1-(1.06)^{-2}}{0.06}$ (round to 6 decimal places).", "answer": "1.833393", "accept": [], "hint": "$(1.06)^{-2} = 0.889996$; $1 - 0.889996 = 0.110004$, over $0.06$." },
-        { "instruction": "Value the coupons: $80 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "146.67", "accept": [], "hint": "$80 \\times 1.833393$." },
-        { "instruction": "Value the face: $\\dfrac{1000}{(1.06)^2}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "890.00", "accept": ["889.996"], "hint": "$1000 / 1.1236$." },
-        { "instruction": "Add for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1036.67", "accept": [], "hint": "$146.67 + 890.00$; above par, as predicted." }
+        { "instruction": "Value the coupons: $80 \\times$ the annuity factor (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "146.67", "accept": [], "hint": "$80 \\times 1.833393$." },
+        { "instruction": "Value the face: $\\dfrac{1000}{(1.06)^2}$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "890.00", "accept": ["889.996"], "hint": "$1000 / 1.1236$." },
+        { "instruction": "Add for the price (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1036.67", "accept": [], "hint": "$146.67 + 890.00$; above par, as predicted." }
       ],
       "finalAnswer": { "value": "1036.67", "unit": "dollars" },
       "solutionNarrative": "The 8% coupon beats the 6% market rate, so it is a premium bond. Pricing: coupons $80 \\cdot 1.833393 = \\$146.67$, face \\$890.00, price \\$1,036.67 — above par, confirming the classification."

@@ -197,11 +197,11 @@
       "plot": { "type": "graph", "nodes": [ { "id": "Root", "x": 0, "y": 3, "color": "accent", "label": "P1" }, { "id": "N1", "x": 2, "y": 4.5, "color": "warn", "label": "P2" }, { "id": "N2", "x": 2, "y": 1.5, "color": "warn", "label": "P2" }, { "id": "LA", "x": 4, "y": 5.4, "label": "(5,1)" }, { "id": "LB", "x": 4, "y": 3.6, "label": "(3,4)" }, { "id": "RA", "x": 4, "y": 2.4, "label": "(2,2)" }, { "id": "RB", "x": 4, "y": 0.6, "label": "(1,5)" } ], "edges": [ { "from": "Root", "to": "N1", "directed": true, "label": "L" }, { "from": "Root", "to": "N2", "directed": true, "label": "R" }, { "from": "N1", "to": "LA", "directed": true, "label": "a" }, { "from": "N1", "to": "LB", "directed": true, "label": "b" }, { "from": "N2", "to": "RA", "directed": true, "label": "a" }, { "from": "N2", "to": "RB", "directed": true, "label": "b" } ], "caption": "First mover P1 can select the branch with the higher folded payoff." },
       "steps": [
         { "instruction": "After L, P2 plays its best reply — \"a\" or \"b\"? (P2 payoffs 1 vs 4.)", "answer": "b", "accept": [], "hint": "4 beats 1, so b." },
-        { "instruction": "Folding, L is worth 3 to P1 (leaf (3,4)) and R is worth 2 (leaf (2,2)). Does P1 choose \"L\" or \"R\"?", "answer": "L", "accept": [], "hint": "Pick the larger folded value." },
-        { "instruction": "What payoff does P1 secure by moving first? (A number.)", "answer": "3", "accept": [], "hint": "The larger of 3 and 2." }
+        { "instruction": "Folding, L is worth 3 to P1 (leaf (3,4)) and R is worth 1 (after R, P2 picks b since 5 > 2, reaching leaf (1,5)). Does P1 choose \"L\" or \"R\"?", "answer": "L", "accept": [], "hint": "Pick the larger folded value." },
+        { "instruction": "What payoff does P1 secure by moving first? (A number.)", "answer": "3", "accept": [], "hint": "The larger of 3 and 1." }
       ],
       "finalAnswer": { "value": "3", "unit": "" },
-      "solutionNarrative": "After L, P2 plays b (leaf $(3,4)$), so L is worth $3$ to P1; R folds to $2$. Committing to L first secures P1 the better outcome, $3$ — the essence of a first-mover advantage."
+      "solutionNarrative": "After L, P2 plays b (leaf $(3,4)$), so L is worth $3$ to P1; after R, P2 plays b (leaf $(1,5)$), so R folds to $1$ — not the $2$ at leaf $(2,2)$, which P2 would never choose. Committing to L first secures P1 the better outcome, $3$ — the essence of a first-mover advantage."
     },
     {
       "id": "game-theory.sequential-games.s11",

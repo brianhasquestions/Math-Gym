@@ -49,8 +49,8 @@
       "context": "applied",
       "prompt": "A project costs \\$1,000 today and returns a single \\$1,200 one year from now. Your required rate is 10%. Find the NPV using $\\text{NPV} = \\dfrac{CF_1}{1+r} - C_0$.",
       "steps": [
-        { "instruction": "Discount the \\$1,200 back one year: $1200/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1090.91", "accept": [], "hint": "$1200 \\div 1.10$." },
-        { "instruction": "Subtract the \\$1,000 initial cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "90.91", "accept": [], "hint": "$1090.91 - 1000$." }
+        { "instruction": "Discount the \\$1,200 back one year: $1200/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1090.91", "accept": [], "hint": "$1200 \\div 1.10$." },
+        { "instruction": "Subtract the \\$1,000 initial cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "90.91", "accept": [], "hint": "$1090.91 - 1000$." }
       ],
       "finalAnswer": { "value": "90.91", "unit": "dollars" },
       "solutionNarrative": "The \\$1,200 is worth $1200/1.10 = \\$1{,}090.91$ today; minus the \\$1,000 cost, NPV $= \\$90.91 > 0$."
@@ -62,10 +62,10 @@
       "context": "applied",
       "prompt": "A project costs \\$1,000 today and returns \\$600 at the end of year 1 and \\$700 at the end of year 2. The required rate is 10%. Find the NPV.",
       "steps": [
-        { "instruction": "Present value of year 1: $600/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "545.45", "accept": [], "hint": "$600 \\div 1.10$." },
-        { "instruction": "Present value of year 2: $700/(1.10)^2 = 700/1.21$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "578.51", "accept": [], "hint": "$700 \\div 1.21$." },
-        { "instruction": "Add the two present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1123.96", "accept": [], "hint": "$545.45 + 578.51$." },
-        { "instruction": "Subtract the \\$1,000 cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "123.96", "accept": [], "hint": "$1123.96 - 1000$." }
+        { "instruction": "Present value of year 1: $600/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "545.45", "accept": [], "hint": "$600 \\div 1.10$." },
+        { "instruction": "Present value of year 2: $700/(1.10)^2 = 700/1.21$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "578.51", "accept": [], "hint": "$700 \\div 1.21$." },
+        { "instruction": "Add the two present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1123.96", "accept": [], "hint": "$545.45 + 578.51$." },
+        { "instruction": "Subtract the \\$1,000 cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "123.96", "accept": [], "hint": "$1123.96 - 1000$." }
       ],
       "finalAnswer": { "value": "123.96", "unit": "dollars" },
       "solutionNarrative": "PVs are $600/1.10 = \\$545.45$ and $700/1.21 = \\$578.51$, summing to \\$1,123.96. NPV $= 1123.96 - 1000 = \\$123.96 > 0$."
@@ -77,11 +77,11 @@
       "context": "applied",
       "prompt": "A project costs \\$5,000 today and returns \\$2,000, \\$2,500, and \\$3,000 at the ends of years 1, 2, and 3. The required rate is 12%. Find the NPV.",
       "steps": [
-        { "instruction": "PV of year 1: $2000/1.12$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1785.71", "accept": [], "hint": "$2000 \\div 1.12$." },
-        { "instruction": "PV of year 2: $2500/(1.12)^2 = 2500/1.2544$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1992.98", "accept": [], "hint": "$2500 \\div 1.2544$." },
-        { "instruction": "PV of year 3: $3000/(1.12)^3 = 3000/1.404928$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "2135.34", "accept": [], "hint": "$3000 \\div 1.404928$." },
-        { "instruction": "Sum the three present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "5914.03", "accept": [], "hint": "$1785.71 + 1992.98 + 2135.34$." },
-        { "instruction": "Subtract the \\$5,000 cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "914.03", "accept": [], "hint": "$5914.03 - 5000$." }
+        { "instruction": "PV of year 1: $2000/1.12$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1785.71", "accept": [], "hint": "$2000 \\div 1.12$." },
+        { "instruction": "PV of year 2: $2500/(1.12)^2 = 2500/1.2544$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1992.98", "accept": [], "hint": "$2500 \\div 1.2544$." },
+        { "instruction": "PV of year 3: $3000/(1.12)^3 = 3000/1.404928$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "2135.34", "accept": [], "hint": "$3000 \\div 1.404928$." },
+        { "instruction": "Sum the three present values (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "5914.03", "accept": [], "hint": "$1785.71 + 1992.98 + 2135.34$." },
+        { "instruction": "Subtract the \\$5,000 cost for the NPV (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "914.03", "accept": [], "hint": "$5914.03 - 5000$." }
       ],
       "finalAnswer": { "value": "914.03", "unit": "dollars" },
       "solutionNarrative": "The PVs are \\$1,785.71, \\$1,992.98, and \\$2,135.34, summing to \\$5,914.03. NPV $= 5914.03 - 5000 = \\$914.03 > 0$, so the project is worth doing."
@@ -191,8 +191,8 @@
       "context": "applied",
       "prompt": "Two independent one-year projects. Project A: cost \\$1,000, returns \\$1,120. Project B: cost \\$1,000, returns \\$1,090. Rank them by NPV at a 5% required rate.",
       "steps": [
-        { "instruction": "NPV of A: $1120/1.05 - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "66.67", "accept": [], "hint": "$1120/1.05 = 1066.67$, minus 1000." },
-        { "instruction": "NPV of B: $1090/1.05 - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "38.10", "accept": [], "hint": "$1090/1.05 = 1038.10$, minus 1000." },
+        { "instruction": "NPV of A: $1120/1.05 - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "66.67", "accept": [], "hint": "$1120/1.05 = 1066.67$, minus 1000." },
+        { "instruction": "NPV of B: $1090/1.05 - 1000$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "38.10", "accept": [], "hint": "$1090/1.05 = 1038.10$, minus 1000." },
         { "instruction": "Which project has the higher NPV? Answer exactly one of: A, B.", "answer": "A", "accept": ["project a"], "hint": "Compare \\$66.67 to \\$38.10." }
       ],
       "finalAnswer": { "value": "A", "unit": "" },
@@ -220,9 +220,9 @@
       "context": "applied",
       "prompt": "A project costs \\$2,000 and returns \\$1,100 at the end of each of years 1 and 2. At a required rate of 10%, find the NPV and decide.",
       "steps": [
-        { "instruction": "PV of year 1: $1100/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "1000.00", "accept": ["1000"], "hint": "$1100 \\div 1.10$." },
-        { "instruction": "PV of year 2: $1100/(1.10)^2 = 1100/1.21$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "909.09", "accept": [], "hint": "$1100 \\div 1.21$." },
-        { "instruction": "NPV: sum the PVs and subtract \\$2,000 (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "-90.91", "accept": [], "hint": "$1000 + 909.09 - 2000$." },
+        { "instruction": "PV of year 1: $1100/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "1000.00", "accept": ["1000"], "hint": "$1100 \\div 1.10$." },
+        { "instruction": "PV of year 2: $1100/(1.10)^2 = 1100/1.21$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "909.09", "accept": [], "hint": "$1100 \\div 1.21$." },
+        { "instruction": "NPV: sum the PVs and subtract \\$2,000 (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "-90.91", "accept": [], "hint": "$1000 + 909.09 - 2000$." },
         { "instruction": "Since the NPV is negative, accept or reject? Answer exactly one of: accept, reject.", "answer": "reject", "accept": ["no"], "hint": "A negative NPV fails the accept-reject rule." }
       ],
       "finalAnswer": { "value": "reject", "unit": "" },
@@ -262,8 +262,8 @@
       "context": "applied",
       "prompt": "A project costs \\$800 and returns a single \\$880 one year from now. At a 10% required rate, find the NPV.",
       "steps": [
-        { "instruction": "Discount the \\$880: $880/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "800.00", "accept": ["800"], "hint": "$880 \\div 1.10$." },
-        { "instruction": "Subtract the \\$800 cost for the NPV. Enter as a number rounded to the nearest cent, no $ or commas.", "answer": "0.00", "accept": ["0"], "hint": "$800.00 - 800$." }
+        { "instruction": "Discount the \\$880: $880/1.10$ (round to the nearest cent). Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "800.00", "accept": ["800"], "hint": "$880 \\div 1.10$." },
+        { "instruction": "Subtract the \\$800 cost for the NPV. Enter as a number rounded to the nearest cent, no \\$ or commas.", "answer": "0.00", "accept": ["0"], "hint": "$800.00 - 800$." }
       ],
       "finalAnswer": { "value": "0.00", "unit": "dollars" },
       "solutionNarrative": "The \\$880 discounts to exactly \\$800, so NPV $= 0$: the project earns precisely the 10% required rate — the break-even case."

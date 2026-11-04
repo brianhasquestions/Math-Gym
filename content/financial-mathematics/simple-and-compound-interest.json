@@ -48,7 +48,7 @@
       "concepts": ["simple-interest"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You deposit \\$1,000 in an account paying 4% simple interest per year. How much interest does it earn in 3 years? Use $I = Prt$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You deposit \\$1,000 in an account paying 4% simple interest per year. How much interest does it earn in 3 years? Use $I = Prt$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Write the rate 4% as a decimal.", "answer": "0.04", "accept": [], "hint": "Divide the percent by 100: $4/100$." },
         { "instruction": "Compute $I = Prt = 1000 \\cdot 0.04 \\cdot 3$. Enter a number rounded to the nearest cent.", "answer": "120.00", "accept": ["120", "120.0", "$120.00"], "hint": "Multiply principal, rate, and time straight through." }
@@ -61,7 +61,7 @@
       "concepts": ["simple-interest"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A \\$2,500 loan charges 5% simple interest per year for 4 years. Find the total amount owed (principal plus interest). Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$2,500 loan charges 5% simple interest per year for 4 years. Find the total amount owed (principal plus interest). Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the interest $I = Prt = 2500 \\cdot 0.05 \\cdot 4$. Enter a number rounded to the nearest cent.", "answer": "500.00", "accept": ["500", "500.0", "$500.00"], "hint": "$2500 \\times 0.05 \\times 4$." },
         { "instruction": "Add the interest to the principal: $A = P + I$. Enter a number rounded to the nearest cent.", "answer": "3000.00", "accept": ["3000", "3000.0", "$3000.00"], "hint": "$2500 + 500$." }
@@ -87,7 +87,7 @@
       "concepts": ["compound-interest"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You invest \\$1,200 at 5% annual interest, compounded annually ($n = 1$), for 4 years. Use $A = P(1 + r/n)^{nt}$. Enter the final amount as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You invest \\$1,200 at 5% annual interest, compounded annually ($n = 1$), for 4 years. Use $A = P(1 + r/n)^{nt}$. Enter the final amount as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the annual growth factor $1 + r/n = 1 + 0.05/1$. Enter as a decimal.", "answer": "1.05", "accept": [], "hint": "Add the decimal rate to 1." },
         { "instruction": "Compute $A = 1200 \\cdot 1.05^{4}$. Enter a number rounded to the nearest cent.", "answer": "1458.61", "accept": ["1458.610", "$1458.61"], "hint": "Raise 1.05 to the 4th power, then multiply by 1200." }
@@ -100,7 +100,7 @@
       "concepts": ["compound-interest"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "You invest \\$2,000 at 6% annual interest, compounded monthly ($n = 12$), for 2 years. Use $A = P(1 + r/n)^{nt}$. Enter the final amount as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You invest \\$2,000 at 6% annual interest, compounded monthly ($n = 12$), for 2 years. Use $A = P(1 + r/n)^{nt}$. Enter the final amount as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly factor $1 + r/n = 1 + 0.06/12$. Enter as a decimal.", "answer": "1.005", "accept": [], "hint": "Divide 0.06 by 12, then add 1." },
         { "instruction": "Find the exponent $nt = 12 \\times 2$. Enter a whole number.", "answer": "24", "accept": [], "hint": "Compoundings per year times years." },
@@ -114,7 +114,7 @@
       "concepts": ["compound-interest"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "You invest \\$5,000 at 8% annual interest, compounded quarterly ($n = 4$), for 3 years. Find the final amount and the interest earned. Use $A = P(1 + r/n)^{nt}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You invest \\$5,000 at 8% annual interest, compounded quarterly ($n = 4$), for 3 years. Find the final amount and the interest earned. Use $A = P(1 + r/n)^{nt}$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the quarterly factor $1 + 0.08/4$. Enter as a decimal.", "answer": "1.02", "accept": [], "hint": "Divide 0.08 by 4, add 1." },
         { "instruction": "Find the exponent $nt = 4 \\times 3$. Enter a whole number.", "answer": "12", "accept": [], "hint": "Quarters in 3 years." },
@@ -169,7 +169,7 @@
       "concepts": ["continuous-compounding"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You invest \\$1,000 at 5% annual interest, compounded continuously, for 3 years. Use $A = Pe^{rt}$. Enter the final amount as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You invest \\$1,000 at 5% annual interest, compounded continuously, for 3 years. Use $A = Pe^{rt}$. Enter the final amount as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the exponent $rt = 0.05 \\times 3$. Enter as a decimal.", "answer": "0.15", "accept": [], "hint": "Multiply the decimal rate by the years." },
         { "instruction": "Compute $A = 1000 \\cdot e^{0.15}$. Enter a number rounded to the nearest cent.", "answer": "1161.83", "accept": ["1161.830", "$1161.83", "1000*e^0.15", "1000*e^(0.15)"], "hint": "Use $e \\approx 2.71828$: raise $e$ to 0.15, then multiply by 1000." }
@@ -182,7 +182,7 @@
       "concepts": ["continuous-compounding"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "\\$3,000 grows at 6% compounded continuously for 5 years. Find the final amount and the interest earned. Use $A = Pe^{rt}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "\\$3,000 grows at 6% compounded continuously for 5 years. Find the final amount and the interest earned. Use $A = Pe^{rt}$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the exponent $rt = 0.06 \\times 5$. Enter as a decimal.", "answer": "0.3", "accept": ["0.30"], "hint": "Rate times time." },
         { "instruction": "Compute $A = 3000 \\cdot e^{0.3}$. Enter a number rounded to the nearest cent.", "answer": "4049.58", "accept": ["4049.580", "$4049.58", "3000*e^(0.3)"], "hint": "Raise $e$ to 0.3, then multiply by 3000." },
@@ -196,7 +196,7 @@
       "concepts": ["continuous-compounding", "compound-interest"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "\\$2,000 is offered at 5% for 4 years either compounded annually or compounded continuously. Find each ending balance and the difference. Use $A = P(1+r)^t$ and $A = Pe^{rt}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "\\$2,000 is offered at 5% for 4 years either compounded annually or compounded continuously. Find each ending balance and the difference. Use $A = P(1+r)^t$ and $A = Pe^{rt}$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Annual: compute $A = 2000 \\cdot 1.05^{4}$. Enter a number rounded to the nearest cent.", "answer": "2431.01", "accept": ["2431.010", "$2431.01"], "hint": "Raise 1.05 to the 4th power, times 2000." },
         { "instruction": "Continuous: compute $A = 2000 \\cdot e^{0.2}$. Enter a number rounded to the nearest cent.", "answer": "2442.81", "accept": ["2442.810", "$2442.81", "2000*e^(0.2)"], "hint": "Exponent $rt = 0.05 \\times 4 = 0.2$; raise $e$ to it, times 2000." },
@@ -210,7 +210,7 @@
       "concepts": ["simple-interest"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "Compute the simple interest on $P = 800$ at $r = 3\\%$ for $t = 5$ years using $I = Prt$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Compute the simple interest on $P = 800$ at $r = 3\\%$ for $t = 5$ years using $I = Prt$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Write 3% as a decimal.", "answer": "0.03", "accept": [], "hint": "$3/100$." },
         { "instruction": "Compute $I = 800 \\cdot 0.03 \\cdot 5$. Enter a number rounded to the nearest cent.", "answer": "120.00", "accept": ["120", "120.0", "$120.00"], "hint": "Multiply straight through." }
@@ -223,7 +223,7 @@
       "concepts": ["compound-interest"],
       "difficulty": 2,
       "context": "abstract",
-      "prompt": "Evaluate $A = P(1 + r/n)^{nt}$ for $P = 1000$, $r = 0.04$, $n = 2$ (semiannual), $t = 3$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Evaluate $A = P(1 + r/n)^{nt}$ for $P = 1000$, $r = 0.04$, $n = 2$ (semiannual), $t = 3$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the per-period factor $1 + 0.04/2$. Enter as a decimal.", "answer": "1.02", "accept": [], "hint": "Divide 0.04 by 2, add 1." },
         { "instruction": "Find the exponent $nt = 2 \\times 3$. Enter a whole number.", "answer": "6", "accept": [], "hint": "Periods per year times years." },
@@ -237,7 +237,7 @@
       "concepts": ["continuous-compounding"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "Evaluate $A = Pe^{rt}$ for $P = 500$, $r = 0.04$, $t = 2$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Evaluate $A = Pe^{rt}$ for $P = 500$, $r = 0.04$, $t = 2$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the exponent $rt = 0.04 \\times 2$. Enter as a decimal.", "answer": "0.08", "accept": [], "hint": "Rate times time." },
         { "instruction": "Compute $A = 500 \\cdot e^{0.08}$. Enter a number rounded to the nearest cent.", "answer": "541.64", "accept": ["541.640", "$541.64", "500*e^(0.08)"], "hint": "Raise $e$ to 0.08, times 500." }

@@ -310,7 +310,11 @@ function parseSolutionSet(normalized) {
     if (n === null) return null;
     nums.push(n);
   }
-  return nums.sort((a, b) => a - b);
+  // A solution SET: a double root is one solution. Generators that draw
+  // r1 === r2 emit "x = -4 or x = -4"; the learner's "x = -4" / "-4" is the
+  // correct set and must match (it used to fail on the length check).
+  nums.sort((a, b) => a - b);
+  return nums.filter((v, i) => i === 0 || Math.abs(v - nums[i - 1]) > 1e-9);
 }
 
 // Pull a single number (and any leading variable name) out of answers like

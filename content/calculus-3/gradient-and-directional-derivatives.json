@@ -206,7 +206,7 @@
       "concepts": ["gradient-applied"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "The temperature on a metal plate (\\u00b0C) is $T(x,y) = 50 - x^2 - y^2$. Find the gradient $\\nabla T$ at the point $(2, 1)$ — the direction of fastest warming — as a numeric vector.",
+      "prompt": "The temperature on a metal plate (°C) is $T(x,y) = 50 - x^2 - y^2$. Find the gradient $\\nabla T$ at the point $(2, 1)$ — the direction of fastest warming — as a numeric vector.",
       "steps": [
         { "instruction": "Write $\\nabla T = \\langle T_x, T_y \\rangle$ in terms of $x$ and $y$.", "answer": "<-2x, -2y>", "accept": [], "hint": "$T_x = -2x$ and $T_y = -2y$." },
         { "instruction": "Evaluate at $(2, 1)$ as a numeric vector.", "answer": "<-4, -2>", "accept": ["(-4, -2)"], "hint": "$-2(2) = -4$ and $-2(1) = -2$." }

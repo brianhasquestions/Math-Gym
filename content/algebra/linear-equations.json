@@ -64,7 +64,7 @@
       "context": "applied",
       "prompt": "You buy 3 identical notebooks and a \\$2 pen. The total is \\$14. What does each notebook cost?",
       "steps": [
-        { "instruction": "Write an equation where $x$ is the cost of one notebook.", "answer": "3x + 2 = 14", "accept": ["3x+2=14", "2+3x=14"], "hint": "Three notebooks at $x$ each, plus the $2 pen, totals 14." },
+        { "instruction": "Write an equation where $x$ is the cost of one notebook.", "answer": "3x + 2 = 14", "accept": ["3x+2=14", "2+3x=14"], "hint": "Three notebooks at $x$ each, plus the \\$2 pen, totals 14." },
         { "instruction": "Subtract the pen's cost from both sides.", "answer": "3x = 12", "accept": ["3x=12"], "hint": "Undo the +2." },
         { "instruction": "Solve for $x$.", "answer": "x = 4", "accept": ["x=4", "4"], "hint": "Divide both sides by 3." }
       ],

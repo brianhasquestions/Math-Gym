@@ -230,12 +230,12 @@ fill["c3v-speed-arclen-3"] = (rng, idx) => {
     id: `gen.c3v-speed-arclen-3.${idx}`, generated: true, concepts: ["speed-and-arc-length"], difficulty: 3, context: "abstract",
     prompt: `Compute the arc length of $\\vec{r}(t) = \\langle t,\\; \\tfrac{2}{3}t^{3/2} \\rangle$ over $[0, ${b}]$. (The curve is engineered so the speed simplifies.)`,
     steps: [
-      { instruction: "With $\\vec{r}\\,'(t) = \\langle 1,\\; t^{1/2} \\rangle$, write $|\\vec{r}\\,'(t)|^2$ as a polynomial in $t$.", answer: "1 + t", accept: ["t + 1", "1+t"], hint: "$1^2 + (t^{1/2})^2$." },
+      { instruction: "With $\\vec{r}'(t) = \\langle 1,\\; t^{1/2} \\rangle$, write $|\\vec{r}'(t)|^2$ as a polynomial in $t$.", answer: "1 + t", accept: ["t + 1", "1+t"], hint: "$1^2 + (t^{1/2})^2$." },
       { instruction: `The antiderivative of $\\sqrt{1+t}$ is $\\tfrac{2}{3}(1+t)^{3/2}$. Evaluate $(1 + ${b})^{3/2}$.`, answer: `${k * k * k}`, accept: [], hint: `$${k * k}^{3/2} = (\\sqrt{${k * k}})^3 = ${k}^3$.` },
       { instruction: `Compute $L = \\tfrac{2}{3}\\left[(1+t)^{3/2}\\right]_0^{${b}} = \\tfrac{2}{3}(${k * k * k} - 1)$.`, answer: ans, accept: dec ? [dec] : [], hint: `$\\tfrac{2}{3} \\times ${k * k * k - 1}$.` },
     ],
     finalAnswer: { value: ans, unit: "" },
-    solutionNarrative: `$|\\vec{r}\\,'|^2 = 1 + t$ — a perfect setup — so $L = \\int_0^{${b}} \\sqrt{1+t}\\,dt = \\tfrac{2}{3}(${k}^3 - 1) = ${ans}$.`,
+    solutionNarrative: `$|\\vec{r}'|^2 = 1 + t$ — a perfect setup — so $L = \\int_0^{${b}} \\sqrt{1+t}\\,dt = \\tfrac{2}{3}(${k}^3 - 1) = ${ans}$.`,
   };
 };
 
@@ -401,7 +401,7 @@ fill["c3v-scalar-line-1"] = (rng, idx) => {
     id: `gen.c3v-scalar-line-1.${idx}`, generated: true, concepts: ["scalar-line-integrals"], difficulty: 1, context: "abstract",
     prompt: `Compute $\\displaystyle\\int_C ${c === 1 ? "" : c}${varName}\\, ds$, where $C$ is the straight segment from $(0,0)$ to $${end}$.`,
     steps: [
-      { instruction: `Parametrize $C$ as $\\vec{r}(t) = ${param}$, $0 \\le t \\le ${L}$. What is the speed $|\\vec{r}\\,'(t)|$?`, answer: "1", accept: [], hint: "The velocity is a unit coordinate vector." },
+      { instruction: `Parametrize $C$ as $\\vec{r}(t) = ${param}$, $0 \\le t \\le ${L}$. What is the speed $|\\vec{r}'(t)|$?`, answer: "1", accept: [], hint: "The velocity is a unit coordinate vector." },
       { instruction: `Compute $\\displaystyle\\int_0^{${L}} ${c === 1 ? "" : c}t \\cdot 1\\, dt$.`, answer: ans, accept: dec ? [dec] : [], hint: `$${c}\\left[t^2/2\\right]_0^{${L}} = ${c} \\cdot ${L * L}/2$.` },
     ],
     finalAnswer: { value: ans, unit: "" },
@@ -422,7 +422,7 @@ fill["c3v-scalar-line-2"] = (rng, idx) => {
     id: `gen.c3v-scalar-line-2.${idx}`, generated: true, concepts: ["scalar-line-integrals"], difficulty: 2, context: "abstract",
     prompt: `Compute $\\displaystyle\\int_C (${fTxt})\\, ds$, where $C$ is the straight segment from $(0,0)$ to $(${end.join(", ")})$, parametrized as $\\vec{r}(t) = \\langle ${3 * m}t,\\; ${4 * m}t \\rangle$, $0 \\le t \\le 1$.`,
     steps: [
-      { instruction: "Compute the speed $|\\vec{r}\\,'(t)|$ (the segment's length, since $t$ runs over $[0,1]$).", answer: `${L}`, accept: [], hint: `$|\\langle ${3 * m}, ${4 * m} \\rangle| = \\sqrt{${9 * m * m} + ${16 * m * m}}$.` },
+      { instruction: "Compute the speed $|\\vec{r}'(t)|$ (the segment's length, since $t$ runs over $[0,1]$).", answer: `${L}`, accept: [], hint: `$|\\langle ${3 * m}, ${4 * m} \\rangle| = \\sqrt{${9 * m * m} + ${16 * m * m}}$.` },
       { instruction: "Substitute the path into the integrand: write $f(\\vec{r}(t))$ as a polynomial in $t$.", answer: `${A}t`, accept: [`${A}*t`], hint: `$${cf(p)}(${3 * m}t) + ${cf(q)}(${4 * m}t) = ${A}t$.` },
       { instruction: `Compute $\\displaystyle\\int_0^1 (${A}t)(${L})\\, dt$.`, answer: ans, accept: dec ? [dec] : [], hint: `$${A * L}\\left[t^2/2\\right]_0^1$.` },
     ],
@@ -452,7 +452,7 @@ fill["c3v-scalar-line-3"] = (rng, idx) => {
     id: `gen.c3v-scalar-line-3.${idx}`, generated: true, concepts: ["scalar-line-integrals"], difficulty: 3, context: "abstract",
     prompt: `Compute $\\displaystyle\\int_C (${fTxt})\\, ds$, where $C$ is the straight segment from $(0,0,0)$ to $(${end.join(", ")})$, parametrized as $\\vec{r}(t) = ${Vt(end.map((x) => `${cf(x)}t`))}$, $0 \\le t \\le 1$.`,
     steps: [
-      { instruction: "Compute the speed $|\\vec{r}\\,'(t)|$.", answer: `${L}`, accept: [], hint: `$|${Vt(end)}| = \\sqrt{${end.map((x) => x * x).join(" + ")}} = \\sqrt{${L * L}}$.` },
+      { instruction: "Compute the speed $|\\vec{r}'(t)|$.", answer: `${L}`, accept: [], hint: `$|${Vt(end)}| = \\sqrt{${end.map((x) => x * x).join(" + ")}} = \\sqrt{${L * L}}$.` },
       { instruction: "Write $f(\\vec{r}(t))$ as a polynomial in $t$.", answer: `${A}t`, accept: [`${A}*t`], hint: "Substitute each component and collect the $t$ terms." },
       { instruction: `Compute $\\displaystyle\\int_0^1 (${A}t)(${L})\\, dt$.`, answer: ans, accept: dec ? [dec] : [], hint: `$${A * L}\\left[t^2/2\\right]_0^1$.` },
     ],
@@ -492,8 +492,8 @@ fill["c3v-work-2"] = (rng, idx) => {
     id: `gen.c3v-work-2.${idx}`, generated: true, concepts: ["work-integrals"], difficulty: 2, context: "abstract",
     prompt: `Compute $\\displaystyle\\int_C \\vec{F} \\cdot d\\vec{r}$ for $\\vec{F} = \\langle ${cf(a)}y,\\; ${cf(b)}x \\rangle$ along the segment $\\vec{r}(t) = \\langle ${cf(p)}t,\\; ${cf(q)}t \\rangle$, $0 \\le t \\le 1$.`,
     steps: [
-      { instruction: "Write the velocity $\\vec{r}\\,'(t)$ as a numeric vector.", answer: V(p, q), accept: [Pn(p, q)], hint: "Differentiate each component." },
-      { instruction: "Evaluate the field on the path and dot with the velocity: write $\\vec{F}(\\vec{r}(t)) \\cdot \\vec{r}\\,'(t)$ as a polynomial in $t$.", answer: `${coefI}t`, accept: [`${coefI}*t`], hint: `$\\vec{F}(\\vec{r}(t)) = \\langle ${a * q}t, ${b * p}t \\rangle$; dot with $${Vt([p, q])}$: $${a * q * p}t + ${b * p * q}t$.` },
+      { instruction: "Write the velocity $\\vec{r}'(t)$ as a numeric vector.", answer: V(p, q), accept: [Pn(p, q)], hint: "Differentiate each component." },
+      { instruction: "Evaluate the field on the path and dot with the velocity: write $\\vec{F}(\\vec{r}(t)) \\cdot \\vec{r}'(t)$ as a polynomial in $t$.", answer: `${coefI}t`, accept: [`${coefI}*t`], hint: `$\\vec{F}(\\vec{r}(t)) = \\langle ${a * q}t, ${b * p}t \\rangle$; dot with $${Vt([p, q])}$: $${a * q * p}t + ${b * p * q}t$.` },
       { instruction: `Compute $W = \\displaystyle\\int_0^1 ${coefI}t\\, dt$.`, answer: ans, accept: dec ? [dec] : [], hint: `$${coefI}\\left[t^2/2\\right]_0^1$.` },
     ],
     finalAnswer: { value: ans, unit: "" },

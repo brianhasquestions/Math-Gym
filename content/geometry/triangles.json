@@ -8,7 +8,7 @@
     {
       "id": "angle-sum",
       "label": "Angle sum and exterior angles",
-      "microLesson": "The three interior angles of any triangle always add up to $180^\\circ$. So if you know two angles, the third is just $180^\\circ$ minus their sum. Example: angles of $50^\\circ$ and $70^\\circ$ leave $180 - 50 - 70 = 60^\\circ$. The **exterior angle theorem** is a handy shortcut: an exterior angle equals the sum of the two interior angles it does *not* touch. So an exterior angle next to a $40^\\circ$ angle, on a triangle whose other two angles are $40^\\circ$ and $65^\\circ$, measures $40 + 65 = 105^\\circ$."
+      "microLesson": "The three interior angles of any triangle always add up to $180^\\circ$. So if you know two angles, the third is just $180^\\circ$ minus their sum. Example: angles of $50^\\circ$ and $70^\\circ$ leave $180 - 50 - 70 = 60^\\circ$. The **exterior angle theorem** is a handy shortcut: an exterior angle equals the sum of the two interior angles it does *not* touch. So on a triangle with angles $40^\\circ$, $65^\\circ$, and $75^\\circ$, the exterior angle next to the $75^\\circ$ angle measures $40 + 65 = 105^\\circ$ (check: $180 - 75 = 105$)."
     },
     {
       "id": "triangle-types",

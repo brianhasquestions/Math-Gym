@@ -148,10 +148,10 @@
       "prompt": "A 16-inch pizza has a diameter of 16 inches. What is its area? Use $\\pi \\approx 3.14$ and round to 1 decimal place.",
       "steps": [
         { "instruction": "Find the radius (half the diameter).", "answer": "8", "accept": ["8 in", "8 inches"], "hint": "Radius $= 16 \\div 2$." },
-        { "instruction": "Apply $A = \\pi r^2$ with $\\pi \\approx 3.14$. Round to 1 decimal place.", "answer": "200.96", "accept": ["201", "201.0"], "hint": "$3.14 \\times 8^2 = 3.14 \\times 64$." }
+        { "instruction": "Apply $A = \\pi r^2$ with $\\pi \\approx 3.14$. Round to 1 decimal place.", "answer": "201.0", "accept": ["201", "200.96"], "hint": "$3.14 \\times 8^2 = 3.14 \\times 64 = 200.96$, then round." }
       ],
-      "finalAnswer": { "value": "200.96", "unit": "square inches" },
-      "solutionNarrative": "Radius $= 8$; $A = \\pi r^2 \\approx 3.14(64) = 200.96\\text{ in}^2$ (about $201$)."
+      "finalAnswer": { "value": "201.0", "unit": "square inches" },
+      "solutionNarrative": "Radius $= 8$; $A = \\pi r^2 \\approx 3.14(64) = 200.96 \\approx 201.0\\text{ in}^2$."
     },
     {
       "id": "geometry.perimeter-and-area.s10",
@@ -160,11 +160,11 @@
       "context": "applied",
       "prompt": "A circular flower bed of radius 7 ft will be edged with metal trim and filled with mulch. Find the circumference (trim needed) and the area (mulch coverage). Use $\\pi \\approx 3.14$ and round each to 1 decimal place.",
       "steps": [
-        { "instruction": "Circumference: $C = 2\\pi r$. Round to 1 decimal place.", "answer": "43.96", "accept": ["44", "44.0"], "hint": "$2 \\times 3.14 \\times 7$." },
-        { "instruction": "Area: $A = \\pi r^2$. Round to 1 decimal place.", "answer": "153.86", "accept": ["153.9"], "hint": "$3.14 \\times 7^2 = 3.14 \\times 49$." }
+        { "instruction": "Circumference: $C = 2\\pi r$. Round to 1 decimal place.", "answer": "44.0", "accept": ["44", "43.96"], "hint": "$2 \\times 3.14 \\times 7 = 43.96$, then round." },
+        { "instruction": "Area: $A = \\pi r^2$. Round to 1 decimal place.", "answer": "153.9", "accept": ["153.86"], "hint": "$3.14 \\times 7^2 = 3.14 \\times 49 = 153.86$, then round." }
       ],
-      "finalAnswer": { "value": "153.86", "unit": "square feet" },
-      "solutionNarrative": "$C = 2(3.14)(7) = 43.96$ ft of trim; $A = 3.14(49) = 153.86\\text{ ft}^2$ of mulch coverage (about $153.9$)."
+      "finalAnswer": { "value": "153.9", "unit": "square feet" },
+      "solutionNarrative": "$C = 2(3.14)(7) = 43.96 \\approx 44.0$ ft of trim; $A = 3.14(49) = 153.86 \\approx 153.9\\text{ ft}^2$ of mulch coverage."
     },
     {
       "id": "geometry.perimeter-and-area.s11",

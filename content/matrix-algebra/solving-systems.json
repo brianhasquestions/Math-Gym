@@ -213,14 +213,14 @@
       "concepts": ["systems-applied", "gaussian-elimination"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "Traffic flows through a one-way loop with three junctions. Conservation (flow in = flow out) at the junctions gives $x + 100 = y + 50,\\; y + 80 = z + 60,\\; z + 30 = x + 80$, where $x$, $y$, $z$ are cars per hour on three road segments. It is known that one extra condition fixes $x = 70$. Using $x = 70$, find $(x, y, z)$ in cars per hour.",
+      "prompt": "Traffic flows through a one-way loop with three junctions. Conservation (flow in = flow out) at the junctions gives $x + 100 = y + 50,\\; y + 80 = z + 60,\\; z + 30 = x + 100$, where $x$, $y$, $z$ are cars per hour on three road segments. These three equations are dependent (any two imply the third), so one extra measurement is needed: $x = 70$. Using $x = 70$, find $(x, y, z)$ in cars per hour.",
       "steps": [
         { "instruction": "From $x + 100 = y + 50$ with $x = 70$, solve for $y$.", "answer": "y = 120", "accept": ["120"], "hint": "$70 + 100 = y + 50$ gives $y = 120$." },
         { "instruction": "From $y + 80 = z + 60$, solve for $z$.", "answer": "z = 140", "accept": ["140"], "hint": "$120 + 80 = z + 60$ gives $z = 140$." },
         { "instruction": "Write the solution vector $(x, y, z)$.", "answer": "(70, 120, 140)", "accept": [], "hint": "Combine the values you found with the given $x = 70$." }
       ],
       "finalAnswer": { "value": "(70, 120, 140)", "unit": "cars per hour" },
-      "solutionNarrative": "With $x = 70$: $70 + 100 = y + 50$ gives $y = 120$; $120 + 80 = z + 60$ gives $z = 140$. Check the third junction: $z + 30 = 170$ and $x + 80 = 150$ — these differ, reflecting that real loop data is balanced overall; using the two binding nodes gives $(70, 120, 140)$."
+      "solutionNarrative": "With $x = 70$: $70 + 100 = y + 50$ gives $y = 120$; $120 + 80 = z + 60$ gives $z = 140$. Check the third junction: $z + 30 = 170$ and $x + 100 = 170$ ✓. Adding all three equations gives $210 = 210$ — total traffic entering the loop equals total leaving — which is exactly why one equation is redundant and the extra condition $x = 70$ was needed. Solution: $(70, 120, 140)$."
     },
     {
       "id": "matrix-algebra.solving-systems.s15",

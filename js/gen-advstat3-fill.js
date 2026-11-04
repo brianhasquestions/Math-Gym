@@ -234,7 +234,7 @@ fill["as3-t-test-3"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: reject ? "reject" : "fail to reject", accept: reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Outside $\\pm ${crit}$ means significant.` },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$t = ${d10(tT)}$, so $|t| = ${d10(mag)}$ ${reject ? ">" : "\\le"} ${crit}$ (df $= ${df}$): we ${reject ? "reject $H_0$ — the process has drifted" : "fail to reject $H_0$ — the drift is within sampling noise"}.`,
+    solutionNarrative: `$t = ${d10(tT)}$, so $|t| = ${d10(mag)} ${reject ? ">" : "\\le"} ${crit}$ (df $= ${df}$): we ${reject ? "reject $H_0$ — the process has drifted" : "fail to reject $H_0$ — the drift is within sampling noise"}.`,
   };
 };
 
@@ -763,7 +763,7 @@ fill["as3-chi-ind-1"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: scen.reject ? "reject" : "fail to reject", accept: scen.reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Beyond the critical value $\\to$ reject.` },
     ],
     finalAnswer: { value: scen.reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$\\mathrm{df} = (${scen.r}-1)(${scen.c}-1) = ${scen.df}$, and $\\chi^2 = ${scen.chi}$ ${scen.reject ? ">" : "\\le"} ${scen.crit}$: ${scen.reject ? "reject independence — the variables are associated" : "fail to reject — the table is compatible with independence"}.`,
+    solutionNarrative: `$\\mathrm{df} = (${scen.r}-1)(${scen.c}-1) = ${scen.df}$, and $\\chi^2 = ${scen.chi} ${scen.reject ? ">" : "\\le"} ${scen.crit}$: ${scen.reject ? "reject independence — the variables are associated" : "fail to reject — the table is compatible with independence"}.`,
   };
 };
 fill["as3-chi-ind-2"] = (rng, idx) => {

@@ -1573,7 +1573,7 @@ generators["limit-diffquotient-v1"] = (rng, idx) => {
   return {
     id: `gen.limit-diffquotient-v1.${idx}`, generated: true, concepts: ["limits-applied"], difficulty: 2, context: "abstract",
     prompt: `For $f(x) = x^2$, evaluate $\\displaystyle\\lim_{h \\to 0} \\frac{f(${a}+h) - f(${a})}{h}$ (the instantaneous rate at $x = ${a}$).`,
-    steps: [{ instruction: "This limit is $f'(${a})$. For $x^2$, $f'(x) = 2x$.", answer: `${2 * a}`, accept: [], hint: `$f'(x) = 2x$, so at $x = ${a}$ it's ${2 * a}.` }],
+    steps: [{ instruction: `This limit is $f'(${a})$. For $x^2$, $f'(x) = 2x$.`, answer: `${2 * a}`, accept: [], hint: `$f'(x) = 2x$, so at $x = ${a}$ it's ${2 * a}.` }],
     finalAnswer: { value: `${2 * a}`, unit: "" }, solutionNarrative: `The difference quotient limit is $f'(${a}) = ${2 * a}$.`,
   };
 };
@@ -1825,7 +1825,7 @@ generators["riemann-v1"] = (rng, idx) => {
   return {
     id: `gen.riemann-v1.${idx}`, generated: true, concepts: ["riemann-sums"], difficulty: 1, context: "abstract",
     prompt: `Estimate the area under $f(x) = ${k}x$ on $[0, ${n}]$ using ${n} rectangles of width 1 and right endpoints.`,
-    steps: [{ instruction: "Add $f(1) + f(2) + \\dots + f(${n})$.", answer: `${sum}`, accept: [], hint: `${k}(1 + 2 + … + ${n}) = ${k} × ${n * (n + 1) / 2}.` }],
+    steps: [{ instruction: `Add $f(1) + f(2) + \\dots + f(${n})$.`, answer: `${sum}`, accept: [], hint: `${k}(1 + 2 + … + ${n}) = ${k} × ${n * (n + 1) / 2}.` }],
     finalAnswer: { value: `${sum}`, unit: "" }, solutionNarrative: `Right sum $= ${k}\\cdot\\frac{${n}(${n}+1)}{2} = ${sum}$.`,
   };
 };
@@ -1854,7 +1854,7 @@ generators["net-change-v1"] = (rng, idx) => {
   return {
     id: `gen.net-change-v1.${idx}`, generated: true, concepts: ["net-change"], difficulty: 2, context: "applied",
     prompt: `Water flows into a tank at rate $r(t) = ${2 * a}t + ${b}$ liters/min. How much water enters during the first ${T} minutes?`,
-    steps: [{ instruction: "Integrate the rate over $[0, ${T}]$.", answer: `${total}`, accept: [], hint: `$\\int_0^{${T}} (${2 * a}t + ${b})\\,dt = ${a}t^2 + ${b}t$ evaluated at ${T}.` }],
+    steps: [{ instruction: `Integrate the rate over $[0, ${T}]$.`, answer: `${total}`, accept: [], hint: `$\\int_0^{${T}} (${2 * a}t + ${b})\\,dt = ${a}t^2 + ${b}t$ evaluated at ${T}.` }],
     finalAnswer: { value: `${total}`, unit: "liters" }, solutionNarrative: `$${a}(${T})^2 + ${b}(${T}) = ${total}$ liters.`,
   };
 };
@@ -1907,7 +1907,7 @@ generators["parts-lnx-v1"] = (rng, idx) => {
   return {
     id: `gen.parts-lnx-v1.${idx}`, generated: true, concepts: ["logarithmic-integrals"], difficulty: 2, context: "abstract",
     prompt: `Evaluate $\\displaystyle\\int_1^{${b}} \\ln x\\,dx$ using integration by parts. (Round to 2 decimals.)`,
-    steps: [{ instruction: "The antiderivative of $\\ln x$ is $x\\ln x - x$. Evaluate on $[1, ${b}]$.", answer: `${val}`, accept: [], hint: `$[x\\ln x - x]_1^{${b}} = ${b}\\ln ${b} - ${b} + 1$.` }],
+    steps: [{ instruction: `The antiderivative of $\\ln x$ is $x\\ln x - x$. Evaluate on $[1, ${b}]$.`, answer: `${val}`, accept: [], hint: `$[x\\ln x - x]_1^{${b}} = ${b}\\ln ${b} - ${b} + 1$.` }],
     finalAnswer: { value: `${val}`, unit: "" }, solutionNarrative: `$${b}\\ln ${b} - ${b} + 1 ≈ ${val}$.`,
   };
 };
@@ -1929,7 +1929,7 @@ generators["area-between-v1"] = (rng, idx) => {
   return {
     id: `gen.area-between-v1.${idx}`, generated: true, concepts: ["area-between-curves"], difficulty: 2, context: "abstract",
     prompt: `Find the area between $y = ${m}x$ and $y = x^2$ (they meet at $x = 0$ and $x = ${m}$).`,
-    steps: [{ instruction: "Integrate (upper − lower) over $[0, ${m}]$.", answer: `${area}`, accept: [], hint: `$\\int_0^{${m}} (${m}x - x^2)\\,dx$.` }],
+    steps: [{ instruction: `Integrate (upper − lower) over $[0, ${m}]$.`, answer: `${area}`, accept: [], hint: `$\\int_0^{${m}} (${m}x - x^2)\\,dx$.` }],
     finalAnswer: { value: `${area}`, unit: "" }, solutionNarrative: `$\\int_0^{${m}} (${m}x - x^2)\\,dx = ${area}$.`,
   };
 };
@@ -1938,12 +1938,14 @@ generators["volume-rev-v1"] = (rng, idx) => {
   return {
     id: `gen.volume-rev-v1.${idx}`, generated: true, concepts: ["volume-of-revolution"], difficulty: 2, context: "abstract",
     prompt: `The region under $y = \\sqrt{x}$ from $x = 0$ to $x = ${b}$ is revolved about the x-axis. Find the volume. (π ≈ 3.14, round to 1 decimal.)`,
-    steps: [{ instruction: "Disk method: $V = \\pi\\int_0^{${b}} (\\sqrt{x})^2\\,dx = \\pi\\int_0^{${b}} x\\,dx$.", answer: `${vol}`, accept: [], hint: `$\\pi \\cdot \\frac{${b}^2}{2}$.` }],
+    steps: [{ instruction: `Disk method: $V = \\pi\\int_0^{${b}} (\\sqrt{x})^2\\,dx = \\pi\\int_0^{${b}} x\\,dx$.`, answer: `${vol}`, accept: [], hint: `$\\pi \\cdot \\frac{${b}^2}{2}$.` }],
     finalAnswer: { value: `${vol}`, unit: "" }, solutionNarrative: `$\\pi \\cdot \\frac{${b * b}}{2} ≈ ${vol}$.`,
   };
 };
 generators["avg-value-v1"] = (rng, idx) => {
-  const k = rng.int(1, 4), b = rng.int(2, 6), avg = round2((k * b ** 3 / 3) / b);
+  // f = 3k x^2, so ∫_0^b f dx = k b^3 and the average is k b^3 / b = k b^2.
+  // (Was (k b^3/3)/b — off by a factor of 3 on every draw.)
+  const k = rng.int(1, 4), b = rng.int(2, 6), avg = k * b * b;
   return {
     id: `gen.avg-value-v1.${idx}`, generated: true, concepts: ["average-value"], difficulty: 2, context: "abstract",
     prompt: `Find the average value of $f(x) = ${3 * k}x^2$ on $[0, ${b}]$.`,
@@ -1987,7 +1989,7 @@ generators["repeating-decimal-v1"] = (rng, idx) => {
   return {
     id: `gen.repeating-decimal-v1.${idx}`, generated: true, concepts: ["series-applications"], difficulty: 2, context: "applied",
     prompt: `Write the repeating decimal $0.\\overline{${d}}$ (i.e. $0.${d}${d}${d}\\ldots$) as a fraction using an infinite geometric series.`,
-    steps: [{ instruction: "It's a geometric series with $a = ${d}/10$, $r = 1/10$; sum $= a/(1-r)$.", answer: frac(d, 9), accept: [`${d}/9`], hint: `$\\frac{${d}/10}{1 - 1/10} = \\frac{${d}}{9}$.` }],
+    steps: [{ instruction: `It's a geometric series with $a = ${d}/10$, $r = 1/10$; sum $= a/(1-r)$.`, answer: frac(d, 9), accept: [`${d}/9`], hint: `$\\frac{${d}/10}{1 - 1/10} = \\frac{${d}}{9}$.` }],
     finalAnswer: { value: frac(d, 9), unit: "" }, solutionNarrative: `$0.\\overline{${d}} = ${frac(d, 9)}$.`,
   };
 };
@@ -2307,21 +2309,24 @@ generators["de-char-eq-v1"] = (rng, idx) => {
   return {
     id: `gen.de-char-eq-v1.${idx}`, generated: true, concepts: ["characteristic-equation"], difficulty: 2, context: "abstract",
     prompt: `Find the roots of the characteristic equation for $y'' ${signed(b)}y' ${signed(c)}y = 0$.`,
-    steps: [{ instruction: "Write $r^2 ${signed(b)}r ${signed(c)} = 0$ and solve.", form: "solutions", answer: `r = ${r1} or r = ${r2}`, accept: [`${r1}, ${r2}`], hint: "Factor the quadratic in $r$." }],
+    steps: [{ instruction: `Write $r^2 ${signed(b)}r ${signed(c)} = 0$ and solve.`, form: "solutions", answer: `r = ${r1} or r = ${r2}`, accept: [`${r1}, ${r2}`], hint: "Factor the quadratic in $r$." }],
     finalAnswer: { value: `r = ${r1}, ${r2}`, unit: "" }, solutionNarrative: `Roots $r = ${r1}, ${r2}$.`,
   };
 };
 generators["de-classify-roots-v1"] = (rng, idx) => {
   const type = rng.pick(["real distinct", "repeated", "complex"]);
   let b, c;
-  if (type === "real distinct") { const r1 = nz(rng, -5, 5), r2 = nz(rng, -5, 5) + (rng.int(0, 1) ? 1 : -1); b = -(r1 + r2); c = r1 * r2; }
+  // r2 is offset from r1 by a NONZERO amount (it used to be an independent
+  // draw ± 1, which could land on r1 and label a zero discriminant "distinct").
+  if (type === "real distinct") { const r1 = nz(rng, -5, 5), r2 = r1 + rng.pick([-3, -2, -1, 1, 2, 3]); b = -(r1 + r2); c = r1 * r2; }
   else if (type === "repeated") { const r = nz(rng, -5, 5); b = -2 * r; c = r * r; }
-  else { b = nz(rng, -4, 4); c = b * b / 4 + rng.int(1, 5); } // discriminant negative
+  else { b = 2 * nz(rng, -2, 2); c = b * b / 4 + rng.int(1, 5); } // even b keeps c an integer; discriminant negative
   const D = b * b - 4 * c;
+  const ACCEPT = { "real distinct": ["distinct real", "real distinct roots", "two real roots"], repeated: ["repeated roots", "double root", "repeated root"], complex: ["complex roots", "complex conjugate"] };
   return {
     id: `gen.de-classify-roots-v1.${idx}`, generated: true, concepts: ["classify-roots"], difficulty: 2, context: "abstract",
     prompt: `For $y'' ${signed(b)}y' ${signed(c)}y = 0$, classify the roots (real distinct, repeated, or complex).`,
-    steps: [{ instruction: "Check the sign of the discriminant $b^2 - 4c$.", answer: type, accept: [], hint: `$b^2 - 4c = ${D}$; positive → real distinct, zero → repeated, negative → complex.` }],
+    steps: [{ instruction: "Check the sign of the discriminant $b^2 - 4c$. Answer real distinct, repeated, or complex.", answer: type, accept: ACCEPT[type], hint: `$b^2 - 4c = ${D}$; positive → real distinct, zero → repeated, negative → complex.` }],
     finalAnswer: { value: type, unit: "" }, solutionNarrative: `Discriminant ${D}, so ${type} roots.`,
   };
 };
@@ -2711,9 +2716,19 @@ export function hasGenerator(template) {
 // the redundant 1 inside math spans ONLY (prose like "count the 1s" must
 // survive), at this single dispatch point so all templates benefit. The
 // lookbehind keeps "11x"/"2.1x" (real coefficients) and "C_1e" (subscript
-// index) intact; grading strings (answers/accepts) are left untouched — the
-// grader already treats 1x and x as equal.
-const stripUnitCoefIn = (inner) => inner.replace(/(?<![0-9.a-zA-Z_])1(?=[a-zA-Z\\])/g, "");
+// index) intact.
+//
+// The 1 is only redundant when it multiplies a VARIABLE or a function /
+// symbol command. Before any other backslash it is a real digit: "\{1\}",
+// "\langle 0,1\rangle", "1\cdot 4", "1\times 5", "L\{1\}", "64 - 1\right)",
+// "1\,dx" — an earlier version stripped those too and corrupted data sets,
+// basis vectors and coalitions. So commands are whitelisted, not blanket-matched.
+const UNIT_COEF_CMDS = "sin|cos|tan|sec|csc|cot|sinh|cosh|tanh|arcsin|arccos|arctan|ln|log|exp|sqrt|pi|theta|lambda|alpha|beta|gamma|mu|sigma|omega|phi|rho|tau|vec|mathbf|hat|dfrac|frac";
+const UNIT_COEF_RE = new RegExp(`(?<![0-9.a-zA-Z_])1(?=[a-zA-Z]|\\\\(?:${UNIT_COEF_CMDS})(?![a-zA-Z]))`, "g");
+const stripUnitCoefIn = (inner) => inner.replace(UNIT_COEF_RE, "");
+// Answer strings have no $…$ delimiters. Same rule, but never touch scientific
+// notation ("1e9", "1e-3") and only before lowercase variables / e^ / i.
+const ANSWER_UNIT_COEF_RE = /(?<![0-9.a-zA-Z_])1(?=[a-df-z]|e(?![0-9+-]))/g;
 const stripUnitCoef = (s) => {
   if (typeof s !== "string" || !s.includes("1")) return s;
   // Escaped currency dollars ("\$240") are NOT math delimiters — mask them so
@@ -2725,15 +2740,42 @@ const stripUnitCoef = (s) => {
     .replace(/\u0000/g, "\\$");
 };
 
+// Binary floating-point noise leaking into text: "0.060000000000000005",
+// "62.99999999999999", "1.3862940000000001". Only numbers with 12+ decimals
+// that END in a long 0-run (after a nonzero digit) or 9-run are touched, so
+// authored values like "0.000000001" survive. The value changes by ~1e-15,
+// so it is safe in answers too.
+const FLOAT_NOISE_RE = /(\d+)\.(\d*?)(?:([1-9])0{6,}[1-9]\d{0,2}|9{6,}\d{0,3})(?![\d])/g;
+const cleanFloatNoise = (s) => typeof s !== "string" ? s : s.replace(FLOAT_NOISE_RE, (m, int, lead, nz) => {
+  const decimals = m.length - int.length - 1;
+  if (decimals < 12) return m;
+  const keep = lead.length + (nz ? 1 : 0);
+  return String(Number(Number(m).toFixed(keep)));
+});
+const tidy = (s) => stripUnitCoef(cleanFloatNoise(s));
+
 export function generate(template, rng, idx) {
   if (!hasGenerator(template)) return null;
   const p = generators[template](rng, idx);
   if (p) {
-    p.prompt = stripUnitCoef(p.prompt);
-    if (p.solutionNarrative) p.solutionNarrative = stripUnitCoef(p.solutionNarrative);
+    p.prompt = tidy(p.prompt);
+    if (p.solutionNarrative) p.solutionNarrative = tidy(p.solutionNarrative);
     for (const s of p.steps || []) {
-      s.instruction = stripUnitCoef(s.instruction);
-      if (s.hint) s.hint = stripUnitCoef(s.hint);
+      s.instruction = tidy(s.instruction);
+      if (s.hint) s.hint = tidy(s.hint);
+      if (typeof s.answer === "string") s.answer = cleanFloatNoise(s.answer);
+      if (s.accept) s.accept = s.accept.map(cleanFloatNoise);
+      // Revealed answers shouldn't read "1x + 6" / "-1e^(-3x)" / "Ae^(1t)",
+      // and a learner typing the natural "-e^(-3x)" must be accepted. Show the
+      // clean form; keep the original as an accept so nothing that passed
+      // before stops passing. (Menu words never contain "1<letter>".)
+      if (typeof s.answer === "string" && !s.answer.includes("$")) {
+        const clean = s.answer.replace(ANSWER_UNIT_COEF_RE, "");
+        if (clean !== s.answer && clean.trim() !== "") {
+          s.accept = [...(s.accept || []), s.answer];
+          s.answer = clean;
+        }
+      }
     }
   }
   return p;

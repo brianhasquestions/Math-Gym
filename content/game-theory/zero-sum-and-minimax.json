@@ -18,7 +18,7 @@
     {
       "id": "saddle-points",
       "label": "Saddle points and the value of a game",
-      "microLesson": "When maximin EQUALS minimax, the shared number is the **value** of the game and the cell that achieves it is a **saddle point** — simultaneously the smallest entry in its row and the largest in its column. At a saddle, pure strategies suffice: neither player can improve by deviating alone, so it is a Nash equilibrium in pure strategies. Micro-example: in $\\begin{smallmatrix} 5 & 8 \\\\ 1 & 3 \\end{smallmatrix}$, maximin $= \\min(5,8)=5$ matches minimax $=\\min(5,3)... $ wait — row mins are $5,1$ so maximin $=5$; column maxes are $5,8$ so minimax $=5$: the $(1,1)$ cell with value $5$ is the saddle. If maximin $<$ minimax there is NO pure saddle and the players must randomize."
+      "microLesson": "When maximin EQUALS minimax, the shared number is the **value** of the game and the cell that achieves it is a **saddle point** — simultaneously the smallest entry in its row and the largest in its column. At a saddle, pure strategies suffice: neither player can improve by deviating alone, so it is a Nash equilibrium in pure strategies. Micro-example: in $\\begin{smallmatrix} 5 & 8 \\\\ 1 & 3 \\end{smallmatrix}$, the row minimums are $5, 1$, so maximin $= 5$; the column maximums are $5, 8$, so minimax $= 5$: the $(1,1)$ cell with value $5$ is the saddle. If maximin $<$ minimax there is NO pure saddle and the players must randomize."
     },
     {
       "id": "mixed-value-2x2",

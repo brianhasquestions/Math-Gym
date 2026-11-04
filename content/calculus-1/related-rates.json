@@ -102,7 +102,7 @@
       "concepts": ["ladder-and-distance"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "Two ships leave the same port. One sails north at 6 km/h, the other east at 8 km/h. One hour later they are 4 km north and 8 km east... actually: at the moment the north ship is 6 km out and the east ship is 8 km out, how fast is the distance between them increasing? ($x^2 + y^2 = z^2$.)",
+      "prompt": "Two ships leave the same port. One sails north at 6 km/h, the other east at 8 km/h. At the moment the north ship is 6 km out and the east ship is 8 km out, how fast is the distance between them increasing? ($x^2 + y^2 = z^2$.)",
       "steps": [
         { "instruction": "Find the current separation $z$ from $x = 8$, $y = 6$.", "answer": "10", "accept": ["z = 10", "z=10"], "hint": "$\\sqrt{8^2 + 6^2} = \\sqrt{100}$." },
         { "instruction": "Differentiate $x^2 + y^2 = z^2$ in time. Write the related-rate equation.", "answer": "2x*dx/dt + 2y*dy/dt = 2z*dz/dt", "accept": ["x*dx/dt + y*dy/dt = z*dz/dt", "2x*dx/dt+2y*dy/dt=2z*dz/dt"], "hint": "$2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 2z\\frac{dz}{dt}$." },

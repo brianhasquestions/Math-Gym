@@ -269,7 +269,7 @@
       "concepts": ["lagrange-multipliers"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "Maximize $f(x,y) = 2x + 3y$ on the constraint... actually, minimize $f(x,y) = x^2 + y^2$ subject to $3x + 4y = 25$ using Lagrange multipliers.",
+      "prompt": "Minimize $f(x,y) = x^2 + y^2$ subject to $3x + 4y = 25$ using Lagrange multipliers.",
       "steps": [
         { "instruction": "From $2x = 3\\lambda$ and $2y = 4\\lambda$, express $y$ in terms of $x$.", "answer": "y = 4x/3", "accept": ["y=4x/3", "3y=4x"], "hint": "Divide: $\\frac{2y}{2x} = \\frac{4\\lambda}{3\\lambda} = \\frac{4}{3}$." },
         { "instruction": "Substitute into $3x + 4y = 25$ and solve for $x$.", "answer": "x = 3", "accept": ["3", "x=3"], "hint": "$3x + 16x/3 = 25 \\Rightarrow 9x + 16x = 75$." },

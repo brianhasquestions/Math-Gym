@@ -94,7 +94,7 @@
       "concepts": ["finding-pure-nash"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "Each cell is (Row's payoff, Column's payoff). Find the pure-strategy Nash equilibrium.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, 4 | 1, 3 |\n| **Bottom** | 3, 1 | 2, 2 |",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Find the pure-strategy Nash equilibrium.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 4, 4 | 1, 3 |\n| **Bottom** | 3, 2 | 2, 1 |",
       "steps": [
         { "instruction": "At the equilibrium, what does Row play? Choose Top or Bottom.", "answer": "Top", "accept": [], "hint": "Find the mutual-best-response cell, then read Row's strategy." },
         { "instruction": "At the equilibrium, what does Column play? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "Read Column's strategy at that same cell." },
@@ -244,14 +244,14 @@
       "concepts": ["finding-pure-nash"],
       "difficulty": 2,
       "context": "abstract",
-      "prompt": "Each cell is (Row's payoff, Column's payoff). Find the unique pure Nash equilibrium.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 1, 1 | 4, 2 |\n| **Bottom** | 2, 4 | 3, 3 |",
+      "prompt": "Each cell is (Row's payoff, Column's payoff). Find the unique pure Nash equilibrium.\n\n| Row \\ Col | Left | Right |\n|---|---|---|\n| **Top** | 1, 1 | 4, 0 |\n| **Bottom** | 2, 4 | 3, 3 |",
       "steps": [
         { "instruction": "At the equilibrium, what does Row play? Choose Top or Bottom.", "answer": "Bottom", "accept": [], "hint": "In column Left, Row prefers Bottom (2>1)." },
         { "instruction": "At the equilibrium, what does Column play? Choose Left or Right.", "answer": "Left", "accept": [], "hint": "In row Bottom, Column prefers Left (4>3)." },
         { "instruction": "How many pure Nash equilibria are there? (Give an integer.)", "answer": "1", "accept": [], "hint": "Check all four cells." }
       ],
       "finalAnswer": { "value": "(Bottom, Left)", "unit": "" },
-      "solutionNarrative": "Row's best responses: Bottom to Left (2>1), Top to Right (4>3). Column's: Right to Top (2>1), Left to Bottom (4>3). The marks coincide only at (Bottom, Left), the unique pure Nash equilibrium at payoffs (2, 4)."
+      "solutionNarrative": "Row's best responses: Bottom to Left (2>1), Top to Right (4>3). Column's: Left to Top (1>0), Left to Bottom (4>3) — Left is dominant for Column. The marks coincide only at (Bottom, Left), the unique pure Nash equilibrium at payoffs (2, 4)."
     },
     {
       "id": "game-theory.pure-nash-equilibrium.s16",

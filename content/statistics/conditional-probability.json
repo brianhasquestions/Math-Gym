@@ -222,7 +222,7 @@
       "concepts": ["bayes-theorem"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A test's advertised '99% accuracy' is its sensitivity: $P(\\text{positive} \\mid \\text{disease}) = 0.99$. Bayes' theorem is needed because a patient wants the REVERSED conditional. Which probability does a patient actually need?",
+      "prompt": "A test's advertised '99% accuracy' is its sensitivity: $P(\\text{positive} \\mid \\text{disease}) = 0.99$, and its specificity is $P(\\text{negative} \\mid \\text{no disease}) = 0.95$. A patient who tests positive wants to know how likely they are to have the disease. Is the advertised 99% the number they need?",
       "steps": [
         { "instruction": "A test with specificity $0.95$ has what false-positive rate $P(\\text{positive} \\mid \\text{no disease}) = 1 - 0.95$? (Give a decimal.)", "answer": "0.05", "accept": ["1/20"], "hint": "Specificity is the true-negative rate; subtract from 1." },
         { "instruction": "The patient needs $P(\\text{disease} \\mid \\text{positive})$, not $P(\\text{positive} \\mid \\text{disease})$. Are these two conditionals the same quantity? Type 'yes' or 'no'.", "answer": "no", "accept": [], "hint": "Bayes reverses the conditioning; the values differ." }

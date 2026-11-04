@@ -315,6 +315,104 @@ group("markdown renderer — tables (payoff matrices, data tables)");
   ok("plain prose (no table) is untouched", !renderMarkdown("just words").includes("<table"));
 }
 
+// ---------------------------------------------------------------- 2026-11 math review regressions
+group("grader — solution sets treat a double root as one solution");
+eq("double root: bare value", checkStep({ form: "solutions", answer: "x = -4 or x = -4" }, "-4"), true);
+eq("double root: x = value", checkStep({ form: "solutions", answer: "x = -4 or x = -4" }, "x = -4"), true);
+eq("double root: wrong sign still rejected", checkStep({ form: "solutions", answer: "x = -4 or x = -4" }, "4"), false);
+eq("two roots: one root alone still rejected", checkStep({ form: "solutions", answer: "x = 2 or x = -3" }, "x = 2"), false);
+
+group("generator — display cleanup keeps meaningful 1s (81f77a6 regression)");
+{
+  const { generate, makeRng } = await imp("js/generator.js");
+  // The unit-coefficient strip once ate any "1" before a backslash, so the
+  // standard basis rendered as <0,> and data sets lost their last value.
+  const basis = generate("laf-coordinates-d1", makeRng(3), 3).prompt;
+  ok("basis vector keeps its 1 (\\langle 0,1\\rangle)", /\\langle 0,\s*1\s*\\rangle/.test(basis));
+  let dataBad = null;
+  for (let s = 1; s <= 400 && !dataBad; s++) {
+    const p = generate("stat-desc-center-d1", makeRng(s), s);
+    const m = p.prompt.match(/\\\{([^}]*)\\\}/);
+    if (!m) continue;
+    const vals = m[1].split(",").map((v) => v.trim());
+    if (vals.some((v) => v === "")) dataBad = p.prompt;
+    else {
+      const sum = vals.reduce((a, v) => a + Number(v), 0);
+      if (String(sum) !== String(p.steps[0].answer)) dataBad = `${p.prompt} -> ${p.steps[0].answer}`;
+    }
+  }
+  eq("data set shown == data set graded (400 seeds)", dataBad, null);
+  // Answers are cleaned for display too ("x^2 - 1x - 20" -> "x^2 - x - 20"),
+  // and the original spelling is still accepted.
+  let leak = null;
+  for (let s = 1; s <= 200 && !leak; s++) {
+    const p = generate("poly-foil-v1", makeRng(s), s);
+    for (const st of p.steps) if (/(?<![0-9.a-z])1x/.test(st.answer)) leak = st.answer;
+  }
+  eq("no '1x' in revealed answers (poly-foil-v1, 200 seeds)", leak, null);
+  // Float noise never reaches the learner.
+  let noise = null;
+  for (let s = 1; s <= 200 && !noise; s++) {
+    const p = generate("fm2-bond-pricing-2", makeRng(s), s);
+    const txt = [p.prompt, ...p.steps.map((x) => x.instruction + " " + (x.hint || ""))].join(" ");
+    if (/\d\.\d*(?:0{8,}[1-9]|9{8,})/.test(txt)) noise = txt.slice(0, 120);
+  }
+  eq("no float noise in fm2-bond-pricing-2 (200 seeds)", noise, null);
+}
+
+group("generator — answers recomputed independently (review P0s)");
+{
+  const { generate, makeRng } = await imp("js/generator.js");
+  // avg-value-v1: f = (3k)x^2 on [0,b] has average k*b^2 (was off by 3x).
+  let avgBad = null;
+  for (let s = 1; s <= 100 && !avgBad; s++) {
+    const p = generate("avg-value-v1", makeRng(s), s);
+    const [, c, b] = p.prompt.match(/= (\d+)x\^2\$ on \$\[0, (\d+)\]/).map(Number);
+    if (Number(p.steps[0].answer) !== (c / 3) * b * b) avgBad = `${p.prompt} -> ${p.steps[0].answer}`;
+  }
+  eq("avg-value-v1 = k b^2 (100 seeds)", avgBad, null);
+  // laf-span-membership-d2 asks for BOTH weights; the pair must grade.
+  const span = generate("laf-span-membership-d2", makeRng(1), 1).steps[0];
+  const [c1, c2] = span.answer.split(",").map((v) => v.trim());
+  ok("span weights: full pair accepted", checkStep(span, `${c1}, ${c2}`) && checkStep(span, `c1 = ${c1}, c2 = ${c2}`));
+  ok("span weights: c1 alone rejected", !checkStep(span, c1));
+  // nt1-general-3: the reported (x, y) must satisfy the stated equation.
+  let dioBad = null;
+  for (let s = 1; s <= 200 && !dioBad; s++) {
+    const p = generate("nt1-general-3", makeRng(s), s);
+    const [, a, b, c] = p.prompt.match(/\$(\d+)x \+ (\d+)y = (\d+)\$/).map(Number);
+    const x = Number(p.steps[0].answer), y = Number(p.steps[p.steps.length - 1].answer);
+    if (a * x + b * y !== c) dioBad = `${a}x+${b}y=${c} with (${x}, ${y})`;
+  }
+  eq("nt1-general-3 solutions satisfy the equation (200 seeds)", dioBad, null);
+  // de-classify-roots-v1: label must match the discriminant's sign.
+  let rootsBad = null;
+  for (let s = 1; s <= 300 && !rootsBad; s++) {
+    const p = generate("de-classify-roots-v1", makeRng(s), s);
+    const D = Number(p.steps[0].hint.match(/= (-?\d+)/)[1]);
+    const want = D > 0 ? "real distinct" : D === 0 ? "repeated" : "complex";
+    if (p.steps[0].answer !== want) rootsBad = `${p.prompt} D=${D} -> ${p.steps[0].answer}`;
+  }
+  eq("de-classify-roots-v1 label matches discriminant (300 seeds)", rootsBad, null);
+}
+
+group("markdown renderer — review regressions");
+{
+  const mod = { exports: {} };
+  const { readFileSync } = await import("node:fs");
+  new Function("module", "exports", readFileSync(path.join(REPO, "vendor/katex/katex.min.js"), "utf8"))(mod, mod.exports);
+  const prevKatex = globalThis.katex;
+  globalThis.katex = mod.exports.default || mod.exports;
+  const noSep = renderMarkdown("Payoffs:\n\n| | Left | Right |\n| Up | 3 | -1 |\n| Down | -2 | 4 |");
+  ok("pipe table without a |---| separator still renders as a table", noSep.includes("<table") && (noSep.match(/<td>/g) || []).length === 6);
+  const cur = renderMarkdown("Each costs $9.00 \\div 12 = \\$0.75$ per unit.");
+  ok("escaped \\$ inside math does not close the span",
+    !cur.includes("katex-error") && (cur.match(/class="katex"/g) || []).length === 1 && /per unit\.<\/p>$/.test(cur));
+  const inlineDisplay = renderMarkdown("$$a^2 + b^2$$ (note the plus sign)");
+  ok("$$…$$ followed by prose on one line renders cleanly", !inlineDisplay.includes("katex-error") && inlineDisplay.includes("note the plus sign"));
+  globalThis.katex = prevKatex;
+}
+
 // ---------------------------------------------------------------- report
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -226,10 +226,10 @@
       "prompt": "A surveyor measures two fence lines of a triangular parcel: 80 m and 60 m, meeting at a corner angle of $50^\\circ$. Find the parcel's area. Round to 1 decimal place.",
       "steps": [
         { "instruction": "Set up the area formula with the two sides and the included angle.", "answer": "K = (1/2)(80)(60)sin(50)", "accept": ["K = 0.5(80)(60)sin(50)", "(1/2)(80)(60)sin(50)", "A = (1/2)(80)(60)sin(50)"], "hint": "$K = \\frac{1}{2}ab\\sin C$ with $a = 80$, $b = 60$, $C = 50^\\circ$." },
-        { "instruction": "Compute the area and round to 1 decimal place (square meters). Use $\\sin 50^\\circ \\approx 0.7660$.", "answer": "1838.5", "accept": [], "hint": "$\\frac{1}{2}(80)(60) = 2400$, and $2400(0.76604) \\approx 1838.5$." }
+        { "instruction": "Compute the area and round to 1 decimal place (square meters). Use $\\sin 50^\\circ \\approx 0.7660$.", "answer": "1838.4", "accept": ["1838.5"], "hint": "$\\frac{1}{2}(80)(60) = 2400$, and $2400(0.7660) = 1838.4$." }
       ],
-      "finalAnswer": { "value": "1838.5", "unit": "square meters" },
-      "solutionNarrative": "$K = \\frac{1}{2}(80)(60)\\sin 50^\\circ = 2400\\sin 50^\\circ \\approx 1838.5$ m² — the parcel is priced without ever measuring its height."
+      "finalAnswer": { "value": "1838.4", "unit": "square meters" },
+      "solutionNarrative": "$K = \\frac{1}{2}(80)(60)\\sin 50^\\circ = 2400\\sin 50^\\circ \\approx 2400(0.7660) = 1838.4$ m² (a calculator's full-precision sine gives 1838.5) — the parcel is priced without ever measuring its height."
     },
     {
       "id": "trigonometry.law-of-sines-and-cosines.s14",

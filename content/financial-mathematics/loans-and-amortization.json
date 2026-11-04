@@ -48,7 +48,7 @@
       "concepts": ["loan-payment"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "You borrow \\$5,000 at 6% per year and repay it with equal payments at the end of each year for 3 years. Find the annual payment with $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "You borrow \\$5,000 at 6% per year and repay it with equal payments at the end of each year for 3 years. Find the annual payment with $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Write the per-period rate $i$ as a decimal.", "answer": "0.06", "accept": [], "hint": "6% as a decimal." },
         { "instruction": "Compute $PMT = \\dfrac{5000 \\cdot 0.06}{1 - (1.06)^{-3}}$. Enter a number rounded to the nearest cent.", "answer": "1870.55", "accept": ["1870.550", "$1870.55"], "hint": "Numerator $5000 \\times 0.06 = 300$; denominator $1 - 1.06^{-3}$." }
@@ -61,7 +61,7 @@
       "concepts": ["loan-payment"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A \\$20,000 car loan is at 6% per year, compounded monthly, for 4 years. Find the monthly payment. Use $i = 6\\%/12$, $n = 12 \\times 4$, and $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$20,000 car loan is at 6% per year, compounded monthly, for 4 years. Find the monthly payment. Use $i = 6\\%/12$, $n = 12 \\times 4$, and $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Annual decimal rate over 12." },
         { "instruction": "Find the number of payments $n = 12 \\times 4$. Enter a whole number.", "answer": "48", "accept": [], "hint": "Months in 4 years." },
@@ -75,7 +75,7 @@
       "concepts": ["loan-payment"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A \\$200,000 mortgage is at 6% per year, compounded monthly, over 30 years. Find the monthly payment, then the total of all payments. Use $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$ with $i = 6\\%/12$ and $n = 12 \\times 30$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$200,000 mortgage is at 6% per year, compounded monthly, over 30 years. Find the monthly payment, then the total of all payments. Use $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$ with $i = 6\\%/12$ and $n = 12 \\times 30$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Annual decimal rate over 12." },
         { "instruction": "Compute the monthly payment $PMT = \\dfrac{200000 \\cdot 0.005}{1 - (1.005)^{-360}}$. Enter a number rounded to the nearest cent.", "answer": "1199.10", "accept": ["1199.100", "$1199.10"], "hint": "Standard mortgage formula with the monthly rate over 360 months." },
@@ -89,7 +89,7 @@
       "concepts": ["amortization-schedule"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A \\$5,000 loan at 6% per year has an annual payment of \\$1,870.55. Break the first payment into interest and principal, and find the balance after it. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$5,000 loan at 6% per year has an annual payment of \\$1,870.55. Break the first payment into interest and principal, and find the balance after it. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Interest in payment 1 is the rate times the current balance: $5000 \\cdot 0.06$. Enter a number rounded to the nearest cent.", "answer": "300.00", "accept": ["300", "300.0", "$300.00"], "hint": "Interest is charged on the outstanding balance." },
         { "instruction": "Principal in payment 1 is the payment minus the interest: $1870.55 - 300$. Enter a number rounded to the nearest cent.", "answer": "1570.55", "accept": ["1570.550", "$1570.55"], "hint": "Whatever is left of the payment reduces the balance." },
@@ -103,7 +103,7 @@
       "concepts": ["amortization-schedule"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A \\$6,000 loan at 7% per year has annual payment \\$1,463.34. Walk two rows of the amortization schedule: find the balance after payment 1, then the interest and principal of payment 2. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$6,000 loan at 7% per year has annual payment \\$1,463.34. Walk two rows of the amortization schedule: find the balance after payment 1, then the interest and principal of payment 2. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Balance after payment 1: interest $6000 \\cdot 0.07 = 420$, principal $1463.34 - 420 = 1043.34$, then $6000 - 1043.34$. Enter the new balance rounded to the nearest cent.", "answer": "4956.66", "accept": ["4956.660", "$4956.66"], "hint": "Interest \\$420, principal \\$1,043.34, balance $6000 - 1043.34$." },
         { "instruction": "Interest in payment 2 uses the NEW balance: $4956.66 \\cdot 0.07$. Enter a number rounded to the nearest cent.", "answer": "346.97", "accept": ["346.970", "$346.97"], "hint": "Interest always uses the current outstanding balance." },
@@ -117,7 +117,7 @@
       "concepts": ["amortization-schedule"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A \\$10,000 loan at 6% per year over 8 years has annual payment \\$1,610.36. Find the outstanding balance after 3 payments using $B_k = PV(1+i)^k - PMT \\cdot \\dfrac{(1+i)^k - 1}{i}$. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$10,000 loan at 6% per year over 8 years has annual payment \\$1,610.36. Find the outstanding balance after 3 payments using $B_k = PV(1+i)^k - PMT \\cdot \\dfrac{(1+i)^k - 1}{i}$. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the grown principal $10000 \\cdot (1.06)^{3}$. Enter a number rounded to the nearest cent.", "answer": "11910.16", "accept": ["11910.160", "$11910.16"], "hint": "The original balance compounded 3 periods." },
         { "instruction": "Compute the accumulated payments $1610.36 \\cdot \\dfrac{(1.06)^{3} - 1}{0.06}$. Enter a number rounded to the nearest cent.", "answer": "5126.74", "accept": ["5126.740", "$5126.74"], "hint": "Future value of the 3 payments made so far." },
@@ -131,7 +131,7 @@
       "concepts": ["total-interest-and-cost"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "A \\$4,000 loan at 8% per year is repaid with 3 annual payments of \\$1,552.13. Find the total paid and the total interest. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$4,000 loan at 8% per year is repaid with 3 annual payments of \\$1,552.13. Find the total paid and the total interest. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Total paid: $1552.13 \\times 3$. Enter a number rounded to the nearest cent.", "answer": "4656.39", "accept": ["4656.390", "$4656.39"], "hint": "Payment times number of payments." },
         { "instruction": "Total interest: total paid minus the amount borrowed, $4656.39 - 4000$. Enter a number rounded to the nearest cent.", "answer": "656.39", "accept": ["656.390", "$656.39"], "hint": "Everything above the principal is interest." }
@@ -144,7 +144,7 @@
       "concepts": ["total-interest-and-cost"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A \\$15,000 car loan at 6% per year for 4 years has a monthly payment of \\$352.28. Find the total paid over the 48 months and the total interest. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$15,000 car loan at 6% per year for 4 years has a monthly payment of \\$352.28. Find the total paid over the 48 months and the total interest. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Total paid: $352.28 \\times 48$. Enter a number rounded to the nearest cent.", "answer": "16909.44", "accept": ["16909.440", "$16909.44"], "hint": "Monthly payment times 48 months." },
         { "instruction": "Total interest: $16909.44 - 15000$. Enter a number rounded to the nearest cent.", "answer": "1909.44", "accept": ["1909.440", "$1909.44"], "hint": "Total paid minus the amount financed." }
@@ -157,7 +157,7 @@
       "concepts": ["total-interest-and-cost"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A \\$200,000 mortgage at 6% per year (monthly) can run 30 years (payment \\$1,199.10/mo) or 15 years (payment \\$1,687.71/mo). Find the total interest for each term and how much MORE the 30-year term costs. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$200,000 mortgage at 6% per year (monthly) can run 30 years (payment \\$1,199.10/mo) or 15 years (payment \\$1,687.71/mo). Find the total interest for each term and how much MORE the 30-year term costs. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "30-year total interest: $1199.10 \\times 360 - 200000$. Enter a number rounded to the nearest cent.", "answer": "231676.00", "accept": ["231676", "231676.0", "$231676.00"], "hint": "Total of the 360 payments, minus principal." },
         { "instruction": "15-year total interest: $1687.71 \\times 180 - 200000$. Enter a number rounded to the nearest cent.", "answer": "103787.80", "accept": ["103787.800", "$103787.80"], "hint": "Total of the 180 payments, minus principal." },
@@ -171,7 +171,7 @@
       "concepts": ["extra-payments-and-comparison"],
       "difficulty": 1,
       "context": "applied",
-      "prompt": "On a \\$6,000 loan at 6% per year the required annual payment is \\$1,424.38. Find the interest in the first payment, then decide the effect of paying extra. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "On a \\$6,000 loan at 6% per year the required annual payment is \\$1,424.38. Find the interest in the first payment, then decide the effect of paying extra. Enter money as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Interest in payment 1: $6000 \\cdot 0.06$. Enter a number rounded to the nearest cent.", "answer": "360.00", "accept": ["360", "360.0", "$360.00"], "hint": "Rate times the starting balance." },
         { "instruction": "Every extra dollar goes straight to principal. Does paying extra make the loan finish sooner or later? Answer 'sooner' or 'later'.", "answer": "sooner", "accept": ["earlier", "faster", "shorter"], "hint": "More principal paid now means less balance to charge interest on later." }
@@ -184,7 +184,7 @@
       "concepts": ["loan-payment"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "Evaluate $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$ for $PV = 10000$, $i = 0.05$, $n = 4$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "Evaluate $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$ for $PV = 10000$, $i = 0.05$, $n = 4$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Compute the numerator $10000 \\cdot 0.05$. Enter a number.", "answer": "500", "accept": ["500.0", "500.00"], "hint": "Present value times the rate." },
         { "instruction": "Compute $PMT = \\dfrac{500}{1 - (1.05)^{-4}}$. Enter a number rounded to the nearest cent.", "answer": "2820.12", "accept": ["2820.120", "$2820.12"], "hint": "Divide 500 by $1 - 1.05^{-4}$." }
@@ -197,7 +197,7 @@
       "concepts": ["amortization-schedule"],
       "difficulty": 2,
       "context": "abstract",
-      "prompt": "An \\$8,000 loan at 6% per year has annual payment \\$1,899.17. Split the first payment into interest and principal, and give the balance after it. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "An \\$8,000 loan at 6% per year has annual payment \\$1,899.17. Split the first payment into interest and principal, and give the balance after it. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Interest in payment 1: $8000 \\cdot 0.06$. Enter a number rounded to the nearest cent.", "answer": "480.00", "accept": ["480", "480.0", "$480.00"], "hint": "Rate times balance." },
         { "instruction": "Principal in payment 1: $1899.17 - 480$. Enter a number rounded to the nearest cent.", "answer": "1419.17", "accept": ["1419.170", "$1419.17"], "hint": "Payment minus interest." },
@@ -211,7 +211,7 @@
       "concepts": ["total-interest-and-cost"],
       "difficulty": 1,
       "context": "abstract",
-      "prompt": "A \\$3,000 loan at 7% per year is repaid with 4 annual payments of \\$885.68. Find the total paid and the total interest. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$3,000 loan at 7% per year is repaid with 4 annual payments of \\$885.68. Find the total paid and the total interest. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Total paid: $885.68 \\times 4$. Enter a number rounded to the nearest cent.", "answer": "3542.72", "accept": ["3542.720", "$3542.72"], "hint": "Payment times 4." },
         { "instruction": "Total interest: $3542.72 - 3000$. Enter a number rounded to the nearest cent.", "answer": "542.72", "accept": ["542.720", "$542.72"], "hint": "Total minus principal." }
@@ -224,7 +224,7 @@
       "concepts": ["extra-payments-and-comparison"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "An \\$8,000 loan at 6% per year has annual payment \\$1,626.90. In year 1 you add an EXTRA \\$500 to principal. Find the balance after payment 1 without the extra, the balance WITH the extra, and how much interest that saves in year 2. Enter each as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "An \\$8,000 loan at 6% per year has annual payment \\$1,626.90. In year 1 you add an EXTRA \\$500 to principal. Find the balance after payment 1 without the extra, the balance WITH the extra, and how much interest that saves in year 2. Enter each as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Balance after the normal payment 1 (interest \\$480, principal \\$1,146.90): $8000 - 1146.90$. Enter a number rounded to the nearest cent.", "answer": "6853.10", "accept": ["6853.100", "$6853.10"], "hint": "Starting balance minus the principal portion." },
         { "instruction": "Balance WITH the extra \\$500: subtract it too. Enter a number rounded to the nearest cent.", "answer": "6353.10", "accept": ["6353.100", "$6353.10"], "hint": "$6853.10 - 500$." },
@@ -238,7 +238,7 @@
       "concepts": ["loan-payment"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A \\$12,000 student loan is at 6% per year, compounded monthly, for 5 years. Find the monthly payment with $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$, $i = 6\\%/12$, $n = 12 \\times 5$. Enter as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$12,000 student loan is at 6% per year, compounded monthly, for 5 years. Find the monthly payment with $PMT = \\dfrac{PV \\cdot i}{1 - (1+i)^{-n}}$, $i = 6\\%/12$, $n = 12 \\times 5$. Enter as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "Find the monthly rate $i = 0.06/12$. Enter as a decimal.", "answer": "0.005", "accept": ["0.06/12"], "hint": "Annual rate over 12." },
         { "instruction": "Find the number of payments $n = 12 \\times 5$. Enter a whole number.", "answer": "60", "accept": [], "hint": "Months in 5 years." },
@@ -252,7 +252,7 @@
       "concepts": ["extra-payments-and-comparison"],
       "difficulty": 2,
       "context": "applied",
-      "prompt": "A \\$12,000 loan at 6% per year (monthly) can run 3 years (payment \\$365.06/mo) or 6 years (payment \\$198.87/mo). Find how much lower the longer-term monthly payment is, then decide which term a borrower who wants the smallest monthly payment should choose. Enter money as a number rounded to the nearest cent, no $ or commas.",
+      "prompt": "A \\$12,000 loan at 6% per year (monthly) can run 3 years (payment \\$365.06/mo) or 6 years (payment \\$198.87/mo). Find how much lower the longer-term monthly payment is, then decide which term a borrower who wants the smallest monthly payment should choose. Enter money as a number rounded to the nearest cent, no \\$ or commas.",
       "steps": [
         { "instruction": "How much smaller is the 6-year monthly payment? $365.06 - 198.87$. Enter a number rounded to the nearest cent.", "answer": "166.19", "accept": ["166.190", "$166.19"], "hint": "Shorter-term payment minus longer-term payment." },
         { "instruction": "For the smallest monthly payment, which term should the borrower pick — the shorter or the longer? Answer 'the shorter term' or 'the longer term'.", "answer": "the longer term", "accept": ["longer term", "longer", "the longer one"], "hint": "Spreading the loan over more payments lowers each one." }

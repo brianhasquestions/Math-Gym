@@ -275,7 +275,7 @@ fill["as4-anova-decide-1"] = (rng, idx) => {
       { instruction: `Decision: type 'reject' or 'fail to reject'.`, answer: reject ? "reject" : "fail to reject", accept: reject ? ["reject the null"] : ["do not reject", "fail"], hint: `Beyond the critical value means significant.` },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$F = ${c.F}$ ${reject ? ">" : "\\le"} ${crit.fstarS}$, so we ${reject ? "reject $H_0$: at least one group mean differs" : "fail to reject $H_0$: the group differences are within noise"}.`,
+    solutionNarrative: `$F = ${c.F} ${reject ? ">" : "\\le"} ${crit.fstarS}$, so we ${reject ? "reject $H_0$: at least one group mean differs" : "fail to reject $H_0$: the group differences are within noise"}.`,
   };
 };
 fill["as4-anova-decide-2"] = (rng, idx) => {
@@ -295,7 +295,7 @@ fill["as4-anova-decide-2"] = (rng, idx) => {
       { instruction: interp.q, answer: interp.a, accept: [], hint: interp.h },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$F = ${c.F}$ ${reject ? ">" : "\\le"} F^* = ${crit.fstarS}$: ${reject ? "reject $H_0$. But rejection says only that at least one mean differs — not that every pair does" : "fail to reject $H_0$. That is a shrug, not a proof that the means are equal"}.`,
+    solutionNarrative: `$F = ${c.F} ${reject ? ">" : "\\le"} F^* = ${crit.fstarS}$: ${reject ? "reject $H_0$. But rejection says only that at least one mean differs — not that every pair does" : "fail to reject $H_0$. That is a shrug, not a proof that the means are equal"}.`,
   };
 };
 fill["as4-anova-decide-3"] = (rng, idx) => {
@@ -485,7 +485,7 @@ fill["as4-reg-slope-3"] = (rng, idx) => {
       { instruction: interp.q, answer: interp.a, accept: [], hint: interp.h },
     ],
     finalAnswer: { value: reject ? "reject" : "fail to reject", unit: "" },
-    solutionNarrative: `$t = ${t}$, $|t| = ${absT}$ ${reject ? ">" : "\\le"} ${conf.t}$: ${reject ? "reject $H_0$ — the data support a genuine linear relationship between the variables" : "fail to reject $H_0$ — but that does not prove the slope is zero, only that this sample could not distinguish it from zero"}.`,
+    solutionNarrative: `$t = ${t}$, $|t| = ${absT} ${reject ? ">" : "\\le"} ${conf.t}$: ${reject ? "reject $H_0$ — the data support a genuine linear relationship between the variables" : "fail to reject $H_0$ — but that does not prove the slope is zero, only that this sample could not distinguish it from zero"}.`,
   };
 };
 

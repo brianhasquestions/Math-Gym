@@ -213,13 +213,13 @@
       "concepts": ["operations-applied", "matrix-addition"],
       "difficulty": 3,
       "context": "applied",
-      "prompt": "A player's stats (rows: points, rebounds) over two games are $\\begin{bmatrix} 20 \\\\ 8 \\end{bmatrix}$ and $\\begin{bmatrix} 16 \\\\ 12 \\end{bmatrix}$. A teammate's totals over the same two games are $\\begin{bmatrix} 30 \\\\ 14 \\end{bmatrix}$. By how much do the first player's two-game totals trail the teammate's, stat by stat?",
+      "prompt": "A player's stats (rows: points, rebounds) over two games are $\\begin{bmatrix} 20 \\\\ 8 \\end{bmatrix}$ and $\\begin{bmatrix} 16 \\\\ 12 \\end{bmatrix}$. A teammate's totals over the same two games are $\\begin{bmatrix} 30 \\\\ 14 \\end{bmatrix}$. Compute the gap, teammate minus first player, stat by stat.",
       "steps": [
         { "instruction": "First find the first player's two-game total by adding their two game columns. Give it as [[a], [b]].", "answer": "[[36], [20]]", "accept": [], "hint": "Points: $20 + 16$. Rebounds: $8 + 12$." },
-        { "instruction": "Now subtract the first player's total from the teammate's total to get the gap. Give it as [[a], [b]].", "answer": "[[-6], [6]]", "accept": [], "hint": "Teammate minus player: $30 - 36$ and $14 - 20$." }
+        { "instruction": "Now subtract the first player's total from the teammate's total to get the gap. Give it as [[a], [b]].", "answer": "[[-6], [-6]]", "accept": [], "hint": "Teammate minus player: $30 - 36$ and $14 - 20$." }
       ],
-      "finalAnswer": { "value": "[[-6], [6]]", "unit": "" },
-      "solutionNarrative": "The first player's totals are $\\begin{bmatrix} 36 \\\\ 20 \\end{bmatrix}$. The teammate minus the player gives $\\begin{bmatrix} 30-36 \\\\ 14-20 \\end{bmatrix} = \\begin{bmatrix} -6 \\\\ 6 \\end{bmatrix}$: the player actually scored 6 more points but grabbed 6 fewer rebounds."
+      "finalAnswer": { "value": "[[-6], [-6]]", "unit": "" },
+      "solutionNarrative": "The first player's totals are $\\begin{bmatrix} 36 \\\\ 20 \\end{bmatrix}$. The teammate minus the player gives $\\begin{bmatrix} 30-36 \\\\ 14-20 \\end{bmatrix} = \\begin{bmatrix} -6 \\\\ -6 \\end{bmatrix}$: both entries are negative, so the first player is actually AHEAD by 6 points and 6 rebounds. The sign of a difference matrix tells you who leads."
     },
     {
       "id": "matrix-algebra.matrix-operations.s15",
