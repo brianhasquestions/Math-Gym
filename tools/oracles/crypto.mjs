@@ -1,6 +1,7 @@
 // Oracles for the cryptography packs that teach attacks and modes:
-// gen-crypto4-fill.js (cr4-, "How Cryptography Breaks") and
-// gen-crypto5-fill.js (cr5-, AES modes of operation).
+// gen-crypto4-fill.js (cr4-, "How Cryptography Breaks"),
+// gen-crypto5-fill.js (cr5-, AES modes of operation) and
+// gen-crypto7-fill.js (cr7-, discrete-log and RSA attacks).
 //
 // Every oracle re-reads the givens from the PROMPT and recomputes each step by
 // brute force (cipher inverses by table, ECDSA (k, d) and GCM (H, S) by
@@ -215,3 +216,158 @@ export const oracles = {
     return check(p, [m, 32 - Math.log2(servers), "yes"], ctx);
   }),
 };
+
+// ---------------------------------------------------------------- cr7
+// gen-crypto7-fill.js (cr7-, discrete-log and RSA attacks). Everything is
+// brute force: logs by trying every exponent, factors by trial division,
+// inverses by search, CRT solutions by scanning the whole range, Håstad
+// messages by trying every m. The prompt's own claims (primitive root, first
+// Fermat a works, every ciphertext wrapped, ...) are re-checked too.
+const pw = (b, e, m) => { let r = 1 % m; b = md(b, m); for (let k = 0; k < e; k++) r = (r * b) % m; return r; };
+const ord = (g, p) => { let v = g % p; for (let k = 1; k < p; k++) { if (v === 1) return k; v = (v * g) % p; } return 0; };
+const dlog = (g, h, p) => { let v = 1; for (let x = 0; x < p - 1; x++) { if (v === h) return x; v = (v * g) % p; } throw new Error(`${h} is not a power of ${g} mod ${p}`); };
+const trialFactor = (n) => { for (let d = 2; d * d <= n; d++) if (n % d === 0) return [d, n / d]; return [n, 1]; };
+const bigPrime = (n) => { let best = 1; for (let d = 2; d <= n; d++) if (n % d === 0 && isPrime(d)) best = d; return best; };
+const cube = (n) => { for (let r = 0; r * r * r <= n; r++) if (r * r * r === n) return true; return false; };
+const allNum = (s, re) => [...s.matchAll(re)].map((m) => m.slice(1).map(Number));
+const cong = (P) => allNum(P, /x \\equiv (\d+) \\pmod\{(\d+)\}/g);
+const scan = (pairs, M) => { const xs = []; for (let x = 0; x < M; x++) if (pairs.every(([a, m]) => x % m === a)) xs.push(x); if (xs.length !== 1) throw new Error(`${xs.length} CRT solutions`); return xs[0]; };
+
+const bsgs7 = (tier) => guard((p, ctx) => {
+  const [g, h, P] = num(p.prompt, /Solve \$(\d+)\^x \\equiv (\d+) \\pmod\{(\d+)\}/);
+  if (!isPrime(P) || ord(g, P) !== P - 1) return `${g} is not a primitive root mod ${P}`;
+  const x = dlog(g, h, P);
+  let m = 1; while (m * m < P - 1) m++;
+  const gim = inv(pw(g, m, P), P), i = Math.floor(x / m), j = x % m;
+  if (x < m || j === 0) return `degenerate log x = ${x} for m = ${m}`;
+  if (tier === 1) return i !== 1 ? `match at i = ${i}, not 1` : check(p, [m, gim, md(h * gim, P), j, x], ctx);
+  if (tier === 2) return check(p, [m, gim, i, j, x], ctx);
+  const [bits] = num(p.prompt, /order about \$2\^\{(\d+)\}\$/);
+  return check(p, [m, gim, i, j, x, bits / 2], ctx);
+});
+
+const rho7 = (tier) => guard((p, ctx) => {
+  const [n] = num(p.prompt, /Factor \$n = (\d+)\$/), [c] = num(p.prompt, /x_k\^2 \+ (\d+) \\bmod n/);
+  const [f1, f2] = trialFactor(n);
+  if (f2 === 1 || !isPrime(f1) || !isPrime(f2)) return `${n} is not a product of two primes`;
+  const xs = [2]; for (let k = 1; k <= 20; k++) xs.push((xs[k - 1] * xs[k - 1] + c) % n);
+  const G = (i) => gcd(Math.abs(xs[2 * i] - xs[i]), n);
+  let i = 1; while (i <= 9 && G(i) === 1) i++;
+  const d = G(i);
+  if (d === 1 || d === n) return `Floyd gives gcd ${d} at i = ${i}`;
+  if (tier === 1) return i !== 2 ? `factor found at i = ${i}` : check(p, [xs[1], xs[2], 1, xs[3], xs[4], d, n / d], ctx);
+  if (tier === 2) {
+    const [a1] = num(p.prompt, /\$x_1 = (\d+)\$/), [a2] = num(p.prompt, /\$x_2 = (\d+)\$/);
+    if (a1 !== xs[1] || a2 !== xs[2]) return "prompt's x_1, x_2 are wrong";
+    return i !== 3 ? `factor found at i = ${i}` : check(p, [xs[3], xs[4], 1, xs[5], xs[6], d, n / d], ctx);
+  }
+  for (const [k, v] of allNum(p.prompt, /\$x_\{(\d+)\} = (\d+)\$/g)) if (xs[k] !== v) return `prompt's x_${k} = ${v}, really ${xs[k]}`;
+  const [bits] = num(p.prompt, /order about \$2\^\{(\d+)\}\$/);
+  return check(p, [i, d, n / d, bits / 2, "no"], ctx);
+});
+
+const ph7 = (tier) => guard((p, ctx) => {
+  const P = p.prompt;
+  if (tier === 3) {
+    const [p1] = num(P, /the first is \$p_1 = (\d+)\$/), [p2] = num(P, /the second is \$p_2 = (\d+)\$/);
+    const [g] = num(P, /primitive root \$g = (\d+)\$/), [h, ps] = num(P, /\\equiv (\d+) \\pmod\{(\d+)\}/);
+    const b1 = bigPrime(p1 - 1), b2 = bigPrime(p2 - 1), safe = b1 > b2 ? p1 : p2;
+    if (b1 === b2 || safe !== ps || 2 * bigPrime(ps - 1) + 1 !== ps) return "the named prime is not the safe one";
+    if (ord(g, ps) !== ps - 1) return `${g} is not a primitive root mod ${ps}`;
+    return check(p, [b1, b2, safe === p1 ? "first" : "second", pw(h, (ps - 1) / 2, ps), dlog(g, h, ps) % 2], ctx);
+  }
+  const [pp] = num(P, /\$p = (\d+)\$/), [g] = num(P, /primitive root \$g = (\d+)\$/), [h] = num(P, /\\equiv (\d+) \\pmod/);
+  if (ord(g, pp) !== pp - 1) return `${g} is not a primitive root mod ${pp}`;
+  const x = dlog(g, h, pp);
+  if (x < 2) return `trivial log ${x}`;
+  if (tier === 1) {
+    const [q] = num(P, /power \$\(p - 1\)\/(\d+)\$/), e = (pp - 1) / q;
+    if (!isPrime(q) || !Number.isInteger(e) || x % q === 0) return `bad subgroup q = ${q} (x = ${x})`;
+    return check(p, [e, pw(g, e, pp), pw(h, e, pp), x % q], ctx);
+  }
+  const qs = []; for (let q = 2; q < pp; q++) if ((pp - 1) % q === 0 && isPrime(q)) qs.push(q);
+  return check(p, [...qs.map((q) => x % q), x], ctx);
+});
+
+const crt7 = (tier) => guard((p, ctx) => {
+  if (tier === 3) {
+    const pairs = allNum(p.prompt, /groups of (\d+) leave (\d+) over/g).map(([m, a]) => [a, m]);
+    const ms = pairs.map(([, m]) => m), M = ms.reduce((a, b) => a * b, 1);
+    const [cap] = num(p.prompt, /fewer than (\d+) /);
+    if (cap !== M) return `cap ${cap} is not M = ${M}`;
+    return check(p, [M, ...ms.map((m) => inv(M / m, m)), scan(pairs, M)], ctx);
+  }
+  const C = cong(p.prompt);
+  if (tier === 1) {
+    const [[a1, m1], [a2, m2]] = C, x = scan(C, m1 * m2);
+    if (x === a1 || x === a2) return `x = ${x} repeats a residue`;
+    return check(p, [inv(m1, m2), (x - a1) / m1, x], ctx);
+  }
+  const [[a1, m1], [, m2], [, m3]] = C, x12 = scan(C.slice(0, 2), m1 * m2), x = scan(C, m1 * m2 * m3);
+  if (x12 === a1) return "first combination is trivial";
+  return check(p, [x12, inv(m1 * m2, m3), (x - x12) / (m1 * m2), x], ctx);
+});
+
+const rcrt7 = (tier) => guard((p, ctx) => {
+  const P = p.prompt;
+  if (tier === 3) {
+    const [n] = num(P, /\$n = (\d+)\$/), [e] = num(P, /\$e = (\d+)\$/), [m] = num(P, /message \$m = (\d+)\$/), [sf] = num(P, /s' = (\d+)\$/);
+    const v = pw(sf, e, n), D = md(v - m, n), g = gcd(D, n);
+    if (g === 1 || g === n || !isPrime(g) || !isPrime(n / g)) return `gcd ${g} does not split ${n}`;
+    return check(p, [v, D, g, n / g, "yes"], ctx);
+  }
+  const [pp] = num(P, /\$p = (\d+)\$/), [q] = num(P, /\$q = (\d+)\$/), [c] = num(P, /Decrypt \$c = (\d+)\$/);
+  if (tier === 1) {
+    const [d] = num(P, /\$d = (\d+)\$/), dp = d % (pp - 1), dq = d % (q - 1), m = pw(c, d, pp * q);
+    if (pw(c, dp, pp) !== m % pp || pw(c, dq, q) !== m % q) return "CRT halves disagree with c^d mod n";
+    return check(p, [dp, dq, m % pp, m % q], ctx);
+  }
+  const [n] = num(P, /\$n = (\d+)\$/), [e] = num(P, /\$e = (\d+)\$/), [dp] = num(P, /\$d_p = (\d+)\$/), [dq] = num(P, /\$d_q = (\d+)\$/);
+  const ms = []; for (let m = 0; m < n; m++) if (pw(m, e, n) === c) ms.push(m);
+  if (ms.length !== 1 || n !== pp * q) return `${ms.length} plaintexts encrypt to c`;
+  const m = ms[0];
+  if (pw(c, dp, pp) !== m % pp || pw(c, dq, q) !== m % q) return "d_p or d_q is wrong";
+  return check(p, [m % pp, m % q, inv(q, pp), (m - (m % q)) / q, m], ctx);
+});
+
+const hastad7 = (tier) => guard((p, ctx) => {
+  const pairs = allNum(p.prompt, /\$n_(\d) = (\d+)\$, \$c_\d = (\d+)\$/g).map(([, n, c]) => [n, c]);
+  const ns = pairs.map(([n]) => n), ms = [];
+  for (let m = 2; m < Math.min(...ns); m++) if (pairs.every(([n, c]) => (m * m * m) % n === c)) ms.push(m);
+  if (ms.length !== 1) return `${ms.length} messages fit the ciphertexts`;
+  const m = ms[0], m3 = m * m * m;
+  if (pairs.some(([n, c]) => m3 < n || cube(c))) return "some ciphertext did not wrap";
+  if (tier === 1) {
+    const [[n1, c1], [n2]] = pairs;
+    if (m3 >= n1 * n2) return "m^3 exceeds n1 n2";
+    return check(p, [inv(n1, n2), (m3 - c1) / n1, m3, m], ctx);
+  }
+  const n12 = ns[0] * ns[1], x12 = m3 % n12;
+  if (m3 < Math.max(ns[0] * ns[1], ns[0] * ns[2], ns[1] * ns[2])) return "two ciphertexts would suffice";
+  if (tier === 2) return check(p, [x12, cube(x12) ? "yes" : "no", m3, m], ctx);
+  const [E] = num(p.steps.map((s) => s.instruction).join(" "), /when \$e = (\d+)\$\?/);
+  return check(p, [x12, m3, m, E, "no"], ctx);
+});
+
+const fermat7 = (tier) => guard((p, ctx) => {
+  const [n] = num(p.prompt, /\$n = (\d+)\$/), [pp, q] = trialFactor(n);
+  if (q === 1 || !isPrime(pp) || !isPrime(q)) return `${n} is not a product of two primes`;
+  let a0 = 1; while (a0 * a0 < n) a0++;
+  let a = a0; while (!Number.isInteger(Math.sqrt(a * a - n))) a++;
+  const b = Math.sqrt(a * a - n);
+  if (a - b !== pp || a + b !== q) return "Fermat's first square does not give the factors";
+  if (tier === 1) return a !== a0 ? "the first a does not work" : check(p, [a0, a0 * a0 - n, b, pp, q], ctx);
+  if (tier === 2) return a === a0 ? "the first a already works" : check(p, [a0, a, b, pp, q], ctx);
+  const [e] = num(p.prompt, /\$e = (\d+)\$/), phi = (pp - 1) * (q - 1);
+  return check(p, [a, pp, q, phi, inv(e, phi)], ctx);
+});
+
+Object.assign(oracles, {
+  "cr7-bsgs-d1": bsgs7(1), "cr7-bsgs-d2": bsgs7(2), "cr7-bsgs-d3": bsgs7(3),
+  "cr7-rho-d1": rho7(1), "cr7-rho-d2": rho7(2), "cr7-rho-d3": rho7(3),
+  "cr7-ph-d1": ph7(1), "cr7-ph-d2": ph7(2), "cr7-ph-d3": ph7(3),
+  "cr7-crt-d1": crt7(1), "cr7-crt-d2": crt7(2), "cr7-crt-d3": crt7(3),
+  "cr7-rcrt-d1": rcrt7(1), "cr7-rcrt-d2": rcrt7(2), "cr7-rcrt-d3": rcrt7(3),
+  "cr7-hastad-d1": hastad7(1), "cr7-hastad-d2": hastad7(2), "cr7-hastad-d3": hastad7(3),
+  "cr7-fermat-d1": fermat7(1), "cr7-fermat-d2": fermat7(2), "cr7-fermat-d3": fermat7(3),
+});

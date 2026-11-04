@@ -1,0 +1,465 @@
+{
+  "id": "cryptography.discrete-log-and-rsa-attacks",
+  "subject": "cryptography",
+  "title": "Discrete-Log and RSA Attacks: BSGS to Håstad",
+  "prerequisites": ["cryptography.modular-exponentiation", "cryptography.rsa", "cryptography.crypto-weaknesses"],
+  "estimatedMinutes": 75,
+  "keyConcepts": [
+    {
+      "id": "chinese-remainder",
+      "label": "The Chinese Remainder Theorem",
+      "microLesson": "For pairwise coprime moduli $m_1, \\dots, m_k$ with product $M$, the system $x \\equiv a_i \\pmod{m_i}$ has exactly one solution mod $M$. Lift: write $x = a_1 + m_1 t$ and solve the next congruence for $t$ with one modular inverse. Formula: $x = \\sum a_i M_i y_i \\bmod M$ with $M_i = M/m_i$ and $y_i = M_i^{-1} \\bmod m_i$. Non-coprime moduli can have no solution."
+    },
+    {
+      "id": "rsa-crt",
+      "label": "RSA-CRT decryption and the fault attack",
+      "microLesson": "With $d_p = d \\bmod (p-1)$ and $d_q = d \\bmod (q-1)$, compute $m_p = c^{d_p} \\bmod p$ and $m_q = c^{d_q} \\bmod q$, then Garner: $h = q^{-1}(m_p - m_q) \\bmod p$ and $m = m_q + hq$. About three to four times faster than $c^d \\bmod n$. If a fault spoils one half of a CRT signature $s'$, then $\\gcd(s'^{\\,e} - m, n)$ is a prime factor of $n$, so implementations verify signatures before release."
+    },
+    {
+      "id": "hastad-broadcast",
+      "label": "Håstad's broadcast attack on e = 3",
+      "microLesson": "If textbook RSA with $e = 3$ sends one message $m$ to three coprime moduli, CRT on $c_i = m^3 \\bmod n_i$ gives $C \\equiv m^3 \\pmod{n_1 n_2 n_3}$, and since $m < n_i$, $C = m^3$ exactly, so $m = \\sqrt[3]{C}$ with no factoring. In general about $e$ ciphertexts are needed. Randomized padding (OAEP) defeats it; fixed known padding does not."
+    },
+    {
+      "id": "fermat-factoring",
+      "label": "Fermat factoring for close primes",
+      "microLesson": "$n = pq = a^2 - b^2$ with $a = (p+q)/2$, $b = (q-p)/2$. Start at $a = \\lceil \\sqrt n \\rceil$ and step up until $a^2 - n$ is a perfect square $b^2$; then $p = a - b$, $q = a + b$. The tries grow like $(q-p)^2 / (8\\sqrt n)$: instant for close primes (CVE-2022-26320), hopeless for independent random ones."
+    },
+    {
+      "id": "baby-step-giant-step",
+      "label": "Baby-step giant-step",
+      "microLesson": "Solve $g^x \\equiv h$ by writing $x = im + j$ with $m = \\lceil \\sqrt{n} \\rceil$ for a group of order $n$. Store baby steps $g^j$ ($0 \\le j < m$), then walk giant steps $h \\cdot (g^{-m})^i$ until one is in the table: $x = im + j$. About $\\sqrt n$ time and $\\sqrt n$ memory, and no generic algorithm beats the square root, so a $2^{256}$-order group costs about $2^{128}$."
+    },
+    {
+      "id": "pollard-rho",
+      "label": "Pollard rho: collisions in a random walk",
+      "microLesson": "Iterate $x_{k+1} = x_k^2 + c \\bmod n$. Mod a hidden prime $p \\mid n$ the walk repeats after about $\\sqrt p$ steps; Floyd's tortoise $x_i$ and hare $x_{2i}$ detect it, and $\\gcd(|x_{2i} - x_i|, n)$ reveals $p$. For discrete logs, rho walks over $g^a h^b$ until a collision gives a linear equation for $x$: about $1.25\\sqrt n$ steps with almost no memory. It is the attack that sizes elliptic curves."
+    },
+    {
+      "id": "pohlig-hellman",
+      "label": "Pohlig–Hellman and safe primes",
+      "microLesson": "For each prime $q$ dividing the group order $n$, $h^{n/q} = (g^{n/q})^x$ lives in a subgroup of order $q$ and reveals $x \\bmod q$ in about $\\sqrt q$ steps; CRT combines the residues. So a discrete log is only as hard as the largest prime factor of the group order. Safe primes $p = 2q + 1$ (and large prime-order subgroups) leave only a huge prime $q$ to attack."
+    }
+  ],
+  "lecture": {
+    "format": "markdown+latex",
+    "body": "## What \"hard\" actually means\n\nTwo earlier topics leaned on a claim of hardness. In **Modular Exponentiation and Fermat–Euler**, Diffie–Hellman was safe because recovering $x$ from $g^x \\bmod p$, the **discrete logarithm**, is hard. In **RSA**, the private key was safe because factoring $n = pq$ is hard. **How Cryptography Breaks** then showed attacks that dodge the math entirely. This topic goes the other way: it attacks the math head on, with the algorithms cryptanalysts really use, so you can see what \"hard\" means and exactly when it stops being true.\n\nThe honest summary, which the rest of the lesson fills in:\n\n| Problem | Best known classical attack | Cost with well-chosen parameters |\n|---|---|---|\n| Discrete log in a prime-order elliptic-curve group of size about $2^{256}$ | Pollard rho (generic) | about $2^{128}$ steps |\n| Discrete log mod a 2048-bit prime | Pohlig–Hellman, then the number field sieve | sub-exponential, far out of reach (about 112-bit security) |\n| Factoring a 2048-bit RSA modulus | general number field sieve | sub-exponential, far out of reach (about 112-bit security) |\n\nNone of these rows says \"no attack exists\". Each says the best known attack costs an astronomical amount **provided the parameters dodge the shortcuts in this topic**: a group order with only small prime factors, primes $p$ and $q$ that sit too close together, unpadded RSA sent to several people, or a CRT computation that faults. For scale, the public records for the general methods are a 795-bit prime-field discrete log (2019) and the 829-bit RSA-250 (2020).\n\nEvery example below is toy-sized so you can run it by hand.\n\n## The Chinese Remainder Theorem\n\nMost of these attacks rest on one ancient fact, first written down by Sunzi in China.\n\n**Chinese Remainder Theorem (CRT).** If $m_1, \\dots, m_k$ are pairwise coprime and $M = m_1 m_2 \\cdots m_k$, then for any remainders $a_1, \\dots, a_k$ the system $x \\equiv a_i \\pmod{m_i}$ has **exactly one** solution with $0 \\le x < M$.\n\nSo a number mod $M$ carries exactly the same information as its list of remainders mod each $m_i$. There are two standard ways to rebuild it.\n\n**Lift, two at a time.** Solve $x \\equiv 2 \\pmod 3$, $x \\equiv 3 \\pmod 5$, $x \\equiv 2 \\pmod 7$. Every solution of the first has the form $x = 2 + 3t$. Plug into the second: $2 + 3t \\equiv 3 \\pmod 5$, so $3t \\equiv 1$, and $3^{-1} \\equiv 2 \\pmod 5$ gives $t \\equiv 2$, so $x \\equiv 8 \\pmod{15}$. Now $x = 8 + 15s$ and $8 + 15s \\equiv 2 \\pmod 7$; since $8 \\equiv 1$ and $15 \\equiv 1 \\pmod 7$, this is $1 + s \\equiv 2$, so $s = 1$ and $x = 23$.\n\n**Formula, all at once.** Let $M_i = M / m_i$ and $y_i = M_i^{-1} \\bmod m_i$. Then\n\n$$x = \\sum_i a_i M_i y_i \\bmod M.$$\n\nEach term is $\\equiv a_i$ modulo its own $m_i$ (because $M_i y_i \\equiv 1$) and $\\equiv 0$ modulo every other $m_j$ (because $M_i$ contains $m_j$).\n\nBoth methods need modular inverses, which the extended Euclidean algorithm from **GCD, Primes, and the Euclidean Algorithm** supplies, and both need the moduli to be coprime. Without that the theorem fails: $x \\equiv 1 \\pmod 4$ says $x$ is odd and $x \\equiv 2 \\pmod 6$ says $x$ is even, so there is no solution at all.\n\n## RSA-CRT: decrypting three to four times faster\n\nThe **RSA** topic proved that decryption works by checking the identity mod $p$ and mod $q$ separately and gluing with CRT. Real implementations do the same thing for speed. The private key stores $p$, $q$, $d_p = d \\bmod (p - 1)$, $d_q = d \\bmod (q - 1)$ and $q_{\\text{inv}} = q^{-1} \\bmod p$, and decryption is\n\n$$m_p = c^{d_p} \\bmod p, \\qquad m_q = c^{d_q} \\bmod q, \\qquad h = q_{\\text{inv}}(m_p - m_q) \\bmod p, \\qquad m = m_q + hq.$$\n\nReducing $d$ is legal because of Fermat's little theorem: mod $p$, exponents only matter mod $p - 1$. The last two formulas are Garner's version of the CRT lift: $m_q + hq$ is automatically right mod $q$, and $h$ makes it right mod $p$. Each exponentiation uses half-size numbers and a half-size exponent, so the pair costs about a quarter of one full $c^d \\bmod n$; in practice RSA-CRT runs about three to four times faster.\n\n*Example.* The classic toy key $p = 61$, $q = 53$, $n = 3233$, $e = 17$, $d = 2753$, ciphertext $c = 2790$. Then $d_p = 2753 \\bmod 60 = 53$ and $d_q = 2753 \\bmod 52 = 49$. Since $2790 \\equiv 45 \\pmod{61}$ and $2790 \\equiv 34 \\pmod{53}$: $m_p = 45^{53} \\bmod 61 = 4$ and $m_q = 34^{49} \\bmod 53 = 12$. With $q_{\\text{inv}} = 53^{-1} \\bmod 61 = 38$, $h = 38 \\cdot (4 - 12) \\bmod 61 = 1$, so $m = 12 + 1 \\cdot 53 = 65$.\n\n**The fault attack.** Speed has a price. Suppose a glitch corrupts only the mod-$p$ half of a CRT **signature**. The output $s'$ is still right mod $q$ but wrong mod $p$, so $s'^{\\,e} - m$ is divisible by $q$ and not by $p$, and\n\n$$\\gcd(s'^{\\,e} - m, \\ n) = q.$$\n\nOne faulty signature factors the modulus. This is the Bellcore attack (Boneh, DeMillo and Lipton, 1997). It matters for smart cards that an attacker can glitch on purpose, and in 2015 Florian Weimer found TLS servers on the internet leaking their RSA keys this way from occasional computation faults. The defence is cheap and standard: verify every signature before releasing it.\n\n## Håstad's broadcast attack\n\n**How Cryptography Breaks** showed that textbook RSA with $e = 3$ falls to an ordinary cube root when $m^3 < n$. Making $m$ big enough to wrap does not help if the same message goes to several people. Send $m$ to three recipients with pairwise coprime moduli:\n\n$$c_i = m^3 \\bmod n_i, \\qquad i = 1, 2, 3.$$\n\nCRT combines them into the unique $C$ with $C \\equiv m^3 \\pmod{n_1 n_2 n_3}$ and $0 \\le C < n_1 n_2 n_3$. Because $m < n_i$ for every $i$, $m^3 < n_1 n_2 n_3$, so $C$ **is** $m^3$ as an ordinary integer, and an integer cube root (no modulus, no key, no factoring) returns $m$. This is Johan Håstad's broadcast attack (1985).\n\n*Example.* Moduli $n_1 = 115$, $n_2 = 187$, $n_3 = 1189$ and ciphertexts $c_1 = 28$, $c_2 = 36$, $c_3 = 370$. None of the $c_i$ is a cube. CRT on the first two gives $x_{12} = 9573$ (mod $21505$), still not a cube, because $m^3$ is bigger than $n_1 n_2$. Folding in the third gives $C = 74088$, and $\\sqrt[3]{74088} = 42$.\n\nIn general the attacker needs about $e$ ciphertexts, since the product of the moduli must exceed $m^e$. Håstad also showed that a fixed, known padding per recipient (say, appending each user's ID) does not save textbook RSA. The real fix is **randomized padding**: with OAEP, each recipient gets a differently padded number, so there is no common $m^3$ to rebuild. (The common choice $e = 65537$ also raises the number of ciphertexts needed, but padding is what makes RSA encryption safe.)\n\n## Fermat factoring: when $p$ and $q$ are too close\n\nWrite $n = pq$ with $p < q$, and let $a = (p + q)/2$ and $b = (q - p)/2$. Then\n\n$$n = a^2 - b^2 = (a - b)(a + b).$$\n\nWhen the primes are close, $b$ is small and $a$ sits just above $\\sqrt n$. So try $a = \\lceil \\sqrt n \\rceil, \\lceil \\sqrt n \\rceil + 1, \\dots$ until $a^2 - n$ is a perfect square $b^2$.\n\n*Example.* $n = 5959$ and $\\lceil \\sqrt{5959} \\rceil = 78$. Then $78^2 - 5959 = 125$ (not a square), $79^2 - 5959 = 282$ (not a square), and $80^2 - 5959 = 441 = 21^2$. So $5959 = (80 - 21)(80 + 21) = 59 \\cdot 101$.\n\nThe number of tries is roughly $(q - p)^2 / (8 \\sqrt n)$. For independently random 1024-bit primes, $q - p$ is typically about as large as the primes themselves and the method is hopeless. For primes chosen close together it finishes instantly, and that really happened: in 2022 Hanno Böck found printers whose RSA keys came from a library that searched for $q$ just after $p$, and factored them with this method (CVE-2022-26320). The FIPS 186 key-generation rules require $|p - q| > 2^{\\text{bits}/2 - 100}$ precisely to rule it out.\n\n## Baby-step giant-step: the square-root barrier\n\nTo solve $g^x \\equiv h \\pmod p$ by trying $x = 0, 1, 2, \\dots$ takes up to $p - 1$ steps. Shanks' **baby-step giant-step** (BSGS) takes about $2\\sqrt{p}$. Write $x = im + j$ with $m = \\lceil \\sqrt{p - 1} \\rceil$ and $0 \\le j < m$. Then\n\n$$g^{im + j} \\equiv h \\iff g^j \\equiv h \\cdot (g^{-m})^i.$$\n\n1. **Baby steps:** store $g^0, g^1, \\dots, g^{m-1}$ in a table.\n2. **Giant steps:** compute $\\gamma_0 = h$, $\\gamma_1 = h g^{-m}$, $\\gamma_2 = h g^{-2m}$, and so on, looking each one up in the table.\n3. At the first hit $\\gamma_i = g^j$, the answer is $x = im + j$.\n\n*Example.* Solve $5^x \\equiv 21 \\pmod{23}$, where $5$ is a primitive root mod $23$. Here $m = \\lceil \\sqrt{22} \\rceil = 5$ and the baby table is $5^0, \\dots, 5^4 \\equiv 1, 5, 2, 10, 4$. Next $5^5 \\equiv 20$ and $20^{-1} \\equiv 15 \\pmod{23}$. The giant steps are $21$, then $21 \\cdot 15 \\equiv 16$, then $16 \\cdot 15 \\equiv 10$, which is in the table as $5^3$. So $i = 2$, $j = 3$ and $x = 2 \\cdot 5 + 3 = 13$. Check: $5^{13} \\bmod 23 = 21$.\n\nFor a group of order $n$, BSGS needs about $\\sqrt n$ time **and** $\\sqrt n$ memory. Shoup proved in 1997 that no **generic** algorithm (one that only multiplies group elements and compares them) can beat that square root by more than a constant factor. For a well-chosen elliptic curve no non-generic shortcut is known, so a group of order about $2^{256}$ costs about $2^{128}$ operations. Storing a $2^{128}$-entry table is out of the question, which is the problem the next method solves.\n\n## Pollard rho: the same square root with almost no memory\n\nPollard's **rho** method takes a pseudo-random walk and waits for it to repeat.\n\nFor **factoring** $n$, iterate $x_{k+1} = x_k^2 + c \\bmod n$. Reduced mod a hidden prime $p$ that divides $n$, the walk has only $p$ possible values, so by the birthday paradox it repeats after about $\\sqrt{p}$ steps and then cycles forever. Drawn out, the tail and the loop look like the Greek letter rho. Floyd's cycle trick spots the repeat with two walkers, a tortoise at $x_i$ and a hare at $x_{2i}$: once $x_{2i} \\equiv x_i \\pmod p$, their difference is a multiple of $p$, and $\\gcd(|x_{2i} - x_i|, n)$ pulls $p$ out even though the walk mod $n$ has not repeated.\n\n```plot\n{\"type\":\"graph\",\"width\":360,\"height\":260,\"nodeRadius\":17,\"nodes\":[{\"id\":\"x0\",\"label\":\"2\",\"x\":0,\"y\":0},{\"id\":\"x1\",\"label\":\"5\",\"x\":0,\"y\":1.2},{\"id\":\"x2\",\"label\":\"26\",\"x\":1,\"y\":2.2,\"color\":\"accent\"},{\"id\":\"x3\",\"label\":\"95\",\"x\":-1,\"y\":2.2,\"color\":\"accent\"}],\"edges\":[{\"from\":\"x0\",\"to\":\"x1\",\"directed\":true},{\"from\":\"x1\",\"to\":\"x2\",\"directed\":true},{\"from\":\"x2\",\"to\":\"x3\",\"directed\":true},{\"from\":\"x3\",\"to\":\"x1\",\"directed\":true}],\"caption\":\"The walk x -> x^2 + 1 from x0 = 2, reduced mod 97: a one-step tail into a 3-cycle. That shape is the rho.\"}\n```\n\n*Example.* $n = 8051$, $c = 1$, $x_0 = 2$. The walk is $2, 5, 26, 677, 7474, 2839, 871$. Floyd: at $i = 1$, $\\gcd(26 - 5, 8051) = \\gcd(21, 8051) = 1$; at $i = 2$, $\\gcd(7474 - 26, 8051) = \\gcd(7448, 8051) = 1$; at $i = 3$, $\\gcd(871 - 677, 8051) = \\gcd(194, 8051) = 97$. So $8051 = 97 \\cdot 83$. Reduced mod $97$ the walk is $2, 5, 26, 95, 5, 26, 95$: the picture above, with $x_3 \\equiv x_6$.\n\nRho finds a prime factor $p$ in about $\\sqrt p$ steps, so it is excellent for small factors and useless against RSA, whose balanced 1024-bit primes would take about $2^{512}$ steps.\n\nFor **discrete logs**, rho walks through elements of the form $g^a h^b$, keeping track of the exponents. A collision $g^a h^b = g^{a'} h^{b'}$ means $a + bx \\equiv a' + b'x$ modulo the group order, a linear equation that usually gives $x$. The expected cost is about $\\sqrt{\\pi n / 2} \\approx 1.25 \\sqrt n$ steps for a group of order $n$, with constant memory, and the work splits cleanly across many machines. This is the attack that sets elliptic-curve key sizes: a 112-bit curve was solved this way in 2009 on a cluster of PlayStation 3 consoles, while a 256-bit curve would need about $2^{128}$ steps.\n\n## Pohlig–Hellman: a log is only as hard as the largest prime in the group order\n\nSuppose the group order is $n = q_1^{e_1} q_2^{e_2} \\cdots q_k^{e_k}$. For each prime $q$ dividing $n$, raise both sides of $g^x = h$ to the power $n / q$:\n\n$$h^{n/q} = \\left(g^{n/q}\\right)^x.$$\n\nThe element $g^{n/q}$ has order $q$, so this equation only sees $x \\bmod q$, which a search (or BSGS, or rho) finds in about $\\sqrt q$ steps. Prime powers $q^e$ are handled one base-$q$ digit at a time with the same trick. Then CRT glues the residues into $x \\bmod n$. This is the **Pohlig–Hellman** algorithm.\n\n*Example.* $p = 31$, $g = 3$ (a primitive root), $h = 22$, and the group order is $p - 1 = 30 = 2 \\cdot 3 \\cdot 5$.\n\n- $q = 2$: $3^{15} \\equiv 30$ and $22^{15} \\equiv 30$, so $x \\equiv 1 \\pmod 2$.\n- $q = 3$: $3^{10} \\equiv 25$ and $22^{10} \\equiv 5$; the powers of $25$ are $1, 25, 5$, so $x \\equiv 2 \\pmod 3$.\n- $q = 5$: $3^{6} \\equiv 16$ and $22^{6} \\equiv 8$; the powers of $16$ are $1, 16, 8, 4, 2$, so $x \\equiv 2 \\pmod 5$.\n\nCRT on $x \\equiv 1, 2, 2$ modulo $2, 3, 5$ gives $x = 17$. Check: $3^{17} \\bmod 31 = 22$.\n\nThe total cost is governed by the **largest** prime factor of the group order. A 2048-bit prime $p$ whose $p - 1$ splits into small primes is broken instantly, however big $p$ is. That is why Diffie–Hellman needs a large prime-order subgroup:\n\n- **Safe primes.** Choose $p = 2q + 1$ with $q$ prime. Then $p - 1 = 2q$, and the only shortcut is the factor $2$, which leaks just $x \\bmod 2$ (raise to $(p-1)/2$ and you get $\\pm 1$). Working in the subgroup of order $q$ (the squares mod $p$) removes even that one bit. The finite-field groups standardized for TLS in RFC 7919 are safe primes.\n- **Prime-order subgroups.** DSA-style groups and elliptic curves instead use a generator of large prime order $q$, at least 224 to 256 bits.\n- **Validate what you receive.** If a peer sends a public value of small order, your shared secret is trapped in a tiny subgroup, and a few guesses reveal your secret modulo that order (a small-subgroup attack). Implementations check received values, or use designs like X25519, which forces the secret scalar to be a multiple of the cofactor $8$ so small-order inputs reveal nothing.\n\n## Toy vs. real\n\nOur numbers have two to eight digits. At real sizes these same algorithms set the parameters:\n\n- **Elliptic curves:** for well-chosen curves only generic attacks are known, so the cost is the rho square root, and a 256-bit curve gives about 128-bit security.\n- **Discrete logs mod $p$ and RSA:** integers have extra structure that the **number field sieve** exploits, giving sub-exponential attacks. That is why these need 2048 to 3072 bits for 112- to 128-bit security, and why the 2015 Logjam researchers could break 512-bit \"export-grade\" Diffie–Hellman and estimated that 1024-bit groups were within reach of a nation-state.\n- **Best-known attacks, not proofs:** nobody has proven that breaking RSA requires factoring $n$, and breaking Diffie–Hellman is proven equivalent to computing discrete logs only for some groups and under extra assumptions. For properly generated, properly padded keys, though, no route better than factoring or a discrete log is known.\n- **Quantum computers:** Shor's algorithm would solve factoring and discrete logs, including elliptic-curve ones, in polynomial time on a large fault-tolerant quantum computer. That is why NIST standardized post-quantum replacements (ML-KEM and ML-DSA) in 2024.\n\nThe best way to make these stick is to break them yourself. Soatok's [\"How To Learn Cryptography as a Programmer\"](https://soatok.blog/2020/06/10/how-to-learn-cryptography-as-a-programmer/) recommends learning by attacking with Cryptopals and CryptoHack, and both include the $e = 3$ broadcast attack and small-subgroup attacks among their challenges."
+  },
+  "application": {
+    "summary": "These algorithms decide real key sizes: Pollard rho is why elliptic curves need 256 bits, Pohlig–Hellman is why Diffie–Hellman uses safe primes or prime-order subgroups, RSA-CRT is how every RSA library decrypts (and why it must verify its signatures), and Håstad's attack and Fermat factoring are why RSA needs random padding and independently chosen primes.",
+    "domains": ["TLS and HTTPS", "smart cards and HSMs", "key generation", "elliptic-curve cryptography", "CTF / security research"],
+    "workedExample": "**Reading one message out of three ciphertexts (toy Håstad attack).**\n\nA server uses textbook RSA with $e = 3$ and no padding, and sends the same message $m$ to three customers with public moduli $n_1 = 115$, $n_2 = 187$, $n_3 = 1189$ (pairwise coprime). You capture $c_1 = 28$, $c_2 = 36$, $c_3 = 370$.\n\n*Step 1: combine the first two.* Write $x = 28 + 115t$. Then $115t \\equiv 36 - 28 \\pmod{187}$. Since $115^{-1} \\equiv 174 \\pmod{187}$, $t \\equiv 83$ and $x_{12} = 9573$, which is $m^3 \\bmod 21505$.\n\n*Step 2: it is not a cube yet.* $21^3 = 9261$ and $22^3 = 10648$, so $x_{12}$ is not a perfect cube: $m^3$ wrapped past $n_1 n_2$.\n\n*Step 3: fold in the third.* Write $C = 9573 + 21505s$ and solve mod $1189$: $21505 \\equiv 103$, its inverse is $658$, and $s \\equiv 3$, so $C = 74088$.\n\n*Step 4: cube root.* $C < n_1 n_2 n_3 = 25569445$ and $m < n_i$, so $C = m^3$ exactly: $\\sqrt[3]{74088} = 42$.\n\n*Check:* $42^3 = 74088$, and $74088 \\bmod 115 = 28$, $\\bmod\\ 187 = 36$, $\\bmod\\ 1189 = 370$.\n\nYou never factored anything and never touched a private key. With OAEP padding each customer would have received a different randomized number, and step 4 would produce garbage.",
+    "domainNotes": [
+      "**TLS and HTTPS:** TLS 1.3 allows finite-field Diffie–Hellman only over the RFC 7919 groups, which are safe primes of 2048 bits and up, and otherwise uses elliptic curves such as X25519. The 2015 Logjam attack broke 512-bit export-grade Diffie–Hellman with number field sieve precomputation that could be reused against every server sharing a prime.",
+      "**Smart cards and HSMs:** essentially every RSA implementation decrypts and signs with CRT for speed, which makes fault injection (voltage or clock glitches, lasers) a real threat. Hardened implementations verify each signature, or re-check the CRT halves, before any output leaves the device.",
+      "**Key generation:** FIPS 186 requires $|p - q| > 2^{\\text{bits}/2 - 100}$ for RSA primes because of Fermat factoring, and CVE-2022-26320 (2022) showed real printers with keys whose primes were close enough to factor in seconds.",
+      "**Elliptic-curve cryptography:** with no shortcut known for well-chosen curves, Pollard rho sets the key size: curves of about 256 bits such as P-256 and Curve25519 give about 128-bit security, and curves with small or smooth group orders are rejected for Pohlig–Hellman reasons.",
+      "**CTF / security research:** small-subgroup attacks, Pohlig–Hellman on smooth groups, Håstad's broadcast attack, Fermat factoring and RSA-CRT faults are staples of Cryptopals and CryptoHack. Running them by hand at toy size first makes the real attacks feel obvious."
+    ]
+  },
+  "generators": [
+    "cr7-crt-d1", "cr7-crt-d2", "cr7-crt-d3",
+    "cr7-rcrt-d1", "cr7-rcrt-d2", "cr7-rcrt-d3",
+    "cr7-hastad-d1", "cr7-hastad-d2", "cr7-hastad-d3",
+    "cr7-fermat-d1", "cr7-fermat-d2", "cr7-fermat-d3",
+    "cr7-bsgs-d1", "cr7-bsgs-d2", "cr7-bsgs-d3",
+    "cr7-rho-d1", "cr7-rho-d2", "cr7-rho-d3",
+    "cr7-ph-d1", "cr7-ph-d2", "cr7-ph-d3"
+  ],
+  "problems": [
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s01",
+      "concepts": ["chinese-remainder"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $x \\equiv 4 \\pmod{7}$ and $x \\equiv 0 \\pmod{5}$ for $0 \\le x < 35$. Lift method: write $x = 4 + 7t$, then solve $4 + 7t \\equiv 0 \\pmod{5}$ for $t$.",
+      "steps": [
+        { "instruction": "Compute $7^{-1} \\bmod 5$.", "answer": "3", "accept": [], "hint": "$7 \\equiv 2 \\pmod{5}$, and $2 \\cdot 3 = 6 = 1 \\cdot 5 + 1$, so the inverse is $3$." },
+        { "instruction": "Solve for $t = (0 - 4) \\cdot 3 \\bmod 5$.", "answer": "3", "accept": [], "hint": "$(-4) \\cdot 3 = -12$, and that is $3$ mod $5$." },
+        { "instruction": "So $x = 4 + 7 \\cdot 3$. What is $x$?", "answer": "25", "accept": [], "hint": "Check: $25 \\bmod 7 = 4$ and $25 \\bmod 5 = 0$." }
+      ],
+      "finalAnswer": { "value": "25", "unit": "" },
+      "solutionNarrative": "$x = 4 + 7t$ already satisfies the first congruence for every $t$. The second needs $7t \\equiv -4 \\pmod{5}$, so $t \\equiv 3$ and $x = 25$. Because $\\gcd(7, 5) = 1$, this is the ONLY solution in $0 \\le x < 35$: that uniqueness is the Chinese Remainder Theorem."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s02",
+      "concepts": ["chinese-remainder"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve the system $x \\equiv 1 \\pmod{4}$, $x \\equiv 10 \\pmod{11}$, $x \\equiv 2 \\pmod{3}$ for $0 \\le x < 132$. Combine two congruences at a time.",
+      "steps": [
+        { "instruction": "Combine the first two: find $x_{12}$ with $0 \\le x_{12} < 44$.", "answer": "21", "accept": [], "hint": "Write $x = 1 + 4t$; then $t \\equiv (10 - 1) \\cdot 3 \\equiv 5 \\pmod{11}$ (since $4^{-1} \\equiv 3$), so $x_{12} = 21$." },
+        { "instruction": "Now solve $x = 21 + 44s \\equiv 2 \\pmod{3}$. First compute $44^{-1} \\bmod 3$.", "answer": "2", "accept": [], "hint": "$44 \\equiv 2 \\pmod{3}$, and $2 \\cdot 2 = 4 = 1 \\cdot 3 + 1$, so the inverse is $2$." },
+        { "instruction": "Compute $s = (2 - 21) \\cdot 2 \\bmod 3$.", "answer": "1", "accept": [], "hint": "$(-19) \\cdot 2 = -38$, which is $1$ mod $3$." },
+        { "instruction": "So $x = 21 + 44 \\cdot 1$. What is $x$?", "answer": "65", "accept": [], "hint": "Check all three: $65 \\bmod 4 = 1$, $65 \\bmod 11 = 10$, $65 \\bmod 3 = 2$." }
+      ],
+      "finalAnswer": { "value": "65", "unit": "" },
+      "solutionNarrative": "The first two congruences collapse to $x \\equiv 21 \\pmod{44}$; folding in the third gives $x = 65$, unique mod $132$. Pairwise coprime moduli are essential: they are what make each inverse exist."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s03",
+      "concepts": ["chinese-remainder"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A teacher splits a class into teams: groups of 11 leave 1 over, groups of 8 leave 0 over, groups of 5 leave 3 over. There are fewer than 440 students. How many are there? Use the CRT formula: $M = m_1 m_2 m_3$, $M_i = M / m_i$, $y_i = M_i^{-1} \\bmod m_i$, and $x = \\sum a_i M_i y_i \\bmod M$.",
+      "steps": [
+        { "instruction": "Compute $M = 11 \\cdot 8 \\cdot 5$.", "answer": "440", "accept": [], "hint": "Multiply the three moduli." },
+        { "instruction": "$M_1 = M / 11 = 40$. Compute $y_1 = M_1^{-1} \\bmod 11$.", "answer": "8", "accept": [], "hint": "$40 \\equiv 7 \\pmod{11}$, and $7 \\cdot 8 = 56 = 5 \\cdot 11 + 1$, so the inverse is $8$." },
+        { "instruction": "$M_2 = M / 8 = 55$. Compute $y_2 = M_2^{-1} \\bmod 8$.", "answer": "7", "accept": [], "hint": "$55 \\equiv 7 \\pmod{8}$, and $7 \\cdot 7 = 49 = 6 \\cdot 8 + 1$, so the inverse is $7$." },
+        { "instruction": "$M_3 = M / 5 = 88$. Compute $y_3 = M_3^{-1} \\bmod 5$.", "answer": "2", "accept": [], "hint": "$88 \\equiv 3 \\pmod{5}$, and $3 \\cdot 2 = 6 = 1 \\cdot 5 + 1$, so the inverse is $2$." },
+        { "instruction": "Compute $x = (1 \\cdot 40 \\cdot 8 + 0 \\cdot 55 \\cdot 7 + 3 \\cdot 88 \\cdot 2) \\bmod 440$.", "answer": "408", "accept": [], "hint": "The sum is $848$, and $848 \\bmod 440 = 408$." }
+      ],
+      "finalAnswer": { "value": "408", "unit": "students" },
+      "solutionNarrative": "Each term $a_i M_i y_i$ is $\\equiv a_i$ mod its own $m_i$ (because $M_i y_i \\equiv 1$) and $\\equiv 0$ mod the other two (because $M_i$ contains them). The sum $848$ therefore hits all three remainders, and reducing mod $440$ gives the unique answer, 408 students."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s04",
+      "concepts": ["rsa-crt"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "RSA private key: $p = 43$, $q = 17$, $n = 731$, $d = 269$. Decrypt $c = 250$ the fast way: by Fermat, mod $p$ the exponent $d$ only matters mod $p - 1$, and mod $q$ only mod $q - 1$. So compute $m_p = c^{d_p} \\bmod p$ and $m_q = c^{d_q} \\bmod q$ with $d_p = d \\bmod (p - 1)$ and $d_q = d \\bmod (q - 1)$.",
+      "steps": [
+        { "instruction": "Compute $d_p = 269 \\bmod 42$.", "answer": "17", "accept": [], "hint": "$269 = 6 \\cdot 42 + 17$." },
+        { "instruction": "Compute $d_q = 269 \\bmod 16$.", "answer": "13", "accept": [], "hint": "$269 = 16 \\cdot 16 + 13$." },
+        { "instruction": "Compute $m_p = 250^{17} \\bmod 43$ (reduce $c$ mod $43$ first).", "answer": "4", "accept": [], "hint": "Square-and-multiply mod 43: $35^{1} \\equiv 35$, $35^{2} \\equiv 21$, $35^{4} \\equiv 11$, $35^{8} \\equiv 35$, $35^{16} \\equiv 21$. Since $17 = 16 + 1$, multiply those powers: $35^{17} \\equiv 4 \\pmod{43}$." },
+        { "instruction": "Compute $m_q = 250^{13} \\bmod 17$.", "answer": "14", "accept": [], "hint": "Square-and-multiply mod 17: $12^{1} \\equiv 12$, $12^{2} \\equiv 8$, $12^{4} \\equiv 13$, $12^{8} \\equiv 16$. Since $13 = 8 + 4 + 1$, multiply those powers: $12^{13} \\equiv 14 \\pmod{17}$." }
+      ],
+      "finalAnswer": { "value": "4", "unit": "" },
+      "solutionNarrative": "$d_p = 17$ and $d_q = 13$, so $m \\equiv 4 \\pmod{43}$ and $m \\equiv 14 \\pmod{17}$. The CRT glues those into the plaintext $m = 133$ (check: $133 \\bmod 43 = 4$, $133 \\bmod 17 = 14$). Two half-size exponentiations with half-size exponents replace one full-size one, which is why real RSA decrypts roughly three to four times faster with CRT."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s05",
+      "concepts": ["rsa-crt"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "RSA-CRT private key: $p = 29$, $q = 37$, $d_p = 17$, $d_q = 29$ (public $n = 1073$, $e = 5$). Decrypt $c = 415$ with Garner's recombination: $m_p = c^{d_p} \\bmod p$, $m_q = c^{d_q} \\bmod q$, $q_{\\text{inv}} = q^{-1} \\bmod p$, $h = q_{\\text{inv}} (m_p - m_q) \\bmod p$, and $m = m_q + hq$.",
+      "steps": [
+        { "instruction": "Compute $m_p = 415^{17} \\bmod 29$.", "answer": "4", "accept": [], "hint": "Square-and-multiply mod 29: $9^{1} \\equiv 9$, $9^{2} \\equiv 23$, $9^{4} \\equiv 7$, $9^{8} \\equiv 20$, $9^{16} \\equiv 23$. Since $17 = 16 + 1$, multiply those powers: $9^{17} \\equiv 4 \\pmod{29}$." },
+        { "instruction": "Compute $m_q = 415^{29} \\bmod 37$.", "answer": "23", "accept": [], "hint": "Square-and-multiply mod 37: $8^{1} \\equiv 8$, $8^{2} \\equiv 27$, $8^{4} \\equiv 26$, $8^{8} \\equiv 10$, $8^{16} \\equiv 26$. Since $29 = 16 + 8 + 4 + 1$, multiply those powers: $8^{29} \\equiv 23 \\pmod{37}$." },
+        { "instruction": "Compute $q_{\\text{inv}} = 37^{-1} \\bmod 29$.", "answer": "11", "accept": [], "hint": "$37 \\equiv 8 \\pmod{29}$, and $8 \\cdot 11 = 88 = 3 \\cdot 29 + 1$, so the inverse is $11$." },
+        { "instruction": "Compute $h = 11 \\cdot (4 - 23) \\bmod 29$ (as a residue from $0$ to $28$).", "answer": "23", "accept": [], "hint": "$11 \\cdot (-19) = -209$, which is $23$ mod $29$." },
+        { "instruction": "Compute $m = 23 + 23 \\cdot 37$.", "answer": "874", "accept": [], "hint": "Check: $874^{5} \\bmod 1073$ should give back $c = 415$." }
+      ],
+      "finalAnswer": { "value": "874", "unit": "" },
+      "solutionNarrative": "$m_p = 4$, $m_q = 23$, $q_{\\text{inv}} = 11$, $h = 23$, so $m = 23 + 23 \\cdot 37 = 874$. The formula is just the CRT lift: $m_q + hq$ is automatically $\\equiv m_q \\pmod q$, and $h$ is chosen so it is also $\\equiv m_p \\pmod p$. Real RSA private keys store exactly $p, q, d_p, d_q, q_{\\text{inv}}$ for this computation."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s06",
+      "concepts": ["rsa-crt"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A smart card signs with RSA-CRT. Public key: $n = 703$, $e = 7$. It signs the message $m = 204$, but a voltage glitch corrupts the mod-$p$ half of the computation, so it outputs the faulty signature $s' = 661$ (right mod $q$, wrong mod $p$). You know only $n$, $e$, $m$ and $s'$.",
+      "steps": [
+        { "instruction": "Compute $v = s'^{\\,e} \\bmod n = 661^{7} \\bmod 703$.", "answer": "241", "accept": [], "hint": "Square-and-multiply mod 703: $661^{1} \\equiv 661$, $661^{2} \\equiv 358$, $661^{4} \\equiv 218$. Since $7 = 4 + 2 + 1$, multiply those powers: $661^{7} \\equiv 241 \\pmod{703}$." },
+        { "instruction": "Compute $D = (v - m) \\bmod n$, as a residue from $0$ to $702$.", "answer": "37", "accept": [], "hint": "$241 - 204 = 37$." },
+        { "instruction": "Compute $\\gcd(D, n) = \\gcd(37, 703)$.", "answer": "37", "accept": [], "hint": "$s'^{\\,e} \\equiv m \\pmod q$ but not mod $p$, so $D$ is a multiple of $q$ and not of $p$. Run Euclid." },
+        { "instruction": "What is the other prime factor of $n$?", "answer": "19", "accept": [], "hint": "$703 / 37$." },
+        { "instruction": "Would checking $s'^{\\,e} \\equiv m \\pmod n$ before releasing the signature have stopped this leak? (yes or no)", "answer": "yes", "accept": [], "hint": "The faulty signature fails that check, so it would never leave the card." }
+      ],
+      "finalAnswer": { "value": "19", "unit": "" },
+      "solutionNarrative": "$v = 241$, $D = 37$, and $\\gcd(37, 703) = 37$, so $n = 19 \\cdot 37$ and the private key is gone. This is the Bellcore fault attack (Boneh, DeMillo and Lipton, 1997): ONE faulty RSA-CRT signature factors $n$. The standard defence is to verify every signature (or re-check the CRT halves) before output, which is why vetted libraries do exactly that."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s07",
+      "concepts": ["hastad-broadcast"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Textbook RSA with $e = 3$ and no padding. The same message $m$ went to two people: $n_1 = 145$, $c_1 = 4$; $n_2 = 187$, $c_2 = 168$. Each ciphertext wrapped ($m^3 > n_i$, so neither $c_i$ is a perfect cube), but it happens that $m^3 < n_1 n_2 = 27115$. So the CRT value $C$ with $C \\equiv c_1 \\pmod{n_1}$, $C \\equiv c_2 \\pmod{n_2}$, $0 \\le C < n_1 n_2$, is exactly $m^3$. Lift: $C = c_1 + n_1 t$.",
+      "steps": [
+        { "instruction": "Compute $n_1^{-1} \\bmod n_2 = 145^{-1} \\bmod 187$.", "answer": "138", "accept": [], "hint": "$145 \\cdot 138 = 20010 = 107 \\cdot 187 + 1$, so the inverse is $138$." },
+        { "instruction": "Compute $t = (c_2 - c_1) \\cdot 138 \\bmod 187$.", "answer": "5", "accept": [], "hint": "$(168 - 4) \\cdot 138 = 22632$, which is $5$ mod $187$." },
+        { "instruction": "Compute $C = 4 + 145 \\cdot 5$.", "answer": "729", "accept": [], "hint": "Check: $729 \\bmod 145 = 4$ and $729 \\bmod 187 = 168$." },
+        { "instruction": "Take the ordinary integer cube root: $m = \\sqrt[3]{729}$.", "answer": "9", "accept": [], "hint": "$9^3 = 729$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "CRT gives $C = 729$, a perfect cube: $9^3 = 729$, so $m = 9$. Neither ciphertext alone revealed anything, but together they pin down $m^3$ as an integer, and integer cube roots are easy. No factoring happened."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s08",
+      "concepts": ["hastad-broadcast"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Textbook RSA with $e = 3$ and no padding. The same message $m$ went to three people with pairwise coprime moduli: $n_1 = 391$, $c_1 = 239$; $n_2 = 319$, $c_2 = 248$; $n_3 = 205$, $c_3 = 183$. Since $m < n_i$ for each $i$, $m^3 < n_1 n_2 n_3 = 25569445$, so the CRT value $C$ ($C \\equiv c_i \\pmod{n_i}$, $0 \\le C < n_1 n_2 n_3$) is exactly $m^3$.",
+      "steps": [
+        { "instruction": "Combine the first two: find $x_{12}$ with $x_{12} \\equiv c_1 \\pmod{n_1}$, $x_{12} \\equiv c_2 \\pmod{n_2}$, $0 \\le x_{12} < 124729$.", "answer": "15879", "accept": [], "hint": "$x_{12} = 239 + 391t$ with $t \\equiv (248 - 239) \\cdot 288 \\equiv 40 \\pmod{319}$ (since $391^{-1} \\equiv 288 \\pmod{319}$)." },
+        { "instruction": "Is $x_{12} = 15879$ a perfect cube? (yes or no)", "answer": "no", "accept": [], "hint": "$25^3 = 15625$ and $26^3 = 17576$. Here $m^3$ is bigger than $n_1 n_2$, so two ciphertexts only give $m^3 \\bmod n_1 n_2$." },
+        { "instruction": "Fold in the third: find $C$ with $C \\equiv x_{12} \\pmod{124729}$ and $C \\equiv c_3 \\pmod{n_3}$, $0 \\le C < 25569445$.", "answer": "140608", "accept": [], "hint": "$C = 15879 + 124729s$ with $s \\equiv (183 - 15879) \\cdot 129 \\equiv 1 \\pmod{205}$ (since $124729^{-1} \\equiv 129 \\pmod{205}$)." },
+        { "instruction": "Take the integer cube root: $m = \\sqrt[3]{C}$.", "answer": "52", "accept": [], "hint": "$52^3 = 140608$." }
+      ],
+      "finalAnswer": { "value": "52", "unit": "" },
+      "solutionNarrative": "Two ciphertexts give $x_{12} = 15879 = m^3 \\bmod 124729$, which is not a cube because $m^3$ wrapped past $n_1 n_2$. The third modulus pushes the CRT range to $25569445 > m^3$, so $C = 140608 = 52^3$ and $m = 52$. This is Håstad's broadcast attack."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s09",
+      "concepts": ["hastad-broadcast"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Textbook RSA with $e = 3$ and no padding. The same message $m$ went to three people with pairwise coprime moduli: $n_1 = 319$, $c_1 = 248$; $n_2 = 391$, $c_2 = 239$; $n_3 = 235$, $c_3 = 78$. Since $m < n_i$ for each $i$, $m^3 < n_1 n_2 n_3 = 29311315$, so the CRT value $C$ ($C \\equiv c_i \\pmod{n_i}$, $0 \\le C < n_1 n_2 n_3$) is exactly $m^3$.",
+      "steps": [
+        { "instruction": "Combine the first two: find $x_{12}$ with $x_{12} \\equiv c_1 \\pmod{n_1}$, $x_{12} \\equiv c_2 \\pmod{n_2}$, $0 \\le x_{12} < 124729$.", "answer": "15879", "accept": [], "hint": "$x_{12} = 248 + 319t$ with $t \\equiv (239 - 248) \\cdot 38 \\equiv 49 \\pmod{391}$ (since $319^{-1} \\equiv 38 \\pmod{391}$)." },
+        { "instruction": "Fold in the third: find $C$ with $C \\equiv x_{12} \\pmod{124729}$ and $C \\equiv c_3 \\pmod{n_3}$, $0 \\le C < 29311315$.", "answer": "140608", "accept": [], "hint": "$C = 15879 + 124729s$ with $s \\equiv (78 - 15879) \\cdot 214 \\equiv 1 \\pmod{235}$ (since $124729^{-1} \\equiv 214 \\pmod{235}$)." },
+        { "instruction": "Take the integer cube root: $m = \\sqrt[3]{C}$.", "answer": "52", "accept": [], "hint": "$52^3 = 140608$." },
+        { "instruction": "The attack needs $n_1 n_2 \\cdots n_k > m^e$. If $m$ is nearly as large as each modulus, how many ciphertexts of the same message does the attacker need when $e = 17$?", "answer": "17", "accept": [], "hint": "Each modulus is only a little bigger than $m$, so you need about one modulus per factor of $m$ in $m^e$." },
+        { "instruction": "Suppose each ciphertext had used OAEP, with fresh random padding every time. Would the CRT result still be a perfect cube $m^3$? (yes or no)", "answer": "no", "accept": [], "hint": "With random padding the three people received three DIFFERENT padded numbers, so there is no single $m^3$ to recover." }
+      ],
+      "finalAnswer": { "value": "52", "unit": "" },
+      "solutionNarrative": "CRT gives $C = 140608 = 52^3$, so $m = 52$. In general the attacker needs about $e$ ciphertexts (here $e = 17$ would need 17), which is one reason $e = 65537$ became the default. The real fix is padding: OAEP randomizes every encryption, so the recipients get unrelated numbers and the CRT result is meaningless. (Håstad also showed that a fixed, known padding per recipient, such as appending a user ID, does NOT help once the attacker has enough ciphertexts.)"
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s10",
+      "concepts": ["fermat-factoring"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Factor $n = 17399$, a product of two primes that are close together. Fermat's method: look for $a \\ge \\sqrt{n}$ with $a^2 - n = b^2$ a perfect square; then $n = a^2 - b^2 = (a - b)(a + b)$. Start at $a = \\lceil \\sqrt{n} \\rceil$ and step $a$ up by 1. For this $n$ the very first $a$ works.",
+      "steps": [
+        { "instruction": "Compute $a = \\lceil \\sqrt{17399} \\rceil$.", "answer": "132", "accept": [], "hint": "$131^2 = 17161 < 17399 < 17424 = 132^2$." },
+        { "instruction": "Compute $a^2 - n$.", "answer": "25", "accept": [], "hint": "$17424 - 17399$." },
+        { "instruction": "That is $b^2$. What is $b$?", "answer": "5", "accept": [], "hint": "$5^2 = 25$." },
+        { "instruction": "What is the smaller prime factor, $a - b$?", "answer": "127", "accept": [], "hint": "$132 - 5$." },
+        { "instruction": "What is the larger prime factor, $a + b$?", "answer": "137", "accept": [], "hint": "$132 + 5$; check that the product is $17399$." }
+      ],
+      "finalAnswer": { "value": "127", "unit": "" },
+      "solutionNarrative": "$a = 132$, $a^2 - n = 25 = 5^2$, so $17399 = (132 - 5)(132 + 5) = 127 \\cdot 137$. When $p$ and $q$ are close, $a = (p + q)/2$ sits just above $\\sqrt n$ and $b = (q - p)/2$ is small, so the search ends almost at once."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s11",
+      "concepts": ["fermat-factoring"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Factor $n = 190163$ (a product of two fairly close primes). Fermat's method: look for $a \\ge \\sqrt{n}$ with $a^2 - n = b^2$ a perfect square; then $n = a^2 - b^2 = (a - b)(a + b)$. Start at $a = \\lceil \\sqrt{n} \\rceil$ and step $a$ up by 1.",
+      "steps": [
+        { "instruction": "Compute the starting value $a = \\lceil \\sqrt{190163} \\rceil$.", "answer": "437", "accept": [], "hint": "$\\sqrt{190163} \\approx 436.08$." },
+        { "instruction": "Step $a$ up until $a^2 - n$ is a perfect square. Which $a$ works first?", "answer": "438", "accept": [], "hint": "$437^2 - 190163 = 806$, $438^2 - 190163 = 1681$ $= 41^2$." },
+        { "instruction": "What is $b = \\sqrt{a^2 - n}$?", "answer": "41", "accept": [], "hint": "$438^2 - 190163 = 1681$." },
+        { "instruction": "What is the smaller factor $a - b$?", "answer": "397", "accept": [], "hint": "$438 - 41$." },
+        { "instruction": "What is the larger factor $a + b$?", "answer": "479", "accept": [], "hint": "$438 + 41$." }
+      ],
+      "finalAnswer": { "value": "397", "unit": "" },
+      "solutionNarrative": "Trying $437^2 - 190163 = 806$, $438^2 - 190163 = 1681$ $= 41^2$ gives $a = 438$ and $b = 41$, so $190163 = 397 \\cdot 479$ after 2 tries. The number of tries grows roughly like $(q - p)^2 / (8\\sqrt n)$, so it is tiny when the primes are close and hopeless when they are far apart."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s12",
+      "concepts": ["fermat-factoring"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "A buggy RSA key generator picked a random prime $p$ and then searched upward from it for $q$, so the two primes are close. Public key: $n = 11639$, $e = 13$. Fermat's method: look for $a \\ge \\sqrt{n}$ with $a^2 - n = b^2$ a perfect square; then $n = a^2 - b^2 = (a - b)(a + b)$. Start at $a = \\lceil \\sqrt{n} \\rceil$ and step $a$ up by 1. Then rebuild the private key.",
+      "steps": [
+        { "instruction": "Which $a$ first makes $a^2 - n$ a perfect square?", "answer": "108", "accept": [], "hint": "$108^2 - 11639 = 25$ $= 5^2$." },
+        { "instruction": "What is the smaller prime $p = a - b$?", "answer": "103", "accept": [], "hint": "$b = 5$." },
+        { "instruction": "What is the larger prime $q = a + b$?", "answer": "113", "accept": [], "hint": "$108 + 5$." },
+        { "instruction": "Compute $\\varphi(n) = (p - 1)(q - 1)$.", "answer": "11424", "accept": [], "hint": "$102 \\cdot 112$." },
+        { "instruction": "Compute the private exponent $d = e^{-1} \\bmod \\varphi(n)$.", "answer": "7909", "accept": [], "hint": "$13 \\cdot 7909 = 102817 = 9 \\cdot 11424 + 1$, so the inverse is $7909$." }
+      ],
+      "finalAnswer": { "value": "7909", "unit": "" },
+      "solutionNarrative": "$a = 108$, $b = 5$, so $n = 103 \\cdot 113$, $\\varphi = 11424$ and $d = 7909$. This is not hypothetical: in 2022 Hanno Böck found printers whose RSA keys were generated this way (CVE-2022-26320) and factored them with Fermat's method in seconds. FIPS 186 key generation requires $|p - q| > 2^{\\text{bits}/2 - 100}$ for exactly this reason."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s13",
+      "concepts": ["baby-step-giant-step"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $2^x \\equiv 18 \\pmod{19}$ for $x$ with baby-step giant-step. ($2$ is a primitive root mod $19$, so $x$ is unique in $0 \\le x < 18$.) Use $m = \\lceil \\sqrt{p - 1} \\rceil$. Baby steps: the table $g^j \\bmod p$ for $0 \\le j < m$. Giant steps: $\\gamma_i = h \\cdot (g^{-m})^i \\bmod p$ for $i = 0, 1, 2, \\dots$, until some $\\gamma_i$ is in the table; then $x = im + j$.",
+      "steps": [
+        { "instruction": "Compute $m = \\lceil \\sqrt{18} \\rceil$.", "answer": "5", "accept": [], "hint": "$4^2 = 16 < 18 \\le 25 = 5^2$." },
+        { "instruction": "Compute the giant-step multiplier $g^{-m} = 2^{-5} \\bmod 19$: first $2^{5} \\bmod 19$, then its inverse.", "answer": "3", "accept": [], "hint": "$2^{5} \\equiv 13 \\pmod{19}$. Then $13 \\cdot 3 = 39 = 2 \\cdot 19 + 1$, so the inverse is $3$." },
+        { "instruction": "$h = 18$ itself (the giant step $\\gamma_0$) is not in the table. Compute $\\gamma_1 = 18 \\cdot 3 \\bmod 19$.", "answer": "16", "accept": [], "hint": "$18 \\cdot 3 = 54$, and $54 \\bmod 19 = 16$." },
+        { "instruction": "Build the baby-step table $2^0, 2^1, \\dots, 2^{4} \\bmod 19$. Which $j$ has $2^j \\equiv \\gamma_1$?", "answer": "4", "accept": [], "hint": "The table: $2^{0} \\equiv 1$, $2^{1} \\equiv 2$, $2^{2} \\equiv 4$, $2^{3} \\equiv 8$, $2^{4} \\equiv 16$." },
+        { "instruction": "So $x = im + j = 1 \\cdot 5 + 4$. What is $x$?", "answer": "9", "accept": [], "hint": "Check: $2^{9} \\bmod 19$ should be $18$." }
+      ],
+      "finalAnswer": { "value": "9", "unit": "" },
+      "solutionNarrative": "With $m = 5$ the baby table is 1, 2, 4, 8, 16 (for $j = 0$ to $4$), and the giant steps run 18, 16. The first giant step in the table is $\\gamma_{1} = 16 = 2^{4}$, so $h \\cdot g^{-5} = g^{4}$ and $x = 1 \\cdot 5 + 4 = 9$. That took 5 baby steps and 2 giant steps instead of up to 17 trial exponents."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s14",
+      "concepts": ["baby-step-giant-step"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $30^x \\equiv 10 \\pmod{43}$ with baby-step giant-step. ($30$ is a primitive root mod $43$.) Use $m = \\lceil \\sqrt{p - 1} \\rceil$. Baby steps: the table $g^j \\bmod p$ for $0 \\le j < m$. Giant steps: $\\gamma_i = h \\cdot (g^{-m})^i \\bmod p$ for $i = 0, 1, 2, \\dots$, until some $\\gamma_i$ is in the table; then $x = im + j$.",
+      "steps": [
+        { "instruction": "Compute $m = \\lceil \\sqrt{42} \\rceil$.", "answer": "7", "accept": [], "hint": "$6^2 = 36 < 42 \\le 49 = 7^2$." },
+        { "instruction": "Compute the giant-step multiplier $g^{-m} = 30^{-7} \\bmod 43$: first $30^{7} \\bmod 43$, then its inverse.", "answer": "37", "accept": [], "hint": "$30^{7} \\equiv 7 \\pmod{43}$. Then $7 \\cdot 37 = 259 = 6 \\cdot 43 + 1$, so the inverse is $37$." },
+        { "instruction": "Build the baby-step table, then walk the giant steps $\\gamma_0 = 10, \\gamma_1, \\gamma_2, \\dots$. At which $i$ does a giant step FIRST land in the table?", "answer": "2", "accept": [], "hint": "Table: $30^{0} \\equiv 1$, $30^{1} \\equiv 30$, $30^{2} \\equiv 40$, $30^{3} \\equiv 39$, $30^{4} \\equiv 9$, $30^{5} \\equiv 12$, $30^{6} \\equiv 16$. Giant steps: $\\gamma_{0} = 10$, $\\gamma_{1} = 26$, $\\gamma_{2} = 16$." },
+        { "instruction": "Which baby step $j$ does it match (the $j$ with $30^j \\equiv \\gamma_i$)?", "answer": "6", "accept": [], "hint": "$\\gamma_{2} = 16$; find it in the table." },
+        { "instruction": "So $x = im + j = 2 \\cdot 7 + 6$. What is $x$?", "answer": "20", "accept": [], "hint": "Check: $30^{20} \\bmod 43$ should be $10$." }
+      ],
+      "finalAnswer": { "value": "20", "unit": "" },
+      "solutionNarrative": "With $m = 7$ the baby table is 1, 30, 40, 39, 9, 12, 16 (for $j = 0$ to $6$), and the giant steps run 10, 26, 16. The first giant step in the table is $\\gamma_{2} = 16 = 30^{6}$, so $h \\cdot g^{-14} = g^{6}$ and $x = 2 \\cdot 7 + 6 = 20$. That took 7 baby steps and 3 giant steps instead of up to 41 trial exponents."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s15",
+      "concepts": ["baby-step-giant-step"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Solve $40^x \\equiv 34 \\pmod{97}$ with baby-step giant-step. ($40$ is a primitive root mod $97$.) Use $m = \\lceil \\sqrt{p - 1} \\rceil$. Baby steps: the table $g^j \\bmod p$ for $0 \\le j < m$. Giant steps: $\\gamma_i = h \\cdot (g^{-m})^i \\bmod p$ for $i = 0, 1, 2, \\dots$, until some $\\gamma_i$ is in the table; then $x = im + j$. Then scale it up: a well-chosen elliptic-curve group has prime order about $2^{384}$.",
+      "steps": [
+        { "instruction": "Compute $m = \\lceil \\sqrt{96} \\rceil$.", "answer": "10", "accept": [], "hint": "$9^2 = 81 < 96 \\le 100 = 10^2$." },
+        { "instruction": "Compute the giant-step multiplier $g^{-m} = 40^{-10} \\bmod 97$: first $40^{10} \\bmod 97$, then its inverse.", "answer": "65", "accept": [], "hint": "$40^{10} \\equiv 3 \\pmod{97}$. Then $3 \\cdot 65 = 195 = 2 \\cdot 97 + 1$, so the inverse is $65$." },
+        { "instruction": "At which giant step $i$ is there FIRST a match with the baby table?", "answer": "4", "accept": [], "hint": "Table: $40^{0} \\equiv 1$, $40^{1} \\equiv 40$, $40^{2} \\equiv 48$, $40^{3} \\equiv 77$, $40^{4} \\equiv 73$, $40^{5} \\equiv 10$, $40^{6} \\equiv 12$, $40^{7} \\equiv 92$, $40^{8} \\equiv 91$, $40^{9} \\equiv 51$. Giant steps: $\\gamma_{0} = 34$, $\\gamma_{1} = 76$, $\\gamma_{2} = 90$, $\\gamma_{3} = 30$, $\\gamma_{4} = 10$." },
+        { "instruction": "Which baby step $j$ matches?", "answer": "5", "accept": [], "hint": "$\\gamma_{4} = 10$." },
+        { "instruction": "So $x = im + j = 4 \\cdot 10 + 5$. What is $x$?", "answer": "45", "accept": [], "hint": "Check: $40^{45} \\bmod 97$ should be $34$." },
+        { "instruction": "For the group of order about $2^{384}$, BSGS must store a table of about $\\sqrt{2^{384}}$ entries. Give the exponent $k$ in $2^k$.", "answer": "192", "accept": [], "hint": "$\\sqrt{2^{384}} = 2^{384/2}$." }
+      ],
+      "finalAnswer": { "value": "45", "unit": "" },
+      "solutionNarrative": "With $m = 10$ the baby table is 1, 40, 48, 77, 73, 10, 12, 92, 91, 51 (for $j = 0$ to $9$), and the giant steps run 34, 76, 90, 30, 10. The first giant step in the table is $\\gamma_{4} = 10 = 40^{5}$, so $h \\cdot g^{-40} = g^{5}$ and $x = 4 \\cdot 10 + 5 = 45$. That took 10 baby steps and 5 giant steps instead of up to 95 trial exponents. At real size the same square root is the whole story: a $2^{384}$-order group needs about $2^{192}$ steps AND $2^{192}$ stored table entries, which is far beyond any computer. Shoup proved in 1997 that no generic algorithm can beat that square root, which is why such a group gives about 192-bit security."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s16",
+      "concepts": ["pollard-rho"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Factor $n = 403$ with Pollard rho. Pollard rho walks $x_{k+1} = x_k^2 + 1 \\bmod n$ from $x_0 = 2$. Floyd's cycle test compares the tortoise $x_i$ with the hare $x_{2i}$: for $i = 1, 2, 3, \\dots$ compute $\\gcd(|x_{2i} - x_i|, n)$ and stop as soon as it is bigger than 1.",
+      "steps": [
+        { "instruction": "Compute $x_{1} = x_{0}^2 + 1 \\bmod 403$.", "answer": "5", "accept": [], "hint": "$2^2 + 1 = 5$, and $5 \\bmod 403 = 5$." },
+        { "instruction": "Compute $x_{2} = x_{1}^2 + 1 \\bmod 403$.", "answer": "26", "accept": [], "hint": "$5^2 + 1 = 26$, and $26 \\bmod 403 = 26$." },
+        { "instruction": "Floyd test at $i = 1$: compute $\\gcd(|x_{2} - x_{1}|, 403) = \\gcd(21, 403)$.", "answer": "1", "accept": [], "hint": "$|26 - 5| = 21$. Run Euclid on $21$ and $403$." },
+        { "instruction": "Compute $x_{3} = x_{2}^2 + 1 \\bmod 403$.", "answer": "274", "accept": [], "hint": "$26^2 + 1 = 677$, and $677 \\bmod 403 = 274$." },
+        { "instruction": "Compute $x_{4} = x_{3}^2 + 1 \\bmod 403$.", "answer": "119", "accept": [], "hint": "$274^2 + 1 = 75077$, and $75077 \\bmod 403 = 119$." },
+        { "instruction": "Floyd test at $i = 2$: compute $\\gcd(|x_{4} - x_{2}|, 403) = \\gcd(93, 403)$.", "answer": "31", "accept": [], "hint": "$|119 - 26| = 93$. Run Euclid on $93$ and $403$." },
+        { "instruction": "That gcd is a prime factor of $403$. What is the other factor?", "answer": "13", "accept": [], "hint": "$403 / 31$." }
+      ],
+      "finalAnswer": { "value": "31", "unit": "" },
+      "solutionNarrative": "The walk is 2, 5, 26, 274, 119. At $i = 2$, $\\gcd(|x_{4} - x_{2}|, 403) = 31$, so $403 = 31 \\cdot 13$. Why it works: reduced mod the hidden prime $31$, the walk takes only about $\\sqrt{31}$ steps to repeat, and once $x_{2i} \\equiv x_i \\pmod{31}$ their difference is a multiple of $31$ that gcd can pull out, even though the walk mod $403$ has not repeated."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s17",
+      "concepts": ["pollard-rho"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Factor $n = 1739$ with Pollard rho. Pollard rho walks $x_{k+1} = x_k^2 + 1 \\bmod n$ from $x_0 = 2$. Floyd's cycle test compares the tortoise $x_i$ with the hare $x_{2i}$: for $i = 1, 2, 3, \\dots$ compute $\\gcd(|x_{2i} - x_i|, n)$ and stop as soon as it is bigger than 1. The walk so far: $x_1 = 5$, $x_2 = 26$, and the test at $i = 1$ gave $\\gcd = 1$.",
+      "steps": [
+        { "instruction": "Compute $x_{3} = x_{2}^2 + 1 \\bmod 1739$.", "answer": "677", "accept": [], "hint": "$26^2 + 1 = 677$, and $677 \\bmod 1739 = 677$." },
+        { "instruction": "Compute $x_{4} = x_{3}^2 + 1 \\bmod 1739$.", "answer": "973", "accept": [], "hint": "$677^2 + 1 = 458330$, and $458330 \\bmod 1739 = 973$." },
+        { "instruction": "Floyd test at $i = 2$: compute $\\gcd(|x_{4} - x_{2}|, 1739) = \\gcd(947, 1739)$.", "answer": "1", "accept": [], "hint": "$|973 - 26| = 947$. Run Euclid on $947$ and $1739$." },
+        { "instruction": "Compute $x_{5} = x_{4}^2 + 1 \\bmod 1739$.", "answer": "714", "accept": [], "hint": "$973^2 + 1 = 946730$, and $946730 \\bmod 1739 = 714$." },
+        { "instruction": "Compute $x_{6} = x_{5}^2 + 1 \\bmod 1739$.", "answer": "270", "accept": [], "hint": "$714^2 + 1 = 509797$, and $509797 \\bmod 1739 = 270$." },
+        { "instruction": "Floyd test at $i = 3$: compute $\\gcd(|x_{6} - x_{3}|, 1739) = \\gcd(407, 1739)$.", "answer": "37", "accept": [], "hint": "$|270 - 677| = 407$. Run Euclid on $407$ and $1739$." },
+        { "instruction": "What is the other factor of $1739$?", "answer": "47", "accept": [], "hint": "$1739 / 37$." }
+      ],
+      "finalAnswer": { "value": "37", "unit": "" },
+      "solutionNarrative": "The walk is 2, 5, 26, 677, 973, 714, 270. At $i = 3$, $\\gcd(|x_{6} - x_{3}|, 1739) = 37$, so $1739 = 37 \\cdot 47$. Why it works: reduced mod the hidden prime $37$, the walk takes only about $\\sqrt{37}$ steps to repeat, and once $x_{2i} \\equiv x_i \\pmod{37}$ their difference is a multiple of $37$ that gcd can pull out, even though the walk mod $1739$ has not repeated."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s18",
+      "concepts": ["pollard-rho"],
+      "difficulty": 3,
+      "context": "abstract",
+      "prompt": "Factor $n = 4189$ with Pollard rho. Pollard rho walks $x_{k+1} = x_k^2 + 1 \\bmod n$ from $x_0 = 2$. Floyd's cycle test compares the tortoise $x_i$ with the hare $x_{2i}$: for $i = 1, 2, 3, \\dots$ compute $\\gcd(|x_{2i} - x_i|, n)$ and stop as soon as it is bigger than 1. The walk is already computed: $x_{0} = 2$, $x_{1} = 5$, $x_{2} = 26$, $x_{3} = 677$, $x_{4} = 1729$, $x_{5} = 2685$, $x_{6} = 4146$, $x_{7} = 1850$, $x_{8} = 88$, $x_{9} = 3556$, $x_{10} = 2735$, $x_{11} = 2861$, $x_{12} = 16$, $x_{13} = 257$, $x_{14} = 3215$. Then compare with discrete logs: the rho method for discrete logs uses the same birthday-collision idea in a group of prime order about $2^{256}$.",
+      "steps": [
+        { "instruction": "At which $i$ does the Floyd test FIRST give a gcd bigger than 1?", "answer": "6", "accept": [], "hint": "Test $i = 1, 2, \\dots$: $\\gcd(|x_{2} - x_{1}|, n) = 1$, $\\gcd(|x_{4} - x_{2}|, n) = 1$, $\\gcd(|x_{6} - x_{3}|, n) = 1$, $\\gcd(|x_{8} - x_{4}|, n) = 1$, $\\gcd(|x_{10} - x_{5}|, n) = 1$, $\\gcd(|x_{12} - x_{6}|, n) = 59$." },
+        { "instruction": "What prime factor does that gcd reveal?", "answer": "59", "accept": [], "hint": "It is the gcd itself." },
+        { "instruction": "What is the other factor?", "answer": "71", "accept": [], "hint": "$4189 / 59$." },
+        { "instruction": "Rho for discrete logs needs about $\\sqrt{2^{256}}$ group operations. Give the exponent $k$ in $2^k$.", "answer": "128", "accept": [], "hint": "Square root halves the exponent." },
+        { "instruction": "Does rho need to store a big table the way baby-step giant-step does? (yes or no)", "answer": "no", "accept": [], "hint": "Floyd keeps just two walkers, the tortoise and the hare." }
+      ],
+      "finalAnswer": { "value": "59", "unit": "" },
+      "solutionNarrative": "The walk is 2, 5, 26, 677, 1729, 2685, 4146, 1850, 88, 3556, 2735, 2861, 16. At $i = 6$, $\\gcd(|x_{12} - x_{6}|, 4189) = 59$, so $4189 = 59 \\cdot 71$. Why it works: reduced mod the hidden prime $59$, the walk takes only about $\\sqrt{59}$ steps to repeat, and once $x_{2i} \\equiv x_i \\pmod{59}$ their difference is a multiple of $59$ that gcd can pull out, even though the walk mod $4189$ has not repeated. For discrete logs, rho walks through elements $g^a h^b$ until two coincide, which gives a linear equation for $x$. It costs about $2^{128}$ steps, the same square root as BSGS, but with almost no memory, which is why it is the practical generic attack and why a $2^{256}$-order curve is rated at about 128-bit security."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s19",
+      "concepts": ["pohlig-hellman"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "A Diffie–Hellman group uses $p = 71$ with primitive root $g = 61$. An eavesdropper sees $h = g^x \\equiv 12 \\pmod{71}$. Since $5$ divides $p - 1 = 70$, raising both sides to the power $(p - 1)/5$ drops into the subgroup of order $5$, where $x \\bmod 5$ can be found by trying at most $5$ values.",
+      "steps": [
+        { "instruction": "Compute the exponent $(p - 1)/5$.", "answer": "14", "accept": [], "hint": "$70 / 5$." },
+        { "instruction": "Compute $g_5 = 61^{14} \\bmod 71$.", "answer": "25", "accept": [], "hint": "Square-and-multiply mod 71: $61^{1} \\equiv 61$, $61^{2} \\equiv 29$, $61^{4} \\equiv 60$, $61^{8} \\equiv 50$. Since $14 = 8 + 4 + 2$, multiply those powers: $61^{14} \\equiv 25 \\pmod{71}$." },
+        { "instruction": "Compute $h_5 = 12^{14} \\bmod 71$.", "answer": "57", "accept": [], "hint": "Square-and-multiply mod 71: $12^{1} \\equiv 12$, $12^{2} \\equiv 2$, $12^{4} \\equiv 4$, $12^{8} \\equiv 16$. Since $14 = 8 + 4 + 2$, multiply those powers: $12^{14} \\equiv 57 \\pmod{71}$." },
+        { "instruction": "Find $k$ in $0 \\le k < 5$ with $g_5^k \\equiv h_5$. That $k$ is $x \\bmod 5$.", "answer": "2", "accept": [], "hint": "Powers of $g_5$: $25^{0} \\equiv 1$, $25^{1} \\equiv 25$, $25^{2} \\equiv 57$, $25^{3} \\equiv 5$, $25^{4} \\equiv 54$." }
+      ],
+      "finalAnswer": { "value": "2", "unit": "" },
+      "solutionNarrative": "$h^{(p-1)/5} = (g^{(p-1)/5})^x$, so $h_5 = g_5^{\\,x}$, and $g_5 = 25$ has order $5$, so only $x \\bmod 5$ matters: $25^{2} \\equiv 57$ gives $x \\equiv 2 \\pmod{5}$. (The full secret is $x = 32$, and $32 \\bmod 5 = 2$.) Repeat for every prime factor of $p - 1$, glue the residues with CRT, and the discrete log falls: that is Pohlig–Hellman."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s20",
+      "concepts": ["pohlig-hellman"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Diffie–Hellman with $p = 43$, where $p - 1 = 2 \\cdot 3 \\cdot 7$, and primitive root $g = 18$. You see $h = g^x \\equiv 39 \\pmod{43}$. Pohlig–Hellman raises $g$ and $h$ to $(p-1)/q$ for each prime $q$ dividing $p - 1$. The projections, computed for you: for $q = 2$: $g^{21} \\equiv 42$ and $h^{21} \\equiv 42$; for $q = 3$: $g^{14} \\equiv 6$ and $h^{14} \\equiv 1$; for $q = 7$: $g^{6} \\equiv 41$ and $h^{6} \\equiv 11$.",
+      "steps": [
+        { "instruction": "Find $x \\bmod 2$: the $k$ in $0 \\le k < 2$ with $42^k \\equiv 42 \\pmod{43}$.", "answer": "1", "accept": [], "hint": "Powers: $42^{0} \\equiv 1$, $42^{1} \\equiv 42$." },
+        { "instruction": "Find $x \\bmod 3$: the $k$ in $0 \\le k < 3$ with $6^k \\equiv 1 \\pmod{43}$.", "answer": "0", "accept": [], "hint": "Powers: $6^{0} \\equiv 1$, $6^{1} \\equiv 6$, $6^{2} \\equiv 36$." },
+        { "instruction": "Find $x \\bmod 7$: the $k$ in $0 \\le k < 7$ with $41^k \\equiv 11 \\pmod{43}$.", "answer": "5", "accept": [], "hint": "Powers: $41^{0} \\equiv 1$, $41^{1} \\equiv 41$, $41^{2} \\equiv 4$, $41^{3} \\equiv 35$, $41^{4} \\equiv 16$, $41^{5} \\equiv 11$, $41^{6} \\equiv 21$." },
+        { "instruction": "Combine with the Chinese Remainder Theorem: find $x$ in $0 \\le x < 42$ with $x \\equiv 1 \\pmod{2}$, $x \\equiv 0 \\pmod{3}$, $x \\equiv 5 \\pmod{7}$.", "answer": "33", "accept": [], "hint": "The first two give $x \\equiv 3 \\pmod{6}$; then try $3, 9, \\dots$ against the third." }
+      ],
+      "finalAnswer": { "value": "33", "unit": "" },
+      "solutionNarrative": "The three small logs give $x \\equiv 1, 0, 5$ modulo $2, 3, 7$, and CRT glues them into $x = 33$. Check: $18^{33} \\bmod 43 = 39$. Every step happened in a subgroup of size at most $7$, so the work was set by the largest prime factor of $p - 1$, not by $p$."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s21",
+      "concepts": ["pohlig-hellman"],
+      "difficulty": 3,
+      "context": "applied",
+      "prompt": "Two candidate Diffie–Hellman primes: the first is $p_1 = 383$ and the second is $p_2 = 151$. Pohlig–Hellman makes a discrete log mod $p$ cost about as much as one in a subgroup whose size is the LARGEST prime factor of $p - 1$. Separately, for $p_1 = 383$ with primitive root $g = 5$, an eavesdropper sees $h = g^x \\equiv 104 \\pmod{383}$.",
+      "steps": [
+        { "instruction": "What is the largest prime factor of $p_1 - 1 = 382$?", "answer": "191", "accept": [], "hint": "$382 = 2 \\cdot 191$." },
+        { "instruction": "What is the largest prime factor of $p_2 - 1 = 150$?", "answer": "5", "accept": [], "hint": "$150 = 2 \\cdot 3 \\cdot 5^{2}$." },
+        { "instruction": "Which prime makes Pohlig–Hellman least helpful to the attacker? (first or second)", "answer": "first", "accept": [], "hint": "Pick the one whose $p - 1$ has the bigger largest prime factor." },
+        { "instruction": "Even a safe prime leaks one bit in the full group. Compute $h^{(p-1)/2} = 104^{191} \\bmod 383$.", "answer": "382", "accept": [], "hint": "Square-and-multiply mod 383: $104^{1} \\equiv 104$, $104^{2} \\equiv 92$, $104^{4} \\equiv 38$, $104^{8} \\equiv 295$, $104^{16} \\equiv 84$, $104^{32} \\equiv 162$, $104^{64} \\equiv 200$, $104^{128} \\equiv 168$. Since $191 = 128 + 32 + 16 + 8 + 4 + 2 + 1$, multiply those powers: $104^{191} \\equiv 382 \\pmod{383}$. It must be $1$ or $382$, because it lands in the subgroup of order 2." },
+        { "instruction": "So what is $x \\bmod 2$?", "answer": "1", "accept": [], "hint": "$h^{(p-1)/2} = (g^{(p-1)/2})^x = (-1)^x$, so $1$ means $x$ is even and $p - 1$ means $x$ is odd." }
+      ],
+      "finalAnswer": { "value": "first", "unit": "" },
+      "solutionNarrative": "$p_1 - 1 = 2 \\cdot 191$ and $p_2 - 1 = 2 \\cdot 3 \\cdot 5^{2}$. The first is a safe prime, $p = 2q + 1$ with $q = 191$ prime, so Pohlig–Hellman can only split off a factor of 2 and the attacker is left with a log in a group of prime order $191$. The other has $p - 1$ built from primes no bigger than $5$, so its discrete logs fall to a handful of tiny searches plus CRT. The order-2 piece still leaks: $h^{191} \\equiv 382$, so $x$ is odd (here $x = 257$). That is why protocols work in the subgroup of prime order $q$ (for example by using $g = 4$ or another square), and why real groups make that prime $q$ large: at least 224 to 256 bits in DSA-style groups, and nearly the full size of $p$ in a safe-prime group."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s22",
+      "concepts": ["chinese-remainder"],
+      "difficulty": 1,
+      "context": "abstract",
+      "prompt": "Solve $x \\equiv 5 \\pmod{7}$ and $x \\equiv 3 \\pmod{8}$ for $0 \\le x < 56$. Lift method: write $x = 5 + 7t$, then solve $5 + 7t \\equiv 3 \\pmod{8}$ for $t$.",
+      "steps": [
+        { "instruction": "Compute $7^{-1} \\bmod 8$.", "answer": "7", "accept": [], "hint": "$7 \\cdot 7 = 49 = 6 \\cdot 8 + 1$, so the inverse is $7$." },
+        { "instruction": "Solve for $t = (3 - 5) \\cdot 7 \\bmod 8$.", "answer": "2", "accept": [], "hint": "$(-2) \\cdot 7 = -14$, and that is $2$ mod $8$." },
+        { "instruction": "So $x = 5 + 7 \\cdot 2$. What is $x$?", "answer": "19", "accept": [], "hint": "Check: $19 \\bmod 7 = 5$ and $19 \\bmod 8 = 3$." }
+      ],
+      "finalAnswer": { "value": "19", "unit": "" },
+      "solutionNarrative": "$x = 5 + 7t$ already satisfies the first congruence for every $t$. The second needs $7t \\equiv -2 \\pmod{8}$, so $t \\equiv 2$ and $x = 19$. Because $\\gcd(7, 8) = 1$, this is the ONLY solution in $0 \\le x < 56$: that uniqueness is the Chinese Remainder Theorem."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s23",
+      "concepts": ["rsa-crt"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "RSA-CRT private key: $p = 47$, $q = 41$, $d_p = 31$, $d_q = 27$ (public $n = 1927$, $e = 3$). Decrypt $c = 1478$ with Garner's recombination: $m_p = c^{d_p} \\bmod p$, $m_q = c^{d_q} \\bmod q$, $q_{\\text{inv}} = q^{-1} \\bmod p$, $h = q_{\\text{inv}} (m_p - m_q) \\bmod p$, and $m = m_q + hq$.",
+      "steps": [
+        { "instruction": "Compute $m_p = 1478^{31} \\bmod 47$.", "answer": "25", "accept": [], "hint": "Square-and-multiply mod 47: $21^{1} \\equiv 21$, $21^{2} \\equiv 18$, $21^{4} \\equiv 42$, $21^{8} \\equiv 25$, $21^{16} \\equiv 14$. Since $31 = 16 + 8 + 4 + 2 + 1$, multiply those powers: $21^{31} \\equiv 25 \\pmod{47}$." },
+        { "instruction": "Compute $m_q = 1478^{27} \\bmod 41$.", "answer": "5", "accept": [], "hint": "Square-and-multiply mod 41: $2^{1} \\equiv 2$, $2^{2} \\equiv 4$, $2^{4} \\equiv 16$, $2^{8} \\equiv 10$, $2^{16} \\equiv 18$. Since $27 = 16 + 8 + 2 + 1$, multiply those powers: $2^{27} \\equiv 5 \\pmod{41}$." },
+        { "instruction": "Compute $q_{\\text{inv}} = 41^{-1} \\bmod 47$.", "answer": "39", "accept": [], "hint": "$41 \\cdot 39 = 1599 = 34 \\cdot 47 + 1$, so the inverse is $39$." },
+        { "instruction": "Compute $h = 39 \\cdot (25 - 5) \\bmod 47$ (as a residue from $0$ to $46$).", "answer": "28", "accept": [], "hint": "$39 \\cdot (20) = 780$, which is $28$ mod $47$." },
+        { "instruction": "Compute $m = 5 + 28 \\cdot 41$.", "answer": "1153", "accept": [], "hint": "Check: $1153^{3} \\bmod 1927$ should give back $c = 1478$." }
+      ],
+      "finalAnswer": { "value": "1153", "unit": "" },
+      "solutionNarrative": "$m_p = 25$, $m_q = 5$, $q_{\\text{inv}} = 39$, $h = 28$, so $m = 5 + 28 \\cdot 41 = 1153$. The formula is just the CRT lift: $m_q + hq$ is automatically $\\equiv m_q \\pmod q$, and $h$ is chosen so it is also $\\equiv m_p \\pmod p$. Real RSA private keys store exactly $p, q, d_p, d_q, q_{\\text{inv}}$ for this computation."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s24",
+      "concepts": ["hastad-broadcast"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Textbook RSA with $e = 3$ and no padding. The same message $m$ went to three people with pairwise coprime moduli: $n_1 = 391$, $c_1 = 325$; $n_2 = 355$, $c_2 = 33$; $n_3 = 319$, $c_3 = 84$. Since $m < n_i$ for each $i$, $m^3 < n_1 n_2 n_3 = 44278795$, so the CRT value $C$ ($C \\equiv c_i \\pmod{n_i}$, $0 \\le C < n_1 n_2 n_3$) is exactly $m^3$.",
+      "steps": [
+        { "instruction": "Combine the first two: find $x_{12}$ with $x_{12} \\equiv c_1 \\pmod{n_1}$, $x_{12} \\equiv c_2 \\pmod{n_2}$, $0 \\le x_{12} < 138805$.", "answer": "105113", "accept": [], "hint": "$x_{12} = 325 + 391t$ with $t \\equiv (33 - 325) \\cdot 286 \\equiv 268 \\pmod{355}$ (since $391^{-1} \\equiv 286 \\pmod{355}$)." },
+        { "instruction": "Is $x_{12} = 105113$ a perfect cube? (yes or no)", "answer": "no", "accept": [], "hint": "$47^3 = 103823$ and $48^3 = 110592$. Here $m^3$ is bigger than $n_1 n_2$, so two ciphertexts only give $m^3 \\bmod n_1 n_2$." },
+        { "instruction": "Fold in the third: find $C$ with $C \\equiv x_{12} \\pmod{138805}$ and $C \\equiv c_3 \\pmod{n_3}$, $0 \\le C < 44278795$.", "answer": "2048383", "accept": [], "hint": "$C = 105113 + 138805s$ with $s \\equiv (84 - 105113) \\cdot 8 \\equiv 14 \\pmod{319}$ (since $138805^{-1} \\equiv 8 \\pmod{319}$)." },
+        { "instruction": "Take the integer cube root: $m = \\sqrt[3]{C}$.", "answer": "127", "accept": [], "hint": "$127^3 = 2048383$." }
+      ],
+      "finalAnswer": { "value": "127", "unit": "" },
+      "solutionNarrative": "Two ciphertexts give $x_{12} = 105113 = m^3 \\bmod 138805$, which is not a cube because $m^3$ wrapped past $n_1 n_2$. The third modulus pushes the CRT range to $44278795 > m^3$, so $C = 2048383 = 127^3$ and $m = 127$. This is Håstad's broadcast attack."
+    },
+    {
+      "id": "cryptography.discrete-log-and-rsa-attacks.s25",
+      "concepts": ["baby-step-giant-step"],
+      "difficulty": 2,
+      "context": "abstract",
+      "prompt": "Solve $24^x \\equiv 9 \\pmod{31}$ with baby-step giant-step. ($24$ is a primitive root mod $31$.) Use $m = \\lceil \\sqrt{p - 1} \\rceil$. Baby steps: the table $g^j \\bmod p$ for $0 \\le j < m$. Giant steps: $\\gamma_i = h \\cdot (g^{-m})^i \\bmod p$ for $i = 0, 1, 2, \\dots$, until some $\\gamma_i$ is in the table; then $x = im + j$.",
+      "steps": [
+        { "instruction": "Compute $m = \\lceil \\sqrt{30} \\rceil$.", "answer": "6", "accept": [], "hint": "$5^2 = 25 < 30 \\le 36 = 6^2$." },
+        { "instruction": "Compute the giant-step multiplier $g^{-m} = 24^{-6} \\bmod 31$: first $24^{6} \\bmod 31$, then its inverse.", "answer": "8", "accept": [], "hint": "$24^{6} \\equiv 4 \\pmod{31}$. Then $4 \\cdot 8 = 32 = 1 \\cdot 31 + 1$, so the inverse is $8$." },
+        { "instruction": "Build the baby-step table, then walk the giant steps $\\gamma_0 = 9, \\gamma_1, \\gamma_2, \\dots$. At which $i$ does a giant step FIRST land in the table?", "answer": "2", "accept": [], "hint": "Table: $24^{0} \\equiv 1$, $24^{1} \\equiv 24$, $24^{2} \\equiv 18$, $24^{3} \\equiv 29$, $24^{4} \\equiv 14$, $24^{5} \\equiv 26$. Giant steps: $\\gamma_{0} = 9$, $\\gamma_{1} = 10$, $\\gamma_{2} = 18$." },
+        { "instruction": "Which baby step $j$ does it match (the $j$ with $24^j \\equiv \\gamma_i$)?", "answer": "2", "accept": [], "hint": "$\\gamma_{2} = 18$; find it in the table." },
+        { "instruction": "So $x = im + j = 2 \\cdot 6 + 2$. What is $x$?", "answer": "14", "accept": [], "hint": "Check: $24^{14} \\bmod 31$ should be $9$." }
+      ],
+      "finalAnswer": { "value": "14", "unit": "" },
+      "solutionNarrative": "With $m = 6$ the baby table is 1, 24, 18, 29, 14, 26 (for $j = 0$ to $5$), and the giant steps run 9, 10, 18. The first giant step in the table is $\\gamma_{2} = 18 = 24^{2}$, so $h \\cdot g^{-12} = g^{2}$ and $x = 2 \\cdot 6 + 2 = 14$. That took 6 baby steps and 3 giant steps instead of up to 29 trial exponents."
+    }
+  ]
+}

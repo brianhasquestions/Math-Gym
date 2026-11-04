@@ -241,7 +241,8 @@
         { "id": "cryptography.aes-finite-fields", "title": "Symmetric Ciphers and Finite Fields (AES)", "file": "content/cryptography/aes-finite-fields.json", "status": "ready" },
         { "id": "cryptography.aes-modes", "title": "AES Modes of Operation: ECB to GCM", "file": "content/cryptography/aes-modes.json", "status": "ready" },
         { "id": "cryptography.ecc", "title": "Elliptic Curve Cryptography", "file": "content/cryptography/ecc.json", "status": "ready" },
-        { "id": "cryptography.crypto-weaknesses", "title": "How Cryptography Breaks: Attacks and Misuse", "file": "content/cryptography/crypto-weaknesses.json", "status": "ready" }
+        { "id": "cryptography.crypto-weaknesses", "title": "How Cryptography Breaks: Attacks and Misuse", "file": "content/cryptography/crypto-weaknesses.json", "status": "ready" },
+        { "id": "cryptography.discrete-log-and-rsa-attacks", "title": "Discrete-Log and RSA Attacks: BSGS to Håstad", "file": "content/cryptography/discrete-log-and-rsa-attacks.json", "status": "ready" }
       ]
     },
     {
