@@ -322,6 +322,84 @@ eq("double root: x = value", checkStep({ form: "solutions", answer: "x = -4 or x
 eq("double root: wrong sign still rejected", checkStep({ form: "solutions", answer: "x = -4 or x = -4" }, "4"), false);
 eq("two roots: one root alone still rejected", checkStep({ form: "solutions", answer: "x = 2 or x = -3" }, "x = 2"), false);
 
+group("grader holes from the 2026-11 review — wrong answers must be REJECTED");
+// G1: precedence. "1/4 * 2" was split at the first "/" and read as 1/(4*2).
+eq("G1 1/4*2 accept does not admit 1/8", checkStep({ answer: "2 * 1/4", accept: ["1/4 * 2"] }, "1/8"), false);
+eq("G1 (x+1)/2 is not x+1/2", checkStep({ answer: "(x+1)/2" }, "x+1/2"), false);
+eq("G1 1/(x+2) is not 1/2+x", checkStep({ answer: "1/(x+2)" }, "1/2+x"), false);
+eq("G1 x/3 - 2 is not x", checkStep({ answer: "x/3 - 2" }, "x"), false);
+eq("G1 x^2 + x^2/2 is not x^2", checkStep({ answer: "x^2 + x^2/2" }, "x^2"), false);
+eq("G1 rational equivalence still works", checkStep({ answer: "(x^2-1)/(x-1)" }, "x+1"), true);
+eq("G1 -x/y == (-x)/y", checkStep({ answer: "-x/y" }, "(-x)/y"), true);
+// G2: typing the problem back is not doing it.
+eq("G2 7*8 is not an answer for 56", checkStep({ answer: "56" }, "7*8"), false);
+eq("G2 4+1 is not an answer for 5", checkStep({ answer: "5" }, "4+1"), false);
+eq("G2 (x^2)^3 is not simplified x^6", checkStep({ instruction: "Simplify.", answer: "x^6" }, "(x^2)^3"), false);
+eq("G2 x^5*x^2 is not x^7", checkStep({ answer: "x^7" }, "x^5*x^2"), false);
+eq("G2 uncombined like terms rejected", checkStep({ instruction: "Combine like terms.", answer: "3x + 8 = 26" }, "8x - 3 - 5x + 11 = 26"), false);
+eq("G2 3x+12-12 is not 3x = 33", checkStep({ instruction: "Subtract 12 from both sides.", answer: "3x = 33" }, "3x+12-12=45-12"), false);
+eq("G2 undistributed line rejected on a distribute step", checkStep({ instruction: "Distribute the 2.", answer: "2x + 14 = 40" }, "2(x+7)=40"), false);
+eq("G2 unreduced fraction rejected on a lowest-terms step", checkStep({ instruction: "Give a fraction in lowest terms.", answer: "1/3" }, "3/9"), false);
+eq("G2 exact forms still fine: 16pi for 50.27", checkStep({ answer: "50.27" }, "16pi"), true);
+eq("G2 setup steps take any faithful transcription", checkStep({ instruction: "Write an equation for the perimeter.", answer: "2x + 6 = 34" }, "x + x + 6 = 34"), true);
+eq("G2 expanding a factored answer is fine", checkStep({ answer: "(x+1)^2" }, "x^2+2x+1"), true);
+// G3: subscripted variables are single symbols.
+eq("G3 v2w3 - v3w2 does not accept 0", checkStep({ answer: "v2w3 - v3w2" }, "0"), false);
+eq("G3 -v1 + v2 = 0 does not accept v = 0", checkStep({ answer: "-v1 + v2 = 0" }, "v = 0"), false);
+eq("G3 c_1 == c1", checkStep({ answer: "c1 + c2" }, "c_1 + c_2"), true);
+// G4: inequalities never move terms across the sign.
+eq("G4 x + 1 >= 4 is not x >= 3", checkStep({ answer: "x >= 3" }, "x + 1 >= 4"), false);
+eq("G4 direction flip still equal", checkStep({ answer: "x >= 3" }, "3 <= x"), true);
+eq("G4 strictness still matters", checkStep({ answer: "x > 3" }, "x >= 3"), false);
+eq("G4 reversed compound inequality", checkStep({ answer: "-2 < x < 5" }, "5 > x > -2"), true);
+// G5/G6: words and function names are not polynomials.
+eq("G5 hyphenated menu words don't collide", checkStep({ answer: "SSS", accept: ["side-side-side"] }, "angle-angle-side"), false);
+eq("G5 'angle-angle' does not equal 0", checkStep({ answer: "AA", accept: ["angle-angle"] }, "0"), false);
+eq("G6 rsin(2theta) is not 2rsin(theta)", checkStep({ answer: "r^2 = 8rsin(theta)" }, "r^2 = 4rsin(2theta)"), false);
+eq("G6 equations with functions still side-swap", checkStep({ answer: "r^2 = 2rcos(theta)" }, "2rcos(theta) = r^2"), true);
+eq("lambda polynomials still compare", checkStep({ answer: "lambda^2 - 5lambda + 6" }, "(lambda-2)(lambda-3)"), true);
+// G7: factor completely.
+eq("G7 x(6x+8) is not complete for 2x(3x+4)", checkStep({ form: "factored", answer: "2x(3x+4)" }, "x(6x+8)"), false);
+eq("G7 2(3x^2+4x) is not complete", checkStep({ form: "factored", answer: "2x(3x+4)" }, "2(3x^2+4x)"), false);
+eq("G7 (6x-9)(2x+3) is not complete for 3(2x-3)(2x+3)", checkStep({ form: "factored", answer: "3(2x-3)(2x+3)" }, "(6x-9)(2x+3)"), false);
+eq("G7 a complete factoring in another order passes", checkStep({ form: "factored", answer: "2x(3x+4)" }, "(3x+4)(2x)"), true);
+// G8: tolerance.
+eq("G8 '0.0' is not 1/36", checkStep({ answer: "1/36" }, "0.0"), false);
+eq("G8 '0.7' is not 2/3 (1 significant figure)", checkStep({ answer: "2/3" }, "0.7"), false);
+eq("G8 '0.67' still fine for 2/3", checkStep({ answer: "2/3" }, "0.67"), true);
+eq("G8 0 is not machine epsilon", checkStep({ answer: "0.00000095" }, "0"), false);
+eq("G8 off-by-one on a big integer rejected", checkStep({ answer: "1080000000" }, "1080000001"), false);
+eq("G8 rounded tuple for an exact tuple", checkStep({ answer: "(6, 1/3)" }, "(6.00, 0.33)"), true);
+// G9: mixed numbers and spaced digits.
+eq("G9 8 1/4 is not 81/4", checkStep({ answer: "81/4" }, "8 1/4"), false);
+eq("G9 1 1/3 is 4/3", checkStep({ answer: "4/3" }, "1 1/3"), true);
+eq("G9 '2 3' is not 23", checkStep({ answer: "23" }, "2 3"), false);
+// Precedence: unary minus binds looser than ^.
+eq("-2^2 after * is -(2^2)", checkStep({ answer: "12" }, "3*-2^2"), false);
+
+group("grader — natural notation now ACCEPTED");
+eq("degree sign", checkStep({ answer: "55" }, "55°"), true);
+eq("^\\circ", checkStep({ answer: "55" }, "55^\\circ"), true);
+eq("'degrees' word", checkStep({ answer: "55" }, "55 degrees"), true);
+eq("degrees in a solution set", checkStep({ form: "solutions", answer: "x = 30 or x = 150" }, "30°, 150°"), true);
+eq("percent sign on a percent answer", checkStep({ answer: "5.21" }, "5.21%"), true);
+eq("percent for a proportion answer", checkStep({ answer: "0.0521" }, "5.21%"), true);
+eq("± in a solution set", checkStep({ form: "solutions", answer: "x = 6 or x = -6" }, "x = ±6"), true);
+eq("'and' in a solution set", checkStep({ form: "solutions", answer: "x = 6 or x = -6" }, "6 and -6"), true);
+eq("7 = x for x = 7", checkStep({ answer: "x = 7" }, "7 = x"), true);
+eq("1x = 5 for x = 5", checkStep({ answer: "x = 5" }, "1x = 5"), true);
+eq("+3 for 3", checkStep({ answer: "3" }, "+3"), true);
+eq("units after a number", checkStep({ answer: "12" }, "12 cm"), true);
+eq("units don't make 5x a number", checkStep({ answer: "5" }, "5x"), false);
+eq("scientific notation", checkStep({ answer: "1080000000" }, "1.08e9"), true);
+eq("reject the null hypothesis", checkStep({ answer: "reject" }, "reject the null hypothesis"), true);
+eq("fail to reject H0", checkStep({ answer: "fail to reject" }, "fail to reject H_0"), true);
+eq("decision words don't cross", checkStep({ answer: "reject" }, "fail to reject the null"), false);
+eq("infinity spellings", checkStep({ answer: "inf/inf" }, "∞/∞"), true);
+eq("bare RHS for a y = answer", checkStep({ answer: "y = 2x + 1" }, "2x + 1"), true);
+eq("y = for a bare-expression answer", checkStep({ answer: "x - 6" }, "y = x - 6"), true);
+eq("bare RHS still has to be right", checkStep({ answer: "y = 2x + 1" }, "2x - 1"), false);
+
 group("generator — display cleanup keeps meaningful 1s (81f77a6 regression)");
 {
   const { generate, makeRng } = await imp("js/generator.js");
